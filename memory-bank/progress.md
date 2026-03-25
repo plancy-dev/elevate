@@ -31,7 +31,7 @@
 | 항목 | 상태 |
 |------|------|
 | 이벤트 수정·삭제 | ✅ |
-| Venue CRUD | ⏳ |
+| Venue CRUD | ✅ |
 | Session CRUD | ⏳ |
 | 참석자 DB + CSV | ⏳ |
 | Settings 실데이터 | ⏳ |
