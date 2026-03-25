@@ -2,16 +2,16 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
-import { EditEventForm } from "@/components/dashboard/edit-event-form";
+import { VenueForm } from "@/components/dashboard/venue-form";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
-import { getEventByIdForEdit } from "@/lib/data/events";
-import { listVenuesForOrg } from "@/lib/data/venues";
+import { createClient } from "@/lib/supabase/server";
+import { getVenueByIdForOrg } from "@/lib/data/venues";
 
-export const metadata = { title: "Edit event" };
+export const metadata = { title: "Edit venue" };
 
 type PageProps = { params: Promise<{ id: string }> };
 
-export default async function EditEventPage({ params }: PageProps) {
+export default async function EditVenuePage({ params }: PageProps) {
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
@@ -21,36 +21,51 @@ export default async function EditEventPage({ params }: PageProps) {
     );
   }
 
+  const orgId = ensured.organizationId;
   const { id } = await params;
-  const row = await getEventByIdForEdit(id);
-  if (!row) notFound();
 
-  const venues = await listVenuesForOrg(ensured.organizationId);
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) notFound();
 
-  const event = {
-    id: row.id,
-    title: row.title,
-    description: row.description ?? "",
-    event_type: row.event_type,
-    status: row.status,
-    start_date: row.start_date,
-    end_date: row.end_date,
-    timezone: row.timezone ?? "UTC",
-    expected_attendees: row.expected_attendees ?? 0,
-    venue_id: row.venue_id as string | null,
-  };
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  const canManage =
+    profile?.role === "admin" || profile?.role === "organizer";
+
+  if (!canManage) {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <p className="text-sm text-text-secondary">
+          Only administrators and organizers can edit venues.
+        </p>
+        <Link href="/dashboard/venues" className="text-sm text-interactive mt-2 inline-block">
+          Back to venues
+        </Link>
+      </div>
+    );
+  }
+
+  const venue = await getVenueByIdForOrg(id, orgId);
+  if (!venue) notFound();
 
   return (
     <div className="min-h-screen bg-background">
       <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-border-subtle bg-background px-6 h-12">
         <Link
-          href={`/dashboard/events/${id}`}
+          href="/dashboard/venues"
           className="text-text-tertiary hover:text-text-primary transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <span className="text-sm font-medium text-text-primary truncate">
-          Edit event
+          Edit venue
         </span>
       </div>
 
@@ -59,12 +74,12 @@ export default async function EditEventPage({ params }: PageProps) {
           <ElevateLogo size="sm" />
         </Link>
         <h1 className="mt-6 text-xl font-semibold tracking-[-0.02em] text-text-primary">
-          {event.title}
+          {venue.name}
         </h1>
         <p className="mt-1 text-sm text-text-tertiary">
-          Update schedule, status, and description.
+          Update address and capacity.
         </p>
-        <EditEventForm event={event} venues={venues} />
+        <VenueForm venue={venue} />
       </div>
     </div>
   );

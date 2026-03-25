@@ -2,35 +2,36 @@
 
 import { TrendingUp, Users, DollarSign, Calendar, MapPin } from "lucide-react";
 
+/** Illustrative UI only — values are placeholders, not live or third-party claims. */
 const kpiCards = [
   {
     label: "Total Attendees",
-    value: "15,495",
-    change: "+12.3%",
+    value: "—",
+    change: "Your data",
     trend: "up" as const,
     icon: <Users className="h-4 w-4" />,
     sparkline: [40, 55, 45, 60, 50, 70, 65, 80, 75, 90, 85, 100],
   },
   {
     label: "Revenue",
-    value: "$300M",
-    change: "+8.7%",
+    value: "—",
+    change: "Your data",
     trend: "up" as const,
     icon: <DollarSign className="h-4 w-4" />,
     sparkline: [30, 35, 40, 38, 45, 50, 48, 55, 60, 58, 65, 72],
   },
   {
     label: "Active Events",
-    value: "284",
-    change: "+23.1%",
+    value: "—",
+    change: "Your data",
     trend: "up" as const,
     icon: <Calendar className="h-4 w-4" />,
     sparkline: [20, 25, 30, 35, 32, 40, 45, 50, 48, 55, 60, 68],
   },
   {
-    label: "Venues Managed",
-    value: "1,247",
-    change: "+5.4%",
+    label: "Venues",
+    value: "—",
+    change: "Your data",
     trend: "up" as const,
     icon: <MapPin className="h-4 w-4" />,
     sparkline: [50, 52, 55, 53, 58, 60, 62, 65, 63, 68, 70, 74],
@@ -74,129 +75,79 @@ function Sparkline({ data }: { data: number[] }) {
 
 const recentEvents = [
   {
-    name: "Global Tech Summit 2026",
-    location: "Singapore",
-    attendees: "4,200",
+    name: "Sample conference",
+    location: "City",
+    attendees: "—",
+    status: "Draft",
+  },
+  {
+    name: "Sample exhibition",
+    location: "City",
+    attendees: "—",
+    status: "Planning",
+  },
+  {
+    name: "Sample meeting",
+    location: "City",
+    attendees: "—",
     status: "Live",
-  },
-  {
-    name: "MICE Asia Conference",
-    location: "Seoul",
-    attendees: "2,800",
-    status: "Live",
-  },
-  {
-    name: "MedTech Expo Berlin",
-    location: "Berlin",
-    attendees: "3,150",
-    status: "Upcoming",
-  },
-  {
-    name: "Corporate Leadership Forum",
-    location: "New York",
-    attendees: "1,600",
-    status: "Completed",
   },
 ];
 
-const statusColor: Record<string, string> = {
-  Live: "bg-accent/20 text-accent",
-  Upcoming: "bg-info/20 text-info",
-  Completed: "bg-surface-03 text-text-tertiary",
-};
-
 export function KPIDashboardPreview() {
   return (
-    <div className="relative rounded-sm border border-border-subtle bg-layer-01 overflow-hidden shadow-2xl shadow-black/40">
-      {/* Dashboard top bar */}
-      <div className="flex items-center justify-between border-b border-border-subtle px-5 py-3">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center h-6 w-6 bg-primary">
-            <span
-              className="text-xs font-serif italic font-bold text-white leading-none"
-              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
-            >
-              e
-            </span>
-          </div>
-          <span className="text-xs font-medium text-text-secondary">
-            Dashboard
-          </span>
-          <span className="text-xs text-text-tertiary">/</span>
-          <span className="text-xs text-text-tertiary">Overview</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-text-tertiary">Q1 2026</span>
-          <div className="h-6 w-6 rounded-full bg-surface-03 flex items-center justify-center">
-            <span className="text-[10px] font-medium text-text-secondary">
-              JK
-            </span>
-          </div>
-        </div>
+    <div
+      className="relative rounded-sm border border-border-subtle bg-layer-01 shadow-2xl overflow-hidden"
+      aria-label="Illustrative dashboard preview (sample layout only)"
+    >
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle bg-layer-02">
+        <span className="text-xs font-medium text-text-secondary">
+          Overview (preview)
+        </span>
+        <span className="text-[10px] text-text-tertiary uppercase tracking-wider">
+          Illustration
+        </span>
       </div>
 
-      {/* KPI Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4">
-        {kpiCards.map((kpi, i) => (
-          <div
-            key={kpi.label}
-            className={`px-5 py-4 ${i < 3 ? "border-r border-border-subtle" : ""} ${i < 2 ? "border-b border-border-subtle lg:border-b-0" : i < 4 ? "border-b border-border-subtle lg:border-b-0" : ""}`}
-          >
-            <div className="flex items-center gap-1.5 mb-2">
-              <span className="text-text-tertiary">{kpi.icon}</span>
-              <span className="text-xs text-text-tertiary">{kpi.label}</span>
-            </div>
-            <div className="flex items-end justify-between">
-              <div>
-                <div className="text-2xl font-semibold tracking-tight text-text-primary">
-                  {kpi.value}
-                </div>
-                <div className="flex items-center gap-1 mt-1">
-                  <TrendingUp className="h-3 w-3 text-accent" />
-                  <span className="text-xs font-medium text-accent">
-                    {kpi.change}
-                  </span>
-                </div>
-              </div>
-              <Sparkline data={kpi.sparkline} />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Event List */}
-      <div className="border-t border-border-subtle">
-        <div className="px-5 py-3 border-b border-border-subtle">
-          <span className="text-xs font-medium text-text-secondary">
-            Recent Events
-          </span>
-        </div>
-        <div>
-          {recentEvents.map((event, i) => (
+      <div className="p-4 space-y-4">
+        <div className="grid grid-cols-2 gap-3">
+          {kpiCards.map((kpi) => (
             <div
-              key={event.name}
-              className={`flex items-center justify-between px-5 py-2.5 ${i < recentEvents.length - 1 ? "border-b border-border-subtle" : ""} hover:bg-layer-02 transition-colors`}
+              key={kpi.label}
+              className="rounded-sm border border-border-subtle bg-background p-3"
             >
-              <div className="flex-1 min-w-0">
-                <div className="text-sm text-text-primary truncate">
-                  {event.name}
-                </div>
-                <div className="text-xs text-text-tertiary">
-                  {event.location}
-                </div>
+              <div className="flex items-start justify-between gap-2">
+                <div className="text-text-tertiary">{kpi.icon}</div>
+                <Sparkline data={kpi.sparkline} />
               </div>
-              <div className="flex items-center gap-4 shrink-0 ml-4">
-                <div className="text-right">
-                  <div className="text-sm font-medium text-text-primary">
-                    {event.attendees}
-                  </div>
-                  <div className="text-xs text-text-tertiary">attendees</div>
-                </div>
-                <span
-                  className={`px-2 py-0.5 text-xs font-medium ${statusColor[event.status]}`}
-                >
-                  {event.status}
-                </span>
+              <div className="mt-2 text-lg font-semibold text-text-primary tabular-nums">
+                {kpi.value}
+              </div>
+              <div className="text-[11px] text-text-tertiary">{kpi.label}</div>
+              <div className="mt-1 flex items-center gap-1 text-[11px] text-accent">
+                <TrendingUp className="h-3 w-3" />
+                {kpi.change}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="rounded-sm border border-border-subtle overflow-hidden">
+          <div className="px-3 py-2 bg-layer-02 text-[11px] font-medium text-text-secondary uppercase tracking-wider">
+            Recent events (sample)
+          </div>
+          {recentEvents.map((ev) => (
+            <div
+              key={ev.name}
+              className="flex items-center justify-between px-3 py-2 border-t border-border-subtle text-xs"
+            >
+              <div>
+                <div className="text-text-primary font-medium">{ev.name}</div>
+                <div className="text-text-tertiary">{ev.location}</div>
+              </div>
+              <div className="text-right">
+                <div className="text-text-primary">{ev.attendees}</div>
+                <div className="text-[10px] text-text-tertiary">{ev.status}</div>
               </div>
             </div>
           ))}

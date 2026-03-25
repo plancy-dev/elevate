@@ -70,8 +70,8 @@ export const mockAttendees = [
   {
     id: "a1",
     name: "Emily Zhang",
-    email: "emily.zhang@samsung.com",
-    company: "Samsung Electronics",
+    email: "emily.zhang@example.com",
+    company: "Example Corp",
     event: "Global Tech Summit 2026",
     type: "VIP" as const,
     checkedIn: true,

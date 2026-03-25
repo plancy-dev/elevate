@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { NewEventForm } from "@/components/dashboard/new-event-form";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
+import { listVenuesForOrg } from "@/lib/data/venues";
 
 export const metadata = { title: "New event" };
 
@@ -15,6 +16,8 @@ export default async function NewEventPage() {
       </div>
     );
   }
+
+  const venues = await listVenuesForOrg(ensured.organizationId);
 
   return (
     <div className="min-h-screen bg-background">
@@ -38,7 +41,7 @@ export default async function NewEventPage() {
         <p className="mt-1 text-sm text-text-tertiary">
           Add a title and schedule. You can attach a venue and sessions later.
         </p>
-        <NewEventForm />
+        <NewEventForm venues={venues} />
       </div>
     </div>
   );

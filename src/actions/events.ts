@@ -27,6 +27,20 @@ export async function createEvent(
   const end = String(formData.get("end_date") ?? "");
   if (!start || !end) return { error: "Start and end dates are required" };
 
+  const venueRaw = String(formData.get("venue_id") ?? "").trim();
+  const venueCandidate: string | null =
+    venueRaw.length > 0 ? venueRaw : null;
+  if (venueCandidate) {
+    const { data: v } = await supabase
+      .from("venues")
+      .select("id")
+      .eq("id", venueCandidate)
+      .eq("organization_id", ctx.organizationId)
+      .maybeSingle();
+    if (!v) return { error: "Invalid or inaccessible venue" };
+  }
+  const venueId = venueCandidate;
+
   const { data: created, error } = await supabase
     .from("events")
     .insert({
@@ -41,6 +55,7 @@ export async function createEvent(
       timezone: String(formData.get("timezone") ?? "UTC"),
       expected_attendees: Number(formData.get("expected_attendees") ?? 0) || 0,
       created_by: ctx.userId,
+      venue_id: venueId,
     })
     .select("id")
     .single();
@@ -74,6 +89,19 @@ export async function updateEvent(
   if (!start || !end) return { error: "Start and end dates are required" };
 
   const status = String(formData.get("status") ?? "draft");
+  const venueRaw = String(formData.get("venue_id") ?? "").trim();
+  const venueCandidate: string | null =
+    venueRaw.length > 0 ? venueRaw : null;
+  if (venueCandidate) {
+    const { data: v } = await supabase
+      .from("venues")
+      .select("id")
+      .eq("id", venueCandidate)
+      .eq("organization_id", ctx.organizationId)
+      .maybeSingle();
+    if (!v) return { error: "Invalid or inaccessible venue" };
+  }
+  const venueId = venueCandidate;
 
   const { error } = await supabase
     .from("events")
@@ -92,6 +120,7 @@ export async function updateEvent(
       end_date: new Date(end).toISOString(),
       timezone: String(formData.get("timezone") ?? "UTC"),
       expected_attendees: Number(formData.get("expected_attendees") ?? 0) || 0,
+      venue_id: venueId,
     })
     .eq("id", eventId)
     .eq("organization_id", ctx.organizationId);

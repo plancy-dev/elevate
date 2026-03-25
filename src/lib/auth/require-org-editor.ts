@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-/** Roles that may create/update/delete org-scoped operational data (events, venues, etc.). */
+/** Roles that may create/update/delete org-scoped operational data (events, sessions, etc.). */
 export const ORG_EDITOR_ROLES = ["admin", "organizer", "coordinator"] as const;
 
 export type OrgEditorContext = {
@@ -47,4 +47,20 @@ export async function getOrgEditorContext(
       role,
     },
   };
+}
+
+/** Venues RLS allows only admin | organizer (not coordinator). */
+const VENUE_MANAGER_ROLES = ["admin", "organizer"] as const;
+
+export async function getVenueManagerContext(
+  supabase: SupabaseClient,
+): Promise<
+  { ok: true; ctx: OrgEditorContext } | { ok: false; error: string }
+> {
+  const base = await getOrgEditorContext(supabase);
+  if (!base.ok) return base;
+  if (!(VENUE_MANAGER_ROLES as readonly string[]).includes(base.ctx.role)) {
+    return { ok: false, error: "Insufficient permissions for venue management" };
+  }
+  return base;
 }

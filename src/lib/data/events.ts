@@ -315,7 +315,7 @@ export async function getEventByIdForEdit(eventId: string) {
   const { data, error } = await supabase
     .from("events")
     .select(
-      "id, title, description, event_type, status, start_date, end_date, timezone, expected_attendees",
+      "id, title, description, event_type, status, start_date, end_date, timezone, expected_attendees, venue_id",
     )
     .eq("id", eventId)
     .maybeSingle();

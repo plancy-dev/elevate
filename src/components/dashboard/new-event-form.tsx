@@ -3,10 +3,11 @@
 import { useActionState } from "react";
 import { createEvent, type CreateEventState } from "@/actions/events";
 import { Button } from "@/components/ui/button";
+import type { VenueRow } from "@/lib/data/venues";
 
 const initialState: CreateEventState = undefined;
 
-export function NewEventForm() {
+export function NewEventForm({ venues }: { venues: VenueRow[] }) {
   const [state, formAction, pending] = useActionState(
     createEvent,
     initialState,
@@ -104,6 +105,28 @@ export function NewEventForm() {
           <option value="gala">Gala</option>
           <option value="incentive">Incentive</option>
           <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div>
+        <label
+          htmlFor="venue_id"
+          className="block text-xs font-medium text-text-secondary mb-1.5"
+        >
+          Venue (optional)
+        </label>
+        <select
+          id="venue_id"
+          name="venue_id"
+          className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
+        >
+          <option value="">No venue</option>
+          {venues.map((v) => (
+            <option key={v.id} value={v.id}>
+              {v.name}
+              {v.city ? ` — ${v.city}` : ""}
+            </option>
+          ))}
         </select>
       </div>
 

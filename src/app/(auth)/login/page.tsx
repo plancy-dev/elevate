@@ -26,32 +26,15 @@ export default function LoginPage() {
             events at scale.
           </h1>
           <p className="mt-4 text-sm text-text-tertiary leading-relaxed max-w-sm">
-            Join 1,200+ event professionals who manage $300M+ in event revenue
-            through Elevate.
+            Sign in to manage your organization&apos;s events, venues, and
+            attendees in Elevate.
           </p>
-
-          <div className="mt-10 grid grid-cols-2 gap-4">
-            {[
-              { value: "15,495", label: "Attendees managed" },
-              { value: "284", label: "Active events" },
-              { value: "40%", label: "Efficiency gain" },
-              { value: "99.9%", label: "Uptime SLA" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <div className="text-xl font-semibold text-text-primary">
-                  {stat.value}
-                </div>
-                <div className="text-xs text-text-tertiary">{stat.label}</div>
-              </div>
-            ))}
-          </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <span className="text-xs text-text-tertiary">SOC 2</span>
-          <span className="text-xs text-text-tertiary">GDPR</span>
-          <span className="text-xs text-text-tertiary">ISO 27001</span>
-        </div>
+        <p className="text-xs text-text-tertiary">
+          Enterprise security and compliance posture depend on your deployment
+          and configuration—ask us for details.
+        </p>
       </div>
 
       <div className="flex-1 flex items-center justify-center p-6">

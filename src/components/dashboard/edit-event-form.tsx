@@ -6,6 +6,7 @@ import {
   type UpdateEventState,
 } from "@/actions/events";
 import { Button } from "@/components/ui/button";
+import type { VenueRow } from "@/lib/data/venues";
 import { toDatetimeLocalValue } from "@/lib/utils";
 
 export type EditableEvent = {
@@ -18,11 +19,18 @@ export type EditableEvent = {
   end_date: string;
   timezone: string;
   expected_attendees: number;
+  venue_id: string | null;
 };
 
 const initialState: UpdateEventState = undefined;
 
-export function EditEventForm({ event }: { event: EditableEvent }) {
+export function EditEventForm({
+  event,
+  venues,
+}: {
+  event: EditableEvent;
+  venues: VenueRow[];
+}) {
   const [state, formAction, pending] = useActionState(
     updateEvent,
     initialState,
@@ -73,6 +81,29 @@ export function EditEventForm({ event }: { event: EditableEvent }) {
           <option value="live">Live</option>
           <option value="completed">Completed</option>
           <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div>
+        <label
+          htmlFor="venue_id"
+          className="block text-xs font-medium text-text-secondary mb-1.5"
+        >
+          Venue (optional)
+        </label>
+        <select
+          id="venue_id"
+          name="venue_id"
+          defaultValue={event.venue_id ?? ""}
+          className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
+        >
+          <option value="">No venue</option>
+          {venues.map((v) => (
+            <option key={v.id} value={v.id}>
+              {v.name}
+              {v.city ? ` — ${v.city}` : ""}
+            </option>
+          ))}
         </select>
       </div>
 

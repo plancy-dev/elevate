@@ -3,7 +3,7 @@
 ## 현재 페이즈
 
 **Phase 1 — MVP · 1B (운영 CRUD)**  
-이벤트 **수정·삭제** 완료. 다음은 **Venue CRUD → Session CRUD** 순.
+**Venue CRUD** 및 이벤트의 `venue_id` 연결 완료. 다음은 **Session CRUD** (로드맵 1B-3).
 
 ## 최근 확정 결정
 
@@ -31,8 +31,7 @@
 - 워크플로우: `.cursor/rules/workflow-modes.mdc`
 - 이 저장소는 **Next.js + TypeScript** 중심 — Rust 관련 규칙은 본 프로젝트에 적용하지 않음.
 
-## 다음에 열 파일 (Venue CRUD)
+## 다음에 열 파일 (Session CRUD)
 
-1. `src/app/(dashboard)/dashboard/venues/page.tsx` — 목록·생성 진입
-2. `src/actions/venues.ts` — 서버 액션
-3. 이벤트 생성/편집 폼에 `venue_id` 선택 추가
+1. `src/app/(dashboard)/dashboard/events/[id]/` 하위 또는 상세 내 세션 편집
+2. `src/actions/sessions.ts` — 서버 액션

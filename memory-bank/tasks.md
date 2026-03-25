@@ -34,7 +34,7 @@
 ### 1B — 운영 CRUD (순서 고정)
 
 1. **이벤트 수정·삭제** — `/dashboard/events/[id]/edit`, `updateEvent` / `deleteEvent` 서버 액션. ✅
-2. **Venue CRUD** — `venues` 목록·생성·수정, 이벤트에 `venue_id` 연결. ⏳ 다음
+2. **Venue CRUD** — `venues` 목록·생성·수정, 이벤트 폼에 `venue_id` 선택. ✅
 3. **Session CRUD** — 이벤트 하위 세션 추가·수정·삭제 (상세 또는 서브라우트).
 4. **비밀번호 재설정 완료** — 복구 세션 후 `updateUser` 전용 페이지(필요 시).
 

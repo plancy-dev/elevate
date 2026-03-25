@@ -19,66 +19,67 @@ const capabilities = [
     icon: <Workflow className="h-5 w-5" />,
     title: "End-to-End Event Orchestration",
     description:
-      "From venue sourcing to post-event analytics—manage every touchpoint of your MICE program in a single, unified platform.",
+      "From venue sourcing to post-event analytics—manage touchpoints of your MICE program in a single workspace.",
   },
   {
     icon: <Brain className="h-5 w-5" />,
     title: "AI-Powered Insights",
     description:
-      "Predict attendance patterns, optimize resource allocation, and surface actionable recommendations that improve event ROI by up to 40%.",
+      "Surface attendance trends, resource needs, and recommendations to support planning and follow-up.",
   },
   {
     icon: <Users className="h-5 w-5" />,
-    title: "Attendee Engagement Engine",
+    title: "Attendee Engagement",
     description:
-      "Personalized schedules, smart matchmaking, and real-time interaction tools that turn passive attendees into active participants.",
+      "Schedules, segments, and check-in flows that help teams run smoother on-site experiences.",
   },
   {
     icon: <BarChart3 className="h-5 w-5" />,
-    title: "Enterprise Analytics",
+    title: "Operational Analytics",
     description:
-      "Track every KPI that matters—attendance, revenue, NPS, lead generation—with customizable dashboards built for executive reporting.",
+      "Track attendance, revenue, and satisfaction metrics in dashboards built for event and executive review.",
   },
   {
     icon: <Globe className="h-5 w-5" />,
-    title: "Global Scale, Local Compliance",
+    title: "Global-ready",
     description:
-      "Multi-language, multi-currency, multi-timezone. GDPR, SOC 2, and ISO 27001 compliant. Ready for events anywhere in the world.",
+      "Multi-timezone scheduling and localization-friendly structure for distributed teams.",
   },
   {
     icon: <Shield className="h-5 w-5" />,
-    title: "Enterprise-Grade Security",
+    title: "Security-minded design",
     description:
-      "SSO, role-based access control, audit logging, and data encryption at rest and in transit. Built for organizations that take security seriously.",
+      "Role-based access and tenant-scoped data on Supabase—align deployment with your org policies.",
   },
 ];
 
-const trustedBy = [
-  "Samsung",
-  "Hyundai",
-  "SK Group",
-  "KOTRA",
-  "CJ ENM",
-  "Lotte",
-];
-
-const metrics = [
-  { value: "15,495+", label: "Attendees Managed", subtext: "across 284 events this quarter" },
-  { value: "$300M+", label: "Event Revenue Tracked", subtext: "year-over-year growth" },
-  { value: "40%", label: "Avg. Efficiency Gain", subtext: "vs. legacy event tools" },
-  { value: "99.9%", label: "Uptime SLA", subtext: "enterprise reliability" },
+const pillars = [
+  {
+    title: "Unified workspace",
+    sub: "Organizations, events, venues, and attendees in one place.",
+  },
+  {
+    title: "Built for teams",
+    sub: "Roles for admins, organizers, coordinators, and viewers.",
+  },
+  {
+    title: "Transparent metrics",
+    sub: "See your own numbers—no vendor-invented benchmarks on this page.",
+  },
+  {
+    title: "Shipped for the web",
+    sub: "Modern stack: Next.js, TypeScript, and Supabase—deploy where you need.",
+  },
 ];
 
 export default function Home() {
   return (
     <div className="flex flex-col">
-      {/* Hero */}
       <section className="relative overflow-hidden border-b border-border-subtle">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(15,98,254,0.08),transparent_60%)]" />
 
         <div className="relative mx-auto max-w-[1584px] px-4 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 py-16 lg:py-24">
-            {/* Left: Copy */}
             <div className="flex flex-col justify-center">
               <Badge variant="blue" className="w-fit mb-6">
                 MICE Enterprise Platform
@@ -93,9 +94,9 @@ export default function Home() {
               </h1>
 
               <p className="mt-6 text-base text-text-secondary leading-relaxed max-w-lg">
-                The enterprise platform for MICE event management. Orchestrate
-                conferences, exhibitions, and corporate meetings with
-                AI-powered insights that drive measurable business outcomes.
+                The enterprise-oriented workspace for MICE-style programs—conferences,
+                exhibitions, and corporate meetings—with insights tied to your own
+                data.
               </p>
 
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
@@ -111,25 +112,8 @@ export default function Home() {
                   </Button>
                 </Link>
               </div>
-
-              <div className="mt-10 pt-6 border-t border-border-subtle">
-                <p className="text-xs text-text-tertiary uppercase tracking-wider mb-3">
-                  Trusted by industry leaders
-                </p>
-                <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-                  {trustedBy.map((name) => (
-                    <span
-                      key={name}
-                      className="text-sm font-medium text-text-tertiary"
-                    >
-                      {name}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
 
-            {/* Right: Dashboard Preview */}
             <div className="relative flex items-center">
               <div className="w-full">
                 <KPIDashboardPreview />
@@ -139,23 +123,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Metrics Band */}
       <section className="border-b border-border-subtle bg-layer-01">
         <div className="mx-auto max-w-[1584px] px-4 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4">
-            {metrics.map((metric, i) => (
+            {pillars.map((p, i) => (
               <div
-                key={metric.label}
+                key={p.title}
                 className={`py-8 px-6 ${i < 3 ? "border-r border-border-subtle" : ""}`}
               >
-                <div className="text-3xl font-semibold tracking-tight text-text-primary">
-                  {metric.value}
+                <div className="text-sm font-medium text-text-primary leading-snug">
+                  {p.title}
                 </div>
-                <div className="mt-1 text-sm font-medium text-text-secondary">
-                  {metric.label}
-                </div>
-                <div className="mt-0.5 text-xs text-text-tertiary">
-                  {metric.subtext}
+                <div className="mt-2 text-xs text-text-tertiary leading-relaxed">
+                  {p.sub}
                 </div>
               </div>
             ))}
@@ -163,7 +143,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Capabilities */}
       <section className="border-b border-border-subtle">
         <div className="mx-auto max-w-[1584px] px-4 py-20 lg:px-8">
           <div className="max-w-2xl mb-12">
@@ -171,9 +150,8 @@ export default function Home() {
               One platform for every dimension of MICE
             </h2>
             <p className="mt-3 text-base text-text-secondary leading-relaxed">
-              Replace fragmented spreadsheets and disconnected tools with a
-              unified system that gives you complete visibility and control over
-              your entire event portfolio.
+              Replace fragmented spreadsheets with a single system of record for
+              portfolios your team actually runs.
             </p>
           </div>
 
@@ -200,57 +178,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Social Proof / Case Study Teaser */}
       <section className="border-b border-border-subtle bg-layer-01">
         <div className="mx-auto max-w-[1584px] px-4 py-20 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <Badge variant="green" className="mb-4">
-                Case Study
-              </Badge>
-              <h2 className="text-2xl font-semibold tracking-[-0.02em] text-text-primary">
-                &ldquo;Elevate reduced our event planning cycle from 6 months to
-                6 weeks while increasing attendee satisfaction by 35%.&rdquo;
-              </h2>
-              <div className="mt-6">
-                <div className="text-sm font-medium text-text-primary">
-                  Sarah Kim
-                </div>
-                <div className="text-sm text-text-tertiary">
-                  VP of Global Events, Fortune 500 Technology Company
-                </div>
-              </div>
-              <Link
-                href="/case-studies"
-                className="inline-flex items-center gap-1.5 mt-6 text-sm text-interactive hover:text-primary transition-colors"
-              >
-                Read the full case study
-                <ArrowRight className="h-3 w-3" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-2 gap-px bg-border-subtle border border-border-subtle">
-              {[
-                { value: "6 weeks", label: "Planning cycle (was 6 months)" },
-                { value: "+35%", label: "Attendee satisfaction increase" },
-                { value: "2.4x", label: "More qualified leads generated" },
-                { value: "$1.8M", label: "Annual cost savings" },
-              ].map((stat) => (
-                <div key={stat.label} className="bg-layer-01 p-6">
-                  <div className="text-xl font-semibold text-primary">
-                    {stat.value}
-                  </div>
-                  <div className="mt-1 text-xs text-text-tertiary leading-relaxed">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="max-w-xl">
+            <Badge variant="green" className="mb-4">
+              Resources
+            </Badge>
+            <h2 className="text-2xl font-semibold tracking-[-0.02em] text-text-primary">
+              Case studies &amp; guides
+            </h2>
+            <p className="mt-3 text-sm text-text-tertiary leading-relaxed">
+              We publish customer stories and product notes as they are available—no
+              fabricated quotes or metrics here.
+            </p>
+            <Link
+              href="/case-studies"
+              className="inline-flex items-center gap-1.5 mt-6 text-sm text-interactive hover:text-primary transition-colors"
+            >
+              Browse resources
+              <ArrowRight className="h-3 w-3" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
       <section className="bg-primary">
         <div className="mx-auto max-w-[1584px] px-4 py-16 lg:px-8">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
@@ -259,8 +210,7 @@ export default function Home() {
                 Ready to elevate your event program?
               </h2>
               <p className="mt-2 text-base text-white/70 max-w-lg">
-                Join the leading MICE organizations already using Elevate to
-                deliver exceptional events at scale.
+                Talk to us about your workflows, integrations, and rollout.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 shrink-0">
@@ -289,11 +239,9 @@ export default function Home() {
           <div className="mt-10 pt-8 border-t border-white/10">
             <div className="flex flex-wrap gap-x-8 gap-y-3">
               {[
-                "14-day free trial",
-                "No credit card required",
-                "SOC 2 & GDPR compliant",
-                "Dedicated onboarding",
-                "99.9% uptime SLA",
+                "Talk to sales about pricing",
+                "Security review on request",
+                "Implementation support",
               ].map((item) => (
                 <div key={item} className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-white/60" />

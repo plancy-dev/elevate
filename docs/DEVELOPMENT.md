@@ -35,3 +35,7 @@ Recommended VS Code extensions are listed in `.vscode/extensions.json`. Project 
 ## Cursor MCP
 
 Copy `.cursor/mcp.json.example` → `.cursor/mcp.json` and add tokens locally. `mcp.json` is gitignored.
+
+## Admin user
+
+See `supabase/README.md` (Dashboard or `pnpm run db:seed-admin` with `ADMIN_EMAIL` / `ADMIN_PASSWORD` and service role).
