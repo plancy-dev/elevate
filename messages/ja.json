@@ -1,0 +1,492 @@
+{
+  "Metadata": {
+    "homeTitle": "Elevate — エンタープライズ MICE イベントプラットフォーム",
+    "homeDescription": "MICE イベント管理のためのエンタープライズ向けプラットフォーム。会議、展示会、企業ミーティングを自社データに基づくインサイトで運営します。",
+    "privacyTitle": "プライバシーポリシー",
+    "termsTitle": "利用規約",
+    "pageTitles": {
+      "pricing": "料金",
+      "contact": "営業に問い合わせ",
+      "demo": "デモを申し込む",
+      "product": "製品",
+      "solutions": "ソリューション",
+      "about": "会社情報",
+      "resources": "リソース",
+      "caseStudies": "事例",
+      "security": "セキュリティ",
+      "compliance": "コンプライアンス",
+      "blog": "ブログ",
+      "careers": "採用情報"
+    }
+  },
+  "Nav": {
+    "product": "製品",
+    "solutions": "ソリューション",
+    "pricing": "料金",
+    "resources": "リソース",
+    "productEventManagement": "イベント管理",
+    "productAttendeeEngagement": "参加者エンゲージメント",
+    "productAnalytics": "分析・インサイト",
+    "productAiConcierge": "AI コンシェルジュ",
+    "solConferences": "カンファレンス",
+    "solExhibitions": "展示会",
+    "solIncentiveTravel": "インセンティブ旅行",
+    "solCorporateMeetings": "企業ミーティング",
+    "contactSales": "営業に問い合わせ",
+    "logIn": "ログイン",
+    "requestDemo": "デモを依頼"
+  },
+  "Footer": {
+    "tagline": "MICE イベント管理のためのエンタープライズプラットフォーム。世界中の会議、展示会、企業イベントを支えます。",
+    "product": "製品",
+    "solutions": "ソリューション",
+    "company": "会社情報",
+    "legal": "法的情報",
+    "termsOfService": "利用規約",
+    "privacyPolicy": "プライバシーポリシー",
+    "about": "概要",
+    "careers": "採用",
+    "blog": "ブログ",
+    "security": "セキュリティ",
+    "compliance": "コンプライアンス",
+    "copyright": "© {year} Elevate Inc. 無断複写・転載を禁じます。",
+    "badgeSoc2": "SOC 2 相当の統制",
+    "badgeGdpr": "GDPR 対応",
+    "badgeIso": "ISO 27001（ロードマップ）"
+  },
+  "Home": {
+    "badge": "MICE エンタープライズプラットフォーム",
+    "headline": "イベントを次の段階へ。",
+    "headlineAccent": "重要な指標を測る。",
+    "subhead": "会議、展示会、企業ミーティングなど MICE プログラム向けのエンタープライズワークスペース—自社データに紐づくインサイトを提供します。",
+    "ctaDemo": "デモを依頼",
+    "ctaExplore": "プラットフォームを見る",
+    "pillar1Title": "統合ワークスペース",
+    "pillar1Sub": "組織、イベント、会場、参加者を一元管理。",
+    "pillar2Title": "チーム向けに設計",
+    "pillar2Sub": "管理者、主催者、コーディネーター、閲覧者などのロール。",
+    "pillar3Title": "透明性のある指標",
+    "pillar3Sub": "自社の数値のみ—ベンダー独自のベンチマークは掲載しません。",
+    "pillar4Title": "Web 向けに構築",
+    "pillar4Sub": "モダンなスタック：Next.js、TypeScript、Supabase—必要な場所にデプロイ。",
+    "sectionCapabilitiesTitle": "MICE のあらゆる側面をひとつのプラットフォームで",
+    "sectionCapabilitiesSub": "バラバラのスプレッドシートをやめ、チームが実際に運用するポートフォリオを単一の記録系で管理します。",
+    "capOrchestrationTitle": "エンドツーエンドのイベントオーケストレーション",
+    "capOrchestrationDesc": "会場選定から事後分析まで—MICE プログラムのタッチポイントを単一ワークスペースで管理します。",
+    "capAiTitle": "AI によるインサイト",
+    "capAiDesc": "出席傾向、リソースニーズ、推奨事項を示し、計画とフォローアップを支援します。",
+    "capAttendeeTitle": "参加者エンゲージメント",
+    "capAttendeeDesc": "スケジュール、セグメント、チェックインの流れでオンサイト体験をスムーズにします。",
+    "capAnalyticsTitle": "運用アナリティクス",
+    "capAnalyticsDesc": "出席、収益、満足度指標をイベント向けおよび経営向けダッシュボードで追跡します。",
+    "capGlobalTitle": "グローバル対応",
+    "capGlobalDesc": "分散チーム向けのマルチタイムゾーンスケジュールとローカライズに配慮した構造。",
+    "capSecurityTitle": "セキュリティを意識した設計",
+    "capSecurityDesc": "ロールベースのアクセスと Supabase のテナントスコープデータ—組織ポリシーに沿って展開できます。",
+    "resourcesBadge": "リソース",
+    "resourcesTitle": "事例とガイド",
+    "resourcesBody": "準備が整い次第、顧客ストーリーと製品ノートを公開します—架空の引用や数値はありません。",
+    "resourcesCta": "リソースを見る",
+    "ctaBandTitle": "イベントプログラムを高める準備はできましたか？",
+    "ctaBandSub": "ワークフロー、連携、ロールアウトについてご相談ください。",
+    "ctaBandDemo": "デモを依頼",
+    "ctaBandContact": "営業に問い合わせ",
+    "ctaCheck1": "料金は営業にご相談",
+    "ctaCheck2": "セキュリティレビューはご要望に応じて",
+    "ctaCheck3": "導入サポート"
+  },
+  "KpiPreview": {
+    "kpiAttendees": "総参加者",
+    "kpiRevenue": "売上",
+    "kpiEvents": "進行中イベント",
+    "kpiVenues": "会場",
+    "kpiChange": "御社データ",
+    "event1Name": "サンプルカンファレンス",
+    "event1Location": "都市",
+    "event2Name": "地域フォーラム",
+    "event2Location": "オンライン",
+    "event3Name": "サンプルミーティング",
+    "event3Location": "都市",
+    "recentTitle": "最近のイベント",
+    "previewTitle": "概要（プレビュー）",
+    "illustration": "デモ",
+    "recentSample": "最近のイベント（サンプル）",
+    "statusDraft": "下書き",
+    "statusPlanning": "計画中",
+    "statusLive": "開催中"
+  },
+  "Privacy": {
+    "title": "プライバシーポリシー",
+    "updated": "最終更新：2026 年 3 月。本番前に法務によるレビューを推奨します。",
+    "p1": "本プライバシーポリシーは、Elevate（「当社」）が Elevate プラットフォームおよび関連サービスを通じて個人データをどのように取り扱うかを説明するものです。管轄・製品・データフローに合わせて法務が調整してください。",
+    "p2": "当社は認証、イベント運用、分析、カスタマーサポート、製品改善のために個人データを処理する場合があります。法的根拠は、契約の履行、正当な利益（お客様の権利とのバランス）、または必要に応じた同意などが該当し得ます。",
+    "p3": "データのカテゴリには、アカウント識別子（メール等）、プロフィール・組織属性、お客様が保存するイベント・参加者記録、利用・診断データ、サポート通信が含まれる場合があります。個人データを販売することはありません。",
+    "p4": "ホスティング、インフラ、メール配信、セキュリティ運用のために再委託先を使用します。エンタープライズ顧客は NDA の下で最新リストを請求できます。国際移転には標準契約条項など適切な保護措置を用いる場合があります。",
+    "p5": "保持期間はプランと設定によります。エンタープライズ契約に保持・削除・エクスポート手順が定められる場合があります。権限のある管理者はロールに応じて一部の記録を管理できます。",
+    "p6": "お住まいの地域によっては、アクセス、訂正、削除、処理の制限、異議、データポータビリティの権利がある場合があります。エンタープライズユーザーはまずアカウント管理者にお問い合わせください。",
+    "p7": "業界慣行に沿い、転送時の暗号化、アクセス制御、監視などのセキュリティ対策を講じます。いかなる方法も完全な安全を保証するものではなく、継続的に改善します。",
+    "p8": "製品または法令の変更に伴い本ポリシーを更新することがあります。重要な変更は法令または契約に従い通知します。適用法の範囲で、発効日以降の継続利用が承諾とみなされる場合があります。",
+    "p9": "プライバシーに関するご請求・ご質問は、Elevate アカウントチームまたは契約書に記載の連絡先までお問い合わせください。"
+  },
+  "Terms": {
+    "title": "利用規約",
+    "updated": "最終更新：2026 年 3 月。本番前に承認済みの文言に差し替えてください。",
+    "p1": "本利用規約（「本規約」）は、Elevate プラットフォームおよび関連サービス（「本サービス」）へのアクセスと利用に適用されます。本サービスを利用することで本規約に同意したものとみなされます。組織に代わって利用する場合、当該組織を拘束する権限があることを表明します。",
+    "p2": "サブスクリプションまたはトライアル期間中、お客様のプラン、文書、適用法に従い、非独占的かつ譲渡不能な範囲で本サービスにアクセス・利用する権利を付与します。本サービスの悪用、運営への干渉、非公開領域への不正アクセスを行ってはなりません。",
+    "p3": "アカウント、コンテンツ、適用法（イベント・マーケティング規制を含む）の遵守についてお客様が責任を負います。データの所有権はお客様にあり、当社は本サービス提供のためにホスティング・処理のライセンスを受けます。",
+    "p4": "法令が許す最大限の範囲で、本サービスは「現状有姿」かつ「提供可能な限り」で提供されます。黙示の保証は否認される場合があります。責任の上限はエンタープライズ契約に従い、ない場合は請求前 12 か月間に支払われた料金を上限とすることがあります。",
+    "p5": "法令で求められる場合、合理的な通知のうえ本サービスを変更することがあります。重大な違反、セキュリティ上のリスク、法的義務がある場合はアクセスを停止することがあります。本規約を改定する場合があり、適用法の範囲で発効後の継続利用が承諾とみなされることがあります。",
+    "p6": "エンタープライズ顧客には、別途締結された基本契約、発注書、データ処理付属文書（該当する場合）が明示的に取り込まれるとき、矛盾する条項についてはそちらが優先します。",
+    "p7": "準拠法および裁判管轄はエンタープライズ契約に従い、ない場合はデラウェア州法（抵触法の原則を除く）が適用されることがあります。一部の条項が執行不能でも残りは有効です。",
+    "p8": "本規約に関するお問い合わせは、Elevate アカウントチームまたは法務窓口までご連絡ください。"
+  },
+  "LanguageSwitcher": {
+    "label": "言語",
+    "en": "English",
+    "ko": "한국어",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語"
+  },
+  "ThemeToggle": {
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "システム",
+    "aria": "カラーテーマを切り替え"
+  },
+  "Contact": {
+    "metaTitle": "営業に問い合わせ",
+    "title": "営業に問い合わせ",
+    "description": "イベントの概要とチーム規模をご記入ください。原則1営業日以内にご返信します。",
+    "labelEmail": "仕事用メール",
+    "placeholderEmail": "you@company.com",
+    "labelCompany": "会社名",
+    "placeholderCompany": "会社名",
+    "labelMessage": "メッセージ",
+    "placeholderMessage": "どのようなご支援が必要ですか？",
+    "submit": "送信する"
+  },
+  "Demo": {
+    "metaTitle": "デモを申し込む",
+    "title": "デモを申し込む",
+    "description": "Elevate が MICE のワークフローにどう合うかご紹介します。約30分、押し売りはありません。",
+    "labelEmail": "仕事用メール",
+    "placeholderEmail": "you@company.com",
+    "labelDate": "希望日",
+    "submit": "デモを予約"
+  },
+  "About": {
+    "metaTitle": "会社情報",
+    "title": "Elevate について",
+    "description": "測定可能な成果が必要な MICE チーム向けの基盤を提供します。スプレッドシートの置き換えではありません。2026年設立（プレースホルダー）。"
+  },
+  "Blog": {
+    "metaTitle": "ブログ",
+    "title": "ブログ",
+    "description": "製品アップデートと MICE 業界の洞察。コンテンツは近日公開予定です。"
+  },
+  "Careers": {
+    "metaTitle": "採用情報",
+    "title": "採用情報",
+    "description": "アジア太平洋とヨーロッパでエンジニアとカスタマーサクセスを募集しています。履歴書は careers@elevate.example へ（プレースホルダー）。"
+  },
+  "CaseStudies": {
+    "metaTitle": "事例",
+    "title": "事例",
+    "description": "企業チームが Elevate で MICE を大規模に運営する方法。詳細は近日公開。",
+    "body": "測定可能な成果を含む詳細事例を準備中です。それまでにプラットフォームをご覧になりたい方はデモをお申し込みください。"
+  },
+  "SecurityPage": {
+    "metaTitle": "セキュリティ",
+    "title": "セキュリティ",
+    "description": "Elevate は転送時・保存時の暗号化、最小権限アクセス、定期的なペネトレーションテストを採用しています。企業向けの詳細ホワイトペーパーは NDA 下で提供（プレースホルダー）。"
+  },
+  "CompliancePage": {
+    "metaTitle": "コンプライアンス",
+    "title": "コンプライアンス",
+    "description": "GDPR に沿ったデータ処理、SOC 2 対応、リージョン別ホスティングに対応。調達段階で DPA を確認可能（プレースホルダー）。"
+  },
+  "ResourcesPage": {
+    "metaTitle": "リソース",
+    "title": "リソース",
+    "description": "Elevate を評価するためのドキュメントとガイド。",
+    "items": {
+      "product": {
+        "title": "製品概要",
+        "desc": "プラットフォームの機能"
+      },
+      "security": {
+        "title": "セキュリティとコンプライアンス",
+        "desc": "GDPR、SOC 2、ISO 27001"
+      },
+      "pricing": {
+        "title": "料金",
+        "desc": "プランと比較"
+      },
+      "cases": {
+        "title": "事例",
+        "desc": "顧客の成果"
+      }
+    }
+  },
+  "Product": {
+    "metaTitle": "製品",
+    "title": "プラットフォーム",
+    "description": "Elevate は MICE 運用を一元化し、ツールを切り替えずに企画・実行・測定まで進められます。",
+    "modules": {
+      "event-management": {
+        "title": "イベント管理",
+        "desc": "企画、会場、スケジュール、オペレーションを一か所に。"
+      },
+      "attendee-engagement": {
+        "title": "参加者エンゲージメント",
+        "desc": "登録、コミュニケーション、オンサイト体験。"
+      },
+      "analytics": {
+        "title": "分析とインサイト",
+        "desc": "KPI、経営向けダッシュボード、エクスポート可能なレポート。"
+      },
+      "ai-concierge": {
+        "title": "AI コンシェルジュ",
+        "desc": "イベントデータへの自然言語クエリ（ロードマップ）。"
+      }
+    }
+  },
+  "ProductSlug": {
+    "event-management": {
+      "metaTitle": "イベント管理",
+      "title": "イベント管理",
+      "body": "会場、タイムライン、トラック、スタッフ割り当てを一元管理。スプレッドシートの単一の情報源に。"
+    },
+    "attendee-engagement": {
+      "metaTitle": "参加者エンゲージメント",
+      "title": "参加者エンゲージメント",
+      "body": "登録フロー、メールキャンペーン、モバイルチェックイン、VIP 対応——大規模イベントと厳格なブランド要件向け。"
+    },
+    "analytics": {
+      "metaTitle": "分析とインサイト",
+      "title": "分析とインサイト",
+      "body": "出席、収益、NPS、オペレーション KPI のリアルタイムダッシュボード。PDF エクスポート、エンタープライズでは API 経由で BI と連携。"
+    },
+    "ai-concierge": {
+      "metaTitle": "AI コンシェルジュ",
+      "title": "AI コンシェルジュ",
+      "body": "スケジュール、収容人数、パフォーマンスを自然言語で質問。企業向けの限定プレビューで提供予定。"
+    }
+  },
+  "Solutions": {
+    "metaTitle": "ソリューション",
+    "title": "ソリューション",
+    "description": "Elevate は MICE のシナリオに合わせて調整できます。以下のセグメントをご覧ください。",
+    "items": {
+      "conferences": "カンファレンス",
+      "exhibitions": "展示会",
+      "incentive-travel": "インセンティブ旅行",
+      "corporate-meetings": "社内会議"
+    }
+  },
+  "SolutionsSlug": {
+    "conferences": {
+      "metaTitle": "カンファレンス",
+      "title": "カンファレンス",
+      "body": "マルチトラック議題、スピーカー管理、スポンサー露出——多数の参加者と複雑なロジスティクス向け。"
+    },
+    "exhibitions": {
+      "metaTitle": "展示会",
+      "title": "展示会",
+      "body": "ブース割り当て、出展者ポータル、フロー分析でホールの成果を向上。"
+    },
+    "incentive-travel": {
+      "metaTitle": "インセンティブ旅行",
+      "title": "インセンティブ旅行",
+      "body": "キュレーションされた旅程、チーム調整、エグゼクティブ向けプログラムに適したコンプライアンス報告。"
+    },
+    "corporate-meetings": {
+      "metaTitle": "社内会議",
+      "title": "社内会議",
+      "body": "社員総会、リーダーシップオフサイト、ハイブリッド形式。エンタープライズセキュリティと SSO に対応。"
+    }
+  },
+  "Pricing": {
+    "metaTitle": "料金",
+    "heroTitle": "シンプルで透明な料金",
+    "heroSub": "14日間の無料トライアルから。クレジットカード不要。イベント規模に合わせて拡張。",
+    "compareTitle": "プランの比較",
+    "featureColumn": "機能",
+    "mostPopular": "最も人気",
+    "faqTitle": "ご質問は？",
+    "faqSub": "組織に合ったプランをご案内します。ニーズをお聞きするお電話をご予約ください。",
+    "faqCta": "営業に問い合わせ",
+    "plans": [
+      {
+        "key": "starter",
+        "name": "スターター",
+        "price": "$299",
+        "period": "/月",
+        "description": "プロフェッショナルなイベント管理を始める小規模チーム向け。",
+        "cta": "無料トライアルを開始",
+        "highlight": false
+      },
+      {
+        "key": "professional",
+        "name": "プロフェッショナル",
+        "price": "$899",
+        "period": "/月",
+        "description": "高度な分析で複数イベントを運営する成長企業向け。",
+        "cta": "無料トライアルを開始",
+        "highlight": true
+      },
+      {
+        "key": "enterprise",
+        "name": "エンタープライズ",
+        "price": "お見積り",
+        "period": "",
+        "description": "最高水準のセキュリティ、コンプライアンス、スケールが必要な大規模組織向け。",
+        "cta": "営業に問い合わせ",
+        "highlight": false
+      }
+    ],
+    "featureRows": [
+      {
+        "kind": "text",
+        "label": "年間イベント数",
+        "starter": "最大10",
+        "professional": "最大50",
+        "enterprise": "無制限"
+      },
+      {
+        "kind": "text",
+        "label": "1イベントあたりの参加者数",
+        "starter": "500",
+        "professional": "5,000",
+        "enterprise": "無制限"
+      },
+      {
+        "kind": "text",
+        "label": "チームメンバー",
+        "starter": "3",
+        "professional": "15",
+        "enterprise": "無制限"
+      },
+      {
+        "kind": "check",
+        "label": "イベントダッシュボード",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "参加者管理",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "トラックスケジュール",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "チェックインシステム",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "CSV/Excel インポート",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "リアルタイム分析",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "カスタムブランディング",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "AI インサイト",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "NPS サーベイ",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "API アクセス",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "SSO (SAML/OIDC)",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "監査ログ",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "カスタム連携",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "専任カスタマーサクセス",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "SLA 保証 (99.9%)",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "オンプレミス",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "text",
+        "label": "サポート",
+        "starter": "メール",
+        "professional": "優先",
+        "enterprise": "24/7 専任"
+      }
+    ]
+  }
+}

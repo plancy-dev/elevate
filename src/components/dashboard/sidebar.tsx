@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
+import { ThemeToggleEnglish } from "@/components/layout/theme-toggle";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -54,10 +55,11 @@ export function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-[240px] flex-col border-r border-border-subtle bg-layer-01">
       {/* Logo */}
-      <div className="flex h-12 items-center justify-between px-4 border-b border-border-subtle">
+      <div className="flex h-12 items-center justify-between gap-2 px-4 border-b border-border-subtle">
         <Link href="/dashboard">
           <ElevateLogo size="sm" />
         </Link>
+        <ThemeToggleEnglish />
       </div>
 
       {/* Main Nav */}

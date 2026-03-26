@@ -4,15 +4,9 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { formatAuthError } from "@/lib/auth-errors";
+import { getAuthCallbackUrl } from "@/lib/auth-redirect-urls";
 import { Button } from "@/components/ui/button";
-
-function getCallbackUrl(next: string) {
-  const origin =
-    typeof window !== "undefined"
-      ? window.location.origin
-      : process.env.NEXT_PUBLIC_APP_URL ?? "";
-  return `${origin}/auth/callback?next=${encodeURIComponent(next)}`;
-}
 
 export function SignupForm() {
   const router = useRouter();
@@ -32,7 +26,10 @@ export function SignupForm() {
     const supabase = createClient();
     const { error: err } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: getCallbackUrl(next) },
+      options: {
+        redirectTo: getAuthCallbackUrl(next),
+        queryParams: { prompt: "select_account" },
+      },
     });
     setLoading(false);
     if (err) setError(err.message);
@@ -45,7 +42,7 @@ export function SignupForm() {
     const supabase = createClient();
     const { error: err } = await supabase.auth.signInWithOAuth({
       provider: "azure",
-      options: { redirectTo: getCallbackUrl(next) },
+      options: { redirectTo: getAuthCallbackUrl(next) },
     });
     setLoading(false);
     if (err) setError(err.message);
@@ -57,17 +54,18 @@ export function SignupForm() {
     setMessage(null);
     setLoading(true);
     const supabase = createClient();
+    const normalizedEmail = email.trim().toLowerCase();
     const { error: err } = await supabase.auth.signUp({
-      email,
+      email: normalizedEmail,
       password,
       options: {
-        emailRedirectTo: getCallbackUrl(next),
+        emailRedirectTo: getAuthCallbackUrl(next),
         data: { full_name: fullName },
       },
     });
     setLoading(false);
     if (err) {
-      setError(err.message);
+      setError(formatAuthError(err));
       return;
     }
     setMessage(

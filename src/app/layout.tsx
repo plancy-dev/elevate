@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { AppThemeProvider } from "@/components/providers/app-theme-provider";
+import { SupabaseUrlHashHandler } from "@/components/auth/supabase-url-hash-handler";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -36,6 +38,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -46,10 +55,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="min-h-screen bg-background text-foreground">
-        {children}
+      <body className="min-h-screen bg-background font-sans text-foreground antialiased">
+        <AppThemeProvider>
+          <SupabaseUrlHashHandler />
+          {children}
+        </AppThemeProvider>
       </body>
     </html>
   );

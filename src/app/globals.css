@@ -1,33 +1,65 @@
 @import "tailwindcss";
 
+/* Light theme (default when .dark is not on <html>) */
 :root {
-  --background: #0D0D0D;
-  --foreground: #F4F4F4;
+  --background: #fafafa;
+  --foreground: #161616;
+  --surface: #ffffff;
+  --surface-02: #f4f4f4;
+  --surface-03: #e8e8e8;
+  --surface-hover: #e0e0e0;
+  --border: #c6c6c6;
+  --border-subtle: #e0e0e0;
+  --text-primary: #161616;
+  --text-secondary: #393939;
+  --text-tertiary: #6f6f6f;
+  --text-on-color: #ffffff;
+  --primary: #0f62fe;
+  --primary-hover: #0353e9;
+  --primary-active: #002d9c;
+  --accent: #198038;
+  --accent-hover: #166a32;
+  --danger: #da1e28;
+  --warning: #f1c21b;
+  --info: #4589ff;
+  --layer-01: #ffffff;
+  --layer-02: #f4f4f4;
+  --layer-03: #e8e8e8;
+  --field: #f4f4f4;
+  --field-hover: #e8e8e8;
+  --focus: #0f62fe;
+  --interactive: #0f62fe;
+  --highlight: rgba(15, 98, 254, 0.12);
+}
+
+.dark {
+  --background: #0d0d0d;
+  --foreground: #f4f4f4;
   --surface: #161616;
-  --surface-02: #1C1C1C;
+  --surface-02: #1c1c1c;
   --surface-03: #262626;
-  --surface-hover: #2C2C2C;
+  --surface-hover: #2c2c2c;
   --border: #393939;
   --border-subtle: #262626;
-  --text-primary: #F4F4F4;
-  --text-secondary: #C6C6C6;
-  --text-tertiary: #8D8D8D;
-  --text-on-color: #FFFFFF;
-  --primary: #0F62FE;
-  --primary-hover: #0353E9;
-  --primary-active: #002D9C;
-  --accent: #42BE65;
-  --accent-hover: #3DAB5A;
-  --danger: #DA1E28;
-  --warning: #F1C21B;
-  --info: #4589FF;
+  --text-primary: #f4f4f4;
+  --text-secondary: #c6c6c6;
+  --text-tertiary: #8d8d8d;
+  --text-on-color: #ffffff;
+  --primary: #0f62fe;
+  --primary-hover: #0353e9;
+  --primary-active: #002d9c;
+  --accent: #42be65;
+  --accent-hover: #3dab5a;
+  --danger: #da1e28;
+  --warning: #f1c21b;
+  --info: #4589ff;
   --layer-01: #161616;
-  --layer-02: #1C1C1C;
+  --layer-02: #1c1c1c;
   --layer-03: #262626;
-  --field: #1C1C1C;
+  --field: #1c1c1c;
   --field-hover: #262626;
-  --focus: #0F62FE;
-  --interactive: #4589FF;
+  --focus: #0f62fe;
+  --interactive: #4589ff;
   --highlight: rgba(15, 98, 254, 0.1);
 }
 
@@ -64,10 +96,15 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  transition: background-color 0.2s ease, color 0.15s ease;
 }
 
 ::selection {
   background: rgba(15, 98, 254, 0.3);
+  color: #fff;
+}
+
+.dark ::selection {
   color: #fff;
 }
 
@@ -89,23 +126,46 @@ body {
 }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-in-right {
-  from { opacity: 0; transform: translateX(20px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes count-up {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulse-subtle {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .animate-fade-up {
@@ -124,7 +184,15 @@ body {
   animation: pulse-subtle 2s ease-in-out infinite;
 }
 
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+.stagger-4 {
+  animation-delay: 0.4s;
+}

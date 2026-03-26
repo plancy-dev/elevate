@@ -1,0 +1,245 @@
+{
+  "Metadata": {
+    "pageTitles": {
+      "pricing": "Pricing",
+      "contact": "Contact Sales",
+      "demo": "Request a Demo",
+      "product": "Product",
+      "solutions": "Solutions",
+      "about": "About",
+      "resources": "Resources",
+      "caseStudies": "Case Studies",
+      "security": "Security",
+      "compliance": "Compliance",
+      "blog": "Blog",
+      "careers": "Careers"
+    }
+  },
+  "Contact": {
+    "metaTitle": "Contact Sales",
+    "title": "Contact sales",
+    "description": "Tell us about your event program and team size. We typically respond within one business day.",
+    "labelEmail": "Work email",
+    "placeholderEmail": "you@company.com",
+    "labelCompany": "Company",
+    "placeholderCompany": "Company name",
+    "labelMessage": "Message",
+    "placeholderMessage": "How can we help?",
+    "submit": "Send message"
+  },
+  "Demo": {
+    "metaTitle": "Request a Demo",
+    "title": "Request a demo",
+    "description": "See how Elevate fits your MICE workflows. A 30-minute walkthrough with your team—no sales pressure.",
+    "labelEmail": "Work email",
+    "placeholderEmail": "you@company.com",
+    "labelDate": "Preferred date",
+    "submit": "Schedule demo"
+  },
+  "About": {
+    "metaTitle": "About",
+    "title": "About Elevate",
+    "description": "We build infrastructure for MICE teams who need measurable outcomes, not another spreadsheet. Founded in 2026 (placeholder)."
+  },
+  "Blog": {
+    "metaTitle": "Blog",
+    "title": "Blog",
+    "description": "Product updates and MICE industry insights. Content pipeline coming soon."
+  },
+  "Careers": {
+    "metaTitle": "Careers",
+    "title": "Careers",
+    "description": "We are hiring engineers and customer success in APAC and Europe. Send your profile to careers@elevate.example (placeholder)."
+  },
+  "CaseStudies": {
+    "metaTitle": "Case Studies",
+    "title": "Case studies",
+    "description": "How enterprise teams use Elevate to run MICE programs at scale. Full stories coming soon.",
+    "body": "We are preparing detailed case studies with measurable outcomes. In the meantime, request a demo to see the platform in action."
+  },
+  "SecurityPage": {
+    "metaTitle": "Security",
+    "title": "Security",
+    "description": "Elevate uses encryption in transit and at rest, least-privilege access, and regular penetration testing. Detailed security whitepaper available under NDA for Enterprise customers (placeholder)."
+  },
+  "CompliancePage": {
+    "metaTitle": "Compliance",
+    "title": "Compliance",
+    "description": "We support GDPR-aligned data processing, SOC 2 readiness, and regional hosting options. Your legal team can review our DPA during procurement (placeholder)."
+  },
+  "ResourcesPage": {
+    "metaTitle": "Resources",
+    "title": "Resources",
+    "description": "Documentation and guides for evaluating Elevate.",
+    "items": {
+      "product": { "title": "Product overview", "desc": "Platform capabilities" },
+      "security": { "title": "Security & compliance", "desc": "GDPR, SOC 2, ISO 27001" },
+      "pricing": { "title": "Pricing", "desc": "Plans and comparison" },
+      "cases": { "title": "Case studies", "desc": "Customer outcomes" }
+    }
+  },
+  "Product": {
+    "metaTitle": "Product",
+    "title": "Platform",
+    "description": "Elevate unifies MICE operations so your team can plan, run, and measure events without switching tools.",
+    "modules": {
+      "event-management": {
+        "title": "Event Management",
+        "desc": "Planning, venues, schedules, and operations in one place."
+      },
+      "attendee-engagement": {
+        "title": "Attendee Engagement",
+        "desc": "Registration, communications, and on-site experience."
+      },
+      "analytics": {
+        "title": "Analytics & Insights",
+        "desc": "KPIs, executive dashboards, and exportable reports."
+      },
+      "ai-concierge": {
+        "title": "AI Concierge",
+        "desc": "Natural-language queries over your event data (roadmap)."
+      }
+    }
+  },
+  "ProductSlug": {
+    "event-management": {
+      "metaTitle": "Event Management",
+      "title": "Event Management",
+      "body": "Centralize venues, timelines, session tracks, and staff assignments. Replace spreadsheets with a single source of truth for your portfolio."
+    },
+    "attendee-engagement": {
+      "metaTitle": "Attendee Engagement",
+      "title": "Attendee Engagement",
+      "body": "Registration flows, email campaigns, mobile check-in, and VIP handling—designed for large programs and strict branding requirements."
+    },
+    "analytics": {
+      "metaTitle": "Analytics & Insights",
+      "title": "Analytics & Insights",
+      "body": "Real-time dashboards for attendance, revenue, NPS, and operational KPIs. Export to PDF and connect to your BI stack via API (Enterprise)."
+    },
+    "ai-concierge": {
+      "metaTitle": "AI Concierge",
+      "title": "AI Concierge",
+      "body": "Ask questions in plain language about schedules, capacity, and performance. Rolling out in controlled beta for Enterprise customers."
+    }
+  },
+  "Solutions": {
+    "metaTitle": "Solutions",
+    "title": "Solutions",
+    "description": "Elevate adapts to your MICE use case. Explore each segment below.",
+    "items": {
+      "conferences": "Conferences",
+      "exhibitions": "Exhibitions",
+      "incentive-travel": "Incentive travel",
+      "corporate-meetings": "Corporate meetings"
+    }
+  },
+  "SolutionsSlug": {
+    "conferences": {
+      "metaTitle": "Conferences",
+      "title": "Conferences",
+      "body": "Multi-track programs, speaker management, and sponsor visibility—built for large delegate counts and complex logistics."
+    },
+    "exhibitions": {
+      "metaTitle": "Exhibitions",
+      "title": "Exhibitions",
+      "body": "Booth allocation, exhibitor portals, and foot-traffic analytics to maximize floor performance."
+    },
+    "incentive-travel": {
+      "metaTitle": "Incentive travel",
+      "title": "Incentive travel",
+      "body": "Curated itineraries, group coordination, and compliance-friendly reporting for executive programs."
+    },
+    "corporate-meetings": {
+      "metaTitle": "Corporate meetings",
+      "title": "Corporate meetings",
+      "body": "Internal town halls, leadership offsites, and hybrid formats with enterprise security and SSO."
+    }
+  },
+  "Pricing": {
+    "metaTitle": "Pricing",
+    "heroTitle": "Simple, transparent pricing",
+    "heroSub": "Start with a 14-day free trial. No credit card required. Scale as your events grow.",
+    "compareTitle": "Compare plans",
+    "featureColumn": "Feature",
+    "mostPopular": "Most Popular",
+    "faqTitle": "Have questions?",
+    "faqSub": "Our team is happy to help you find the right plan for your organization. Schedule a call to discuss your needs.",
+    "faqCta": "Talk to Sales",
+    "plans": [
+      {
+        "key": "starter",
+        "name": "Starter",
+        "price": "$299",
+        "period": "/month",
+        "description": "For small teams getting started with professional event management.",
+        "cta": "Start Free Trial",
+        "highlight": false
+      },
+      {
+        "key": "professional",
+        "name": "Professional",
+        "price": "$899",
+        "period": "/month",
+        "description": "For growing organizations managing multiple events with advanced analytics.",
+        "cta": "Start Free Trial",
+        "highlight": true
+      },
+      {
+        "key": "enterprise",
+        "name": "Enterprise",
+        "price": "Custom",
+        "period": "",
+        "description": "For large organizations needing maximum security, compliance, and scale.",
+        "cta": "Contact Sales",
+        "highlight": false
+      }
+    ],
+    "featureRows": [
+      {
+        "kind": "text",
+        "label": "Events per year",
+        "starter": "Up to 10",
+        "professional": "Up to 50",
+        "enterprise": "Unlimited"
+      },
+      {
+        "kind": "text",
+        "label": "Attendees per event",
+        "starter": "500",
+        "professional": "5,000",
+        "enterprise": "Unlimited"
+      },
+      {
+        "kind": "text",
+        "label": "Team members",
+        "starter": "3",
+        "professional": "15",
+        "enterprise": "Unlimited"
+      },
+      { "kind": "check", "label": "Event dashboard", "starter": true, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "Attendee management", "starter": true, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "Session scheduling", "starter": true, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "Check-in system", "starter": true, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "CSV/Excel import", "starter": true, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "Real-time analytics", "starter": false, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "Custom branding", "starter": false, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "AI-powered insights", "starter": false, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "NPS surveys", "starter": false, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "API access", "starter": false, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "SSO (SAML/OIDC)", "starter": false, "professional": false, "enterprise": true },
+      { "kind": "check", "label": "Audit logging", "starter": false, "professional": false, "enterprise": true },
+      { "kind": "check", "label": "Custom integrations", "starter": false, "professional": false, "enterprise": true },
+      { "kind": "check", "label": "Dedicated account manager", "starter": false, "professional": false, "enterprise": true },
+      { "kind": "check", "label": "SLA guarantee (99.9%)", "starter": false, "professional": false, "enterprise": true },
+      { "kind": "check", "label": "On-premise deployment", "starter": false, "professional": false, "enterprise": true },
+      {
+        "kind": "text",
+        "label": "Support",
+        "starter": "Email",
+        "professional": "Priority",
+        "enterprise": "24/7 dedicated"
+      }
+    ]
+  }
+}

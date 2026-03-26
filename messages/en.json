@@ -1,0 +1,492 @@
+{
+  "Metadata": {
+    "homeTitle": "Elevate — Enterprise MICE Event Platform",
+    "homeDescription": "The enterprise platform for MICE event management. Orchestrate conferences, exhibitions, and corporate meetings with insights tied to your own data.",
+    "privacyTitle": "Privacy Policy",
+    "termsTitle": "Terms of Service",
+    "pageTitles": {
+      "pricing": "Pricing",
+      "contact": "Contact Sales",
+      "demo": "Request a Demo",
+      "product": "Product",
+      "solutions": "Solutions",
+      "about": "About",
+      "resources": "Resources",
+      "caseStudies": "Case Studies",
+      "security": "Security",
+      "compliance": "Compliance",
+      "blog": "Blog",
+      "careers": "Careers"
+    }
+  },
+  "Nav": {
+    "product": "Product",
+    "solutions": "Solutions",
+    "pricing": "Pricing",
+    "resources": "Resources",
+    "productEventManagement": "Event Management",
+    "productAttendeeEngagement": "Attendee Engagement",
+    "productAnalytics": "Analytics & Insights",
+    "productAiConcierge": "AI Concierge",
+    "solConferences": "Conferences",
+    "solExhibitions": "Exhibitions",
+    "solIncentiveTravel": "Incentive Travel",
+    "solCorporateMeetings": "Corporate Meetings",
+    "contactSales": "Contact Sales",
+    "logIn": "Log In",
+    "requestDemo": "Request Demo"
+  },
+  "Footer": {
+    "tagline": "The enterprise platform for MICE event management. Powering conferences, exhibitions, and corporate meetings worldwide.",
+    "product": "Product",
+    "solutions": "Solutions",
+    "company": "Company",
+    "legal": "Legal",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "about": "About",
+    "careers": "Careers",
+    "blog": "Blog",
+    "security": "Security",
+    "compliance": "Compliance",
+    "copyright": "© {year} Elevate Inc. All rights reserved.",
+    "badgeSoc2": "SOC 2 aligned controls",
+    "badgeGdpr": "GDPR-ready posture",
+    "badgeIso": "ISO 27001 (roadmap)"
+  },
+  "Home": {
+    "badge": "MICE Enterprise Platform",
+    "headline": "Elevate your events.",
+    "headlineAccent": "Measure what matters.",
+    "subhead": "The enterprise-oriented workspace for MICE-style programs—conferences, exhibitions, and corporate meetings—with insights tied to your own data.",
+    "ctaDemo": "Request a Demo",
+    "ctaExplore": "Explore Platform",
+    "pillar1Title": "Unified workspace",
+    "pillar1Sub": "Organizations, events, venues, and attendees in one place.",
+    "pillar2Title": "Built for teams",
+    "pillar2Sub": "Roles for admins, organizers, coordinators, and viewers.",
+    "pillar3Title": "Transparent metrics",
+    "pillar3Sub": "See your own numbers—no vendor-invented benchmarks on this page.",
+    "pillar4Title": "Shipped for the web",
+    "pillar4Sub": "Modern stack: Next.js, TypeScript, and Supabase—deploy where you need.",
+    "sectionCapabilitiesTitle": "One platform for every dimension of MICE",
+    "sectionCapabilitiesSub": "Replace fragmented spreadsheets with a single system of record for portfolios your team actually runs.",
+    "capOrchestrationTitle": "End-to-End Event Orchestration",
+    "capOrchestrationDesc": "From venue sourcing to post-event analytics—manage touchpoints of your MICE program in a single workspace.",
+    "capAiTitle": "AI-Powered Insights",
+    "capAiDesc": "Surface attendance trends, resource needs, and recommendations to support planning and follow-up.",
+    "capAttendeeTitle": "Attendee Engagement",
+    "capAttendeeDesc": "Schedules, segments, and check-in flows that help teams run smoother on-site experiences.",
+    "capAnalyticsTitle": "Operational Analytics",
+    "capAnalyticsDesc": "Track attendance, revenue, and satisfaction metrics in dashboards built for event and executive review.",
+    "capGlobalTitle": "Global-ready",
+    "capGlobalDesc": "Multi-timezone scheduling and localization-friendly structure for distributed teams.",
+    "capSecurityTitle": "Security-minded design",
+    "capSecurityDesc": "Role-based access and tenant-scoped data on Supabase—align deployment with your org policies.",
+    "resourcesBadge": "Resources",
+    "resourcesTitle": "Case studies & guides",
+    "resourcesBody": "We publish customer stories and product notes as they are available—no fabricated quotes or metrics here.",
+    "resourcesCta": "Browse resources",
+    "ctaBandTitle": "Ready to elevate your event program?",
+    "ctaBandSub": "Talk to us about your workflows, integrations, and rollout.",
+    "ctaBandDemo": "Request a Demo",
+    "ctaBandContact": "Contact Sales",
+    "ctaCheck1": "Talk to sales about pricing",
+    "ctaCheck2": "Security review on request",
+    "ctaCheck3": "Implementation support"
+  },
+  "KpiPreview": {
+    "kpiAttendees": "Total Attendees",
+    "kpiRevenue": "Revenue",
+    "kpiEvents": "Active Events",
+    "kpiVenues": "Venues",
+    "kpiChange": "Your data",
+    "event1Name": "Sample conference",
+    "event1Location": "City",
+    "event2Name": "Regional forum",
+    "event2Location": "Online",
+    "event3Name": "Sample meeting",
+    "event3Location": "City",
+    "recentTitle": "Recent events",
+    "previewTitle": "Overview (preview)",
+    "illustration": "Illustration",
+    "recentSample": "Recent events (sample)",
+    "statusDraft": "Draft",
+    "statusPlanning": "Planning",
+    "statusLive": "Live"
+  },
+  "Privacy": {
+    "title": "Privacy Policy",
+    "updated": "Last updated: March 2026. Have your legal team review before production use.",
+    "p1": "This Privacy Policy describes how Elevate (“we”, “us”) processes personal data when you use the Elevate platform and related services. It is provided for transparency and should be reviewed and adapted by your counsel to match your jurisdiction, product, and data flows.",
+    "p2": "We process personal data to provide authentication, event operations, analytics, customer support, and product improvement. Depending on context, lawful bases may include performance of a contract, legitimate interests balanced against your rights, or consent where required.",
+    "p3": "Categories of data may include account identifiers (such as email), profile and organization attributes, event and attendee records you choose to store, usage and diagnostic data, and communications with support. We do not sell personal data.",
+    "p4": "We use subprocessors for hosting, infrastructure, email delivery, and security operations. A current list is available on request under NDA for enterprise customers. International transfers may rely on appropriate safeguards such as Standard Contractual Clauses where applicable.",
+    "p5": "Retention depends on your plan and configuration. Enterprise agreements may specify retention, deletion, and export procedures. Where you are an authorized administrator, you may be able to manage certain records subject to role permissions.",
+    "p6": "Depending on your location, you may have rights to access, rectify, delete, restrict processing, object, or port data. Enterprise users should contact their account administrator first; others may contact us using the details in your order form or support channel.",
+    "p7": "Security measures are implemented in line with industry practice, including encryption in transit, access controls, and monitoring. No method of transmission or storage is completely secure; we continuously improve our program.",
+    "p8": "We may update this policy to reflect product or legal changes. Material changes will be communicated as required by law or your agreement. Continued use after the effective date constitutes acceptance where permitted.",
+    "p9": "For privacy requests or questions, contact your Elevate account team or the address provided in your enterprise agreement."
+  },
+  "Terms": {
+    "title": "Terms of Service",
+    "updated": "Last updated: March 2026. Replace with counsel-approved text before production.",
+    "p1": "These Terms of Service (“Terms”) govern access to and use of the Elevate platform and related services (the “Service”). By using the Service, you agree to these Terms. If you use the Service on behalf of an organization, you represent that you have authority to bind that organization.",
+    "p2": "We grant you a non-exclusive, non-transferable right to access and use the Service during your subscription or trial, subject to your plan, documentation, and applicable laws. You will not misuse the Service, interfere with its operation, or attempt to access non-public areas.",
+    "p3": "You are responsible for your accounts, content, and compliance with applicable laws (including event and marketing regulations). You retain ownership of your data; we receive a license to host and process it solely to provide the Service.",
+    "p4": "The Service is provided on an “as is” and “as available” basis to the maximum extent permitted by law. We disclaim implied warranties where allowed. Our aggregate liability is limited as set forth in your enterprise agreement or, if none, to fees paid in the twelve months preceding the claim.",
+    "p5": "We may modify the Service with reasonable notice where required. We may suspend access for material breach, security risk, or legal obligation. We may update these Terms; continued use after the effective date constitutes acceptance where permitted.",
+    "p6": "For enterprise customers, a written master agreement, order form, and data processing addendum (if applicable) supersede conflicting terms in these Terms when they are explicitly incorporated.",
+    "p7": "These Terms are governed by the law and venue specified in your enterprise agreement, or otherwise by the laws of the State of Delaware, excluding conflict-of-law rules. If any provision is unenforceable, the remainder remains in effect.",
+    "p8": "Questions about these Terms should be directed to your Elevate account team or legal contact."
+  },
+  "LanguageSwitcher": {
+    "label": "Language",
+    "en": "English",
+    "ko": "한국어",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語"
+  },
+  "ThemeToggle": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "aria": "Toggle color theme"
+  },
+  "Contact": {
+    "metaTitle": "Contact Sales",
+    "title": "Contact sales",
+    "description": "Tell us about your event program and team size. We typically respond within one business day.",
+    "labelEmail": "Work email",
+    "placeholderEmail": "you@company.com",
+    "labelCompany": "Company",
+    "placeholderCompany": "Company name",
+    "labelMessage": "Message",
+    "placeholderMessage": "How can we help?",
+    "submit": "Send message"
+  },
+  "Demo": {
+    "metaTitle": "Request a Demo",
+    "title": "Request a demo",
+    "description": "See how Elevate fits your MICE workflows. A 30-minute walkthrough with your team—no sales pressure.",
+    "labelEmail": "Work email",
+    "placeholderEmail": "you@company.com",
+    "labelDate": "Preferred date",
+    "submit": "Schedule demo"
+  },
+  "About": {
+    "metaTitle": "About",
+    "title": "About Elevate",
+    "description": "We build infrastructure for MICE teams who need measurable outcomes, not another spreadsheet. Founded in 2026 (placeholder)."
+  },
+  "Blog": {
+    "metaTitle": "Blog",
+    "title": "Blog",
+    "description": "Product updates and MICE industry insights. Content pipeline coming soon."
+  },
+  "Careers": {
+    "metaTitle": "Careers",
+    "title": "Careers",
+    "description": "We are hiring engineers and customer success in APAC and Europe. Send your profile to careers@elevate.example (placeholder)."
+  },
+  "CaseStudies": {
+    "metaTitle": "Case Studies",
+    "title": "Case studies",
+    "description": "How enterprise teams use Elevate to run MICE programs at scale. Full stories coming soon.",
+    "body": "We are preparing detailed case studies with measurable outcomes. In the meantime, request a demo to see the platform in action."
+  },
+  "SecurityPage": {
+    "metaTitle": "Security",
+    "title": "Security",
+    "description": "Elevate uses encryption in transit and at rest, least-privilege access, and regular penetration testing. Detailed security whitepaper available under NDA for Enterprise customers (placeholder)."
+  },
+  "CompliancePage": {
+    "metaTitle": "Compliance",
+    "title": "Compliance",
+    "description": "We support GDPR-aligned data processing, SOC 2 readiness, and regional hosting options. Your legal team can review our DPA during procurement (placeholder)."
+  },
+  "ResourcesPage": {
+    "metaTitle": "Resources",
+    "title": "Resources",
+    "description": "Documentation and guides for evaluating Elevate.",
+    "items": {
+      "product": {
+        "title": "Product overview",
+        "desc": "Platform capabilities"
+      },
+      "security": {
+        "title": "Security & compliance",
+        "desc": "GDPR, SOC 2, ISO 27001"
+      },
+      "pricing": {
+        "title": "Pricing",
+        "desc": "Plans and comparison"
+      },
+      "cases": {
+        "title": "Case studies",
+        "desc": "Customer outcomes"
+      }
+    }
+  },
+  "Product": {
+    "metaTitle": "Product",
+    "title": "Platform",
+    "description": "Elevate unifies MICE operations so your team can plan, run, and measure events without switching tools.",
+    "modules": {
+      "event-management": {
+        "title": "Event Management",
+        "desc": "Planning, venues, schedules, and operations in one place."
+      },
+      "attendee-engagement": {
+        "title": "Attendee Engagement",
+        "desc": "Registration, communications, and on-site experience."
+      },
+      "analytics": {
+        "title": "Analytics & Insights",
+        "desc": "KPIs, executive dashboards, and exportable reports."
+      },
+      "ai-concierge": {
+        "title": "AI Concierge",
+        "desc": "Natural-language queries over your event data (roadmap)."
+      }
+    }
+  },
+  "ProductSlug": {
+    "event-management": {
+      "metaTitle": "Event Management",
+      "title": "Event Management",
+      "body": "Centralize venues, timelines, session tracks, and staff assignments. Replace spreadsheets with a single source of truth for your portfolio."
+    },
+    "attendee-engagement": {
+      "metaTitle": "Attendee Engagement",
+      "title": "Attendee Engagement",
+      "body": "Registration flows, email campaigns, mobile check-in, and VIP handling—designed for large programs and strict branding requirements."
+    },
+    "analytics": {
+      "metaTitle": "Analytics & Insights",
+      "title": "Analytics & Insights",
+      "body": "Real-time dashboards for attendance, revenue, NPS, and operational KPIs. Export to PDF and connect to your BI stack via API (Enterprise)."
+    },
+    "ai-concierge": {
+      "metaTitle": "AI Concierge",
+      "title": "AI Concierge",
+      "body": "Ask questions in plain language about schedules, capacity, and performance. Rolling out in controlled beta for Enterprise customers."
+    }
+  },
+  "Solutions": {
+    "metaTitle": "Solutions",
+    "title": "Solutions",
+    "description": "Elevate adapts to your MICE use case. Explore each segment below.",
+    "items": {
+      "conferences": "Conferences",
+      "exhibitions": "Exhibitions",
+      "incentive-travel": "Incentive travel",
+      "corporate-meetings": "Corporate meetings"
+    }
+  },
+  "SolutionsSlug": {
+    "conferences": {
+      "metaTitle": "Conferences",
+      "title": "Conferences",
+      "body": "Multi-track programs, speaker management, and sponsor visibility—built for large delegate counts and complex logistics."
+    },
+    "exhibitions": {
+      "metaTitle": "Exhibitions",
+      "title": "Exhibitions",
+      "body": "Booth allocation, exhibitor portals, and foot-traffic analytics to maximize floor performance."
+    },
+    "incentive-travel": {
+      "metaTitle": "Incentive travel",
+      "title": "Incentive travel",
+      "body": "Curated itineraries, group coordination, and compliance-friendly reporting for executive programs."
+    },
+    "corporate-meetings": {
+      "metaTitle": "Corporate meetings",
+      "title": "Corporate meetings",
+      "body": "Internal town halls, leadership offsites, and hybrid formats with enterprise security and SSO."
+    }
+  },
+  "Pricing": {
+    "metaTitle": "Pricing",
+    "heroTitle": "Simple, transparent pricing",
+    "heroSub": "Start with a 14-day free trial. No credit card required. Scale as your events grow.",
+    "compareTitle": "Compare plans",
+    "featureColumn": "Feature",
+    "mostPopular": "Most Popular",
+    "faqTitle": "Have questions?",
+    "faqSub": "Our team is happy to help you find the right plan for your organization. Schedule a call to discuss your needs.",
+    "faqCta": "Talk to Sales",
+    "plans": [
+      {
+        "key": "starter",
+        "name": "Starter",
+        "price": "$299",
+        "period": "/month",
+        "description": "For small teams getting started with professional event management.",
+        "cta": "Start Free Trial",
+        "highlight": false
+      },
+      {
+        "key": "professional",
+        "name": "Professional",
+        "price": "$899",
+        "period": "/month",
+        "description": "For growing organizations managing multiple events with advanced analytics.",
+        "cta": "Start Free Trial",
+        "highlight": true
+      },
+      {
+        "key": "enterprise",
+        "name": "Enterprise",
+        "price": "Custom",
+        "period": "",
+        "description": "For large organizations needing maximum security, compliance, and scale.",
+        "cta": "Contact Sales",
+        "highlight": false
+      }
+    ],
+    "featureRows": [
+      {
+        "kind": "text",
+        "label": "Events per year",
+        "starter": "Up to 10",
+        "professional": "Up to 50",
+        "enterprise": "Unlimited"
+      },
+      {
+        "kind": "text",
+        "label": "Attendees per event",
+        "starter": "500",
+        "professional": "5,000",
+        "enterprise": "Unlimited"
+      },
+      {
+        "kind": "text",
+        "label": "Team members",
+        "starter": "3",
+        "professional": "15",
+        "enterprise": "Unlimited"
+      },
+      {
+        "kind": "check",
+        "label": "Event dashboard",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "Attendee management",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "Session scheduling",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "Check-in system",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "CSV/Excel import",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "Real-time analytics",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "Custom branding",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "AI-powered insights",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "NPS surveys",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "API access",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "SSO (SAML/OIDC)",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "Audit logging",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "Custom integrations",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "Dedicated account manager",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "SLA guarantee (99.9%)",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "On-premise deployment",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "text",
+        "label": "Support",
+        "starter": "Email",
+        "professional": "Priority",
+        "enterprise": "24/7 dedicated"
+      }
+    ]
+  }
+}

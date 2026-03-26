@@ -1,0 +1,209 @@
+{
+  "Metadata": {
+    "pageTitles": {
+      "pricing": "定價",
+      "contact": "聯絡業務",
+      "demo": "申請示範",
+      "product": "產品",
+      "solutions": "解決方案",
+      "about": "關於",
+      "resources": "資源",
+      "caseStudies": "案例研究",
+      "security": "安全",
+      "compliance": "合規",
+      "blog": "部落格",
+      "careers": "徵才"
+    }
+  },
+  "Contact": {
+    "metaTitle": "聯絡業務",
+    "title": "聯絡業務",
+    "description": "請說明您的活動專案與團隊規模。我們會盡力在一個工作天內回覆。",
+    "labelEmail": "工作信箱",
+    "placeholderEmail": "you@company.com",
+    "labelCompany": "公司",
+    "placeholderCompany": "公司名稱",
+    "labelMessage": "訊息",
+    "placeholderMessage": "我們如何協助您？",
+    "submit": "送出訊息"
+  },
+  "Demo": {
+    "metaTitle": "申請示範",
+    "title": "申請示範",
+    "description": "了解 Elevate 如何配合您的 MICE 工作流程。與團隊進行約 30 分鐘示範，無強迫推銷。",
+    "labelEmail": "工作信箱",
+    "placeholderEmail": "you@company.com",
+    "labelDate": "偏好日期",
+    "submit": "預約示範"
+  },
+  "About": {
+    "metaTitle": "關於",
+    "title": "關於 Elevate",
+    "description": "我們為需要可衡量成果的 MICE 團隊打造基礎建設，而不是又一張試算表。成立於 2026 年（佔位）。"
+  },
+  "Blog": {
+    "metaTitle": "部落格",
+    "title": "部落格",
+    "description": "產品更新與 MICE 產業洞察。內容管線即將推出。"
+  },
+  "Careers": {
+    "metaTitle": "徵才",
+    "title": "徵才",
+    "description": "我們在亞太與歐洲招募工程師與客戶成功職位。請將履歷寄至 careers@elevate.example（佔位）。"
+  },
+  "CaseStudies": {
+    "metaTitle": "案例研究",
+    "title": "案例研究",
+    "description": "企業團隊如何運用 Elevate 大規模執行 MICE 專案。完整故事即將發布。",
+    "body": "我們正在準備含可衡量成果的詳細案例。在此之前，請申請示範以了解平台。"
+  },
+  "SecurityPage": {
+    "metaTitle": "安全",
+    "title": "安全",
+    "description": "Elevate 採用傳輸與靜態加密、最小權限存取與定期滲透測試。企業客戶可在 NDA 下取得詳細安全白皮書（佔位）。"
+  },
+  "CompliancePage": {
+    "metaTitle": "合規",
+    "title": "合規",
+    "description": "我們支援符合 GDPR 的資料處理、SOC 2 就緒與區域託管選項。採購階段可審閱 DPA（佔位）。"
+  },
+  "ResourcesPage": {
+    "metaTitle": "資源",
+    "title": "資源",
+    "description": "評估 Elevate 的文件與指南。",
+    "items": {
+      "product": { "title": "產品概覽", "desc": "平台能力" },
+      "security": { "title": "安全與合規", "desc": "GDPR、SOC 2、ISO 27001" },
+      "pricing": { "title": "定價", "desc": "方案與比較" },
+      "cases": { "title": "案例研究", "desc": "客戶成果" }
+    }
+  },
+  "Product": {
+    "metaTitle": "產品",
+    "title": "平台",
+    "description": "Elevate 統一 MICE 營運，讓您的團隊無需切換工具即可完成策劃、執行與衡量。",
+    "modules": {
+      "event-management": { "title": "活動管理", "desc": "策劃、場館、日程與營運集中在一處。" },
+      "attendee-engagement": { "title": "與會者互動", "desc": "報名、溝通與現場體驗。" },
+      "analytics": { "title": "分析與洞察", "desc": "KPI、管理層儀表板與可匯出報告。" },
+      "ai-concierge": { "title": "AI 禮賓", "desc": "對活動資料的自然語言查詢（路線圖）。" }
+    }
+  },
+  "ProductSlug": {
+    "event-management": {
+      "metaTitle": "活動管理",
+      "title": "活動管理",
+      "body": "集中管理場館、時間軸、分會場與人員配置。以單一真實來源取代試算表。"
+    },
+    "attendee-engagement": {
+      "metaTitle": "與會者互動",
+      "title": "與會者互動",
+      "body": "報名流程、電子郵件活動、行動簽到與 VIP 處理——適合大型專案與嚴格品牌要求。"
+    },
+    "analytics": {
+      "metaTitle": "分析與洞察",
+      "title": "分析與洞察",
+      "body": "出席、營收、NPS 與營運 KPI 的即時儀表板。可匯出 PDF，企業版可透過 API 連接 BI。"
+    },
+    "ai-concierge": {
+      "metaTitle": "AI 禮賓",
+      "title": "AI 禮賓",
+      "body": "以自然語言詢問日程、容量與表現。面向企業客戶的受控測試中推出。"
+    }
+  },
+  "Solutions": {
+    "metaTitle": "解決方案",
+    "title": "解決方案",
+    "description": "Elevate 適配您的 MICE 情境。請探索以下細分。",
+    "items": {
+      "conferences": "會議",
+      "exhibitions": "展覽",
+      "incentive-travel": "獎勵旅遊",
+      "corporate-meetings": "企業會議"
+    }
+  },
+  "SolutionsSlug": {
+    "conferences": {
+      "metaTitle": "會議",
+      "title": "會議",
+      "body": "多軌議程、講者管理與贊助商曝光——面向大量代表與複雜後勤。"
+    },
+    "exhibitions": {
+      "metaTitle": "展覽",
+      "title": "展覽",
+      "body": "攤位分配、展商入口與人流分析，提升展館表現。"
+    },
+    "incentive-travel": {
+      "metaTitle": "獎勵旅遊",
+      "title": "獎勵旅遊",
+      "body": "精選行程、團隊協調與適合高階專案的合規報告。"
+    },
+    "corporate-meetings": {
+      "metaTitle": "企業會議",
+      "title": "企業會議",
+      "body": "內部全員會、領導力異地會與混合形式，具備企業安全與 SSO。"
+    }
+  },
+  "Pricing": {
+    "metaTitle": "定價",
+    "heroTitle": "簡單透明的定價",
+    "heroSub": "從 14 天免費試用開始。無需信用卡。隨活動規模擴展。",
+    "compareTitle": "比較方案",
+    "featureColumn": "功能",
+    "mostPopular": "最受歡迎",
+    "faqTitle": "有疑問？",
+    "faqSub": "我們可協助您找到適合組織的方案。預約通話討論需求。",
+    "faqCta": "聯絡業務",
+    "plans": [
+      {
+        "key": "starter",
+        "name": "入門版",
+        "price": "$299",
+        "period": "/月",
+        "description": "適合開始專業活動管理的小型團隊。",
+        "cta": "開始免費試用",
+        "highlight": false
+      },
+      {
+        "key": "professional",
+        "name": "專業版",
+        "price": "$899",
+        "period": "/月",
+        "description": "適合以進階分析管理多場活動的成長型組織。",
+        "cta": "開始免費試用",
+        "highlight": true
+      },
+      {
+        "key": "enterprise",
+        "name": "企業版",
+        "price": "客製",
+        "period": "",
+        "description": "適合需要最高安全、合規與規模的大型組織。",
+        "cta": "聯絡業務",
+        "highlight": false
+      }
+    ],
+    "featureRows": [
+      { "kind": "text", "label": "每年活動數", "starter": "最多 10", "professional": "最多 50", "enterprise": "不限" },
+      { "kind": "text", "label": "單場與會人數", "starter": "500", "professional": "5,000", "enterprise": "不限" },
+      { "kind": "text", "label": "團隊成員", "starter": "3", "professional": "15", "enterprise": "不限" },
+      { "kind": "check", "label": "活動看板", "starter": true, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "與會者管理", "starter": true, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "分會場排程", "starter": true, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "簽到系統", "starter": true, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "CSV/Excel 匯入", "starter": true, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "即時分析", "starter": false, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "自訂品牌", "starter": false, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "AI 洞察", "starter": false, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "NPS 調查", "starter": false, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "API 存取", "starter": false, "professional": true, "enterprise": true },
+      { "kind": "check", "label": "SSO (SAML/OIDC)", "starter": false, "professional": false, "enterprise": true },
+      { "kind": "check", "label": "稽核日誌", "starter": false, "professional": false, "enterprise": true },
+      { "kind": "check", "label": "自訂整合", "starter": false, "professional": false, "enterprise": true },
+      { "kind": "check", "label": "專屬客戶成功經理", "starter": false, "professional": false, "enterprise": true },
+      { "kind": "check", "label": "SLA 保證 (99.9%)", "starter": false, "professional": false, "enterprise": true },
+      { "kind": "check", "label": "地端部署", "starter": false, "professional": false, "enterprise": true },
+      { "kind": "text", "label": "支援", "starter": "電子郵件", "professional": "優先", "enterprise": "24/7 專屬" }
+    ]
+  }
+}

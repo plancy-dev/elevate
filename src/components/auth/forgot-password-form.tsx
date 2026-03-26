@@ -2,15 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { getAuthCallbackUrl } from "@/lib/auth-redirect-urls";
 import { Button } from "@/components/ui/button";
-
-function getRecoveryRedirectUrl() {
-  const origin =
-    typeof window !== "undefined"
-      ? window.location.origin
-      : process.env.NEXT_PUBLIC_APP_URL ?? "";
-  return `${origin}/auth/callback?next=${encodeURIComponent("/dashboard")}`;
-}
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -24,9 +17,13 @@ export function ForgotPasswordForm() {
     setMessage(null);
     setLoading(true);
     const supabase = createClient();
-    const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: getRecoveryRedirectUrl(),
-    });
+    const normalizedEmail = email.trim().toLowerCase();
+    const { error: err } = await supabase.auth.resetPasswordForEmail(
+      normalizedEmail,
+      {
+        redirectTo: getAuthCallbackUrl("/dashboard"),
+      },
+    );
     setLoading(false);
     if (err) {
       setError(err.message);

@@ -7,13 +7,15 @@
  *   ADMIN_EMAIL=you@company.com ADMIN_PASSWORD='secure-password-here' node scripts/seed-admin.mjs
  *
  * Requires: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+ *
+ * If the user already exists, this script resets their password and sets role=admin (dev convenience).
  */
 
 import { createClient } from "@supabase/supabase-js";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const email = process.env.ADMIN_EMAIL;
+const emailRaw = process.env.ADMIN_EMAIL;
 const password = process.env.ADMIN_PASSWORD;
 
 if (!url || !serviceKey) {
@@ -22,12 +24,14 @@ if (!url || !serviceKey) {
   );
   process.exit(1);
 }
-if (!email || !password) {
+if (!emailRaw || !password) {
   console.error(
     "Set ADMIN_EMAIL and ADMIN_PASSWORD (e.g. ADMIN_EMAIL=a@b.com ADMIN_PASSWORD='...' node scripts/seed-admin.mjs)",
   );
   process.exit(1);
 }
+
+const email = emailRaw.trim().toLowerCase();
 
 const supabase = createClient(url, serviceKey, {
   auth: {
@@ -36,19 +40,72 @@ const supabase = createClient(url, serviceKey, {
   },
 });
 
-const { data, error } = await supabase.auth.admin.createUser({
-  email,
-  password,
-  email_confirm: true,
-  user_metadata: { full_name: "Administrator" },
-});
-
-if (error) {
-  console.error("createUser failed:", error.message);
-  process.exit(1);
+function looksLikeDuplicateUser(error) {
+  if (!error?.message) return false;
+  const m = error.message.toLowerCase();
+  return (
+    m.includes("already") ||
+    m.includes("registered") ||
+    m.includes("exists") ||
+    m.includes("duplicate")
+  );
 }
 
-const userId = data.user?.id;
+async function findUserIdByEmail() {
+  const perPage = 200;
+  for (let page = 1; page <= 10; page += 1) {
+    const { data, error } = await supabase.auth.admin.listUsers({
+      page,
+      perPage,
+    });
+    if (error) {
+      console.error("listUsers failed:", error.message);
+      process.exit(1);
+    }
+    const users = data?.users ?? [];
+    const match = users.find((u) => u.email?.toLowerCase() === email);
+    if (match?.id) return match.id;
+    if (users.length < perPage) break;
+  }
+  return null;
+}
+
+let userId;
+
+const { data: created, error: createErr } = await supabase.auth.admin.createUser(
+  {
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { full_name: "Administrator" },
+  },
+);
+
+if (createErr && looksLikeDuplicateUser(createErr)) {
+  console.log("User already exists — updating password and admin role…");
+  userId = await findUserIdByEmail();
+  if (!userId) {
+    console.error(
+      "Could not find user by email after duplicate error:",
+      createErr.message,
+    );
+    process.exit(1);
+  }
+  const { error: updErr } = await supabase.auth.admin.updateUserById(userId, {
+    password,
+    email_confirm: true,
+  });
+  if (updErr) {
+    console.error("updateUserById failed:", updErr.message);
+    process.exit(1);
+  }
+} else if (createErr) {
+  console.error("createUser failed:", createErr.message);
+  process.exit(1);
+} else {
+  userId = created.user?.id;
+}
+
 if (!userId) {
   console.error("No user id returned.");
   process.exit(1);
@@ -64,7 +121,7 @@ if (profileErr) {
   process.exit(1);
 }
 
-console.log("OK — admin user created:", email);
+console.log("OK — admin user ready:", email);
 console.log("Sign in at /login with email & password.");
 console.log(
   "First dashboard visit will attach a default organization if needed.",

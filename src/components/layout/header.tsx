@@ -1,45 +1,51 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import NextLink from "next/link";
 import { Menu, X, ChevronDown } from "lucide-react";
-import { ButtonLink } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { IntlButtonLink } from "@/components/layout/intl-button-link";
+import { buttonLinkClassName } from "@/components/ui/button";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { cn } from "@/lib/utils";
 
-const navLinks = [
-  {
-    label: "Product",
-    href: "/product",
-    children: [
-      { href: "/product/event-management", label: "Event Management" },
-      { href: "/product/attendee-engagement", label: "Attendee Engagement" },
-      { href: "/product/analytics", label: "Analytics & Insights" },
-      { href: "/product/ai-concierge", label: "AI Concierge" },
-    ],
-  },
-  {
-    label: "Solutions",
-    href: "/solutions",
-    children: [
-      { href: "/solutions/conferences", label: "Conferences" },
-      { href: "/solutions/exhibitions", label: "Exhibitions" },
-      { href: "/solutions/incentive-travel", label: "Incentive Travel" },
-      { href: "/solutions/corporate-meetings", label: "Corporate Meetings" },
-    ],
-  },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Resources", href: "/resources" },
-];
-
 export function Header() {
+  const t = useTranslations("Nav");
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navLinks = [
+    {
+      label: t("product"),
+      href: "/product",
+      children: [
+        { href: "/product/event-management", label: t("productEventManagement") },
+        { href: "/product/attendee-engagement", label: t("productAttendeeEngagement") },
+        { href: "/product/analytics", label: t("productAnalytics") },
+        { href: "/product/ai-concierge", label: t("productAiConcierge") },
+      ],
+    },
+    {
+      label: t("solutions"),
+      href: "/solutions",
+      children: [
+        { href: "/solutions/conferences", label: t("solConferences") },
+        { href: "/solutions/exhibitions", label: t("solExhibitions") },
+        { href: "/solutions/incentive-travel", label: t("solIncentiveTravel") },
+        { href: "/solutions/corporate-meetings", label: t("solCorporateMeetings") },
+      ],
+    },
+    { label: t("pricing"), href: "/pricing" },
+    { label: t("resources"), href: "/resources" },
+  ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-border-subtle bg-surface/95 backdrop-blur-sm">
-      <div className="mx-auto flex h-12 max-w-[1584px] items-center justify-between px-4 lg:px-8">
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center">
+      <div className="mx-auto flex h-12 max-w-[1584px] items-center justify-between gap-2 px-4 lg:px-8">
+        <div className="flex min-w-0 items-center gap-4 lg:gap-8">
+          <Link href="/" className="flex shrink-0 items-center">
             <ElevateLogo size="sm" />
           </Link>
 
@@ -60,21 +66,29 @@ export function Header() {
           </nav>
         </div>
 
-        <div className="hidden lg:flex items-center gap-2">
-          <ButtonLink href="/contact" variant="ghost" size="sm">
-            Contact Sales
-          </ButtonLink>
-          <ButtonLink href="/login" variant="ghost" size="sm">
-            Log In
-          </ButtonLink>
-          <ButtonLink href="/demo" variant="primary" size="sm">
-            Request Demo
-          </ButtonLink>
+        <div className="hidden lg:flex items-center gap-2 shrink-0">
+          <LanguageSwitcher />
+          <ThemeToggle />
+          <IntlButtonLink href="/contact" variant="ghost" size="sm">
+            {t("contactSales")}
+          </IntlButtonLink>
+          <NextLink
+            href="/login"
+            className={buttonLinkClassName("ghost", "sm")}
+          >
+            {t("logIn")}
+          </NextLink>
+          <IntlButtonLink href="/demo" variant="primary" size="sm">
+            {t("requestDemo")}
+          </IntlButtonLink>
         </div>
 
         <button
-          className="lg:hidden flex h-8 w-8 items-center justify-center text-text-secondary hover:bg-layer-02"
+          type="button"
+          className="lg:hidden flex h-8 w-8 shrink-0 items-center justify-center text-text-secondary hover:bg-layer-02"
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-expanded={mobileOpen}
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
           {mobileOpen ? (
             <X className="h-5 w-5" />
@@ -86,6 +100,10 @@ export function Header() {
 
       {mobileOpen && (
         <div className="lg:hidden border-t border-border-subtle bg-surface">
+          <div className="flex items-center justify-between gap-2 border-b border-border-subtle px-4 py-2">
+            <LanguageSwitcher className="flex-1" />
+            <ThemeToggle />
+          </div>
           <nav className="flex flex-col">
             {navLinks.map((link) => (
               <div key={link.href}>
@@ -114,33 +132,31 @@ export function Header() {
               </div>
             ))}
             <div className="border-t border-border-subtle p-4 flex flex-col gap-2">
-              <ButtonLink
+              <IntlButtonLink
                 href="/contact"
                 variant="ghost"
                 size="md"
                 className={cn("w-full")}
                 onClick={() => setMobileOpen(false)}
               >
-                Contact Sales
-              </ButtonLink>
-              <ButtonLink
+                {t("contactSales")}
+              </IntlButtonLink>
+              <NextLink
                 href="/login"
-                variant="ghost"
-                size="md"
-                className={cn("w-full")}
+                className={buttonLinkClassName("ghost", "md", "w-full")}
                 onClick={() => setMobileOpen(false)}
               >
-                Log In
-              </ButtonLink>
-              <ButtonLink
+                {t("logIn")}
+              </NextLink>
+              <IntlButtonLink
                 href="/demo"
                 variant="primary"
                 size="md"
                 className={cn("w-full")}
                 onClick={() => setMobileOpen(false)}
               >
-                Request Demo
-              </ButtonLink>
+                {t("requestDemo")}
+              </IntlButtonLink>
             </div>
           </nav>
         </div>

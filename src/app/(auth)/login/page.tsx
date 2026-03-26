@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
+import { ThemeToggleEnglish } from "@/components/layout/theme-toggle";
 import { LoginForm } from "@/components/auth/login-form";
 
 export const metadata = { title: "Log In" };
@@ -13,7 +14,10 @@ function LoginFormFallback() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="relative min-h-screen bg-background flex">
+      <div className="absolute right-4 top-4 z-10">
+        <ThemeToggleEnglish />
+      </div>
       <div className="hidden lg:flex lg:w-[480px] xl:w-[560px] flex-col justify-between bg-layer-01 border-r border-border-subtle p-10">
         <Link href="/">
           <ElevateLogo size="md" />

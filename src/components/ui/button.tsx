@@ -2,13 +2,13 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { type ButtonHTMLAttributes, forwardRef, type ReactNode } from "react";
 
-type ButtonVariant =
+export type ButtonVariant =
   | "primary"
   | "secondary"
   | "tertiary"
   | "ghost"
   | "danger";
-type ButtonSize = "sm" | "md" | "lg" | "xl";
+export type ButtonSize = "sm" | "md" | "lg" | "xl";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -93,6 +93,14 @@ Button.displayName = "Button";
 const linkBase =
   "inline-flex items-center justify-center gap-2 font-medium transition-colors duration-100 cursor-pointer focus:outline-2 focus:outline-offset-2 focus:outline-focus";
 
+export function buttonLinkClassName(
+  variant: ButtonVariant = "primary",
+  size: ButtonSize = "md",
+  className?: string,
+) {
+  return cn(linkBase, variantStyles[variant], sizeStyles[size], className);
+}
+
 type ButtonLinkProps = {
   href: string;
   variant?: ButtonVariant;
@@ -114,12 +122,7 @@ export function ButtonLink({
     <Link
       href={href}
       onClick={onClick}
-      className={cn(
-        linkBase,
-        variantStyles[variant],
-        sizeStyles[size],
-        className,
-      )}
+      className={buttonLinkClassName(variant, size, className)}
     >
       {children}
     </Link>

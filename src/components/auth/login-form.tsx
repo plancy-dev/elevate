@@ -1,21 +1,42 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { formatAuthError } from "@/lib/auth-errors";
+import { getAuthCallbackUrl } from "@/lib/auth-redirect-urls";
 import { Button } from "@/components/ui/button";
 
-function getCallbackUrl(next: string) {
-  const origin =
-    typeof window !== "undefined"
-      ? window.location.origin
-      : process.env.NEXT_PUBLIC_APP_URL ?? "";
-  return `${origin}/auth/callback?next=${encodeURIComponent(next)}`;
+function formatOAuthCallbackError(
+  code: string,
+  description: string | null,
+  errorCode?: string | null,
+): string {
+  const d = description?.replace(/\+/g, " ").trim() ?? "";
+  if (
+    errorCode === "otp_expired" ||
+    (code === "access_denied" &&
+      /(invalid or has expired|email link)/i.test(d))
+  ) {
+    return (
+      "This password reset or email link has expired or was already used. " +
+      "Request a new reset from Forgot password and open the latest email link within about an hour."
+    );
+  }
+  if (code === "access_denied") {
+    return "Sign-in was cancelled. Try again when you’re ready.";
+  }
+  if (/space/i.test(d) || /client/i.test(d)) {
+    return "Provider configuration failed. In Supabase: Google Client IDs must have no spaces (comma-separated only). Check Azure Client ID, secret Value, and Tenant URL.";
+  }
+  if (d.length > 0) return d;
+  return `Sign-in failed (${code}). Check Google and Microsoft settings in Supabase and your provider consoles.`;
 }
 
 export function LoginForm() {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const next = searchParams.get("next")?.startsWith("/")
     ? searchParams.get("next")!
@@ -24,15 +45,40 @@ export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [oauthBanner, setOauthBanner] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const authError = searchParams.get("auth_error");
+    if (!authError) return;
+
+    const desc = searchParams.get("auth_error_description");
+    const authErrorCode = searchParams.get("auth_error_code");
+    const msg = formatOAuthCallbackError(authError, desc, authErrorCode);
+    const sp = searchParams.toString();
+
+    queueMicrotask(() => {
+      setOauthBanner(msg);
+      const params = new URLSearchParams(sp);
+      params.delete("auth_error");
+      params.delete("auth_error_description");
+      params.delete("auth_error_code");
+      const q = params.toString();
+      router.replace(q ? `${pathname}?${q}` : pathname, { scroll: false });
+    });
+  }, [searchParams, pathname, router]);
 
   async function signInWithGoogle() {
     setError(null);
+    setOauthBanner(null);
     setLoading(true);
     const supabase = createClient();
     const { error: err } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: getCallbackUrl(next) },
+      options: {
+        redirectTo: getAuthCallbackUrl(next),
+        queryParams: { prompt: "select_account" },
+      },
     });
     setLoading(false);
     if (err) setError(err.message);
@@ -40,11 +86,12 @@ export function LoginForm() {
 
   async function signInWithAzure() {
     setError(null);
+    setOauthBanner(null);
     setLoading(true);
     const supabase = createClient();
     const { error: err } = await supabase.auth.signInWithOAuth({
       provider: "azure",
-      options: { redirectTo: getCallbackUrl(next) },
+      options: { redirectTo: getAuthCallbackUrl(next) },
     });
     setLoading(false);
     if (err) setError(err.message);
@@ -55,13 +102,14 @@ export function LoginForm() {
     setError(null);
     setLoading(true);
     const supabase = createClient();
+    const normalizedEmail = email.trim().toLowerCase();
     const { error: err } = await supabase.auth.signInWithPassword({
-      email,
+      email: normalizedEmail,
       password,
     });
     setLoading(false);
     if (err) {
-      setError(err.message);
+      setError(formatAuthError(err));
       return;
     }
     router.push(next);
@@ -70,6 +118,11 @@ export function LoginForm() {
 
   return (
     <>
+      {oauthBanner && (
+        <p className="mb-4 rounded-sm border border-border-subtle bg-layer-02 px-3 py-2 text-xs text-text-secondary">
+          {oauthBanner}
+        </p>
+      )}
       {error && (
         <p className="mb-4 rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {error}

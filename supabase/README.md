@@ -12,7 +12,12 @@
 In **Authentication → URL Configuration**, add:
 
 - Site URL: `http://localhost:3000` (and your production URL later)
-- Redirect URLs: `http://localhost:3000/auth/callback` (and `https://your-domain.com/auth/callback`)
+- Redirect URLs: **must** include the exact recovery/OAuth callback the app uses, e.g.  
+  `http://localhost:3000/auth/callback`  
+  (You can use a wildcard such as `http://localhost:3000/**` if your project allows it.)  
+  If the reset link redirects to `/` with `#error=...&error_code=otp_expired`, the link was already used, expired (~1 hour), or the callback URL is not allow-listed—request a **new** reset email after fixing URLs.
+
+Full checklist (redirect URIs, Client ID formatting, Azure secrets, **account linking**): **[docs/SOCIAL_AUTH.md](../docs/SOCIAL_AUTH.md)**.
 
 ### Google & Microsoft (Azure) sign-in
 
@@ -23,12 +28,21 @@ Under **Authentication → Providers**:
 
 The app calls `signInWithOAuth` with `redirectTo: <origin>/auth/callback?next=...`. No extra Next.js routes are required beyond `src/app/auth/callback/route.ts`.
 
-## Admin user (email/password)
+## Users & admin role (no seed script required)
 
-Raw `INSERT` into `auth.users` in SQL is **not** recommended (schema varies by version). Use one of:
+**Recommended:** add users in **Authentication → Users** (email + password) or use the app’s **Sign up**. The `handle_new_user` trigger creates `public.profiles`.
 
-1. **Dashboard**: **Authentication → Users → Add user** (email + password). The `handle_new_user` trigger creates `public.profiles`. Then run in SQL Editor:  
-   `update public.profiles set role = 'admin' where email = 'your@email.com';`
-2. **Script** (service role required): from repo root,  
-   `ADMIN_EMAIL=... ADMIN_PASSWORD=... pnpm run db:seed-admin`  
-   See `scripts/seed-admin.mjs`.
+On the **first successful login**, when the profile has no organization yet, the app’s onboarding (`ensureDefaultOrganization` in `src/actions/onboarding.ts`) creates a default organization and sets **`role` to `admin`** for that user. You do **not** need to run SQL or `pnpm db:seed-admin` for that flow.
+
+### Optional: `pnpm db:seed-admin`
+
+Use `scripts/seed-admin.mjs` only if you want to **create or reset a user from the CLI** (requires `SUPABASE_SERVICE_ROLE_KEY`). If the email already exists, the script resets the password and sets `role = admin` on `profiles`. This is a convenience for automation—not a requirement when the user already exists in the Dashboard.
+
+## Login returns 400 (`grant_type=password`)
+
+The browser calls `POST .../auth/v1/token?grant_type=password`. A **400** almost always means:
+
+- The **password does not match** what Supabase has for that email, or  
+- **Email confirmation** is required and the address is not confirmed (Supabase **Authentication → Providers → Email** → “Confirm email”).
+
+**Fix:** In **Authentication → Users**, open the user and **set or reset the password**, or use **Forgot password** on the login page (with SMTP configured in Supabase if required). You do not need to run `db:seed-admin` just because the user row already exists.

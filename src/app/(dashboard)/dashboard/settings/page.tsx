@@ -1,3 +1,4 @@
+import { ConnectedIdentities } from "@/components/auth/connected-identities";
 import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Settings" };
@@ -10,6 +11,15 @@ export default function SettingsPage() {
       </div>
 
       <div className="p-6 max-w-xl space-y-8">
+        <section>
+          <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider">
+            Connected accounts
+          </h2>
+          <div className="mt-3">
+            <ConnectedIdentities />
+          </div>
+        </section>
+
         <section>
           <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider">
             Organization

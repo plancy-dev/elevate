@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
+import { ThemeToggleEnglish } from "@/components/layout/theme-toggle";
 import { SignupForm } from "@/components/auth/signup-form";
 
 export const metadata = { title: "Create account" };
 
 export default function SignupPage() {
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="relative min-h-screen bg-background flex">
+      <div className="absolute right-4 top-4 z-10">
+        <ThemeToggleEnglish />
+      </div>
       <div className="mx-auto flex w-full max-w-[400px] flex-col justify-center px-6 py-16">
         <Link href="/">
           <ElevateLogo size="md" />

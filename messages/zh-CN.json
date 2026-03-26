@@ -1,0 +1,492 @@
+{
+  "Metadata": {
+    "homeTitle": "Elevate — 企业级 MICE 活动平台",
+    "homeDescription": "面向 MICE 活动管理的企业级平台。以您自己的数据为支撑，统筹会议、展览与企业活动。",
+    "privacyTitle": "隐私政策",
+    "termsTitle": "服务条款",
+    "pageTitles": {
+      "pricing": "定价",
+      "contact": "联系销售",
+      "demo": "申请演示",
+      "product": "产品",
+      "solutions": "解决方案",
+      "about": "关于",
+      "resources": "资源",
+      "caseStudies": "案例研究",
+      "security": "安全",
+      "compliance": "合规",
+      "blog": "博客",
+      "careers": "招聘"
+    }
+  },
+  "Nav": {
+    "product": "产品",
+    "solutions": "解决方案",
+    "pricing": "定价",
+    "resources": "资源",
+    "productEventManagement": "活动管理",
+    "productAttendeeEngagement": "参会者互动",
+    "productAnalytics": "分析与洞察",
+    "productAiConcierge": "AI 礼宾",
+    "solConferences": "会议",
+    "solExhibitions": "展览",
+    "solIncentiveTravel": "奖励旅游",
+    "solCorporateMeetings": "企业会议",
+    "contactSales": "联系销售",
+    "logIn": "登录",
+    "requestDemo": "申请演示"
+  },
+  "Footer": {
+    "tagline": "面向 MICE 活动管理的企业级平台，服务全球会议、展览与企业活动。",
+    "product": "产品",
+    "solutions": "解决方案",
+    "company": "公司",
+    "legal": "法律",
+    "termsOfService": "服务条款",
+    "privacyPolicy": "隐私政策",
+    "about": "关于",
+    "careers": "招聘",
+    "blog": "博客",
+    "security": "安全",
+    "compliance": "合规",
+    "copyright": "© {year} Elevate Inc. 保留所有权利。",
+    "badgeSoc2": "SOC 2 控制对齐",
+    "badgeGdpr": "GDPR 就绪",
+    "badgeIso": "ISO 27001（规划中）"
+  },
+  "Home": {
+    "badge": "MICE 企业平台",
+    "headline": "提升您的活动水平。",
+    "headlineAccent": "衡量真正重要的指标。",
+    "subhead": "面向 MICE 类项目的企业级工作区——会议、展览与企业活动——洞察与您的自有数据紧密相连。",
+    "ctaDemo": "申请演示",
+    "ctaExplore": "了解平台",
+    "pillar1Title": "统一工作区",
+    "pillar1Sub": "组织、活动、场馆与参会者集中管理。",
+    "pillar2Title": "为团队打造",
+    "pillar2Sub": "管理员、主办方、协调员与查看者等角色。",
+    "pillar3Title": "透明指标",
+    "pillar3Sub": "展示您自己的数据——本页无供应商虚构基准。",
+    "pillar4Title": "面向 Web 交付",
+    "pillar4Sub": "现代技术栈：Next.js、TypeScript 与 Supabase——按需部署。",
+    "sectionCapabilitiesTitle": "一个平台覆盖 MICE 各维度",
+    "sectionCapabilitiesSub": "用单一真实来源替代零散表格，管理团队实际运营的项目组合。",
+    "capOrchestrationTitle": "端到端活动编排",
+    "capOrchestrationDesc": "从场馆遴选到会后分析——在单一工作区管理 MICE 项目的触点。",
+    "capAiTitle": "AI 驱动洞察",
+    "capAiDesc": "呈现出席趋势、资源需求与建议，支持策划与跟进。",
+    "capAttendeeTitle": "参会者互动",
+    "capAttendeeDesc": "日程、分群与签到流程，助力现场体验更顺畅。",
+    "capAnalyticsTitle": "运营分析",
+    "capAnalyticsDesc": "在活动与管理层看板中跟踪出席、收入与满意度指标。",
+    "capGlobalTitle": "面向全球",
+    "capGlobalDesc": "多时区排期与利于本地化的结构，服务分布式团队。",
+    "capSecurityTitle": "安全优先设计",
+    "capSecurityDesc": "基于角色的访问与 Supabase 租户级数据——与组织策略对齐部署。",
+    "resourcesBadge": "资源",
+    "resourcesTitle": "案例与指南",
+    "resourcesBody": "我们在有内容时发布客户故事与产品说明——无虚构引用或指标。",
+    "resourcesCta": "浏览资源",
+    "ctaBandTitle": "准备好提升活动项目了吗？",
+    "ctaBandSub": "与我们沟通您的工作流、集成与上线计划。",
+    "ctaBandDemo": "申请演示",
+    "ctaBandContact": "联系销售",
+    "ctaCheck1": "与销售沟通定价",
+    "ctaCheck2": "可应要求提供安全审查",
+    "ctaCheck3": "实施支持"
+  },
+  "KpiPreview": {
+    "kpiAttendees": "总参会人数",
+    "kpiRevenue": "收入",
+    "kpiEvents": "进行中活动",
+    "kpiVenues": "场馆",
+    "kpiChange": "您的数据",
+    "event1Name": "示例会议",
+    "event1Location": "城市",
+    "event2Name": "区域论坛",
+    "event2Location": "线上",
+    "event3Name": "示例内部会议",
+    "event3Location": "城市",
+    "recentTitle": "近期活动",
+    "previewTitle": "概览（预览）",
+    "illustration": "示例",
+    "recentSample": "近期活动（示例）",
+    "statusDraft": "草稿",
+    "statusPlanning": "策划中",
+    "statusLive": "进行中"
+  },
+  "Privacy": {
+    "title": "隐私政策",
+    "updated": "最近更新：2026 年 3 月。上线前请由法务团队审阅。",
+    "p1": "本隐私政策说明 Elevate（“我们”）在您使用 Elevate 平台及相关服务时如何处理个人信息。仅供透明说明，请由法律顾问根据司法辖区、产品与数据流进行调整。",
+    "p2": "我们可能为提供认证、活动运营、分析、客户支持与产品改进而处理个人信息。法律依据视情况而定，可能包括合同履行、在平衡您权利基础上的正当利益，或依法取得的同意。",
+    "p3": "数据类别可能包括账户标识（如电子邮件）、档案与组织属性、您选择存储的活动与参会者记录、使用与诊断数据、以及与支持的通信。我们不出售个人信息。",
+    "p4": "我们使用分包商提供托管、基础设施、邮件投递与安全运营。企业客户可在保密协议下索取最新清单。跨境传输在适用时可依赖标准合同条款等保障措施。",
+    "p5": "保留期限取决于您的方案与配置。企业协议可约定删除、导出与保留程序。经授权的管理员可在角色权限内管理部分记录。",
+    "p6": "视所在地而定，您可能享有访问、更正、删除、限制处理、反对或数据可携带等权利。企业用户请先联系账户管理员。",
+    "p7": "我们采取符合行业惯例的安全措施，包括传输加密、访问控制与监控。任何传输或存储方式都无法保证绝对安全；我们会持续改进。",
+    "p8": "我们可能因产品或法律变化更新本政策。重大变更将依法或依协议通知。在适用范围内，生效日后继续使用即视为接受。",
+    "p9": "隐私相关请求或问题，请联系您的 Elevate 账户团队或企业协议中列明的联系方式。"
+  },
+  "Terms": {
+    "title": "服务条款",
+    "updated": "最近更新：2026 年 3 月。上线前请替换为经批准的正式文本。",
+    "p1": "本服务条款（“条款”）规范对 Elevate 平台及相关服务（“服务”）的访问与使用。使用服务即表示您同意本条款。若您代表组织使用，则声明您有权约束该组织。",
+    "p2": "在订阅或试用期内，我们授予您非独占、不可转让的权利，以依据您的方案、文档与适用法律访问并使用服务。您不得滥用服务、干扰其运行或试图访问非公开区域。",
+    "p3": "您对账户、内容及遵守适用法律（包括活动与营销法规）负责。您保留数据所有权；我们仅获托管与处理许可以提供服务。",
+    "p4": "在法律允许的最大范围内，服务按“现状”和“可用”提供。在允许范围内免责声明。责任上限以企业协议为准；若无，则以索赔前十二个月内已支付费用为限。",
+    "p5": "我们可在依法要求时合理通知后修改服务。若严重违约、存在安全风险或法律义务，可暂停访问。我们可能更新条款；在允许范围内，生效后继续使用视为接受。",
+    "p6": "对企业客户而言，已签署的主协议、订单表与数据处理附录（如适用）在明确纳入时优先于冲突条款。",
+    "p7": "准据法与管辖以企业协议为准；否则可适用特拉华州法律（排除冲突规范）。若某条款不可执行，其余条款仍然有效。",
+    "p8": "有关条款的问题请联系您的 Elevate 账户团队或法务联系人。"
+  },
+  "LanguageSwitcher": {
+    "label": "语言",
+    "en": "English",
+    "ko": "한국어",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語"
+  },
+  "ThemeToggle": {
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统",
+    "aria": "切换颜色主题"
+  },
+  "Contact": {
+    "metaTitle": "联系销售",
+    "title": "联系销售",
+    "description": "请介绍您的活动项目与团队规模。我们力争在一个工作日内回复。",
+    "labelEmail": "工作邮箱",
+    "placeholderEmail": "you@company.com",
+    "labelCompany": "公司",
+    "placeholderCompany": "公司名称",
+    "labelMessage": "留言",
+    "placeholderMessage": "我们如何帮助您？",
+    "submit": "发送消息"
+  },
+  "Demo": {
+    "metaTitle": "申请演示",
+    "title": "申请演示",
+    "description": "了解 Elevate 如何适配您的 MICE 工作流。与团队进行约 30 分钟演示，无强制推销。",
+    "labelEmail": "工作邮箱",
+    "placeholderEmail": "you@company.com",
+    "labelDate": "首选日期",
+    "submit": "预约演示"
+  },
+  "About": {
+    "metaTitle": "关于",
+    "title": "关于 Elevate",
+    "description": "我们为需要可衡量成果的 MICE 团队打造基础设施，而不是又一张表格。成立于 2026 年（占位）。"
+  },
+  "Blog": {
+    "metaTitle": "博客",
+    "title": "博客",
+    "description": "产品更新与 MICE 行业洞察。内容管线即将推出。"
+  },
+  "Careers": {
+    "metaTitle": "招聘",
+    "title": "招聘",
+    "description": "我们在亚太与欧洲招聘工程师与客户成功岗位。请将简历发送至 careers@elevate.example（占位）。"
+  },
+  "CaseStudies": {
+    "metaTitle": "案例研究",
+    "title": "案例研究",
+    "description": "企业团队如何使用 Elevate 大规模运行 MICE 项目。完整故事即将发布。",
+    "body": "我们正在准备包含可衡量成果的详细案例。在此之前，请申请演示以了解平台。"
+  },
+  "SecurityPage": {
+    "metaTitle": "安全",
+    "title": "安全",
+    "description": "Elevate 采用传输与静态加密、最小权限访问与定期渗透测试。企业客户可在 NDA 下获取详细安全白皮书（占位）。"
+  },
+  "CompliancePage": {
+    "metaTitle": "合规",
+    "title": "合规",
+    "description": "我们支持符合 GDPR 的数据处理、SOC 2 就绪与区域托管选项。采购阶段可审阅 DPA（占位）。"
+  },
+  "ResourcesPage": {
+    "metaTitle": "资源",
+    "title": "资源",
+    "description": "评估 Elevate 的文档与指南。",
+    "items": {
+      "product": {
+        "title": "产品概览",
+        "desc": "平台能力"
+      },
+      "security": {
+        "title": "安全与合规",
+        "desc": "GDPR、SOC 2、ISO 27001"
+      },
+      "pricing": {
+        "title": "定价",
+        "desc": "方案与对比"
+      },
+      "cases": {
+        "title": "案例研究",
+        "desc": "客户成果"
+      }
+    }
+  },
+  "Product": {
+    "metaTitle": "产品",
+    "title": "平台",
+    "description": "Elevate 统一 MICE 运营，让您的团队无需切换工具即可完成策划、执行与衡量。",
+    "modules": {
+      "event-management": {
+        "title": "活动管理",
+        "desc": "策划、场馆、日程与运营集中在一处。"
+      },
+      "attendee-engagement": {
+        "title": "参会者互动",
+        "desc": "注册、沟通与现场体验。"
+      },
+      "analytics": {
+        "title": "分析与洞察",
+        "desc": "KPI、管理层看板与可导出报告。"
+      },
+      "ai-concierge": {
+        "title": "AI 礼宾",
+        "desc": "对活动数据的自然语言查询（路线图）。"
+      }
+    }
+  },
+  "ProductSlug": {
+    "event-management": {
+      "metaTitle": "活动管理",
+      "title": "活动管理",
+      "body": "集中管理场馆、时间线、分会场与人员分配。用单一真实来源取代电子表格。"
+    },
+    "attendee-engagement": {
+      "metaTitle": "参会者互动",
+      "title": "参会者互动",
+      "body": "注册流程、邮件活动、移动端签到与 VIP 处理——面向大型项目与严格品牌要求。"
+    },
+    "analytics": {
+      "metaTitle": "分析与洞察",
+      "title": "分析与洞察",
+      "body": "出席、收入、NPS 与运营 KPI 的实时看板。可导出 PDF，企业版可通过 API 连接 BI。"
+    },
+    "ai-concierge": {
+      "metaTitle": "AI 礼宾",
+      "title": "AI 礼宾",
+      "body": "用自然语言询问日程、容量与表现。面向企业客户的受控测试中推出。"
+    }
+  },
+  "Solutions": {
+    "metaTitle": "解决方案",
+    "title": "解决方案",
+    "description": "Elevate 适配您的 MICE 场景。请探索以下细分。",
+    "items": {
+      "conferences": "会议",
+      "exhibitions": "展览",
+      "incentive-travel": "奖励旅游",
+      "corporate-meetings": "企业会议"
+    }
+  },
+  "SolutionsSlug": {
+    "conferences": {
+      "metaTitle": "会议",
+      "title": "会议",
+      "body": "多轨道议程、演讲人管理与赞助商曝光——面向大量代表与复杂后勤。"
+    },
+    "exhibitions": {
+      "metaTitle": "展览",
+      "title": "展览",
+      "body": "展位分配、展商门户与客流分析，提升展馆表现。"
+    },
+    "incentive-travel": {
+      "metaTitle": "奖励旅游",
+      "title": "奖励旅游",
+      "body": "精选行程、团队协调与适合高管项目的合规报告。"
+    },
+    "corporate-meetings": {
+      "metaTitle": "企业会议",
+      "title": "企业会议",
+      "body": "内部全员会、领导力异地会与混合形式，具备企业安全与 SSO。"
+    }
+  },
+  "Pricing": {
+    "metaTitle": "定价",
+    "heroTitle": "简单透明的定价",
+    "heroSub": "从 14 天免费试用开始。无需信用卡。随活动规模扩展。",
+    "compareTitle": "比较方案",
+    "featureColumn": "功能",
+    "mostPopular": "最受欢迎",
+    "faqTitle": "有疑问？",
+    "faqSub": "我们可帮助您找到适合组织的方案。预约通话讨论需求。",
+    "faqCta": "联系销售",
+    "plans": [
+      {
+        "key": "starter",
+        "name": "入门版",
+        "price": "$299",
+        "period": "/月",
+        "description": "适合开始专业活动管理的小型团队。",
+        "cta": "开始免费试用",
+        "highlight": false
+      },
+      {
+        "key": "professional",
+        "name": "专业版",
+        "price": "$899",
+        "period": "/月",
+        "description": "适合以高级分析管理多场活动的成长型组织。",
+        "cta": "开始免费试用",
+        "highlight": true
+      },
+      {
+        "key": "enterprise",
+        "name": "企业版",
+        "price": "定制",
+        "period": "",
+        "description": "适合需要最高安全、合规与规模的大型组织。",
+        "cta": "联系销售",
+        "highlight": false
+      }
+    ],
+    "featureRows": [
+      {
+        "kind": "text",
+        "label": "每年活动数",
+        "starter": "最多 10",
+        "professional": "最多 50",
+        "enterprise": "不限"
+      },
+      {
+        "kind": "text",
+        "label": "单场参会人数",
+        "starter": "500",
+        "professional": "5,000",
+        "enterprise": "不限"
+      },
+      {
+        "kind": "text",
+        "label": "团队成员",
+        "starter": "3",
+        "professional": "15",
+        "enterprise": "不限"
+      },
+      {
+        "kind": "check",
+        "label": "活动看板",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "参会者管理",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "分会场排期",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "签到系统",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "CSV/Excel 导入",
+        "starter": true,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "实时分析",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "自定义品牌",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "AI 洞察",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "NPS 调研",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "API 访问",
+        "starter": false,
+        "professional": true,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "SSO (SAML/OIDC)",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "审计日志",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "自定义集成",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "专属客户成功经理",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "SLA 保证 (99.9%)",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "check",
+        "label": "本地部署",
+        "starter": false,
+        "professional": false,
+        "enterprise": true
+      },
+      {
+        "kind": "text",
+        "label": "支持",
+        "starter": "邮件",
+        "professional": "优先",
+        "enterprise": "24/7 专属"
+      }
+    ]
+  }
+}

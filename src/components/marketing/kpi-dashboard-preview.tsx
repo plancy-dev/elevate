@@ -1,42 +1,7 @@
 "use client";
 
 import { TrendingUp, Users, DollarSign, Calendar, MapPin } from "lucide-react";
-
-/** Illustrative UI only — values are placeholders, not live or third-party claims. */
-const kpiCards = [
-  {
-    label: "Total Attendees",
-    value: "—",
-    change: "Your data",
-    trend: "up" as const,
-    icon: <Users className="h-4 w-4" />,
-    sparkline: [40, 55, 45, 60, 50, 70, 65, 80, 75, 90, 85, 100],
-  },
-  {
-    label: "Revenue",
-    value: "—",
-    change: "Your data",
-    trend: "up" as const,
-    icon: <DollarSign className="h-4 w-4" />,
-    sparkline: [30, 35, 40, 38, 45, 50, 48, 55, 60, 58, 65, 72],
-  },
-  {
-    label: "Active Events",
-    value: "—",
-    change: "Your data",
-    trend: "up" as const,
-    icon: <Calendar className="h-4 w-4" />,
-    sparkline: [20, 25, 30, 35, 32, 40, 45, 50, 48, 55, 60, 68],
-  },
-  {
-    label: "Venues",
-    value: "—",
-    change: "Your data",
-    trend: "up" as const,
-    icon: <MapPin className="h-4 w-4" />,
-    sparkline: [50, 52, 55, 53, 58, 60, 62, 65, 63, 68, 70, 74],
-  },
-];
+import { useTranslations } from "next-intl";
 
 function Sparkline({ data }: { data: number[] }) {
   const max = Math.max(...data);
@@ -59,12 +24,12 @@ function Sparkline({ data }: { data: number[] }) {
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      className="overflow-visible"
+      className="overflow-visible text-primary"
     >
       <polyline
         points={points}
         fill="none"
-        stroke="#0F62FE"
+        stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -73,39 +38,73 @@ function Sparkline({ data }: { data: number[] }) {
   );
 }
 
-const recentEvents = [
-  {
-    name: "Sample conference",
-    location: "City",
-    attendees: "—",
-    status: "Draft",
-  },
-  {
-    name: "Sample exhibition",
-    location: "City",
-    attendees: "—",
-    status: "Planning",
-  },
-  {
-    name: "Sample meeting",
-    location: "City",
-    attendees: "—",
-    status: "Live",
-  },
-];
-
+/** Illustrative UI only — values are placeholders, not live or third-party claims. */
 export function KPIDashboardPreview() {
+  const t = useTranslations("KpiPreview");
+
+  const kpiCards = [
+    {
+      label: t("kpiAttendees"),
+      value: "—",
+      change: t("kpiChange"),
+      icon: <Users className="h-4 w-4" />,
+      sparkline: [40, 55, 45, 60, 50, 70, 65, 80, 75, 90, 85, 100],
+    },
+    {
+      label: t("kpiRevenue"),
+      value: "—",
+      change: t("kpiChange"),
+      icon: <DollarSign className="h-4 w-4" />,
+      sparkline: [30, 35, 40, 38, 45, 50, 48, 55, 60, 58, 65, 72],
+    },
+    {
+      label: t("kpiEvents"),
+      value: "—",
+      change: t("kpiChange"),
+      icon: <Calendar className="h-4 w-4" />,
+      sparkline: [20, 25, 30, 35, 32, 40, 45, 50, 48, 55, 60, 68],
+    },
+    {
+      label: t("kpiVenues"),
+      value: "—",
+      change: t("kpiChange"),
+      icon: <MapPin className="h-4 w-4" />,
+      sparkline: [50, 52, 55, 53, 58, 60, 62, 65, 63, 68, 70, 74],
+    },
+  ];
+
+  const recentEvents = [
+    {
+      name: t("event1Name"),
+      location: t("event1Location"),
+      attendees: "—",
+      status: t("statusDraft"),
+    },
+    {
+      name: t("event2Name"),
+      location: t("event2Location"),
+      attendees: "—",
+      status: t("statusPlanning"),
+    },
+    {
+      name: t("event3Name"),
+      location: t("event3Location"),
+      attendees: "—",
+      status: t("statusLive"),
+    },
+  ];
+
   return (
     <div
       className="relative rounded-sm border border-border-subtle bg-layer-01 shadow-2xl overflow-hidden"
-      aria-label="Illustrative dashboard preview (sample layout only)"
+      aria-label={t("previewTitle")}
     >
       <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle bg-layer-02">
         <span className="text-xs font-medium text-text-secondary">
-          Overview (preview)
+          {t("previewTitle")}
         </span>
         <span className="text-[10px] text-text-tertiary uppercase tracking-wider">
-          Illustration
+          {t("illustration")}
         </span>
       </div>
 
@@ -134,7 +133,7 @@ export function KPIDashboardPreview() {
 
         <div className="rounded-sm border border-border-subtle overflow-hidden">
           <div className="px-3 py-2 bg-layer-02 text-[11px] font-medium text-text-secondary uppercase tracking-wider">
-            Recent events (sample)
+            {t("recentSample")}
           </div>
           {recentEvents.map((ev) => (
             <div
