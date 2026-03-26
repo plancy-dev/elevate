@@ -24,6 +24,7 @@ In **Authentication → URL Configuration**, add:
   `https://your-app.vercel.app/auth/callback`  
   For preview deployments, add each host or a pattern your Supabase project allows (e.g. `https://*.vercel.app/auth/callback` if supported).
 - The app uses `resetPasswordForEmail` with `redirectTo: <origin>/auth/callback?next=/auth/update-password`. That path is **not** locale-prefixed, so the hash survives and `/auth/update-password` lets the user set a new password.
+- **PKCE** links use `?code=` on `/auth/callback`. After `exchangeCodeForSession`, Supabase JS includes **`redirectType: recovery`** (from PKCE storage) even when the URL has no `next` query—e.g. older emails or dashboard “Send password recovery.” The callback must route recovery sessions to `/auth/update-password` instead of defaulting to `/dashboard`.
 
 Full checklist (redirect URIs, Client ID formatting, Azure secrets, **account linking**): **[docs/SOCIAL_AUTH.md](../docs/SOCIAL_AUTH.md)**.
 
