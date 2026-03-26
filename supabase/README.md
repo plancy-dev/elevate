@@ -17,6 +17,14 @@ In **Authentication → URL Configuration**, add:
   (You can use a wildcard such as `http://localhost:3000/**` if your project allows it.)  
   If the reset link redirects to `/` with `#error=...&error_code=otp_expired`, the link was already used, expired (~1 hour), or the callback URL is not allow-listed—request a **new** reset email after fixing URLs.
 
+### Password recovery (production / Vercel)
+
+- **Do not** rely on `redirect_to` pointing only at the Site URL root (e.g. `https://your-app.vercel.app`). After verification, Supabase may send users to `/#access_token=...`; next-intl then redirects `/` → `/ko` (or another locale), and **many browsers drop the URL hash on that redirect**, so the session never applies and you only see the marketing home.
+- Add these to **Redirect URLs** (adjust host):  
+  `https://your-app.vercel.app/auth/callback`  
+  For preview deployments, add each host or a pattern your Supabase project allows (e.g. `https://*.vercel.app/auth/callback` if supported).
+- The app uses `resetPasswordForEmail` with `redirectTo: <origin>/auth/callback?next=/auth/update-password`. That path is **not** locale-prefixed, so the hash survives and `/auth/update-password` lets the user set a new password.
+
 Full checklist (redirect URIs, Client ID formatting, Azure secrets, **account linking**): **[docs/SOCIAL_AUTH.md](../docs/SOCIAL_AUTH.md)**.
 
 ### Google & Microsoft (Azure) sign-in

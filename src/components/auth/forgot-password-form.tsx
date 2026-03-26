@@ -2,7 +2,10 @@
 
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { getAuthCallbackUrl } from "@/lib/auth-redirect-urls";
+import {
+  AUTH_UPDATE_PASSWORD_PATH,
+  getAuthCallbackUrl,
+} from "@/lib/auth-redirect-urls";
 import { Button } from "@/components/ui/button";
 
 export function ForgotPasswordForm() {
@@ -21,7 +24,7 @@ export function ForgotPasswordForm() {
     const { error: err } = await supabase.auth.resetPasswordForEmail(
       normalizedEmail,
       {
-        redirectTo: getAuthCallbackUrl("/dashboard"),
+        redirectTo: getAuthCallbackUrl(AUTH_UPDATE_PASSWORD_PATH),
       },
     );
     setLoading(false);

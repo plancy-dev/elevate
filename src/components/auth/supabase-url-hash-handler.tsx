@@ -3,12 +3,16 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import {
+  AUTH_UPDATE_PASSWORD_PATH,
+  getLoginPathWithAuthError,
+} from "@/lib/auth-redirect-urls";
 
 /**
  * Supabase redirects recovery / magic links to `redirectTo` or Site URL with
  * tokens or errors in the **hash** (fragment). Fragments are never sent to the
- * server, so `app/auth/callback/route.ts` cannot see them. This client handler
- * parses the hash on any page load and redirects or establishes a session.
+ * server, so only the browser can read them. This handler parses the hash on
+ * load, sets the session from access/refresh tokens, or forwards errors to login.
  */
 export function SupabaseUrlHashHandler() {
   const router = useRouter();
@@ -34,21 +38,19 @@ export function SupabaseUrlHashHandler() {
     if (error) {
       ran.current = true;
       clearHash();
-      const login = new URL("/login", window.location.origin);
-      login.searchParams.set("auth_error", error);
-      if (errorCode) login.searchParams.set("auth_error_code", errorCode);
-      if (errorDescription) {
-        login.searchParams.set(
-          "auth_error_description",
-          errorDescription.slice(0, 500),
-        );
-      }
-      router.replace(login.pathname + login.search);
+      router.replace(
+        getLoginPathWithAuthError(window.location.origin, {
+          error,
+          errorCode,
+          errorDescription,
+        }),
+      );
       return;
     }
 
     const accessToken = params.get("access_token");
     const refreshToken = params.get("refresh_token");
+    const flowType = params.get("type");
     if (accessToken && refreshToken) {
       ran.current = true;
       void (async () => {
@@ -59,16 +61,17 @@ export function SupabaseUrlHashHandler() {
         });
         clearHash();
         if (sessionErr) {
-          const login = new URL("/login", window.location.origin);
-          login.searchParams.set("auth_error", "session_error");
-          login.searchParams.set(
-            "auth_error_description",
-            sessionErr.message.slice(0, 300),
+          router.replace(
+            getLoginPathWithAuthError(window.location.origin, {
+              error: "session_error",
+              errorDescription: sessionErr.message.slice(0, 300),
+            }),
           );
-          router.replace(login.pathname + login.search);
           return;
         }
-        router.replace("/dashboard");
+        const afterAuth =
+          flowType === "recovery" ? AUTH_UPDATE_PASSWORD_PATH : "/dashboard";
+        router.replace(afterAuth);
         router.refresh();
       })();
     }
