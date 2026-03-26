@@ -34,7 +34,15 @@ Under **Authentication → Providers**:
 1. **Google** — enable, add OAuth Client ID/Secret from [Google Cloud Console](https://console.cloud.google.com/) (authorized redirect URI: `https://<project-ref>.supabase.co/auth/v1/callback`).
 2. **Azure** — enable Microsoft provider; register an app in Azure Entra ID and paste Application (client) ID, client secret, and tenant. Redirect URI in Azure must include Supabase’s callback URL.
 
-The app calls `signInWithOAuth` with `redirectTo: <origin>/auth/callback?next=...`. No extra Next.js routes are required beyond `src/app/auth/callback/route.ts`.
+The app calls `signInWithOAuth` with `redirectTo: <origin>/auth/callback?next=...`. The callback is implemented as `src/app/auth/callback/page.tsx` (client exchange + hash handling).
+
+### Email rate limits (`429: email rate limit exceeded`)
+
+Supabase applies **rate limits on auth emails** (signup, magic link, password recovery). If you see `429: email rate limit exceeded` in **Auth logs** or the dashboard toast when using **Send password recovery**, you have hit that limit—often after many attempts in a few minutes.
+
+**What to do:** wait (often on the order of an hour; exact windows are platform-defined), then send **one** reset request. Avoid clicking “Send reset link” or dashboard recovery repeatedly while testing.
+
+Docs: [Auth rate limits](https://supabase.com/docs/guides/auth/rate-limits).
 
 ## Users & admin role (no seed script required)
 

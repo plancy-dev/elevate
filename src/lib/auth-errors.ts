@@ -1,38 +1,30 @@
 /**
- * Maps Supabase Auth errors to clearer copy for sign-in / sign-up forms.
- * A 400 on `grant_type=password` usually means wrong credentials or no matching user.
+ * Maps Supabase Auth API errors to clearer copy for the UI.
+ * See https://supabase.com/docs/guides/auth/rate-limits
  */
-export function formatAuthError(err: { message?: string; status?: number }): string {
-  const raw = err.message?.trim() ?? "";
-  const lower = raw.toLowerCase();
+function isAuthEmailRateLimited(message: string): boolean {
+  const lower = message.toLowerCase();
+  return (
+    lower.includes("rate limit") ||
+    lower.includes("429") ||
+    lower.includes("email rate limit")
+  );
+}
 
-  if (
-    lower.includes("invalid login") ||
-    lower.includes("invalid credentials") ||
-    lower.includes("email or password")
-  ) {
-    return (
-      "Invalid email or password. " +
-      "If the user already exists in Supabase, set or reset the password under Authentication → Users (or use Forgot password below). " +
-      "You do not need to run db:seed-admin; the first dashboard visit can create your org and admin role."
-    );
+/** Sign-in, sign-up, OAuth, and other auth calls that may return 429 on email sends. */
+export function formatAuthError(err: { message: string }): string {
+  const raw = err.message ?? "";
+  if (isAuthEmailRateLimited(raw)) {
+    return "Too many authentication emails were sent recently, so sending is temporarily blocked. Wait an hour or so, then try again.";
   }
+  return raw;
+}
 
-  if (lower.includes("email not confirmed") || lower.includes("not confirmed")) {
-    return "Confirm your email before signing in. Check your inbox for the confirmation link from Supabase.";
+/** Forgot-password / `resetPasswordForEmail` — same limit, copy mentions reset emails. */
+export function formatAuthEmailDeliveryError(err: { message: string }): string {
+  const raw = err.message ?? "";
+  if (isAuthEmailRateLimited(raw)) {
+    return "Too many reset emails were sent recently, so sending is temporarily blocked. Wait an hour or so, then try again. Repeated clicks and dashboard “Send password recovery” also count toward this limit.";
   }
-
-  if (lower.includes("too many requests") || err.status === 429) {
-    return "Too many attempts. Wait a minute and try again.";
-  }
-
-  if (
-    lower.includes("already registered") ||
-    lower.includes("already been registered") ||
-    lower.includes("user already")
-  ) {
-    return "This email is already registered. Log in instead, or reset your password.";
-  }
-
-  return raw || "Something went wrong. Please try again.";
+  return raw;
 }

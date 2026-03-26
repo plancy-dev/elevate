@@ -7,6 +7,7 @@ import {
   getAuthCallbackUrl,
 } from "@/lib/auth-redirect-urls";
 import { Button } from "@/components/ui/button";
+import { formatAuthEmailDeliveryError } from "@/lib/auth-errors";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -29,7 +30,7 @@ export function ForgotPasswordForm() {
     );
     setLoading(false);
     if (err) {
-      setError(err.message);
+      setError(formatAuthEmailDeliveryError(err));
       return;
     }
     setMessage(
