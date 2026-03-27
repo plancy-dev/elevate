@@ -3,6 +3,10 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import {
+  logAuthFlow,
+  snapshotHashParams,
+} from "@/lib/auth-flow-log";
 import { getLoginPathWithAuthError } from "@/lib/auth-redirect-urls";
 import { resolvePostImplicitHashRedirect } from "@/lib/auth-recovery-redirect";
 
@@ -23,6 +27,11 @@ export function SupabaseUrlHashHandler() {
     const hash = window.location.hash;
     if (!hash || hash.length <= 1) return;
 
+    logAuthFlow("auth.hash.start", {
+      pathname: window.location.pathname,
+      hashSafe: snapshotHashParams(hash),
+    });
+
     const params = new URLSearchParams(hash.slice(1));
     const error = params.get("error");
     const errorCode = params.get("error_code");
@@ -35,6 +44,7 @@ export function SupabaseUrlHashHandler() {
 
     if (error) {
       ran.current = true;
+      logAuthFlow("auth.hash.error_to_login", { error, errorCode });
       clearHash();
       router.replace(
         getLoginPathWithAuthError(window.location.origin, {
@@ -52,6 +62,11 @@ export function SupabaseUrlHashHandler() {
     if (accessToken && refreshToken) {
       ran.current = true;
       void (async () => {
+        logAuthFlow("auth.hash.set_session", {
+          flowType,
+          accessTokenLen: accessToken.length,
+          refreshTokenLen: refreshToken.length,
+        });
         const supabase = createClient();
         const { error: sessionErr } = await supabase.auth.setSession({
           access_token: accessToken,
@@ -59,6 +74,9 @@ export function SupabaseUrlHashHandler() {
         });
         clearHash();
         if (sessionErr) {
+          logAuthFlow("auth.hash.session_error", {
+            message: sessionErr.message.slice(0, 300),
+          });
           router.replace(
             getLoginPathWithAuthError(window.location.origin, {
               error: "session_error",
@@ -67,9 +85,9 @@ export function SupabaseUrlHashHandler() {
           );
           return;
         }
-        router.replace(
-          resolvePostImplicitHashRedirect(flowType, accessToken),
-        );
+        const dest = resolvePostImplicitHashRedirect(flowType, accessToken);
+        logAuthFlow("auth.hash.redirect", { destination: dest, flowType });
+        router.replace(dest);
         router.refresh();
       })();
     }

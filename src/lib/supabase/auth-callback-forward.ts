@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { logAuthFlow, snapshotSearchParams } from "@/lib/auth-flow-log";
 import { routing } from "@/i18n/routing";
 import { AUTH_CALLBACK_PATH } from "@/lib/auth-redirect-urls";
 
@@ -40,6 +41,11 @@ export function redirectAuthLandingToCallbackIfNeeded(
   const target = new URL(AUTH_CALLBACK_PATH, request.url);
   url.searchParams.forEach((value, key) => {
     target.searchParams.set(key, value);
+  });
+  logAuthFlow("middleware.pkce_forward", {
+    fromPath: url.pathname,
+    toPath: AUTH_CALLBACK_PATH,
+    querySafe: snapshotSearchParams(url.searchParams),
   });
   return NextResponse.redirect(target);
 }

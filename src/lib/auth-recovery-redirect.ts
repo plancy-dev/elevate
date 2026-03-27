@@ -1,3 +1,4 @@
+import { logAuthFlow } from "@/lib/auth-flow-log";
 import {
   AUTH_UPDATE_PASSWORD_PATH,
   DEFAULT_POST_LOGIN_PATH,
@@ -47,11 +48,26 @@ export function resolvePostImplicitHashRedirect(
   accessToken: string,
 ): string {
   if (flowType === "recovery") {
+    logAuthFlow("auth.resolve.implicit_hash", {
+      rule: "hash_type_recovery",
+      destination: AUTH_UPDATE_PASSWORD_PATH,
+    });
     return AUTH_UPDATE_PASSWORD_PATH;
   }
-  if (jwtIndicatesPasswordRecovery(accessToken)) {
+  const jwtRecovery = jwtIndicatesPasswordRecovery(accessToken);
+  if (jwtRecovery) {
+    logAuthFlow("auth.resolve.implicit_hash", {
+      rule: "jwt_amr_recovery",
+      destination: AUTH_UPDATE_PASSWORD_PATH,
+    });
     return AUTH_UPDATE_PASSWORD_PATH;
   }
+  logAuthFlow("auth.resolve.implicit_hash", {
+    rule: "default_dashboard",
+    destination: DEFAULT_POST_LOGIN_PATH,
+    flowType,
+    jwtRecovery,
+  });
   return DEFAULT_POST_LOGIN_PATH;
 }
 
@@ -70,13 +86,32 @@ export function resolvePostPkceRedirect(
   searchParams: URLSearchParams,
 ): string {
   if (data?.redirectType === "recovery") {
+    logAuthFlow("auth.resolve.pkce", {
+      rule: "redirectType_recovery",
+      destination: AUTH_UPDATE_PASSWORD_PATH,
+    });
     return AUTH_UPDATE_PASSWORD_PATH;
   }
   if (jwtIndicatesPasswordRecovery(data?.session?.access_token)) {
+    logAuthFlow("auth.resolve.pkce", {
+      rule: "jwt_amr_recovery",
+      destination: AUTH_UPDATE_PASSWORD_PATH,
+    });
     return AUTH_UPDATE_PASSWORD_PATH;
   }
   if (searchParams.get("type") === "recovery") {
+    logAuthFlow("auth.resolve.pkce", {
+      rule: "query_type_recovery",
+      destination: AUTH_UPDATE_PASSWORD_PATH,
+    });
     return AUTH_UPDATE_PASSWORD_PATH;
   }
-  return nextFromQuery.startsWith("/") ? nextFromQuery : DEFAULT_POST_LOGIN_PATH;
+  const dest = nextFromQuery.startsWith("/") ? nextFromQuery : DEFAULT_POST_LOGIN_PATH;
+  logAuthFlow("auth.resolve.pkce", {
+    rule: "next_or_default",
+    destination: dest,
+    nextFromQuery,
+    redirectType: data?.redirectType ?? null,
+  });
+  return dest;
 }

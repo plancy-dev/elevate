@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DEFAULT_POST_LOGIN_PATH } from "@/lib/auth-redirect-urls";
+import { logAuthFlow } from "@/lib/auth-flow-log";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 
@@ -19,6 +20,9 @@ export function UpdatePasswordForm() {
   useEffect(() => {
     const supabase = createClient();
     void supabase.auth.getSession().then(({ data: { session } }) => {
+      logAuthFlow("auth.update_password.mount", {
+        hasSession: Boolean(session),
+      });
       setSessionChecked(true);
       setHasSession(!!session);
     });

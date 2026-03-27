@@ -44,6 +44,16 @@ Supabase applies **rate limits on auth emails** (signup, magic link, password re
 
 **What to do:** wait (often on the order of an hour; exact windows are platform-defined), then send **one** reset request. Avoid clicking “Send reset link” or dashboard recovery repeatedly while testing.
 
+### Auth flow debug logs (issue tracking)
+
+The app emits structured lines prefixed with **`[elevate-auth-flow]`** (JSON per line). Use them to trace password recovery vs PKCE vs hash:
+
+- **Vercel → Logs**: filter by `elevate-auth-flow` to see middleware (`middleware.pkce_forward`, `middleware.session_guard`) and Edge `updateSession` behavior.
+- **Browser → DevTools Console**: same prefix; full client-side sequence (callback, hash handler, `auth.resolve.*`, update-password mount).
+- **sessionStorage** key `elevate_auth_flow_v1`: rolling JSON array of the last events (safe: no raw tokens; `code` is length-only). Copy for tickets:  
+  `JSON.parse(sessionStorage.getItem('elevate_auth_flow_v1'))`  
+  Disable logging: set env **`NEXT_PUBLIC_AUTH_FLOW_DEBUG=0`** (build-time).
+
 Docs: [Auth rate limits](https://supabase.com/docs/guides/auth/rate-limits).
 
 ## Users & admin role (no seed script required)

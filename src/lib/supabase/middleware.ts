@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { logAuthFlow } from "@/lib/auth-flow-log";
 
 /**
  * Refreshes the Supabase session and merges auth cookies into `response`.
@@ -41,6 +42,10 @@ export async function updateSession(
   const path = request.nextUrl.pathname;
 
   if (!user && path.startsWith("/dashboard")) {
+    logAuthFlow("middleware.session_guard", {
+      action: "dashboard_requires_login",
+      path,
+    });
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("next", path);
@@ -55,6 +60,10 @@ export async function updateSession(
     user &&
     (path === "/login" || path === "/signup" || path === "/forgot-password")
   ) {
+    logAuthFlow("middleware.session_guard", {
+      action: "authed_user_to_dashboard",
+      path,
+    });
     const redirectResponse = NextResponse.redirect(
       new URL("/dashboard", request.url),
     );
