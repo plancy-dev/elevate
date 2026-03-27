@@ -11,12 +11,16 @@ export type EnsureOrgResult =
  * First-time users have no organization_id; create a default org and attach profile (admin).
  * Uses service role for the update when RLS would block org creation.
  */
+const TRANSIENT_PROFILE_ERROR =
+  /schema cache|could not query|connection|timeout|econn/i;
+const SCHEMA_CACHE_USER_MESSAGE = /schema cache|could not query/i;
+
 function isTransientProfileError(message: string): boolean {
-  return /schema cache|could not query|connection|timeout|econn/i.test(message);
+  return TRANSIENT_PROFILE_ERROR.test(message);
 }
 
 function formatProfileError(message: string): string {
-  if (/schema cache|could not query/i.test(message)) {
+  if (SCHEMA_CACHE_USER_MESSAGE.test(message)) {
     return (
       `${message} — Try refreshing the page in a few seconds. If it persists, open Supabase Dashboard → Project Settings → API and reload, or check Auth/DB status.`
     );

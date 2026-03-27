@@ -60,3 +60,30 @@ export function formatAuthEmailDeliveryError(err: { message: string }): string {
   }
   return raw;
 }
+
+/** OAuth redirect errors surfaced as `?auth_error=` on the login page. */
+export function formatOAuthCallbackError(
+  code: string,
+  description: string | null,
+  errorCode?: string | null,
+): string {
+  const d = description?.replace(/\+/g, " ").trim() ?? "";
+  if (
+    errorCode === "otp_expired" ||
+    (code === "access_denied" &&
+      /(invalid or has expired|email link)/i.test(d))
+  ) {
+    return (
+      "This password reset or email link has expired or was already used. " +
+      "Request a new reset from Forgot password and open the latest email link within about an hour."
+    );
+  }
+  if (code === "access_denied") {
+    return "Sign-in was cancelled. Try again when you’re ready.";
+  }
+  if (/space/i.test(d) || /client/i.test(d)) {
+    return "Provider configuration failed. In Supabase: Google Client IDs must have no spaces (comma-separated only). Check Azure Client ID, secret Value, and Tenant URL.";
+  }
+  if (d.length > 0) return d;
+  return `Sign-in failed (${code}). Check Google and Microsoft settings in Supabase and your provider consoles.`;
+}

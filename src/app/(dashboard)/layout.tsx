@@ -1,14 +1,9 @@
 import { redirect } from "next/navigation";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { Sidebar, type SidebarUser } from "@/components/dashboard/sidebar";
+import { getInitialsFromDisplayName } from "@/lib/user-display";
+import { formatUserRoleLabel } from "@/lib/user-roles";
 import { createClient } from "@/lib/supabase/server";
-
-const ROLE_LABEL: Record<string, string> = {
-  admin: "Admin",
-  organizer: "Organizer",
-  coordinator: "Coordinator",
-  viewer: "Viewer",
-};
 
 export default async function DashboardLayout({
   children,
@@ -49,19 +44,12 @@ export default async function DashboardLayout({
     profile?.display_name?.trim() ||
     user.email?.split("@")[0] ||
     "User";
-  const roleKey = profile?.role ?? "viewer";
   const sidebarUser: SidebarUser = {
     displayName,
     email: user.email ?? "",
-    roleLabel: ROLE_LABEL[roleKey] ?? roleKey,
+    roleLabel: formatUserRoleLabel(profile?.role),
     orgName,
-    initials: (() => {
-      const parts = displayName.trim().split(/\s+/).filter(Boolean);
-      if (parts.length >= 2) {
-        return `${parts[0]!.slice(0, 1)}${parts[1]!.slice(0, 1)}`.toUpperCase();
-      }
-      return displayName.slice(0, 2).toUpperCase() || "?";
-    })(),
+    initials: getInitialsFromDisplayName(displayName),
   };
 
   return (
