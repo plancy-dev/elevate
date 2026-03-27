@@ -73,6 +73,10 @@ On the **first successful login**, when the profile has no organization yet, the
 
 Use `scripts/seed-admin.mjs` only if you want to **create or reset a user from the CLI** (requires `SUPABASE_SERVICE_ROLE_KEY`). If the email already exists, the script resets the password and sets `role = admin` on `profiles`. This is a convenience for automation—not a requirement when the user already exists in the Dashboard.
 
+### Password login fails after reset (“Invalid login credentials”)
+
+Supabase often uses the same message for **wrong password** and **email not confirmed**. Check **Authentication → Users** → the user → email confirmed / last sign-in. If **Confirm email** is enabled under **Providers → Email**, unconfirmed users cannot use password login until they confirm. You can confirm manually in the dashboard or temporarily disable confirmation for development. Also confirm **Vercel `NEXT_PUBLIC_SUPABASE_URL` / anon key** match the project where you reset the password.
+
 ## Login returns 400 (`grant_type=password`)
 
 The browser calls `POST .../auth/v1/token?grant_type=password`. A **400** almost always means:

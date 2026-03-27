@@ -4,7 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { formatAuthError } from "@/lib/auth-errors";
+import { formatAuthError, formatSignInPasswordError } from "@/lib/auth-errors";
 import {
   DEFAULT_POST_LOGIN_PATH,
   getAuthCallbackUrl,
@@ -135,7 +135,7 @@ export function LoginForm() {
     });
     setLoading(false);
     if (err) {
-      setError(formatAuthError(err));
+      setError(formatSignInPasswordError(err));
       return;
     }
     router.push(next);

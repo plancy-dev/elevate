@@ -20,6 +20,38 @@ export function formatAuthError(err: { message: string }): string {
   return raw;
 }
 
+/**
+ * `signInWithPassword` — Supabase often returns a generic "Invalid login credentials"
+ * for wrong password, unconfirmed email, or edge cases after a reset.
+ */
+export function formatSignInPasswordError(err: { message: string }): string {
+  const raw = err.message ?? "";
+  const lower = raw.toLowerCase();
+  if (isAuthEmailRateLimited(raw)) {
+    return formatAuthError(err);
+  }
+  if (
+    lower.includes("email not confirmed") ||
+    lower.includes("email address not confirmed")
+  ) {
+    return (
+      "This email is not confirmed. In Supabase: Authentication → Providers → Email — either turn off “Confirm email” for testing, or open the confirmation link from the signup email. Password sign-in is blocked until the email is confirmed."
+    );
+  }
+  if (
+    lower.includes("invalid login") ||
+    lower.includes("invalid credentials") ||
+    lower.includes("wrong password")
+  ) {
+    return (
+      "That email and password don’t match what the server has. Check Caps Lock and try again. " +
+      "If you just finished a password reset, confirm you’re using the new password. " +
+      "If it still fails: Supabase → Authentication → Users → open this user and confirm the email is verified, or use “Send password recovery” / set a temporary password from the dashboard."
+    );
+  }
+  return formatAuthError(err);
+}
+
 /** Forgot-password / `resetPasswordForEmail` — same limit, copy mentions reset emails. */
 export function formatAuthEmailDeliveryError(err: { message: string }): string {
   const raw = err.message ?? "";

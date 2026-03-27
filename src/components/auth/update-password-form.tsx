@@ -43,10 +43,17 @@ export function UpdatePasswordForm() {
     setLoading(true);
     const supabase = createClient();
     const { error: err } = await supabase.auth.updateUser({ password });
-    setLoading(false);
     if (err) {
+      setLoading(false);
       setError(err.message);
       return;
+    }
+    const { error: refreshErr } = await supabase.auth.refreshSession();
+    setLoading(false);
+    if (refreshErr) {
+      logAuthFlow("auth.update_password.refresh_warn", {
+        message: refreshErr.message.slice(0, 200),
+      });
     }
     clearRecoveryPendingClient();
     router.push(DEFAULT_POST_LOGIN_PATH);
