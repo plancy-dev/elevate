@@ -148,12 +148,17 @@ export type EventDetailPageData = {
   locationLabel: string;
   sessions: Array<{
     id: string;
-    timeLabel: string;
     title: string;
-    speaker_line: string;
+    start_time: string;
+    end_time: string;
+    speaker_name: string;
+    speaker_title: string;
+    description: string;
     room: string;
     registered_count: number;
     capacity: number;
+    timeLabel: string;
+    speaker_line: string;
   }>;
   topAttendees: Array<{
     id: string;
@@ -206,7 +211,7 @@ export async function getEventDetailPageData(
   const { data: sessionRows } = await supabase
     .from("sessions")
     .select(
-      "id, start_time, end_time, title, speaker_name, speaker_title, room, registered_count, capacity",
+      "id, start_time, end_time, title, description, speaker_name, speaker_title, room, registered_count, capacity",
     )
     .eq("event_id", eventId)
     .order("start_time", { ascending: true });
@@ -218,8 +223,11 @@ export async function getEventDetailPageData(
       start_time: s.start_time,
       end_time: s.end_time,
       title: s.title,
+      description: s.description ?? "",
+      speaker_name: s.speaker_name ?? "",
+      speaker_title: s.speaker_title ?? "",
       speaker_line: speakerParts.join(", ") || "—",
-      room: s.room || "—",
+      room: s.room ?? "",
       registered_count: s.registered_count ?? 0,
       capacity: s.capacity ?? 0,
       timeLabel: formatSessionTime(s.start_time, s.end_time),

@@ -12,6 +12,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { DeleteEventForm } from "@/components/dashboard/delete-event-form";
+import { EventSessionsPanel } from "@/components/dashboard/event-sessions-panel";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -20,6 +21,7 @@ import {
   formatEventDateRange,
   getEventDetailPageData,
 } from "@/lib/data/events";
+import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/utils";
 
 export const metadata = { title: "Event Detail" };
@@ -50,6 +52,21 @@ export default async function EventDetailPage({ params }: PageProps) {
 
   const { event, locationLabel, sessions, topAttendees, registeredCount, checkedInCount, npsAvg } =
     data;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let canEditSessions = false;
+  if (user) {
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+    const r = prof?.role ?? "";
+    canEditSessions = ["admin", "organizer", "coordinator"].includes(r);
+  }
 
   const checkInRate =
     registeredCount > 0
@@ -191,56 +208,11 @@ export default async function EventDetailPage({ params }: PageProps) {
                 {sessions.length} sessions
               </span>
             </div>
-            {sessions.length === 0 ? (
-              <div className="px-5 py-8 text-sm text-text-tertiary">
-                No sessions yet. Add sessions from your Supabase admin or a future
-                editor.
-              </div>
-            ) : (
-              <div className="divide-y divide-border-subtle">
-                {sessions.map((session) => {
-                  const cap = session.capacity || 1;
-                  const fillPct = Math.round(
-                    (session.registered_count / cap) * 100,
-                  );
-                  return (
-                    <div
-                      key={session.id}
-                      className="px-5 py-3.5 hover:bg-layer-02 transition-colors"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-3">
-                            <span className="text-xs text-text-tertiary font-mono whitespace-nowrap">
-                              {session.timeLabel}
-                            </span>
-                            <span className="text-sm font-medium text-text-primary truncate">
-                              {session.title}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-3 mt-1 text-xs text-text-tertiary">
-                            <span>{session.speaker_line}</span>
-                            <span>·</span>
-                            <span>{session.room}</span>
-                          </div>
-                        </div>
-                        <div className="text-right shrink-0">
-                          <div className="text-sm text-text-primary">
-                            {session.registered_count}/{session.capacity}
-                          </div>
-                          <div className="w-20 h-1 bg-surface-03 mt-1.5 overflow-hidden">
-                            <div
-                              className={`h-full ${fillPct >= 100 ? "bg-danger" : fillPct >= 80 ? "bg-warning" : "bg-primary"}`}
-                              style={{ width: `${Math.min(fillPct, 100)}%` }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+            <EventSessionsPanel
+              eventId={id}
+              canEdit={canEditSessions}
+              sessions={sessions}
+            />
           </div>
 
           <div className="border border-border-subtle bg-layer-01">
