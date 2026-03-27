@@ -49,7 +49,7 @@ Supabase applies **rate limits on auth emails** (signup, magic link, password re
 
 ### “Could not query the database for the schema cache” (dashboard)
 
-PostgREST occasionally returns this when the API schema cache is stale or under load. The app **retries** profile reads in `ensureDefaultOrganization` and surfaces a short hint. If it persists: **Supabase Dashboard → Project Settings → API** (reload schema), or wait and refresh; confirm migrations ran and RLS policies allow `profiles` / `organizations` for your user.
+PostgREST occasionally returns this when the API schema cache is stale or under load. The app **retries** profile reads in `ensureDefaultOrganization` and surfaces a short hint. If it persists: wait a minute and refresh; confirm migrations ran and RLS allows `profiles` / `organizations`. The **“Reload schema”** control may not appear in **Integrations → Data API** (UI changes by version). Alternatives: **SQL Editor** run `NOTIFY pgrst, 'reload schema';` (PostgREST reload), or **Project Settings → General → Restart project** if your plan allows.
 
 ### Auth flow debug logs (issue tracking)
 

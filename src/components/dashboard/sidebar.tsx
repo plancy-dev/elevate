@@ -122,6 +122,9 @@ export function Sidebar({ user }: { user: SidebarUser }) {
             <div className="text-sm font-medium text-text-primary truncate">
               {user.displayName}
             </div>
+            <div className="text-xs text-text-tertiary truncate" title={user.email}>
+              {user.email}
+            </div>
             <div className="text-xs text-text-tertiary truncate">
               {user.roleLabel} · {user.orgName}
             </div>

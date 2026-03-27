@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { Sidebar, type SidebarUser } from "@/components/dashboard/sidebar";
 import { createClient } from "@/lib/supabase/server";
 
@@ -20,6 +21,11 @@ export default async function DashboardLayout({
   } = await supabase.auth.getUser();
 
   if (!user) {
+    redirect("/login");
+  }
+
+  const ensured = await ensureDefaultOrganization();
+  if (!ensured.ok && ensured.error === "Not authenticated") {
     redirect("/login");
   }
 
