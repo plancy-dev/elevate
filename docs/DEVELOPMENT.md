@@ -23,9 +23,11 @@ Apply SQL migrations in order from `supabase/README.md` (Supabase SQL Editor or 
 | `pnpm lint` | ESLint |
 | `pnpm typecheck` | `tsc --noEmit` |
 | `pnpm test` | Vitest unit tests (`tests/unit/`) |
-| `pnpm test:watch` | Vitest watch mode |
+| `pnpm test:watch` | Vitest watch (unit only) |
+| `pnpm test:integration` | Opt-in Supabase smoke — see [TESTING.md](TESTING.md) |
+| `pnpm test:e2e` | Playwright — see [TESTING.md](TESTING.md) |
 | `pnpm build` | Production build |
-| `pnpm verify` | lint + typecheck + test + build (local “CI dry run”) |
+| `pnpm verify` | lint + typecheck + unit test + build (local “CI dry run”) |
 
 ## CI
 

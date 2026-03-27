@@ -34,7 +34,7 @@ cp .env.local.example .env.local
 pnpm dev
 ```
 
-See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for scripts, CI, and editor notes.
+See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for scripts, CI, and editor notes. Testing (unit, optional Supabase integration, Playwright) is in [docs/TESTING.md](docs/TESTING.md).
 
 Open [http://localhost:3000](http://localhost:3000).
 
@@ -54,7 +54,12 @@ src/
 │   └── marketing/              # KPI Dashboard Preview, etc.
 ├── lib/
 │   ├── supabase/               # Client (browser, server, middleware)
+│   ├── env/                    # Public env validation (Supabase URL / anon)
 │   └── utils.ts                # Utility functions
+tests/
+├── unit/                       # Vitest (CI)
+├── integration/                # Opt-in Supabase smoke
+└── e2e/                        # Playwright
 └── types/                      # TypeScript type definitions
 
 memory-bank/                    # Project documentation
