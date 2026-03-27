@@ -36,24 +36,23 @@
 1. **이벤트 수정·삭제** — `/dashboard/events/[id]/edit`, `updateEvent` / `deleteEvent` 서버 액션. ✅
 2. **Venue CRUD** — `venues` 목록·생성·수정, 이벤트 폼에 `venue_id` 선택. ✅
 3. **Session CRUD** — 이벤트 상세 `EventSessionsPanel` + `createSession` / `updateSession` / `deleteSession`. ✅
-4. **비밀번호 재설정 완료** — 복구 세션 후 `updateUser` 전용 페이지(필요 시).
+4. **비밀번호 재설정 완료** — `/auth/update-password` + 복구 세션·쿠키 플로우. ✅
 
 ### 1C — 참석자 루프
 
-1. 참석자 목록을 DB 연동 (`/dashboard/attendees`, 이벤트별 필터).
-2. CSV 임포트 (서버 액션 + 검증 + 중복 정책).
-3. 체크인 토글·일괄 작업.
+1. 참석자 목록을 DB 연동 (`/dashboard/attendees`, 조직 전체 목록). ✅
+2. CSV 임포트 (서버 액션 + 검증 + 이벤트 내 이메일 중복 스킵). ✅
+3. 체크인 토글·일괄 작업 (편집 역할). ✅
 
 ### 1D — 설정·플랫폼 마감
 
-1. **`/dashboard/settings` 실구현** (설계: `memory-bank/creative-settings-org-profile.md`) — 코드 반영됨; **원격 DB에는 `005` 마이그레이션 적용 필요**
+1. **`/dashboard/settings`** — 코드 반영됨; **`005` 마이그레이션은 수동 적용·검증 완료(사용자)**.
    - [x] DB `005` 스크립트: `organizations` UPDATE RLS (`admin`/`organizer`), `profiles.email_milestone_digest`
    - [x] 서버 액션: `updateOrganizationName`, `updateProfileAndNotifications` (`src/actions/settings.ts`)
    - [x] 설정 UI: `SettingsOrgForm` / `SettingsProfileForm`, 역할별 조직명 편집
-   - [ ] 배포/스테이징 Supabase에 `005` 적용 후 수동 검증
-2. **Next.js `middleware` → `proxy`** 마이그레이션 (16 공식 가이드).
-3. `supabase gen types` → `Database` 타입 적용.
-4. Vercel 배포·프리뷰·환경 변수 점검.
+2. **Next.js `middleware` → `proxy`** — `src/proxy.ts` (`export function proxy`), `src/middleware.ts` 제거. ✅
+3. **`supabase gen types`** — `src/types/database.types.ts`, `createClient`/`createBrowserClient`에 `Database` 제네릭, `pnpm db:types`로 재생성. ✅
+4. **Vercel** — 배포 시 `NEXT_PUBLIC_APP_URL`·`NEXT_PUBLIC_SUPABASE_*`·리다이렉트 URL 등은 [supabase/README.md](../supabase/README.md) Auth 섹션·프리뷰 호스트 allow-list 점검 (운영 시 수동).
 
 ---
 

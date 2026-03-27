@@ -53,7 +53,7 @@ src/
 │   ├── layout/                 # Header, Footer, ElevateLogo
 │   └── marketing/              # KPI Dashboard Preview, etc.
 ├── lib/
-│   ├── supabase/               # Client (browser, server, middleware)
+│   ├── supabase/               # Client (browser, server, proxy session helper)
 │   ├── env/                    # Public env validation (Supabase URL / anon)
 │   └── utils.ts                # Utility functions
 tests/

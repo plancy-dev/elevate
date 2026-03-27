@@ -49,6 +49,9 @@ next-env.d.ts
 # Local MCP secrets (use .cursor/mcp.json.example)
 .cursor/mcp.json
 
+# Supabase CLI local cache
+supabase/.temp/
+
 # Python / tooling caches
 **/__pycache__/
 **/*.pyc

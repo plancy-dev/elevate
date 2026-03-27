@@ -2,8 +2,8 @@
 
 ## 현재 페이즈
 
-**Phase 1 — MVP · 1B~1C**  
-Session CRUD 완료. 다음 우선: **1C 참석자** (CSV·체크인) 또는 **1D** `middleware`→`proxy`, Supabase 타입 생성.
+**Phase 1 — MVP · Phase 2 준비**  
+1D 완료: `src/proxy.ts`, `src/types/database.types.ts` + Supabase 클라이언트 제네릭, `pnpm db:types`. 다음 우선: **Phase 2** (조직 초대·분석 등) 또는 Vercel 운영 점검.
 
 ## 최근 확정 결정
 
@@ -17,6 +17,10 @@ Session CRUD 완료. 다음 우선: **1C 참석자** (CSV·체크인) 또는 **1
 | 영역 | 위치 |
 |------|------|
 | 세션 서버 액션 | `src/actions/sessions.ts` |
+| 참석자 서버 액션 | `src/actions/attendees.ts` |
+| 참석자 UI | `src/components/dashboard/attendees-page-client.tsx`, `src/app/(dashboard)/dashboard/attendees/page.tsx` |
+| 요청 경계 (`proxy`) | `src/proxy.ts` → `src/lib/supabase/update-session.ts` |
+| DB 타입 | `src/types/database.types.ts` (`pnpm db:types`) |
 | 이벤트 상세 UI | `src/components/dashboard/event-sessions-panel.tsx`, `src/app/(dashboard)/dashboard/events/[id]/page.tsx` |
 | 이벤트 데이터 | `src/lib/data/events.ts` (`getEventDetailPageData`) |
 

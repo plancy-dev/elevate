@@ -17,7 +17,8 @@
     "test:e2e": "playwright test",
     "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
     "db:seed-admin": "node scripts/seed-admin.mjs",
-    "generate:brand": "node scripts/generate-brand-assets.mjs"
+    "generate:brand": "node scripts/generate-brand-assets.mjs",
+    "db:types": "node scripts/gen-db-types.mjs"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.2.6",

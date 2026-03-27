@@ -2,7 +2,7 @@
 
 ## 현재 상태
 
-**Phase 1A 완료 · Phase 1B 진행 중** (이벤트 수정·삭제 완료)
+**Phase 1 MVP 핵심 루프 완료** (1B·1C·1D 반영)
 
 ---
 
@@ -22,7 +22,7 @@
 
 ### 인프라
 - `pnpm build` 통과
-- Next.js 16: `middleware` deprecation 경고 → Phase 1D에서 `proxy` 이전 예정
+- Next.js 16: `src/proxy.ts` + `Database` 타입 (`pnpm db:types`)
 
 ---
 
@@ -32,10 +32,11 @@
 |------|------|
 | 이벤트 수정·삭제 | ✅ |
 | Venue CRUD | ✅ |
-| Session CRUD | ⏳ |
-| 참석자 DB + CSV | ⏳ |
-| Settings 실데이터 | ⏳ |
-| Vercel 프로덕션 | ⏳ |
+| Session CRUD | ✅ |
+| 참석자 DB + CSV | ✅ |
+| Settings + DB `005` | ✅ (마이그레이션 수동 적용) |
+| `proxy` + Supabase 타입 | ✅ |
+| Vercel 프로덕션 | 운영 시 env·리다이렉트 점검 |
 
 ---
 

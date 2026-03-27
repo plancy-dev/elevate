@@ -5,10 +5,11 @@ import { hasRecoveryPendingCookie } from "@/lib/auth-recovery-cookie";
 import { jwtIndicatesPasswordRecovery } from "@/lib/auth-recovery-redirect";
 import { logAuthFlow } from "@/lib/auth-flow-log";
 import { getPublicSupabaseEnv } from "@/lib/env/public";
+import type { Database } from "@/types/database.types";
 
 /**
  * Refreshes the Supabase session and merges auth cookies into `response`.
- * Pass the response from upstream middleware (e.g. next-intl) so redirects keep cookies.
+ * Pass the response from upstream handlers (e.g. next-intl) so redirects keep cookies.
  */
 export async function updateSession(
   request: NextRequest,
@@ -21,7 +22,7 @@ export async function updateSession(
 
   const supabaseResponse = response ?? NextResponse.next({ request });
 
-  const supabase = createServerClient(env.url, env.anonKey, {
+  const supabase = createServerClient<Database>(env.url, env.anonKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();

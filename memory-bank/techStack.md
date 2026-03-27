@@ -2,7 +2,7 @@
 
 | 레이어 | 선택 | 메모 |
 |--------|------|------|
-| 프레임워크 | Next.js 16 (App Router, RSC) | `middleware` → `proxy` 이전 예정 (1D) |
+| 프레임워크 | Next.js 16 (App Router, RSC) | 요청 경계: `src/proxy.ts` (`proxy`) |
 | 언어 | TypeScript (strict) | |
 | 스타일 | Tailwind CSS v4 | Carbon-inspired 토큰 (`globals.css`) |
 | 인증·DB | Supabase (Auth, Postgres, RLS) | Browser/Server/Admin 클라이언트 분리 |

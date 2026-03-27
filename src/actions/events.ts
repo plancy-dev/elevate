@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { getOrgEditorContext } from "@/lib/auth/require-org-editor";
 import { revalidateEventAndDashboard } from "@/lib/cache/revalidate-events";
+import { eventTypeFromForm } from "@/lib/db/event-type-from-form";
 import { createClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/utils";
 
@@ -48,7 +49,7 @@ export async function createEvent(
       title,
       slug,
       description: String(formData.get("description") ?? ""),
-      event_type: String(formData.get("event_type") ?? "conference"),
+      event_type: eventTypeFromForm(formData),
       status: "draft",
       start_date: new Date(start).toISOString(),
       end_date: new Date(end).toISOString(),
@@ -108,7 +109,7 @@ export async function updateEvent(
     .update({
       title,
       description: String(formData.get("description") ?? ""),
-      event_type: String(formData.get("event_type") ?? "conference"),
+      event_type: eventTypeFromForm(formData),
       status: status as
         | "draft"
         | "planning"

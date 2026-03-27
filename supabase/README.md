@@ -22,15 +22,15 @@ In **Authentication → URL Configuration**, add:
 ### Password recovery (production / Vercel)
 
 - **Vercel env:** `NEXT_PUBLIC_APP_URL` must be the **production** origin (e.g. `https://your-app.vercel.app`, no trailing slash), **not** `http://localhost:3000`. A wrong value breaks server-side auth URL helpers and can make client navigation point at the wrong host.
-- **Site URL root + PKCE:** If Supabase redirects to `https://your-app.vercel.app/?code=...` (because Site URL is the root, or dashboard “Send password recovery” did not use `/auth/callback`), **middleware** forwards that request to `/auth/callback?code=...` so `exchangeCodeForSession` runs. Without this, users briefly see the marketing home and never complete sign-in.
+- **Site URL root + PKCE:** If Supabase redirects to `https://your-app.vercel.app/?code=...` (because Site URL is the root, or dashboard “Send password recovery” did not use `/auth/callback`), **`src/proxy.ts` (Next.js proxy)** forwards that request to `/auth/callback?code=...` so `exchangeCodeForSession` runs. Without this, users briefly see the marketing home and never complete sign-in.
 - **Do not** rely on `redirect_to` pointing only at the Site URL root for **implicit** flows: after verification, Supabase may send users to `/#access_token=...`; next-intl then redirects `/` → `/ko` (or another locale), and **many browsers drop the URL hash on that redirect**, so the session never applies and you only see the marketing home. (This project sets `localeDetection: false` to reduce that risk.)
 - Add these to **Redirect URLs** (adjust host):  
   `https://your-app.vercel.app/auth/callback`  
   For preview deployments, add each host or a pattern your Supabase project allows (e.g. `https://*.vercel.app/auth/callback` if supported).
 - The app uses `resetPasswordForEmail` and **magic link** (`signInWithOtp`) with `emailRedirectTo: <origin>/auth/callback?next=...` (password reset uses `next=/auth/update-password`). Those paths are **not** locale-prefixed, so fragments and PKCE queries stay intact.
 - **PKCE** links use `?code=` on `/auth/callback`. After `exchangeCodeForSession`, Supabase JS includes **`redirectType: recovery`** (from PKCE storage) even when the URL has no `next` query—e.g. older emails or dashboard “Send password recovery.” The callback must route recovery sessions to `/auth/update-password` instead of defaulting to `/dashboard`.
-- **Recovery session vs `/login`:** A reset link can leave the user with a valid session while they still need to choose a new password. Middleware must not treat that like a normal login: if the access token’s JWT `amr` indicates **recovery**, requests to `/login`, `/signup`, `/forgot-password`, or `/dashboard` are redirected to **`/auth/update-password`** (see `updateSession`).
-- **Token refresh vs recovery:** Edge middleware calls `getSession()`, which can **refresh** the token and drop `amr: recovery` from the JWT (Supabase audit logs may show `token_refreshed` / `token_revoked`). The app therefore sets a short-lived cookie **`elevate_pw_recovery=1`** when the client completes PKCE or hash handling for recovery (`setRecoveryPendingClient` in `auth-recovery-cookie.ts`). Middleware treats that cookie like a recovery hint so users are not sent to `/dashboard` before setting a new password.
+- **Recovery session vs `/login`:** A reset link can leave the user with a valid session while they still need to choose a new password. The app proxy must not treat that like a normal login: if the access token’s JWT `amr` indicates **recovery**, requests to `/login`, `/signup`, `/forgot-password`, or `/dashboard` are redirected to **`/auth/update-password`** (see `updateSession` in `src/lib/supabase/update-session.ts`).
+- **Token refresh vs recovery:** The proxy (`updateSession`) calls `getSession()`, which can **refresh** the token and drop `amr: recovery` from the JWT (Supabase audit logs may show `token_refreshed` / `token_revoked`). The app therefore sets a short-lived cookie **`elevate_pw_recovery=1`** when the client completes PKCE or hash handling for recovery (`setRecoveryPendingClient` in `auth-recovery-cookie.ts`). The proxy treats that cookie like a recovery hint so users are not sent to `/dashboard` before setting a new password.
 
 Full checklist (redirect URIs, Client ID formatting, Azure secrets, **account linking**): **[docs/SOCIAL_AUTH.md](../docs/SOCIAL_AUTH.md)**.
 
@@ -61,7 +61,7 @@ PostgREST occasionally returns this when the API schema cache is stale or under 
 
 The app emits structured lines prefixed with **`[elevate-auth-flow]`** (JSON per line). Use them to trace password recovery vs PKCE vs hash:
 
-- **Vercel → Logs**: filter by `elevate-auth-flow` to see middleware (`middleware.pkce_forward`, `middleware.session_guard`) and Edge `updateSession` behavior.
+- **Vercel → Logs**: filter by `elevate-auth-flow` to see proxy-related events (`middleware.pkce_forward`, `middleware.session_guard` log keys; `updateSession` in `src/lib/supabase/update-session.ts`).
 - **Browser → DevTools Console**: same prefix; full client-side sequence (callback, hash handler, `auth.resolve.*`, update-password mount).
 - **sessionStorage** key `elevate_auth_flow_v1`: rolling JSON array of the last events (safe: no raw tokens; `code` is length-only). Copy for tickets:  
   `JSON.parse(sessionStorage.getItem('elevate_auth_flow_v1'))`  
