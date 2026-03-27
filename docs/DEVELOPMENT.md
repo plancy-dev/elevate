@@ -33,7 +33,7 @@ Apply SQL migrations in order from `supabase/README.md` (Supabase SQL Editor or 
 
 GitHub Actions (`.github/workflows/ci.yml`) runs lint, typecheck, unit tests, and build on pushes/PRs to `main`. Build uses placeholder `NEXT_PUBLIC_*` values; Vercel injects real env vars at deploy time.
 
-See [TESTING.md](TESTING.md) for what we test and how to extend it.
+Optional: **`.github/workflows/e2e.yml`** — manual Playwright run (repository secrets required). See [TESTING.md](TESTING.md).
 
 ## Editor
 

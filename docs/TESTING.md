@@ -83,7 +83,22 @@ CI does **not** run integration tests unless you add secrets and env to the work
 
 **Host:** Default base URL is `http://localhost:3000`. If `PLAYWRIGHT_BASE_URL` uses `127.0.0.1`, `playwright.config.ts` rewrites it to `localhost` so cookies match `pnpm dev`. Run the app as `http://localhost:3000` when testing locally.
 
-**Specs:** `smoke.spec.ts` — login page shell only. `auth-dashboard.spec.ts` — password sign-in and dashboard sidebar (Overview + user email in sidebar).
+**Specs:** `smoke.spec.ts` — login page shell only. `auth-dashboard.spec.ts` — password sign-in and dashboard sidebar. `auth-session.spec.ts` — sign out → login page → sign in again (session regression).
+
+### GitHub Actions (optional)
+
+Workflow **`.github/workflows/e2e.yml`** — **Actions → E2E (Playwright) → Run workflow** (manual only).
+
+Add these **repository secrets** (same values as a working `.env.local` against your Supabase project):
+
+| Secret | Purpose |
+|--------|---------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon key |
+| `E2E_USER_EMAIL` | Test user email |
+| `E2E_USER_PASSWORD` | Test user password |
+
+The job runs `pnpm build`, `pnpm start`, then `pnpm test:e2e` against `http://localhost:3000`. It does **not** run on push/PR by default.
 
 ## Adding tests
 
