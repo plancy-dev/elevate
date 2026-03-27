@@ -9,9 +9,11 @@ import {
   snapshotSearchParams,
 } from "@/lib/auth-flow-log";
 import {
+  AUTH_UPDATE_PASSWORD_PATH,
   DEFAULT_POST_LOGIN_PATH,
   getLoginPathWithAuthError,
 } from "@/lib/auth-redirect-urls";
+import { setRecoveryPendingClient } from "@/lib/auth-recovery-cookie";
 import { resolvePostPkceRedirect } from "@/lib/auth-recovery-redirect";
 
 function AuthCallbackInner() {
@@ -84,6 +86,12 @@ function AuthCallbackInner() {
           redirectType,
           hasSession: Boolean(data?.session),
         });
+        if (
+          redirectType === "recovery" ||
+          destination === AUTH_UPDATE_PASSWORD_PATH
+        ) {
+          setRecoveryPendingClient();
+        }
         router.replace(destination);
         router.refresh();
       });

@@ -1,7 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { jwtIndicatesPasswordRecovery } from "@/lib/auth-recovery-redirect";
 import { AUTH_UPDATE_PASSWORD_PATH } from "@/lib/auth-redirect-urls";
+import { hasRecoveryPendingCookie } from "@/lib/auth-recovery-cookie";
+import { jwtIndicatesPasswordRecovery } from "@/lib/auth-recovery-redirect";
 import { logAuthFlow } from "@/lib/auth-flow-log";
 
 /**
@@ -46,8 +47,11 @@ export async function updateSession(
   } = await supabase.auth.getSession();
 
   const accessToken = session?.access_token;
-  const isPasswordRecoverySession =
+  const jwtRecovery =
     Boolean(accessToken) && jwtIndicatesPasswordRecovery(accessToken);
+  const recoveryCookie = hasRecoveryPendingCookie(request);
+  /** JWT `amr` recovery OR client-set hint (survives token refresh in Edge). */
+  const isRecoveryHint = jwtRecovery || recoveryCookie;
 
   const path = request.nextUrl.pathname;
 
@@ -55,7 +59,7 @@ export async function updateSession(
    * Password-reset emails establish a recovery session before the user sets a new password.
    * Do not send them to /dashboard or bounce them from /login — route to update-password.
    */
-  if (user && isPasswordRecoverySession) {
+  if (user && isRecoveryHint) {
     const onUpdatePassword =
       path === AUTH_UPDATE_PASSWORD_PATH ||
       path.startsWith(`${AUTH_UPDATE_PASSWORD_PATH}/`);
@@ -69,6 +73,7 @@ export async function updateSession(
         logAuthFlow("middleware.session_guard", {
           action: "recovery_session_to_update_password",
           path,
+          via: recoveryCookie ? "cookie" : "jwt_amr",
         });
         const redirectResponse = NextResponse.redirect(
           new URL(AUTH_UPDATE_PASSWORD_PATH, request.url),
@@ -103,7 +108,8 @@ export async function updateSession(
     logAuthFlow("middleware.session_guard", {
       action: "authed_user_to_dashboard",
       path,
-      isPasswordRecoverySession,
+      jwtRecovery,
+      recoveryCookieHint: recoveryCookie,
     });
     const redirectResponse = NextResponse.redirect(
       new URL("/dashboard", request.url),

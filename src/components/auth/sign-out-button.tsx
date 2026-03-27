@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { clearRecoveryPendingClient } from "@/lib/auth-recovery-cookie";
 import { createClient } from "@/lib/supabase/client";
 import { LogOut } from "lucide-react";
 
@@ -10,6 +11,7 @@ export function SignOutButton() {
   async function signOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
+    clearRecoveryPendingClient();
     router.push("/login");
     router.refresh();
   }

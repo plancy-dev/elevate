@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DEFAULT_POST_LOGIN_PATH } from "@/lib/auth-redirect-urls";
+import { clearRecoveryPendingClient } from "@/lib/auth-recovery-cookie";
 import { logAuthFlow } from "@/lib/auth-flow-log";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,7 @@ export function UpdatePasswordForm() {
       setError(err.message);
       return;
     }
+    clearRecoveryPendingClient();
     router.push(DEFAULT_POST_LOGIN_PATH);
     router.refresh();
   }

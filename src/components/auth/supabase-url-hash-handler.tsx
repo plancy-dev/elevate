@@ -7,7 +7,11 @@ import {
   logAuthFlow,
   snapshotHashParams,
 } from "@/lib/auth-flow-log";
-import { getLoginPathWithAuthError } from "@/lib/auth-redirect-urls";
+import {
+  AUTH_UPDATE_PASSWORD_PATH,
+  getLoginPathWithAuthError,
+} from "@/lib/auth-redirect-urls";
+import { setRecoveryPendingClient } from "@/lib/auth-recovery-cookie";
 import { resolvePostImplicitHashRedirect } from "@/lib/auth-recovery-redirect";
 
 /**
@@ -87,6 +91,9 @@ export function SupabaseUrlHashHandler() {
         }
         const dest = resolvePostImplicitHashRedirect(flowType, accessToken);
         logAuthFlow("auth.hash.redirect", { destination: dest, flowType });
+        if (dest === AUTH_UPDATE_PASSWORD_PATH || flowType === "recovery") {
+          setRecoveryPendingClient();
+        }
         router.replace(dest);
         router.refresh();
       })();
