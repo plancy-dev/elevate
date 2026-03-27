@@ -1,4 +1,7 @@
-import { AUTH_UPDATE_PASSWORD_PATH } from "@/lib/auth-redirect-urls";
+import {
+  AUTH_UPDATE_PASSWORD_PATH,
+  DEFAULT_POST_LOGIN_PATH,
+} from "@/lib/auth-redirect-urls";
 
 /** Decode JWT payload (browser-safe, no verify). */
 function decodeJwtPayload(accessToken: string): Record<string, unknown> | null {
@@ -49,7 +52,7 @@ export function resolvePostImplicitHashRedirect(
   if (jwtIndicatesPasswordRecovery(accessToken)) {
     return AUTH_UPDATE_PASSWORD_PATH;
   }
-  return "/dashboard";
+  return DEFAULT_POST_LOGIN_PATH;
 }
 
 type ExchangeData = {
@@ -75,5 +78,5 @@ export function resolvePostPkceRedirect(
   if (searchParams.get("type") === "recovery") {
     return AUTH_UPDATE_PASSWORD_PATH;
   }
-  return nextFromQuery.startsWith("/") ? nextFromQuery : "/dashboard";
+  return nextFromQuery.startsWith("/") ? nextFromQuery : DEFAULT_POST_LOGIN_PATH;
 }

@@ -19,11 +19,12 @@ In **Authentication → URL Configuration**, add:
 
 ### Password recovery (production / Vercel)
 
-- **Do not** rely on `redirect_to` pointing only at the Site URL root (e.g. `https://your-app.vercel.app`). After verification, Supabase may send users to `/#access_token=...`; next-intl then redirects `/` → `/ko` (or another locale), and **many browsers drop the URL hash on that redirect**, so the session never applies and you only see the marketing home.
+- **Site URL root + PKCE:** If Supabase redirects to `https://your-app.vercel.app/?code=...` (because Site URL is the root, or dashboard “Send password recovery” did not use `/auth/callback`), **middleware** forwards that request to `/auth/callback?code=...` so `exchangeCodeForSession` runs. Without this, users briefly see the marketing home and never complete sign-in.
+- **Do not** rely on `redirect_to` pointing only at the Site URL root for **implicit** flows: after verification, Supabase may send users to `/#access_token=...`; next-intl then redirects `/` → `/ko` (or another locale), and **many browsers drop the URL hash on that redirect**, so the session never applies and you only see the marketing home. (This project sets `localeDetection: false` to reduce that risk.)
 - Add these to **Redirect URLs** (adjust host):  
   `https://your-app.vercel.app/auth/callback`  
   For preview deployments, add each host or a pattern your Supabase project allows (e.g. `https://*.vercel.app/auth/callback` if supported).
-- The app uses `resetPasswordForEmail` with `redirectTo: <origin>/auth/callback?next=/auth/update-password`. That path is **not** locale-prefixed, so the hash survives and `/auth/update-password` lets the user set a new password.
+- The app uses `resetPasswordForEmail` and **magic link** (`signInWithOtp`) with `emailRedirectTo: <origin>/auth/callback?next=...` (password reset uses `next=/auth/update-password`). Those paths are **not** locale-prefixed, so fragments and PKCE queries stay intact.
 - **PKCE** links use `?code=` on `/auth/callback`. After `exchangeCodeForSession`, Supabase JS includes **`redirectType: recovery`** (from PKCE storage) even when the URL has no `next` query—e.g. older emails or dashboard “Send password recovery.” The callback must route recovery sessions to `/auth/update-password` instead of defaulting to `/dashboard`.
 
 Full checklist (redirect URIs, Client ID formatting, Azure secrets, **account linking**): **[docs/SOCIAL_AUTH.md](../docs/SOCIAL_AUTH.md)**.

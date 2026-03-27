@@ -5,12 +5,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { formatAuthError } from "@/lib/auth-errors";
-import { getAuthCallbackUrl } from "@/lib/auth-redirect-urls";
+import {
+  DEFAULT_POST_LOGIN_PATH,
+  getAuthCallbackUrl,
+} from "@/lib/auth-redirect-urls";
 import { Button } from "@/components/ui/button";
 
 export function SignupForm() {
   const router = useRouter();
-  const next = "/dashboard";
+  const next = DEFAULT_POST_LOGIN_PATH;
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");

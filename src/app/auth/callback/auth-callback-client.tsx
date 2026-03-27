@@ -3,7 +3,10 @@
 import { Suspense, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { getLoginPathWithAuthError } from "@/lib/auth-redirect-urls";
+import {
+  DEFAULT_POST_LOGIN_PATH,
+  getLoginPathWithAuthError,
+} from "@/lib/auth-redirect-urls";
 import { resolvePostPkceRedirect } from "@/lib/auth-recovery-redirect";
 
 function AuthCallbackInner() {
@@ -18,7 +21,7 @@ function AuthCallbackInner() {
     const oauthErrorCode = searchParams.get("error_code");
     const code = searchParams.get("code");
     const nextRaw = searchParams.get("next");
-    const nextFallback = nextRaw?.startsWith("/") ? nextRaw : "/dashboard";
+    const nextFallback = nextRaw?.startsWith("/") ? nextRaw : DEFAULT_POST_LOGIN_PATH;
 
     if (error) {
       handled.current = true;

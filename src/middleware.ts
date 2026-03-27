@@ -1,6 +1,7 @@
 import createIntlMiddleware from "next-intl/middleware";
 import { type NextRequest } from "next/server";
 import { routing } from "@/i18n/routing";
+import { redirectAuthLandingToCallbackIfNeeded } from "@/lib/supabase/auth-callback-forward";
 import { updateSession } from "@/lib/supabase/middleware";
 
 const intlMiddleware = createIntlMiddleware(routing);
@@ -28,6 +29,9 @@ function shouldSkipIntl(pathname: string) {
 }
 
 export async function middleware(request: NextRequest) {
+  const authForward = redirectAuthLandingToCallbackIfNeeded(request);
+  if (authForward) return authForward;
+
   if (shouldSkipIntl(request.nextUrl.pathname)) {
     return updateSession(request);
   }

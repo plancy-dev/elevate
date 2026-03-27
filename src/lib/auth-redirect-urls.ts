@@ -1,11 +1,13 @@
 /**
- * OAuth, email confirmation, and password recovery redirects.
+ * OAuth, email confirmation, password recovery, and magic-link redirects.
  * URLs must match entries under Supabase → Authentication → URL Configuration → Redirect URLs.
  *
- * Use `/auth/callback` (not the site root) for recovery so the URL hash is not lost when
- * next-intl redirects `/` → `/[locale]`.
+ * Prefer `/auth/callback` (not the site root) so PKCE and fragments behave predictably; the
+ * middleware also forwards `/?code=...` from the Site URL root to this path.
  */
+export const AUTH_CALLBACK_PATH = "/auth/callback" as const;
 export const AUTH_UPDATE_PASSWORD_PATH = "/auth/update-password" as const;
+export const DEFAULT_POST_LOGIN_PATH = "/dashboard" as const;
 
 export type LoginAuthErrorInput = {
   error: string;
@@ -14,6 +16,15 @@ export type LoginAuthErrorInput = {
   /** If set and not `/dashboard`, appended as `next` for post-login redirect. */
   next?: string | null;
 };
+
+/**
+ * Absolute callback URL for Supabase `redirectTo` / `emailRedirectTo` (browser or server).
+ */
+export function buildAuthCallbackUrl(origin: string, nextPath: string): string {
+  const base = origin.replace(/\/$/, "");
+  const next = nextPath.startsWith("/") ? nextPath : `/${nextPath}`;
+  return `${base}${AUTH_CALLBACK_PATH}?next=${encodeURIComponent(next)}`;
+}
 
 /**
  * Path + query for `/login` after an auth failure (OAuth query or hash fragment).
@@ -33,7 +44,7 @@ export function getLoginPathWithAuthError(
       input.errorDescription.slice(0, 500),
     );
   }
-  if (input.next && input.next !== "/dashboard") {
+  if (input.next && input.next !== DEFAULT_POST_LOGIN_PATH) {
     login.searchParams.set("next", input.next);
   }
   return login.pathname + login.search;
@@ -46,6 +57,7 @@ export function getAuthBrowserOrigin(): string {
   return (process.env.NEXT_PUBLIC_APP_URL ?? "").replace(/\/$/, "");
 }
 
+/** Browser or server: callback URL with `next` path (e.g. `/dashboard`, `/auth/update-password`). */
 export function getAuthCallbackUrl(next: string): string {
-  return `${getAuthBrowserOrigin()}/auth/callback?next=${encodeURIComponent(next)}`;
+  return buildAuthCallbackUrl(getAuthBrowserOrigin(), next);
 }

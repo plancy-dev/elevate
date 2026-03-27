@@ -5,7 +5,10 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { formatAuthError } from "@/lib/auth-errors";
-import { getAuthCallbackUrl } from "@/lib/auth-redirect-urls";
+import {
+  DEFAULT_POST_LOGIN_PATH,
+  getAuthCallbackUrl,
+} from "@/lib/auth-redirect-urls";
 import { Button } from "@/components/ui/button";
 
 function formatOAuthCallbackError(
@@ -40,11 +43,13 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const next = searchParams.get("next")?.startsWith("/")
     ? searchParams.get("next")!
-    : "/dashboard";
+    : DEFAULT_POST_LOGIN_PATH;
 
+  const [authMode, setAuthMode] = useState<"password" | "magic">("password");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [magicMessage, setMagicMessage] = useState<string | null>(null);
   const [oauthBanner, setOauthBanner] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -100,9 +105,30 @@ export function LoginForm() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+    setMagicMessage(null);
     setLoading(true);
     const supabase = createClient();
     const normalizedEmail = email.trim().toLowerCase();
+
+    if (authMode === "magic") {
+      const { error: err } = await supabase.auth.signInWithOtp({
+        email: normalizedEmail,
+        options: {
+          emailRedirectTo: getAuthCallbackUrl(next),
+          shouldCreateUser: false,
+        },
+      });
+      setLoading(false);
+      if (err) {
+        setError(formatAuthError(err));
+        return;
+      }
+      setMagicMessage(
+        "If an account exists for this email, you will receive a sign-in link shortly. Open it on this device within about an hour.",
+      );
+      return;
+    }
+
     const { error: err } = await supabase.auth.signInWithPassword({
       email: normalizedEmail,
       password,
@@ -179,6 +205,51 @@ export function LoginForm() {
         <div className="flex-1 h-px bg-border-subtle" />
       </div>
 
+      <div
+        className="mb-4 flex rounded-sm border border-border-subtle p-0.5"
+        role="tablist"
+        aria-label="Sign-in method"
+      >
+        <button
+          type="button"
+          role="tab"
+          aria-selected={authMode === "password"}
+          className={`flex-1 rounded-sm px-3 py-2 text-xs font-medium transition-colors ${
+            authMode === "password"
+              ? "bg-layer-01 text-text-primary"
+              : "text-text-tertiary hover:text-text-secondary"
+          }`}
+          onClick={() => {
+            setAuthMode("password");
+            setMagicMessage(null);
+          }}
+        >
+          Password
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={authMode === "magic"}
+          className={`flex-1 rounded-sm px-3 py-2 text-xs font-medium transition-colors ${
+            authMode === "magic"
+              ? "bg-layer-01 text-text-primary"
+              : "text-text-tertiary hover:text-text-secondary"
+          }`}
+          onClick={() => {
+            setAuthMode("magic");
+            setMagicMessage(null);
+          }}
+        >
+          Magic link
+        </button>
+      </div>
+
+      {magicMessage && (
+        <p className="mb-4 rounded-sm border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-text-secondary">
+          {magicMessage}
+        </p>
+      )}
+
       <form className="flex flex-col gap-4" onSubmit={onSubmit}>
         <div>
           <label
@@ -199,35 +270,37 @@ export function LoginForm() {
           />
         </div>
 
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label
-              htmlFor="password"
-              className="block text-xs font-medium text-text-secondary"
-            >
-              Password
-            </label>
-            <Link
-              href="/forgot-password"
-              className="text-xs text-interactive hover:text-primary transition-colors"
-            >
-              Forgot password?
-            </Link>
+        {authMode === "password" && (
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label
+                htmlFor="password"
+                className="block text-xs font-medium text-text-secondary"
+              >
+                Password
+              </label>
+              <Link
+                href="/forgot-password"
+                className="text-xs text-interactive hover:text-primary transition-colors"
+              >
+                Forgot password?
+              </Link>
+            </div>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+              placeholder="••••••••"
+              className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus transition-colors"
+            />
           </div>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            required
-            placeholder="••••••••"
-            className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus transition-colors"
-          />
-        </div>
+        )}
 
         <Button variant="primary" size="lg" className="w-full mt-2" disabled={loading} isLoading={loading} type="submit">
-          Log In
+          {authMode === "magic" ? "Email me a sign-in link" : "Log In"}
         </Button>
       </form>
 
