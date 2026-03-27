@@ -81,6 +81,8 @@ CI does **not** run integration tests unless you add secrets and env to the work
    PLAYWRIGHT_BASE_URL=https://your-app.vercel.app pnpm test:e2e
    ```
 
+**Host:** Default base URL is `http://localhost:3000` (not `127.0.0.1`) so auth cookies match `pnpm dev` and `NEXT_PUBLIC_APP_URL`. If you must use `127.0.0.1`, set `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000` and open the app with the same host.
+
 **Specs:** `smoke.spec.ts` — login page shell only. `auth-dashboard.spec.ts` — password sign-in and dashboard sidebar (Overview + user email in sidebar).
 
 ## Adding tests

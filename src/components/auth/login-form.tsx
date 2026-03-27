@@ -111,13 +111,19 @@ export function LoginForm() {
       return;
     }
 
-    const { error: err } = await supabase.auth.signInWithPassword({
+    const { data, error: err } = await supabase.auth.signInWithPassword({
       email: normalizedEmail,
       password,
     });
     setLoading(false);
     if (err) {
       setError(formatSignInPasswordError(err));
+      return;
+    }
+    if (!data.session) {
+      setError(
+        "Sign-in returned no session. Refresh and try again, or check Supabase Auth status.",
+      );
       return;
     }
     router.push(next);

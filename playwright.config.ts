@@ -16,8 +16,9 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "list",
   use: {
+    // Use `localhost` (not 127.0.0.1) so auth cookies match `pnpm dev` / NEXT_PUBLIC_APP_URL
     baseURL:
-      process.env.PLAYWRIGHT_BASE_URL?.trim() || "http://127.0.0.1:3000",
+      process.env.PLAYWRIGHT_BASE_URL?.trim() || "http://localhost:3000",
     trace: "on-first-retry",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
