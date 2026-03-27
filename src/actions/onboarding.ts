@@ -11,6 +11,19 @@ export type EnsureOrgResult =
  * First-time users have no organization_id; create a default org and attach profile (admin).
  * Uses service role for the update when RLS would block org creation.
  */
+function isTransientProfileError(message: string): boolean {
+  return /schema cache|could not query|connection|timeout|econn/i.test(message);
+}
+
+function formatProfileError(message: string): string {
+  if (/schema cache|could not query/i.test(message)) {
+    return (
+      `${message} — Try refreshing the page in a few seconds. If it persists, open Supabase Dashboard → Project Settings → API and reload, or check Auth/DB status.`
+    );
+  }
+  return message;
+}
+
 export async function ensureDefaultOrganization(): Promise<EnsureOrgResult> {
   const supabase = await createClient();
   const {
@@ -18,16 +31,28 @@ export async function ensureDefaultOrganization(): Promise<EnsureOrgResult> {
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "Not authenticated" };
 
-  const { data: profile, error: profileErr } = await supabase
-    .from("profiles")
-    .select("organization_id")
-    .eq("id", user.id)
-    .maybeSingle();
+  let profile: { organization_id: string | null } | null = null;
+  let profileErr = null as { message: string } | null;
 
-  if (profileErr) return { ok: false, error: profileErr.message };
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const res = await supabase
+      .from("profiles")
+      .select("organization_id")
+      .eq("id", user.id)
+      .maybeSingle();
+    profileErr = res.error;
+    profile = res.data;
+    if (!profileErr) break;
+    if (!isTransientProfileError(profileErr.message) || attempt === 2) {
+      return { ok: false, error: formatProfileError(profileErr.message) };
+    }
+    await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
+  }
+
   if (profile?.organization_id) {
     return { ok: true, organizationId: profile.organization_id };
   }
+
 
   let admin;
   try {

@@ -1,9 +1,41 @@
+import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { ConnectedIdentities } from "@/components/auth/connected-identities";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Settings" };
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const ensured = await ensureDefaultOrganization();
+  if (!ensured.ok) {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <p className="text-sm text-danger">{ensured.error}</p>
+      </div>
+    );
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return null;
+  }
+
+  const [{ data: org }, { data: profile }] = await Promise.all([
+    supabase
+      .from("organizations")
+      .select("name")
+      .eq("id", ensured.organizationId)
+      .maybeSingle(),
+    supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.id)
+      .maybeSingle(),
+  ]);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="sticky top-0 z-30 flex items-center border-b border-border-subtle bg-background px-6 h-12">
@@ -31,19 +63,28 @@ export default function SettingsPage() {
               </label>
               <input
                 type="text"
-                defaultValue="Elevate Corp"
+                readOnly
+                defaultValue={org?.name ?? ""}
                 className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
               />
+              <p className="mt-1 text-xs text-text-tertiary">
+                Organization name is managed in the database; editing UI coming
+                soon.
+              </p>
             </div>
             <div>
               <label className="block text-xs text-text-secondary mb-1">
-                Default timezone
+                Profile display name
               </label>
-              <select className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus">
-                <option>Asia/Singapore</option>
-                <option>Asia/Seoul</option>
-                <option>UTC</option>
-              </select>
+              <input
+                type="text"
+                readOnly
+                defaultValue={profile?.display_name ?? ""}
+                className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
+              />
+              <p className="mt-1 text-xs text-text-tertiary">
+                From your account profile (`profiles.display_name`).
+              </p>
             </div>
           </div>
         </section>
@@ -56,9 +97,13 @@ export default function SettingsPage() {
             <input type="checkbox" defaultChecked className="rounded border-border" />
             Email digest for event milestones
           </label>
+          <p className="mt-2 text-xs text-text-tertiary">
+            Notification delivery preferences will connect to your org settings
+            in a later release.
+          </p>
         </section>
 
-        <Button variant="primary" size="md">
+        <Button variant="primary" size="md" type="button" disabled>
           Save changes
         </Button>
       </div>

@@ -47,6 +47,10 @@ Supabase applies **rate limits on auth emails** (signup, magic link, password re
 
 **What to do:** wait (often on the order of an hour; exact windows are platform-defined), then send **one** reset request. Avoid clicking “Send reset link” or dashboard recovery repeatedly while testing.
 
+### “Could not query the database for the schema cache” (dashboard)
+
+PostgREST occasionally returns this when the API schema cache is stale or under load. The app **retries** profile reads in `ensureDefaultOrganization` and surfaces a short hint. If it persists: **Supabase Dashboard → Project Settings → API** (reload schema), or wait and refresh; confirm migrations ran and RLS policies allow `profiles` / `organizations` for your user.
+
 ### Auth flow debug logs (issue tracking)
 
 The app emits structured lines prefixed with **`[elevate-auth-flow]`** (JSON per line). Use them to trace password recovery vs PKCE vs hash:

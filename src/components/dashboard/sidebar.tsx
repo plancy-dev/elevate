@@ -49,7 +49,15 @@ const bottomItems = [
   { label: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
 ];
 
-export function Sidebar() {
+export type SidebarUser = {
+  displayName: string;
+  email: string;
+  roleLabel: string;
+  orgName: string;
+  initials: string;
+};
+
+export function Sidebar({ user }: { user: SidebarUser }) {
   const pathname = usePathname();
 
   return (
@@ -106,14 +114,16 @@ export function Sidebar() {
       <div className="border-t border-border-subtle p-3">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-03">
-            <span className="text-xs font-medium text-text-secondary">JK</span>
+            <span className="text-xs font-medium text-text-secondary">
+              {user.initials}
+            </span>
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-medium text-text-primary truncate">
-              Jaekyeong Ko
+              {user.displayName}
             </div>
             <div className="text-xs text-text-tertiary truncate">
-              Admin · Elevate Corp
+              {user.roleLabel} · {user.orgName}
             </div>
           </div>
           <div className="shrink-0">
