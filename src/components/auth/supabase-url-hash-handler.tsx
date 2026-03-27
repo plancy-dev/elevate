@@ -3,10 +3,8 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import {
-  AUTH_UPDATE_PASSWORD_PATH,
-  getLoginPathWithAuthError,
-} from "@/lib/auth-redirect-urls";
+import { getLoginPathWithAuthError } from "@/lib/auth-redirect-urls";
+import { resolvePostImplicitHashRedirect } from "@/lib/auth-recovery-redirect";
 
 /**
  * Supabase redirects recovery / magic links to `redirectTo` or Site URL with
@@ -69,9 +67,9 @@ export function SupabaseUrlHashHandler() {
           );
           return;
         }
-        const afterAuth =
-          flowType === "recovery" ? AUTH_UPDATE_PASSWORD_PATH : "/dashboard";
-        router.replace(afterAuth);
+        router.replace(
+          resolvePostImplicitHashRedirect(flowType, accessToken),
+        );
         router.refresh();
       })();
     }

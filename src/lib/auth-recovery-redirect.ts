@@ -35,6 +35,23 @@ export function jwtIndicatesPasswordRecovery(accessToken: string | undefined): b
   return false;
 }
 
+/**
+ * Where to send the user after `setSession` from URL hash tokens (implicit flow).
+ * Aligns with {@link resolvePostPkceRedirect}: `type=recovery` and/or JWT `amr`.
+ */
+export function resolvePostImplicitHashRedirect(
+  flowType: string | null,
+  accessToken: string,
+): string {
+  if (flowType === "recovery") {
+    return AUTH_UPDATE_PASSWORD_PATH;
+  }
+  if (jwtIndicatesPasswordRecovery(accessToken)) {
+    return AUTH_UPDATE_PASSWORD_PATH;
+  }
+  return "/dashboard";
+}
+
 type ExchangeData = {
   redirectType?: string | null;
   session?: { access_token?: string };
