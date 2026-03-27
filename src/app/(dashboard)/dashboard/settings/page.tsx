@@ -1,9 +1,13 @@
 import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { ConnectedIdentities } from "@/components/auth/connected-identities";
-import { Button } from "@/components/ui/button";
+import { SettingsOrgForm } from "@/components/dashboard/settings-org-form";
+import { SettingsProfileForm } from "@/components/dashboard/settings-profile-form";
 import { createClient } from "@/lib/supabase/server";
+import type { UserRole } from "@/types";
 
 export const metadata = { title: "Settings" };
+
+const ORG_MANAGERS: UserRole[] = ["admin", "organizer"];
 
 export default async function SettingsPage() {
   const ensured = await ensureDefaultOrganization();
@@ -31,10 +35,16 @@ export default async function SettingsPage() {
       .maybeSingle(),
     supabase
       .from("profiles")
-      .select("display_name")
+      .select("display_name, role, email_milestone_digest")
       .eq("id", user.id)
       .maybeSingle(),
   ]);
+
+  const role = (profile?.role ?? "viewer") as UserRole;
+  const canManageOrg = ORG_MANAGERS.includes(role);
+  const digest =
+    (profile as { email_milestone_digest?: boolean } | null)
+      ?.email_milestone_digest ?? true;
 
   return (
     <div className="min-h-screen bg-background">
@@ -56,56 +66,42 @@ export default async function SettingsPage() {
           <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider">
             Organization
           </h2>
-          <div className="mt-3 space-y-3">
-            <div>
-              <label className="block text-xs text-text-secondary mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                readOnly
-                defaultValue={org?.name ?? ""}
-                className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
-              />
-              <p className="mt-1 text-xs text-text-tertiary">
-                Organization name is managed in the database; editing UI coming
-                soon.
-              </p>
-            </div>
-            <div>
-              <label className="block text-xs text-text-secondary mb-1">
-                Profile display name
-              </label>
-              <input
-                type="text"
-                readOnly
-                defaultValue={profile?.display_name ?? ""}
-                className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
-              />
-              <p className="mt-1 text-xs text-text-tertiary">
-                From your account profile (`profiles.display_name`).
-              </p>
-            </div>
+          <div className="mt-3">
+            {canManageOrg ? (
+              <SettingsOrgForm defaultName={org?.name ?? ""} />
+            ) : (
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs text-text-secondary mb-1">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    readOnly
+                    value={org?.name ?? ""}
+                    className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-tertiary focus:outline-none"
+                  />
+                  <p className="mt-1 text-xs text-text-tertiary">
+                    Only organization admins and organizers can change the
+                    organization name.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
         <section>
           <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider">
-            Notifications
+            Your profile
           </h2>
-          <label className="mt-3 flex items-center gap-2 text-sm text-text-secondary">
-            <input type="checkbox" defaultChecked className="rounded border-border" />
-            Email digest for event milestones
-          </label>
-          <p className="mt-2 text-xs text-text-tertiary">
-            Notification delivery preferences will connect to your org settings
-            in a later release.
-          </p>
+          <div className="mt-3">
+            <SettingsProfileForm
+              defaultDisplayName={profile?.display_name ?? ""}
+              defaultEmailMilestoneDigest={digest}
+            />
+          </div>
         </section>
-
-        <Button variant="primary" size="md" type="button" disabled>
-          Save changes
-        </Button>
       </div>
     </div>
   );

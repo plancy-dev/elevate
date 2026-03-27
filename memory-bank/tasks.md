@@ -46,7 +46,11 @@
 
 ### 1D — 설정·플랫폼 마감
 
-1. `/dashboard/settings` — 프로필·조직명 표시/수정.
+1. **`/dashboard/settings` 실구현** (설계: `memory-bank/creative-settings-org-profile.md`) — 코드 반영됨; **원격 DB에는 `005` 마이그레이션 적용 필요**
+   - [x] DB `005` 스크립트: `organizations` UPDATE RLS (`admin`/`organizer`), `profiles.email_milestone_digest`
+   - [x] 서버 액션: `updateOrganizationName`, `updateProfileAndNotifications` (`src/actions/settings.ts`)
+   - [x] 설정 UI: `SettingsOrgForm` / `SettingsProfileForm`, 역할별 조직명 편집
+   - [ ] 배포/스테이징 Supabase에 `005` 적용 후 수동 검증
 2. **Next.js `middleware` → `proxy`** 마이그레이션 (16 공식 가이드).
 3. `supabase gen types` → `Database` 타입 적용.
 4. Vercel 배포·프리뷰·환경 변수 점검.

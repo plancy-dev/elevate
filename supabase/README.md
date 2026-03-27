@@ -7,6 +7,7 @@
    - `migrations/002_profiles_select_own.sql`
    - `migrations/003_session_attendees_policies.sql` (RLS for `session_attendees` writes)
    - `migrations/004_profiles_rls_no_recursion.sql` (**required** if you see infinite recursion on `profiles`; replaces org/role subqueries with `SECURITY DEFINER` helpers)
+   - `migrations/005_settings_org_update_and_profile_prefs.sql` — `organizations` UPDATE for admin/organizer; `profiles.email_milestone_digest`
 
 ## Auth redirect URLs
 
