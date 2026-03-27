@@ -26,6 +26,7 @@ In **Authentication → URL Configuration**, add:
   For preview deployments, add each host or a pattern your Supabase project allows (e.g. `https://*.vercel.app/auth/callback` if supported).
 - The app uses `resetPasswordForEmail` and **magic link** (`signInWithOtp`) with `emailRedirectTo: <origin>/auth/callback?next=...` (password reset uses `next=/auth/update-password`). Those paths are **not** locale-prefixed, so fragments and PKCE queries stay intact.
 - **PKCE** links use `?code=` on `/auth/callback`. After `exchangeCodeForSession`, Supabase JS includes **`redirectType: recovery`** (from PKCE storage) even when the URL has no `next` query—e.g. older emails or dashboard “Send password recovery.” The callback must route recovery sessions to `/auth/update-password` instead of defaulting to `/dashboard`.
+- **Recovery session vs `/login`:** A reset link can leave the user with a valid session while they still need to choose a new password. Middleware must not treat that like a normal login: if the access token’s JWT `amr` indicates **recovery**, requests to `/login`, `/signup`, `/forgot-password`, or `/dashboard` are redirected to **`/auth/update-password`** (see `updateSession`).
 
 Full checklist (redirect URIs, Client ID formatting, Azure secrets, **account linking**): **[docs/SOCIAL_AUTH.md](../docs/SOCIAL_AUTH.md)**.
 
