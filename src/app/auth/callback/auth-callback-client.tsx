@@ -80,36 +80,49 @@ function AuthCallbackInner() {
         nextFallback,
       });
       const supabase = createClient();
-      void supabase.auth.exchangeCodeForSession(code).then(({ data, error: err }) => {
-        if (err) {
-          logAuthFlow("auth.callback.pkce_error", {
-            message: err.message.slice(0, 300),
+      void supabase.auth
+        .exchangeCodeForSession(code)
+        .then(({ data, error: err }) => {
+          if (err) {
+            logAuthFlow("auth.callback.pkce_error", {
+              message: err.message.slice(0, 300),
+            });
+            router.replace("/auth/auth-code-error");
+            return;
+          }
+          const destination = resolvePostPkceRedirect(nextFallback, data, searchParams);
+          const redirectType =
+            data &&
+            typeof data === "object" &&
+            "redirectType" in data &&
+            typeof (data as { redirectType?: unknown }).redirectType === "string"
+              ? (data as { redirectType: string }).redirectType
+              : null;
+          logAuthFlow("auth.callback.pkce_done", {
+            destination,
+            redirectType,
+            hasSession: Boolean(data?.session),
           });
+          if (
+            redirectType === "recovery" ||
+            destination === AUTH_UPDATE_PASSWORD_PATH
+          ) {
+            setRecoveryPendingClient();
+          }
+          router.replace(destination);
+          router.refresh();
+        })
+        .catch((reason: unknown) => {
+          const message =
+            reason &&
+            typeof reason === "object" &&
+            "message" in reason &&
+            typeof (reason as { message: unknown }).message === "string"
+              ? (reason as { message: string }).message.slice(0, 300)
+              : String(reason).slice(0, 300);
+          logAuthFlow("auth.callback.pkce_reject", { message });
           router.replace("/auth/auth-code-error");
-          return;
-        }
-        const destination = resolvePostPkceRedirect(nextFallback, data, searchParams);
-        const redirectType =
-          data &&
-          typeof data === "object" &&
-          "redirectType" in data &&
-          typeof (data as { redirectType?: unknown }).redirectType === "string"
-            ? (data as { redirectType: string }).redirectType
-            : null;
-        logAuthFlow("auth.callback.pkce_done", {
-          destination,
-          redirectType,
-          hasSession: Boolean(data?.session),
         });
-        if (
-          redirectType === "recovery" ||
-          destination === AUTH_UPDATE_PASSWORD_PATH
-        ) {
-          setRecoveryPendingClient();
-        }
-        router.replace(destination);
-        router.refresh();
-      });
       return;
     }
 

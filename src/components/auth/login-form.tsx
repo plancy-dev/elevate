@@ -8,7 +8,9 @@ import {
   formatAuthError,
   formatOAuthCallbackError,
   formatSignInPasswordError,
+  formatUnknownAuthError,
 } from "@/lib/auth-errors";
+import { signInWithOAuthProvider } from "@/lib/auth/oauth-sign-in";
 import {
   DEFAULT_POST_LOGIN_PATH,
   getAuthCallbackUrl,
@@ -59,29 +61,36 @@ export function LoginForm() {
     setError(null);
     setOauthBanner(null);
     setLoading(true);
-    const supabase = createClient();
-    const { error: err } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
+    try {
+      const supabase = createClient();
+      const { error: err } = await signInWithOAuthProvider(supabase, {
+        provider: "google",
         redirectTo: getAuthCallbackUrl(next),
-        queryParams: { prompt: "select_account" },
-      },
-    });
-    setLoading(false);
-    if (err) setError(formatAuthError(err));
+      });
+      if (err) setError(formatAuthError(err));
+    } catch (e) {
+      setError(formatUnknownAuthError(e));
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function signInWithAzure() {
     setError(null);
     setOauthBanner(null);
     setLoading(true);
-    const supabase = createClient();
-    const { error: err } = await supabase.auth.signInWithOAuth({
-      provider: "azure",
-      options: { redirectTo: getAuthCallbackUrl(next) },
-    });
-    setLoading(false);
-    if (err) setError(formatAuthError(err));
+    try {
+      const supabase = createClient();
+      const { error: err } = await signInWithOAuthProvider(supabase, {
+        provider: "azure",
+        redirectTo: getAuthCallbackUrl(next),
+      });
+      if (err) setError(formatAuthError(err));
+    } catch (e) {
+      setError(formatUnknownAuthError(e));
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function onSubmit(e: FormEvent) {
@@ -92,42 +101,49 @@ export function LoginForm() {
     const supabase = createClient();
     const normalizedEmail = email.trim().toLowerCase();
 
-    if (authMode === "magic") {
-      const { error: err } = await supabase.auth.signInWithOtp({
-        email: normalizedEmail,
-        options: {
-          emailRedirectTo: getAuthCallbackUrl(next),
-          shouldCreateUser: false,
-        },
-      });
-      setLoading(false);
-      if (err) {
-        setError(formatAuthError(err));
+    try {
+      if (authMode === "magic") {
+        const { error: err } = await supabase.auth.signInWithOtp({
+          email: normalizedEmail,
+          options: {
+            emailRedirectTo: getAuthCallbackUrl(next),
+            shouldCreateUser: false,
+          },
+        });
+        setLoading(false);
+        if (err) {
+          setError(formatAuthError(err));
+          return;
+        }
+        setMagicMessage(
+          "If an account exists for this email, you will receive a sign-in link shortly. Open it on this device within about an hour.",
+        );
         return;
       }
-      setMagicMessage(
-        "If an account exists for this email, you will receive a sign-in link shortly. Open it on this device within about an hour.",
-      );
-      return;
-    }
 
-    const { data, error: err } = await supabase.auth.signInWithPassword({
-      email: normalizedEmail,
-      password,
-    });
-    setLoading(false);
-    if (err) {
-      setError(formatSignInPasswordError(err));
-      return;
+      const { data, error: err } = await supabase.auth.signInWithPassword({
+        email: normalizedEmail,
+        password,
+      });
+      if (err) {
+        setLoading(false);
+        setError(formatSignInPasswordError(err));
+        return;
+      }
+      if (!data.session) {
+        setLoading(false);
+        setError(
+          "Sign-in returned no session. Refresh and try again, or check Supabase Auth status.",
+        );
+        return;
+      }
+      // Keep loading until navigation unmounts this page (`router.push` has no completion callback).
+      router.push(next);
+      router.refresh();
+    } catch (e) {
+      setLoading(false);
+      setError(formatUnknownAuthError(e));
     }
-    if (!data.session) {
-      setError(
-        "Sign-in returned no session. Refresh and try again, or check Supabase Auth status.",
-      );
-      return;
-    }
-    router.push(next);
-    router.refresh();
   }
 
   return (

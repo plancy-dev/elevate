@@ -4,6 +4,7 @@ import {
   formatAuthEmailDeliveryError,
   formatOAuthCallbackError,
   formatSignInPasswordError,
+  formatUnknownAuthError,
 } from "@/lib/auth-errors";
 
 describe("formatAuthError", () => {
@@ -39,6 +40,19 @@ describe("formatAuthEmailDeliveryError", () => {
     expect(
       formatAuthEmailDeliveryError({ message: "429 rate limit" }),
     ).toMatch(/reset emails/);
+  });
+});
+
+describe("formatUnknownAuthError", () => {
+  it("maps object with message through formatAuthError", () => {
+    expect(formatUnknownAuthError({ message: "429: rate limit" })).toMatch(
+      /Too many authentication emails/,
+    );
+  });
+
+  it("returns generic copy for non-Error shapes", () => {
+    expect(formatUnknownAuthError(null)).toMatch(/Something went wrong/);
+    expect(formatUnknownAuthError(undefined)).toMatch(/Something went wrong/);
   });
 });
 

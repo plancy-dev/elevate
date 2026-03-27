@@ -3,7 +3,10 @@ import { config as loadEnv } from "dotenv";
 import { defineConfig, devices } from "@playwright/test";
 
 // So E2E_USER_* and PLAYWRIGHT_BASE_URL work without exporting from the shell
-loadEnv({ path: path.resolve(process.cwd(), ".env.local") });
+loadEnv({
+  path: path.resolve(process.cwd(), ".env.local"),
+  quiet: true,
+});
 
 /** Avoid 127.0.0.1 vs localhost cookie host mismatch with Next + Supabase. */
 function resolveBaseURL(): string {

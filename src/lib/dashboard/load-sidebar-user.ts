@@ -14,29 +14,38 @@ export async function loadSidebarUser(
 ): Promise<SidebarUser> {
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name, role, organization_id")
+    .select(
+      `
+      display_name,
+      role,
+      organization_id,
+      organizations (
+        name
+      )
+    `,
+    )
     .eq("id", user.id)
     .maybeSingle();
 
-  let orgName = "—";
-  if (profile?.organization_id) {
-    const { data: org } = await supabase
-      .from("organizations")
-      .select("name")
-      .eq("id", profile.organization_id)
-      .maybeSingle();
-    orgName = org?.name?.trim() || "—";
-  }
+  type ProfileWithOrgEmbed = {
+    display_name?: string | null;
+    role?: string;
+    organization_id?: string | null;
+    organizations?: { name?: string | null } | null;
+  };
+
+  const row = profile as ProfileWithOrgEmbed | null;
+  const orgName = row?.organizations?.name?.trim() || "—";
 
   const displayName =
-    profile?.display_name?.trim() ||
+    row?.display_name?.trim() ||
     user.email?.split("@")[0] ||
     "User";
 
   return {
     displayName,
     email: user.email ?? "",
-    roleLabel: formatUserRoleLabel(profile?.role),
+    roleLabel: formatUserRoleLabel(row?.role),
     orgName,
     initials: getInitialsFromDisplayName(displayName),
   };

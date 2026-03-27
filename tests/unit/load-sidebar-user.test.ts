@@ -3,15 +3,15 @@ import type { User } from "@supabase/supabase-js";
 import { describe, expect, it } from "vitest";
 import { loadSidebarUser } from "@/lib/dashboard/load-sidebar-user";
 
-type ProfileRow = {
+type ProfileEmbedRow = {
   display_name: string | null;
   role: string;
   organization_id: string | null;
+  organizations: { name: string } | null;
 };
 
 function createChainableMock(handlers: {
-  profiles: () => Promise<{ data: ProfileRow | null; error: null }>;
-  organizations: () => Promise<{ data: { name: string } | null; error: null }>;
+  profiles: () => Promise<{ data: ProfileEmbedRow | null; error: null }>;
 }): SupabaseClient {
   return {
     from(table: string) {
@@ -20,7 +20,6 @@ function createChainableMock(handlers: {
           eq: () => ({
             maybeSingle: () => {
               if (table === "profiles") return handlers.profiles();
-              if (table === "organizations") return handlers.organizations();
               return Promise.resolve({ data: null, error: null });
             },
           }),
@@ -43,18 +42,15 @@ function baseUser(overrides: Partial<User> = {}): User {
 }
 
 describe("loadSidebarUser", () => {
-  it("builds sidebar from profile and organization", async () => {
+  it("builds sidebar from profile and embedded organization", async () => {
     const supabase = createChainableMock({
       profiles: async () => ({
         data: {
           display_name: "Jane Doe",
           role: "admin",
           organization_id: "org-uuid",
+          organizations: { name: "Acme Corp" },
         },
-        error: null,
-      }),
-      organizations: async () => ({
-        data: { name: "Acme Corp" },
         error: null,
       }),
     });
@@ -77,10 +73,10 @@ describe("loadSidebarUser", () => {
           display_name: "",
           role: "viewer",
           organization_id: null,
+          organizations: null,
         },
         error: null,
       }),
-      organizations: async () => ({ data: null, error: null }),
     });
 
     const result = await loadSidebarUser(supabase, baseUser({ email: "bob@example.com" }));
@@ -90,25 +86,21 @@ describe("loadSidebarUser", () => {
     expect(result.initials).toBe("BO");
   });
 
-  it("does not query organizations when profile has no organization_id", async () => {
-    let orgCalls = 0;
+  it("uses em dash when organization name is only whitespace", async () => {
     const supabase = createChainableMock({
       profiles: async () => ({
         data: {
-          display_name: "Solo",
+          display_name: "User",
           role: "viewer",
-          organization_id: null,
+          organization_id: "id",
+          organizations: { name: "   " },
         },
         error: null,
       }),
-      organizations: async () => {
-        orgCalls += 1;
-        return { data: null, error: null };
-      },
     });
 
-    await loadSidebarUser(supabase, baseUser());
+    const result = await loadSidebarUser(supabase, baseUser());
 
-    expect(orgCalls).toBe(0);
+    expect(result.orgName).toBe("—");
   });
 });

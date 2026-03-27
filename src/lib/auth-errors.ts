@@ -20,6 +20,17 @@ export function formatAuthError(err: { message: string }): string {
   return raw;
 }
 
+/** Thrown errors or non-Supabase failures during auth (network, unexpected shapes). */
+export function formatUnknownAuthError(error: unknown): string {
+  if (error !== null && typeof error === "object" && "message" in error) {
+    const m = (error as { message: unknown }).message;
+    if (typeof m === "string" && m.length > 0) {
+      return formatAuthError({ message: m });
+    }
+  }
+  return "Something went wrong. Check your connection and try again.";
+}
+
 /**
  * `signInWithPassword` — Supabase often returns a generic "Invalid login credentials"
  * for wrong password, unconfirmed email, or edge cases after a reset.
