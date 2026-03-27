@@ -6,6 +6,7 @@
    - `migrations/001_initial_schema.sql`
    - `migrations/002_profiles_select_own.sql`
    - `migrations/003_session_attendees_policies.sql` (RLS for `session_attendees` writes)
+   - `migrations/004_profiles_rls_no_recursion.sql` (**required** if you see infinite recursion on `profiles`; replaces org/role subqueries with `SECURITY DEFINER` helpers)
 
 ## Auth redirect URLs
 
@@ -46,6 +47,10 @@ The app calls `signInWithOAuth` with `redirectTo: <origin>/auth/callback?next=..
 Supabase applies **rate limits on auth emails** (signup, magic link, password recovery). If you see `429: email rate limit exceeded` in **Auth logs** or the dashboard toast when using **Send password recovery**, you have hit that limit—often after many attempts in a few minutes.
 
 **What to do:** wait (often on the order of an hour; exact windows are platform-defined), then send **one** reset request. Avoid clicking “Send reset link” or dashboard recovery repeatedly while testing.
+
+### `infinite recursion detected in policy for relation "profiles"`
+
+RLS policies must not run `SELECT … FROM public.profiles WHERE id = auth.uid()` inside another policy on `profiles`—that re-enters RLS and loops. Migration **`004_profiles_rls_no_recursion.sql`** adds `public.user_organization_id()` and `public.user_role()` (`SECURITY DEFINER`, `search_path = public`) and rewrites affected policies. Run it in the SQL Editor after `001`–`003` (or apply on any DB that already ran those).
 
 ### “Could not query the database for the schema cache” (dashboard)
 
