@@ -20,6 +20,7 @@ const SKIP_INTL_PREFIXES = [
 
 function shouldSkipIntl(pathname: string) {
   if (pathname.startsWith("/dashboard")) return true;
+  if (pathname.startsWith("/invite")) return true;
   if (pathname.startsWith("/auth")) return true;
   if (pathname.startsWith("/_next")) return true;
   if (pathname.startsWith("/api")) return true;

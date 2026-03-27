@@ -49,6 +49,39 @@ export async function getOrgEditorContext(
   };
 }
 
+/** Invitations: same as venue policy (admin | organizer). */
+const INVITE_MANAGER_ROLES = ["admin", "organizer"] as const;
+
+export async function getOrgInviteManagerContext(
+  supabase: SupabaseClient,
+): Promise<
+  { ok: true; ctx: OrgEditorContext } | { ok: false; error: string }
+> {
+  const base = await getOrgEditorContext(supabase);
+  if (!base.ok) return base;
+  if (!(INVITE_MANAGER_ROLES as readonly string[]).includes(base.ctx.role)) {
+    return {
+      ok: false,
+      error: "Only admins and organizers can manage invitations.",
+    };
+  }
+  return base;
+}
+
+/** Org admin only — changing member roles. */
+export async function getOrgAdminContext(
+  supabase: SupabaseClient,
+): Promise<
+  { ok: true; ctx: OrgEditorContext } | { ok: false; error: string }
+> {
+  const base = await getOrgEditorContext(supabase);
+  if (!base.ok) return base;
+  if (base.ctx.role !== "admin") {
+    return { ok: false, error: "Only organization admins can change member roles." };
+  }
+  return base;
+}
+
 /** Venues RLS allows only admin | organizer (not coordinator). */
 const VENUE_MANAGER_ROLES = ["admin", "organizer"] as const;
 

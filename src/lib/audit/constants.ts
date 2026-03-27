@@ -1,0 +1,35 @@
+/** Stable action names for audit_logs.action (single source of truth). */
+export const AuditAction = {
+  EVENT_CREATE: "event.create",
+  EVENT_UPDATE: "event.update",
+  EVENT_DELETE: "event.delete",
+  SESSION_CREATE: "session.create",
+  SESSION_UPDATE: "session.update",
+  SESSION_DELETE: "session.delete",
+  ATTENDEE_IMPORT: "attendee.import_csv",
+  ATTENDEE_CHECK_IN: "attendee.check_in",
+  ATTENDEE_BULK_CHECK_IN: "attendee.bulk_check_in",
+  INVITE_CREATE: "invitation.create",
+  INVITE_REVOKE: "invitation.revoke",
+  INVITE_ACCEPT: "invitation.accept",
+  MEMBER_ROLE_UPDATE: "member.role_update",
+  SETTINGS_ORG_UPDATE: "settings.organization_update",
+  SETTINGS_PROFILE_UPDATE: "settings.profile_update",
+  VENUE_CREATE: "venue.create",
+  VENUE_UPDATE: "venue.update",
+  VENUE_DELETE: "venue.delete",
+  PAYMENT_INTENT_CREATE: "payment.intent_create",
+  PAYMENT_CONFIRMED: "payment.confirmed",
+  PAYMENT_WEBHOOK: "payment.webhook_status",
+} as const;
+
+export const AuditEntityType = {
+  EVENT: "event",
+  SESSION: "session",
+  ATTENDEE: "attendee",
+  INVITATION: "organization_invitation",
+  PROFILE: "profile",
+  ORGANIZATION: "organization",
+  VENUE: "venue",
+  PAYMENT: "toss_payment",
+} as const;

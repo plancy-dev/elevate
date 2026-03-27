@@ -8,6 +8,9 @@ import {
   Users,
   MapPin,
   BarChart3,
+  Building2,
+  CreditCard,
+  FileText,
   Settings,
   HelpCircle,
 } from "lucide-react";
@@ -42,11 +45,11 @@ const navItems = [
     href: "/dashboard/analytics",
     icon: BarChart3,
   },
-];
-
-const bottomItems = [
-  { label: "Settings", href: "/dashboard/settings", icon: Settings },
-  { label: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
+  {
+    label: "Team",
+    href: "/dashboard/team",
+    icon: Building2,
+  },
 ];
 
 export type SidebarUser = {
@@ -57,8 +60,27 @@ export type SidebarUser = {
   initials: string;
 };
 
-export function Sidebar({ user }: { user: SidebarUser }) {
+export function Sidebar({
+  user,
+  showAudit = false,
+  showBilling = true,
+}: {
+  user: SidebarUser;
+  showAudit?: boolean;
+  showBilling?: boolean;
+}) {
   const pathname = usePathname();
+
+  const bottomItems = [
+    ...(showAudit
+      ? [{ label: "Audit log", href: "/dashboard/audit", icon: FileText }]
+      : []),
+    ...(showBilling
+      ? [{ label: "Billing", href: "/dashboard/billing", icon: CreditCard }]
+      : []),
+    { label: "Settings", href: "/dashboard/settings", icon: Settings },
+    { label: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
+  ];
 
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-[240px] flex-col border-r border-border-subtle bg-layer-01">

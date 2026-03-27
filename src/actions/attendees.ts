@@ -1,6 +1,8 @@
 "use server";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
+import { logAudit } from "@/lib/audit/log";
 import { getOrgEditorContext } from "@/lib/auth/require-org-editor";
 import { revalidateEventAndDashboard } from "@/lib/cache/revalidate-events";
 import { parseCsvRows } from "@/lib/csv-parse";
@@ -208,6 +210,19 @@ export async function importAttendeesCsv(
 
   revalidateEventAndDashboard(eventId);
 
+  await logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.ATTENDEE_IMPORT,
+    entityType: AuditEntityType.ATTENDEE,
+    entityId: null,
+    metadata: {
+      event_id: eventId,
+      added: newOnly.length,
+      skipped_duplicates: skippedDupes,
+    },
+  });
+
   let msg = `Added ${newOnly.length} new attendee(s).`;
   if (skippedDupes > 0) {
     msg += ` Skipped ${skippedDupes} row(s) already registered for this event (same email).`;
@@ -271,6 +286,15 @@ export async function setAttendeeCheckIn(
   if (error) return { error: error.message };
   if (!data?.event_id) return { error: "Update failed." };
 
+  await logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.ATTENDEE_CHECK_IN,
+    entityType: AuditEntityType.ATTENDEE,
+    entityId: id,
+    metadata: { event_id: data.event_id, checked_in: checkedIn },
+  });
+
   revalidateEventAndDashboard(data.event_id);
   return { success: checkedIn ? "Checked in." : "Check-in cleared." };
 }
@@ -307,6 +331,20 @@ export async function bulkSetAttendeeCheckIn(
   for (const eid of eventIds) {
     revalidateEventAndDashboard(eid);
   }
+
+  await logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.ATTENDEE_BULK_CHECK_IN,
+    entityType: AuditEntityType.ATTENDEE,
+    entityId: null,
+    metadata: {
+      count: ids.length,
+      checked_in: checkedIn,
+      event_ids: eventIds,
+    },
+  });
+
   return {
     success: `${ids.length} attendee(s) ${checkedIn ? "checked in" : "unchecked"}.`,
   };

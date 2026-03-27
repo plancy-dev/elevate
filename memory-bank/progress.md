@@ -37,6 +37,8 @@
 | Settings + DB `005` | ✅ (마이그레이션 수동 적용) |
 | `proxy` + Supabase 타입 | ✅ |
 | Vercel 프로덕션 | 운영 시 env·리다이렉트 점검 |
+| Phase 2 팀·초대 | `006` + `/dashboard/team`, `/invite` |
+| Phase 2 분석 | 참석자 기준 월 집계 |
 
 ---
 

@@ -6,6 +6,7 @@ export function revalidateEventAndDashboard(eventId?: string) {
   revalidatePath("/dashboard/events");
   revalidatePath("/dashboard/venues");
   revalidatePath("/dashboard/attendees");
+  revalidatePath("/dashboard/team");
   if (eventId) {
     revalidatePath(`/dashboard/events/${eventId}`);
     revalidatePath(`/dashboard/events/${eventId}/edit`);

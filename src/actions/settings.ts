@@ -1,5 +1,7 @@
 "use server";
 
+import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
+import { logAudit } from "@/lib/audit/log";
 import { revalidatePath } from "next/cache";
 import { getVenueManagerContext } from "@/lib/auth/require-org-editor";
 import {
@@ -28,6 +30,16 @@ export async function updateOrganizationName(
     .eq("id", auth.ctx.organizationId);
 
   if (error) return { error: error.message };
+
+  await logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.SETTINGS_ORG_UPDATE,
+    entityType: AuditEntityType.ORGANIZATION,
+    entityId: auth.ctx.organizationId,
+    metadata: { name: v.value },
+  });
+
   revalidatePath("/dashboard", "layout");
   revalidatePath("/dashboard/settings");
   return undefined;
@@ -60,6 +72,27 @@ export async function updateProfileAndNotifications(
     .eq("id", user.id);
 
   if (error) return { error: error.message };
+
+  const { data: prof } = await supabase
+    .from("profiles")
+    .select("organization_id")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (prof?.organization_id) {
+    await logAudit({
+      organizationId: prof.organization_id,
+      actorId: user.id,
+      action: AuditAction.SETTINGS_PROFILE_UPDATE,
+      entityType: AuditEntityType.PROFILE,
+      entityId: user.id,
+      metadata: {
+        display_name: nameCheck.value,
+        email_milestone_digest: digest,
+      },
+    });
+  }
+
   revalidatePath("/dashboard", "layout");
   revalidatePath("/dashboard/settings");
   return undefined;

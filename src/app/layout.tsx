@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { AppThemeProvider } from "@/components/providers/app-theme-provider";
+import { PostHogRoot } from "@/components/analytics/posthog-root";
 import { SupabaseUrlHashHandler } from "@/components/auth/supabase-url-hash-handler";
+import { AppThemeProvider } from "@/components/providers/app-theme-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -60,8 +61,10 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <AppThemeProvider>
-          <SupabaseUrlHashHandler />
-          {children}
+          <PostHogRoot>
+            <SupabaseUrlHashHandler />
+            {children}
+          </PostHogRoot>
         </AppThemeProvider>
       </body>
     </html>

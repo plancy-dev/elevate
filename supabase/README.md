@@ -8,6 +8,9 @@
    - `migrations/003_session_attendees_policies.sql` (RLS for `session_attendees` writes)
    - `migrations/004_profiles_rls_no_recursion.sql` (**required** if you see infinite recursion on `profiles`; replaces org/role subqueries with `SECURITY DEFINER` helpers)
    - `migrations/005_settings_org_update_and_profile_prefs.sql` — `organizations` UPDATE for admin/organizer; `profiles.email_milestone_digest`
+   - `migrations/006_organization_invitations.sql` — pending org invites (`organization_invitations` + RLS)
+   - `migrations/007_audit_logs.sql` — append-only audit trail (inserts via service role from app)
+   - `migrations/008_toss_payment_intents.sql` — Toss PoC payment rows (insert/update via service role from app; members can `select` own org)
 
 ## Auth redirect URLs
 

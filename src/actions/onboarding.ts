@@ -57,7 +57,6 @@ export async function ensureDefaultOrganization(): Promise<EnsureOrgResult> {
     return { ok: true, organizationId: profile.organization_id };
   }
 
-
   let admin;
   try {
     admin = createAdminClient();
@@ -67,6 +66,40 @@ export async function ensureDefaultOrganization(): Promise<EnsureOrgResult> {
       error:
         "SUPABASE_SERVICE_ROLE_KEY is missing. Add it to .env.local for onboarding.",
     };
+  }
+
+  const email = (user.email ?? "").trim().toLowerCase();
+  if (email) {
+    const { data: inv, error: invErr } = await admin
+      .from("organization_invitations")
+      .select("id, organization_id, role")
+      .eq("email", email)
+      .is("accepted_at", null)
+      .gt("expires_at", new Date().toISOString())
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (!invErr && inv) {
+      const { error: upErr } = await admin
+        .from("profiles")
+        .update({
+          organization_id: inv.organization_id,
+          role: inv.role,
+        })
+        .eq("id", user.id);
+
+      if (upErr) {
+        return { ok: false, error: upErr.message };
+      }
+
+      await admin
+        .from("organization_invitations")
+        .update({ accepted_at: new Date().toISOString() })
+        .eq("id", inv.id);
+
+      return { ok: true, organizationId: inv.organization_id };
+    }
   }
 
   const slug = `org-${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`;

@@ -30,13 +30,13 @@ export default async function AnalyticsPage() {
           <div className="flex items-center gap-2 mb-6">
             <TrendingUp className="h-4 w-4 text-accent" />
             <span className="text-sm font-medium text-text-primary">
-              Attendance by month (from event start dates)
+              Registrations & revenue by month (event start date)
             </span>
           </div>
           {series.length === 0 ? (
             <p className="text-sm text-text-tertiary">
-              No events yet. Create events with start dates to see attendance
-              rolled up by month.
+              No data yet. Create events and add attendees to see monthly
+              registration counts and revenue.
             </p>
           ) : (
             <>
@@ -51,15 +51,16 @@ export default async function AnalyticsPage() {
                       style={{
                         height: `${Math.max(8, (s.attendees / maxA) * 100)}%`,
                       }}
-                      title={`${s.attendees} attendees · ${formatCurrency(s.revenueCents)}`}
+                      title={`${s.attendees} registrations · ${formatCurrency(s.revenueCents)}`}
                     />
                     <span className="text-xs text-text-tertiary">{s.label}</span>
                   </div>
                 ))}
               </div>
               <p className="mt-4 text-xs text-text-tertiary">
-                Revenue shown in tooltips is summed from `events.revenue_cents`
-                for events starting in each month.
+                Bar height follows registration count; tooltips include revenue
+                summed from `events.revenue_cents` for events starting in that
+                month.
               </p>
             </>
           )}

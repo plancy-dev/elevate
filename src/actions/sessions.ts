@@ -1,6 +1,8 @@
 "use server";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
+import { logAudit } from "@/lib/audit/log";
 import { getOrgEditorContext } from "@/lib/auth/require-org-editor";
 import { revalidateEventAndDashboard } from "@/lib/cache/revalidate-events";
 import { createClient } from "@/lib/supabase/server";
@@ -80,19 +82,33 @@ export async function createSession(
   );
   if (!allowed) return { error: "Event not found or access denied." };
 
-  const { error } = await supabase.from("sessions").insert({
-    event_id: eventId,
-    title,
-    description,
-    speaker_name: speakerName,
-    speaker_title: speakerTitle,
-    room,
-    start_time: start.toISOString(),
-    end_time: end.toISOString(),
-    capacity,
-  });
+  const { data: created, error } = await supabase
+    .from("sessions")
+    .insert({
+      event_id: eventId,
+      title,
+      description,
+      speaker_name: speakerName,
+      speaker_title: speakerTitle,
+      room,
+      start_time: start.toISOString(),
+      end_time: end.toISOString(),
+      capacity,
+    })
+    .select("id")
+    .single();
 
   if (error) return { error: error.message };
+  if (created?.id) {
+    await logAudit({
+      organizationId: auth.ctx.organizationId,
+      actorId: auth.ctx.userId,
+      action: AuditAction.SESSION_CREATE,
+      entityType: AuditEntityType.SESSION,
+      entityId: created.id,
+      metadata: { event_id: eventId, title },
+    });
+  }
   revalidateEventAndDashboard(eventId);
   return { success: true };
 }
@@ -147,6 +163,14 @@ export async function updateSession(
     .eq("id", sessionId);
 
   if (error) return { error: error.message };
+  await logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.SESSION_UPDATE,
+    entityType: AuditEntityType.SESSION,
+    entityId: sessionId,
+    metadata: { event_id: scope.eventId, title },
+  });
   revalidateEventAndDashboard(scope.eventId);
   return { success: true };
 }
@@ -168,6 +192,15 @@ export async function deleteSession(formData: FormData) {
 
   const { error } = await supabase.from("sessions").delete().eq("id", sessionId);
   if (error) return;
+
+  await logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.SESSION_DELETE,
+    entityType: AuditEntityType.SESSION,
+    entityId: sessionId,
+    metadata: { event_id: scope.eventId },
+  });
 
   revalidateEventAndDashboard(scope.eventId);
 }

@@ -1,6 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
+import { logAudit } from "@/lib/audit/log";
 import { getOrgEditorContext } from "@/lib/auth/require-org-editor";
 import { revalidateEventAndDashboard } from "@/lib/cache/revalidate-events";
 import { eventTypeFromForm } from "@/lib/db/event-type-from-form";
@@ -63,6 +65,15 @@ export async function createEvent(
 
   if (error) return { error: error.message };
   if (!created) return { error: "Failed to create event" };
+
+  await logAudit({
+    organizationId: ctx.organizationId,
+    actorId: ctx.userId,
+    action: AuditAction.EVENT_CREATE,
+    entityType: AuditEntityType.EVENT,
+    entityId: created.id,
+    metadata: { title },
+  });
 
   revalidateEventAndDashboard(created.id);
   redirect(`/dashboard/events/${created.id}`);
@@ -128,6 +139,15 @@ export async function updateEvent(
 
   if (error) return { error: error.message };
 
+  await logAudit({
+    organizationId: ctx.organizationId,
+    actorId: ctx.userId,
+    action: AuditAction.EVENT_UPDATE,
+    entityType: AuditEntityType.EVENT,
+    entityId: eventId,
+    metadata: { title },
+  });
+
   revalidateEventAndDashboard(eventId);
   redirect(`/dashboard/events/${eventId}`);
 }
@@ -148,6 +168,15 @@ export async function deleteEvent(formData: FormData) {
     .eq("organization_id", ctx.organizationId);
 
   if (error) return;
+
+  await logAudit({
+    organizationId: ctx.organizationId,
+    actorId: ctx.userId,
+    action: AuditAction.EVENT_DELETE,
+    entityType: AuditEntityType.EVENT,
+    entityId: eventId,
+    metadata: {},
+  });
 
   revalidateEventAndDashboard();
   redirect("/dashboard/events");

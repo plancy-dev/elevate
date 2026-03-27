@@ -60,11 +60,11 @@
 
 | 순서 | 항목 |
 |------|------|
-| 1 | 조직 초대·멤버·역할 (viewer 이상 정책 정리) |
-| 2 | Analytics 페이지 실데이터 집계 |
-| 3 | 감사 로그 / 주요 액션 기록 (선택) |
-| 4 | **Toss Payments MCP 참고** 국내 결제(티켓·플랜) PoC — 별도 ADR |
-| 5 | PostHog 등 제품 분석 (이벤트 트래킹) |
+| 1 | 조직 초대·멤버·역할 — `006` + `/dashboard/team`, 초대 링크 `/invite`, 온보딩 시 이메일 매칭 초대 수락 |
+| 2 | Analytics — 월별 `attendees` 등록 수 + `events.revenue_cents` (시작 월 기준) |
+| 3 | 감사 로그 — `007` + 주요 서버 액션 기록 + `/dashboard/audit` (admin) |
+| 4 | Toss Payments PoC — 위젯·승인·`008`·웹훅 라우트 + `/dashboard/billing` |
+| 5 | PostHog — `posthog-js` + 대시보드 identify (env 있을 때만) |
 
 ---
 
@@ -77,6 +77,22 @@ AI 인사이트, 스케줄 추천, 리포트 자동화, Concierge 챗봇 — **P
 ## Phase 4 — Scale (백로그)
 
 화이트라벨, SAML/OIDC, 다국어, API 마켓플레이스, Edge·글로벌 최적화.
+
+---
+
+## Phase 2 이후 — 검수 반영 & 다음 스프린트 후보
+
+| 우선순위 | 항목 | 비고 |
+|---------|------|------|
+| P0 | **Toss 실연동** — 주문 생성·승인·웹훅·`payments` 테이블 + RLS | ADR-001 범위; 현재 `/dashboard/billing`은 안내만 |
+| P0 | **감사 로그 운영** — 실패 시 알림/메트릭(선택), 장기 보관·삭제 정책 | `logAudit`는 실패 삼킴(의도); 필요 시 관측 추가 |
+| P1 | **PostHog** — 퍼널/핵심 이벤트 정의, 서버 캡처 여부 검토 | env 없으면 미로드 유지 |
+| P1 | **E2E 확장** — 로그인→대시보드 외 팀·초대·설정 스모크 | Playwright |
+| P1 | **개발 경험** — 기본 `pnpm dev`는 Webpack; Turbopack은 `pnpm dev:turbo`. HMR 이슈 시 `.next` 삭제 | 프로덕션 빌드와 무관 |
+| P2 | **감사 로그 UX** — CSV 내보내기, 액션명 한글 라벨, metadata 예쁜 표시 | |
+| P2 | **청구/구독 모델** — Toss 외 구독·인보이스 전략 | 제품 결정 후 |
+| — | **Phase 3** — AI 인사이트·Concierge 등 | `tasks.md` Phase 3 백로그 |
+| — | **보류·참고** — Google Stitch 등 외부 디자인 MCP, 화이트라벨 | 키는 저장소에 넣지 않음 |
 
 ---
 

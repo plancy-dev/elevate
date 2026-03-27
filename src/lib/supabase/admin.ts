@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { assertSupabaseProjectUrl } from "@/lib/env/public";
+import type { Database } from "@/types/database.types";
 
 /**
  * Server-only client with elevated privileges. Never import in Client Components.
@@ -12,7 +13,7 @@ export function createAdminClient() {
       "Missing SUPABASE_SERVICE_ROLE_KEY. Add it to .env.local (server-only; never expose to the client).",
     );
   }
-  return createClient(url, key, {
+  return createClient<Database>(url, key, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
