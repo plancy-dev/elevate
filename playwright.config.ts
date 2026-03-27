@@ -1,4 +1,9 @@
+import path from "node:path";
+import { config as loadEnv } from "dotenv";
 import { defineConfig, devices } from "@playwright/test";
+
+// So E2E_USER_* and PLAYWRIGHT_BASE_URL work without exporting from the shell
+loadEnv({ path: path.resolve(process.cwd(), ".env.local") });
 
 /**
  * Local: `pnpm dev` in another terminal, then `pnpm test:e2e`.

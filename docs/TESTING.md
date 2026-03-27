@@ -58,7 +58,16 @@ CI does **not** run integration tests unless you add secrets and env to the work
    pnpm exec playwright install chromium
    ```
 
-2. Start the app, then run tests:
+2. **Password login → dashboard** (optional but recommended for regression): add to **`.env.local`** (never commit):
+
+   ```bash
+   E2E_USER_EMAIL=your-test-user@example.com
+   E2E_USER_PASSWORD=your-test-password
+   ```
+
+   `playwright.config.ts` loads `.env.local` so these are available to tests. Without them, `auth-dashboard.spec.ts` is **skipped**; the public `smoke.spec.ts` still runs.
+
+3. Start the app, then run tests:
 
    ```bash
    pnpm dev
@@ -66,13 +75,13 @@ CI does **not** run integration tests unless you add secrets and env to the work
    pnpm test:e2e
    ```
 
-3. Optional — point at a deployed preview:
+4. Optional — point at a deployed preview (same `.env.local` or export env in the shell):
 
    ```bash
    PLAYWRIGHT_BASE_URL=https://your-app.vercel.app pnpm test:e2e
    ```
 
-Current smoke spec: login page heading + “Work email” field.
+**Specs:** `smoke.spec.ts` — login page shell only. `auth-dashboard.spec.ts` — password sign-in and dashboard sidebar (Overview + user email in sidebar).
 
 ## Adding tests
 
