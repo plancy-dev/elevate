@@ -19,6 +19,7 @@ In **Authentication → URL Configuration**, add:
 
 ### Password recovery (production / Vercel)
 
+- **Vercel env:** `NEXT_PUBLIC_APP_URL` must be the **production** origin (e.g. `https://your-app.vercel.app`, no trailing slash), **not** `http://localhost:3000`. A wrong value breaks server-side auth URL helpers and can make client navigation point at the wrong host.
 - **Site URL root + PKCE:** If Supabase redirects to `https://your-app.vercel.app/?code=...` (because Site URL is the root, or dashboard “Send password recovery” did not use `/auth/callback`), **middleware** forwards that request to `/auth/callback?code=...` so `exchangeCodeForSession` runs. Without this, users briefly see the marketing home and never complete sign-in.
 - **Do not** rely on `redirect_to` pointing only at the Site URL root for **implicit** flows: after verification, Supabase may send users to `/#access_token=...`; next-intl then redirects `/` → `/ko` (or another locale), and **many browsers drop the URL hash on that redirect**, so the session never applies and you only see the marketing home. (This project sets `localeDetection: false` to reduce that risk.)
 - Add these to **Redirect URLs** (adjust host):  

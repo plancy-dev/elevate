@@ -30,6 +30,21 @@ function AuthCallbackInner() {
     const nextRaw = searchParams.get("next");
     const nextFallback = nextRaw?.startsWith("/") ? nextRaw : DEFAULT_POST_LOGIN_PATH;
 
+    /**
+     * Set recovery hint before `exchangeCodeForSession` resolves. Otherwise a parallel
+     * navigation to `/login` (e.g. header link) can run middleware with no cookie yet
+     * and hit `authed_user_to_dashboard` while the callback is still in flight.
+     */
+    if (
+      (nextRaw && nextRaw.includes("update-password")) ||
+      searchParams.get("type") === "recovery"
+    ) {
+      setRecoveryPendingClient();
+      logAuthFlow("auth.callback.early_recovery_cookie", {
+        reason: nextRaw?.includes("update-password") ? "next_query" : "type_query",
+      });
+    }
+
     logAuthFlow("auth.callback.mount", {
       hrefRedacted: typeof window !== "undefined" ? redactHref(window.location.href) : "",
       querySafe: snapshotSearchParams(searchParams),
