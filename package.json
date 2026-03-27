@@ -11,6 +11,9 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
     "db:seed-admin": "node scripts/seed-admin.mjs",
     "generate:brand": "node scripts/generate-brand-assets.mjs"
   },
@@ -37,6 +40,7 @@
     "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "to-ico": "^1.1.5",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   }
 }

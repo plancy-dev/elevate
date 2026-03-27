@@ -4,6 +4,7 @@ import { AUTH_UPDATE_PASSWORD_PATH } from "@/lib/auth-redirect-urls";
 import { hasRecoveryPendingCookie } from "@/lib/auth-recovery-cookie";
 import { jwtIndicatesPasswordRecovery } from "@/lib/auth-recovery-redirect";
 import { logAuthFlow } from "@/lib/auth-flow-log";
+import { getPublicSupabaseEnv } from "@/lib/env/public";
 
 /**
  * Refreshes the Supabase session and merges auth cookies into `response`.
@@ -13,16 +14,14 @@ export async function updateSession(
   request: NextRequest,
   response?: NextResponse,
 ) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
+  const env = getPublicSupabaseEnv();
+  if (!env) {
     return response ?? NextResponse.next({ request });
   }
 
   const supabaseResponse = response ?? NextResponse.next({ request });
 
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+  const supabase = createServerClient(env.url, env.anonKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();

@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
-import { Sidebar, type SidebarUser } from "@/components/dashboard/sidebar";
-import { getInitialsFromDisplayName } from "@/lib/user-display";
-import { formatUserRoleLabel } from "@/lib/user-roles";
+import { Sidebar } from "@/components/dashboard/sidebar";
+import { loadSidebarUser } from "@/lib/dashboard/load-sidebar-user";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardLayout({
@@ -24,33 +23,7 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("display_name, role, organization_id")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  let orgName = "—";
-  if (profile?.organization_id) {
-    const { data: org } = await supabase
-      .from("organizations")
-      .select("name")
-      .eq("id", profile.organization_id)
-      .maybeSingle();
-    orgName = org?.name?.trim() || "—";
-  }
-
-  const displayName =
-    profile?.display_name?.trim() ||
-    user.email?.split("@")[0] ||
-    "User";
-  const sidebarUser: SidebarUser = {
-    displayName,
-    email: user.email ?? "",
-    roleLabel: formatUserRoleLabel(profile?.role),
-    orgName,
-    initials: getInitialsFromDisplayName(displayName),
-  };
+  const sidebarUser = await loadSidebarUser(supabase, user);
 
   return (
     <div className="flex min-h-screen">
