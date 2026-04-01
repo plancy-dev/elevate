@@ -5,10 +5,10 @@ import { Link } from "@/i18n/navigation";
 import { MarketingSection } from "@/components/marketing/marketing-section";
 
 const SLUGS = [
-  "event-management",
-  "attendee-engagement",
-  "analytics",
-  "ai-concierge",
+  "prompt-studio",
+  "ebooks-and-guides",
+  "org-workspace",
+  "security",
 ] as const;
 
 type Props = { params: Promise<{ locale: string }> };

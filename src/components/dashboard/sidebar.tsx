@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
+  BookOpen,
+  Sparkles,
   Calendar,
   Users,
   MapPin,
@@ -19,12 +21,25 @@ import { ElevateLogo } from "@/components/layout/elevate-logo";
 import { ThemeToggleEnglish } from "@/components/layout/theme-toggle";
 import { cn } from "@/lib/utils";
 
-const navItems = [
+const primaryNavItems = [
   {
     label: "Overview",
     href: "/dashboard",
     icon: LayoutDashboard,
   },
+  {
+    label: "Prompt Studio",
+    href: "/dashboard/studio",
+    icon: Sparkles,
+  },
+  {
+    label: "Library",
+    href: "/dashboard/library",
+    icon: BookOpen,
+  },
+];
+
+const legacyMiceNavItems = [
   {
     label: "Events",
     href: "/dashboard/events",
@@ -95,7 +110,34 @@ export function Sidebar({
       {/* Main Nav */}
       <nav className="flex-1 overflow-y-auto py-3 px-2">
         <div className="space-y-0.5">
-          {navItems.map((item) => {
+          {primaryNavItems.map((item) => {
+            const isActive =
+              pathname === item.href ||
+              (item.href !== "/dashboard" && pathname.startsWith(item.href));
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 text-sm transition-colors",
+                  isActive
+                    ? "bg-highlight text-primary font-medium border-l-2 border-primary"
+                    : "text-text-secondary hover:text-text-primary hover:bg-layer-02",
+                )}
+              >
+                <item.icon className="h-4 w-4 shrink-0" />
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
+        <div className="mt-4 px-3 pb-1 pt-2 border-t border-border-subtle">
+          <p className="text-[10px] font-medium uppercase tracking-wider text-text-tertiary">
+            Legacy (MICE)
+          </p>
+        </div>
+        <div className="space-y-0.5">
+          {legacyMiceNavItems.map((item) => {
             const isActive =
               pathname === item.href ||
               (item.href !== "/dashboard" && pathname.startsWith(item.href));

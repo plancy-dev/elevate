@@ -25,6 +25,8 @@ type Props = {
   appOrigin: string;
   customerEmail: string | null;
   customerName: string | null;
+  /** When set, successful payment grants org entitlement for this catalog slug (PoC price must match). */
+  contentProductSlug?: string | null;
 };
 
 export function BillingTossWidget({
@@ -33,6 +35,7 @@ export function BillingTossWidget({
   appOrigin,
   customerEmail,
   customerName,
+  contentProductSlug,
 }: Props) {
   const widgetsRef = useRef<WidgetsApi | null>(null);
   const [ready, setReady] = useState(false);
@@ -82,7 +85,10 @@ export function BillingTossWidget({
     setError(null);
     setBusy(true);
     try {
-      const intent = await createTossPaymentIntent(TOSS_POC_AMOUNT_KRW);
+      const intent = await createTossPaymentIntent(
+        TOSS_POC_AMOUNT_KRW,
+        contentProductSlug ?? null,
+      );
       if (!intent.ok) {
         setError(intent.error);
         return;
@@ -98,7 +104,9 @@ export function BillingTossWidget({
       });
       await widgets.requestPayment({
         orderId: intent.orderId,
-        orderName: "Elevate PoC (test)",
+        orderName: contentProductSlug
+          ? `Elevate — ${contentProductSlug}`
+          : "Elevate PoC (test)",
         successUrl: `${appOrigin}/dashboard/billing/success`,
         failUrl: `${appOrigin}/dashboard/billing/fail`,
         customerEmail: customerEmail ?? undefined,

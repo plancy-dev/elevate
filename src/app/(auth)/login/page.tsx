@@ -25,13 +25,13 @@ export default function LoginPage() {
 
         <div>
           <h1 className="text-[32px] font-semibold leading-tight tracking-[-0.02em] text-text-primary">
-            Orchestrate world-class
+            E-books, Library,
             <br />
-            events at scale.
+            and your org workspace.
           </h1>
           <p className="mt-4 text-sm text-text-tertiary leading-relaxed max-w-sm">
-            Sign in to manage your organization&apos;s events, venues, and
-            attendees in Elevate.
+            Sign in to access purchases, downloads, and organization tools—not a
+            mandatory product tour.
           </p>
         </div>
 
@@ -53,12 +53,12 @@ export default function LoginPage() {
             Log in to Elevate
           </h2>
           <p className="mt-2 text-sm text-text-tertiary">
-            Don&apos;t have an account?{" "}
+            Need an account for purchases?{" "}
             <Link
               href="/signup"
               className="text-interactive hover:text-primary transition-colors"
             >
-              Request access
+              Create one
             </Link>
           </p>
 

@@ -1,98 +1,75 @@
 # Elevate — Roadmap & Task Tracking (SoT)
 
-**제품**: Elevate — MICE B2B SaaS (회의·전시·인센티브·컨퍼런스 운영)  
+**제품**: Elevate — **AI 가이드 → B2B 워크플로/에이전트** 플랫폼 (피벗 진행 중)  
 **스택**: Next.js 16 (App Router) · TypeScript · Tailwind v4 · Supabase (Auth + Postgres + RLS) · Vercel  
-**원칙**: 멀티테넌트(`organization_id`) + RLS로 데이터 격리, 서버 컴포넌트 우선.
+**원칙**: 멀티테넌트(`organization_id`) + RLS, 서버 컴포넌트 우선. **비전 SoT**: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md)
 
 ---
 
 ## CTO 우선순위 (한 줄)
 
-**데이터가 있는 “운영 루프” 완성 → 팀/엔터프라이즈 → 지능/스케일**
+**Prompt Studio 내러티브·IA → 카탈로그·권한·결제 루프 → 스튜디오 MVP·에이전트 워크스페이스**
+
+랜딩·메타 카피는 **Prompt Studio / 프롬프트 개선 MVP** 우선; 카탈로그·전자책·뉴스레터는 성장·상업 레이어(`docs/CONTENT_FUNNEL.md`).
 
 ---
 
-## Phase 0 — Foundation (완료)
-
-스캐폴딩, 브랜딩, 마케팅·대시보드 UI 셸, Supabase 클라이언트·미들웨어, DB 마이그레이션(멀티테넌트 + RLS).
-
----
-
-## Phase 1 — MVP: “한 조직이 이벤트를 끝까지 운영”
-
-### 1A — Auth & 데이터 파이프 (완료)
+## AI 피벗 — Phase A (문서·랜딩·도구)
 
 | # | 항목 | 상태 |
 |---|------|------|
-| 1 | Supabase Auth (이메일, OAuth 콜백, 미들웨어 세션) | ✅ |
-| 2 | DB 마이그레이션 적용 (`000`→`001`→`002`) | ✅ (로컬 기준) |
-| 3 | 조직 온보딩 (`ensureDefaultOrganization`, 서비스 롤) | ✅ |
-| 4 | 대시보드·이벤트 목록·상세 Supabase 연동 | ✅ |
-| 5 | 이벤트 생성 (`/dashboard/events/new`) | ✅ |
-| 6 | 회원가입·비밀번호 재설정 UI | ✅ |
-
-### 1B — 운영 CRUD (순서 고정)
-
-1. **이벤트 수정·삭제** — `/dashboard/events/[id]/edit`, `updateEvent` / `deleteEvent` 서버 액션. ✅
-2. **Venue CRUD** — `venues` 목록·생성·수정, 이벤트 폼에 `venue_id` 선택. ✅
-3. **Session CRUD** — 이벤트 상세 `EventSessionsPanel` + `createSession` / `updateSession` / `deleteSession`. ✅
-4. **비밀번호 재설정 완료** — `/auth/update-password` + 복구 세션·쿠키 플로우. ✅
-
-### 1C — 참석자 루프
-
-1. 참석자 목록을 DB 연동 (`/dashboard/attendees`, 조직 전체 목록). ✅
-2. CSV 임포트 (서버 액션 + 검증 + 이벤트 내 이메일 중복 스킵). ✅
-3. 체크인 토글·일괄 작업 (편집 역할). ✅
-
-### 1D — 설정·플랫폼 마감
-
-1. **`/dashboard/settings`** — 코드 반영됨; **`005` 마이그레이션은 수동 적용·검증 완료(사용자)**.
-   - [x] DB `005` 스크립트: `organizations` UPDATE RLS (`admin`/`organizer`), `profiles.email_milestone_digest`
-   - [x] 서버 액션: `updateOrganizationName`, `updateProfileAndNotifications` (`src/actions/settings.ts`)
-   - [x] 설정 UI: `SettingsOrgForm` / `SettingsProfileForm`, 역할별 조직명 편집
-2. **Next.js `middleware` → `proxy`** — `src/proxy.ts` (`export function proxy`), `src/middleware.ts` 제거. ✅
-3. **`supabase gen types`** — `src/types/database.types.ts`, `createClient`/`createBrowserClient`에 `Database` 제네릭, `pnpm db:types`로 재생성. ✅
-4. **Vercel** — 배포 시 `NEXT_PUBLIC_APP_URL`·`NEXT_PUBLIC_SUPABASE_*`·리다이렉트 URL 등은 [supabase/README.md](../supabase/README.md) Auth 섹션·프리뷰 호스트 allow-list 점검 (운영 시 수동).
+| A0 | Phase 0 인벤토리 + North Star (`inventory-ai-pivot-phase0.md`, `creative-elevate-ai-pivot.md`) | ✅ |
+| A1 | README, `domainKnowledge`, `tasks`, `activeContext`, AGENTS/CLAUDE 정렬 | ✅ |
+| A2 | gstack 저장소 설치·`CLAUDE.md` 연동 | ✅ (`.agents/skills/gstack` 클론; `./setup`는 **Bun** 필요 — [docs/GSTACK.md](../docs/GSTACK.md)) |
+| A3 | `@chenglou/pretext` 랜딩(클라이언트)·i18n | ✅ |
+| A4 | AI 문서 통합 — gstack ↔ Memory Bank 허브 [`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md), `AI_USAGE`·`GSTACK`·README 정렬 | ✅ |
+| A5 | 세션 자동 부트스트랩 [`ai-session-bootstrap.mdc`](../.cursor/rules/ai-session-bootstrap.mdc) · [`AI_USER_TEMPLATES.md`](../docs/AI_USER_TEMPLATES.md) · [`AI_WORKFLOW_PORTABILITY.md`](../docs/AI_WORKFLOW_PORTABILITY.md) | ✅ |
+| A6 | 킬링 서비스 중심 랜딩·IA — `en.json`·Product 슬러그·Studio 플레이스홀더·[`ADR-002`](../docs/adr/ADR-002-prompt-studio-mvp.md) | ✅ |
 
 ---
 
-## Phase 2 — Growth: 팀·분석·결제
+## AI 피벗 — Phase B (데이터·앱)
 
-| 순서 | 항목 |
+| # | 항목 | 상태 |
+|---|------|------|
+| B1 | 마이그레이션 `009` — `content_products`, `organization_content_entitlements` + RLS | ✅ |
+| B2 | 대시보드 **Library** 우선 네비; MICE는 Legacy 그룹으로 이동 | ✅ |
+| B3 | `pnpm db:types` 재생성 | 로컬 Supabase 프로젝트에서 적용 후 실행 |
+| B4 | Toss·결제와 `content_products` 정합 (`011` intent link, confirm/webhook → entitlement; Library→Billing `?product=`) | ✅ |
+| B5 | `010` `product_kind` + Library 표시 + [`docs/CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md) | ✅ |
+
+---
+
+## AI 피벗 — Phase C (성장)
+
+| 항목 | 비고 |
 |------|------|
-| 1 | 조직 초대·멤버·역할 — `006` + `/dashboard/team`, 초대 링크 `/invite`, 온보딩 시 이메일 매칭 초대 수락 |
-| 2 | Analytics — 월별 `attendees` 등록 수 + `events.revenue_cents` (시작 월 기준) |
-| 3 | 감사 로그 — `007` + 주요 서버 액션 기록 + `/dashboard/audit` (admin) |
-| 4 | Toss Payments PoC — 위젯·승인·`008`·웹훅 라우트 + `/dashboard/billing` |
-| 5 | PostHog — `posthog-js` + 대시보드 identify (env 있을 때만) |
+| 듀얼 GTM 랜딩/케이스 | Bottom-up + Enterprise 스토리 |
+| 크리에이터·마켓플레이스 | 수수료·정산 모델 제품화 |
+| 에이전트 워크스페이스 | 노드 UI·연동·감사 |
 
 ---
 
-## Phase 3 — Intelligence (백로그)
+## Legacy — 이전 Phase 요약 (완료, MICE)
 
-AI 인사이트, 스케줄 추천, 리포트 자동화, Concierge 챗봇 — **Phase 1 데이터·이벤트 모델이 안정된 뒤** 착수.
+> 신규 기능은 MICE 모델에 추가하지 않는다.
+
+- **Phase 0 Foundation**: 스캐폴딩, 마케팅·대시보드, Supabase, `000`–`002`
+- **Phase 1 MVP MICE**: 이벤트·venue·세션·참석자 CRUD, 설정, `proxy`
+- **Phase 2 Growth**: 팀 초대 `006`, 분석, 감사 `007`, Toss PoC `008`, PostHog
+
+상세 체크리스트는 git 히스토리·`reflect-phase1-closeout.md` 참고.
 
 ---
 
-## Phase 4 — Scale (백로그)
-
-화이트라벨, SAML/OIDC, 다국어, API 마켓플레이스, Edge·글로벌 최적화.
-
----
-
-## Phase 2 이후 — 검수 반영 & 다음 스프린트 후보
+## 백로그 (공통)
 
 | 우선순위 | 항목 | 비고 |
 |---------|------|------|
-| P0 | **Toss 실연동** — 주문 생성·승인·웹훅·`payments` 테이블 + RLS | ADR-001 범위; 현재 `/dashboard/billing`은 안내만 |
-| P0 | **감사 로그 운영** — 실패 시 알림/메트릭(선택), 장기 보관·삭제 정책 | `logAudit`는 실패 삼킴(의도); 필요 시 관측 추가 |
-| P1 | **PostHog** — 퍼널/핵심 이벤트 정의, 서버 캡처 여부 검토 | env 없으면 미로드 유지 |
-| P1 | **E2E 확장** — 로그인→대시보드 외 팀·초대·설정 스모크 | Playwright |
-| P1 | **개발 경험** — 기본 `pnpm dev`는 Webpack; Turbopack은 `pnpm dev:turbo`. HMR 이슈 시 `.next` 삭제 | 프로덕션 빌드와 무관 |
-| P2 | **감사 로그 UX** — CSV 내보내기, 액션명 한글 라벨, metadata 예쁜 표시 | |
-| P2 | **청구/구독 모델** — Toss 외 구독·인보이스 전략 | 제품 결정 후 |
-| — | **Phase 3** — AI 인사이트·Concierge 등 | `tasks.md` Phase 3 백로그 |
-| — | **보류·참고** — Google Stitch 등 외부 디자인 MCP, 화이트라벨 | 키는 저장소에 넣지 않음 |
+| P0 | Production Toss keys·웹훅 URL·상용 컴플라이언스 | 운영 |
+| P1 | PostHog 대시보드(퍼널 시각화) | 이벤트: `elevate_funnel_*`, `elevate_waitlist_*`, `elevate_marketing_cta_click` — 대시보드 수동 구성 |
+| P1 | E2E CI — PR에 `run-e2e` 라벨 또는 수동 workflow | `e2e.yml` |
+| P2 | MICE 스키마 제거 또는 아카이브 | 데이터·고객 영향 검토 후 |
 
 ---
 
@@ -100,4 +77,4 @@ AI 인사이트, 스케줄 추천, 리포트 자동화, Concierge 챗봇 — **P
 
 - **서비스 롤**: 조직 자동 생성 등 관리 작업에만 사용; 클라이언트 번들 금지.
 - **RLS**: `profiles.organization_id`가 없으면 데이터 접근이 막힐 수 있음 → 온보딩 필수.
-- **디자인 프로토타입**: Google Stitch MCP (선택) — `mcp.json`에 키는 저장소에 넣지 말 것.
+- **gstack**: YC 관점 리뷰는 `/plan-ceo-review`, `/office-hours` 등 — `CLAUDE.md` 참고. **역할 분담**는 `docs/AI_ORCHESTRATION.md`.

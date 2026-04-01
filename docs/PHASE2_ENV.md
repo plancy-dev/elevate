@@ -20,7 +20,8 @@
 3. 로컬/배포 환경에 설정 (예: Vercel Environment Variables):
 
 ```bash
-NEXT_PUBLIC_POSTHOG_KEY=phc_...
+NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=phc_...
+# or: NEXT_PUBLIC_POSTHOG_KEY=phc_...
 NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```
 

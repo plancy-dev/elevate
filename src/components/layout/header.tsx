@@ -21,10 +21,10 @@ export function Header() {
       label: t("product"),
       href: "/product",
       children: [
-        { href: "/product/event-management", label: t("productEventManagement") },
-        { href: "/product/attendee-engagement", label: t("productAttendeeEngagement") },
-        { href: "/product/analytics", label: t("productAnalytics") },
-        { href: "/product/ai-concierge", label: t("productAiConcierge") },
+        { href: "/product/prompt-studio", label: t("productPromptStudio") },
+        { href: "/product/ebooks-and-guides", label: t("productEbooksAndGuides") },
+        { href: "/product/org-workspace", label: t("productOrgWorkspace") },
+        { href: "/product/security", label: t("productSecurity") },
       ],
     },
     {
@@ -69,6 +69,12 @@ export function Header() {
         <div className="hidden lg:flex items-center gap-2 shrink-0">
           <LanguageSwitcher />
           <ThemeToggle />
+          <IntlButtonLink href="/#waitlist" variant="primary" size="sm">
+            {t("joinWaitlist")}
+          </IntlButtonLink>
+          <IntlButtonLink href="/product/ebooks-and-guides" variant="ghost" size="sm">
+            {t("ebooks")}
+          </IntlButtonLink>
           <IntlButtonLink href="/contact" variant="ghost" size="sm">
             {t("contactSales")}
           </IntlButtonLink>
@@ -78,7 +84,7 @@ export function Header() {
           >
             {t("logIn")}
           </NextLink>
-          <IntlButtonLink href="/demo" variant="primary" size="sm">
+          <IntlButtonLink href="/demo" variant="tertiary" size="sm">
             {t("requestDemo")}
           </IntlButtonLink>
         </div>
@@ -133,6 +139,24 @@ export function Header() {
             ))}
             <div className="border-t border-border-subtle p-4 flex flex-col gap-2">
               <IntlButtonLink
+                href="/#waitlist"
+                variant="primary"
+                size="md"
+                className={cn("w-full")}
+                onClick={() => setMobileOpen(false)}
+              >
+                {t("joinWaitlist")}
+              </IntlButtonLink>
+              <IntlButtonLink
+                href="/product/ebooks-and-guides"
+                variant="ghost"
+                size="md"
+                className={cn("w-full")}
+                onClick={() => setMobileOpen(false)}
+              >
+                {t("ebooks")}
+              </IntlButtonLink>
+              <IntlButtonLink
                 href="/contact"
                 variant="ghost"
                 size="md"
@@ -150,7 +174,7 @@ export function Header() {
               </NextLink>
               <IntlButtonLink
                 href="/demo"
-                variant="primary"
+                variant="tertiary"
                 size="md"
                 className={cn("w-full")}
                 onClick={() => setMobileOpen(false)}

@@ -83,11 +83,14 @@ CI does **not** run integration tests unless you add secrets and env to the work
 
 **Host:** Default base URL is `http://localhost:3000`. If `PLAYWRIGHT_BASE_URL` uses `127.0.0.1`, `playwright.config.ts` rewrites it to `localhost` so cookies match `pnpm dev`. Run the app as `http://localhost:3000` when testing locally.
 
-**Specs:** `smoke.spec.ts` — login page shell only. `auth-dashboard.spec.ts` — password sign-in and dashboard sidebar. `auth-session.spec.ts` — sign out → login page → sign in again (session regression).
+**Specs:** `smoke.spec.ts` — login page shell only. `auth-dashboard.spec.ts` — password sign-in and dashboard sidebar. `library.spec.ts` — login → Library heading. `auth-session.spec.ts` — sign out → login page → sign in again (session regression).
 
 ### GitHub Actions (optional)
 
-Workflow **`.github/workflows/e2e.yml`** — **Actions → E2E (Playwright) → Run workflow** (manual only).
+Workflow **`.github/workflows/e2e.yml`**:
+
+- **Actions → E2E (Playwright) → Run workflow** (manual), or
+- Add the label **`run-e2e`** to a pull request to trigger the same workflow.
 
 Add these **repository secrets** (same values as a working `.env.local` against your Supabase project):
 

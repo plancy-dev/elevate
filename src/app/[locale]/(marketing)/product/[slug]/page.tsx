@@ -5,10 +5,10 @@ import { getTranslations } from "next-intl/server";
 import { MarketingSection } from "@/components/marketing/marketing-section";
 
 const VALID_SLUGS = new Set([
-  "event-management",
-  "attendee-engagement",
-  "analytics",
-  "ai-concierge",
+  "prompt-studio",
+  "ebooks-and-guides",
+  "org-workspace",
+  "security",
 ]);
 
 type Props = { params: Promise<{ locale: string; slug: string }> };

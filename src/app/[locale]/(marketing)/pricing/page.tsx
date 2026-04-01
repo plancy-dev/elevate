@@ -178,9 +178,15 @@ export default async function PricingPage({ params }: Props) {
           <p className="mt-2 text-sm text-text-tertiary max-w-md mx-auto">
             {t("faqSub")}
           </p>
-          <div className="mt-6 flex justify-center gap-3">
-            <Link href="/contact">
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <NextLink href="/signup">
               <Button variant="primary" size="lg">
+                {t("faqSignUp")}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </NextLink>
+            <Link href="/contact">
+              <Button variant="tertiary" size="lg">
                 {t("faqCta")}
                 <ArrowRight className="h-4 w-4" />
               </Button>

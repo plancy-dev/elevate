@@ -12,8 +12,8 @@ const SKIP_INTL_PREFIXES = [
   "/forgot-password",
   "/dashboard",
   "/auth",
-  "/icon.svg",
   "/icon.png",
+  "/icon.svg",
   "/apple-icon.png",
   "/favicon.ico",
 ];

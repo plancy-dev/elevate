@@ -21,9 +21,11 @@ export const AuditAction = {
   PAYMENT_INTENT_CREATE: "payment.intent_create",
   PAYMENT_CONFIRMED: "payment.confirmed",
   PAYMENT_WEBHOOK: "payment.webhook_status",
+  CONTENT_ENTITLEMENT_GRANT: "content.entitlement_grant",
 } as const;
 
 export const AuditEntityType = {
+  CONTENT_PRODUCT: "content_product",
   EVENT: "event",
   SESSION: "session",
   ATTENDEE: "attendee",

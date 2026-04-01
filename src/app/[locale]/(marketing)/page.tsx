@@ -5,17 +5,24 @@ import {
   ArrowRight,
   BarChart3,
   Brain,
+  FileDiff,
   Globe,
   Shield,
-  Users,
   Workflow,
   CheckCircle2,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import {
+  MarketingTrackedLocaleLink,
+  MarketingTrackedNextLink,
+} from "@/components/analytics/marketing-tracked-links";
+import { MarketingCtaId } from "@/lib/analytics/posthog-events";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { KPIDashboardPreview } from "@/components/marketing/kpi-dashboard-preview";
+import { PretextHeroStatement } from "@/components/marketing/pretext-hero-statement";
+import { WaitlistForm } from "@/components/marketing/waitlist-form";
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -49,9 +56,9 @@ export default async function Home({ params }: Props) {
       description: t("capAiDesc"),
     },
     {
-      icon: <Users className="h-5 w-5" />,
-      title: t("capAttendeeTitle"),
-      description: t("capAttendeeDesc"),
+      icon: <FileDiff className="h-5 w-5" />,
+      title: t("capReviewTitle"),
+      description: t("capReviewDesc"),
     },
     {
       icon: <BarChart3 className="h-5 w-5" />,
@@ -101,19 +108,49 @@ export default async function Home({ params }: Props) {
                 {t("subhead")}
               </p>
 
+              <PretextHeroStatement
+                line1={t("pretextLine1")}
+                line2={t("pretextLine2")}
+                sub={t("pretextSub")}
+              />
+
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <Link href="/demo">
+                <MarketingTrackedLocaleLink
+                  href="/#waitlist"
+                  ctaId={MarketingCtaId.HERO_WAITLIST_ANCHOR}
+                >
                   <Button variant="primary" size="lg">
-                    {t("ctaDemo")}
+                    {t("ctaWaitlist")}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
-                </Link>
-                <Link href="/product">
+                </MarketingTrackedLocaleLink>
+                <MarketingTrackedLocaleLink
+                  href="/product/prompt-studio"
+                  ctaId={MarketingCtaId.HERO_PROMPT_STUDIO}
+                >
                   <Button variant="tertiary" size="lg">
-                    {t("ctaExplore")}
+                    {t("ctaPromptStudio")}
                   </Button>
-                </Link>
+                </MarketingTrackedLocaleLink>
+                <MarketingTrackedLocaleLink
+                  href="/product/ebooks-and-guides"
+                  ctaId={MarketingCtaId.HERO_EBOOKS}
+                >
+                  <Button variant="tertiary" size="lg">
+                    {t("ctaEbooks")}
+                  </Button>
+                </MarketingTrackedLocaleLink>
               </div>
+              <p className="mt-4 text-sm text-text-tertiary">
+                {t("ctaSignUpHint")}{" "}
+                <MarketingTrackedNextLink
+                  href="/signup"
+                  ctaId={MarketingCtaId.HERO_SIGNUP}
+                  className="text-interactive hover:text-primary transition-colors font-medium"
+                >
+                  {t("ctaSignUp")}
+                </MarketingTrackedNextLink>
+              </p>
             </div>
 
             <div className="relative flex items-center">
@@ -179,6 +216,23 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
+      <section
+        id="waitlist"
+        className="border-b border-border-subtle bg-layer-01 scroll-mt-20"
+      >
+        <div className="mx-auto max-w-[1584px] px-4 py-16 lg:px-8">
+          <div className="max-w-xl">
+            <h2 className="text-2xl font-semibold tracking-[-0.02em] text-text-primary">
+              {t("sectionWaitlistTitle")}
+            </h2>
+            <p className="mt-3 text-sm text-text-secondary leading-relaxed">
+              {t("sectionWaitlistSub")}
+            </p>
+            <WaitlistForm source="home" className="mt-8" />
+          </div>
+        </div>
+      </section>
+
       <section className="border-b border-border-subtle bg-layer-01">
         <div className="mx-auto max-w-[1584px] px-4 py-20 lg:px-8">
           <div className="max-w-xl">
@@ -204,36 +258,70 @@ export default async function Home({ params }: Props) {
 
       <section className="bg-primary">
         <div className="mx-auto max-w-[1584px] px-4 py-16 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-            <div>
-              <h2 className="text-2xl font-semibold text-white tracking-[-0.02em]">
-                {t("ctaBandTitle")}
-              </h2>
-              <p className="mt-2 text-base text-white/70 max-w-lg">
-                {t("ctaBandSub")}
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 shrink-0">
-              <Link href="/demo">
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  className="bg-white text-primary hover:bg-white/90 border-0"
-                >
-                  {t("ctaBandDemo")}
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button
-                  variant="ghost"
-                  size="lg"
-                  className="text-white/80 hover:text-white hover:bg-white/10"
-                >
-                  {t("ctaBandContact")}
-                </Button>
-              </Link>
-            </div>
+          <div className="max-w-2xl">
+            <h2 className="text-2xl font-semibold text-white tracking-[-0.02em]">
+              {t("ctaBandTitle")}
+            </h2>
+            <p className="mt-2 text-base text-white/70">
+              {t("ctaBandSub")}
+            </p>
+            <WaitlistForm
+              source="band"
+              variant="panel"
+              className="mt-8 max-w-xl"
+            />
+          </div>
+
+          <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-3">
+            <MarketingTrackedLocaleLink
+              href="/product/ebooks-and-guides"
+              ctaId={MarketingCtaId.BAND_EBOOKS}
+            >
+              <Button
+                variant="ghost"
+                size="lg"
+                className="text-white/90 hover:text-white hover:bg-white/10 border border-white/30"
+              >
+                {t("ctaBandEbooks")}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </MarketingTrackedLocaleLink>
+            <MarketingTrackedNextLink
+              href="/signup"
+              ctaId={MarketingCtaId.BAND_SIGNUP}
+            >
+              <Button
+                variant="ghost"
+                size="lg"
+                className="text-white/80 hover:text-white hover:bg-white/10"
+              >
+                {t("ctaBandSignUp")}
+              </Button>
+            </MarketingTrackedNextLink>
+            <MarketingTrackedLocaleLink
+              href="/demo"
+              ctaId={MarketingCtaId.BAND_DEMO}
+            >
+              <Button
+                variant="ghost"
+                size="lg"
+                className="text-white/80 hover:text-white hover:bg-white/10"
+              >
+                {t("ctaBandDemo")}
+              </Button>
+            </MarketingTrackedLocaleLink>
+            <MarketingTrackedLocaleLink
+              href="/contact"
+              ctaId={MarketingCtaId.BAND_CONTACT}
+            >
+              <Button
+                variant="ghost"
+                size="lg"
+                className="text-white/80 hover:text-white hover:bg-white/10"
+              >
+                {t("ctaBandContact")}
+              </Button>
+            </MarketingTrackedLocaleLink>
           </div>
 
           <div className="mt-10 pt-8 border-t border-white/10">

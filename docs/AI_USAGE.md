@@ -1,34 +1,30 @@
-# AI / Cursor 사용 가이드 — Elevate
+# AI / Cursor — Elevate 진입점
 
-이 저장소에서 AI 코딩 도우미를 쓸 때의 **진입점**과 **문서 위치**만 정리한다.
+**전체 구조(레이어·의사결정·프롬프트 계약)는 [`docs/AI_ORCHESTRATION.md`](./AI_ORCHESTRATION.md)를 본다.**  
+이 파일은 빠른 링크만 유지한다.
 
-## 1. 무엇을 먼저 읽나
+## 30초 체크리스트
 
-1. **`memory-bank/tasks.md`** — 페이즈·우선순위 (단일 소스)
-2. **`memory-bank/activeContext.md`** — 지금 단계·다음 앵커 파일
-3. **`docs/DEVELOPMENT.md`** — 로컬 개발·CI·스크립트
-4. **`AGENTS.md` / `CLAUDE.md`** — Next.js 16 주의사항
+1. **`memory-bank/tasks.md`** — 지금 해야 할 일 (SoT)  
+2. **`memory-bank/activeContext.md`** — 단계·앵커 파일  
+3. **`AGENTS.md` / `CLAUDE.md`** — Next.js 16 · gstack 요약  
+4. **구현·스크립트** — [`DEVELOPMENT.md`](./DEVELOPMENT.md)
 
-## 2. `.cursor` 구조
+**자동**: 구현·버그·기능 요청은 `.cursor/rules/ai-session-bootstrap.mdc`가 위 컨텍스트를 로드한다.  
+**권장 입력 형식**: [`AI_USER_TEMPLATES.md`](./AI_USER_TEMPLATES.md) · **타 프로젝트 이식**: [`AI_WORKFLOW_PORTABILITY.md`](./AI_WORKFLOW_PORTABILITY.md).
+
+## 폴더
 
 | 경로 | 용도 |
 |------|------|
-| `rules/workflow-modes.mdc` | INIT→PLAN→BUILD… 워크플로우 |
-| `rules/memory-bank-guide.mdc` | memory-bank 갱신 트리거 |
-| `rules/cursor-ai-context.mdc` | 규칙 인덱스 (본 문서와 연결) |
-| `skills/` | UI/React 보조 스킬 (선택) |
+| `.cursor/rules/` | INIT→BUILD 워크플로, 커밋, Memory Bank 가이드 |
+| `.cursor/skills/` | React/UI 보조 (선택) |
+| `.agents/skills/gstack/` | gstack vendored 스킬 — [GSTACK.md](./GSTACK.md) |
 
-**참고**: `rust-*` 규칙은 **이 프로젝트에서 사용하지 않음** (Next.js + TS 전용).
+## MCP
 
-## 3. Memory Bank
+Supabase·Stitch·Toss·**PostHog** 등은 **`.cursor/mcp.json`** — 토큰·키는 저장소에 넣지 않는다. PostHog는 [공식 MCP 문서](https://posthog.com/docs/model-context-protocol/cursor) 참고; 예시는 `mcp.json.example`의 `posthog` 항목.
 
-- 인덱스: **`memory-bank/README.md`**
-- 아카이브: `memory-bank/archive/` (선택)
+## 서브에이전트
 
-## 4. MCP
-
-- Supabase MCP, Stitch, Toss 등은 **`.cursor/mcp.json`** — **토큰·API 키는 저장소에 넣지 말 것**. 로컬·Cursor 설정에만 둔다.
-
-## 5. 서브에이전트
-
-`.cursor/agents/` — 탐색·프론트·디버거 등; 대규모 작업 시 `workflow-modes.mdc` 참고.
+`.cursor/agents/` — 대규모 변경 시 `workflow-modes.mdc` 참고.

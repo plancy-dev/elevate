@@ -49,6 +49,9 @@ next-env.d.ts
 # Local MCP secrets (use .cursor/mcp.json.example)
 .cursor/mcp.json
 
+# Optional gstack vendored skills (clone via docs/GSTACK.md; not required for CI)
+.agents/
+
 # Supabase CLI local cache
 supabase/.temp/
 

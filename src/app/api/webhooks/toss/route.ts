@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import { logAudit } from "@/lib/audit/log";
+import { grantOrganizationContentEntitlement } from "@/lib/payments/content-entitlement";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Json } from "@/types/database.types";
 
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
       const admin = createAdminClient();
       const { data: intent } = await admin
         .from("toss_payment_intents")
-        .select("id, organization_id, created_by, status")
+        .select("id, organization_id, created_by, status, content_product_id")
         .eq("order_id", orderId)
         .maybeSingle();
 
@@ -55,6 +56,24 @@ export async function POST(req: Request) {
             entityId: intent.id,
             metadata: { order_id: orderId, status, source: "webhook" },
           });
+
+          if (intent.content_product_id) {
+            const grant = await grantOrganizationContentEntitlement(
+              admin,
+              intent.organization_id,
+              intent.content_product_id,
+            );
+            if (grant.ok) {
+              await logAudit({
+                organizationId: intent.organization_id,
+                actorId: intent.created_by,
+                action: AuditAction.CONTENT_ENTITLEMENT_GRANT,
+                entityType: AuditEntityType.CONTENT_PRODUCT,
+                entityId: intent.content_product_id,
+                metadata: { order_id: orderId, status, source: "webhook" },
+              });
+            }
+          }
         }
       }
     }

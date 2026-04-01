@@ -196,3 +196,18 @@ body {
 .stagger-4 {
   animation-delay: 0.4s;
 }
+
+@keyframes elevate-pretext-hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.elevate-pretext-hero-animate {
+  animation: elevate-pretext-hero-fade-up 0.75s ease-out both;
+}

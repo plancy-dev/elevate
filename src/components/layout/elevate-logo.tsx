@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface ElevateLogoProps {
@@ -7,9 +8,9 @@ interface ElevateLogoProps {
 }
 
 const sizeMap = {
-  sm: { box: "h-7 w-7", text: "text-sm", font: "text-[15px]" },
-  md: { box: "h-8 w-8", text: "text-base", font: "text-[17px]" },
-  lg: { box: "h-10 w-10", text: "text-lg", font: "text-xl" },
+  sm: { box: "h-7 w-7", text: "text-sm", px: 28 },
+  md: { box: "h-8 w-8", text: "text-base", px: 32 },
+  lg: { box: "h-10 w-10", text: "text-lg", px: 40 },
 };
 
 export function ElevateLogo({
@@ -24,18 +25,17 @@ export function ElevateLogo({
       <div
         className={cn(
           s.box,
-          "relative flex items-center justify-center bg-primary",
+          "relative shrink-0 overflow-hidden rounded-full bg-transparent ring-1 ring-black/10 dark:ring-white/15",
         )}
       >
-        <span
-          className={cn(
-            s.font,
-            "font-serif italic font-bold text-white leading-none select-none",
-          )}
-          style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
-        >
-          e
-        </span>
+        <Image
+          src="/brand/elevate-mark-192.png"
+          alt=""
+          width={s.px}
+          height={s.px}
+          className="object-cover"
+          priority
+        />
       </div>
       {showText && (
         <span

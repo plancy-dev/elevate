@@ -14,111 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      audit_logs: {
-        Row: {
-          action: string
-          actor_id: string | null
-          created_at: string
-          entity_id: string | null
-          entity_type: string
-          id: string
-          metadata: Json
-          organization_id: string
-        }
-        Insert: {
-          action: string
-          actor_id?: string | null
-          created_at?: string
-          entity_id?: string | null
-          entity_type?: string
-          id?: string
-          metadata?: Json
-          organization_id: string
-        }
-        Update: {
-          action?: string
-          actor_id?: string | null
-          created_at?: string
-          entity_id?: string | null
-          entity_type?: string
-          id?: string
-          metadata?: Json
-          organization_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "audit_logs_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "audit_logs_actor_id_fkey"
-            columns: ["actor_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      toss_payment_intents: {
-        Row: {
-          amount_krw: number
-          confirmed_at: string | null
-          created_at: string
-          created_by: string
-          id: string
-          last_webhook_at: string | null
-          last_webhook_payload: Json
-          order_id: string
-          organization_id: string
-          payment_key: string | null
-          status: string
-        }
-        Insert: {
-          amount_krw: number
-          confirmed_at?: string | null
-          created_at?: string
-          created_by: string
-          id?: string
-          last_webhook_at?: string | null
-          last_webhook_payload?: Json
-          order_id: string
-          organization_id: string
-          payment_key?: string | null
-          status?: string
-        }
-        Update: {
-          amount_krw?: number
-          confirmed_at?: string | null
-          created_at?: string
-          created_by?: string
-          id?: string
-          last_webhook_at?: string | null
-          last_webhook_payload?: Json
-          order_id?: string
-          organization_id?: string
-          payment_key?: string | null
-          status?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "toss_payment_intents_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "toss_payment_intents_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       attendees: {
         Row: {
           checked_in: boolean
@@ -180,6 +75,93 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          id: string
+          metadata: Json
+          organization_id: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          metadata?: Json
+          organization_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          metadata?: Json
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_products: {
+        Row: {
+          created_at: string
+          currency: string
+          description: string
+          id: string
+          is_active: boolean
+          price_cents: number
+          product_kind: string
+          slug: string
+          storage_object_path: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          price_cents?: number
+          product_kind?: string
+          slug: string
+          storage_object_path?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          price_cents?: number
+          product_kind?: string
+          slug?: string
+          storage_object_path?: string | null
+          title?: string
+        }
+        Relationships: []
       }
       events: {
         Row: {
@@ -275,35 +257,41 @@ export type Database = {
           },
         ]
       }
-      organizations: {
+      organization_content_entitlements: {
         Row: {
-          created_at: string
+          content_product_id: string
+          granted_at: string
           id: string
-          logo_url: string | null
-          name: string
-          plan: Database["public"]["Enums"]["org_plan"]
-          slug: string
-          updated_at: string
+          organization_id: string
         }
         Insert: {
-          created_at?: string
+          content_product_id: string
+          granted_at?: string
           id?: string
-          logo_url?: string | null
-          name: string
-          plan?: Database["public"]["Enums"]["org_plan"]
-          slug: string
-          updated_at?: string
+          organization_id: string
         }
         Update: {
-          created_at?: string
+          content_product_id?: string
+          granted_at?: string
           id?: string
-          logo_url?: string | null
-          name?: string
-          plan?: Database["public"]["Enums"]["org_plan"]
-          slug?: string
-          updated_at?: string
+          organization_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "organization_content_entitlements_content_product_id_fkey"
+            columns: ["content_product_id"]
+            isOneToOne: false
+            referencedRelation: "content_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_content_entitlements_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       organization_invitations: {
         Row: {
@@ -341,20 +329,50 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "organization_invitations_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "organization_invitations_invited_by_fkey"
             columns: ["invited_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "organization_invitations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      organizations: {
+        Row: {
+          created_at: string
+          id: string
+          logo_url: string | null
+          name: string
+          plan: Database["public"]["Enums"]["org_plan"]
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          plan?: Database["public"]["Enums"]["org_plan"]
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          plan?: Database["public"]["Enums"]["org_plan"]
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -489,6 +507,73 @@ export type Database = {
           },
         ]
       }
+      toss_payment_intents: {
+        Row: {
+          amount_krw: number
+          confirmed_at: string | null
+          content_product_id: string | null
+          created_at: string
+          created_by: string
+          id: string
+          last_webhook_at: string | null
+          last_webhook_payload: Json
+          order_id: string
+          organization_id: string
+          payment_key: string | null
+          status: string
+        }
+        Insert: {
+          amount_krw: number
+          confirmed_at?: string | null
+          content_product_id?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          last_webhook_at?: string | null
+          last_webhook_payload?: Json
+          order_id: string
+          organization_id: string
+          payment_key?: string | null
+          status?: string
+        }
+        Update: {
+          amount_krw?: number
+          confirmed_at?: string | null
+          content_product_id?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          last_webhook_at?: string | null
+          last_webhook_payload?: Json
+          order_id?: string
+          organization_id?: string
+          payment_key?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "toss_payment_intents_content_product_id_fkey"
+            columns: ["content_product_id"]
+            isOneToOne: false
+            referencedRelation: "content_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "toss_payment_intents_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "toss_payment_intents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       venues: {
         Row: {
           address: string
@@ -535,6 +620,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      waitlist_signups: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          locale: string | null
+          source: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          locale?: string | null
+          source?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          locale?: string | null
+          source?: string
+        }
+        Relationships: []
       }
     }
     Views: {

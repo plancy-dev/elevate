@@ -2,42 +2,40 @@
 
 ## 현재 페이즈
 
-**Phase 2 — Growth (백로그 핵심 반영)**  
-팀·초대·분석·감사 로그(`007` + `/dashboard/audit`)·PostHog(옵션 env)·Toss ADR + `/dashboard/billing` 안내. 세부: `docs/PHASE2_ENV.md`.
+**AI 피벗 — Phase A/B**  
+North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문서·랜딩(Pretext)·gstack·신규 DB(콘텐츠 카탈로그·엔타이틀먼트)와 대시보드 Library 우선 네비.
 
 ## 최근 확정 결정
 
 | 주제 | 결정 |
 |------|------|
-| 세션 편집 | `admin`/`organizer`/`coordinator`만 UI 노출 · RLS는 기존 `Organizers can manage sessions` |
-| 세션 폼 | 이벤트 상세 내 패널 · `revalidateEventAndDashboard` |
+| 제품 방향 | AI 가이드·워크플로 플랫폼으로 피벗; MICE는 레거시 보관 |
+| MICE 스키마 | 당분간 삭제 마이그레이션 없음 |
+| SoT 문서 | `creative-elevate-ai-pivot.md` + `tasks.md` |
 
-## 검수 메모 (Phase 2 마감)
-
-- 감사 로그: 마이그레이션 미적용·RLS 오류 시 빈 목록 대신 에러 문구 표시 (`/dashboard/audit`).
-- 타임스탬프: UTC 고정 표기로 SSR/클라이언트 하이드레이션 시 locale 편차 완화 (`formatDateTimeUtc`).
-- 감사 **쓰기**는 `SUPABASE_SERVICE_ROLE_KEY` 필수; 실패 시 프로덕션은 무시, 개발은 `[audit]` 터미널 경고.
-- 다음 작업 후보: `memory-bank/tasks.md` 표 참고 (Toss 실연동, E2E 확장 등).
-
-## 다음 INIT 권장 포커스
-
-1. **Toss PoC 운영**: `008` 마이그레이션 적용·`pnpm db:types`; Toss 대시보드에 **성공/실패 URL** 등록; 웹훅은 ngrok/Vercel 배포 후 `/api/webhooks/toss` 연결.
-2. **감사 로그**: Billing 테스트 결제 후 `payment.intent_create` / `payment.confirmed` / `payment.webhook_status` 확인.
-3. **후속**: 환불·부분 취소·구독 모델·영수증 등 ADR 범위 밖.
-
-## 코드베이스 앵커
+## 레거시 (MICE) 앵커
 
 | 영역 | 위치 |
 |------|------|
-| 세션 서버 액션 | `src/actions/sessions.ts` |
-| 참석자 서버 액션 | `src/actions/attendees.ts` |
-| 참석자 UI | `src/components/dashboard/attendees-page-client.tsx`, `src/app/(dashboard)/dashboard/attendees/page.tsx` |
-| 요청 경계 (`proxy`) | `src/proxy.ts` → `src/lib/supabase/update-session.ts` |
+| 이벤트·세션·참석자 | `src/actions/*`, `src/app/(dashboard)/dashboard/events`, `attendees`, `venues` |
 | DB 타입 | `src/types/database.types.ts` (`pnpm db:types`) |
-| 팀·초대 | `src/app/(dashboard)/dashboard/team`, `src/actions/invitations.ts`, `src/app/invite/page.tsx` |
-| 이벤트 상세 UI | `src/components/dashboard/event-sessions-panel.tsx`, `src/app/(dashboard)/dashboard/events/[id]/page.tsx` |
-| 이벤트 데이터 | `src/lib/data/events.ts` (`getEventDetailPageData`) |
+| 요청 경계 | `src/proxy.ts` |
+
+## 신규 (피벗)
+
+| 영역 | 위치 |
+|------|------|
+| Library | `src/app/(dashboard)/dashboard/library` |
+| 콘텐츠 스키마 | `009`–`010` 카탈로그·엔타이틀먼트·`product_kind`; `011` 결제 intent↔SKU; `012` Storage 경로 |
+| 결제→권한 | Toss confirm/webhook → `organization_content_entitlements`; Library→Billing `?product=` |
+| 전자책 퍼널 문서 | `docs/CONTENT_FUNNEL.md` |
+| REFLECT 검수 | `memory-bank/reflect-ebook-content-funnel.md` |
+| 랜딩 Pretext | `src/components/marketing/pretext-hero-statement.tsx` |
 
 ## AI / Cursor
 
 - **`memory-bank/tasks.md`** — 단일 우선순위
+- **`docs/AI_ORCHESTRATION.md`** — gstack·Memory Bank·저장소 규칙 레이어 (허브)
+- **`.cursor/rules/ai-session-bootstrap.mdc`** — 구현·버그·기능 시 `tasks`/`activeContext` 자동 로드
+- **`docs/AI_USER_TEMPLATES.md`** · **`docs/AI_WORKFLOW_PORTABILITY.md`** — 요청 형식·타 레포 이식
+- **`CLAUDE.md`** — gstack 스킬·브라우징; `docs/GSTACK.md` 설치

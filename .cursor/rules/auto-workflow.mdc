@@ -41,10 +41,11 @@ alwaysApply: true
 
 ```
 1. 요청 분석
-2. memory-bank/domainKnowledge.md 참조
-3. 관련 파일 탐색
-4. 복잡도 판단 (L1-L4)
-5. 결과 출력 (AGENTS.md 형식)
+2. memory-bank/tasks.md, activeContext.md 참조 (로드맵·앵커; ai-session-bootstrap과 동일)
+3. memory-bank/domainKnowledge.md 참조
+4. 관련 파일 탐색
+5. 복잡도 판단 (L1-L4)
+6. 결과 출력 (AGENTS.md 형식)
 ```
 
 **출력 형식**:
@@ -107,6 +108,8 @@ alwaysApply: true
 ## 참조
 
 - **AGENTS.md**: 전체 가이드
-- **docs/AI_USAGE.md**: Cursor AI 활용 전반 (진입점·디렉터리·Skills·서브에이전트)
+- **docs/AI_ORCHESTRATION.md**: AI 도구 레이어·의사결정 (요약: `docs/AI_USAGE.md`)
+- **ai-session-bootstrap.mdc**: 구현·버그·기능 시 tasks/activeContext 자동 로드
+- **docs/AI_USER_TEMPLATES.md**: 버그·기능 요청 권장 형식
 - **workflow-modes.mdc**: 상세 워크플로우
 - **memory-bank/**: 컨텍스트

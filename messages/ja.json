@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "homeTitle": "Elevate — エンタープライズ MICE イベントプラットフォーム",
-    "homeDescription": "MICE イベント管理のためのエンタープライズ向けプラットフォーム。会議、展示会、企業ミーティングを自社データに基づくインサイトで運営します。",
+    "homeTitle": "Elevate AI — プロンプト改善と早期アクセス",
+    "homeDescription": "Elevate AI はモデルに沿った分析と構造化された提案でプロンプトを改善します（最初の MVP）。Prompt Studio ベータはウェイトリストから。ブログ・ニュースレターは SEO・更新用。カタログ・電子書籍は早期ユーザーの特典とロードマップ資金。",
     "privacyTitle": "プライバシーポリシー",
     "termsTitle": "利用規約",
     "pageTitles": {
@@ -20,24 +20,27 @@
     }
   },
   "Nav": {
-    "product": "製品",
-    "solutions": "ソリューション",
-    "pricing": "料金",
-    "resources": "リソース",
-    "productEventManagement": "イベント管理",
-    "productAttendeeEngagement": "参加者エンゲージメント",
-    "productAnalytics": "分析・インサイト",
-    "productAiConcierge": "AI コンシェルジュ",
-    "solConferences": "カンファレンス",
-    "solExhibitions": "展示会",
-    "solIncentiveTravel": "インセンティブ旅行",
-    "solCorporateMeetings": "企業ミーティング",
-    "contactSales": "営業に問い合わせ",
-    "logIn": "ログイン",
-    "requestDemo": "デモを依頼"
+    "product": "Product",
+    "solutions": "Solutions",
+    "pricing": "Pricing",
+    "resources": "Resources",
+    "solConferences": "Conferences",
+    "solExhibitions": "Exhibitions",
+    "solIncentiveTravel": "Incentive Travel",
+    "solCorporateMeetings": "Corporate Meetings",
+    "contactSales": "Contact Sales",
+    "logIn": "Log In",
+    "requestDemo": "Request Demo",
+    "library": "Library",
+    "productPromptStudio": "Prompt Studio",
+    "productEbooksAndGuides": "E-books & guides",
+    "productOrgWorkspace": "Org workspace",
+    "productSecurity": "Security & compliance",
+    "ebooks": "カタログ",
+    "joinWaitlist": "早期アクセス"
   },
   "Footer": {
-    "tagline": "MICE イベント管理のためのエンタープライズプラットフォーム。世界中の会議、展示会、企業イベントを支えます。",
+    "tagline": "Elevate AI の核はプロンプト改善です。Prompt Studio ベータはウェイトリストで受け付けます。ブログ・ニュースレター・SEO で成長し、カタログ・電子書籍は価値を込めた商業レイヤーです。リスト登録だけならアカウント不要です。",
     "product": "製品",
     "solutions": "ソリューション",
     "company": "会社情報",
@@ -52,68 +55,81 @@
     "copyright": "© {year} Elevate Inc. 無断複写・転載を禁じます。",
     "badgeSoc2": "SOC 2 相当の統制",
     "badgeGdpr": "GDPR 対応",
-    "badgeIso": "ISO 27001（ロードマップ）"
+    "badgeIso": "ISO 27001（ロードマップ）",
+    "newsletter": "Newsletter & updates"
   },
   "Home": {
-    "badge": "MICE エンタープライズプラットフォーム",
-    "headline": "イベントを次の段階へ。",
-    "headlineAccent": "重要な指標を測る。",
-    "subhead": "会議、展示会、企業ミーティングなど MICE プログラム向けのエンタープライズワークスペース—自社データに紐づくインサイトを提供します。",
-    "ctaDemo": "デモを依頼",
-    "ctaExplore": "プラットフォームを見る",
-    "pillar1Title": "統合ワークスペース",
-    "pillar1Sub": "組織、イベント、会場、参加者を一元管理。",
-    "pillar2Title": "チーム向けに設計",
-    "pillar2Sub": "管理者、主催者、コーディネーター、閲覧者などのロール。",
-    "pillar3Title": "透明性のある指標",
-    "pillar3Sub": "自社の数値のみ—ベンダー独自のベンチマークは掲載しません。",
-    "pillar4Title": "Web 向けに構築",
-    "pillar4Sub": "モダンなスタック：Next.js、TypeScript、Supabase—必要な場所にデプロイ。",
-    "sectionCapabilitiesTitle": "MICE のあらゆる側面をひとつのプラットフォームで",
-    "sectionCapabilitiesSub": "バラバラのスプレッドシートをやめ、チームが実際に運用するポートフォリオを単一の記録系で管理します。",
-    "capOrchestrationTitle": "エンドツーエンドのイベントオーケストレーション",
-    "capOrchestrationDesc": "会場選定から事後分析まで—MICE プログラムのタッチポイントを単一ワークスペースで管理します。",
-    "capAiTitle": "AI によるインサイト",
-    "capAiDesc": "出席傾向、リソースニーズ、推奨事項を示し、計画とフォローアップを支援します。",
-    "capAttendeeTitle": "参加者エンゲージメント",
-    "capAttendeeDesc": "スケジュール、セグメント、チェックインの流れでオンサイト体験をスムーズにします。",
-    "capAnalyticsTitle": "運用アナリティクス",
-    "capAnalyticsDesc": "出席、収益、満足度指標をイベント向けおよび経営向けダッシュボードで追跡します。",
-    "capGlobalTitle": "グローバル対応",
-    "capGlobalDesc": "分散チーム向けのマルチタイムゾーンスケジュールとローカライズに配慮した構造。",
-    "capSecurityTitle": "セキュリティを意識した設計",
-    "capSecurityDesc": "ロールベースのアクセスと Supabase のテナントスコープデータ—組織ポリシーに沿って展開できます。",
-    "resourcesBadge": "リソース",
-    "resourcesTitle": "事例とガイド",
-    "resourcesBody": "準備が整い次第、顧客ストーリーと製品ノートを公開します—架空の引用や数値はありません。",
-    "resourcesCta": "リソースを見る",
-    "ctaBandTitle": "イベントプログラムを高める準備はできましたか？",
-    "ctaBandSub": "ワークフロー、連携、ロールアウトについてご相談ください。",
-    "ctaBandDemo": "デモを依頼",
-    "ctaBandContact": "営業に問い合わせ",
-    "ctaCheck1": "料金は営業にご相談",
-    "ctaCheck2": "セキュリティレビューはご要望に応じて",
-    "ctaCheck3": "導入サポート"
+    "badge": "Elevate AI · Prompt Studio · ウェイトリスト",
+    "headline": "より良いプロンプトを、",
+    "headlineAccent": "自信を持ってリリース。",
+    "subhead": "最初の MVP はプロンプト改善です。モデルを選び、構造化された分析からレビュー可能な変更へ。Prompt Studio ベータはウェイトリストから。ブログ・ニュースレターはビルダーへのリーチ、カタログ・電子書籍は早期ユーザーの特典と製品に込めた価値です。",
+    "pretextLine1": "ROI you can",
+    "pretextLine2": "show in a meeting.",
+    "pretextSub": "Responsive headline layout powered by Pretext—resize the window to see reflow without layout thrash.",
+    "ctaSignUp": "Create account",
+    "ctaExplore": "Explore platform",
+    "ctaDemo": "Book a demo",
+    "pillar1Title": "Prompt Studio（MVP）",
+    "pillar1Sub": "モデルに沿ったプロンプト改善—分析・構造化された提案・レビューと承認への道。段階的に提供、ウェイトリストが先です。",
+    "pillar2Title": "カタログ・電子書籍",
+    "pillar2Sub": "ガイドとテンプレートのデジタルカタログ—早期ユーザーの特典、リリース内容の抽出、核となる製品と並行する商業レイヤー。",
+    "pillar3Title": "Org workspace",
+    "pillar3Sub": "Roles, billing, and tenant isolation—serious enough for procurement.",
+    "pillar4Title": "Shipped for the web",
+    "pillar4Sub": "Next.js, TypeScript, Supabase—deploy where your security team allows.",
+    "sectionCapabilitiesTitle": "プロンプト改善が先、カタログは並行",
+    "sectionCapabilitiesSub": "Prompt Studio が主役—モデル費用を増やす前にプロンプトを磨きます。ライブラリ・カタログは成長を支え、ブログ・ニュースレターは SEO・GEO で流入、ウェイトリストが本気のユーザーを集めます。",
+    "capOrchestrationTitle": "Model-aware workflow",
+    "capOrchestrationDesc": "Pick a target model and keep prompts aligned with how you actually ship—fewer surprises in production.",
+    "capAiTitle": "Analysis & improvement",
+    "capAiDesc": "Structured suggestions so you move from vague instructions to testable, reusable prompts.",
+    "capReviewTitle": "Review & accept",
+    "capReviewDesc": "Cursor-style review: see proposed changes, accept what fits, and keep a clear trail for your team.",
+    "capAnalyticsTitle": "Adoption you can see",
+    "capAnalyticsDesc": "When Studio is enabled for your org, tie usage to outcomes—Library, entitlements, and billing stay in one tenant.",
+    "capGlobalTitle": "Global-ready",
+    "capGlobalDesc": "Localization-friendly marketing and app shell for distributed teams and dual-track GTM.",
+    "capSecurityTitle": "Tenant-scoped by design",
+    "capSecurityDesc": "Role-based access and Supabase RLS—deploy where your security team allows.",
+    "resourcesBadge": "Resources",
+    "resourcesTitle": "Case studies & guides",
+    "resourcesBody": "We publish customer stories and product notes as they are available—no fabricated quotes or metrics here.",
+    "resourcesCta": "Browse resources",
+    "ctaBandTitle": "ウェイトリスト — ベータアクセス",
+    "ctaBandSub": "製品アップデート、Prompt Studio のロールアウト、自然・有料獲得向けのブログハイライト。カタログの新着は同じリストでお知らせします。",
+    "ctaBandSignUp": "Create account",
+    "ctaBandDemo": "Book a demo",
+    "ctaBandContact": "Contact sales",
+    "ctaCheck1": "Talk to sales about pricing",
+    "ctaCheck2": "Security review on request",
+    "ctaCheck3": "Implementation support",
+    "ctaEbooks": "カタログを見る",
+    "ctaWaitlist": "ウェイトリストに登録",
+    "ctaPromptStudio": "Prompt Studio を見る",
+    "ctaSignUpHint": "For purchases & downloads:",
+    "sectionWaitlistTitle": "ウェイトリスト — Prompt Studio ベータ",
+    "sectionWaitlistSub": "メールのみ、アカウント不要。Prompt Studio 公開時にホワイトリストで先行招待し、製品アップデートとブログのピック（自然・広告獲得）もお届けします。",
+    "ctaBandEbooks": "カタログを見る"
   },
   "KpiPreview": {
-    "kpiAttendees": "総参加者",
-    "kpiRevenue": "売上",
-    "kpiEvents": "進行中イベント",
-    "kpiVenues": "会場",
-    "kpiChange": "御社データ",
-    "event1Name": "サンプルカンファレンス",
-    "event1Location": "都市",
-    "event2Name": "地域フォーラム",
-    "event2Location": "オンライン",
-    "event3Name": "サンプルミーティング",
-    "event3Location": "都市",
-    "recentTitle": "最近のイベント",
-    "previewTitle": "概要（プレビュー）",
-    "illustration": "デモ",
-    "recentSample": "最近のイベント（サンプル）",
-    "statusDraft": "下書き",
-    "statusPlanning": "計画中",
-    "statusLive": "開催中"
+    "kpiAttendees": "Active users",
+    "kpiRevenue": "Library SKUs",
+    "kpiEvents": "Studio sessions",
+    "kpiVenues": "Orgs",
+    "kpiChange": "Illustrative",
+    "event1Name": "Prompt pack A",
+    "event1Location": "Team",
+    "event2Name": "Guide: rollout",
+    "event2Location": "Library",
+    "event3Name": "Org default",
+    "event3Location": "Policy",
+    "recentTitle": "Recent activity",
+    "previewTitle": "Workspace (preview)",
+    "illustration": "Illustration",
+    "recentSample": "Recent activity (sample)",
+    "statusDraft": "Draft",
+    "statusPlanning": "Planning",
+    "statusLive": "Live"
   },
   "Privacy": {
     "title": "プライバシーポリシー",
@@ -155,25 +171,27 @@
     "aria": "カラーテーマを切り替え"
   },
   "Contact": {
-    "metaTitle": "営業に問い合わせ",
-    "title": "営業に問い合わせ",
-    "description": "イベントの概要とチーム規模をご記入ください。原則1営業日以内にご返信します。",
-    "labelEmail": "仕事用メール",
+    "metaTitle": "Contact Sales",
+    "title": "Contact sales",
+    "description": "Prompt Studio の展開、組織ライブラリ、カタログ購入、セキュリティについて—チーム導入の場合はその旨も。通常 1 営業日以内に返信します。",
+    "labelEmail": "Work email",
     "placeholderEmail": "you@company.com",
-    "labelCompany": "会社名",
-    "placeholderCompany": "会社名",
-    "labelMessage": "メッセージ",
-    "placeholderMessage": "どのようなご支援が必要ですか？",
-    "submit": "送信する"
+    "labelCompany": "Company",
+    "placeholderCompany": "Company name",
+    "labelMessage": "Message",
+    "placeholderMessage": "How can we help?",
+    "submit": "Send message"
   },
   "Demo": {
-    "metaTitle": "デモを申し込む",
-    "title": "デモを申し込む",
-    "description": "Elevate が MICE のワークフローにどう合うかご紹介します。約30分、押し売りはありません。",
-    "labelEmail": "仕事用メール",
+    "metaTitle": "Request a Demo",
+    "title": "Request a demo",
+    "description": "Prompt Studio ロードマップ、ライブラリ、カタログ決済をご案内します。押し売りはありません。スクリプト通りの「全機能」デモではありません。",
+    "signUpHint": "Need an account for a purchase?",
+    "signUpLink": "Create account",
+    "labelEmail": "Work email",
     "placeholderEmail": "you@company.com",
-    "labelDate": "希望日",
-    "submit": "デモを予約"
+    "labelDate": "Preferred date",
+    "submit": "Schedule demo"
   },
   "About": {
     "metaTitle": "会社情報",
@@ -193,8 +211,8 @@
   "CaseStudies": {
     "metaTitle": "事例",
     "title": "事例",
-    "description": "企業チームが Elevate で MICE を大規模に運営する方法。詳細は近日公開。",
-    "body": "測定可能な成果を含む詳細事例を準備中です。それまでにプラットフォームをご覧になりたい方はデモをお申し込みください。"
+    "description": "Elevate AI のプロンプトワークフロー、ライブラリ、ワークスペースを使うチームの事例。詳細は近日公開。",
+    "body": "測定可能な成果を含む事例を準備中です。それまでにウェイトリストに登録するか、カタログをご覧ください。"
   },
   "SecurityPage": {
     "metaTitle": "セキュリティ",
@@ -230,48 +248,48 @@
     }
   },
   "Product": {
-    "metaTitle": "製品",
-    "title": "プラットフォーム",
-    "description": "Elevate は MICE 運用を一元化し、ツールを切り替えずに企画・実行・測定まで進められます。",
+    "metaTitle": "Product",
+    "title": "Platform",
+    "description": "Elevate AI の中心は Prompt Studio—モデルに沿ったプロンプト改善。組織ワークスペースとライブラリ（カタログ・電子書籍）は並行で展開、ウェイトリストが製品ニュースを最初に受け取ります。",
     "modules": {
-      "event-management": {
-        "title": "イベント管理",
-        "desc": "企画、会場、スケジュール、オペレーションを一か所に。"
+      "prompt-studio": {
+        "title": "Prompt Studio",
+        "desc": "Choose a model, analyze prompts, and apply reviewable improvements—Cursor-style acceptance on the roadmap."
       },
-      "attendee-engagement": {
-        "title": "参加者エンゲージメント",
-        "desc": "登録、コミュニケーション、オンサイト体験。"
+      "ebooks-and-guides": {
+        "title": "E-books & guides",
+        "desc": "カタログと権限—成長と特典のレイヤー。ヘッドラインは Prompt Studio です。"
       },
-      "analytics": {
-        "title": "分析とインサイト",
-        "desc": "KPI、経営向けダッシュボード、エクスポート可能なレポート。"
+      "org-workspace": {
+        "title": "Org workspace",
+        "desc": "Roles, invites, Library access, and billing scoped to your organization."
       },
-      "ai-concierge": {
-        "title": "AI コンシェルジュ",
-        "desc": "イベントデータへの自然言語クエリ（ロードマップ）。"
+      "security": {
+        "title": "Security & compliance",
+        "desc": "Tenant isolation, least-privilege patterns, and enterprise-friendly deployment stories."
       }
     }
   },
   "ProductSlug": {
-    "event-management": {
-      "metaTitle": "イベント管理",
-      "title": "イベント管理",
-      "body": "会場、タイムライン、トラック、スタッフ割り当てを一元管理。スプレッドシートの単一の情報源に。"
+    "prompt-studio": {
+      "metaTitle": "Prompt Studio",
+      "title": "Prompt Studio",
+      "body": "核となるループ: 対象モデルを選び、プロンプトを貼ると構造化された分析・改善提案が得られます。レビューと承認/却下はロードマップ。ベータはウェイトリストから。アカウントは購入と組織ライブラリ向け—スクリプト通りの全製品ツアーではありません。"
     },
-    "attendee-engagement": {
-      "metaTitle": "参加者エンゲージメント",
-      "title": "参加者エンゲージメント",
-      "body": "登録フロー、メールキャンペーン、モバイルチェックイン、VIP 対応——大規模イベントと厳格なブランド要件向け。"
+    "ebooks-and-guides": {
+      "metaTitle": "E-books & guides",
+      "title": "E-books & guides",
+      "body": "High-signal guides and templates sold through the catalog. Purchases grant your organization entitlements; Library surfaces what you can download when files are attached in ops."
     },
-    "analytics": {
-      "metaTitle": "分析とインサイト",
-      "title": "分析とインサイト",
-      "body": "出席、収益、NPS、オペレーション KPI のリアルタイムダッシュボード。PDF エクスポート、エンタープライズでは API 経由で BI と連携。"
+    "org-workspace": {
+      "metaTitle": "Org workspace",
+      "title": "Org workspace",
+      "body": "Everything is scoped to organizations: members, roles, Library, Studio access, and billing. Invite teammates and keep a single source of truth for what the org owns."
     },
-    "ai-concierge": {
-      "metaTitle": "AI コンシェルジュ",
-      "title": "AI コンシェルジュ",
-      "body": "スケジュール、収容人数、パフォーマンスを自然言語で質問。企業向けの限定プレビューで提供予定。"
+    "security": {
+      "metaTitle": "Security & compliance",
+      "title": "Security & compliance",
+      "body": "Supabase-backed auth, RLS, and deployment options your security team can align with. Detailed reviews under NDA for enterprise buyers—see also Security and Compliance pages."
     }
   },
   "Solutions": {
@@ -308,132 +326,98 @@
     }
   },
   "Pricing": {
-    "metaTitle": "料金",
-    "heroTitle": "シンプルで透明な料金",
-    "heroSub": "14日間の無料トライアルから。クレジットカード不要。イベント規模に合わせて拡張。",
-    "compareTitle": "プランの比較",
-    "featureColumn": "機能",
-    "mostPopular": "最も人気",
-    "faqTitle": "ご質問は？",
-    "faqSub": "組織に合ったプランをご案内します。ニーズをお聞きするお電話をご予約ください。",
-    "faqCta": "営業に問い合わせ",
+    "metaTitle": "Pricing",
+    "heroTitle": "Simple, transparent pricing",
+    "heroSub": "Prompt Studio プレビューはプランに応じて提供。準備ができたらライブラリとカタログ SKU で購入。座席とエンタープライズ統制はその後に拡大。",
+    "compareTitle": "Compare plans",
+    "featureColumn": "Feature",
+    "mostPopular": "Most Popular",
+    "faqTitle": "Have questions?",
+    "faqSub": "Create an account when you need purchases and downloads—or talk to us about pilots, compliance, and rollout.",
+    "faqCta": "Talk to sales",
+    "faqSignUp": "Create account",
     "plans": [
       {
         "key": "starter",
-        "name": "スターター",
+        "name": "Starter",
         "price": "$299",
-        "period": "/月",
-        "description": "プロフェッショナルなイベント管理を始める小規模チーム向け。",
-        "cta": "無料トライアルを開始",
+        "period": "/month",
+        "description": "Small teams starting with Prompt Studio preview and Library.",
+        "cta": "Start free trial",
         "highlight": false
       },
       {
         "key": "professional",
-        "name": "プロフェッショナル",
+        "name": "Professional",
         "price": "$899",
-        "period": "/月",
-        "description": "高度な分析で複数イベントを運営する成長企業向け。",
-        "cta": "無料トライアルを開始",
+        "period": "/month",
+        "description": "Growing orgs: more seats, catalog entitlements, and Studio usage.",
+        "cta": "Start free trial",
         "highlight": true
       },
       {
         "key": "enterprise",
-        "name": "エンタープライズ",
-        "price": "お見積り",
+        "name": "Enterprise",
+        "price": "Custom",
         "period": "",
-        "description": "最高水準のセキュリティ、コンプライアンス、スケールが必要な大規模組織向け。",
-        "cta": "営業に問い合わせ",
+        "description": "SSO, audit, security review, and custom rollout for large organizations.",
+        "cta": "Contact sales",
         "highlight": false
       }
     ],
     "featureRows": [
       {
         "kind": "text",
-        "label": "年間イベント数",
-        "starter": "最大10",
-        "professional": "最大50",
-        "enterprise": "無制限"
+        "label": "Included seats",
+        "starter": "Up to 5",
+        "professional": "Up to 25",
+        "enterprise": "Unlimited"
       },
       {
         "kind": "text",
-        "label": "1イベントあたりの参加者数",
-        "starter": "500",
-        "professional": "5,000",
-        "enterprise": "無制限"
+        "label": "Prompt Studio preview",
+        "starter": "Included",
+        "professional": "Included",
+        "enterprise": "Included"
       },
       {
         "kind": "text",
-        "label": "チームメンバー",
-        "starter": "3",
-        "professional": "15",
-        "enterprise": "無制限"
+        "label": "Library (e-books & guides)",
+        "starter": "Included",
+        "professional": "Included",
+        "enterprise": "Included"
+      },
+      {
+        "kind": "text",
+        "label": "Catalog SKUs entitled",
+        "starter": "Up to 3",
+        "professional": "Up to 20",
+        "enterprise": "Custom"
       },
       {
         "kind": "check",
-        "label": "イベントダッシュボード",
+        "label": "Org billing & Toss checkout",
         "starter": true,
         "professional": true,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "参加者管理",
+        "label": "Team invites",
         "starter": true,
         "professional": true,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "トラックスケジュール",
-        "starter": true,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "チェックインシステム",
-        "starter": true,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "CSV/Excel インポート",
-        "starter": true,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "リアルタイム分析",
+        "label": "Usage-oriented analytics",
         "starter": false,
         "professional": true,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "カスタムブランディング",
-        "starter": false,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "AI インサイト",
-        "starter": false,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "NPS サーベイ",
-        "starter": false,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "API アクセス",
+        "label": "API access (future)",
         "starter": false,
         "professional": true,
         "enterprise": true
@@ -447,46 +431,47 @@
       },
       {
         "kind": "check",
-        "label": "監査ログ",
+        "label": "Audit logging",
         "starter": false,
         "professional": false,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "カスタム連携",
+        "label": "Custom integrations",
         "starter": false,
         "professional": false,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "専任カスタマーサクセス",
+        "label": "Dedicated success",
         "starter": false,
         "professional": false,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "SLA 保証 (99.9%)",
-        "starter": false,
-        "professional": false,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "オンプレミス",
+        "label": "SLA (99.9%)",
         "starter": false,
         "professional": false,
         "enterprise": true
       },
       {
         "kind": "text",
-        "label": "サポート",
-        "starter": "メール",
-        "professional": "優先",
-        "enterprise": "24/7 専任"
+        "label": "Support",
+        "starter": "Email",
+        "professional": "Priority",
+        "enterprise": "24/7 dedicated"
       }
     ]
+  },
+  "Waitlist": {
+    "labelEmail": "メール",
+    "placeholderEmail": "you@company.com",
+    "hintNewsletter": "Prompt Studio ベータのホワイトリスト—製品アップデートとブログのハイライトも送ります。いつでも配信停止できます。",
+    "submit": "ウェイトリストに参加",
+    "success": "早期アクセスリストに登録しました。確認メールは後日ポリシーに沿って送る場合があります。",
+    "errorGeneric": "Something went wrong. Try again in a moment."
   }
 }

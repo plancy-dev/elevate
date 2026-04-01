@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "homeTitle": "Elevate — 企业级 MICE 活动平台",
-    "homeDescription": "面向 MICE 活动管理的企业级平台。以您自己的数据为支撑，统筹会议、展览与企业活动。",
+    "homeTitle": "Elevate AI — 提示改进与抢先体验",
+    "homeDescription": "Elevate AI 通过面向模型的分析与结构化建议改进提示（首个 MVP）。Prompt Studio 测试版通过等候名单；博客与通讯用于 SEO 与更新。目录与电子书用于回馈早期用户并支持路线图。",
     "privacyTitle": "隐私政策",
     "termsTitle": "服务条款",
     "pageTitles": {
@@ -20,24 +20,27 @@
     }
   },
   "Nav": {
-    "product": "产品",
-    "solutions": "解决方案",
-    "pricing": "定价",
-    "resources": "资源",
-    "productEventManagement": "活动管理",
-    "productAttendeeEngagement": "参会者互动",
-    "productAnalytics": "分析与洞察",
-    "productAiConcierge": "AI 礼宾",
-    "solConferences": "会议",
-    "solExhibitions": "展览",
-    "solIncentiveTravel": "奖励旅游",
-    "solCorporateMeetings": "企业会议",
-    "contactSales": "联系销售",
-    "logIn": "登录",
-    "requestDemo": "申请演示"
+    "product": "Product",
+    "solutions": "Solutions",
+    "pricing": "Pricing",
+    "resources": "Resources",
+    "solConferences": "Conferences",
+    "solExhibitions": "Exhibitions",
+    "solIncentiveTravel": "Incentive Travel",
+    "solCorporateMeetings": "Corporate Meetings",
+    "contactSales": "Contact Sales",
+    "logIn": "Log In",
+    "requestDemo": "Request Demo",
+    "library": "Library",
+    "productPromptStudio": "Prompt Studio",
+    "productEbooksAndGuides": "E-books & guides",
+    "productOrgWorkspace": "Org workspace",
+    "productSecurity": "Security & compliance",
+    "ebooks": "目录",
+    "joinWaitlist": "抢先体验"
   },
   "Footer": {
-    "tagline": "面向 MICE 活动管理的企业级平台，服务全球会议、展览与企业活动。",
+    "tagline": "Elevate AI 的核心是提示改进—Prompt Studio 测试版通过等候名单开放。我们用博客、通讯与 SEO 增长；目录与电子书是承载产品价值的商业层。仅加入名单无需账户。",
     "product": "产品",
     "solutions": "解决方案",
     "company": "公司",
@@ -52,68 +55,81 @@
     "copyright": "© {year} Elevate Inc. 保留所有权利。",
     "badgeSoc2": "SOC 2 控制对齐",
     "badgeGdpr": "GDPR 就绪",
-    "badgeIso": "ISO 27001（规划中）"
+    "badgeIso": "ISO 27001（规划中）",
+    "newsletter": "Newsletter & updates"
   },
   "Home": {
-    "badge": "MICE 企业平台",
-    "headline": "提升您的活动水平。",
-    "headlineAccent": "衡量真正重要的指标。",
-    "subhead": "面向 MICE 类项目的企业级工作区——会议、展览与企业活动——洞察与您的自有数据紧密相连。",
-    "ctaDemo": "申请演示",
-    "ctaExplore": "了解平台",
-    "pillar1Title": "统一工作区",
-    "pillar1Sub": "组织、活动、场馆与参会者集中管理。",
-    "pillar2Title": "为团队打造",
-    "pillar2Sub": "管理员、主办方、协调员与查看者等角色。",
-    "pillar3Title": "透明指标",
-    "pillar3Sub": "展示您自己的数据——本页无供应商虚构基准。",
-    "pillar4Title": "面向 Web 交付",
-    "pillar4Sub": "现代技术栈：Next.js、TypeScript 与 Supabase——按需部署。",
-    "sectionCapabilitiesTitle": "一个平台覆盖 MICE 各维度",
-    "sectionCapabilitiesSub": "用单一真实来源替代零散表格，管理团队实际运营的项目组合。",
-    "capOrchestrationTitle": "端到端活动编排",
-    "capOrchestrationDesc": "从场馆遴选到会后分析——在单一工作区管理 MICE 项目的触点。",
-    "capAiTitle": "AI 驱动洞察",
-    "capAiDesc": "呈现出席趋势、资源需求与建议，支持策划与跟进。",
-    "capAttendeeTitle": "参会者互动",
-    "capAttendeeDesc": "日程、分群与签到流程，助力现场体验更顺畅。",
-    "capAnalyticsTitle": "运营分析",
-    "capAnalyticsDesc": "在活动与管理层看板中跟踪出席、收入与满意度指标。",
-    "capGlobalTitle": "面向全球",
-    "capGlobalDesc": "多时区排期与利于本地化的结构，服务分布式团队。",
-    "capSecurityTitle": "安全优先设计",
-    "capSecurityDesc": "基于角色的访问与 Supabase 租户级数据——与组织策略对齐部署。",
-    "resourcesBadge": "资源",
-    "resourcesTitle": "案例与指南",
-    "resourcesBody": "我们在有内容时发布客户故事与产品说明——无虚构引用或指标。",
-    "resourcesCta": "浏览资源",
-    "ctaBandTitle": "准备好提升活动项目了吗？",
-    "ctaBandSub": "与我们沟通您的工作流、集成与上线计划。",
-    "ctaBandDemo": "申请演示",
-    "ctaBandContact": "联系销售",
-    "ctaCheck1": "与销售沟通定价",
-    "ctaCheck2": "可应要求提供安全审查",
-    "ctaCheck3": "实施支持"
+    "badge": "Elevate AI · Prompt Studio · 等候名单",
+    "headline": "更好的提示，",
+    "headlineAccent": "放心上线。",
+    "subhead": "首个 MVP 是提示改进：选择模型、获得结构化分析并走向可审核的修改。Prompt Studio 测试版通过等候名单；博客与通讯触达开发者；目录与电子书回馈早期用户并体现产品价值。",
+    "pretextLine1": "ROI you can",
+    "pretextLine2": "show in a meeting.",
+    "pretextSub": "Responsive headline layout powered by Pretext—resize the window to see reflow without layout thrash.",
+    "ctaSignUp": "Create account",
+    "ctaExplore": "Explore platform",
+    "ctaDemo": "Book a demo",
+    "pillar1Title": "Prompt Studio（MVP）",
+    "pillar1Sub": "面向模型的提示改进—分析、结构化建议与通往审核/接受的路径。分阶段发布；等候名单优先。",
+    "pillar2Title": "目录与电子书",
+    "pillar2Sub": "指南与模板的数字目录—早期用户奖励、从发布内容提炼，以及与核心产品并行的商业层。",
+    "pillar3Title": "Org workspace",
+    "pillar3Sub": "Roles, billing, and tenant isolation—serious enough for procurement.",
+    "pillar4Title": "Shipped for the web",
+    "pillar4Sub": "Next.js, TypeScript, Supabase—deploy where your security team allows.",
+    "sectionCapabilitiesTitle": "提示改进优先，目录并行",
+    "sectionCapabilitiesSub": "Prompt Studio 是主角—在扩大模型支出前先打磨提示。图书馆与目录支撑增长；博客与通讯服务 SEO 与 GEO；等候名单汇聚认真用户。",
+    "capOrchestrationTitle": "Model-aware workflow",
+    "capOrchestrationDesc": "Pick a target model and keep prompts aligned with how you actually ship—fewer surprises in production.",
+    "capAiTitle": "Analysis & improvement",
+    "capAiDesc": "Structured suggestions so you move from vague instructions to testable, reusable prompts.",
+    "capReviewTitle": "Review & accept",
+    "capReviewDesc": "Cursor-style review: see proposed changes, accept what fits, and keep a clear trail for your team.",
+    "capAnalyticsTitle": "Adoption you can see",
+    "capAnalyticsDesc": "When Studio is enabled for your org, tie usage to outcomes—Library, entitlements, and billing stay in one tenant.",
+    "capGlobalTitle": "Global-ready",
+    "capGlobalDesc": "Localization-friendly marketing and app shell for distributed teams and dual-track GTM.",
+    "capSecurityTitle": "Tenant-scoped by design",
+    "capSecurityDesc": "Role-based access and Supabase RLS—deploy where your security team allows.",
+    "resourcesBadge": "Resources",
+    "resourcesTitle": "Case studies & guides",
+    "resourcesBody": "We publish customer stories and product notes as they are available—no fabricated quotes or metrics here.",
+    "resourcesCta": "Browse resources",
+    "ctaBandTitle": "等候名单 — 测试版访问",
+    "ctaBandSub": "产品更新、Prompt Studio 上线节奏，以及面向自然与付费获取的博客精选。目录上新通过同一列表通知。",
+    "ctaBandSignUp": "Create account",
+    "ctaBandDemo": "Book a demo",
+    "ctaBandContact": "Contact sales",
+    "ctaCheck1": "Talk to sales about pricing",
+    "ctaCheck2": "Security review on request",
+    "ctaCheck3": "Implementation support",
+    "ctaEbooks": "浏览目录",
+    "ctaWaitlist": "加入等候名单",
+    "ctaPromptStudio": "了解 Prompt Studio",
+    "ctaSignUpHint": "For purchases & downloads:",
+    "sectionWaitlistTitle": "等候名单 — Prompt Studio 测试版",
+    "sectionWaitlistSub": "仅需邮箱，无需账户。Prompt Studio 开放时以白名单优先邀请；并发送产品更新与博客精选（自然与广告投放获客）。",
+    "ctaBandEbooks": "浏览目录"
   },
   "KpiPreview": {
-    "kpiAttendees": "总参会人数",
-    "kpiRevenue": "收入",
-    "kpiEvents": "进行中活动",
-    "kpiVenues": "场馆",
-    "kpiChange": "您的数据",
-    "event1Name": "示例会议",
-    "event1Location": "城市",
-    "event2Name": "区域论坛",
-    "event2Location": "线上",
-    "event3Name": "示例内部会议",
-    "event3Location": "城市",
-    "recentTitle": "近期活动",
-    "previewTitle": "概览（预览）",
-    "illustration": "示例",
-    "recentSample": "近期活动（示例）",
-    "statusDraft": "草稿",
-    "statusPlanning": "策划中",
-    "statusLive": "进行中"
+    "kpiAttendees": "Active users",
+    "kpiRevenue": "Library SKUs",
+    "kpiEvents": "Studio sessions",
+    "kpiVenues": "Orgs",
+    "kpiChange": "Illustrative",
+    "event1Name": "Prompt pack A",
+    "event1Location": "Team",
+    "event2Name": "Guide: rollout",
+    "event2Location": "Library",
+    "event3Name": "Org default",
+    "event3Location": "Policy",
+    "recentTitle": "Recent activity",
+    "previewTitle": "Workspace (preview)",
+    "illustration": "Illustration",
+    "recentSample": "Recent activity (sample)",
+    "statusDraft": "Draft",
+    "statusPlanning": "Planning",
+    "statusLive": "Live"
   },
   "Privacy": {
     "title": "隐私政策",
@@ -155,25 +171,27 @@
     "aria": "切换颜色主题"
   },
   "Contact": {
-    "metaTitle": "联系销售",
-    "title": "联系销售",
-    "description": "请介绍您的活动项目与团队规模。我们力争在一个工作日内回复。",
-    "labelEmail": "工作邮箱",
+    "metaTitle": "Contact Sales",
+    "title": "Contact sales",
+    "description": "咨询 Prompt Studio 上线、组织图书馆、目录采购或安全—团队采购请注明。我们通常在一个工作日内回复。",
+    "labelEmail": "Work email",
     "placeholderEmail": "you@company.com",
-    "labelCompany": "公司",
-    "placeholderCompany": "公司名称",
-    "labelMessage": "留言",
-    "placeholderMessage": "我们如何帮助您？",
-    "submit": "发送消息"
+    "labelCompany": "Company",
+    "placeholderCompany": "Company name",
+    "labelMessage": "Message",
+    "placeholderMessage": "How can we help?",
+    "submit": "Send message"
   },
   "Demo": {
-    "metaTitle": "申请演示",
-    "title": "申请演示",
-    "description": "了解 Elevate 如何适配您的 MICE 工作流。与团队进行约 30 分钟演示，无强制推销。",
-    "labelEmail": "工作邮箱",
+    "metaTitle": "Request a Demo",
+    "title": "Request a demo",
+    "description": "了解 Prompt Studio 路线图、图书馆与目录结账—无压力，不是照本宣科的「全功能」演示。",
+    "signUpHint": "Need an account for a purchase?",
+    "signUpLink": "Create account",
+    "labelEmail": "Work email",
     "placeholderEmail": "you@company.com",
-    "labelDate": "首选日期",
-    "submit": "预约演示"
+    "labelDate": "Preferred date",
+    "submit": "Schedule demo"
   },
   "About": {
     "metaTitle": "关于",
@@ -193,8 +211,8 @@
   "CaseStudies": {
     "metaTitle": "案例研究",
     "title": "案例研究",
-    "description": "企业团队如何使用 Elevate 大规模运行 MICE 项目。完整故事即将发布。",
-    "body": "我们正在准备包含可衡量成果的详细案例。在此之前，请申请演示以了解平台。"
+    "description": "团队如何使用 Elevate AI—提示工作流、图书馆与工作区。完整案例即将发布。",
+    "body": "我们正在准备包含可衡量结果的详细案例。您可先加入等候名单或浏览目录。"
   },
   "SecurityPage": {
     "metaTitle": "安全",
@@ -230,48 +248,48 @@
     }
   },
   "Product": {
-    "metaTitle": "产品",
-    "title": "平台",
-    "description": "Elevate 统一 MICE 运营，让您的团队无需切换工具即可完成策划、执行与衡量。",
+    "metaTitle": "Product",
+    "title": "Platform",
+    "description": "Elevate AI 以 Prompt Studio 为核心—面向模型的提示改进。组织工作区与图书馆（目录、电子书）分阶段推出；等候名单最先收到产品动态。",
     "modules": {
-      "event-management": {
-        "title": "活动管理",
-        "desc": "策划、场馆、日程与运营集中在一处。"
+      "prompt-studio": {
+        "title": "Prompt Studio",
+        "desc": "Choose a model, analyze prompts, and apply reviewable improvements—Cursor-style acceptance on the roadmap."
       },
-      "attendee-engagement": {
-        "title": "参会者互动",
-        "desc": "注册、沟通与现场体验。"
+      "ebooks-and-guides": {
+        "title": "E-books & guides",
+        "desc": "目录与权益—增长与奖励层；主叙事仍是 Prompt Studio。"
       },
-      "analytics": {
-        "title": "分析与洞察",
-        "desc": "KPI、管理层看板与可导出报告。"
+      "org-workspace": {
+        "title": "Org workspace",
+        "desc": "Roles, invites, Library access, and billing scoped to your organization."
       },
-      "ai-concierge": {
-        "title": "AI 礼宾",
-        "desc": "对活动数据的自然语言查询（路线图）。"
+      "security": {
+        "title": "Security & compliance",
+        "desc": "Tenant isolation, least-privilege patterns, and enterprise-friendly deployment stories."
       }
     }
   },
   "ProductSlug": {
-    "event-management": {
-      "metaTitle": "活动管理",
-      "title": "活动管理",
-      "body": "集中管理场馆、时间线、分会场与人员分配。用单一真实来源取代电子表格。"
+    "prompt-studio": {
+      "metaTitle": "Prompt Studio",
+      "title": "Prompt Studio",
+      "body": "核心闭环：选择目标模型、粘贴提示，获得结构化分析与改进建议—审核与接受在路线图中。分阶段推出；通过等候名单获得测试资格；账户侧重购买与组织图书馆，而非强制全产品导览。"
     },
-    "attendee-engagement": {
-      "metaTitle": "参会者互动",
-      "title": "参会者互动",
-      "body": "注册流程、邮件活动、移动端签到与 VIP 处理——面向大型项目与严格品牌要求。"
+    "ebooks-and-guides": {
+      "metaTitle": "E-books & guides",
+      "title": "E-books & guides",
+      "body": "High-signal guides and templates sold through the catalog. Purchases grant your organization entitlements; Library surfaces what you can download when files are attached in ops."
     },
-    "analytics": {
-      "metaTitle": "分析与洞察",
-      "title": "分析与洞察",
-      "body": "出席、收入、NPS 与运营 KPI 的实时看板。可导出 PDF，企业版可通过 API 连接 BI。"
+    "org-workspace": {
+      "metaTitle": "Org workspace",
+      "title": "Org workspace",
+      "body": "Everything is scoped to organizations: members, roles, Library, Studio access, and billing. Invite teammates and keep a single source of truth for what the org owns."
     },
-    "ai-concierge": {
-      "metaTitle": "AI 礼宾",
-      "title": "AI 礼宾",
-      "body": "用自然语言询问日程、容量与表现。面向企业客户的受控测试中推出。"
+    "security": {
+      "metaTitle": "Security & compliance",
+      "title": "Security & compliance",
+      "body": "Supabase-backed auth, RLS, and deployment options your security team can align with. Detailed reviews under NDA for enterprise buyers—see also Security and Compliance pages."
     }
   },
   "Solutions": {
@@ -308,132 +326,98 @@
     }
   },
   "Pricing": {
-    "metaTitle": "定价",
-    "heroTitle": "简单透明的定价",
-    "heroSub": "从 14 天免费试用开始。无需信用卡。随活动规模扩展。",
-    "compareTitle": "比较方案",
-    "featureColumn": "功能",
-    "mostPopular": "最受欢迎",
-    "faqTitle": "有疑问？",
-    "faqSub": "我们可帮助您找到适合组织的方案。预约通话讨论需求。",
-    "faqCta": "联系销售",
+    "metaTitle": "Pricing",
+    "heroTitle": "Simple, transparent pricing",
+    "heroSub": "Prompt Studio 预览按方案开放；需要时再开通图书馆与目录 SKU。随组织扩大席位与企业管控。",
+    "compareTitle": "Compare plans",
+    "featureColumn": "Feature",
+    "mostPopular": "Most Popular",
+    "faqTitle": "Have questions?",
+    "faqSub": "Create an account when you need purchases and downloads—or talk to us about pilots, compliance, and rollout.",
+    "faqCta": "Talk to sales",
+    "faqSignUp": "Create account",
     "plans": [
       {
         "key": "starter",
-        "name": "入门版",
+        "name": "Starter",
         "price": "$299",
-        "period": "/月",
-        "description": "适合开始专业活动管理的小型团队。",
-        "cta": "开始免费试用",
+        "period": "/month",
+        "description": "Small teams starting with Prompt Studio preview and Library.",
+        "cta": "Start free trial",
         "highlight": false
       },
       {
         "key": "professional",
-        "name": "专业版",
+        "name": "Professional",
         "price": "$899",
-        "period": "/月",
-        "description": "适合以高级分析管理多场活动的成长型组织。",
-        "cta": "开始免费试用",
+        "period": "/month",
+        "description": "Growing orgs: more seats, catalog entitlements, and Studio usage.",
+        "cta": "Start free trial",
         "highlight": true
       },
       {
         "key": "enterprise",
-        "name": "企业版",
-        "price": "定制",
+        "name": "Enterprise",
+        "price": "Custom",
         "period": "",
-        "description": "适合需要最高安全、合规与规模的大型组织。",
-        "cta": "联系销售",
+        "description": "SSO, audit, security review, and custom rollout for large organizations.",
+        "cta": "Contact sales",
         "highlight": false
       }
     ],
     "featureRows": [
       {
         "kind": "text",
-        "label": "每年活动数",
-        "starter": "最多 10",
-        "professional": "最多 50",
-        "enterprise": "不限"
+        "label": "Included seats",
+        "starter": "Up to 5",
+        "professional": "Up to 25",
+        "enterprise": "Unlimited"
       },
       {
         "kind": "text",
-        "label": "单场参会人数",
-        "starter": "500",
-        "professional": "5,000",
-        "enterprise": "不限"
+        "label": "Prompt Studio preview",
+        "starter": "Included",
+        "professional": "Included",
+        "enterprise": "Included"
       },
       {
         "kind": "text",
-        "label": "团队成员",
-        "starter": "3",
-        "professional": "15",
-        "enterprise": "不限"
+        "label": "Library (e-books & guides)",
+        "starter": "Included",
+        "professional": "Included",
+        "enterprise": "Included"
+      },
+      {
+        "kind": "text",
+        "label": "Catalog SKUs entitled",
+        "starter": "Up to 3",
+        "professional": "Up to 20",
+        "enterprise": "Custom"
       },
       {
         "kind": "check",
-        "label": "活动看板",
+        "label": "Org billing & Toss checkout",
         "starter": true,
         "professional": true,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "参会者管理",
+        "label": "Team invites",
         "starter": true,
         "professional": true,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "分会场排期",
-        "starter": true,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "签到系统",
-        "starter": true,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "CSV/Excel 导入",
-        "starter": true,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "实时分析",
+        "label": "Usage-oriented analytics",
         "starter": false,
         "professional": true,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "自定义品牌",
-        "starter": false,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "AI 洞察",
-        "starter": false,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "NPS 调研",
-        "starter": false,
-        "professional": true,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "API 访问",
+        "label": "API access (future)",
         "starter": false,
         "professional": true,
         "enterprise": true
@@ -447,46 +431,47 @@
       },
       {
         "kind": "check",
-        "label": "审计日志",
+        "label": "Audit logging",
         "starter": false,
         "professional": false,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "自定义集成",
+        "label": "Custom integrations",
         "starter": false,
         "professional": false,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "专属客户成功经理",
+        "label": "Dedicated success",
         "starter": false,
         "professional": false,
         "enterprise": true
       },
       {
         "kind": "check",
-        "label": "SLA 保证 (99.9%)",
-        "starter": false,
-        "professional": false,
-        "enterprise": true
-      },
-      {
-        "kind": "check",
-        "label": "本地部署",
+        "label": "SLA (99.9%)",
         "starter": false,
         "professional": false,
         "enterprise": true
       },
       {
         "kind": "text",
-        "label": "支持",
-        "starter": "邮件",
-        "professional": "优先",
-        "enterprise": "24/7 专属"
+        "label": "Support",
+        "starter": "Email",
+        "professional": "Priority",
+        "enterprise": "24/7 dedicated"
       }
     ]
+  },
+  "Waitlist": {
+    "labelEmail": "邮箱",
+    "placeholderEmail": "you@company.com",
+    "hintNewsletter": "Prompt Studio 测试版白名单—同时发送产品更新与博客精选。可随时退订。",
+    "submit": "加入等候名单",
+    "success": "已加入抢先体验名单。若后续发送确认邮件，请查收收件箱。",
+    "errorGeneric": "Something went wrong. Try again in a moment."
   }
 }

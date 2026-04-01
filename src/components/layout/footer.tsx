@@ -13,15 +13,15 @@ export async function Footer() {
         title: t("product"),
         links: [
           {
-            href: "/product/event-management",
-            label: nav("productEventManagement"),
+            href: "/product/prompt-studio",
+            label: nav("productPromptStudio"),
           },
           {
-            href: "/product/attendee-engagement",
-            label: nav("productAttendeeEngagement"),
+            href: "/product/ebooks-and-guides",
+            label: nav("productEbooksAndGuides"),
           },
-          { href: "/product/analytics", label: nav("productAnalytics") },
-          { href: "/product/ai-concierge", label: nav("productAiConcierge") },
+          { href: "/product/org-workspace", label: nav("productOrgWorkspace") },
+          { href: "/product/security", label: nav("productSecurity") },
         ],
       },
       {
@@ -42,6 +42,7 @@ export async function Footer() {
       {
         title: t("company"),
         links: [
+          { href: "/#waitlist", label: t("newsletter") },
           { href: "/about", label: t("about") },
           { href: "/careers", label: t("careers") },
           { href: "/blog", label: t("blog") },

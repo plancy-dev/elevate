@@ -17,25 +17,26 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Elevate — Enterprise MICE Event Platform",
+    default: "Elevate AI — Prompt improvement & early access",
     template: "%s | Elevate",
   },
   description:
-    "The enterprise platform for MICE event management. Orchestrate conferences, exhibitions, and corporate meetings with AI-powered insights that drive measurable business outcomes.",
+    "Elevate AI: model-aware prompt improvement—our first MVP. Join the waitlist for Prompt Studio beta; blog and catalog support growth. Org-scoped workspace.",
   keywords: [
-    "MICE",
-    "event management",
-    "conference platform",
-    "exhibition management",
-    "corporate meetings",
-    "enterprise events",
-    "event analytics",
-    "attendee engagement",
+    "Elevate AI",
+    "Prompt Studio",
+    "prompt improvement",
+    "AI",
+    "B2B SaaS",
+    "enterprise AI",
+    "e-books",
+    "organization",
+    "Supabase",
   ],
   openGraph: {
-    title: "Elevate — Enterprise MICE Event Platform",
+    title: "Elevate AI — Prompt improvement & early access",
     description:
-      "Orchestrate world-class events with AI-powered insights that drive measurable business outcomes.",
+      "Improve prompts with structured analysis; join the waitlist for Prompt Studio beta. Library and catalog in parallel.",
     type: "website",
     locale: "en_US",
   },

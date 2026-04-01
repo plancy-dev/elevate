@@ -7,7 +7,7 @@ alwaysApply: false
 # Memory Bank Guide — Elevate
 
 > **상세 가이드**: `memory-bank/README.md`  
-> **AI 진입점**: `docs/AI_USAGE.md`
+> **AI 진입점**: `docs/AI_ORCHESTRATION.md` (요약: `docs/AI_USAGE.md`)
 
 ---
 
@@ -50,4 +50,4 @@ alwaysApply: false
 2. **Archive = 읽기 전용 참조** — 단일 위치: `memory-bank/archive/` (인덱스: `memory-bank/archive/index.md`)
 3. **중복 문서 금지** — 기존 문서 재사용
 
-→ 워크플로우: `workflow-modes.mdc` | 아카이브·정리: `archive-and-cleanup.mdc` | AI 활용: `docs/AI_USAGE.md`
+→ 워크플로우: `workflow-modes.mdc` | 아카이브·정리: `archive-and-cleanup.mdc` | AI: `docs/AI_ORCHESTRATION.md`

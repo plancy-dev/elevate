@@ -1,3 +1,4 @@
+import NextLink from "next/link";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
@@ -43,6 +44,15 @@ export default async function DemoPage({ params }: Props) {
           <Button variant="primary" size="lg" type="submit">
             {t("submit")}
           </Button>
+          <p className="text-sm text-text-tertiary pt-2">
+            {t("signUpHint")}{" "}
+            <NextLink
+              href="/signup"
+              className="text-interactive hover:text-primary underline-offset-2 hover:underline"
+            >
+              {t("signUpLink")}
+            </NextLink>
+          </p>
         </form>
       </MarketingSection>
     </div>

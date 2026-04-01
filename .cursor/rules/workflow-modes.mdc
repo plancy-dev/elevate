@@ -139,7 +139,7 @@ INIT(VAN) → PLAN → CREATIVE → BUILD → REFLECT → ARCHIVE
 | `memory-bank/archive/` | 통합 아카이브 (완료 문서) | ARCHIVE, 정리 시 |
 
 → 상세: `memory-bank/README.md` | 아카이브·정리: `.cursor/rules/archive-and-cleanup.mdc`  
-→ **AI 활용 전반** (진입점·Skills·디렉터리·서브에이전트): `docs/AI_USAGE.md`
+→ **AI 오케스트레이션** (gstack·Memory Bank·규칙): `docs/AI_ORCHESTRATION.md` · 요약: `docs/AI_USAGE.md`
 
 ---
 

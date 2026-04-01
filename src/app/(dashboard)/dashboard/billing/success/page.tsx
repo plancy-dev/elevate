@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { confirmTossPaymentFromRedirect } from "@/actions/toss-payments";
+import { PurchaseSuccessCapture } from "@/components/analytics/purchase-success-capture";
 
 export const metadata = { title: "Billing — payment success" };
 
@@ -21,6 +22,7 @@ export default async function BillingPaymentSuccessPage({
 
   return (
     <div className="min-h-screen bg-background p-6">
+      <PurchaseSuccessCapture ok={result.ok} />
       {result.ok ? (
         <>
           <h1 className="text-lg font-medium text-text-primary">

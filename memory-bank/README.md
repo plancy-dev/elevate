@@ -20,11 +20,17 @@
 - **기능 완료 시**: `progress.md`
 - **아키텍처 변경 시**: `creative-architecture.md`
 
+## gstack과의 관계
+
+- **Memory Bank** = 이 프로젝트의 **상태·우선순위·도메인** (SoT). gstack으로 옮기거나 대체하지 않는다.
+- **gstack** (`.agents/skills/gstack`) = **리뷰·전략·QA** 등 구조화된 역할 프롬프트. 설치는 `docs/GSTACK.md`.
+- **통합 허브**: `docs/AI_ORCHESTRATION.md` — 레이어·의사결정표·프롬프트 계약.
+
 ## Cursor
 
 - 규칙: `.cursor/rules/memory-bank-guide.mdc`
 - 워크플로우: `.cursor/rules/workflow-modes.mdc`
-- AI 진입점 요약: `docs/AI_USAGE.md`
+- AI 진입점: `docs/AI_USAGE.md` → 상세 `docs/AI_ORCHESTRATION.md`
 
 ## 시크릿
 

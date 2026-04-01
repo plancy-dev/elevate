@@ -6,8 +6,9 @@ alwaysApply: false
 
 # Cursor AI 활용 맵 — Elevate
 
-> **전체 정리**: `docs/AI_USAGE.md`  
-> **로드맵·우선순위**: `memory-bank/tasks.md`
+> **전체 정리**: `docs/AI_ORCHESTRATION.md` (요약·링크: `docs/AI_USAGE.md`)  
+> **로드맵·우선순위**: `memory-bank/tasks.md`  
+> **자동 부트스트랩**: `ai-session-bootstrap.mdc` · **요청 템플릿**: `docs/AI_USER_TEMPLATES.md` · **타 레포 이식**: `docs/AI_WORKFLOW_PORTABILITY.md`
 
 ---
 

@@ -19,6 +19,10 @@ export default function SignupPage() {
         <h1 className="mt-10 text-2xl font-semibold tracking-[-0.02em] text-text-primary">
           Create account
         </h1>
+        <p className="mt-2 text-sm text-text-secondary leading-relaxed">
+          For purchasing e-books, org Library downloads, and billing—not a gated
+          product demo.
+        </p>
         <p className="mt-2 text-sm text-text-tertiary">
           Already have an account?{" "}
           <Link

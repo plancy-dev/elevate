@@ -1,8 +1,8 @@
 # Elevate
 
-**Enterprise MICE Event Platform.**
+**AI adoption and workflow platform (pivot in progress).**
 
-Elevate is a B2B SaaS platform for the MICE (Meetings, Incentives, Conferences, Exhibitions) industry. Orchestrate world-class events with AI-powered insights that drive measurable business outcomes.
+Elevate helps teams turn **measurable AI outcomes** into repeatable workflows: premium guides and templates today; **organization-scoped** access, billing, and (roadmap) agent workspaces. The codebase still contains **legacy MICE** (meetings/events) modules for backward compatibility; new work follows [`memory-bank/creative-elevate-ai-pivot.md`](memory-bank/creative-elevate-ai-pivot.md).
 
 ## Tech Stack
 
@@ -11,7 +11,22 @@ Elevate is a B2B SaaS platform for the MICE (Meetings, Incentives, Conferences, 
 - **Styling**: Tailwind CSS v4 (Carbon-inspired enterprise dark theme)
 - **Auth & Database**: Supabase (PostgreSQL + Auth + Storage + Realtime)
 - **Deployment**: Vercel
-- **Design Prototyping**: Google Stitch MCP
+- **Design Prototyping**: Google Stitch MCP (optional)
+
+## Product docs
+
+| Doc | Purpose |
+|-----|---------|
+| [`memory-bank/creative-elevate-ai-pivot.md`](memory-bank/creative-elevate-ai-pivot.md) | North Star: flywheel, dual GTM, pivot phases |
+| [`memory-bank/inventory-ai-pivot-phase0.md`](memory-bank/inventory-ai-pivot-phase0.md) | Legacy vs new surface inventory |
+| [`docs/CONTENT_FUNNEL.md`](docs/CONTENT_FUNNEL.md) | Ebook-first funnel & journey vs codebase |
+| [`memory-bank/reflect-ebook-content-funnel.md`](memory-bank/reflect-ebook-content-funnel.md) | REFLECT audit (implementation + gaps) |
+| [`memory-bank/tasks.md`](memory-bank/tasks.md) | Roadmap SoT |
+| [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) | AI 도구 레이어 (gstack·Memory Bank·규칙) |
+| [`docs/AI_AGENT_MATURITY_REPORT.md`](docs/AI_AGENT_MATURITY_REPORT.md) | AI 에이전트 활용 성숙도·벤치마크·점수 (리포트) |
+| [`docs/MANUAL_OPERATOR_CHECKLIST.md`](docs/MANUAL_OPERATOR_CHECKLIST.md) | Toss / Supabase / PostHog 수동 작업 체크리스트 |
+| [`docs/AI_USER_TEMPLATES.md`](docs/AI_USER_TEMPLATES.md) | 버그·기능 요청 권장 형식 |
+| [`docs/AI_WORKFLOW_PORTABILITY.md`](docs/AI_WORKFLOW_PORTABILITY.md) | 다른 프로젝트로 워크플로 이식 시 수정 파일 |
 
 ## Getting Started
 
@@ -34,7 +49,7 @@ cp .env.local.example .env.local
 pnpm dev
 ```
 
-See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for scripts, CI, and editor notes. Testing (unit, optional Supabase integration, Playwright) is in [docs/TESTING.md](docs/TESTING.md).
+See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for scripts, CI, and editor notes. Testing (unit, optional Supabase integration, Playwright) is in [docs/TESTING.md](docs/TESTING.md). Optional **gstack** install (Bun + `./setup`): [docs/GSTACK.md](docs/GSTACK.md).
 
 Open [http://localhost:3000](http://localhost:3000).
 
@@ -43,15 +58,14 @@ Open [http://localhost:3000](http://localhost:3000).
 ```
 src/
 ├── app/                        # Next.js App Router
-│   ├── (marketing)/            # Landing, pricing, about
+│   ├── [locale]/(marketing)/   # Landing, pricing, about
 │   ├── (auth)/                 # Login, signup
-│   ├── (dashboard)/            # Event management dashboard
-│   ├── (legal)/                # Terms, privacy
+│   ├── (dashboard)/            # App dashboard (library + legacy MICE)
 │   └── api/                    # API routes, webhooks
 ├── components/
 │   ├── ui/                     # Button, Card, Badge (Carbon-inspired)
 │   ├── layout/                 # Header, Footer, ElevateLogo
-│   └── marketing/              # KPI Dashboard Preview, etc.
+│   └── marketing/              # Landing sections, Pretext helpers
 ├── lib/
 │   ├── supabase/               # Client (browser, server, proxy session helper)
 │   ├── env/                    # Public env validation (Supabase URL / anon)
@@ -60,7 +74,6 @@ tests/
 ├── unit/                       # Vitest (CI)
 ├── integration/                # Opt-in Supabase smoke
 └── e2e/                        # Playwright
-└── types/                      # TypeScript type definitions
 
 memory-bank/                    # Project documentation
 supabase/migrations/            # Database migration SQL
@@ -70,7 +83,9 @@ supabase/migrations/            # Database migration SQL
 
 - **Multi-tenant**: Organization-scoped data with Supabase RLS
 - **Roles**: admin, organizer, coordinator, viewer
-- **Data model**: Organizations → Events → Sessions → Attendees
+- **Data model (current)**:
+  - **New**: content catalog & org entitlements (see migration `009`)
+  - **Legacy MICE**: Organizations → Events → Sessions → Attendees (deprecated for new features)
 
 ## Design System
 

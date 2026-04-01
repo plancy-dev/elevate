@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
+import { BillingFunnelCapture } from "@/components/analytics/billing-funnel-capture";
 import { BillingTossWidget } from "@/components/dashboard/billing-toss-widget";
 import { getTossWidgetClientKey } from "@/lib/env/toss";
 import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
@@ -16,7 +17,16 @@ async function resolveAppOrigin(): Promise<string> {
   return `${proto}://${host}`;
 }
 
-export default async function BillingPage() {
+export default async function BillingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ product?: string }>;
+}) {
+  const { product: productParam } = await searchParams;
+  const contentProductSlug =
+    typeof productParam === "string" && productParam.trim().length > 0
+      ? productParam.trim()
+      : null;
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
@@ -48,6 +58,16 @@ export default async function BillingPage() {
         <h1 className="text-sm font-medium text-text-primary">Billing</h1>
       </div>
       <div className="p-6 max-w-xl space-y-6">
+        <BillingFunnelCapture productSlug={contentProductSlug} />
+        {contentProductSlug ? (
+          <p className="text-sm text-text-secondary leading-relaxed">
+            Checkout for catalog slug{" "}
+            <code className="text-text-primary text-xs">{contentProductSlug}</code>{" "}
+            — entitlement is granted to your organization after a successful payment
+            (same PoC amount: {TOSS_POC_AMOUNT_KRW} KRW; product must match that
+            price in <code className="text-xs">content_products</code>).
+          </p>
+        ) : null}
         <p className="text-sm text-text-secondary leading-relaxed">
           Toss Payments test flow: pay {TOSS_POC_AMOUNT_KRW} KRW with the widget
           below (test keys). Success redirects here for server-side confirmation;
@@ -73,6 +93,7 @@ export default async function BillingPage() {
             appOrigin={origin}
             customerEmail={user.email ?? null}
             customerName={prof?.display_name?.trim() || null}
+            contentProductSlug={contentProductSlug}
           />
         ) : (
           <p className="text-sm text-text-tertiary">

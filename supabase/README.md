@@ -11,6 +11,12 @@
    - `migrations/006_organization_invitations.sql` — pending org invites (`organization_invitations` + RLS)
    - `migrations/007_audit_logs.sql` — append-only audit trail (inserts via service role from app)
    - `migrations/008_toss_payment_intents.sql` — Toss PoC payment rows (insert/update via service role from app; members can `select` own org)
+   - `migrations/009_content_products.sql` — AI pivot: `content_products` catalog + `organization_content_entitlements` (RLS; optional seed rows)
+   - `migrations/010_content_product_kind.sql` — `content_products.product_kind` (`ebook` default) for ebook-first funnel
+   - `migrations/011_toss_payment_intent_content_product.sql` — optional `content_product_id` on `toss_payment_intents` for checkout → entitlement
+   - `migrations/012_content_product_storage_path.sql` — optional `storage_object_path` for signed downloads
+
+After applying new migrations, regenerate types: **`pnpm db:types`** (requires `NEXT_PUBLIC_PROJECT_ID` or parseable `NEXT_PUBLIC_SUPABASE_URL` in `.env.local` — see `scripts/gen-db-types.mjs`).
 
 ## Auth redirect URLs
 
