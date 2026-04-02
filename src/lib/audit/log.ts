@@ -32,7 +32,7 @@ export async function logAudit(params: LogParams): Promise<void> {
       }
       return;
     }
-    revalidatePath("/dashboard/audit");
+    revalidatePath("/admin/audit");
   } catch (e) {
     if (process.env.NODE_ENV === "development") {
       const msg = e instanceof Error ? e.message : String(e);

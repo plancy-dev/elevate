@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { PostHogRoot } from "@/components/analytics/posthog-root";
+import { getSiteUrl } from "@/lib/seo/site-url";
 import { SupabaseUrlHashHandler } from "@/components/auth/supabase-url-hash-handler";
 import { AppThemeProvider } from "@/components/providers/app-theme-provider";
 import "./globals.css";
@@ -16,6 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "Elevate AI — Prompt improvement & early access",
     template: "%s | Elevate",
@@ -60,7 +62,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="min-h-screen bg-background font-sans text-foreground antialiased">
+      <body
+        className="min-h-screen bg-background font-sans text-foreground antialiased"
+        suppressHydrationWarning
+      >
         <AppThemeProvider>
           <PostHogRoot>
             <SupabaseUrlHashHandler />

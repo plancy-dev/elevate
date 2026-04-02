@@ -2,9 +2,8 @@
 
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import { logAudit } from "@/lib/audit/log";
-import {
-  getOrgInviteManagerContext,
-} from "@/lib/auth/require-org-editor";
+import { getOrgInviteManagerContext } from "@/lib/auth/require-org-editor";
+import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database.types";
@@ -26,10 +25,10 @@ export async function createOrganizationInvitation(
 
   const allowedRoles = ["viewer", "coordinator", "organizer", "admin"] as const;
   if (!emailRaw || !emailRaw.includes("@")) {
-    return { error: "Enter a valid email address." };
+    return { error: ActionErrorCode.inviteInvalidEmail };
   }
   if (!(allowedRoles as readonly string[]).includes(role)) {
-    return { error: "Invalid role." };
+    return { error: ActionErrorCode.inviteInvalidRole };
   }
 
   const supabase = await createClient();
@@ -39,7 +38,7 @@ export async function createOrganizationInvitation(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { error: "Not authenticated." };
+  if (!user) return { error: ActionErrorCode.inviteNotAuthenticated };
 
   const { data: existingMember } = await supabase
     .from("profiles")
@@ -48,7 +47,7 @@ export async function createOrganizationInvitation(
     .eq("email", emailRaw)
     .maybeSingle();
   if (existingMember) {
-    return { error: "This email already belongs to your organization." };
+    return { error: ActionErrorCode.inviteEmailAlreadyMember };
   }
 
   const token = crypto.randomUUID();
@@ -71,11 +70,10 @@ export async function createOrganizationInvitation(
   if (error) {
     if (error.code === "23505") {
       return {
-        error:
-          "An invitation is already pending for this email. Revoke it first or wait until it expires.",
+        error: ActionErrorCode.invitePendingDuplicate,
       };
     }
-    return { error: error.message };
+    return { error: ActionErrorCode.dbError };
   }
 
   if (invRow?.id) {
@@ -91,7 +89,7 @@ export async function createOrganizationInvitation(
 
   revalidatePath("/dashboard/team");
   return {
-    success: "Invitation created. Share the invite link from the list below.",
+    success: ActionErrorCode.inviteCreated,
   };
 }
 
@@ -99,7 +97,7 @@ export async function revokeOrganizationInvitation(
   invitationId: string,
 ): Promise<InvitationActionState> {
   const id = invitationId.trim();
-  if (!id) return { error: "Missing invitation." };
+  if (!id) return { error: ActionErrorCode.inviteMissingId };
 
   const supabase = await createClient();
   const auth = await getOrgInviteManagerContext(supabase);
@@ -111,7 +109,7 @@ export async function revokeOrganizationInvitation(
     .eq("id", id)
     .eq("organization_id", auth.ctx.organizationId);
 
-  if (error) return { error: error.message };
+  if (error) return { error: ActionErrorCode.dbError };
 
   await logAudit({
     organizationId: auth.ctx.organizationId,
@@ -123,5 +121,5 @@ export async function revokeOrganizationInvitation(
   });
 
   revalidatePath("/dashboard/team");
-  return { success: "Invitation removed." };
+  return { success: ActionErrorCode.inviteRevoked };
 }

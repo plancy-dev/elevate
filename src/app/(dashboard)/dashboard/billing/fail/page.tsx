@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-export const metadata = { title: "Billing — payment failed" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Dashboard.billing");
+  return { title: t("failMeta") };
+}
 
 export default async function BillingPaymentFailPage({
   searchParams,
@@ -11,20 +16,24 @@ export default async function BillingPaymentFailPage({
   const code = typeof sp.code === "string" ? sp.code : "";
   const message = typeof sp.message === "string" ? sp.message : "";
 
+  const t = await getTranslations("Dashboard.billing");
+
   return (
     <div className="min-h-screen bg-background p-6">
-      <h1 className="text-lg font-medium text-text-primary">Payment cancelled or failed</h1>
+      <h1 className="text-lg font-medium text-text-primary">{t("failTitle")}</h1>
       <p className="text-sm text-text-secondary mt-2 max-w-md">
-        {message || "The test payment did not complete. You can try again from Billing."}
+        {message || t("failBody")}
       </p>
       {code ? (
-        <p className="text-xs text-text-tertiary mt-2 font-mono">Code: {code}</p>
+        <p className="text-xs text-text-tertiary mt-2 font-mono">
+          {t("failCode", { code })}
+        </p>
       ) : null}
       <Link
         href="/dashboard/billing"
         className="text-sm text-primary mt-6 inline-block hover:underline"
       >
-        Back to Billing
+        {t("backToBilling")}
       </Link>
     </div>
   );

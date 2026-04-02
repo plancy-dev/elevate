@@ -1,13 +1,17 @@
 "use client";
 
 import { useActionState } from "react";
+import { useTranslations } from "next-intl";
 import {
   updateOrganizationName,
   type SettingsActionState,
 } from "@/actions/settings";
+import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import { Button } from "@/components/ui/button";
 
 export function SettingsOrgForm({ defaultName }: { defaultName: string }) {
+  const t = useTranslations("Dashboard.settingsOrg");
+  const tAction = useTranslations("Dashboard.actionErrors");
   const initialState: SettingsActionState = undefined;
   const [state, formAction, pending] = useActionState(
     updateOrganizationName,
@@ -18,7 +22,7 @@ export function SettingsOrgForm({ defaultName }: { defaultName: string }) {
     <form action={formAction} className="space-y-3">
       {state?.error && (
         <p className="rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
-          {state.error}
+          {translateActionErrorMessage(state.error, tAction)}
         </p>
       )}
       <div>
@@ -26,7 +30,7 @@ export function SettingsOrgForm({ defaultName }: { defaultName: string }) {
           htmlFor="organization_name"
           className="block text-xs text-text-secondary mb-1"
         >
-          Name
+          {t("nameLabel")}
         </label>
         <input
           id="organization_name"
@@ -36,12 +40,10 @@ export function SettingsOrgForm({ defaultName }: { defaultName: string }) {
           maxLength={200}
           className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
         />
-        <p className="mt-1 text-xs text-text-tertiary">
-          Shown in the dashboard sidebar. URL slug is not changed when you rename.
-        </p>
+        <p className="mt-1 text-xs text-text-tertiary">{t("nameHint")}</p>
       </div>
       <Button variant="primary" size="md" type="submit" isLoading={pending}>
-        Save organization
+        {t("save")}
       </Button>
     </form>
   );

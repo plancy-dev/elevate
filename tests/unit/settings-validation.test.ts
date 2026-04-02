@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import {
   MAX_SETTINGS_TEXT_LEN,
   validateDisplayName,
@@ -14,12 +15,13 @@ describe("validateOrganizationName", () => {
   it("rejects empty", () => {
     const r = validateOrganizationName("   ");
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.error).toMatch(/required/i);
+    if (!r.ok) expect(r.error).toBe(ActionErrorCode.settingsOrgNameRequired);
   });
 
   it("rejects too long", () => {
     const r = validateOrganizationName("x".repeat(MAX_SETTINGS_TEXT_LEN + 1));
     expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toBe(ActionErrorCode.settingsTextTooLong);
   });
 });
 
@@ -32,5 +34,6 @@ describe("validateDisplayName", () => {
   it("rejects too long", () => {
     const r = validateDisplayName("x".repeat(MAX_SETTINGS_TEXT_LEN + 1));
     expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toBe(ActionErrorCode.settingsTextTooLong);
   });
 });

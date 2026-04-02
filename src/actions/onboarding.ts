@@ -1,5 +1,6 @@
 "use server";
 
+import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -19,13 +20,11 @@ function isTransientProfileError(message: string): boolean {
   return TRANSIENT_PROFILE_ERROR.test(message);
 }
 
-function formatProfileError(message: string): string {
+function profileErrorCode(message: string): string {
   if (SCHEMA_CACHE_USER_MESSAGE.test(message)) {
-    return (
-      `${message} — Try refreshing the page in a few seconds. If it persists, open Supabase Dashboard → Project Settings → API and reload, or check Auth/DB status.`
-    );
+    return ActionErrorCode.onboardingProfileUnavailable;
   }
-  return message;
+  return ActionErrorCode.dbError;
 }
 
 export async function ensureDefaultOrganization(): Promise<EnsureOrgResult> {
@@ -33,7 +32,7 @@ export async function ensureDefaultOrganization(): Promise<EnsureOrgResult> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false, error: "Not authenticated" };
+  if (!user) return { ok: false, error: ActionErrorCode.authNotAuthenticated };
 
   let profile: { organization_id: string | null } | null = null;
   let profileErr = null as { message: string } | null;
@@ -48,7 +47,7 @@ export async function ensureDefaultOrganization(): Promise<EnsureOrgResult> {
     profile = res.data;
     if (!profileErr) break;
     if (!isTransientProfileError(profileErr.message) || attempt === 2) {
-      return { ok: false, error: formatProfileError(profileErr.message) };
+      return { ok: false, error: profileErrorCode(profileErr.message) };
     }
     await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
   }
@@ -63,8 +62,7 @@ export async function ensureDefaultOrganization(): Promise<EnsureOrgResult> {
   } catch {
     return {
       ok: false,
-      error:
-        "SUPABASE_SERVICE_ROLE_KEY is missing. Add it to .env.local for onboarding.",
+      error: ActionErrorCode.onboardingServiceRoleMissing,
     };
   }
 
@@ -90,7 +88,7 @@ export async function ensureDefaultOrganization(): Promise<EnsureOrgResult> {
         .eq("id", user.id);
 
       if (upErr) {
-        return { ok: false, error: upErr.message };
+        return { ok: false, error: ActionErrorCode.dbError };
       }
 
       await admin
@@ -110,7 +108,7 @@ export async function ensureDefaultOrganization(): Promise<EnsureOrgResult> {
     .single();
 
   if (orgErr || !org) {
-    return { ok: false, error: orgErr?.message ?? "Failed to create organization" };
+    return { ok: false, error: ActionErrorCode.onboardingOrgCreateFailed };
   }
 
   const { error: upErr } = await admin
@@ -119,7 +117,7 @@ export async function ensureDefaultOrganization(): Promise<EnsureOrgResult> {
     .eq("id", user.id);
 
   if (upErr) {
-    return { ok: false, error: upErr.message };
+    return { ok: false, error: ActionErrorCode.dbError };
   }
 
   return { ok: true, organizationId: org.id };

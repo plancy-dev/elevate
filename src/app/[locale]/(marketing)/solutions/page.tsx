@@ -32,9 +32,14 @@ export default async function SolutionsIndexPage({ params }: Props) {
             <li key={slug} className="bg-layer-01">
               <Link
                 href={`/solutions/${slug}`}
-                className="block p-6 text-sm font-medium text-text-primary hover:bg-layer-02 transition-colors"
+                className="block p-6 hover:bg-layer-02 transition-colors"
               >
-                {t(`items.${slug}`)}
+                <span className="text-base font-semibold text-text-primary">
+                  {t(`items.${slug}.title`)}
+                </span>
+                <p className="mt-2 text-sm text-text-tertiary leading-relaxed">
+                  {t(`items.${slug}.desc`)}
+                </p>
               </Link>
             </li>
           ))}

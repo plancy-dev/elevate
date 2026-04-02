@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
-import { MarketingSection } from "@/components/marketing/marketing-section";
+import { MarketingArticle } from "@/components/marketing/marketing-article";
 
 const VALID_SLUGS = new Set([
   "conferences",
@@ -20,7 +20,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: tMeta("pageTitles.solutions") };
   }
   const t = await getTranslations({ locale, namespace: "SolutionsSlug" });
-  return { title: t(`${slug}.metaTitle`) };
+  const title = t(`${slug}.metaTitle`);
+  const description = t(`${slug}.metaDescription`);
+  return {
+    title,
+    description,
+    openGraph: { title, description, type: "article" },
+    twitter: { card: "summary_large_image", title, description },
+  };
 }
 
 export default async function SolutionPage({ params }: Props) {
@@ -30,11 +37,18 @@ export default async function SolutionPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("SolutionsSlug");
 
+  const sections = [
+    { title: t(`${slug}.section1Title`), body: t(`${slug}.section1Body`) },
+    { title: t(`${slug}.section2Title`), body: t(`${slug}.section2Body`) },
+    { title: t(`${slug}.section3Title`), body: t(`${slug}.section3Body`) },
+  ];
+
   return (
     <div className="border-t border-border-subtle">
-      <MarketingSection
+      <MarketingArticle
         title={t(`${slug}.title`)}
-        description={t(`${slug}.body`)}
+        lead={t(`${slug}.lead`)}
+        sections={sections}
       />
     </div>
   );

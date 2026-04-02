@@ -2,112 +2,72 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   BookOpen,
   Sparkles,
-  Calendar,
-  Users,
-  MapPin,
-  BarChart3,
   Building2,
   CreditCard,
-  FileText,
   Settings,
   HelpCircle,
+  Shield,
 } from "lucide-react";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
-import { ThemeToggleEnglish } from "@/components/layout/theme-toggle";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { cn } from "@/lib/utils";
-
-const primaryNavItems = [
-  {
-    label: "Overview",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "Prompt Studio",
-    href: "/dashboard/studio",
-    icon: Sparkles,
-  },
-  {
-    label: "Library",
-    href: "/dashboard/library",
-    icon: BookOpen,
-  },
-];
-
-const legacyMiceNavItems = [
-  {
-    label: "Events",
-    href: "/dashboard/events",
-    icon: Calendar,
-  },
-  {
-    label: "Attendees",
-    href: "/dashboard/attendees",
-    icon: Users,
-  },
-  {
-    label: "Venues",
-    href: "/dashboard/venues",
-    icon: MapPin,
-  },
-  {
-    label: "Analytics",
-    href: "/dashboard/analytics",
-    icon: BarChart3,
-  },
-  {
-    label: "Team",
-    href: "/dashboard/team",
-    icon: Building2,
-  },
-];
+import type { OrgRoleKey } from "@/lib/user-roles";
 
 export type SidebarUser = {
   displayName: string;
   email: string;
-  roleLabel: string;
+  /** `profiles.role` normalized for `Dashboard.roles.*` */
+  role: OrgRoleKey;
   orgName: string;
   initials: string;
 };
 
 export function Sidebar({
   user,
-  showAudit = false,
   showBilling = true,
+  showAdminHub = false,
 }: {
   user: SidebarUser;
-  showAudit?: boolean;
   showBilling?: boolean;
+  showAdminHub?: boolean;
 }) {
   const pathname = usePathname();
+  const t = useTranslations("Dashboard.sidebar");
+  const tRoles = useTranslations("Dashboard.roles");
+
+  const primaryNavItems = [
+    { label: t("overview"), href: "/dashboard", icon: LayoutDashboard },
+    { label: t("library"), href: "/dashboard/library", icon: BookOpen },
+    { label: t("promptStudio"), href: "/dashboard/studio", icon: Sparkles },
+  ];
+
+  const workspaceNavItems = [
+    { label: t("team"), href: "/dashboard/team", icon: Building2 },
+  ];
 
   const bottomItems = [
-    ...(showAudit
-      ? [{ label: "Audit log", href: "/dashboard/audit", icon: FileText }]
-      : []),
     ...(showBilling
-      ? [{ label: "Billing", href: "/dashboard/billing", icon: CreditCard }]
+      ? [{ label: t("billing"), href: "/dashboard/billing", icon: CreditCard }]
       : []),
-    { label: "Settings", href: "/dashboard/settings", icon: Settings },
-    { label: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
+    { label: t("settings"), href: "/dashboard/settings", icon: Settings },
+    { label: t("helpSupport"), href: "/dashboard/help", icon: HelpCircle },
   ];
 
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-[240px] flex-col border-r border-border-subtle bg-layer-01">
-      {/* Logo */}
       <div className="flex h-12 items-center justify-between gap-2 px-4 border-b border-border-subtle">
         <Link href="/dashboard">
           <ElevateLogo size="sm" />
         </Link>
-        <ThemeToggleEnglish />
+        <ThemeToggle />
       </div>
 
-      {/* Main Nav */}
       <nav className="flex-1 overflow-y-auto py-3 px-2">
         <div className="space-y-0.5">
           {primaryNavItems.map((item) => {
@@ -125,19 +85,43 @@ export function Sidebar({
                     : "text-text-secondary hover:text-text-primary hover:bg-layer-02",
                 )}
               >
-                <item.icon className="h-4 w-4 shrink-0" />
+                <item.icon className="h-4 w-4 shrink-0" aria-hidden />
                 {item.label}
               </Link>
             );
           })}
         </div>
+
+        {showAdminHub ? (
+          <div className="mt-3 px-2">
+            <Link
+              href="/admin"
+              title={t("adminServiceTitle")}
+              aria-current={
+                pathname === "/admin" || pathname.startsWith("/admin/")
+                  ? "page"
+                  : undefined
+              }
+              className={cn(
+                "flex items-center gap-3 rounded-sm px-3 py-2 text-sm transition-colors",
+                pathname === "/admin" || pathname.startsWith("/admin/")
+                  ? "bg-highlight text-primary font-medium border-l-2 border-primary"
+                  : "text-text-secondary hover:text-text-primary hover:bg-layer-02 border-l-2 border-transparent",
+              )}
+            >
+              <Shield className="h-4 w-4 shrink-0" aria-hidden />
+              {t("adminService")}
+            </Link>
+          </div>
+        ) : null}
+
         <div className="mt-4 px-3 pb-1 pt-2 border-t border-border-subtle">
           <p className="text-[10px] font-medium uppercase tracking-wider text-text-tertiary">
-            Legacy (MICE)
+            {t("workspace")}
           </p>
         </div>
         <div className="space-y-0.5">
-          {legacyMiceNavItems.map((item) => {
+          {workspaceNavItems.map((item) => {
             const isActive =
               pathname === item.href ||
               (item.href !== "/dashboard" && pathname.startsWith(item.href));
@@ -152,7 +136,7 @@ export function Sidebar({
                     : "text-text-secondary hover:text-text-primary hover:bg-layer-02",
                 )}
               >
-                <item.icon className="h-4 w-4 shrink-0" />
+                <item.icon className="h-4 w-4 shrink-0" aria-hidden />
                 {item.label}
               </Link>
             );
@@ -160,7 +144,6 @@ export function Sidebar({
         </div>
       </nav>
 
-      {/* Bottom Nav */}
       <div className="border-t border-border-subtle py-3 px-2 space-y-0.5">
         {bottomItems.map((item) => (
           <Link
@@ -168,13 +151,12 @@ export function Sidebar({
             href={item.href}
             className="flex items-center gap-3 px-3 py-2 text-sm text-text-tertiary hover:text-text-primary hover:bg-layer-02 transition-colors"
           >
-            <item.icon className="h-4 w-4 shrink-0" />
+            <item.icon className="h-4 w-4 shrink-0" aria-hidden />
             {item.label}
           </Link>
         ))}
       </div>
 
-      {/* User */}
       <div className="border-t border-border-subtle p-3">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-03">
@@ -190,7 +172,7 @@ export function Sidebar({
               {user.email}
             </div>
             <div className="text-xs text-text-tertiary truncate">
-              {user.roleLabel} · {user.orgName}
+              {tRoles(user.role)} · {user.orgName}
             </div>
           </div>
           <div className="shrink-0">

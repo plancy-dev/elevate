@@ -60,7 +60,7 @@ describe("loadSidebarUser", () => {
     expect(result).toEqual({
       displayName: "Jane Doe",
       email: "jane@example.com",
-      roleLabel: "Admin",
+      role: "admin",
       orgName: "Acme Corp",
       initials: "JD",
     });

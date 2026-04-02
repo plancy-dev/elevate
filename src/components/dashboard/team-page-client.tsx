@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useTransition } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import {
   createOrganizationInvitation,
@@ -9,8 +10,10 @@ import {
 } from "@/actions/invitations";
 import { updateMemberRole } from "@/actions/team";
 import type { OrgInvitationRow, OrgMemberRow } from "@/lib/data/team";
-import { roleLabel } from "@/lib/labels/user-role";
 import { inviteAbsoluteUrl } from "@/lib/invite-url";
+import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
+import type { OrgRoleKey } from "@/lib/user-roles";
+import { normalizeOrgRoleKey } from "@/lib/user-roles";
 import { Button } from "@/components/ui/button";
 
 type Props = {
@@ -21,7 +24,11 @@ type Props = {
   currentUserId: string;
 };
 
-const ROLES = ["viewer", "coordinator", "organizer", "admin"] as const;
+const ROLES: OrgRoleKey[] = ["viewer", "coordinator", "organizer", "admin"];
+
+function roleTranslationKey(role: string): OrgRoleKey {
+  return normalizeOrgRoleKey(role);
+}
 
 export function TeamPageClient({
   members,
@@ -31,6 +38,10 @@ export function TeamPageClient({
   currentUserId,
 }: Props) {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("Dashboard.team");
+  const tRoles = useTranslations("Dashboard.roles");
+  const tAction = useTranslations("Dashboard.actionErrors");
   const [inviteState, inviteAction, invitePending] = useActionState(
     createOrganizationInvitation,
     undefined as InvitationActionState,
@@ -38,18 +49,31 @@ export function TeamPageClient({
   const [rolePending, startRole] = useTransition();
 
   async function onRevoke(id: string) {
-    if (!confirm("Remove this invitation?")) return;
+    if (!confirm(t("confirmRevoke"))) return;
     const r = await revokeOrganizationInvitation(id);
-    if (r?.error) window.alert(r.error);
+    if (r?.error) {
+      window.alert(translateActionErrorMessage(r.error, tAction));
+    }
     router.refresh();
   }
 
   function onRoleChange(memberId: string, role: string) {
     startRole(async () => {
       const r = await updateMemberRole(memberId, role);
-      if (r?.error) window.alert(r.error);
+      if (r?.error) {
+        window.alert(translateActionErrorMessage(r.error, tAction));
+      }
       router.refresh();
     });
+  }
+
+  function formatExpires(d: string) {
+    return new Date(d).toLocaleDateString(locale, { dateStyle: "medium" });
+  }
+
+  async function copyInviteLink(token: string) {
+    await navigator.clipboard.writeText(inviteAbsoluteUrl(token));
+    window.alert(t("linkCopied"));
   }
 
   return (
@@ -57,7 +81,7 @@ export function TeamPageClient({
       {canInvite && (
         <section className="border border-border-subtle bg-layer-01 p-6 max-w-lg">
           <h2 className="text-sm font-medium text-text-primary mb-4">
-            Invite teammate
+            {t("inviteTitle")}
           </h2>
           <form action={inviteAction} className="flex flex-col gap-3">
             <div>
@@ -65,7 +89,7 @@ export function TeamPageClient({
                 htmlFor="invite-email"
                 className="block text-xs font-medium text-text-secondary mb-1"
               >
-                Email
+                {t("email")}
               </label>
               <input
                 id="invite-email"
@@ -81,7 +105,7 @@ export function TeamPageClient({
                 htmlFor="invite-role"
                 className="block text-xs font-medium text-text-secondary mb-1"
               >
-                Role
+                {t("role")}
               </label>
               <select
                 id="invite-role"
@@ -91,16 +115,20 @@ export function TeamPageClient({
               >
                 {ROLES.map((r) => (
                   <option key={r} value={r}>
-                    {roleLabel(r)}
+                    {tRoles(r)}
                   </option>
                 ))}
               </select>
             </div>
             {inviteState?.error && (
-              <p className="text-xs text-danger">{inviteState.error}</p>
+              <p className="text-xs text-danger">
+                {translateActionErrorMessage(inviteState.error, tAction)}
+              </p>
             )}
             {inviteState?.success && (
-              <p className="text-xs text-accent">{inviteState.success}</p>
+              <p className="text-xs text-accent">
+                {translateActionErrorMessage(inviteState.success, tAction)}
+              </p>
             )}
             <Button
               type="submit"
@@ -109,21 +137,23 @@ export function TeamPageClient({
               className="w-fit"
               isLoading={invitePending}
             >
-              Send invitation
+              {t("sendInvitation")}
             </Button>
           </form>
         </section>
       )}
 
       <section>
-        <h2 className="text-sm font-medium text-text-primary mb-3">Members</h2>
+        <h2 className="text-sm font-medium text-text-primary mb-3">
+          {t("members")}
+        </h2>
         <div className="border border-border-subtle bg-layer-01 overflow-x-auto">
           <table className="w-full text-sm min-w-[520px]">
             <thead>
               <tr className="border-b border-border-subtle text-left text-xs text-text-tertiary uppercase tracking-wider">
-                <th className="px-4 py-2 font-medium">Name</th>
-                <th className="px-4 py-2 font-medium">Email</th>
-                <th className="px-4 py-2 font-medium">Role</th>
+                <th className="px-4 py-2 font-medium">{t("colName")}</th>
+                <th className="px-4 py-2 font-medium">{t("colEmail")}</th>
+                <th className="px-4 py-2 font-medium">{t("colRole")}</th>
               </tr>
             </thead>
             <tbody>
@@ -146,13 +176,13 @@ export function TeamPageClient({
                       >
                         {ROLES.map((r) => (
                           <option key={r} value={r}>
-                            {roleLabel(r)}
+                            {tRoles(r)}
                           </option>
                         ))}
                       </select>
                     ) : (
                       <span className="text-text-secondary">
-                        {roleLabel(m.role)}
+                        {tRoles(roleTranslationKey(m.role))}
                       </span>
                     )}
                   </td>
@@ -166,7 +196,7 @@ export function TeamPageClient({
       {canInvite && invitations.length > 0 && (
         <section>
           <h2 className="text-sm font-medium text-text-primary mb-3">
-            Pending invitations
+            {t("pendingInvitations")}
           </h2>
           <ul className="space-y-3">
             {invitations.map((inv) => (
@@ -177,8 +207,8 @@ export function TeamPageClient({
                 <div>
                   <div className="text-sm text-text-primary">{inv.email}</div>
                   <div className="text-xs text-text-tertiary">
-                    {roleLabel(inv.role)} · expires{" "}
-                    {new Date(inv.expiresAt).toLocaleDateString()}
+                    {tRoles(roleTranslationKey(inv.role))} ·{" "}
+                    {t("expires", { date: formatExpires(inv.expiresAt) })}
                   </div>
                   <div className="mt-2 text-xs text-text-tertiary break-all font-mono">
                     {inviteAbsoluteUrl(inv.token)}
@@ -189,13 +219,9 @@ export function TeamPageClient({
                     type="button"
                     variant="secondary"
                     size="sm"
-                    onClick={() => {
-                      void navigator.clipboard.writeText(
-                        inviteAbsoluteUrl(inv.token),
-                      );
-                    }}
+                    onClick={() => void copyInviteLink(inv.token)}
                   >
-                    Copy link
+                    {t("copyLink")}
                   </Button>
                   <Button
                     type="button"
@@ -203,7 +229,7 @@ export function TeamPageClient({
                     size="sm"
                     onClick={() => onRevoke(inv.id)}
                   >
-                    Revoke
+                    {t("revoke")}
                   </Button>
                 </div>
               </li>

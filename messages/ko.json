@@ -11,7 +11,6 @@
       "product": "제품",
       "solutions": "솔루션",
       "about": "소개",
-      "resources": "리소스",
       "caseStudies": "사례 연구",
       "security": "보안",
       "compliance": "컴플라이언스",
@@ -23,10 +22,10 @@
     "ebooks": "카탈로그",
     "joinWaitlist": "얼리 액세스",
     "library": "라이브러리",
+    "blog": "블로그",
     "product": "제품",
     "solutions": "솔루션",
     "pricing": "요금제",
-    "resources": "리소스",
     "solConferences": "컨퍼런스",
     "solExhibitions": "전시회",
     "solIncentiveTravel": "인센티브 여행",
@@ -34,6 +33,8 @@
     "contactSales": "영업 문의",
     "logIn": "로그인",
     "requestDemo": "데모 요청",
+    "openDashboard": "대시보드",
+    "signOut": "로그아웃",
     "productPromptStudio": "프롬프트 스튜디오",
     "productEbooksAndGuides": "전자책·가이드",
     "productOrgWorkspace": "조직 워크스페이스",
@@ -102,10 +103,10 @@
     "capGlobalDesc": "분산 팀과 듀얼 GTM에 맞는 로컬라이제이션 구조.",
     "capSecurityTitle": "테넌트 단위 설계",
     "capSecurityDesc": "역할 기반 접근과 Supabase RLS—보안팀 정책에 맞게 배포할 수 있습니다.",
-    "resourcesBadge": "리소스",
-    "resourcesTitle": "사례 연구 및 가이드",
-    "resourcesBody": "고객 사례와 제품 릴리스 노트는 준비되는 대로 게재합니다. 허위 인용이나 외부 벤치마크 수치는 포함하지 않습니다.",
-    "resourcesCta": "리소스 보기",
+    "resourcesBadge": "블로그",
+    "resourcesTitle": "제품 노트와 검색 친화 포스트",
+    "resourcesBody": "마케팅 블로그는 저장소의 MDX(content/blog)로 배포해 코드처럼 리뷰합니다. 인용·수치는 검증 가능할 때만 씁니다.",
+    "resourcesCta": "블로그 열기",
     "ctaBandTitle": "대기 명단 — 베타 액세스",
     "ctaBandSub": "제품 업데이트, 프롬프트 스튜디오 롤아웃, 자연·유료 유입용 블로그 하이라이트. 카탈로그 소식은 같은 명단에서 부가로 전합니다.",
     "ctaBandEbooks": "카탈로그 보기",
@@ -191,6 +192,10 @@
     "submit": "메시지 보내기"
   },
   "Demo": {
+    "pausedMetaTitle": "데모 — 일시 중단",
+    "pausedTitle": "데모 일정 요청을 받지 않습니다",
+    "pausedDescription": "현재 데모 요청은 받지 않습니다. 사이트를 둘러보시거나 대기 명단에 참여하시고, 문의가 필요하면 영업팀에 연락해 주세요.",
+    "pausedBackHome": "홈으로",
     "metaTitle": "Request a Demo",
     "title": "Request a demo",
     "description": "프롬프트 스튜디오 로드맵, 라이브러리, 카탈로그 결제를 30분 안내합니다. 부담 없이 요청하세요. ‘풀 제품’ 각본 데모는 아닙니다.",
@@ -209,7 +214,11 @@
   "Blog": {
     "metaTitle": "블로그",
     "title": "블로그",
-    "description": "제품 업데이트와 MICE 산업 인사이트. 콘텐츠 파이프라인 준비 중입니다."
+    "description": "제품 업데이트와 산업 메모. 글은 저장소의 content/blog MDX로 관리합니다.",
+    "empty": "아직 게시물이 없습니다.",
+    "published": "게시 {date}",
+    "readMore": "글 읽기",
+    "backToBlog": "블로그 목록"
   },
   "Careers": {
     "metaTitle": "채용",
@@ -232,105 +241,150 @@
     "title": "컴플라이언스",
     "description": "GDPR에 맞춘 처리, SOC 2 준비, 지역별 호스팅 옵션을 지원합니다. 조달 단계에서 DPA 검토가 가능합니다(플레이스홀더)."
   },
-  "ResourcesPage": {
-    "metaTitle": "리소스",
-    "title": "리소스",
-    "description": "Elevate 도입을 검토할 때 참고할 문서와 가이드입니다.",
-    "items": {
-      "product": {
-        "title": "제품 개요",
-        "desc": "플랫폼 기능"
-      },
-      "security": {
-        "title": "보안 및 컴플라이언스",
-        "desc": "GDPR, SOC 2, ISO 27001"
-      },
-      "pricing": {
-        "title": "요금제",
-        "desc": "플랜 비교"
-      },
-      "cases": {
-        "title": "사례 연구",
-        "desc": "고객 성과"
-      }
-    }
-  },
   "Product": {
     "metaTitle": "Product",
-    "title": "플랫폼",
-    "description": "Elevate AI의 중심은 프롬프트 스튜디오—모델 인지 프롬프트 개선. 조직 워크스페이스와 라이브러리(카탈로그·전자책)는 병행으로 열리며, 대기 명단이 제품 소식을 먼저 받습니다.",
+    "title": "Platform",
+    "description": "Elevate is prompt-first: Prompt Studio analyzes and improves prompts against the models you actually ship. Library, catalog, and org workspace wrap that loop in governance, entitlements, and billing.",
     "modules": {
       "prompt-studio": {
-        "title": "프롬프트 스튜디오",
-        "desc": "모델을 고르고 프롬프트를 분석·개선—수락 UX는 로드맵."
+        "title": "Prompt Studio",
+        "desc": "Model-aware analysis and structured improvements—scoped to your org, with review flows on the roadmap."
       },
       "ebooks-and-guides": {
-        "title": "전자책·가이드",
-        "desc": "카탈로그와 권한—성장과 보상 레이어이며 헤드라인은 프롬프트 스튜디오입니다."
+        "title": "E-books & guides",
+        "desc": "Catalog SKUs and downloads in Library—commercial layer alongside Prompt Studio, not a separate product silo."
       },
       "org-workspace": {
-        "title": "조직 워크스페이스",
-        "desc": "역할·초대·라이브러리·스튜디오 접근·조직 단위 결제."
+        "title": "Org workspace",
+        "desc": "Members, roles, invites, billing, and Library entitlements in one tenant."
       },
       "security": {
-        "title": "보안·컴플라이언스",
-        "desc": "테넌트 격리·최소 권한·엔터프라이즈 친화적 배포 스토리."
+        "title": "Security & compliance",
+        "desc": "Supabase Auth, RLS, and deployment patterns your security team can review."
       }
     }
   },
   "ProductSlug": {
     "prompt-studio": {
-      "metaTitle": "프롬프트 스튜디오",
-      "title": "프롬프트 스튜디오",
-      "body": "핵심 루프: 대상 모델을 고르고 프롬프트를 붙여 넣으면 구조화된 분석·개선 제안을 받습니다. 검토·수락은 로드맵입니다. 베타는 대기 명단으로 받으며, 계정은 구매·조직 라이브러리 중심입니다."
+      "metaTitle": "Prompt Studio | Elevate",
+      "metaDescription": "Model-aware prompt improvement for teams that ship AI features. Pick a target model, analyze prompts, and get structured suggestions—scoped to your organization.",
+      "title": "Prompt Studio",
+      "lead": "Prompt Studio is Elevate's primary surface: model-aware prompt improvement for teams that ship AI features and internal copilots. Work is scoped to your organization—not a public playground—so drafts stay inside your tenant.",
+      "section1Title": "What you get today",
+      "section1Body": "Choose the model you deploy against, paste a prompt, and receive structured analysis and improvement suggestions. We focus on actionable output: what to change, why it matters, and how it aligns with model behavior—not generic tips.\n\nLibrary and catalog run in parallel so your org can pair prompt work with entitlements and downloadable guides when operations attach files.",
+      "section2Title": "Built for org workflows",
+      "section2Body": "Everything ties to your Elevate organization: members, roles, and billing. Prompt iterations stay auditable within the team, which matters when procurement asks how AI-assisted work is reviewed.\n\nStudio access respects the same org boundaries as Library—no cross-tenant leakage by design.",
+      "section3Title": "Roadmap: review and accept",
+      "section3Body": "Accept/reject flows, side-by-side diffs, and tighter integrations are on the roadmap. Join the waitlist to get Prompt Studio beta access first; production accounts remain the path for purchases and downloads."
     },
     "ebooks-and-guides": {
-      "metaTitle": "전자책·가이드",
-      "title": "전자책·가이드",
-      "body": "신뢰도 높은 가이드와 템플릿을 카탈로그로 판매합니다. 구매 후 조직에 권한이 부여되며, 운영에서 파일을 연결하면 라이브러리에서 다운로드할 수 있습니다."
+      "metaTitle": "E-books & guides | Elevate",
+      "metaDescription": "Digital catalog and Library entitlements for guides and templates—purchased per org, downloaded when entitled.",
+      "title": "E-books & guides",
+      "lead": "The catalog is how we package high-signal guides and templates alongside Prompt Studio. Purchases grant your organization entitlements; Library surfaces what you can download when files are attached in operations.",
+      "section1Title": "How catalog and Library connect",
+      "section1Body": "Checkout (where enabled) records what your org has purchased or licensed. Library lists entitled titles so members know what they can download without hunting through email threads or shared drives.\n\nIf a title is locked, it is usually a subscription or entitlement issue—Billing is the right place to upgrade or unlock.",
+      "section2Title": "Why we ship this in parallel",
+      "section2Body": "Prompt improvement is the hero loop; catalog and e-books are how we reward early believers and fund the roadmap without diluting the core product narrative.\n\nContent is versioned in Git-friendly MDX for marketing and ops; digital products in Library follow the same org scoping as the rest of Elevate.",
+      "section3Title": "Operations note",
+      "section3Body": "Admins manage catalog rows in the platform console when configured. End users should always use Library for downloads so entitlements stay authoritative."
     },
     "org-workspace": {
-      "metaTitle": "조직 워크스페이스",
-      "title": "조직 워크스페이스",
-      "body": "모든 것이 조직 단위로 범위가 정해집니다. 멤버·역할·라이브러리·스튜디오·결제를 한곳에서 다루고 팀을 초대하세요."
+      "metaTitle": "Org workspace | Elevate",
+      "metaDescription": "Organizations, roles, invitations, Library, and billing—single tenant for Prompt Studio and catalog entitlements.",
+      "title": "Org workspace",
+      "lead": "Elevate is organized around organizations: every member, invite, Library view, and billing record belongs to exactly one org. That boundary is intentional for procurement, audit, and least-privilege access.",
+      "section1Title": "Members and roles",
+      "section1Body": "Invite teammates with roles that match how you operate. Admins can manage settings and, where applicable, admin surfaces; contributors focus on Studio and Library without inheriting billing controls they do not need.",
+      "section2Title": "Library visibility",
+      "section2Body": "Library reflects entitlements for the signed-in user's organization. If something is missing, it is usually a subscription or purchase state—not a personal account issue.\n\nStarter plans may see fewer titles; upgrading the org unlocks more catalog content when available.",
+      "section3Title": "Billing and ownership",
+      "section3Body": "Toss Payments PoC and future gateways attach to the organization so finance has a single invoice trail. Personal accounts exist for sign-in, but purchase and download rights are org-scoped."
     },
     "security": {
-      "metaTitle": "보안·컴플라이언스",
-      "title": "보안·컴플라이언스",
-      "body": "Supabase 인증·RLS와 보안팀이 맞출 수 있는 배포 옵션. 엔터프라이즈 구매자는 NDA 하에 상세 검토가 가능합니다—보안·컴플라이언스 페이지 참고."
+      "metaTitle": "Security & compliance | Elevate",
+      "metaDescription": "Supabase Auth, RLS, tenant isolation, and deployment options your security team can align with. Deeper reviews under NDA for enterprise buyers.",
+      "title": "Security & compliance",
+      "lead": "Elevate is built on Supabase with row-level security policies that keep tenant data apart. We do not claim certifications we have not earned—see our Security and Compliance pages for posture and roadmap.",
+      "section1Title": "Authentication and data plane",
+      "section1Body": "Users authenticate via Supabase Auth. Application data reads and writes use policies that require membership in the correct organization.\n\nService role keys are server-only and never ship to the browser.",
+      "section2Title": "Deployment and review",
+      "section2Body": "We target Next.js deployments your team can run on Vercel or compatible hosts. Enterprise customers can request architecture review, DPA, and deeper diligence under NDA.\n\nOperational logging and audit trails are evolving in the product—see the admin audit log where enabled.",
+      "section3Title": "Related reading",
+      "section3Body": "For policy language and legal terms, see the Security and Compliance marketing pages and Privacy Policy. This module summarizes engineering intent, not a substitute for your legal review."
     }
   },
   "Solutions": {
-    "metaTitle": "솔루션",
-    "title": "솔루션",
-    "description": "Elevate는 MICE 유형에 맞게 적용됩니다. 아래 세그먼트를 살펴보세요.",
+    "metaTitle": "Solutions",
+    "title": "Solutions",
+    "description": "Event and travel programs generate thousands of comms—speaker briefs, sponsor copy, attendee emails, and exhibitor kits. Elevate helps MICE teams standardize and improve that language with model-aware prompts, org-scoped drafts, and Library-backed assets.",
     "items": {
-      "conferences": "컨퍼런스",
-      "exhibitions": "전시회",
-      "incentive-travel": "인센티브 여행",
-      "corporate-meetings": "기업 미팅"
+      "conferences": {
+        "title": "Conferences",
+        "desc": "Multi-track programs and speaker/sponsor comms at scale."
+      },
+      "exhibitions": {
+        "title": "Exhibitions",
+        "desc": "Exhibitor kits, floor campaigns, and lead-gen copy consistency."
+      },
+      "incentive-travel": {
+        "title": "Incentive travel",
+        "desc": "Program narratives and compliance-sensitive itineraries."
+      },
+      "corporate-meetings": {
+        "title": "Corporate meetings",
+        "desc": "Exec summaries, hybrid runbooks, internal AI policy alignment."
+      }
     }
   },
   "SolutionsSlug": {
     "conferences": {
-      "metaTitle": "컨퍼런스",
-      "title": "컨퍼런스",
-      "body": "다중 트랙, 연사 관리, 스폰서 노출—대규모 참석과 복잡한 물류에 맞춰 설계되었습니다."
+      "metaTitle": "Conferences | Elevate",
+      "metaDescription": "Improve prompt libraries for speaker briefs, sponsor tiers, and attendee journeys—scoped to your organization.",
+      "title": "Conferences",
+      "lead": "Large programs mean repeated comms: session descriptions, speaker briefs, sponsor deliverables, and attendee journeys. Elevate helps you build reusable prompt patterns and improve them against the models your team actually uses.",
+      "section1Title": "Where Elevate fits",
+      "section1Body": "Use Prompt Studio to tighten instructions for on-brand tone, clarity, and model alignment. When marketing attaches catalog assets, Library makes downloads entitlement-aware—so field teams and agencies pull from the same source of truth.\n\nThis is not a replacement for your registration or abstract system; it is the quality layer on top of language and AI-assisted drafts.",
+      "section2Title": "Operational outcomes",
+      "section2Body": "Fewer one-off rewrites, fewer off-brand variants, faster review cycles when teams share org-scoped drafts.\n\nRoles and billing stay tied to the organization so procurement can audit who had access to what.",
+      "section3Title": "Getting started",
+      "section3Body": "Join the waitlist for Prompt Studio beta, or open Billing when checkout is enabled to unlock catalog content. Contact sales if you need enterprise rollout and security review."
     },
     "exhibitions": {
-      "metaTitle": "전시회",
-      "title": "전시회",
-      "body": "부스 배정, 전시사 포털, 동선 분석으로 전시장 성과를 높입니다."
+      "metaTitle": "Exhibitions | Elevate",
+      "metaDescription": "Consistent exhibitor comms, booth kits, and campaign copy—improved with model-aware prompts and org-scoped drafts.",
+      "title": "Exhibitions",
+      "lead": "Exhibitions depend on tight coordination between exhibitors, agencies, and floor teams. Elevate helps you standardize prompt templates for kits, campaigns, and lead follow-ups so tone and claims stay consistent across hundreds of touchpoints.",
+      "section1Title": "Language consistency",
+      "section1Body": "Prompt Studio surfaces structured improvements so teams do not ship contradictory instructions to models or contractors.\n\nPair with Library when downloadable guides and templates are part of your commercial program.",
+      "section2Title": "Governance",
+      "section2Body": "Everything stays inside the organization tenant. That matters when sponsors and exhibitors expect confidentiality around unreleased messaging.\n\nAudit and admin tooling continues to mature—see the product changelog for what is live.",
+      "section3Title": "Next steps",
+      "section3Body": "Browse the catalog for packaged guides, or talk to sales about multi-org programs and pilots."
     },
     "incentive-travel": {
-      "metaTitle": "인센티브 여행",
-      "title": "인센티브 여행",
-      "body": "맞춤 일정, 그룹 조정, 임원 프로그램에 맞는 컴플라이언스 보고를 지원합니다."
+      "metaTitle": "Incentive travel | Elevate",
+      "metaDescription": "Narratives and comms for incentive programs—with structured prompt improvement and org-scoped drafts.",
+      "title": "Incentive travel",
+      "lead": "Incentive programs require polished narratives, itinerary language, and sensitive attendee comms. Elevate helps teams iterate on prompts with clear model targets and reviewable structure before messages reach VIPs.",
+      "section1Title": "Quality and safety",
+      "section1Body": "Model-aware prompts reduce the risk of off-tone or off-policy copy when programs span multiple regions.\n\nDrafts remain scoped to your organization so partner agencies and internal teams can collaborate without exposing content publicly.",
+      "section2Title": "Catalog and rewards",
+      "section2Body": "When guides are part of the reward package, Library entitlements align downloads with what the org purchased.\n\nCatalog and billing are designed to sit alongside Prompt Studio, not compete with it.",
+      "section3Title": "Talk to us",
+      "section3Body": "For bespoke programs or compliance-heavy rollouts, contact sales and we will align on review and deployment expectations."
     },
     "corporate-meetings": {
-      "metaTitle": "기업 미팅",
-      "title": "기업 미팅",
-      "body": "사내 타운홀, 리더십 오프사이트, 하이브리드 형식으로 엔터프라이즈 보안과 SSO를 지원합니다."
+      "metaTitle": "Corporate meetings | Elevate",
+      "metaDescription": "Exec summaries, hybrid runbooks, and internal AI policy alignment—improved with Prompt Studio and org-scoped governance.",
+      "title": "Corporate meetings",
+      "lead": "Corporate meetings teams juggle internal comms, executive summaries, and hybrid logistics. Elevate gives you a repeatable prompt layer so leadership updates, FAQs, and policy explanations stay consistent as models and regulations change.",
+      "section1Title": "Internal alignment",
+      "section1Body": "Prompt Studio helps teams converge on approved phrasing and structure before content is broadcast to Slack, email, or intranet.\n\nOrg workspace ensures the right roles can edit drafts and approve changes.",
+      "section2Title": "Security posture",
+      "section2Body": "Supabase Auth and RLS underpin tenant isolation. For enterprise buyers, deeper security and compliance materials are available under NDA.\n\nSee Security and Compliance pages for statements of direction.",
+      "section3Title": "Rollout",
+      "section3Body": "Start with the waitlist for Prompt Studio beta; add catalog entitlements when you need downloadable playbooks. We will meet you where your procurement process is."
     }
   },
   "Pricing": {
@@ -473,5 +527,337 @@
         "enterprise": "24/7 dedicated"
       }
     ]
+  },
+  "Dashboard": {
+    "signOut": "로그아웃",
+    "actionErrors": {
+      "authNotAuthenticated": "로그인이 필요합니다.",
+      "authNoOrganization": "조직이 없습니다. 페이지를 새로고침해 보세요.",
+      "authInsufficientPermissions": "이 작업을 수행할 권한이 없습니다.",
+      "authInviteManagersOnly": "초대는 관리자와 오거나이저만 관리할 수 있습니다.",
+      "authAdminOnly": "멤버 역할 변경은 조직 관리자만 할 수 있습니다.",
+      "authVenuePermissionDenied": "장소 관리 권한이 없습니다.",
+      "settingsOrgNameRequired": "조직 이름을 입력해 주세요.",
+      "settingsTextTooLong": "최대 {max}자까지 입력할 수 있습니다.",
+      "inviteInvalidEmail": "유효한 이메일 주소를 입력해 주세요.",
+      "inviteInvalidRole": "유효하지 않은 역할입니다.",
+      "inviteEmailAlreadyMember": "이 이메일은 이미 조직에 속해 있습니다.",
+      "invitePendingDuplicate": "이 이메일로 보낸 초대가 이미 대기 중입니다. 취소하거나 만료될 때까지 기다려 주세요.",
+      "inviteNotAuthenticated": "로그인이 필요합니다.",
+      "inviteMissingId": "초대 정보가 없습니다.",
+      "inviteCreated": "초대가 생성되었습니다. 아래 목록에서 초대 링크를 공유하세요.",
+      "inviteRevoked": "초대가 제거되었습니다.",
+      "teamMissingMember": "멤버 정보가 없습니다.",
+      "teamInvalidRole": "유효하지 않은 역할입니다.",
+      "teamCannotChangeOwnRole": "여기서는 본인 역할을 바꿀 수 없습니다.",
+      "teamServerConfig": "서버 설정 오류입니다.",
+      "teamMemberNotFound": "멤버를 찾을 수 없습니다.",
+      "teamNotInOrg": "조직 멤버가 아닙니다.",
+      "teamRoleUpdated": "역할이 변경되었습니다.",
+      "dbError": "문제가 발생했습니다. 다시 시도해 주세요.",
+      "unexpected": "문제가 발생했습니다. 다시 시도해 주세요.",
+      "onboardingServiceRoleMissing": "서버 설정이 완료되지 않았습니다. 온보딩을 위해 환경에 SUPABASE_SERVICE_ROLE_KEY를 추가하세요.",
+      "onboardingOrgCreateFailed": "조직을 만들 수 없습니다. 다시 시도해 주세요.",
+      "onboardingProfileUnavailable": "프로필을 불러올 수 없습니다. 잠시 후 새로고침하세요. 계속되면 Supabase 상태를 확인하세요."
+    },
+    "roles": {
+      "admin": "관리자",
+      "organizer": "오거나이저",
+      "coordinator": "코디네이터",
+      "viewer": "뷰어"
+    },
+    "team": {
+      "inviteTitle": "팀원 초대",
+      "email": "이메일",
+      "role": "역할",
+      "sendInvitation": "초대 보내기",
+      "members": "멤버",
+      "colName": "이름",
+      "colEmail": "이메일",
+      "colRole": "역할",
+      "pendingInvitations": "대기 중인 초대",
+      "expires": "만료 {date}",
+      "copyLink": "링크 복사",
+      "revoke": "취소",
+      "confirmRevoke": "이 초대를 삭제할까요?",
+      "linkCopied": "클립보드에 링크를 복사했습니다."
+    },
+    "settingsProfile": {
+      "displayNameLabel": "프로필 표시 이름",
+      "displayNamePlaceholder": "이름",
+      "displayNameHint": "사이드바와 앱 전반에 표시됩니다.",
+      "notificationsHeading": "알림",
+      "digestLabel": "이벤트 마일스톤 이메일 요약",
+      "digestHint": "켜면 마일스톤 요약에 포함될 수 있습니다(발송은 배포 설정에 따름).",
+      "save": "프로필 및 알림 저장"
+    },
+    "settingsOrg": {
+      "nameLabel": "이름",
+      "nameHint": "대시보드 사이드바에 표시됩니다. 이름을 바꿔도 URL 슬러그는 바뀌지 않습니다.",
+      "save": "조직 저장"
+    },
+    "billing": {
+      "checkoutWithSlug": "카탈로그 항목 「{slug}」 결제입니다. 결제가 완료되면 라이브러리에서 조직에 권한이 부여됩니다(테스트 금액 {amount}원, 해당 가격으로 등록된 항목이어야 합니다).",
+      "tossIntro": "테스트 결제: 아래 위젯으로 {amount}원을 결제합니다. 성공 후 이 화면으로 돌아와 서버에서 결제를 확인합니다.",
+      "registerUrls": "토스 가맹점 설정에서 성공·실패 시 돌아올 주소를 이 앱 주소에 맞게 등록하세요.",
+      "setClientKey": "이 환경에서는 결제용 클라이언트 키가 설정되지 않아 결제를 사용할 수 없습니다.",
+      "footerDocs": "문제가 있으면 관리자에게 결제 키와 돌아올 URL이 이 환경에 맞게 설정되어 있는지 확인해 달라고 요청하세요.",
+      "errors": {
+        "pocAmountOnly": "이 테스트 결제는 {amount}원만 지원합니다.",
+        "missingWidgetKey": "결제가 비활성화되어 있습니다. 클라이언트 키가 없습니다.",
+        "catalogUnknown": "해당 상품을 찾을 수 없거나 비활성 상태입니다.",
+        "catalogPriceMismatch": "이 상품 가격이 테스트 결제 금액({amount}원)과 맞지 않습니다.",
+        "paymentServerConfig": "서버 설정이 완료되지 않아 결제를 시작할 수 없습니다.",
+        "intentCreateFailed": "결제를 시작하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+        "generic": "문제가 발생했습니다. 다시 시도해 주세요.",
+        "tossClientUnknown": "결제 창에서 일반적인 오류가 반환되었습니다. 토스 대시보드의 테스트 키·허용 도메인을 확인하고, 팝업·스크립트 차단 여부를 점검해 주세요."
+      },
+      "widgetErrorLoad": "토스 위젯을 불러오지 못했습니다",
+      "widgetNotReady": "결제 UI가 아직 준비되지 않았습니다.",
+      "widgetErrorRequest": "결제 요청에 실패했습니다",
+      "widgetOpening": "여는 중…",
+      "widgetPay": "테스트 금액 결제 ({amount}원)",
+      "widgetLoading": "결제 수단을 불러오는 중…",
+      "orderNameDefault": "Elevate PoC (테스트)",
+      "orderNameWithSlug": "Elevate — {slug}",
+      "customerFallback": "회원",
+      "successMeta": "결제 성공",
+      "successTitle": "결제가 확인되었습니다",
+      "successAlready": "이 결제는 이미 확인되었습니다.",
+      "successBody": "토스가 테스트 결제를 수락했습니다. 감사 로그에 payment.intent_create 및 payment.confirmed가 기록됩니다.",
+      "failConfirmTitle": "확인할 수 없음",
+      "failMeta": "결제 실패",
+      "failTitle": "결제가 취소되었거나 실패했습니다",
+      "failBody": "테스트 결제가 완료되지 않았습니다. 결제 페이지에서 다시 시도할 수 있습니다.",
+      "failCode": "코드: {code}",
+      "backToBilling": "결제로 돌아가기"
+    },
+    "connectedAccounts": {
+      "loading": "연결된 계정을 불러오는 중…",
+      "intro": "이메일에 연결된 로그인 방식입니다. Google·Microsoft와 비밀번호에 같은 이메일을 쓰면, 프로젝트에서 자동 계정 연결이 켜져 있을 때 Supabase가 병합할 수 있습니다.",
+      "linkManualHint": "Supabase 인증 설정에서 수동 아이덴티티 연결을 켜거나, 자동 연결과 함께 같은 이메일을 사용하세요.",
+      "linkGoogle": "Google 연결",
+      "linkMicrosoft": "Microsoft 연결",
+      "redirecting": "이동 중…",
+      "providerGoogle": "Google",
+      "providerMicrosoft": "Microsoft",
+      "providerEmail": "이메일 및 비밀번호",
+      "providerOther": "{provider}"
+    },
+    "sidebar": {
+      "overview": "개요",
+      "promptStudio": "프롬프트 스튜디오",
+      "library": "라이브러리",
+      "adminService": "관리자 서비스",
+      "workspace": "워크스페이스",
+      "team": "팀",
+      "billing": "결제",
+      "settings": "설정",
+      "helpSupport": "도움말 및 지원",
+      "adminServiceTitle": "조직 관리 — 감사, 결제, 설정"
+    },
+    "overview": {
+      "title": "개요",
+      "liveData": "실시간 데이터",
+      "openLibrary": "라이브러리",
+      "openPromptStudio": "프롬프트 스튜디오 열기",
+      "promptStudioBadge": "프롬프트 스튜디오",
+      "promptStudioHeadline": "대상 모델에 맞게 프롬프트를 개선하세요",
+      "promptStudioDesc": "구조화된 분석과 제안—로드맵에서 검토 흐름을 확인하세요.",
+      "libraryBadge": "라이브러리",
+      "entitledOne": "권한이 있는 제목 {count}개",
+      "entitledOther": "권한이 있는 제목 {count}개",
+      "libraryDesc": "카탈로그 구매로 받은 가이드, 템플릿, 다운로드입니다.",
+      "kpiPromptStudio": "프롬프트 스튜디오",
+      "kpiReady": "준비됨",
+      "kpiImprovePrompts": "프롬프트 개선",
+      "kpiLibraryEntitlements": "라이브러리 권한",
+      "kpiCatalogSkus": "카탈로그 SKU",
+      "kpiTeamMembers": "팀 멤버",
+      "kpiInYourOrg": "조직 내",
+      "kpiActiveProducts": "활성 제품",
+      "kpiTitlesYouCanUse": "사용 가능한 제목",
+      "gettingStarted": "시작하기",
+      "gettingStartedSub": "주요 작업 공간으로 프롬프트 스튜디오와 라이브러리를 사용하세요.",
+      "openStudio": "스튜디오 열기",
+      "bodyAdmin": "개요는 프롬프트 스튜디오, 라이브러리 권한, 팀 규모를 강조합니다. 감사 로그, 결제, 조직 설정은 <link>관리자 서비스</link>에서 열 수 있습니다.",
+      "bodyNonAdmin": "개요는 프롬프트 스튜디오, 라이브러리 권한, 팀 규모를 강조합니다. 결제, 감사 접근, 조직 전체 설정은 조직 관리자에게 문의하세요.",
+      "recentActivity": "최근 활동",
+      "recentActivityEmpty": "팀이 프롬프트 스튜디오와 라이브러리를 사용하면 여기에 표시됩니다."
+    },
+    "settings": {
+      "title": "설정",
+      "metaTitle": "설정",
+      "connectedAccounts": "연결된 계정",
+      "organization": "조직",
+      "yourProfile": "내 프로필",
+      "orgNameReadOnly": "이름",
+      "orgNameHint": "조직 이름은 관리자와 오거나이저만 변경할 수 있습니다.",
+      "language": {
+        "section": "언어",
+        "label": "표시 언어",
+        "hint": "로그인한 대시보드, 관리자 영역, 앱 크롬에 적용됩니다. 마케팅 페이지는 사이트 헤더의 언어 전환을 사용합니다.",
+        "saving": "저장 중…",
+        "error": "언어를 저장하지 못했습니다. 다시 시도해 주세요.",
+        "errors": {
+          "invalidLocale": "지원하지 않는 언어입니다.",
+          "unauthorized": "언어를 변경하려면 로그인하세요."
+        }
+      }
+    },
+    "adminShell": {
+      "logoAria": "관리자 홈",
+      "administrator": "관리자",
+      "description": "조직 운영과 컴플라이언스입니다. 제품 작업은 제품 대시보드에서 진행합니다.",
+      "backToProduct": "제품 대시보드로 돌아가기",
+      "sectionOrg": "조직",
+      "navOverview": "개요",
+      "navAudit": "감사 로그",
+      "navContent": "라이브러리 카탈로그",
+      "navTeam": "팀",
+      "navBilling": "결제",
+      "navSettings": "설정",
+      "navHelp": "도움말 및 지원"
+    },
+    "admin": {
+      "title": "관리자 콘솔",
+      "metaTitle": "관리자",
+      "backToOverview": "개요로 돌아가기",
+      "intro": "조직 관리자는 여기에서 핵심 운영을 열 수 있습니다. 제품 작업은 <studio>프롬프트 스튜디오</studio>와 <library>라이브러리</library>에서 진행합니다.",
+      "cards": {
+        "audit": {
+          "title": "감사 로그",
+          "desc": "보안·컴플라이언스 기록(서비스 역할 기록)."
+        },
+        "team": {
+          "title": "팀 및 초대",
+          "desc": "멤버, 역할, 대기 중인 초대."
+        },
+        "billing": {
+          "title": "결제 및 결제 수단",
+          "desc": "토스 결제 및 카탈로그 권한."
+        },
+        "settings": {
+          "title": "조직 설정",
+          "desc": "조직 프로필 및 알림 환경설정."
+        },
+        "catalog": {
+          "title": "디지털 상품 및 전자책",
+          "desc": "파일을 업로드하고 라이브러리·마케팅 페이지용 카탈로그 행을 관리합니다."
+        }
+      }
+    },
+    "adminContent": {
+      "metaTitle": "라이브러리 카탈로그",
+      "title": "라이브러리 카탈로그",
+      "intro": "PDF, EPUB 또는 ZIP을 업로드합니다. 파일은 Supabase Storage에 저장되고 카탈로그에 연결되며, 권한이 있는 사용자는 라이브러리에서 다운로드합니다.",
+      "listHeading": "카탈로그 항목",
+      "empty": "아직 카탈로그 행이 없습니다. 아래에서 파일을 업로드하세요.",
+      "colSlug": "슬러그",
+      "colTitle": "제목",
+      "colKind": "종류",
+      "colPrice": "가격(원)",
+      "colStorage": "스토리지 경로",
+      "colActive": "활성",
+      "yes": "예",
+      "no": "아니오",
+      "formHeading": "슬러그로 업로드 또는 교체",
+      "slug": "슬러그",
+      "slugHint": "카탈로그 전체에서 고유해야 합니다(DB unique). 소문자로 정규화되며 단어는 하이픈으로 구분합니다.",
+      "replaceExisting": "이 슬러그를 쓰는 기존 카탈로그 행을 교체합니다(항목 수정 시 필수).",
+      "titleLabel": "제목",
+      "description": "설명",
+      "priceKrw": "가격(원)",
+      "productKind": "상품 종류",
+      "file": "파일",
+      "fileHint": "PDF, EPUB 또는 ZIP. 최대 120MB.",
+      "submit": "카탈로그 저장",
+      "pending": "저장 중…",
+      "successCreated": "새 카탈로그 행이 생성되었습니다.",
+      "successReplaced": "해당 슬러그의 기존 행이 교체되었습니다.",
+      "errors": {
+        "unauthorized": "다시 로그인하세요.",
+        "forbidden": "플랫폼 관리자 권한이 없습니다.",
+        "invalid_slug": "유효한 슬러그를 입력하세요(문자, 숫자, 하이픈).",
+        "title_required": "제목은 필수입니다.",
+        "file_required": "파일을 선택하세요.",
+        "file_too_large": "파일이 너무 큽니다(최대 120MB).",
+        "file_type": "PDF, EPUB 또는 ZIP만 허용됩니다.",
+        "storage_upload_failed": "스토리지 업로드에 실패했습니다. 버킷과 정책을 확인하세요.",
+        "db_insert_failed": "카탈로그 행을 만들 수 없습니다.",
+        "db_update_failed": "카탈로그 행을 업데이트할 수 없습니다.",
+        "slug_taken": "이 슬러그는 이미 사용 중입니다. 아래 교체 옵션을 켜거나 다른 슬러그를 선택하세요.",
+        "unknown": "문제가 발생했습니다."
+      }
+    },
+    "audit": {
+      "title": "감사 로그",
+      "metaTitle": "감사 로그",
+      "intro": "앱에서 변경한 내용(설정, 초대, 결제 등)이 조직 단위로 여기에 기록됩니다.",
+      "hint": "저장 후에도 비어 있나요? 서버 환경에 SUPABASE_SERVICE_ROLE_KEY가 설정되어 있는지 확인하세요. 감사 행은 서비스 역할로 기록됩니다. 테이블이 없으면 마이그레이션 007_audit_logs를 적용하세요.",
+      "empty": "아직 항목이 없습니다. 설정에서 조직 이름이나 프로필을 저장한 뒤 이 페이지를 새로고침해 보세요.",
+      "colTime": "시간(UTC)",
+      "colActor": "실행자",
+      "colAction": "동작",
+      "colEntity": "엔티티",
+      "colDetails": "세부",
+      "loadError": "감사 로그를 불러오지 못했습니다. 마이그레이션 007이 적용되었는지 확인하세요."
+    },
+    "studio": {
+      "metaTitle": "프롬프트 스튜디오",
+      "badge": "프리뷰",
+      "intro": "모델에 맞는 프롬프트 분석과 검토 가능한 개선이 여기에 제공됩니다. 전자책·가이드는 라이브러리에서 이용하고, LLM 연동 흐름은 계속 확장합니다.",
+      "bullet1": "대상 모델을 고르고 프롬프트를 붙여 넣습니다.",
+      "bullet2": "구조화된 제안을 받습니다(전체 diff·수락 흐름은 로드맵).",
+      "bullet3": "라이브러리와 결제로 조직 안에서 작업을 유지합니다.",
+      "building": "공개 개발 중",
+      "note": "개선 API 계약은 docs/adr/ADR-002-prompt-studio-mvp.md에 정의되어 있습니다. 활성화 전까지는 명확한 미준비 응답을 반환합니다.",
+      "ctaLibrary": "라이브러리 열기",
+      "ctaBilling": "결제 및 체크아웃"
+    },
+    "library": {
+      "metaTitle": "라이브러리",
+      "subtitle": "이용 권한이 있는 제목이 여기에 표시됩니다. 접근은 조직 구독(Professional / Enterprise)과 개별 구매에 따라 달라질 수 있습니다. 업그레이드나 잠금 해제는 결제에서 진행하세요.",
+      "subscriptionBanner": "조직이 Starter 요금제입니다. 라이브러리 에셋 중 많은 항목은 유료 조직 구독에 포함됩니다. 기대한 제목이 없거나 계속 잠겨 있으면 구독이 필요할 수 있으며, 단순히 카탈로그나 설정 문제만은 아닐 수 있습니다.",
+      "subscriptionBillingCta": "구독 및 결제",
+      "emptyStarterNote": "이 페이지가 비어 있거나 항목이 계속 잠겨 있으면 아직 구독이 없거나 카탈로그에 항목이 없을 수 있습니다. 결제에서 개별 타이틀을 잠금 해제할 수 있을 때 이용할 수 있습니다.",
+      "empty": "표시할 항목이 없습니다. 아직 카탈로그에 등록된 콘텐츠가 없고, 조직에서 구매한 자산도 없습니다. 콘텐츠가 준비되고 구매되면 여기에 나타납니다.",
+      "included": "조직에 포함됨",
+      "notIncluded": "라이선스 없음",
+      "payPoc": "{amount}원 결제(PoC)",
+      "download": "다운로드",
+      "productKind": {
+        "ebook": "전자책",
+        "guide": "가이드",
+        "template": "템플릿",
+        "bundle": "번들"
+      }
+    },
+    "help": {
+      "metaTitle": "도움말 및 지원",
+      "title": "도움말 및 지원",
+      "documentation": "문서",
+      "documentationSub": "가이드 및 API 참고(placeholder URL)",
+      "emailLabel": "이메일",
+      "chat": "채팅",
+      "chatSub": "엔터프라이즈: 전용 Slack 채널"
+    },
+    "pages": {
+      "studio": {
+        "title": "프롬프트 스튜디오"
+      },
+      "library": {
+        "title": "라이브러리"
+      },
+      "team": {
+        "title": "팀"
+      },
+      "billing": {
+        "title": "결제"
+      },
+      "help": {
+        "title": "도움말 및 지원"
+      }
+    }
   }
 }

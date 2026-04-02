@@ -8,6 +8,9 @@ import { createClient } from "@/lib/supabase/server";
 import { getTossWidgetClientKey } from "@/lib/env/toss";
 import { tossConfirmPayment } from "@/lib/payments/toss-api";
 import { grantOrganizationContentEntitlement } from "@/lib/payments/content-entitlement";
+import {
+  PaymentIntentErrorCode,
+} from "@/lib/payments/payment-intent-errors";
 import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
 import { revalidatePath } from "next/cache";
 
@@ -32,21 +35,22 @@ export async function createTossPaymentIntent(
   contentProductSlug?: string | null,
 ): Promise<CreateIntentResult> {
   if (amountKrw !== TOSS_POC_AMOUNT_KRW) {
-    return { ok: false, error: `PoC only supports ${TOSS_POC_AMOUNT_KRW} KRW.` };
+    return { ok: false, error: PaymentIntentErrorCode.pocAmountOnly };
   }
   if (!getTossWidgetClientKey()) {
-    return {
-      ok: false,
-      error:
-        "Missing NEXT_PUBLIC_TOSS_WIDGET_CLIENT_KEY. Add it to .env.local for the payment widget.",
-    };
+    return { ok: false, error: PaymentIntentErrorCode.missingWidgetKey };
   }
 
   const supabase = await createClient();
   const auth = await getOrgEditorContext(supabase);
   if (!auth.ok) return { ok: false, error: auth.error };
 
-  const admin = createAdminClient();
+  let admin;
+  try {
+    admin = createAdminClient();
+  } catch {
+    return { ok: false, error: PaymentIntentErrorCode.paymentServerConfig };
+  }
   let contentProductId: string | null = null;
   if (contentProductSlug?.trim()) {
     const { data: product, error: pErr } = await admin
@@ -57,13 +61,10 @@ export async function createTossPaymentIntent(
       .maybeSingle();
 
     if (pErr || !product) {
-      return { ok: false, error: "Unknown or inactive catalog product." };
+      return { ok: false, error: PaymentIntentErrorCode.catalogUnknown };
     }
     if (product.price_cents !== POC_PRICE_CENTS) {
-      return {
-        ok: false,
-        error: `PoC checkout only supports catalog items priced at ${TOSS_POC_AMOUNT_KRW} KRW (minor units: ${POC_PRICE_CENTS}).`,
-      };
+      return { ok: false, error: PaymentIntentErrorCode.catalogPriceMismatch };
     }
     contentProductId = product.id;
   }
@@ -83,7 +84,7 @@ export async function createTossPaymentIntent(
     .single();
 
   if (error || !row) {
-    return { ok: false, error: error?.message ?? "Failed to create payment intent" };
+    return { ok: false, error: PaymentIntentErrorCode.intentCreateFailed };
   }
 
   await logAudit({

@@ -2,7 +2,7 @@ import type { User } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { SidebarUser } from "@/components/dashboard/sidebar";
 import { getInitialsFromDisplayName } from "@/lib/user-display";
-import { formatUserRoleLabel } from "@/lib/user-roles";
+import { normalizeOrgRoleKey } from "@/lib/user-roles";
 
 /**
  * Loads profile + organization name for the dashboard shell (sidebar).
@@ -45,7 +45,7 @@ export async function loadSidebarUser(
   return {
     displayName,
     email: user.email ?? "",
-    roleLabel: formatUserRoleLabel(row?.role),
+    role: normalizeOrgRoleKey(row?.role),
     orgName,
     initials: getInitialsFromDisplayName(displayName),
   };

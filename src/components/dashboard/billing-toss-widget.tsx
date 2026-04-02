@@ -1,8 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ANONYMOUS, loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import { createTossPaymentIntent } from "@/actions/toss-payments";
+import { isActionErrorCode } from "@/lib/i18n/action-error-codes";
+import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
+import {
+  isPaymentIntentErrorCode,
+  PaymentIntentErrorCode,
+} from "@/lib/payments/payment-intent-errors";
+import { isUnhelpfulTossClientErrorMessage } from "@/lib/payments/toss-widget-user-message";
 import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
 
 type WidgetsApi = {
@@ -37,10 +45,57 @@ export function BillingTossWidget({
   customerName,
   contentProductSlug,
 }: Props) {
+  const t = useTranslations("Dashboard.billing");
+  const tAction = useTranslations("Dashboard.actionErrors");
   const widgetsRef = useRef<WidgetsApi | null>(null);
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  function formatIntentError(code: string): string {
+    if (isActionErrorCode(code)) {
+      return translateActionErrorMessage(code, (key, values) =>
+        tAction(key, values as { max?: number }),
+      );
+    }
+    if (isPaymentIntentErrorCode(code)) {
+      if (code === PaymentIntentErrorCode.pocAmountOnly) {
+        return t("errors.pocAmountOnly", { amount: TOSS_POC_AMOUNT_KRW });
+      }
+      if (code === PaymentIntentErrorCode.catalogPriceMismatch) {
+        return t("errors.catalogPriceMismatch", { amount: TOSS_POC_AMOUNT_KRW });
+      }
+      if (code === PaymentIntentErrorCode.missingWidgetKey) {
+        return t("errors.missingWidgetKey");
+      }
+      if (code === PaymentIntentErrorCode.catalogUnknown) {
+        return t("errors.catalogUnknown");
+      }
+      if (code === PaymentIntentErrorCode.paymentServerConfig) {
+        return t("errors.paymentServerConfig");
+      }
+      if (code === PaymentIntentErrorCode.intentCreateFailed) {
+        return t("errors.intentCreateFailed");
+      }
+    }
+    return t("errors.generic");
+  }
+
+  const formatThrownPaymentError = useCallback(
+    (e: unknown): string => {
+      const raw =
+        e instanceof Error
+          ? e.message
+          : typeof e === "string"
+            ? e
+            : "";
+      if (isUnhelpfulTossClientErrorMessage(raw)) {
+        return t("errors.tossClientUnknown");
+      }
+      return raw.trim().length > 0 ? raw : t("errors.generic");
+    },
+    [t],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -72,14 +127,14 @@ export function BillingTossWidget({
         }
       } catch (e) {
         if (!cancelled) {
-          setError(e instanceof Error ? e.message : "Failed to load Toss widget");
+          setError(formatThrownPaymentError(e));
         }
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, [clientKey, customerKey]);
+  }, [clientKey, customerKey, formatThrownPaymentError]);
 
   async function handlePay() {
     setError(null);
@@ -90,12 +145,12 @@ export function BillingTossWidget({
         contentProductSlug ?? null,
       );
       if (!intent.ok) {
-        setError(intent.error);
+        setError(formatIntentError(intent.error));
         return;
       }
       const widgets = widgetsRef.current;
       if (!widgets) {
-        setError("Payment UI is not ready yet.");
+        setError(t("widgetNotReady"));
         return;
       }
       await widgets.setAmount({
@@ -105,15 +160,15 @@ export function BillingTossWidget({
       await widgets.requestPayment({
         orderId: intent.orderId,
         orderName: contentProductSlug
-          ? `Elevate — ${contentProductSlug}`
-          : "Elevate PoC (test)",
+          ? t("orderNameWithSlug", { slug: contentProductSlug })
+          : t("orderNameDefault"),
         successUrl: `${appOrigin}/dashboard/billing/success`,
         failUrl: `${appOrigin}/dashboard/billing/fail`,
         customerEmail: customerEmail ?? undefined,
-        customerName: customerName ?? "Member",
+        customerName: customerName ?? t("customerFallback"),
       });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Payment request failed");
+      setError(formatThrownPaymentError(e));
     } finally {
       setBusy(false);
     }
@@ -142,10 +197,12 @@ export function BillingTossWidget({
         disabled={!ready || busy}
         className="rounded-sm bg-primary px-4 py-2 text-sm font-medium text-text-on-color hover:bg-primary-hover disabled:opacity-50"
       >
-        {busy ? "Opening…" : "Pay test amount (100 KRW)"}
+        {busy
+          ? t("widgetOpening")
+          : t("widgetPay", { amount: TOSS_POC_AMOUNT_KRW })}
       </button>
       {!ready ? (
-        <p className="text-xs text-text-tertiary">Loading payment methods…</p>
+        <p className="text-xs text-text-tertiary">{t("widgetLoading")}</p>
       ) : null}
     </div>
   );

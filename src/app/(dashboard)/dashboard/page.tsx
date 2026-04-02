@@ -2,29 +2,29 @@ import {
   TrendingUp,
   TrendingDown,
   Users,
-  DollarSign,
-  Calendar,
-  MapPin,
   ArrowRight,
-  Plus,
-  MoreHorizontal,
+  Sparkles,
+  BookOpen,
+  Package,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
+import { ActionErrorMessage } from "@/components/i18n/action-error-message";
 import { ButtonLink } from "@/components/ui/button";
-import {
-  EVENT_STATUS_BADGE_CLASS,
-  EVENT_STATUS_LABEL,
-  formatEventDateRange,
-  formatEventRevenue,
-  getDashboardStats,
-  listOrgEvents,
-} from "@/lib/data/events";
-import { formatCompactNumber, formatCurrency } from "@/lib/utils";
-
-export const metadata = { title: "Dashboard" };
+import { getLibraryPageData } from "@/lib/data/library";
+import { listOrgMembers } from "@/lib/data/team";
+import { canAccessPlatformAdmin } from "@/lib/auth/platform-admin";
+import { createClient } from "@/lib/supabase/server";
 
 const recentActivity: { text: string; time: string }[] = [];
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Dashboard.overview");
+  return { title: t("title") };
+}
 
 export default async function DashboardPage() {
   const ensured = await ensureDefaultOrganization();
@@ -32,52 +32,76 @@ export default async function DashboardPage() {
     return (
       <div className="min-h-screen bg-background p-6">
         <div className="max-w-lg rounded-sm border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger">
-          {ensured.error}
+          <ActionErrorMessage
+            code={ensured.error}
+            className="text-sm text-danger"
+          />
         </div>
       </div>
     );
   }
 
   const orgId = ensured.organizationId;
-  const [stats, events] = await Promise.all([
-    getDashboardStats(orgId),
-    listOrgEvents(orgId),
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    redirect("/login");
+  }
+
+  const [library, members, profileRow] = await Promise.all([
+    getLibraryPageData(supabase, orgId),
+    listOrgMembers(orgId),
+    supabase.from("profiles").select("role").eq("id", user.id).maybeSingle(),
   ]);
 
-  const previewEvents = events.slice(0, 5);
+  const showPlatformAdmin = canAccessPlatformAdmin(
+    user.email,
+    profileRow.data?.role,
+  );
+  const t = await getTranslations("Dashboard.overview");
+
+  const entitledCount = library.entitledIds.size;
+  const catalogCount = library.products.length;
+
+  const entitledLabel =
+    entitledCount === 1
+      ? t("entitledOne", { count: entitledCount })
+      : t("entitledOther", { count: entitledCount });
 
   const kpis = [
     {
-      label: "Total Attendees",
-      value: formatCompactNumber(stats.totalAttendees),
+      label: t("kpiPromptStudio"),
+      value: t("kpiReady"),
+      change: "—",
+      trend: "up" as const,
+      icon: Sparkles,
+      period: t("kpiImprovePrompts"),
+    },
+    {
+      label: t("kpiLibraryEntitlements"),
+      value: String(entitledCount),
+      change: "—",
+      trend: "up" as const,
+      icon: BookOpen,
+      period: t("kpiTitlesYouCanUse"),
+    },
+    {
+      label: t("kpiCatalogSkus"),
+      value: String(catalogCount),
+      change: "—",
+      trend: "up" as const,
+      icon: Package,
+      period: t("kpiActiveProducts"),
+    },
+    {
+      label: t("kpiTeamMembers"),
+      value: String(members.length),
       change: "—",
       trend: "up" as const,
       icon: Users,
-      period: "all events",
-    },
-    {
-      label: "Revenue",
-      value: formatCurrency(stats.revenueCents),
-      change: "—",
-      trend: "up" as const,
-      icon: DollarSign,
-      period: "all events",
-    },
-    {
-      label: "Active Events",
-      value: String(stats.activeEvents),
-      change: "—",
-      trend: "up" as const,
-      icon: Calendar,
-      period: "live & registration",
-    },
-    {
-      label: "Avg. NPS Score",
-      value: "—",
-      change: "—",
-      trend: "down" as const,
-      icon: TrendingUp,
-      period: "when collected",
+      period: t("kpiInYourOrg"),
     },
   ];
 
@@ -85,35 +109,80 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-background">
       <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border-subtle bg-background px-6 h-12">
         <div>
-          <h1 className="text-sm font-medium text-text-primary">Overview</h1>
+          <h1 className="text-sm font-medium text-text-primary">{t("title")}</h1>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-text-tertiary">Live data</span>
-          <ButtonLink href="/dashboard/events/new" variant="primary" size="sm">
-            <Plus className="h-3.5 w-3.5" />
-            New Event
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-text-tertiary hidden sm:inline">
+            {t("liveData")}
+          </span>
+          <ButtonLink href="/dashboard/library" variant="tertiary" size="sm">
+            <BookOpen className="h-3.5 w-3.5" aria-hidden />
+            {t("openLibrary")}
+          </ButtonLink>
+          <ButtonLink href="/dashboard/studio" variant="primary" size="sm">
+            <Sparkles className="h-3.5 w-3.5" aria-hidden />
+            {t("openPromptStudio")}
           </ButtonLink>
         </div>
       </div>
 
       <div className="p-6 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <Link
+            href="/dashboard/studio"
+            className="group border border-border-subtle bg-layer-01 p-6 hover:bg-layer-02 transition-colors"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2 text-primary mb-2">
+                  <Sparkles className="h-5 w-5" aria-hidden />
+                  <span className="text-xs font-semibold uppercase tracking-wider">
+                    {t("promptStudioBadge")}
+                  </span>
+                </div>
+                <h2 className="text-lg font-semibold text-text-primary">
+                  {t("promptStudioHeadline")}
+                </h2>
+                <p className="mt-2 text-sm text-text-secondary leading-relaxed">
+                  {t("promptStudioDesc")}
+                </p>
+              </div>
+              <ArrowRight className="h-5 w-5 text-text-tertiary group-hover:text-primary shrink-0 transition-colors" aria-hidden />
+            </div>
+          </Link>
+          <Link
+            href="/dashboard/library"
+            className="group border border-border-subtle bg-layer-01 p-6 hover:bg-layer-02 transition-colors"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2 text-primary mb-2">
+                  <BookOpen className="h-5 w-5" aria-hidden />
+                  <span className="text-xs font-semibold uppercase tracking-wider">
+                    {t("libraryBadge")}
+                  </span>
+                </div>
+                <h2 className="text-lg font-semibold text-text-primary">
+                  {entitledLabel}
+                </h2>
+                <p className="mt-2 text-sm text-text-secondary leading-relaxed">
+                  {t("libraryDesc")}
+                </p>
+              </div>
+              <ArrowRight className="h-5 w-5 text-text-tertiary group-hover:text-primary shrink-0 transition-colors" aria-hidden />
+            </div>
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-px bg-border-subtle border border-border-subtle">
           {kpis.map((kpi) => (
             <div
               key={kpi.label}
               className="bg-layer-01 p-5 hover:bg-layer-02 transition-colors"
             >
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <kpi.icon className="h-4 w-4 text-text-tertiary" />
-                  <span className="text-xs text-text-tertiary">{kpi.label}</span>
-                </div>
-                <button
-                  type="button"
-                  className="text-text-tertiary hover:text-text-secondary"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </button>
+              <div className="flex items-center gap-2 mb-3">
+                <kpi.icon className="h-4 w-4 text-text-tertiary" aria-hidden />
+                <span className="text-xs text-text-tertiary">{kpi.label}</span>
               </div>
               <div className="text-3xl font-semibold tracking-tight text-text-primary">
                 {kpi.value}
@@ -124,9 +193,9 @@ export default async function DashboardPage() {
                 ) : (
                   <>
                     {kpi.trend === "up" ? (
-                      <TrendingUp className="h-3.5 w-3.5 text-accent" />
+                      <TrendingUp className="h-3.5 w-3.5 text-accent" aria-hidden />
                     ) : (
-                      <TrendingDown className="h-3.5 w-3.5 text-danger" />
+                      <TrendingDown className="h-3.5 w-3.5 text-danger" aria-hidden />
                     )}
                     <span
                       className={`text-xs font-medium ${kpi.trend === "up" ? "text-accent" : "text-danger"}`}
@@ -146,92 +215,50 @@ export default async function DashboardPage() {
         <div className="grid xl:grid-cols-3 gap-6">
           <div className="xl:col-span-2 border border-border-subtle bg-layer-01">
             <div className="flex items-center justify-between px-5 py-3 border-b border-border-subtle">
-              <h2 className="text-sm font-medium text-text-primary">Events</h2>
+              <div>
+                <h2 className="text-sm font-medium text-text-primary">
+                  {t("gettingStarted")}
+                </h2>
+                <p className="text-xs text-text-tertiary mt-0.5">
+                  {t("gettingStartedSub")}
+                </p>
+              </div>
               <Link
-                href="/dashboard/events"
+                href="/dashboard/studio"
                 className="text-xs text-interactive hover:text-primary flex items-center gap-1 transition-colors"
               >
-                View all <ArrowRight className="h-3 w-3" />
+                {t("openStudio")} <ArrowRight className="h-3 w-3" aria-hidden />
               </Link>
             </div>
-
-            <div className="grid grid-cols-[1fr_100px_100px_100px_120px] gap-4 px-5 py-2 border-b border-border-subtle text-xs font-medium text-text-tertiary uppercase tracking-wider">
-              <span>Event</span>
-              <span>Attendees</span>
-              <span>Revenue</span>
-              <span>Status</span>
-              <span>Date</span>
-            </div>
-
-            {previewEvents.length === 0 ? (
-              <div className="px-5 py-10 text-center text-sm text-text-tertiary">
-                No events yet.{" "}
-                <Link
-                  href="/dashboard/events/new"
-                  className="text-interactive hover:text-primary"
-                >
-                  Create your first event
-                </Link>
-                .
-              </div>
-            ) : (
-              previewEvents.map((event) => {
-                const location = event.venue
-                  ? [event.venue.name, event.venue.city]
-                      .filter(Boolean)
-                      .join(", ")
-                  : "—";
-                return (
-                  <Link
-                    key={event.id}
-                    href={`/dashboard/events/${event.id}`}
-                    className="grid grid-cols-[1fr_100px_100px_100px_120px] gap-4 px-5 py-3 border-b border-border-subtle last:border-b-0 hover:bg-layer-02 transition-colors items-center"
-                  >
-                    <div>
-                      <div className="text-sm text-text-primary font-medium truncate">
-                        {event.title}
-                      </div>
-                      <div className="text-xs text-text-tertiary flex items-center gap-1 mt-0.5">
-                        <MapPin className="h-3 w-3 shrink-0" />
-                        <span className="truncate">{location}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-text-primary">
-                        {event.actual_attendees.toLocaleString()}
-                      </div>
-                      <div className="text-xs text-text-tertiary">
-                        / {event.expected_attendees.toLocaleString()}
-                      </div>
-                    </div>
-                    <div className="text-sm text-text-primary">
-                      {formatEventRevenue(event)}
-                    </div>
-                    <div>
-                      <span
-                        className={`inline-flex px-2 py-0.5 text-xs font-medium ${EVENT_STATUS_BADGE_CLASS[event.status] ?? ""}`}
+            <div className="px-5 py-8 text-sm text-text-secondary leading-relaxed">
+              {showPlatformAdmin ? (
+                <div>
+                  {t.rich("bodyAdmin", {
+                    link: (chunks) => (
+                      <Link
+                        href="/admin"
+                        className="font-medium text-interactive hover:text-primary"
                       >
-                        {EVENT_STATUS_LABEL[event.status]}
-                      </span>
-                    </div>
-                    <div className="text-xs text-text-tertiary">
-                      {formatEventDateRange(event.start_date, event.end_date)}
-                    </div>
-                  </Link>
-                );
-              })
-            )}
+                        {chunks}
+                      </Link>
+                    ),
+                  })}
+                </div>
+              ) : (
+                <p>{t("bodyNonAdmin")}</p>
+              )}
+            </div>
           </div>
 
           <div className="border border-border-subtle bg-layer-01">
             <div className="px-5 py-3 border-b border-border-subtle">
               <h2 className="text-sm font-medium text-text-primary">
-                Recent Activity
+                {t("recentActivity")}
               </h2>
             </div>
             {recentActivity.length === 0 ? (
               <div className="px-5 py-8 text-sm text-text-tertiary">
-                Activity will appear here as your team uses Elevate.
+                {t("recentActivityEmpty")}
               </div>
             ) : (
               <div className="divide-y divide-border-subtle">
@@ -248,42 +275,6 @@ export default async function DashboardPage() {
               </div>
             )}
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border-subtle border border-border-subtle">
-          {[
-            {
-              label: "Total events",
-              value: String(stats.totalEvents),
-              sub: "in your organization",
-            },
-            {
-              label: "Reporting period",
-              value: "All time",
-              sub: "live metrics",
-            },
-            {
-              label: "Leads",
-              value: "—",
-              sub: "connect CRM to track",
-            },
-            {
-              label: "Returning attendees",
-              value: "—",
-              sub: "when historical data exists",
-            },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="bg-layer-01 p-5 hover:bg-layer-02 transition-colors"
-            >
-              <div className="text-xs text-text-tertiary">{stat.label}</div>
-              <div className="text-2xl font-semibold text-text-primary mt-1">
-                {stat.value}
-              </div>
-              <div className="text-xs text-text-tertiary mt-1">{stat.sub}</div>
-            </div>
-          ))}
         </div>
       </div>
     </div>

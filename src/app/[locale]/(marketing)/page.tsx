@@ -246,7 +246,7 @@ export default async function Home({ params }: Props) {
               {t("resourcesBody")}
             </p>
             <Link
-              href="/case-studies"
+              href="/blog"
               className="inline-flex items-center gap-1.5 mt-6 text-sm text-interactive hover:text-primary transition-colors"
             >
               {t("resourcesCta")}
@@ -298,18 +298,6 @@ export default async function Home({ params }: Props) {
                 {t("ctaBandSignUp")}
               </Button>
             </MarketingTrackedNextLink>
-            <MarketingTrackedLocaleLink
-              href="/demo"
-              ctaId={MarketingCtaId.BAND_DEMO}
-            >
-              <Button
-                variant="ghost"
-                size="lg"
-                className="text-white/80 hover:text-white hover:bg-white/10"
-              >
-                {t("ctaBandDemo")}
-              </Button>
-            </MarketingTrackedLocaleLink>
             <MarketingTrackedLocaleLink
               href="/contact"
               ctaId={MarketingCtaId.BAND_CONTACT}

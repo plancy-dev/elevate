@@ -1,10 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
+import { useTranslations } from "next-intl";
 import {
   updateProfileAndNotifications,
   type SettingsActionState,
 } from "@/actions/settings";
+import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import { Button } from "@/components/ui/button";
 
 export function SettingsProfileForm({
@@ -14,6 +16,8 @@ export function SettingsProfileForm({
   defaultDisplayName: string;
   defaultEmailMilestoneDigest: boolean;
 }) {
+  const t = useTranslations("Dashboard.settingsProfile");
+  const tAction = useTranslations("Dashboard.actionErrors");
   const initialState: SettingsActionState = undefined;
   const [state, formAction, pending] = useActionState(
     updateProfileAndNotifications,
@@ -24,7 +28,7 @@ export function SettingsProfileForm({
     <form action={formAction} className="space-y-4">
       {state?.error && (
         <p className="rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
-          {state.error}
+          {translateActionErrorMessage(state.error, tAction)}
         </p>
       )}
       <div>
@@ -32,7 +36,7 @@ export function SettingsProfileForm({
           htmlFor="display_name"
           className="block text-xs text-text-secondary mb-1"
         >
-          Profile display name
+          {t("displayNameLabel")}
         </label>
         <input
           id="display_name"
@@ -40,16 +44,16 @@ export function SettingsProfileForm({
           defaultValue={defaultDisplayName}
           maxLength={200}
           className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
-          placeholder="Your name"
+          placeholder={t("displayNamePlaceholder")}
         />
         <p className="mt-1 text-xs text-text-tertiary">
-          Shown in the sidebar and across the app.
+          {t("displayNameHint")}
         </p>
       </div>
 
       <div>
         <h3 className="text-xs font-medium text-text-tertiary uppercase tracking-wider">
-          Notifications
+          {t("notificationsHeading")}
         </h3>
         <label className="mt-3 flex items-center gap-2 text-sm text-text-secondary">
           <input
@@ -59,16 +63,13 @@ export function SettingsProfileForm({
             defaultChecked={defaultEmailMilestoneDigest}
             className="rounded border-border"
           />
-          Email digest for event milestones
+          {t("digestLabel")}
         </label>
-        <p className="mt-2 text-xs text-text-tertiary">
-          When enabled, we can include you in milestone summaries (delivery is
-          configured per deployment).
-        </p>
+        <p className="mt-2 text-xs text-text-tertiary">{t("digestHint")}</p>
       </div>
 
       <Button variant="primary" size="md" type="submit" isLoading={pending}>
-        Save profile &amp; notifications
+        {t("save")}
       </Button>
     </form>
   );

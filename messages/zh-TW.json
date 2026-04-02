@@ -11,7 +11,6 @@
       "product": "產品",
       "solutions": "解決方案",
       "about": "關於",
-      "resources": "資源",
       "caseStudies": "案例研究",
       "security": "安全",
       "compliance": "合規",
@@ -20,10 +19,10 @@
     }
   },
   "Nav": {
+    "blog": "部落格",
     "product": "Product",
     "solutions": "Solutions",
     "pricing": "Pricing",
-    "resources": "Resources",
     "solConferences": "Conferences",
     "solExhibitions": "Exhibitions",
     "solIncentiveTravel": "Incentive Travel",
@@ -31,6 +30,8 @@
     "contactSales": "Contact Sales",
     "logIn": "Log In",
     "requestDemo": "Request Demo",
+    "openDashboard": "主控台",
+    "signOut": "登出",
     "library": "Library",
     "productPromptStudio": "Prompt Studio",
     "productEbooksAndGuides": "E-books & guides",
@@ -91,10 +92,10 @@
     "capGlobalDesc": "Localization-friendly marketing and app shell for distributed teams and dual-track GTM.",
     "capSecurityTitle": "Tenant-scoped by design",
     "capSecurityDesc": "Role-based access and Supabase RLS—deploy where your security team allows.",
-    "resourcesBadge": "Resources",
-    "resourcesTitle": "Case studies & guides",
-    "resourcesBody": "We publish customer stories and product notes as they are available—no fabricated quotes or metrics here.",
-    "resourcesCta": "Browse resources",
+    "resourcesBadge": "Blog",
+    "resourcesTitle": "Product notes & SEO-friendly posts",
+    "resourcesBody": "We ship the marketing blog from the repo (MDX in content/blog) so every release can be reviewed like code—no fabricated quotes; metrics only when we can stand behind them.",
+    "resourcesCta": "Open blog",
     "ctaBandTitle": "等候名單 — 測試版存取",
     "ctaBandSub": "產品更新、Prompt Studio 上線節奏，以及面向自然與付費獲取的部落格精選。目錄上新透過同一列表通知。",
     "ctaBandSignUp": "Create account",
@@ -183,6 +184,10 @@
     "submit": "Send message"
   },
   "Demo": {
+    "pausedMetaTitle": "示範 — 暫停",
+    "pausedTitle": "示範預約已暫停",
+    "pausedDescription": "我們目前不接受示範預約。請瀏覽網站、加入等候名單，或聯絡業務團隊。",
+    "pausedBackHome": "返回首頁",
     "metaTitle": "Request a Demo",
     "title": "Request a demo",
     "description": "了解 Prompt Studio 路線圖、圖書館與目錄結帳—無壓力，不是照本宣科的「全功能」演示。",
@@ -201,7 +206,11 @@
   "Blog": {
     "metaTitle": "部落格",
     "title": "部落格",
-    "description": "產品更新與 MICE 產業洞察。內容管線即將推出。"
+    "description": "產品更新與產業筆記。文章以儲存庫中的 content/blog MDX 管理。",
+    "empty": "尚無文章。",
+    "published": "發布 {date}",
+    "readMore": "閱讀全文",
+    "backToBlog": "返回部落格"
   },
   "Careers": {
     "metaTitle": "徵才",
@@ -224,105 +233,150 @@
     "title": "合規",
     "description": "我們支援符合 GDPR 的資料處理、SOC 2 就緒與區域託管選項。採購階段可審閱 DPA（佔位）。"
   },
-  "ResourcesPage": {
-    "metaTitle": "資源",
-    "title": "資源",
-    "description": "評估 Elevate 的文件與指南。",
-    "items": {
-      "product": {
-        "title": "產品概覽",
-        "desc": "平台能力"
-      },
-      "security": {
-        "title": "安全與合規",
-        "desc": "GDPR、SOC 2、ISO 27001"
-      },
-      "pricing": {
-        "title": "定價",
-        "desc": "方案與比較"
-      },
-      "cases": {
-        "title": "案例研究",
-        "desc": "客戶成果"
-      }
-    }
-  },
   "Product": {
     "metaTitle": "Product",
     "title": "Platform",
-    "description": "Elevate AI 以 Prompt Studio 為核心—面向模型的提示改進。組織工作區與圖書館（目錄、電子書）分階段推出；等候名單最先收到產品動態。",
+    "description": "Elevate is prompt-first: Prompt Studio analyzes and improves prompts against the models you actually ship. Library, catalog, and org workspace wrap that loop in governance, entitlements, and billing.",
     "modules": {
       "prompt-studio": {
         "title": "Prompt Studio",
-        "desc": "Choose a model, analyze prompts, and apply reviewable improvements—Cursor-style acceptance on the roadmap."
+        "desc": "Model-aware analysis and structured improvements—scoped to your org, with review flows on the roadmap."
       },
       "ebooks-and-guides": {
         "title": "E-books & guides",
-        "desc": "目錄與權益—成長與獎勵層；主敘事仍是 Prompt Studio。"
+        "desc": "Catalog SKUs and downloads in Library—commercial layer alongside Prompt Studio, not a separate product silo."
       },
       "org-workspace": {
         "title": "Org workspace",
-        "desc": "Roles, invites, Library access, and billing scoped to your organization."
+        "desc": "Members, roles, invites, billing, and Library entitlements in one tenant."
       },
       "security": {
         "title": "Security & compliance",
-        "desc": "Tenant isolation, least-privilege patterns, and enterprise-friendly deployment stories."
+        "desc": "Supabase Auth, RLS, and deployment patterns your security team can review."
       }
     }
   },
   "ProductSlug": {
     "prompt-studio": {
-      "metaTitle": "Prompt Studio",
+      "metaTitle": "Prompt Studio | Elevate",
+      "metaDescription": "Model-aware prompt improvement for teams that ship AI features. Pick a target model, analyze prompts, and get structured suggestions—scoped to your organization.",
       "title": "Prompt Studio",
-      "body": "核心閉環：選擇目標模型、貼上提示，獲得結構化分析與改進建議—審核與接受在路線圖中。分階段推出；透過等候名單取得測試資格；帳戶側重購買與組織圖書館，而非強制全產品導覽。"
+      "lead": "Prompt Studio is Elevate's primary surface: model-aware prompt improvement for teams that ship AI features and internal copilots. Work is scoped to your organization—not a public playground—so drafts stay inside your tenant.",
+      "section1Title": "What you get today",
+      "section1Body": "Choose the model you deploy against, paste a prompt, and receive structured analysis and improvement suggestions. We focus on actionable output: what to change, why it matters, and how it aligns with model behavior—not generic tips.\n\nLibrary and catalog run in parallel so your org can pair prompt work with entitlements and downloadable guides when operations attach files.",
+      "section2Title": "Built for org workflows",
+      "section2Body": "Everything ties to your Elevate organization: members, roles, and billing. Prompt iterations stay auditable within the team, which matters when procurement asks how AI-assisted work is reviewed.\n\nStudio access respects the same org boundaries as Library—no cross-tenant leakage by design.",
+      "section3Title": "Roadmap: review and accept",
+      "section3Body": "Accept/reject flows, side-by-side diffs, and tighter integrations are on the roadmap. Join the waitlist to get Prompt Studio beta access first; production accounts remain the path for purchases and downloads."
     },
     "ebooks-and-guides": {
-      "metaTitle": "E-books & guides",
+      "metaTitle": "E-books & guides | Elevate",
+      "metaDescription": "Digital catalog and Library entitlements for guides and templates—purchased per org, downloaded when entitled.",
       "title": "E-books & guides",
-      "body": "High-signal guides and templates sold through the catalog. Purchases grant your organization entitlements; Library surfaces what you can download when files are attached in ops."
+      "lead": "The catalog is how we package high-signal guides and templates alongside Prompt Studio. Purchases grant your organization entitlements; Library surfaces what you can download when files are attached in operations.",
+      "section1Title": "How catalog and Library connect",
+      "section1Body": "Checkout (where enabled) records what your org has purchased or licensed. Library lists entitled titles so members know what they can download without hunting through email threads or shared drives.\n\nIf a title is locked, it is usually a subscription or entitlement issue—Billing is the right place to upgrade or unlock.",
+      "section2Title": "Why we ship this in parallel",
+      "section2Body": "Prompt improvement is the hero loop; catalog and e-books are how we reward early believers and fund the roadmap without diluting the core product narrative.\n\nContent is versioned in Git-friendly MDX for marketing and ops; digital products in Library follow the same org scoping as the rest of Elevate.",
+      "section3Title": "Operations note",
+      "section3Body": "Admins manage catalog rows in the platform console when configured. End users should always use Library for downloads so entitlements stay authoritative."
     },
     "org-workspace": {
-      "metaTitle": "Org workspace",
+      "metaTitle": "Org workspace | Elevate",
+      "metaDescription": "Organizations, roles, invitations, Library, and billing—single tenant for Prompt Studio and catalog entitlements.",
       "title": "Org workspace",
-      "body": "Everything is scoped to organizations: members, roles, Library, Studio access, and billing. Invite teammates and keep a single source of truth for what the org owns."
+      "lead": "Elevate is organized around organizations: every member, invite, Library view, and billing record belongs to exactly one org. That boundary is intentional for procurement, audit, and least-privilege access.",
+      "section1Title": "Members and roles",
+      "section1Body": "Invite teammates with roles that match how you operate. Admins can manage settings and, where applicable, admin surfaces; contributors focus on Studio and Library without inheriting billing controls they do not need.",
+      "section2Title": "Library visibility",
+      "section2Body": "Library reflects entitlements for the signed-in user's organization. If something is missing, it is usually a subscription or purchase state—not a personal account issue.\n\nStarter plans may see fewer titles; upgrading the org unlocks more catalog content when available.",
+      "section3Title": "Billing and ownership",
+      "section3Body": "Toss Payments PoC and future gateways attach to the organization so finance has a single invoice trail. Personal accounts exist for sign-in, but purchase and download rights are org-scoped."
     },
     "security": {
-      "metaTitle": "Security & compliance",
+      "metaTitle": "Security & compliance | Elevate",
+      "metaDescription": "Supabase Auth, RLS, tenant isolation, and deployment options your security team can align with. Deeper reviews under NDA for enterprise buyers.",
       "title": "Security & compliance",
-      "body": "Supabase-backed auth, RLS, and deployment options your security team can align with. Detailed reviews under NDA for enterprise buyers—see also Security and Compliance pages."
+      "lead": "Elevate is built on Supabase with row-level security policies that keep tenant data apart. We do not claim certifications we have not earned—see our Security and Compliance pages for posture and roadmap.",
+      "section1Title": "Authentication and data plane",
+      "section1Body": "Users authenticate via Supabase Auth. Application data reads and writes use policies that require membership in the correct organization.\n\nService role keys are server-only and never ship to the browser.",
+      "section2Title": "Deployment and review",
+      "section2Body": "We target Next.js deployments your team can run on Vercel or compatible hosts. Enterprise customers can request architecture review, DPA, and deeper diligence under NDA.\n\nOperational logging and audit trails are evolving in the product—see the admin audit log where enabled.",
+      "section3Title": "Related reading",
+      "section3Body": "For policy language and legal terms, see the Security and Compliance marketing pages and Privacy Policy. This module summarizes engineering intent, not a substitute for your legal review."
     }
   },
   "Solutions": {
-    "metaTitle": "解決方案",
-    "title": "解決方案",
-    "description": "Elevate 適配您的 MICE 情境。請探索以下細分。",
+    "metaTitle": "Solutions",
+    "title": "Solutions",
+    "description": "Event and travel programs generate thousands of comms—speaker briefs, sponsor copy, attendee emails, and exhibitor kits. Elevate helps MICE teams standardize and improve that language with model-aware prompts, org-scoped drafts, and Library-backed assets.",
     "items": {
-      "conferences": "會議",
-      "exhibitions": "展覽",
-      "incentive-travel": "獎勵旅遊",
-      "corporate-meetings": "企業會議"
+      "conferences": {
+        "title": "Conferences",
+        "desc": "Multi-track programs and speaker/sponsor comms at scale."
+      },
+      "exhibitions": {
+        "title": "Exhibitions",
+        "desc": "Exhibitor kits, floor campaigns, and lead-gen copy consistency."
+      },
+      "incentive-travel": {
+        "title": "Incentive travel",
+        "desc": "Program narratives and compliance-sensitive itineraries."
+      },
+      "corporate-meetings": {
+        "title": "Corporate meetings",
+        "desc": "Exec summaries, hybrid runbooks, internal AI policy alignment."
+      }
     }
   },
   "SolutionsSlug": {
     "conferences": {
-      "metaTitle": "會議",
-      "title": "會議",
-      "body": "多軌議程、講者管理與贊助商曝光——面向大量代表與複雜後勤。"
+      "metaTitle": "Conferences | Elevate",
+      "metaDescription": "Improve prompt libraries for speaker briefs, sponsor tiers, and attendee journeys—scoped to your organization.",
+      "title": "Conferences",
+      "lead": "Large programs mean repeated comms: session descriptions, speaker briefs, sponsor deliverables, and attendee journeys. Elevate helps you build reusable prompt patterns and improve them against the models your team actually uses.",
+      "section1Title": "Where Elevate fits",
+      "section1Body": "Use Prompt Studio to tighten instructions for on-brand tone, clarity, and model alignment. When marketing attaches catalog assets, Library makes downloads entitlement-aware—so field teams and agencies pull from the same source of truth.\n\nThis is not a replacement for your registration or abstract system; it is the quality layer on top of language and AI-assisted drafts.",
+      "section2Title": "Operational outcomes",
+      "section2Body": "Fewer one-off rewrites, fewer off-brand variants, faster review cycles when teams share org-scoped drafts.\n\nRoles and billing stay tied to the organization so procurement can audit who had access to what.",
+      "section3Title": "Getting started",
+      "section3Body": "Join the waitlist for Prompt Studio beta, or open Billing when checkout is enabled to unlock catalog content. Contact sales if you need enterprise rollout and security review."
     },
     "exhibitions": {
-      "metaTitle": "展覽",
-      "title": "展覽",
-      "body": "攤位分配、展商入口與人流分析，提升展館表現。"
+      "metaTitle": "Exhibitions | Elevate",
+      "metaDescription": "Consistent exhibitor comms, booth kits, and campaign copy—improved with model-aware prompts and org-scoped drafts.",
+      "title": "Exhibitions",
+      "lead": "Exhibitions depend on tight coordination between exhibitors, agencies, and floor teams. Elevate helps you standardize prompt templates for kits, campaigns, and lead follow-ups so tone and claims stay consistent across hundreds of touchpoints.",
+      "section1Title": "Language consistency",
+      "section1Body": "Prompt Studio surfaces structured improvements so teams do not ship contradictory instructions to models or contractors.\n\nPair with Library when downloadable guides and templates are part of your commercial program.",
+      "section2Title": "Governance",
+      "section2Body": "Everything stays inside the organization tenant. That matters when sponsors and exhibitors expect confidentiality around unreleased messaging.\n\nAudit and admin tooling continues to mature—see the product changelog for what is live.",
+      "section3Title": "Next steps",
+      "section3Body": "Browse the catalog for packaged guides, or talk to sales about multi-org programs and pilots."
     },
     "incentive-travel": {
-      "metaTitle": "獎勵旅遊",
-      "title": "獎勵旅遊",
-      "body": "精選行程、團隊協調與適合高階專案的合規報告。"
+      "metaTitle": "Incentive travel | Elevate",
+      "metaDescription": "Narratives and comms for incentive programs—with structured prompt improvement and org-scoped drafts.",
+      "title": "Incentive travel",
+      "lead": "Incentive programs require polished narratives, itinerary language, and sensitive attendee comms. Elevate helps teams iterate on prompts with clear model targets and reviewable structure before messages reach VIPs.",
+      "section1Title": "Quality and safety",
+      "section1Body": "Model-aware prompts reduce the risk of off-tone or off-policy copy when programs span multiple regions.\n\nDrafts remain scoped to your organization so partner agencies and internal teams can collaborate without exposing content publicly.",
+      "section2Title": "Catalog and rewards",
+      "section2Body": "When guides are part of the reward package, Library entitlements align downloads with what the org purchased.\n\nCatalog and billing are designed to sit alongside Prompt Studio, not compete with it.",
+      "section3Title": "Talk to us",
+      "section3Body": "For bespoke programs or compliance-heavy rollouts, contact sales and we will align on review and deployment expectations."
     },
     "corporate-meetings": {
-      "metaTitle": "企業會議",
-      "title": "企業會議",
-      "body": "內部全員會、領導力異地會與混合形式，具備企業安全與 SSO。"
+      "metaTitle": "Corporate meetings | Elevate",
+      "metaDescription": "Exec summaries, hybrid runbooks, and internal AI policy alignment—improved with Prompt Studio and org-scoped governance.",
+      "title": "Corporate meetings",
+      "lead": "Corporate meetings teams juggle internal comms, executive summaries, and hybrid logistics. Elevate gives you a repeatable prompt layer so leadership updates, FAQs, and policy explanations stay consistent as models and regulations change.",
+      "section1Title": "Internal alignment",
+      "section1Body": "Prompt Studio helps teams converge on approved phrasing and structure before content is broadcast to Slack, email, or intranet.\n\nOrg workspace ensures the right roles can edit drafts and approve changes.",
+      "section2Title": "Security posture",
+      "section2Body": "Supabase Auth and RLS underpin tenant isolation. For enterprise buyers, deeper security and compliance materials are available under NDA.\n\nSee Security and Compliance pages for statements of direction.",
+      "section3Title": "Rollout",
+      "section3Body": "Start with the waitlist for Prompt Studio beta; add catalog entitlements when you need downloadable playbooks. We will meet you where your procurement process is."
     }
   },
   "Pricing": {
@@ -466,12 +520,344 @@
       }
     ]
   },
+  "Dashboard": {
+    "signOut": "登出",
+    "actionErrors": {
+      "authNotAuthenticated": "請先登入。",
+      "authNoOrganization": "尚無組織。請重新整理頁面。",
+      "authInsufficientPermissions": "您沒有執行此操作的權限。",
+      "authInviteManagersOnly": "僅管理員與組織者可管理邀請。",
+      "authAdminOnly": "僅組織管理員可變更成員角色。",
+      "authVenuePermissionDenied": "您沒有場地管理權限。",
+      "settingsOrgNameRequired": "請填寫組織名稱。",
+      "settingsTextTooLong": "最多 {max} 個字元。",
+      "inviteInvalidEmail": "請輸入有效的電子郵件地址。",
+      "inviteInvalidRole": "無效的角色。",
+      "inviteEmailAlreadyMember": "該電子郵件已屬於您的組織。",
+      "invitePendingDuplicate": "該電子郵件已有待處理邀請。請先撤銷或等待過期。",
+      "inviteNotAuthenticated": "請先登入。",
+      "inviteMissingId": "缺少邀請資訊。",
+      "inviteCreated": "已建立邀請。請在下方清單中分享邀請連結。",
+      "inviteRevoked": "已移除邀請。",
+      "teamMissingMember": "缺少成員資訊。",
+      "teamInvalidRole": "無效的角色。",
+      "teamCannotChangeOwnRole": "無法在此變更您自己的角色。",
+      "teamServerConfig": "伺服器設定錯誤。",
+      "teamMemberNotFound": "找不到成員。",
+      "teamNotInOrg": "不是組織成員。",
+      "teamRoleUpdated": "角色已更新。",
+      "dbError": "發生問題，請再試一次。",
+      "unexpected": "發生問題，請再試一次。",
+      "onboardingServiceRoleMissing": "伺服器設定不完整。請在環境中新增 SUPABASE_SERVICE_ROLE_KEY 以完成 onboarding。",
+      "onboardingOrgCreateFailed": "無法建立組織，請再試一次。",
+      "onboardingProfileUnavailable": "無法載入個人資料。請稍後重新整理。若持續失敗，請檢查 Supabase 狀態。"
+    },
+    "roles": {
+      "admin": "管理員",
+      "organizer": "主辦者",
+      "coordinator": "協調者",
+      "viewer": "檢視者"
+    },
+    "team": {
+      "inviteTitle": "邀請團隊成員",
+      "email": "電子郵件",
+      "role": "角色",
+      "sendInvitation": "傳送邀請",
+      "members": "成員",
+      "colName": "姓名",
+      "colEmail": "電子郵件",
+      "colRole": "角色",
+      "pendingInvitations": "待處理邀請",
+      "expires": "到期 {date}",
+      "copyLink": "複製連結",
+      "revoke": "撤銷",
+      "confirmRevoke": "要移除此邀請嗎？",
+      "linkCopied": "連結已複製到剪貼簿。"
+    },
+    "settingsProfile": {
+      "displayNameLabel": "個人資料顯示名稱",
+      "displayNamePlaceholder": "您的姓名",
+      "displayNameHint": "顯示在側欄與應用程式各處。",
+      "notificationsHeading": "通知",
+      "digestLabel": "活動里程碑電子郵件摘要",
+      "digestHint": "開啟後可能納入里程碑摘要（實際寄送依部署設定而定）。",
+      "save": "儲存個人資料與通知"
+    },
+    "settingsOrg": {
+      "nameLabel": "名稱",
+      "nameHint": "顯示在主控台側欄。重新命名不會變更 URL 別名。",
+      "save": "儲存組織"
+    },
+    "billing": {
+      "checkoutWithSlug": "正在為目錄商品「{slug}」結帳。付款成功後，您的組織將在資料庫中取得權限（測試金額 {amount} KRW，商品須為該價格）。",
+      "tossIntro": "測試結帳：使用下方元件支付 {amount} KRW。成功後會返回此頁，由伺服器確認付款。",
+      "registerUrls": "請在 Toss 商戶後台將成功／失敗回跳網址設定為與本應用一致。",
+      "setClientKey": "目前環境未設定結帳用戶端金鑰，無法使用付款。",
+      "footerDocs": "若遇到問題，請請管理員確認已為此環境設定付款金鑰與回跳網址。",
+      "errors": {
+        "pocAmountOnly": "此測試結帳僅支援 {amount} KRW。",
+        "missingWidgetKey": "付款未啟用：缺少用戶端金鑰。",
+        "catalogUnknown": "該商品無法使用或已停用。",
+        "catalogPriceMismatch": "該商品價格與測試金額（{amount} KRW）不一致。",
+        "paymentServerConfig": "伺服器尚未完成設定，無法開始付款。",
+        "intentCreateFailed": "無法開始付款，請稍後再試。",
+        "generic": "發生問題，請再試一次。",
+        "tossClientUnknown": "付款視窗回傳了通用錯誤。請確認 Toss 後台的測試金鑰與允許網域，並確認未封鎖彈出視窗或指令碼。"
+      },
+      "widgetErrorLoad": "無法載入 Toss 元件",
+      "widgetNotReady": "付款介面尚未就緒。",
+      "widgetErrorRequest": "付款請求失敗",
+      "widgetOpening": "正在開啟…",
+      "widgetPay": "支付測試金額（{amount} KRW）",
+      "widgetLoading": "正在載入付款方式…",
+      "orderNameDefault": "Elevate PoC (test)",
+      "orderNameWithSlug": "Elevate — {slug}",
+      "customerFallback": "成員",
+      "successMeta": "付款成功",
+      "successTitle": "付款已確認",
+      "successAlready": "此付款已確認。",
+      "successBody": "Toss 已接受測試付款。稽核日誌會記錄 payment.intent_create 與 payment.confirmed。",
+      "failConfirmTitle": "無法確認",
+      "failMeta": "付款失敗",
+      "failTitle": "付款已取消或失敗",
+      "failBody": "測試付款未完成。您可從帳單頁重試。",
+      "failCode": "代碼：{code}",
+      "backToBilling": "返回帳單"
+    },
+    "connectedAccounts": {
+      "loading": "正在載入已連結帳號…",
+      "intro": "與您的電子郵件關聯的登入方式。若 Google 或 Microsoft 與密碼使用同一信箱，且專案啟用自動帳號連結，Supabase 可合併帳號。",
+      "linkManualHint": "請在 Supabase 驗證設定中啟用手動身分連結，或啟用自動連結並使用相同信箱。",
+      "linkGoogle": "連結 Google",
+      "linkMicrosoft": "連結 Microsoft",
+      "redirecting": "正在重新導向…",
+      "providerGoogle": "Google",
+      "providerMicrosoft": "Microsoft",
+      "providerEmail": "電子郵件與密碼",
+      "providerOther": "{provider}"
+    },
+    "sidebar": {
+      "overview": "總覽",
+      "promptStudio": "提示工作室",
+      "library": "資料庫",
+      "adminService": "管理服務",
+      "workspace": "工作區",
+      "team": "團隊",
+      "billing": "帳單",
+      "settings": "設定",
+      "helpSupport": "說明與支援",
+      "adminServiceTitle": "組織管理 — 稽核、帳單、設定"
+    },
+    "overview": {
+      "title": "總覽",
+      "liveData": "即時資料",
+      "openLibrary": "資料庫",
+      "openPromptStudio": "開啟提示工作室",
+      "promptStudioBadge": "提示工作室",
+      "promptStudioHeadline": "針對目標模型改進提示",
+      "promptStudioDesc": "結構化分析與建議—在路線圖中檢視審核流程。",
+      "libraryBadge": "資料庫",
+      "entitledOne": "{count} 個已授權標題",
+      "entitledOther": "{count} 個已授權標題",
+      "libraryDesc": "來自目錄購買的指南、範本與下載。",
+      "kpiPromptStudio": "提示工作室",
+      "kpiReady": "就緒",
+      "kpiImprovePrompts": "改進提示",
+      "kpiLibraryEntitlements": "資料庫權益",
+      "kpiCatalogSkus": "目錄 SKU",
+      "kpiTeamMembers": "團隊成員",
+      "kpiInYourOrg": "在您的組織內",
+      "kpiActiveProducts": "上架商品",
+      "kpiTitlesYouCanUse": "可用標題",
+      "gettingStarted": "入門",
+      "gettingStartedSub": "請將提示工作室與資料庫作為主要工作區。",
+      "openStudio": "開啟工作室",
+      "bodyAdmin": "總覽凸顯提示工作室、資料庫權益與團隊規模。稽核日誌、帳單與組織設定請開啟 <link>管理服務</link>。",
+      "bodyNonAdmin": "總覽凸顯提示工作室、資料庫權益與團隊規模。帳單、稽核與組織層級設定請聯絡組織管理員。",
+      "recentActivity": "最近活動",
+      "recentActivityEmpty": "團隊使用提示工作室與資料庫後，活動將顯示在這裡。"
+    },
+    "settings": {
+      "title": "設定",
+      "metaTitle": "設定",
+      "connectedAccounts": "已連結帳號",
+      "organization": "組織",
+      "yourProfile": "個人資料",
+      "orgNameReadOnly": "名稱",
+      "orgNameHint": "僅組織管理員與主辦者可變更組織名稱。",
+      "language": {
+        "section": "語言",
+        "label": "顯示語言",
+        "hint": "適用於登入後的主控台、管理後台與應用介面。行銷網站請使用頁首語言切換。",
+        "saving": "正在儲存…",
+        "error": "無法儲存語言，請再試一次。",
+        "errors": {
+          "invalidLocale": "不支援該語言。",
+          "unauthorized": "請登入後再變更語言。"
+        }
+      }
+    },
+    "adminShell": {
+      "logoAria": "管理首頁",
+      "administrator": "管理員",
+      "description": "組織營運與合規。產品工作請在產品主控台進行。",
+      "backToProduct": "返回產品主控台",
+      "sectionOrg": "組織",
+      "navOverview": "總覽",
+      "navAudit": "稽核日誌",
+      "navContent": "資料庫目錄",
+      "navTeam": "團隊",
+      "navBilling": "帳單",
+      "navSettings": "設定",
+      "navHelp": "說明與支援"
+    },
+    "admin": {
+      "title": "管理主控台",
+      "metaTitle": "管理",
+      "backToOverview": "返回總覽",
+      "intro": "組織管理員可在此開啟核心營運。產品工作請在 <studio>提示工作室</studio> 與 <library>資料庫</library> 進行。",
+      "cards": {
+        "audit": {
+          "title": "稽核日誌",
+          "desc": "安全與合規紀錄（服務角色寫入）。"
+        },
+        "team": {
+          "title": "團隊與邀請",
+          "desc": "成員、角色與待處理邀請。"
+        },
+        "billing": {
+          "title": "帳單與付款",
+          "desc": "Toss 結帳與目錄權益。"
+        },
+        "settings": {
+          "title": "組織設定",
+          "desc": "組織資料與通知偏好。"
+        },
+        "catalog": {
+          "title": "數位產品與電子書",
+          "desc": "上傳檔案並管理資料庫與行銷頁面的目錄列。"
+        }
+      }
+    },
+    "adminContent": {
+      "metaTitle": "資料庫目錄",
+      "title": "資料庫目錄",
+      "intro": "上傳 PDF、EPUB 或 ZIP。檔案會儲存在 Supabase Storage 並連結目錄；有權限的使用者可從資料庫下載。",
+      "listHeading": "目錄項目",
+      "empty": "尚無目錄列。請在下方上傳檔案。",
+      "colSlug": "識別碼",
+      "colTitle": "標題",
+      "colKind": "類型",
+      "colPrice": "價格（KRW）",
+      "colStorage": "儲存路徑",
+      "colActive": "啟用",
+      "yes": "是",
+      "no": "否",
+      "formHeading": "依識別碼上傳或取代",
+      "slug": "識別碼",
+      "slugHint": "在整個目錄中必須唯一（資料庫 unique）。會規範為小寫，詞與詞以連字號分隔。",
+      "replaceExisting": "取代已使用此識別碼的現有目錄列（更新項目時必須勾選）。",
+      "titleLabel": "標題",
+      "description": "描述",
+      "priceKrw": "價格（KRW）",
+      "productKind": "商品類型",
+      "file": "檔案",
+      "fileHint": "PDF、EPUB 或 ZIP。最大 120 MB。",
+      "submit": "儲存目錄",
+      "pending": "儲存中…",
+      "successCreated": "已新建目錄列。",
+      "successReplaced": "已取代該識別碼的現有列。",
+      "errors": {
+        "unauthorized": "請重新登入。",
+        "forbidden": "您沒有平台管理員權限。",
+        "invalid_slug": "請輸入有效的識別碼（字母、數字、連字號）。",
+        "title_required": "標題為必填。",
+        "file_required": "請選擇檔案。",
+        "file_too_large": "檔案過大（最大 120 MB）。",
+        "file_type": "僅允許 PDF、EPUB 或 ZIP。",
+        "storage_upload_failed": "無法上傳至儲存空間。請檢查儲存桶與政策。",
+        "db_insert_failed": "無法建立目錄列。",
+        "db_update_failed": "無法更新目錄列。",
+        "slug_taken": "此識別碼已被使用。請啟用下方取代選項或改用其他識別碼。",
+        "unknown": "發生問題。"
+      }
+    },
+    "audit": {
+      "title": "稽核日誌",
+      "metaTitle": "稽核日誌",
+      "intro": "透過應用程式進行的變更（設定、邀請、付款等）會依組織記錄於此。",
+      "hint": "儲存後仍為空？請確認伺服器環境已設定 SUPABASE_SERVICE_ROLE_KEY。稽核列以服務角色寫入。若缺少資料表，請套用遷移 007_audit_logs。",
+      "empty": "尚無紀錄。請在設定中儲存組織名稱或個人資料，然後重新整理此頁面。",
+      "colTime": "時間 (UTC)",
+      "colActor": "操作者",
+      "colAction": "動作",
+      "colEntity": "實體",
+      "colDetails": "詳情",
+      "loadError": "無法載入稽核日誌。是否已套用遷移 007？"
+    },
+    "studio": {
+      "metaTitle": "提示工作室",
+      "badge": "預覽",
+      "intro": "在此提供面向模型的提示分析與可審閱的改進。電子書與指南請從資料庫使用，LLM 連動流程將持續擴展。",
+      "bullet1": "選擇目標模型並貼上提示。",
+      "bullet2": "取得結構化建議（全文 diff 與接受流程在路線圖中）。",
+      "bullet3": "透過資料庫與帳務，在組織內維持工作閉環。",
+      "building": "公開建置中",
+      "note": "改進 API 約定見 docs/adr/ADR-002-prompt-studio-mvp.md。在啟用前，介面會回傳明確的「未就緒」回應。",
+      "ctaLibrary": "開啟資料庫",
+      "ctaBilling": "帳單與結帳"
+    },
+    "library": {
+      "metaTitle": "資料庫",
+      "subtitle": "有權使用的標題會顯示於此。存取可能取決於組織訂閱（Professional / Enterprise）以及單獨購買—請至帳單升級或解鎖。",
+      "subscriptionBanner": "您的組織目前為 Starter 方案。許多資料庫資源包含在付費組織訂閱中；若預期內容缺失或仍鎖定，可能需要升級—未必只是目錄或設定問題。",
+      "subscriptionBillingCta": "訂閱與帳單",
+      "emptyStarterNote": "若此頁為空或項目仍鎖定，可能是尚未訂閱或目錄暫無項目。於帳單可單獨解鎖時，可從該處購買。",
+      "empty": "尚無可顯示的內容。目前目錄中沒有項目，您的組織也尚未購買任何資產。內容上架並完成購買後，將顯示於此。",
+      "included": "已包含在組織中",
+      "notIncluded": "未取得授權",
+      "payPoc": "支付 {amount} 韓元（PoC）",
+      "download": "下載",
+      "productKind": {
+        "ebook": "電子書",
+        "guide": "指南",
+        "template": "範本",
+        "bundle": "套裝"
+      }
+    },
+    "help": {
+      "metaTitle": "說明與支援",
+      "title": "說明與支援",
+      "documentation": "文件",
+      "documentationSub": "指南與 API 參考（預留 URL）",
+      "emailLabel": "電子郵件",
+      "chat": "聊天",
+      "chatSub": "企業版：專屬 Slack 頻道"
+    },
+    "pages": {
+      "studio": {
+        "title": "提示工作室"
+      },
+      "library": {
+        "title": "資料庫"
+      },
+      "team": {
+        "title": "團隊"
+      },
+      "billing": {
+        "title": "帳單"
+      },
+      "help": {
+        "title": "說明與支援"
+      }
+    }
+  },
   "Waitlist": {
     "labelEmail": "電子郵件",
     "placeholderEmail": "you@company.com",
     "hintNewsletter": "Prompt Studio 測試版白名單—同時寄送產品更新與部落格精選。可隨時退訂。",
     "submit": "加入等候名單",
     "success": "已加入搶先體驗名單。若後續寄送確認郵件，請查收收件匣。",
-    "errorGeneric": "Something went wrong. Try again in a moment."
+    "errorGeneric": "發生問題，請稍後再試一次。"
   }
 }

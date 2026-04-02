@@ -3,6 +3,7 @@
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import { logAudit } from "@/lib/audit/log";
 import { getOrgAdminContext } from "@/lib/auth/require-org-editor";
+import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -24,9 +25,9 @@ export async function updateMemberRole(
   role: string,
 ): Promise<TeamActionState> {
   const id = profileId.trim();
-  if (!id) return { error: "Missing member." };
+  if (!id) return { error: ActionErrorCode.teamMissingMember };
   if (!(ASSIGNABLE_ROLES as readonly string[]).includes(role)) {
-    return { error: "Invalid role." };
+    return { error: ActionErrorCode.teamInvalidRole };
   }
 
   const supabase = await createClient();
@@ -34,14 +35,14 @@ export async function updateMemberRole(
   if (!auth.ok) return { error: auth.error };
 
   if (id === auth.ctx.userId) {
-    return { error: "You cannot change your own role here." };
+    return { error: ActionErrorCode.teamCannotChangeOwnRole };
   }
 
   let admin;
   try {
     admin = createAdminClient();
   } catch {
-    return { error: "Server configuration error." };
+    return { error: ActionErrorCode.teamServerConfig };
   }
 
   const { data: target, error: tErr } = await admin
@@ -51,11 +52,11 @@ export async function updateMemberRole(
     .maybeSingle();
 
   if (tErr || !target?.organization_id) {
-    return { error: "Member not found." };
+    return { error: ActionErrorCode.teamMemberNotFound };
   }
 
   if (target.organization_id !== auth.ctx.organizationId) {
-    return { error: "Not a member of your organization." };
+    return { error: ActionErrorCode.teamNotInOrg };
   }
 
   const { error } = await admin
@@ -63,7 +64,7 @@ export async function updateMemberRole(
     .update({ role: role as UserRole })
     .eq("id", id);
 
-  if (error) return { error: error.message };
+  if (error) return { error: ActionErrorCode.dbError };
 
   await logAudit({
     organizationId: auth.ctx.organizationId,
@@ -76,5 +77,5 @@ export async function updateMemberRole(
 
   revalidatePath("/dashboard/team");
   revalidatePath("/dashboard");
-  return { success: "Role updated." };
+  return { success: ActionErrorCode.teamRoleUpdated };
 }

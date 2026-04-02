@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
+import { ActionErrorMessage } from "@/components/i18n/action-error-message";
 import { TeamPageClient } from "@/components/dashboard/team-page-client";
 import {
   listOrgMembers,
@@ -6,14 +9,17 @@ import {
 } from "@/lib/data/team";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata = { title: "Team" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Dashboard.pages");
+  return { title: t("team.title") };
+}
 
 export default async function TeamPage() {
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
       <div className="min-h-screen bg-background p-6">
-        <p className="text-sm text-danger">{ensured.error}</p>
+        <ActionErrorMessage code={ensured.error} />
       </div>
     );
   }
@@ -39,10 +45,12 @@ export default async function TeamPage() {
     listPendingInvitations(ensured.organizationId),
   ]);
 
+  const t = await getTranslations("Dashboard.pages");
+
   return (
     <div className="min-h-screen bg-background">
       <div className="sticky top-0 z-30 flex items-center border-b border-border-subtle bg-background px-6 h-12">
-        <h1 className="text-sm font-medium text-text-primary">Team</h1>
+        <h1 className="text-sm font-medium text-text-primary">{t("team.title")}</h1>
       </div>
       <TeamPageClient
         members={members}

@@ -11,7 +11,6 @@
       "product": "Product",
       "solutions": "Solutions",
       "about": "About",
-      "resources": "Resources",
       "caseStudies": "Case Studies",
       "security": "Security",
       "compliance": "Compliance",
@@ -23,10 +22,10 @@
     "ebooks": "Catalog",
     "joinWaitlist": "Early access",
     "library": "Library",
+    "blog": "Blog",
     "product": "Product",
     "solutions": "Solutions",
     "pricing": "Pricing",
-    "resources": "Resources",
     "productPromptStudio": "Prompt Studio",
     "productEbooksAndGuides": "E-books & guides",
     "productOrgWorkspace": "Org workspace",
@@ -37,7 +36,9 @@
     "solCorporateMeetings": "Corporate Meetings",
     "contactSales": "Contact Sales",
     "logIn": "Log In",
-    "requestDemo": "Request Demo"
+    "requestDemo": "Request Demo",
+    "openDashboard": "Dashboard",
+    "signOut": "Sign out"
   },
   "Footer": {
     "tagline": "Elevate AI is prompt improvement first—join the waitlist for Prompt Studio beta. We use blog, newsletter, and SEO to grow; catalog and e-books reflect our product story and reward early believers. No account required to join the list.",
@@ -105,10 +106,10 @@
     "capGlobalDesc": "Localization-friendly marketing and app shell for distributed teams and dual-track GTM.",
     "capSecurityTitle": "Tenant-scoped by design",
     "capSecurityDesc": "Role-based access and Supabase RLS—deploy where your security team allows.",
-    "resourcesBadge": "Resources",
-    "resourcesTitle": "Case studies & guides",
-    "resourcesBody": "We publish customer stories and product notes as they are available—no fabricated quotes or metrics here.",
-    "resourcesCta": "Browse resources",
+    "resourcesBadge": "Blog",
+    "resourcesTitle": "Product notes & SEO-friendly posts",
+    "resourcesBody": "We ship the marketing blog from the repo (MDX in content/blog) so every release can be reviewed like code—no fabricated quotes; metrics only when we can stand behind them.",
+    "resourcesCta": "Open blog",
     "ctaBandTitle": "Join the waitlist — beta access",
     "ctaBandSub": "Product updates, Prompt Studio rollout, and blog highlights for organic and paid acquisition. Catalog drops are a bonus on the same list.",
     "ctaBandEbooks": "Browse catalog",
@@ -191,6 +192,10 @@
     "submit": "Send message"
   },
   "Demo": {
+    "pausedMetaTitle": "Demo — unavailable",
+    "pausedTitle": "Demo scheduling is paused",
+    "pausedDescription": "We are not taking demo requests right now. Explore the site, join the waitlist, or contact sales if you need to reach us.",
+    "pausedBackHome": "Back to home",
     "metaTitle": "Request a Demo",
     "title": "Request a demo",
     "description": "Walk through the Prompt Studio roadmap, Library, and catalog checkout—no pressure, not a scripted “full product” tour.",
@@ -209,7 +214,11 @@
   "Blog": {
     "metaTitle": "Blog",
     "title": "Blog",
-    "description": "Product updates and MICE industry insights. Content pipeline coming soon."
+    "description": "Product updates and industry notes. Posts live in the repo as MDX under content/blog.",
+    "empty": "No posts yet.",
+    "published": "Published {date}",
+    "readMore": "Read article",
+    "backToBlog": "Back to blog"
   },
   "Careers": {
     "metaTitle": "Careers",
@@ -232,105 +241,150 @@
     "title": "Compliance",
     "description": "We support GDPR-aligned data processing, SOC 2 readiness, and regional hosting options. Your legal team can review our DPA during procurement (placeholder)."
   },
-  "ResourcesPage": {
-    "metaTitle": "Resources",
-    "title": "Resources",
-    "description": "Documentation and guides for evaluating Elevate.",
-    "items": {
-      "product": {
-        "title": "Product overview",
-        "desc": "Platform capabilities"
-      },
-      "security": {
-        "title": "Security & compliance",
-        "desc": "GDPR, SOC 2, ISO 27001"
-      },
-      "pricing": {
-        "title": "Pricing",
-        "desc": "Plans and comparison"
-      },
-      "cases": {
-        "title": "Case studies",
-        "desc": "Customer outcomes"
-      }
-    }
-  },
   "Product": {
     "metaTitle": "Product",
     "title": "Platform",
-    "description": "Elevate AI centers on Prompt Studio—model-aware prompt improvement. Org workspace and Library (catalog, e-books) roll out in parallel; waitlist subscribers get product news first.",
+    "description": "Elevate is prompt-first: Prompt Studio analyzes and improves prompts against the models you actually ship. Library, catalog, and org workspace wrap that loop in governance, entitlements, and billing.",
     "modules": {
       "prompt-studio": {
         "title": "Prompt Studio",
-        "desc": "Choose a model, analyze prompts, and apply reviewable improvements—Cursor-style acceptance on the roadmap."
+        "desc": "Model-aware analysis and structured improvements—scoped to your org, with review flows on the roadmap."
       },
       "ebooks-and-guides": {
         "title": "E-books & guides",
-        "desc": "Catalog and entitlements—growth and rewards alongside Prompt Studio, not the core headline."
+        "desc": "Catalog SKUs and downloads in Library—commercial layer alongside Prompt Studio, not a separate product silo."
       },
       "org-workspace": {
         "title": "Org workspace",
-        "desc": "Roles, invites, Library access, and billing scoped to your organization."
+        "desc": "Members, roles, invites, billing, and Library entitlements in one tenant."
       },
       "security": {
         "title": "Security & compliance",
-        "desc": "Tenant isolation, least-privilege patterns, and enterprise-friendly deployment stories."
+        "desc": "Supabase Auth, RLS, and deployment patterns your security team can review."
       }
     }
   },
   "ProductSlug": {
     "prompt-studio": {
-      "metaTitle": "Prompt Studio",
+      "metaTitle": "Prompt Studio | Elevate",
+      "metaDescription": "Model-aware prompt improvement for teams that ship AI features. Pick a target model, analyze prompts, and get structured suggestions—scoped to your organization.",
       "title": "Prompt Studio",
-      "body": "Our killer loop: pick a target model, paste a prompt, and get structured analysis and improvement suggestions—with review and accept/reject on the roadmap. Join the waitlist for beta access; accounts remain for purchases and org Library—not a scripted full-product tour."
+      "lead": "Prompt Studio is Elevate's primary surface: model-aware prompt improvement for teams that ship AI features and internal copilots. Work is scoped to your organization—not a public playground—so drafts stay inside your tenant.",
+      "section1Title": "What you get today",
+      "section1Body": "Choose the model you deploy against, paste a prompt, and receive structured analysis and improvement suggestions. We focus on actionable output: what to change, why it matters, and how it aligns with model behavior—not generic tips.\n\nLibrary and catalog run in parallel so your org can pair prompt work with entitlements and downloadable guides when operations attach files.",
+      "section2Title": "Built for org workflows",
+      "section2Body": "Everything ties to your Elevate organization: members, roles, and billing. Prompt iterations stay auditable within the team, which matters when procurement asks how AI-assisted work is reviewed.\n\nStudio access respects the same org boundaries as Library—no cross-tenant leakage by design.",
+      "section3Title": "Roadmap: review and accept",
+      "section3Body": "Accept/reject flows, side-by-side diffs, and tighter integrations are on the roadmap. Join the waitlist to get Prompt Studio beta access first; production accounts remain the path for purchases and downloads."
     },
     "ebooks-and-guides": {
-      "metaTitle": "E-books & guides",
+      "metaTitle": "E-books & guides | Elevate",
+      "metaDescription": "Digital catalog and Library entitlements for guides and templates—purchased per org, downloaded when entitled.",
       "title": "E-books & guides",
-      "body": "High-signal guides and templates sold through the catalog. Purchases grant your organization entitlements; Library surfaces what you can download when files are attached in ops."
+      "lead": "The catalog is how we package high-signal guides and templates alongside Prompt Studio. Purchases grant your organization entitlements; Library surfaces what you can download when files are attached in operations.",
+      "section1Title": "How catalog and Library connect",
+      "section1Body": "Checkout (where enabled) records what your org has purchased or licensed. Library lists entitled titles so members know what they can download without hunting through email threads or shared drives.\n\nIf a title is locked, it is usually a subscription or entitlement issue—Billing is the right place to upgrade or unlock.",
+      "section2Title": "Why we ship this in parallel",
+      "section2Body": "Prompt improvement is the hero loop; catalog and e-books are how we reward early believers and fund the roadmap without diluting the core product narrative.\n\nContent is versioned in Git-friendly MDX for marketing and ops; digital products in Library follow the same org scoping as the rest of Elevate.",
+      "section3Title": "Operations note",
+      "section3Body": "Admins manage catalog rows in the platform console when configured. End users should always use Library for downloads so entitlements stay authoritative."
     },
     "org-workspace": {
-      "metaTitle": "Org workspace",
+      "metaTitle": "Org workspace | Elevate",
+      "metaDescription": "Organizations, roles, invitations, Library, and billing—single tenant for Prompt Studio and catalog entitlements.",
       "title": "Org workspace",
-      "body": "Everything is scoped to organizations: members, roles, Library, Studio access, and billing. Invite teammates and keep a single source of truth for what the org owns."
+      "lead": "Elevate is organized around organizations: every member, invite, Library view, and billing record belongs to exactly one org. That boundary is intentional for procurement, audit, and least-privilege access.",
+      "section1Title": "Members and roles",
+      "section1Body": "Invite teammates with roles that match how you operate. Admins can manage settings and, where applicable, admin surfaces; contributors focus on Studio and Library without inheriting billing controls they do not need.",
+      "section2Title": "Library visibility",
+      "section2Body": "Library reflects entitlements for the signed-in user's organization. If something is missing, it is usually a subscription or purchase state—not a personal account issue.\n\nStarter plans may see fewer titles; upgrading the org unlocks more catalog content when available.",
+      "section3Title": "Billing and ownership",
+      "section3Body": "Toss Payments PoC and future gateways attach to the organization so finance has a single invoice trail. Personal accounts exist for sign-in, but purchase and download rights are org-scoped."
     },
     "security": {
-      "metaTitle": "Security & compliance",
+      "metaTitle": "Security & compliance | Elevate",
+      "metaDescription": "Supabase Auth, RLS, tenant isolation, and deployment options your security team can align with. Deeper reviews under NDA for enterprise buyers.",
       "title": "Security & compliance",
-      "body": "Supabase-backed auth, RLS, and deployment options your security team can align with. Detailed reviews under NDA for enterprise buyers—see also Security and Compliance pages."
+      "lead": "Elevate is built on Supabase with row-level security policies that keep tenant data apart. We do not claim certifications we have not earned—see our Security and Compliance pages for posture and roadmap.",
+      "section1Title": "Authentication and data plane",
+      "section1Body": "Users authenticate via Supabase Auth. Application data reads and writes use policies that require membership in the correct organization.\n\nService role keys are server-only and never ship to the browser.",
+      "section2Title": "Deployment and review",
+      "section2Body": "We target Next.js deployments your team can run on Vercel or compatible hosts. Enterprise customers can request architecture review, DPA, and deeper diligence under NDA.\n\nOperational logging and audit trails are evolving in the product—see the admin audit log where enabled.",
+      "section3Title": "Related reading",
+      "section3Body": "For policy language and legal terms, see the Security and Compliance marketing pages and Privacy Policy. This module summarizes engineering intent, not a substitute for your legal review."
     }
   },
   "Solutions": {
     "metaTitle": "Solutions",
     "title": "Solutions",
-    "description": "Elevate adapts to your MICE use case. Explore each segment below.",
+    "description": "Event and travel programs generate thousands of comms—speaker briefs, sponsor copy, attendee emails, and exhibitor kits. Elevate helps MICE teams standardize and improve that language with model-aware prompts, org-scoped drafts, and Library-backed assets.",
     "items": {
-      "conferences": "Conferences",
-      "exhibitions": "Exhibitions",
-      "incentive-travel": "Incentive travel",
-      "corporate-meetings": "Corporate meetings"
+      "conferences": {
+        "title": "Conferences",
+        "desc": "Multi-track programs and speaker/sponsor comms at scale."
+      },
+      "exhibitions": {
+        "title": "Exhibitions",
+        "desc": "Exhibitor kits, floor campaigns, and lead-gen copy consistency."
+      },
+      "incentive-travel": {
+        "title": "Incentive travel",
+        "desc": "Program narratives and compliance-sensitive itineraries."
+      },
+      "corporate-meetings": {
+        "title": "Corporate meetings",
+        "desc": "Exec summaries, hybrid runbooks, internal AI policy alignment."
+      }
     }
   },
   "SolutionsSlug": {
     "conferences": {
-      "metaTitle": "Conferences",
+      "metaTitle": "Conferences | Elevate",
+      "metaDescription": "Improve prompt libraries for speaker briefs, sponsor tiers, and attendee journeys—scoped to your organization.",
       "title": "Conferences",
-      "body": "Multi-track programs, speaker management, and sponsor visibility—built for large delegate counts and complex logistics."
+      "lead": "Large programs mean repeated comms: session descriptions, speaker briefs, sponsor deliverables, and attendee journeys. Elevate helps you build reusable prompt patterns and improve them against the models your team actually uses.",
+      "section1Title": "Where Elevate fits",
+      "section1Body": "Use Prompt Studio to tighten instructions for on-brand tone, clarity, and model alignment. When marketing attaches catalog assets, Library makes downloads entitlement-aware—so field teams and agencies pull from the same source of truth.\n\nThis is not a replacement for your registration or abstract system; it is the quality layer on top of language and AI-assisted drafts.",
+      "section2Title": "Operational outcomes",
+      "section2Body": "Fewer one-off rewrites, fewer off-brand variants, faster review cycles when teams share org-scoped drafts.\n\nRoles and billing stay tied to the organization so procurement can audit who had access to what.",
+      "section3Title": "Getting started",
+      "section3Body": "Join the waitlist for Prompt Studio beta, or open Billing when checkout is enabled to unlock catalog content. Contact sales if you need enterprise rollout and security review."
     },
     "exhibitions": {
-      "metaTitle": "Exhibitions",
+      "metaTitle": "Exhibitions | Elevate",
+      "metaDescription": "Consistent exhibitor comms, booth kits, and campaign copy—improved with model-aware prompts and org-scoped drafts.",
       "title": "Exhibitions",
-      "body": "Booth allocation, exhibitor portals, and foot-traffic analytics to maximize floor performance."
+      "lead": "Exhibitions depend on tight coordination between exhibitors, agencies, and floor teams. Elevate helps you standardize prompt templates for kits, campaigns, and lead follow-ups so tone and claims stay consistent across hundreds of touchpoints.",
+      "section1Title": "Language consistency",
+      "section1Body": "Prompt Studio surfaces structured improvements so teams do not ship contradictory instructions to models or contractors.\n\nPair with Library when downloadable guides and templates are part of your commercial program.",
+      "section2Title": "Governance",
+      "section2Body": "Everything stays inside the organization tenant. That matters when sponsors and exhibitors expect confidentiality around unreleased messaging.\n\nAudit and admin tooling continues to mature—see the product changelog for what is live.",
+      "section3Title": "Next steps",
+      "section3Body": "Browse the catalog for packaged guides, or talk to sales about multi-org programs and pilots."
     },
     "incentive-travel": {
-      "metaTitle": "Incentive travel",
+      "metaTitle": "Incentive travel | Elevate",
+      "metaDescription": "Narratives and comms for incentive programs—with structured prompt improvement and org-scoped drafts.",
       "title": "Incentive travel",
-      "body": "Curated itineraries, group coordination, and compliance-friendly reporting for executive programs."
+      "lead": "Incentive programs require polished narratives, itinerary language, and sensitive attendee comms. Elevate helps teams iterate on prompts with clear model targets and reviewable structure before messages reach VIPs.",
+      "section1Title": "Quality and safety",
+      "section1Body": "Model-aware prompts reduce the risk of off-tone or off-policy copy when programs span multiple regions.\n\nDrafts remain scoped to your organization so partner agencies and internal teams can collaborate without exposing content publicly.",
+      "section2Title": "Catalog and rewards",
+      "section2Body": "When guides are part of the reward package, Library entitlements align downloads with what the org purchased.\n\nCatalog and billing are designed to sit alongside Prompt Studio, not compete with it.",
+      "section3Title": "Talk to us",
+      "section3Body": "For bespoke programs or compliance-heavy rollouts, contact sales and we will align on review and deployment expectations."
     },
     "corporate-meetings": {
-      "metaTitle": "Corporate meetings",
+      "metaTitle": "Corporate meetings | Elevate",
+      "metaDescription": "Exec summaries, hybrid runbooks, and internal AI policy alignment—improved with Prompt Studio and org-scoped governance.",
       "title": "Corporate meetings",
-      "body": "Internal town halls, leadership offsites, and hybrid formats with enterprise security and SSO."
+      "lead": "Corporate meetings teams juggle internal comms, executive summaries, and hybrid logistics. Elevate gives you a repeatable prompt layer so leadership updates, FAQs, and policy explanations stay consistent as models and regulations change.",
+      "section1Title": "Internal alignment",
+      "section1Body": "Prompt Studio helps teams converge on approved phrasing and structure before content is broadcast to Slack, email, or intranet.\n\nOrg workspace ensures the right roles can edit drafts and approve changes.",
+      "section2Title": "Security posture",
+      "section2Body": "Supabase Auth and RLS underpin tenant isolation. For enterprise buyers, deeper security and compliance materials are available under NDA.\n\nSee Security and Compliance pages for statements of direction.",
+      "section3Title": "Rollout",
+      "section3Body": "Start with the waitlist for Prompt Studio beta; add catalog entitlements when you need downloadable playbooks. We will meet you where your procurement process is."
     }
   },
   "Pricing": {
@@ -473,5 +527,327 @@
         "enterprise": "24/7 dedicated"
       }
     ]
+  },
+  "Dashboard": {
+    "signOut": "Sign out",
+    "actionErrors": {
+      "authNotAuthenticated": "You must be signed in.",
+      "authNoOrganization": "No organization. Try refreshing the page.",
+      "authInsufficientPermissions": "You don't have permission to do this.",
+      "authInviteManagersOnly": "Only admins and organizers can manage invitations.",
+      "authAdminOnly": "Only organization admins can change member roles.",
+      "authVenuePermissionDenied": "You don't have permission for venue management.",
+      "settingsOrgNameRequired": "Organization name is required.",
+      "settingsTextTooLong": "Use at most {max} characters.",
+      "inviteInvalidEmail": "Enter a valid email address.",
+      "inviteInvalidRole": "Invalid role.",
+      "inviteEmailAlreadyMember": "This email already belongs to your organization.",
+      "invitePendingDuplicate": "An invitation is already pending for this email. Revoke it first or wait until it expires.",
+      "inviteNotAuthenticated": "You must be signed in.",
+      "inviteMissingId": "Missing invitation.",
+      "inviteCreated": "Invitation created. Share the invite link from the list below.",
+      "inviteRevoked": "Invitation removed.",
+      "teamMissingMember": "Missing member.",
+      "teamInvalidRole": "Invalid role.",
+      "teamCannotChangeOwnRole": "You cannot change your own role here.",
+      "teamServerConfig": "Server configuration error.",
+      "teamMemberNotFound": "Member not found.",
+      "teamNotInOrg": "Not a member of your organization.",
+      "teamRoleUpdated": "Role updated.",
+      "dbError": "Something went wrong. Please try again.",
+      "unexpected": "Something went wrong. Please try again.",
+      "onboardingServiceRoleMissing": "Server configuration is incomplete. Add SUPABASE_SERVICE_ROLE_KEY to your environment for onboarding.",
+      "onboardingOrgCreateFailed": "Could not create your organization. Please try again.",
+      "onboardingProfileUnavailable": "Could not load your profile. Wait a few seconds and refresh. If it persists, check Supabase status."
+    },
+    "roles": {
+      "admin": "Admin",
+      "organizer": "Organizer",
+      "coordinator": "Coordinator",
+      "viewer": "Viewer"
+    },
+    "team": {
+      "inviteTitle": "Invite teammate",
+      "email": "Email",
+      "role": "Role",
+      "sendInvitation": "Send invitation",
+      "members": "Members",
+      "colName": "Name",
+      "colEmail": "Email",
+      "colRole": "Role",
+      "pendingInvitations": "Pending invitations",
+      "expires": "expires {date}",
+      "copyLink": "Copy link",
+      "revoke": "Revoke",
+      "confirmRevoke": "Remove this invitation?",
+      "linkCopied": "Link copied to clipboard."
+    },
+    "settingsProfile": {
+      "displayNameLabel": "Profile display name",
+      "displayNamePlaceholder": "Your name",
+      "displayNameHint": "Shown in the sidebar and across the app.",
+      "notificationsHeading": "Notifications",
+      "digestLabel": "Email digest for event milestones",
+      "digestHint": "When enabled, we can include you in milestone summaries (delivery is configured per deployment).",
+      "save": "Save profile & notifications"
+    },
+    "settingsOrg": {
+      "nameLabel": "Name",
+      "nameHint": "Shown in the dashboard sidebar. URL slug is not changed when you rename.",
+      "save": "Save organization"
+    },
+    "billing": {
+      "checkoutWithSlug": "You are checking out catalog item “{slug}.” After a successful payment, your organization receives access in the Library (test amount: {amount} KRW; the item must be listed at that price).",
+      "tossIntro": "Test checkout: pay {amount} KRW with the widget below. After success you return here so we can confirm the payment on the server.",
+      "registerUrls": "In the Toss merchant dashboard, set return URLs to match your app (success and failure under Billing).",
+      "setClientKey": "Payments are disabled in this environment until the checkout keys are configured for your deployment.",
+      "footerDocs": "Having trouble? Ask your administrator to confirm payment keys and return URLs are set for this environment.",
+      "errors": {
+        "pocAmountOnly": "This test checkout only supports {amount} KRW.",
+        "missingWidgetKey": "Payments are not enabled: the checkout client key is missing.",
+        "catalogUnknown": "That product is not available or is inactive.",
+        "catalogPriceMismatch": "This product’s price does not match the test amount ({amount} KRW).",
+        "paymentServerConfig": "Payment could not be started because the server is not fully configured.",
+        "intentCreateFailed": "We could not start the payment. Please try again in a moment.",
+        "generic": "Something went wrong. Please try again.",
+        "tossClientUnknown": "The payment window reported a generic error. Check test keys in the Toss dashboard, that this site’s domain is allowed, and that pop-ups or the payment script are not blocked."
+      },
+      "widgetErrorLoad": "Failed to load Toss widget",
+      "widgetNotReady": "Payment UI is not ready yet.",
+      "widgetErrorRequest": "Payment request failed",
+      "widgetOpening": "Opening…",
+      "widgetPay": "Pay test amount ({amount} KRW)",
+      "widgetLoading": "Loading payment methods…",
+      "orderNameDefault": "Elevate PoC (test)",
+      "orderNameWithSlug": "Elevate — {slug}",
+      "customerFallback": "Member",
+      "successMeta": "Payment success",
+      "successTitle": "Payment confirmed",
+      "successAlready": "This payment was already confirmed.",
+      "successBody": "Toss accepted the test payment. Audit log records payment.intent_create and payment.confirmed.",
+      "failConfirmTitle": "Could not confirm",
+      "failMeta": "Payment failed",
+      "failTitle": "Payment cancelled or failed",
+      "failBody": "The test payment did not complete. You can try again from Billing.",
+      "failCode": "Code: {code}",
+      "backToBilling": "Back to Billing"
+    },
+    "connectedAccounts": {
+      "loading": "Loading connected accounts…",
+      "intro": "Sign-in methods linked to your email. If you use the same email with Google or Microsoft as with your password, Supabase can merge them when automatic account linking is enabled in the project.",
+      "linkManualHint": "Enable manual identity linking in Supabase Authentication settings, or use the same email with automatic linking enabled.",
+      "linkGoogle": "Link Google",
+      "linkMicrosoft": "Link Microsoft",
+      "redirecting": "Redirecting…",
+      "providerGoogle": "Google",
+      "providerMicrosoft": "Microsoft",
+      "providerEmail": "Email & password",
+      "providerOther": "{provider}"
+    },
+    "sidebar": {
+      "overview": "Overview",
+      "promptStudio": "Prompt Studio",
+      "library": "Library",
+      "adminService": "Admin service",
+      "workspace": "Workspace",
+      "team": "Team",
+      "billing": "Billing",
+      "settings": "Settings",
+      "helpSupport": "Help & Support",
+      "adminServiceTitle": "Organization administration — audit, billing, settings"
+    },
+    "overview": {
+      "title": "Overview",
+      "liveData": "Live data",
+      "openLibrary": "Library",
+      "openPromptStudio": "Open Prompt Studio",
+      "promptStudioBadge": "Prompt Studio",
+      "promptStudioHeadline": "Improve prompts for your target model",
+      "promptStudioDesc": "Structured analysis and suggestions—review flows on the roadmap.",
+      "libraryBadge": "Library",
+      "entitledOne": "{count} entitled title",
+      "entitledOther": "{count} entitled titles",
+      "libraryDesc": "Guides, templates, and downloads from your catalog purchases.",
+      "kpiPromptStudio": "Prompt Studio",
+      "kpiReady": "Ready",
+      "kpiImprovePrompts": "improve prompts",
+      "kpiLibraryEntitlements": "Library entitlements",
+      "kpiCatalogSkus": "Catalog SKUs",
+      "kpiTeamMembers": "Team members",
+      "kpiInYourOrg": "in your org",
+      "kpiActiveProducts": "active products",
+      "kpiTitlesYouCanUse": "titles you can use",
+      "gettingStarted": "Getting started",
+      "gettingStartedSub": "Use Prompt Studio and Library as your primary workspace.",
+      "openStudio": "Open Studio",
+      "bodyAdmin": "Your overview highlights Prompt Studio, Library entitlements, and team size. Open <link>Admin service</link> for audit logs, billing, and organization settings.",
+      "bodyNonAdmin": "Your overview highlights Prompt Studio, Library entitlements, and team size. For billing, audit access, and org-wide settings, ask your organization administrator.",
+      "recentActivity": "Recent Activity",
+      "recentActivityEmpty": "Activity will appear here as your team uses Prompt Studio and Library."
+    },
+    "settings": {
+      "title": "Settings",
+      "metaTitle": "Settings",
+      "connectedAccounts": "Connected accounts",
+      "organization": "Organization",
+      "yourProfile": "Your profile",
+      "orgNameReadOnly": "Name",
+      "orgNameHint": "Only organization admins and organizers can change the organization name.",
+      "language": {
+        "section": "Language",
+        "label": "Display language",
+        "hint": "Applies to the signed-in dashboard, admin area, and in-app chrome. Marketing pages use the site header language switcher.",
+        "saving": "Saving…",
+        "error": "Could not save language. Try again.",
+        "errors": {
+          "invalidLocale": "That language is not supported.",
+          "unauthorized": "Sign in to change your language."
+        }
+      }
+    },
+    "adminShell": {
+      "logoAria": "Admin home",
+      "administrator": "Administrator",
+      "description": "Organization operations and compliance. Product work stays in the product dashboard.",
+      "backToProduct": "Back to product dashboard",
+      "sectionOrg": "Organization",
+      "navOverview": "Overview",
+      "navAudit": "Audit log",
+      "navContent": "Library catalog",
+      "navTeam": "Team",
+      "navBilling": "Billing",
+      "navSettings": "Settings",
+      "navHelp": "Help & Support"
+    },
+    "admin": {
+      "title": "Admin console",
+      "metaTitle": "Admin",
+      "backToOverview": "Back to overview",
+      "intro": "Organization administrators can open core operations here. Product work stays in <studio>Prompt Studio</studio> and <library>Library</library>.",
+      "cards": {
+        "audit": {
+          "title": "Audit log",
+          "desc": "Security and compliance trail (service role writes)."
+        },
+        "team": {
+          "title": "Team & invitations",
+          "desc": "Members, roles, and pending invites."
+        },
+        "billing": {
+          "title": "Billing & payments",
+          "desc": "Toss checkout and catalog entitlements."
+        },
+        "settings": {
+          "title": "Organization settings",
+          "desc": "Org profile and notification preferences."
+        },
+        "catalog": {
+          "title": "Digital products & e-books",
+          "desc": "Upload files and manage catalog rows for Library and marketing pages."
+        }
+      }
+    },
+    "adminContent": {
+      "metaTitle": "Library catalog",
+      "title": "Library catalog",
+      "intro": "Upload a PDF, EPUB, or ZIP. Files are stored in Supabase Storage and linked to the catalog; entitled users download from Library.",
+      "listHeading": "Catalog items",
+      "empty": "No catalog rows yet. Upload a file below.",
+      "colSlug": "Slug",
+      "colTitle": "Title",
+      "colKind": "Kind",
+      "colPrice": "Price (KRW)",
+      "colStorage": "Storage path",
+      "colActive": "Active",
+      "yes": "Yes",
+      "no": "No",
+      "formHeading": "Upload or replace by slug",
+      "slug": "Slug",
+      "slugHint": "Must be unique across the catalog (enforced in the database). Slugs normalize to lowercase; hyphens separate words.",
+      "replaceExisting": "Replace the existing catalog row that uses this slug (required when updating an item).",
+      "titleLabel": "Title",
+      "description": "Description",
+      "priceKrw": "Price (KRW)",
+      "productKind": "Product kind",
+      "file": "File",
+      "fileHint": "PDF, EPUB, or ZIP. Max 120 MB.",
+      "submit": "Save catalog row",
+      "pending": "Saving…",
+      "successCreated": "New catalog row created.",
+      "successReplaced": "Existing row replaced for this slug.",
+      "errors": {
+        "unauthorized": "Sign in again.",
+        "forbidden": "You do not have access to platform admin.",
+        "invalid_slug": "Enter a valid slug (letters, numbers, hyphens).",
+        "title_required": "Title is required.",
+        "file_required": "Choose a file.",
+        "file_too_large": "File is too large (max 120 MB).",
+        "file_type": "Only PDF, EPUB, or ZIP files are allowed.",
+        "storage_upload_failed": "Could not upload to storage. Check bucket and policies.",
+        "db_insert_failed": "Could not create catalog row.",
+        "db_update_failed": "Could not update catalog row.",
+        "slug_taken": "This slug is already in use. Enable the replace option below or choose another slug.",
+        "unknown": "Something went wrong."
+      }
+    },
+    "audit": {
+      "title": "Audit log",
+      "metaTitle": "Audit log",
+      "intro": "Changes made through the app (settings, invitations, payments, etc.) are recorded here for your organization.",
+      "hint": "Still empty after saving? Confirm SUPABASE_SERVICE_ROLE_KEY is set in the server environment—audit rows are written with the service role. If the table is missing, apply migration 007_audit_logs.",
+      "empty": "No entries yet. Try saving organization name or profile on Settings—then refresh this page.",
+      "colTime": "Time (UTC)",
+      "colActor": "Actor",
+      "colAction": "Action",
+      "colEntity": "Entity",
+      "colDetails": "Details",
+      "loadError": "Could not load audit logs. Is migration 007 applied?"
+    },
+    "studio": {
+      "metaTitle": "Prompt Studio",
+      "badge": "Preview",
+      "intro": "Model-aware prompt analysis and reviewable improvements are shipping here. This page is the home for the killer loop—try the Library for e-books and guides today, and watch this space as we wire LLM-backed flows.",
+      "bullet1": "Choose a target model and paste a prompt.",
+      "bullet2": "Get structured suggestions (full diff + accept flows on the roadmap).",
+      "bullet3": "Keep work inside your org with Library and billing.",
+      "building": "Building in public",
+      "note": "API contract for improvements is defined in docs/adr/ADR-002-prompt-studio-mvp.md. Until enabled, requests return a clear not-ready response.",
+      "ctaLibrary": "Open Library",
+      "ctaBilling": "Billing & checkout"
+    },
+    "library": {
+      "metaTitle": "Library",
+      "subtitle": "Entitled titles appear here. Access can depend on your organization’s subscription (Professional / Enterprise) and on individual purchases—open Billing to upgrade or unlock items.",
+      "subscriptionBanner": "Your organization is on the Starter plan. Many library assets are included with a paid organization subscription; if expected titles are missing or stay locked, you may need to upgrade—not only a catalog or setup issue.",
+      "subscriptionBillingCta": "Subscription & billing",
+      "emptyStarterNote": "If this page stays empty or items remain locked, your organization may not have an active subscription yet, or the catalog may have no items. You can still unlock individual titles from Billing when checkout is available.",
+      "empty": "Your library is empty. There are no catalog items yet and no purchases for your organization. When content is available and purchased, it will appear here.",
+      "included": "Included for your org",
+      "notIncluded": "Not licensed",
+      "payPoc": "Pay {amount} KRW (PoC)",
+      "download": "Download",
+      "productKind": {
+        "ebook": "E-book",
+        "guide": "Guide",
+        "template": "Template",
+        "bundle": "Bundle"
+      }
+    },
+    "help": {
+      "metaTitle": "Help & Support",
+      "title": "Help & Support",
+      "documentation": "Documentation",
+      "documentationSub": "Guides and API reference (placeholder URL)",
+      "emailLabel": "Email",
+      "chat": "Chat",
+      "chatSub": "Enterprise: dedicated Slack channel"
+    },
+    "pages": {
+      "studio": { "title": "Prompt Studio" },
+      "library": { "title": "Library" },
+      "team": { "title": "Team" },
+      "billing": { "title": "Billing" },
+      "help": { "title": "Help & Support" }
+    }
   }
 }

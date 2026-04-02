@@ -1,26 +1,43 @@
 "use client";
 
 import { useState } from "react";
-import NextLink from "next/link";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { IntlButtonLink } from "@/components/layout/intl-button-link";
-import { buttonLinkClassName } from "@/components/ui/button";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
+import { HeaderAuthCluster } from "@/components/layout/header-auth-cluster";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { MarketingNavDropdown } from "@/components/layout/marketing-nav-dropdown";
+import { useAuthUser } from "@/hooks/use-auth-user";
 import { cn } from "@/lib/utils";
+
+type NavDropdownDef = {
+  type: "dropdown";
+  label: string;
+  items: { href: string; label: string }[];
+};
+
+type NavLinkDef = {
+  type: "link";
+  label: string;
+  href: string;
+};
+
+type NavEntry = NavDropdownDef | NavLinkDef;
 
 export function Header() {
   const t = useTranslations("Nav");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const authUser = useAuthUser();
+  const showLeadGen = authUser === null;
 
-  const navLinks = [
+  const navEntries: NavEntry[] = [
     {
+      type: "dropdown",
       label: t("product"),
-      href: "/product",
-      children: [
+      items: [
         { href: "/product/prompt-studio", label: t("productPromptStudio") },
         { href: "/product/ebooks-and-guides", label: t("productEbooksAndGuides") },
         { href: "/product/org-workspace", label: t("productOrgWorkspace") },
@@ -28,17 +45,17 @@ export function Header() {
       ],
     },
     {
+      type: "dropdown",
       label: t("solutions"),
-      href: "/solutions",
-      children: [
+      items: [
         { href: "/solutions/conferences", label: t("solConferences") },
         { href: "/solutions/exhibitions", label: t("solExhibitions") },
         { href: "/solutions/incentive-travel", label: t("solIncentiveTravel") },
         { href: "/solutions/corporate-meetings", label: t("solCorporateMeetings") },
       ],
     },
-    { label: t("pricing"), href: "/pricing" },
-    { label: t("resources"), href: "/resources" },
+    { type: "link", label: t("pricing"), href: "/pricing" },
+    { type: "link", label: t("blog"), href: "/blog" },
   ];
 
   return (
@@ -50,43 +67,44 @@ export function Header() {
           </Link>
 
           <nav className="hidden lg:flex items-center">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "flex items-center gap-1 h-12 px-4 text-sm text-text-secondary transition-colors",
-                  "hover:text-text-primary hover:bg-layer-02",
-                )}
-              >
-                {link.label}
-                {link.children && <ChevronDown className="h-3 w-3" />}
-              </Link>
-            ))}
+            {navEntries.map((entry) =>
+              entry.type === "link" ? (
+                <Link
+                  key={entry.href}
+                  href={entry.href}
+                  className={cn(
+                    "flex items-center h-12 px-4 text-sm text-text-secondary transition-colors",
+                    "hover:text-text-primary hover:bg-layer-02",
+                  )}
+                >
+                  {entry.label}
+                </Link>
+              ) : (
+                <MarketingNavDropdown
+                  key={entry.label}
+                  label={entry.label}
+                  items={entry.items}
+                />
+              ),
+            )}
           </nav>
         </div>
 
         <div className="hidden lg:flex items-center gap-2 shrink-0">
           <LanguageSwitcher />
           <ThemeToggle />
-          <IntlButtonLink href="/#waitlist" variant="primary" size="sm">
-            {t("joinWaitlist")}
-          </IntlButtonLink>
+          {showLeadGen ? (
+            <IntlButtonLink href="/#waitlist" variant="primary" size="sm">
+              {t("joinWaitlist")}
+            </IntlButtonLink>
+          ) : null}
           <IntlButtonLink href="/product/ebooks-and-guides" variant="ghost" size="sm">
             {t("ebooks")}
           </IntlButtonLink>
           <IntlButtonLink href="/contact" variant="ghost" size="sm">
             {t("contactSales")}
           </IntlButtonLink>
-          <NextLink
-            href="/login"
-            className={buttonLinkClassName("ghost", "sm")}
-          >
-            {t("logIn")}
-          </NextLink>
-          <IntlButtonLink href="/demo" variant="tertiary" size="sm">
-            {t("requestDemo")}
-          </IntlButtonLink>
+          <HeaderAuthCluster user={authUser} />
         </div>
 
         <button
@@ -111,42 +129,48 @@ export function Header() {
             <ThemeToggle />
           </div>
           <nav className="flex flex-col">
-            {navLinks.map((link) => (
-              <div key={link.href}>
+            {navEntries.map((entry) =>
+              entry.type === "link" ? (
                 <Link
-                  href={link.href}
-                  className="flex items-center justify-between px-4 py-3 text-sm text-text-secondary hover:text-text-primary hover:bg-layer-02"
-                  onClick={() => !link.children && setMobileOpen(false)}
+                  key={entry.href}
+                  href={entry.href}
+                  className="px-4 py-3 text-sm text-text-secondary hover:text-text-primary hover:bg-layer-02"
+                  onClick={() => setMobileOpen(false)}
                 >
-                  {link.label}
-                  {link.children && <ChevronDown className="h-3 w-3" />}
+                  {entry.label}
                 </Link>
-                {link.children && (
+              ) : (
+                <div key={entry.label} className="border-b border-border-subtle">
+                  <div className="px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+                    {entry.label}
+                  </div>
                   <div className="bg-layer-01">
-                    {link.children.map((child) => (
+                    {entry.items.map((item) => (
                       <Link
-                        key={child.href}
-                        href={child.href}
-                        className="block px-8 py-2.5 text-sm text-text-tertiary hover:text-text-primary hover:bg-layer-02"
+                        key={item.href}
+                        href={item.href}
+                        className="block px-6 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-layer-02"
                         onClick={() => setMobileOpen(false)}
                       >
-                        {child.label}
+                        {item.label}
                       </Link>
                     ))}
                   </div>
-                )}
-              </div>
-            ))}
+                </div>
+              ),
+            )}
             <div className="border-t border-border-subtle p-4 flex flex-col gap-2">
-              <IntlButtonLink
-                href="/#waitlist"
-                variant="primary"
-                size="md"
-                className={cn("w-full")}
-                onClick={() => setMobileOpen(false)}
-              >
-                {t("joinWaitlist")}
-              </IntlButtonLink>
+              {showLeadGen ? (
+                <IntlButtonLink
+                  href="/#waitlist"
+                  variant="primary"
+                  size="md"
+                  className={cn("w-full")}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {t("joinWaitlist")}
+                </IntlButtonLink>
+              ) : null}
               <IntlButtonLink
                 href="/product/ebooks-and-guides"
                 variant="ghost"
@@ -165,22 +189,11 @@ export function Header() {
               >
                 {t("contactSales")}
               </IntlButtonLink>
-              <NextLink
-                href="/login"
-                className={buttonLinkClassName("ghost", "md", "w-full")}
-                onClick={() => setMobileOpen(false)}
-              >
-                {t("logIn")}
-              </NextLink>
-              <IntlButtonLink
-                href="/demo"
-                variant="tertiary"
+              <HeaderAuthCluster
+                user={authUser}
                 size="md"
-                className={cn("w-full")}
-                onClick={() => setMobileOpen(false)}
-              >
-                {t("requestDemo")}
-              </IntlButtonLink>
+                onNavigate={() => setMobileOpen(false)}
+              />
             </div>
           </nav>
         </div>

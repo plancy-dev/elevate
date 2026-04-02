@@ -4,6 +4,7 @@ import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import { logAudit } from "@/lib/audit/log";
 import { revalidatePath } from "next/cache";
 import { getVenueManagerContext } from "@/lib/auth/require-org-editor";
+import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import {
   validateDisplayName,
   validateOrganizationName,
@@ -29,7 +30,7 @@ export async function updateOrganizationName(
     .update({ name: v.value })
     .eq("id", auth.ctx.organizationId);
 
-  if (error) return { error: error.message };
+  if (error) return { error: ActionErrorCode.dbError };
 
   await logAudit({
     organizationId: auth.ctx.organizationId,
@@ -61,7 +62,7 @@ export async function updateProfileAndNotifications(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { error: "Not authenticated" };
+  if (!user) return { error: ActionErrorCode.authNotAuthenticated };
 
   const { error } = await supabase
     .from("profiles")
@@ -71,7 +72,7 @@ export async function updateProfileAndNotifications(
     })
     .eq("id", user.id);
 
-  if (error) return { error: error.message };
+  if (error) return { error: ActionErrorCode.dbError };
 
   const { data: prof } = await supabase
     .from("profiles")

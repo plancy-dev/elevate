@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import type { AuditLogRow } from "@/lib/data/audit";
 import { formatDateTimeUtc } from "@/lib/utils/format-date";
 
@@ -7,18 +10,15 @@ type Props = {
 };
 
 export function AuditLogView({ loadError, rows }: Props) {
+  const t = useTranslations("Dashboard.audit");
+
   return (
     <>
       <p className="text-xs text-text-tertiary mb-2 max-w-2xl leading-relaxed">
-        Changes made through the app (events, settings, invitations, etc.) are
-        recorded here for your organization.
+        {t("intro")}
       </p>
       <p className="text-xs text-text-tertiary mb-4 max-w-2xl leading-relaxed border-l-2 border-border-subtle pl-3">
-        Still empty after saving? Confirm{" "}
-        <code className="text-text-secondary">SUPABASE_SERVICE_ROLE_KEY</code>{" "}
-        is set in the server environment—audit rows are written with the
-        service role. If the table is missing, apply migration{" "}
-        <code className="text-text-secondary">007_audit_logs</code>.
+        {t("hint")}
       </p>
       {loadError ? (
         <p className="text-sm text-danger max-w-2xl" role="alert">
@@ -26,21 +26,18 @@ export function AuditLogView({ loadError, rows }: Props) {
         </p>
       ) : null}
       {!loadError && rows.length === 0 ? (
-        <p className="text-sm text-text-tertiary max-w-xl">
-          No entries yet. Try saving organization name or profile on Settings,
-          or edit an event—then refresh this page.
-        </p>
+        <p className="text-sm text-text-tertiary max-w-xl">{t("empty")}</p>
       ) : null}
       {!loadError && rows.length > 0 ? (
         <div className="border border-border-subtle bg-layer-01 overflow-x-auto">
           <table className="w-full text-sm min-w-[720px]">
             <thead>
               <tr className="border-b border-border-subtle text-left text-xs text-text-tertiary uppercase tracking-wider">
-                <th className="px-4 py-2 font-medium">Time (UTC)</th>
-                <th className="px-4 py-2 font-medium">Actor</th>
-                <th className="px-4 py-2 font-medium">Action</th>
-                <th className="px-4 py-2 font-medium">Entity</th>
-                <th className="px-4 py-2 font-medium">Details</th>
+                <th className="px-4 py-2 font-medium">{t("colTime")}</th>
+                <th className="px-4 py-2 font-medium">{t("colActor")}</th>
+                <th className="px-4 py-2 font-medium">{t("colAction")}</th>
+                <th className="px-4 py-2 font-medium">{t("colEntity")}</th>
+                <th className="px-4 py-2 font-medium">{t("colDetails")}</th>
               </tr>
             </thead>
             <tbody>

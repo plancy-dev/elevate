@@ -1,9 +1,10 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
-import {
-  CONTENT_PRODUCT_KIND_LABEL,
-  getLibraryPageData,
-} from "@/lib/data/library";
+import type { ContentProductKind } from "@/lib/data/library";
+import { getLibraryPageData } from "@/lib/data/library";
+import { hasPaidServiceSubscription } from "@/lib/organizations/plan";
 import { FunnelCaptureOnce } from "@/components/analytics/funnel-capture";
 import { LibraryDownloadButton } from "@/components/dashboard/library-download-button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,19 +13,19 @@ import { PostHogEvent } from "@/lib/analytics/posthog-events";
 import { formatCurrencyMinor } from "@/lib/format-currency";
 import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
 
-const copy = {
-  title: "Library",
-  subtitle:
-    "Your purchased digital products (e-books and guides first). Entitlements are granted per organization after payment—see migration 009/010 and ops runbook.",
-  empty:
-    "No catalog rows yet. Apply migrations through 010, then insert into content_products (set product_kind, e.g. ebook).",
-  included: "Included for your org",
-  notIncluded: "Not licensed",
-  legacyNote:
-    "Legacy MICE (events, venues, attendees) stays under the sidebar until deprecated.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Dashboard.library");
+  return { title: t("metaTitle") };
+}
+
+function productKindMessageKey(
+  kind: ContentProductKind,
+): "productKind.ebook" | "productKind.guide" | "productKind.template" | "productKind.bundle" {
+  return `productKind.${kind}`;
+}
 
 export default async function LibraryPage() {
+  const t = await getTranslations("Dashboard.library");
   const supabase = await createClient();
   const {
     data: { user },
@@ -37,28 +38,56 @@ export default async function LibraryPage() {
     .maybeSingle();
 
   const orgId = profile?.organization_id ?? null;
-  const { products, entitledIds } = await getLibraryPageData(supabase, orgId);
+  const { products, entitledIds, organizationPlan } =
+    await getLibraryPageData(supabase, orgId);
+
+  const subscribed = hasPaidServiceSubscription(organizationPlan);
+  const showStarterSubscription =
+    orgId !== null && organizationPlan !== null && !subscribed;
 
   return (
     <div className="p-6 lg:p-8 max-w-4xl">
       <FunnelCaptureOnce event={PostHogEvent.ELEVATE_FUNNEL_LIBRARY_VIEW} />
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-text-primary tracking-tight">
-          {copy.title}
+          {t("metaTitle")}
         </h1>
         <p className="mt-2 text-sm text-text-tertiary leading-relaxed max-w-2xl">
-          {copy.subtitle}
+          {t("subtitle")}
         </p>
       </div>
 
+      {showStarterSubscription ? (
+        <div
+          className="mb-8 rounded-sm border border-border-subtle bg-layer-02/80 px-4 py-3 max-w-2xl"
+          role="note"
+        >
+          <p className="text-sm text-text-secondary leading-relaxed">
+            {t("subscriptionBanner")}
+          </p>
+          <Link
+            href="/dashboard/billing"
+            className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
+          >
+            {t("subscriptionBillingCta")}
+          </Link>
+        </div>
+      ) : null}
+
       {products.length === 0 ? (
-        <p className="text-sm text-text-secondary">{copy.empty}</p>
+        <div className="space-y-3 max-w-2xl">
+          <p className="text-sm text-text-secondary">{t("empty")}</p>
+          {showStarterSubscription ? (
+            <p className="text-sm text-text-tertiary leading-relaxed">
+              {t("emptyStarterNote")}
+            </p>
+          ) : null}
+        </div>
       ) : (
         <ul className="space-y-4">
           {products.map((p) => {
             const ok = entitledIds.has(p.id);
-            const kindLabel =
-              CONTENT_PRODUCT_KIND_LABEL[p.product_kind] ?? p.product_kind;
+            const kindLabel = t(productKindMessageKey(p.product_kind));
             return (
               <li key={p.id}>
                 <Card className="border-border-subtle">
@@ -70,7 +99,7 @@ export default async function LibraryPage() {
                           {p.title}
                         </h2>
                         <Badge variant={ok ? "green" : "warm-gray"}>
-                          {ok ? copy.included : copy.notIncluded}
+                          {ok ? t("included") : t("notIncluded")}
                         </Badge>
                       </div>
                       {p.description ? (
@@ -91,12 +120,12 @@ export default async function LibraryPage() {
                           href={`/dashboard/billing?product=${encodeURIComponent(p.slug)}`}
                           className="text-sm font-medium text-primary hover:underline"
                         >
-                          Pay {TOSS_POC_AMOUNT_KRW} KRW (PoC)
+                          {t("payPoc", { amount: TOSS_POC_AMOUNT_KRW })}
                         </Link>
                       ) : null}
                       {ok && p.storage_object_path ? (
                         <LibraryDownloadButton productId={p.id}>
-                          Download
+                          {t("download")}
                         </LibraryDownloadButton>
                       ) : null}
                     </div>
@@ -107,10 +136,6 @@ export default async function LibraryPage() {
           })}
         </ul>
       )}
-
-      <p className="mt-10 text-xs text-text-tertiary border-t border-border-subtle pt-6">
-        {copy.legacyNote}
-      </p>
     </div>
   );
 }

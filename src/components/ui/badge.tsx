@@ -12,7 +12,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   blue: "bg-[#0043CE]/20 text-info",
   green: "bg-[#198038]/20 text-accent",
   red: "bg-[#DA1E28]/20 text-danger",
-  "warm-gray": "bg-[#393939] text-text-secondary",
+  "warm-gray": "bg-[#393939] text-white",
 };
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(

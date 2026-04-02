@@ -1,15 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database.types";
+import type { OrgPlan } from "@/lib/organizations/plan";
 
 /** Aligns with `content_products.product_kind` (migration 010). */
 export type ContentProductKind = "ebook" | "guide" | "template" | "bundle";
-
-export const CONTENT_PRODUCT_KIND_LABEL: Record<ContentProductKind, string> = {
-  ebook: "E-book",
-  guide: "Guide",
-  template: "Template",
-  bundle: "Bundle",
-};
 
 export type LibraryProductRow = {
   id: string;
@@ -28,6 +22,7 @@ export async function getLibraryPageData(
 ): Promise<{
   products: LibraryProductRow[];
   entitledIds: Set<string>;
+  organizationPlan: OrgPlan | null;
 }> {
   const { data: products, error: pErr } = await supabase
     .from("content_products")
@@ -42,7 +37,20 @@ export async function getLibraryPageData(
   }
 
   let entitledIds = new Set<string>();
+  let organizationPlan: OrgPlan | null = null;
+
   if (organizationId) {
+    const { data: org, error: oErr } = await supabase
+      .from("organizations")
+      .select("plan")
+      .eq("id", organizationId)
+      .maybeSingle();
+
+    if (oErr) {
+      throw oErr;
+    }
+    organizationPlan = org?.plan ?? null;
+
     const { data: ents, error: eErr } = await supabase
       .from("organization_content_entitlements")
       .select("content_product_id")
@@ -62,5 +70,6 @@ export async function getLibraryPageData(
       storage_object_path: p.storage_object_path ?? null,
     })),
     entitledIds,
+    organizationPlan,
   };
 }

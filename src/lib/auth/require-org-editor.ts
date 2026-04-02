@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 
 /** Roles that may create/update/delete org-scoped operational data (events, sessions, etc.). */
 export const ORG_EDITOR_ROLES = ["admin", "organizer", "coordinator"] as const;
@@ -21,7 +22,7 @@ export async function getOrgEditorContext(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false, error: "Not authenticated" };
+  if (!user) return { ok: false, error: ActionErrorCode.authNotAuthenticated };
 
   const { data: profile, error } = await supabase
     .from("profiles")
@@ -29,14 +30,14 @@ export async function getOrgEditorContext(
     .eq("id", user.id)
     .single();
 
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: ActionErrorCode.dbError };
   if (!profile?.organization_id) {
-    return { ok: false, error: "No organization. Refresh the page." };
+    return { ok: false, error: ActionErrorCode.authNoOrganization };
   }
 
   const role = profile.role ?? "";
   if (!(ORG_EDITOR_ROLES as readonly string[]).includes(role)) {
-    return { ok: false, error: "Insufficient permissions" };
+    return { ok: false, error: ActionErrorCode.authInsufficientPermissions };
   }
 
   return {
@@ -62,7 +63,7 @@ export async function getOrgInviteManagerContext(
   if (!(INVITE_MANAGER_ROLES as readonly string[]).includes(base.ctx.role)) {
     return {
       ok: false,
-      error: "Only admins and organizers can manage invitations.",
+      error: ActionErrorCode.authInviteManagersOnly,
     };
   }
   return base;
@@ -77,7 +78,7 @@ export async function getOrgAdminContext(
   const base = await getOrgEditorContext(supabase);
   if (!base.ok) return base;
   if (base.ctx.role !== "admin") {
-    return { ok: false, error: "Only organization admins can change member roles." };
+    return { ok: false, error: ActionErrorCode.authAdminOnly };
   }
   return base;
 }
@@ -93,7 +94,10 @@ export async function getVenueManagerContext(
   const base = await getOrgEditorContext(supabase);
   if (!base.ok) return base;
   if (!(VENUE_MANAGER_ROLES as readonly string[]).includes(base.ctx.role)) {
-    return { ok: false, error: "Insufficient permissions for venue management" };
+    return {
+      ok: false,
+      error: ActionErrorCode.authVenuePermissionDenied,
+    };
   }
   return base;
 }
