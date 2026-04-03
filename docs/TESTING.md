@@ -28,6 +28,7 @@ Covers:
 - Auth UI copy: `formatAuthError`, `formatSignInPasswordError`, OAuth callback messages
 - Public env helpers: `getPublicSupabaseEnv`, `assertPublicSupabaseEnv`
 - **`loadSidebarUser`** — chainable Supabase mock (profile + org)
+- **`POST /api/waitlist`** — mocked Supabase admin insert (honeypot, validation, duplicate)
 
 ## Integration tests (`pnpm test:integration`)
 
@@ -83,7 +84,7 @@ CI does **not** run integration tests unless you add secrets and env to the work
 
 **Host:** Default base URL is `http://localhost:3000`. If `PLAYWRIGHT_BASE_URL` uses `127.0.0.1`, `playwright.config.ts` rewrites it to `localhost` so cookies match `pnpm dev`. Run the app as `http://localhost:3000` when testing locally.
 
-**Specs:** `smoke.spec.ts` — login page shell only. `auth-dashboard.spec.ts` — password sign-in and dashboard sidebar. `library.spec.ts` — login → Library heading. `auth-session.spec.ts` — sign out → login page → sign in again (session regression).
+**Specs:** `smoke.spec.ts` — login page shell only. `marketing-waitlist.spec.ts` — home band waitlist (mocked API) + primary-band Contact sales link. `auth-dashboard.spec.ts` — password sign-in and dashboard sidebar. `library.spec.ts` — login → Library heading. `auth-session.spec.ts` — sign out → login page → sign in again (session regression).
 
 ### GitHub Actions (optional)
 
