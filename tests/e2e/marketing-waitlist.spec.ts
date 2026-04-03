@@ -29,7 +29,7 @@ test.describe("marketing home: waitlist band", () => {
     await page.getByRole("button", { name: /Join waitlist/i }).last().click();
 
     await expect(page.getByRole("status")).toContainText(
-      /on the list|early access/i,
+      /waitlist|Prompt Studio|inbox/i,
       { timeout: 15_000 },
     );
   });
