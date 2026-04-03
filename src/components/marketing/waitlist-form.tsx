@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { usePostHog } from "posthog-js/react";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { PostHogEvent } from "@/lib/analytics/posthog-events";
 import { cn } from "@/lib/utils";
-import type { WaitlistSource } from "@/lib/waitlist/sources";
+import { WAITLIST_API_PATH, type WaitlistSource } from "@/lib/waitlist/sources";
 
 type WaitlistFormProps = {
   source: WaitlistSource;
@@ -28,15 +28,18 @@ export function WaitlistForm({
     "idle",
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const submitLock = useRef(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (submitLock.current) return;
+    submitLock.current = true;
     setErrorMessage(null);
     setStatus("loading");
     const form = e.currentTarget;
     const hp = new FormData(form).get("website");
     try {
-      const res = await fetch("/api/waitlist", {
+      const res = await fetch(WAITLIST_API_PATH, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -46,7 +49,12 @@ export function WaitlistForm({
           website: typeof hp === "string" ? hp : "",
         }),
       });
-      const data = (await res.json()) as { ok?: boolean; error?: string };
+      let data: { ok?: boolean; error?: string } = {};
+      try {
+        data = (await res.json()) as { ok?: boolean; error?: string };
+      } catch {
+        /* non-JSON error body */
+      }
       if (!res.ok) {
         posthog?.capture(PostHogEvent.ELEVATE_WAITLIST_SUBMIT_FAILED, {
           source,
@@ -71,6 +79,8 @@ export function WaitlistForm({
       });
       setStatus("error");
       setErrorMessage(t("errorGeneric"));
+    } finally {
+      submitLock.current = false;
     }
   }
 

@@ -115,10 +115,7 @@
     "ctaBandEbooks": "Browse catalog",
     "ctaBandSignUp": "Create account",
     "ctaBandDemo": "Book a demo",
-    "ctaBandContact": "Contact sales",
-    "ctaCheck1": "Talk to sales about pricing",
-    "ctaCheck2": "Security review on request",
-    "ctaCheck3": "Implementation support"
+    "ctaBandContact": "Contact sales"
   },
   "KpiPreview": {
     "kpiAttendees": "Active users",

@@ -1,5 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import {
   ArrowRight,
@@ -9,7 +8,6 @@ import {
   Globe,
   Shield,
   Workflow,
-  CheckCircle2,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import {
@@ -83,8 +81,6 @@ export default async function Home({ params }: Props) {
     { title: t("pillar3Title"), sub: t("pillar3Sub") },
     { title: t("pillar4Title"), sub: t("pillar4Sub") },
   ];
-
-  const ctaChecks = [t("ctaCheck1"), t("ctaCheck2"), t("ctaCheck3")];
 
   return (
     <div className="flex flex-col">
@@ -272,30 +268,21 @@ export default async function Home({ params }: Props) {
             />
           </div>
 
-          <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-3">
+          <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
             <MarketingTrackedLocaleLink
               href="/contact"
               ctaId={MarketingCtaId.BAND_CONTACT}
+              className="inline-flex"
             >
               <Button
                 variant="ghost"
                 size="lg"
-                className="text-white/80 hover:text-white hover:bg-white/10"
+                className="w-full sm:w-auto border-0 bg-white px-6 font-semibold text-primary shadow-md transition-shadow hover:bg-zinc-50 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-w-[12rem]"
               >
                 {t("ctaBandContact")}
+                <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
               </Button>
             </MarketingTrackedLocaleLink>
-          </div>
-
-          <div className="mt-10 pt-8 border-t border-white/10">
-            <div className="flex flex-wrap gap-x-8 gap-y-3">
-              {ctaChecks.map((item) => (
-                <div key={item} className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-white/60" />
-                  <span className="text-sm text-white/70">{item}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
