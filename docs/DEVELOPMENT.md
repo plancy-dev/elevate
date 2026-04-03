@@ -37,6 +37,10 @@ After changing Site URL or redirects, smoke-test: sign-in, sign-up, password rec
 
 To add a new surface (e.g. blog CTA), add the string to `WAITLIST_SOURCE_VALUES`, use it as `<WaitlistForm source="…" />`, and deploy—no schema change required (`source` is `text`).
 
+## Blog (MDX)
+
+Posts live under **`content/blog/<locale>/<slug>.mdx`** (e.g. `content/blog/en/welcome.mdx`). Each supported locale (`en`, `ko`, `ja`, `zh-CN`, `zh-TW`) has its own files—there is **no** automatic fallback to English at runtime. Use YAML front matter: `title`, `description`, `date` (`YYYY-MM-DD`). Slugs must match `^[a-z0-9]+(?:-[a-z0-9]+)*$`. Loading: `src/lib/blog/posts.ts`.
+
 ## Scripts
 
 | Command | Purpose |
