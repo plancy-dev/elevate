@@ -124,10 +124,32 @@ export type Database = {
           },
         ]
       }
+      catalog_purchase_allowlist: {
+        Row: {
+          created_at: string
+          email_normalized: string
+          id: string
+          note: string | null
+        }
+        Insert: {
+          created_at?: string
+          email_normalized: string
+          id?: string
+          note?: string | null
+        }
+        Update: {
+          created_at?: string
+          email_normalized?: string
+          id?: string
+          note?: string | null
+        }
+        Relationships: []
+      }
       content_products: {
         Row: {
           created_at: string
           currency: string
+          delivery_mode: string
           description: string
           id: string
           is_active: boolean
@@ -140,6 +162,7 @@ export type Database = {
         Insert: {
           created_at?: string
           currency?: string
+          delivery_mode?: string
           description?: string
           id?: string
           is_active?: boolean
@@ -152,6 +175,7 @@ export type Database = {
         Update: {
           created_at?: string
           currency?: string
+          delivery_mode?: string
           description?: string
           id?: string
           is_active?: boolean
@@ -162,6 +186,45 @@ export type Database = {
           title?: string
         }
         Relationships: []
+      }
+      content_ebook_first_opens: {
+        Row: {
+          content_product_id: string
+          id: string
+          opened_at: string
+          organization_id: string
+          user_id: string
+        }
+        Insert: {
+          content_product_id: string
+          id?: string
+          opened_at?: string
+          organization_id: string
+          user_id: string
+        }
+        Update: {
+          content_product_id?: string
+          id?: string
+          opened_at?: string
+          organization_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_ebook_first_opens_content_product_id_fkey"
+            columns: ["content_product_id"]
+            isOneToOne: false
+            referencedRelation: "content_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_ebook_first_opens_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       events: {
         Row: {

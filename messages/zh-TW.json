@@ -207,7 +207,10 @@
     "empty": "尚無文章。",
     "published": "發布 {date}",
     "readMore": "閱讀全文",
-    "backToBlog": "返回部落格"
+    "backToBlog": "返回部落格",
+    "shareLink": "複製連結",
+    "shareCopied": "已複製連結",
+    "shareFailed": "無法複製，請從網址列複製。"
   },
   "Careers": {
     "metaTitle": "徵才",
@@ -598,6 +601,8 @@
         "catalogPriceMismatch": "該商品價格與測試金額（{amount} KRW）不一致。",
         "paymentServerConfig": "伺服器尚未完成設定，無法開始付款。",
         "intentCreateFailed": "無法開始付款，請稍後再試。",
+        "checkoutAllowlistDenied": "僅受邀電子郵件可發起目錄結帳。請管理員將您的個人資料電子郵件加入結帳許可名單。",
+        "checkoutAllowlistNoEmail": "個人資料缺少電子郵件。請更新帳號或聯絡支援。",
         "generic": "發生問題，請再試一次。",
         "tossClientUnknown": "付款視窗回傳了通用錯誤。請確認 Toss 後台的測試金鑰與允許網域，並確認未封鎖彈出視窗或指令碼。"
       },
@@ -619,7 +624,11 @@
       "failTitle": "付款已取消或失敗",
       "failBody": "測試付款未完成。您可從帳單頁重試。",
       "failCode": "代碼：{code}",
-      "backToBilling": "返回帳單"
+      "backToBilling": "返回帳單",
+      "confirmErrors": {
+        "checkoutAllowlistDenied": "您的個人資料電子郵件不在結帳許可名單中，無法確認此筆付款。",
+        "checkoutAllowlistNoEmail": "個人資料無電子郵件，無法確認此筆付款。"
+      }
     },
     "connectedAccounts": {
       "loading": "正在載入已連結帳號…",
@@ -703,6 +712,7 @@
       "navOverview": "總覽",
       "navAudit": "稽核日誌",
       "navContent": "資料庫目錄",
+      "navPurchaseAllowlist": "結帳許可名單",
       "navTeam": "團隊",
       "navBilling": "帳單",
       "navSettings": "設定",
@@ -733,7 +743,26 @@
         "catalog": {
           "title": "數位產品與電子書",
           "desc": "上傳檔案並管理資料庫與行銷頁面的目錄列。"
+        },
+        "purchaseAllowlist": {
+          "title": "結帳許可名單",
+          "desc": "伺服器啟用時，僅這些電子郵件可發起目錄結帳。"
         }
+      }
+    },
+    "adminPurchaseAllowlist": {
+      "metaTitle": "結帳許可名單",
+      "title": "結帳許可名單",
+      "intro": "當 CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true 時，僅此處列出的電子郵件可建立目錄 Toss 支付意向。與行銷候補名單無關；須與個人資料電子郵件一致（正規化、不分大小寫）。",
+      "emailLabel": "電子郵件",
+      "noteLabel": "備註（選填）",
+      "add": "新增電子郵件",
+      "listHeading": "已許可電子郵件",
+      "empty": "尚無電子郵件。啟用門檻時請新增允許的地址。",
+      "remove": "移除",
+      "errors": {
+        "invalidEmail": "請輸入有效的電子郵件地址。",
+        "duplicate": "該電子郵件已在名單中。"
       }
     },
     "adminContent": {
@@ -815,6 +844,11 @@
       "notIncluded": "未取得授權",
       "payPoc": "支付 {amount} 韓元（PoC）",
       "download": "下載",
+      "readOnline": "線上閱讀",
+      "readerMetaTitle": "{title}",
+      "readerEmpty": "此標題的應用內內容尚未就緒。若您認為有誤，請聯絡支援。",
+      "readerBackToLibrary": "返回資料庫",
+      "readerUsageNotice": "僅供在本工作區內使用。Web 專屬標題不提供檔案下載；與一般網頁相同，仍可能透過瀏覽器複製或擷取畫面。",
       "productKind": {
         "ebook": "電子書",
         "guide": "指南",

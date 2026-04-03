@@ -4,6 +4,7 @@ import {
   BookOpen,
   CreditCard,
   FileText,
+  ListChecks,
   Settings,
   Shield,
   Users,
@@ -24,6 +25,12 @@ export default async function AdminHomePage() {
       title: t("cards.catalog.title"),
       desc: t("cards.catalog.desc"),
       icon: BookOpen,
+    },
+    {
+      href: "/admin/purchase-allowlist",
+      title: t("cards.purchaseAllowlist.title"),
+      desc: t("cards.purchaseAllowlist.desc"),
+      icon: ListChecks,
     },
     {
       href: "/admin/audit",

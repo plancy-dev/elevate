@@ -2,13 +2,16 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { getContentStorageBucket } from "@/lib/env/content-storage";
+import { canReadCatalogProduct } from "@/lib/content/ebook-access";
+import { getOrganizationCatalogAccess } from "@/lib/data/organization-catalog-access";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
- * Redirects to a short-lived signed URL if the user is entitled to the product
- * and `content_products.storage_object_path` is set.
+ * Redirects to a short-lived signed URL when the org may read the SKU
+ * (`canReadCatalogProduct`), `delivery_mode` is `pdf`, and
+ * `storage_object_path` is set. `web_only` products return 403.
  */
 export async function GET(
   _req: Request,
@@ -27,36 +30,40 @@ export async function GET(
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("organization_id")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  const orgId = profile?.organization_id;
-  if (!orgId) {
+  const access = await getOrganizationCatalogAccess(supabase, user.id);
+  if (!access) {
     return NextResponse.json({ error: "no organization" }, { status: 403 });
   }
 
-  const { data: ent } = await supabase
-    .from("organization_content_entitlements")
-    .select("id")
-    .eq("organization_id", orgId)
-    .eq("content_product_id", productId)
-    .maybeSingle();
-
-  if (!ent) {
+  if (
+    !canReadCatalogProduct({
+      organizationPlan: access.organizationPlan,
+      entitledProductIds: access.entitledProductIds,
+      productId,
+    })
+  ) {
     return NextResponse.json({ error: "not entitled" }, { status: 403 });
   }
 
   const admin = createAdminClient();
   const { data: product, error: pe } = await admin
     .from("content_products")
-    .select("storage_object_path")
+    .select("storage_object_path, delivery_mode")
     .eq("id", productId)
     .maybeSingle();
 
-  if (pe || !product?.storage_object_path?.trim()) {
+  if (pe || !product) {
+    return NextResponse.json({ error: "file not available" }, { status: 404 });
+  }
+
+  if (product.delivery_mode === "web_only") {
+    return NextResponse.json(
+      { error: "downloads not available for this product" },
+      { status: 403 },
+    );
+  }
+
+  if (!product.storage_object_path?.trim()) {
     return NextResponse.json({ error: "file not available" }, { status: 404 });
   }
 

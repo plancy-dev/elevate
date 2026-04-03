@@ -215,7 +215,10 @@
     "empty": "No posts yet.",
     "published": "Published {date}",
     "readMore": "Read article",
-    "backToBlog": "Back to blog"
+    "backToBlog": "Back to blog",
+    "shareLink": "Copy link",
+    "shareCopied": "Link copied",
+    "shareFailed": "Could not copy — copy the URL from the address bar."
   },
   "Careers": {
     "metaTitle": "Careers",
@@ -606,6 +609,8 @@
         "catalogPriceMismatch": "This product’s price does not match the test amount ({amount} KRW).",
         "paymentServerConfig": "Payment could not be started because the server is not fully configured.",
         "intentCreateFailed": "We could not start the payment. Please try again in a moment.",
+        "checkoutAllowlistDenied": "Catalog checkout is limited to invited email addresses. Ask an administrator to add your email to the checkout allowlist.",
+        "checkoutAllowlistNoEmail": "Your profile has no email address. Update your account or contact support.",
         "generic": "Something went wrong. Please try again.",
         "tossClientUnknown": "The payment window reported a generic error. Check test keys in the Toss dashboard, that this site’s domain is allowed, and that pop-ups or the payment script are not blocked."
       },
@@ -627,7 +632,11 @@
       "failTitle": "Payment cancelled or failed",
       "failBody": "The test payment did not complete. You can try again from Billing.",
       "failCode": "Code: {code}",
-      "backToBilling": "Back to Billing"
+      "backToBilling": "Back to Billing",
+      "confirmErrors": {
+        "checkoutAllowlistDenied": "We could not confirm this payment because your email is not on the checkout allowlist.",
+        "checkoutAllowlistNoEmail": "We could not confirm this payment because your profile has no email address."
+      }
     },
     "connectedAccounts": {
       "loading": "Loading connected accounts…",
@@ -711,6 +720,7 @@
       "navOverview": "Overview",
       "navAudit": "Audit log",
       "navContent": "Library catalog",
+      "navPurchaseAllowlist": "Checkout allowlist",
       "navTeam": "Team",
       "navBilling": "Billing",
       "navSettings": "Settings",
@@ -741,7 +751,26 @@
         "catalog": {
           "title": "Digital products & e-books",
           "desc": "Upload files and manage catalog rows for Library and marketing pages."
+        },
+        "purchaseAllowlist": {
+          "title": "Checkout allowlist",
+          "desc": "Emails allowed to start catalog checkout when the server requires it."
         }
+      }
+    },
+    "adminPurchaseAllowlist": {
+      "metaTitle": "Checkout allowlist",
+      "title": "Checkout allowlist",
+      "intro": "When CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true, only emails listed here can create a Toss payment intent for the catalog PoC. This is independent of the marketing waitlist. Profile email must match (normalized, case-insensitive).",
+      "emailLabel": "Email",
+      "noteLabel": "Note (optional)",
+      "add": "Add email",
+      "listHeading": "Allowed emails",
+      "empty": "No emails yet. Add one to allow checkout when the gate is enabled.",
+      "remove": "Remove",
+      "errors": {
+        "invalidEmail": "Enter a valid email address.",
+        "duplicate": "That email is already on the list."
       }
     },
     "adminContent": {
@@ -823,6 +852,11 @@
       "notIncluded": "Not licensed",
       "payPoc": "Pay {amount} KRW (PoC)",
       "download": "Download",
+      "readOnline": "Read online",
+      "readerMetaTitle": "{title}",
+      "readerEmpty": "No in-app content is available for this title yet. If you believe this is a mistake, contact support.",
+      "readerBackToLibrary": "Back to Library",
+      "readerUsageNotice": "Licensed for use in this workspace. Web-only titles do not offer a file download; content may still be copied or captured from the browser like any web page.",
       "productKind": {
         "ebook": "E-book",
         "guide": "Guide",

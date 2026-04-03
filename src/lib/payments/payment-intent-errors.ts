@@ -9,6 +9,10 @@ export const PaymentIntentErrorCode = {
   catalogPriceMismatch: "catalogPriceMismatch",
   paymentServerConfig: "paymentServerConfig",
   intentCreateFailed: "intentCreateFailed",
+  /** `CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true` and email not on `catalog_purchase_allowlist` */
+  checkoutAllowlistDenied: "checkoutAllowlistDenied",
+  /** Profile has no email — cannot match allowlist */
+  checkoutAllowlistNoEmail: "checkoutAllowlistNoEmail",
 } as const;
 
 export type PaymentIntentErrorCode =

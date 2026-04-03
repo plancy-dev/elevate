@@ -10,6 +10,10 @@ export const PostHogEvent = {
   ELEVATE_FUNNEL_BILLING_VIEW: "elevate_funnel_billing_view",
   ELEVATE_FUNNEL_PURCHASE_COMPLETED: "elevate_funnel_purchase_completed",
   ELEVATE_FUNNEL_ASSET_DOWNLOAD: "elevate_funnel_asset_download",
+  ELEVATE_FUNNEL_EBOOK_READER_VIEW: "elevate_funnel_ebook_reader_view",
+  ELEVATE_FUNNEL_EBOOK_READER_LINK_CLICK: "elevate_funnel_ebook_reader_link_click",
+  /** Blog — share current URL to clipboard (no PII in properties) */
+  ELEVATE_BLOG_POST_SHARE_LINK_COPIED: "elevate_blog_post_share_link_copied",
   /** Marketing / waitlist — no PII in properties */
   ELEVATE_WAITLIST_SUBMITTED: "elevate_waitlist_submitted",
   ELEVATE_WAITLIST_SUBMIT_FAILED: "elevate_waitlist_submit_failed",

@@ -12,6 +12,7 @@ import {
   PaymentIntentErrorCode,
 } from "@/lib/payments/payment-intent-errors";
 import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
+import { assertCatalogCheckoutAllowlistForUserId } from "@/lib/payments/assert-catalog-checkout-allowlist";
 import { revalidatePath } from "next/cache";
 
 function generateOrderId(): string {
@@ -51,6 +52,16 @@ export async function createTossPaymentIntent(
   } catch {
     return { ok: false, error: PaymentIntentErrorCode.paymentServerConfig };
   }
+
+  const allowlistGate = await assertCatalogCheckoutAllowlistForUserId(
+    supabase,
+    admin,
+    auth.ctx.userId,
+  );
+  if (!allowlistGate.ok) {
+    return { ok: false, error: allowlistGate.error };
+  }
+
   let contentProductId: string | null = null;
   if (contentProductSlug?.trim()) {
     const { data: product, error: pErr } = await admin
@@ -106,7 +117,7 @@ export async function createTossPaymentIntent(
 
 export type ConfirmRedirectResult =
   | { ok: true; alreadyConfirmed?: boolean }
-  | { ok: false; error: string };
+  | { ok: false; error: string; errorKey?: "checkoutAllowlistDenied" | "checkoutAllowlistNoEmail" };
 
 /**
  * 승인 API 호출 + DB 반영. 성공 리다이렉트 URL에서 호출.
@@ -153,6 +164,7 @@ export async function confirmTossPaymentFromRedirect(params: {
   if (intent.amount_krw !== amount) {
     return { ok: false, error: "Amount mismatch." };
   }
+
   if (intent.status === "confirmed") {
     if (intent.content_product_id) {
       await grantOrganizationContentEntitlement(
@@ -162,6 +174,25 @@ export async function confirmTossPaymentFromRedirect(params: {
       );
     }
     return { ok: true, alreadyConfirmed: true };
+  }
+
+  const allowlistGate = await assertCatalogCheckoutAllowlistForUserId(
+    supabase,
+    admin,
+    user.id,
+  );
+  if (!allowlistGate.ok) {
+    return {
+      ok: false,
+      error:
+        allowlistGate.error === PaymentIntentErrorCode.checkoutAllowlistNoEmail
+          ? "Missing profile email."
+          : "Not on checkout allowlist.",
+      errorKey:
+        allowlistGate.error === PaymentIntentErrorCode.checkoutAllowlistNoEmail
+          ? "checkoutAllowlistNoEmail"
+          : "checkoutAllowlistDenied",
+    };
   }
 
   const confirmed = await tossConfirmPayment({

@@ -215,7 +215,10 @@
     "empty": "아직 게시물이 없습니다.",
     "published": "게시 {date}",
     "readMore": "글 읽기",
-    "backToBlog": "블로그 목록"
+    "backToBlog": "블로그 목록",
+    "shareLink": "링크 복사",
+    "shareCopied": "링크를 복사했습니다",
+    "shareFailed": "복사할 수 없습니다. 주소 표시줄에서 URL을 복사하세요."
   },
   "Careers": {
     "metaTitle": "채용",
@@ -606,6 +609,8 @@
         "catalogPriceMismatch": "이 상품 가격이 테스트 결제 금액({amount}원)과 맞지 않습니다.",
         "paymentServerConfig": "서버 설정이 완료되지 않아 결제를 시작할 수 없습니다.",
         "intentCreateFailed": "결제를 시작하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+        "checkoutAllowlistDenied": "카탈로그 결제는 초대된 이메일만 시작할 수 있습니다. 관리자에게 프로필 이메일을 결제 허용 목록에 추가해 달라고 요청하세요.",
+        "checkoutAllowlistNoEmail": "프로필에 이메일이 없습니다. 계정을 수정하거나 지원팀에 문의하세요.",
         "generic": "문제가 발생했습니다. 다시 시도해 주세요.",
         "tossClientUnknown": "결제 창에서 일반적인 오류가 반환되었습니다. 토스 대시보드의 테스트 키·허용 도메인을 확인하고, 팝업·스크립트 차단 여부를 점검해 주세요."
       },
@@ -627,7 +632,11 @@
       "failTitle": "결제가 취소되었거나 실패했습니다",
       "failBody": "테스트 결제가 완료되지 않았습니다. 결제 페이지에서 다시 시도할 수 있습니다.",
       "failCode": "코드: {code}",
-      "backToBilling": "결제로 돌아가기"
+      "backToBilling": "결제로 돌아가기",
+      "confirmErrors": {
+        "checkoutAllowlistDenied": "프로필 이메일이 결제 허용 목록에 없어 이 결제를 확인할 수 없습니다.",
+        "checkoutAllowlistNoEmail": "프로필에 이메일이 없어 이 결제를 확인할 수 없습니다."
+      }
     },
     "connectedAccounts": {
       "loading": "연결된 계정을 불러오는 중…",
@@ -711,6 +720,7 @@
       "navOverview": "개요",
       "navAudit": "감사 로그",
       "navContent": "라이브러리 카탈로그",
+      "navPurchaseAllowlist": "결제 허용 목록",
       "navTeam": "팀",
       "navBilling": "결제",
       "navSettings": "설정",
@@ -741,7 +751,26 @@
         "catalog": {
           "title": "디지털 상품 및 전자책",
           "desc": "파일을 업로드하고 라이브러리·마케팅 페이지용 카탈로그 행을 관리합니다."
+        },
+        "purchaseAllowlist": {
+          "title": "결제 허용 목록",
+          "desc": "서버에서 요구할 때 카탈로그 결제를 시작할 수 있는 이메일입니다."
         }
+      }
+    },
+    "adminPurchaseAllowlist": {
+      "metaTitle": "결제 허용 목록",
+      "title": "결제 허용 목록",
+      "intro": "CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true일 때 여기에 등록된 이메일만 카탈로그 Toss 결제 의도를 만들 수 있습니다. 마케팅 대기명단과는 별개이며, 프로필 이메일과 일치해야 합니다(정규화·대소문자 무시).",
+      "emailLabel": "이메일",
+      "noteLabel": "메모(선택)",
+      "add": "이메일 추가",
+      "listHeading": "허용된 이메일",
+      "empty": "아직 등록된 이메일이 없습니다. 게이트를 켤 때 허용할 주소를 추가하세요.",
+      "remove": "삭제",
+      "errors": {
+        "invalidEmail": "유효한 이메일을 입력하세요.",
+        "duplicate": "이미 목록에 있는 이메일입니다."
       }
     },
     "adminContent": {
@@ -823,6 +852,11 @@
       "notIncluded": "라이선스 없음",
       "payPoc": "{amount}원 결제(PoC)",
       "download": "다운로드",
+      "readOnline": "온라인으로 읽기",
+      "readerMetaTitle": "{title}",
+      "readerEmpty": "아직 이 제목에 대한 인앱 콘텐츠가 없습니다. 문제가 있다고 생각되면 지원팀에 문의하세요.",
+      "readerBackToLibrary": "라이브러리로 돌아가기",
+      "readerUsageNotice": "이 워크스페이스에서 이용하도록 제공됩니다. 웹 전용 제목은 파일 다운로드를 제공하지 않으며, 일반 웹페이지와 같이 브라우저에서 복사·캡처가 가능할 수 있습니다.",
       "productKind": {
         "ebook": "전자책",
         "guide": "가이드",

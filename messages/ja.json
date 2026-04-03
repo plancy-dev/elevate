@@ -207,7 +207,10 @@
     "empty": "まだ記事がありません。",
     "published": "公開日 {date}",
     "readMore": "記事を読む",
-    "backToBlog": "ブログ一覧へ"
+    "backToBlog": "ブログ一覧へ",
+    "shareLink": "リンクをコピー",
+    "shareCopied": "コピーしました",
+    "shareFailed": "コピーできませんでした。アドレスバーからURLをコピーしてください。"
   },
   "Careers": {
     "metaTitle": "採用情報",
@@ -598,6 +601,8 @@
         "catalogPriceMismatch": "この商品の価格がテスト金額（{amount} KRW）と一致しません。",
         "paymentServerConfig": "サーバー設定が完了していないため、決済を開始できません。",
         "intentCreateFailed": "決済を開始できませんでした。しばらくしてから再度お試しください。",
+        "checkoutAllowlistDenied": "カタログの決済は招待されたメールアドレスのみ開始できます。管理者にプロフィールのメールを許可リストに追加してもらってください。",
+        "checkoutAllowlistNoEmail": "プロフィールにメールアドレスがありません。アカウントを更新するかサポートに連絡してください。",
         "generic": "問題が発生しました。もう一度お試しください。",
         "tossClientUnknown": "決済ウィンドウから一般的なエラーが返されました。Toss ダッシュボードのテストキー・許可ドメインを確認し、ポップアップやスクリプトのブロックをオフにしてください。"
       },
@@ -619,7 +624,11 @@
       "failTitle": "決済がキャンセルまたは失敗しました",
       "failBody": "テスト決済が完了しませんでした。請求ページから再試行できます。",
       "failCode": "コード: {code}",
-      "backToBilling": "請求に戻る"
+      "backToBilling": "請求に戻る",
+      "confirmErrors": {
+        "checkoutAllowlistDenied": "プロフィールのメールがチェックアウト許可リストにないため、この決済を確認できませんでした。",
+        "checkoutAllowlistNoEmail": "プロフィールにメールがないため、この決済を確認できませんでした。"
+      }
     },
     "connectedAccounts": {
       "loading": "接続済みアカウントを読み込み中…",
@@ -703,6 +712,7 @@
       "navOverview": "概要",
       "navAudit": "監査ログ",
       "navContent": "ライブラリカタログ",
+      "navPurchaseAllowlist": "チェックアウト許可リスト",
       "navTeam": "チーム",
       "navBilling": "請求",
       "navSettings": "設定",
@@ -733,7 +743,26 @@
         "catalog": {
           "title": "デジタル商品と電子書籍",
           "desc": "ファイルをアップロードし、ライブラリとマーケティングページ用のカタログ行を管理します。"
+        },
+        "purchaseAllowlist": {
+          "title": "チェックアウト許可リスト",
+          "desc": "サーバー設定時にカタログ決済を開始できるメールアドレスです。"
         }
+      }
+    },
+    "adminPurchaseAllowlist": {
+      "metaTitle": "チェックアウト許可リスト",
+      "title": "チェックアウト許可リスト",
+      "intro": "CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true のとき、ここに登録されたメールのみカタログの Toss 決済インテントを作成できます。マーケティングのウェイトリストとは別で、プロフィールのメールと一致する必要があります（正規化・大文字小文字は区別しません）。",
+      "emailLabel": "メール",
+      "noteLabel": "メモ（任意）",
+      "add": "メールを追加",
+      "listHeading": "許可されたメール",
+      "empty": "まだメールがありません。ゲートを有効にするときに追加してください。",
+      "remove": "削除",
+      "errors": {
+        "invalidEmail": "有効なメールアドレスを入力してください。",
+        "duplicate": "このメールはすでにリストにあります。"
       }
     },
     "adminContent": {
@@ -815,6 +844,11 @@
       "notIncluded": "未ライセンス",
       "payPoc": "{amount} KRW で決済（PoC）",
       "download": "ダウンロード",
+      "readOnline": "オンラインで読む",
+      "readerMetaTitle": "{title}",
+      "readerEmpty": "このタイトルのアプリ内コンテンツはまだありません。問題と思われる場合はサポートへお問い合わせください。",
+      "readerBackToLibrary": "ライブラリに戻る",
+      "readerUsageNotice": "このワークスペース内での利用を目的としています。Web 専用タイトルはファイルダウンロードを提供せず、通常のウェブページと同様にブラウザからのコピーやキャプチャは可能な場合があります。",
       "productKind": {
         "ebook": "電子書籍",
         "guide": "ガイド",

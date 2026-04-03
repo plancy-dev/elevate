@@ -77,6 +77,12 @@ export function BillingTossWidget({
       if (code === PaymentIntentErrorCode.intentCreateFailed) {
         return t("errors.intentCreateFailed");
       }
+      if (code === PaymentIntentErrorCode.checkoutAllowlistDenied) {
+        return t("errors.checkoutAllowlistDenied");
+      }
+      if (code === PaymentIntentErrorCode.checkoutAllowlistNoEmail) {
+        return t("errors.checkoutAllowlistNoEmail");
+      }
     }
     return t("errors.generic");
   }

@@ -9,7 +9,7 @@ import {
   Shield,
   Workflow,
 } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { Link, getPathname } from "@/i18n/navigation";
 import {
   MarketingTrackedLocaleLink,
   MarketingTrackedNextLink,
@@ -18,6 +18,8 @@ import { MarketingCtaId } from "@/lib/analytics/posthog-events";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { buildPathAlternatesLanguages } from "@/lib/seo/locale-alternates";
+import { getSiteUrl } from "@/lib/seo/site-url";
 import { KPIDashboardPreview } from "@/components/marketing/kpi-dashboard-preview";
 import { PretextHeroStatement } from "@/components/marketing/pretext-hero-statement";
 import { WaitlistForm } from "@/components/marketing/waitlist-form";
@@ -26,12 +28,19 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  const pathname = getPathname({ locale, href: "/" as never });
+  const canonicalUrl = `${getSiteUrl()}${pathname}`;
   return {
     title: t("homeTitle"),
     description: t("homeDescription"),
+    alternates: {
+      canonical: canonicalUrl,
+      languages: buildPathAlternatesLanguages("/"),
+    },
     openGraph: {
       title: t("homeTitle"),
       description: t("homeDescription"),
+      url: canonicalUrl,
       locale: locale.replace("-", "_"),
     },
   };

@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { Link, getPathname } from "@/i18n/navigation";
 import { MarketingSection } from "@/components/marketing/marketing-section";
 import { getAllPostMetaForLocale } from "@/lib/blog/posts";
+import { buildPathAlternatesLanguages } from "@/lib/seo/locale-alternates";
 import { getSiteUrl } from "@/lib/seo/site-url";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -16,7 +17,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t("metaTitle"),
     description: t("description"),
-    alternates: { canonical: canonicalUrl },
+    alternates: {
+      canonical: canonicalUrl,
+      languages: buildPathAlternatesLanguages("/blog"),
+    },
     openGraph: {
       title: t("title"),
       description: t("description"),

@@ -10,6 +10,7 @@ import {
   FileText,
   HelpCircle,
   LayoutDashboard,
+  ListChecks,
   Settings,
   Shield,
   Users,
@@ -29,6 +30,7 @@ export function AdminSidebar({ user }: { user: SidebarUser }) {
   const primaryNavItems = [
     { label: t("navOverview"), href: "/admin", icon: LayoutDashboard },
     { label: t("navContent"), href: "/admin/content", icon: BookOpen },
+    { label: t("navPurchaseAllowlist"), href: "/admin/purchase-allowlist", icon: ListChecks },
     { label: t("navAudit"), href: "/admin/audit", icon: FileText },
   ];
 

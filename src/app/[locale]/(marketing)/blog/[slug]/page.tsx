@@ -7,7 +7,13 @@ import { Link, getPathname } from "@/i18n/navigation";
 import { blogMdxComponents } from "@/components/blog/mdx-components";
 import { getAllPostMetaForLocale, getPostBySlug } from "@/lib/blog/posts";
 import { routing } from "@/i18n/routing";
+import { buildBlogPostAlternatesLanguages } from "@/lib/seo/locale-alternates";
+import {
+  organizationJsonLdId,
+  websiteJsonLdId,
+} from "@/lib/seo/site-jsonld";
 import { getSiteUrl } from "@/lib/seo/site-url";
+import { BlogShareLinkButton } from "@/components/blog/blog-share-link-button";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -33,11 +39,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     href: `/blog/${slug}` as never,
   });
   const canonicalUrl = `${getSiteUrl()}${pathname}`;
+  const languageAlternates = buildBlogPostAlternatesLanguages(slug);
   const published = `${post.meta.date}T12:00:00.000Z`;
   return {
     title: post.meta.title,
     description: post.meta.description || undefined,
-    alternates: { canonical: canonicalUrl },
+    alternates: {
+      canonical: canonicalUrl,
+      ...(languageAlternates ? { languages: languageAlternates } : {}),
+    },
     openGraph: {
       title: post.meta.title,
       description: post.meta.description || undefined,
@@ -63,22 +73,26 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   const t = await getTranslations("Blog");
+  const base = getSiteUrl();
   const pathname = getPathname({
     locale,
     href: `/blog/${slug}` as never,
   });
-  const canonicalUrl = `${getSiteUrl()}${pathname}`;
+  const canonicalUrl = `${base}${pathname}`;
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.meta.title,
+    inLanguage: locale === "zh-CN" ? "zh-CN" : locale === "zh-TW" ? "zh-TW" : locale,
     datePublished: `${post.meta.date}T12:00:00.000Z`,
     dateModified: `${post.meta.date}T12:00:00.000Z`,
     mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+    isPartOf: { "@id": websiteJsonLdId(base), "@type": "WebSite" },
     publisher: {
       "@type": "Organization",
+      "@id": organizationJsonLdId(base),
       name: "Elevate",
-      url: getSiteUrl(),
+      url: base,
     },
   };
   if (post.meta.description) {
@@ -105,6 +119,8 @@ export default async function BlogPostPage({ params }: Props) {
             {post.meta.description}
           </p>
         ) : null}
+
+        <BlogShareLinkButton url={canonicalUrl} slug={slug} locale={locale} />
 
         <div className="mt-10 prose-blog">
           <MDXRemote source={post.body} components={blogMdxComponents} />

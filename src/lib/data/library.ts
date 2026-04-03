@@ -5,6 +5,9 @@ import type { OrgPlan } from "@/lib/organizations/plan";
 /** Aligns with `content_products.product_kind` (migration 010). */
 export type ContentProductKind = "ebook" | "guide" | "template" | "bundle";
 
+/** Aligns with `content_products.delivery_mode` (migration 013). */
+export type EbookDeliveryMode = "pdf" | "web_only";
+
 export type LibraryProductRow = {
   id: string;
   slug: string;
@@ -13,6 +16,7 @@ export type LibraryProductRow = {
   price_cents: number;
   currency: string;
   product_kind: ContentProductKind;
+  delivery_mode: EbookDeliveryMode;
   storage_object_path: string | null;
 };
 
@@ -27,7 +31,7 @@ export async function getLibraryPageData(
   const { data: products, error: pErr } = await supabase
     .from("content_products")
     .select(
-      "id, slug, title, description, price_cents, currency, product_kind, storage_object_path",
+      "id, slug, title, description, price_cents, currency, product_kind, delivery_mode, storage_object_path",
     )
     .eq("is_active", true)
     .order("created_at", { ascending: false });
@@ -67,6 +71,7 @@ export async function getLibraryPageData(
     products: rows.map((p) => ({
       ...p,
       product_kind: (p.product_kind ?? "ebook") as ContentProductKind,
+      delivery_mode: (p.delivery_mode ?? "pdf") as EbookDeliveryMode,
       storage_object_path: p.storage_object_path ?? null,
     })),
     entitledIds,

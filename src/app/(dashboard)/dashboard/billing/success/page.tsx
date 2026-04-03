@@ -45,7 +45,9 @@ export default async function BillingPaymentSuccessPage({
             {t("failConfirmTitle")}
           </h1>
           <p className="text-sm text-text-secondary mt-2 max-w-md">
-            {result.error}
+            {"errorKey" in result && result.errorKey
+              ? t(`confirmErrors.${result.errorKey}`)
+              : result.error}
           </p>
         </>
       )}

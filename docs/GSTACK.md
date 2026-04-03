@@ -23,7 +23,7 @@ cd .agents/skills/gstack
 | 방향·압축 | `/office-hours`, `/plan-ceo-review` | `memory-bank/creative-elevate-ai-pivot.md`, `tasks.md` |
 | 설계·구멍 | `/plan-eng-review` | ADR, `creative-architecture.md` |
 | 구현 | — | Cursor INIT→BUILD, `pnpm verify` |
-| 출하 전 | `/review`, `/qa` | 커밋 훅 통과 (스킵 금지) |
+| 출하 전 | `/review`, `/qa` | 커밋 훅 통과 (스킵 금지); 콘텐츠·권한 서사는 [`docs/CONTENT_FUNNEL.md`](./CONTENT_FUNNEL.md)와 구현이 맞는지 대조 |
 
 ## 충돌 방지
 

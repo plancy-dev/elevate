@@ -4,9 +4,11 @@ import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import type { ContentProductKind } from "@/lib/data/library";
 import { getLibraryPageData } from "@/lib/data/library";
+import { canReadCatalogProduct } from "@/lib/content/ebook-access";
 import { hasPaidServiceSubscription } from "@/lib/organizations/plan";
 import { FunnelCaptureOnce } from "@/components/analytics/funnel-capture";
 import { LibraryDownloadButton } from "@/components/dashboard/library-download-button";
+import { LibraryReadOnlineButton } from "@/components/dashboard/library-read-online-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PostHogEvent } from "@/lib/analytics/posthog-events";
@@ -86,7 +88,11 @@ export default async function LibraryPage() {
       ) : (
         <ul className="space-y-4">
           {products.map((p) => {
-            const ok = entitledIds.has(p.id);
+            const canRead = canReadCatalogProduct({
+              organizationPlan,
+              entitledProductIds: entitledIds,
+              productId: p.id,
+            });
             const kindLabel = t(productKindMessageKey(p.product_kind));
             return (
               <li key={p.id}>
@@ -98,8 +104,8 @@ export default async function LibraryPage() {
                         <h2 className="text-base font-semibold text-text-primary">
                           {p.title}
                         </h2>
-                        <Badge variant={ok ? "green" : "warm-gray"}>
-                          {ok ? t("included") : t("notIncluded")}
+                        <Badge variant={canRead ? "green" : "warm-gray"}>
+                          {canRead ? t("included") : t("notIncluded")}
                         </Badge>
                       </div>
                       {p.description ? (
@@ -115,7 +121,7 @@ export default async function LibraryPage() {
                       <span className="text-sm font-medium text-text-primary whitespace-nowrap">
                         {formatCurrencyMinor(p.price_cents, p.currency)}
                       </span>
-                      {!ok ? (
+                      {!canRead ? (
                         <Link
                           href={`/dashboard/billing?product=${encodeURIComponent(p.slug)}`}
                           className="text-sm font-medium text-primary hover:underline"
@@ -123,10 +129,20 @@ export default async function LibraryPage() {
                           {t("payPoc", { amount: TOSS_POC_AMOUNT_KRW })}
                         </Link>
                       ) : null}
-                      {ok && p.storage_object_path ? (
+                      {canRead &&
+                      p.delivery_mode === "pdf" &&
+                      p.storage_object_path ? (
                         <LibraryDownloadButton productId={p.id}>
                           {t("download")}
                         </LibraryDownloadButton>
+                      ) : null}
+                      {canRead && p.delivery_mode === "web_only" ? (
+                        <LibraryReadOnlineButton
+                          productId={p.id}
+                          slug={p.slug}
+                        >
+                          {t("readOnline")}
+                        </LibraryReadOnlineButton>
                       ) : null}
                     </div>
                   </CardContent>

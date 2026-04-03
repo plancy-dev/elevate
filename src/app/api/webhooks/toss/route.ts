@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import { logAudit } from "@/lib/audit/log";
+import { isCatalogCheckoutAllowlistRequired } from "@/lib/env/catalog-checkout";
+import { assertCatalogCheckoutAllowlistForUserIdAdminOnly } from "@/lib/payments/assert-catalog-checkout-allowlist";
 import { grantOrganizationContentEntitlement } from "@/lib/payments/content-entitlement";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Json } from "@/types/database.types";
@@ -34,6 +36,28 @@ export async function POST(req: Request) {
         .maybeSingle();
 
       if (intent?.status === "pending") {
+        if (isCatalogCheckoutAllowlistRequired()) {
+          const allowed = await assertCatalogCheckoutAllowlistForUserIdAdminOnly(
+            admin,
+            intent.created_by,
+          );
+          if (!allowed) {
+            await logAudit({
+              organizationId: intent.organization_id,
+              actorId: intent.created_by,
+              action: AuditAction.PAYMENT_WEBHOOK,
+              entityType: AuditEntityType.PAYMENT,
+              entityId: intent.id,
+              metadata: {
+                order_id: orderId,
+                skipped: "checkout_allowlist",
+                source: "webhook",
+              },
+            });
+            return NextResponse.json({ received: true });
+          }
+        }
+
         const now = new Date().toISOString();
         const { error } = await admin
           .from("toss_payment_intents")
