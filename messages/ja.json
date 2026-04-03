@@ -206,7 +206,7 @@
   "Blog": {
     "metaTitle": "ブログ",
     "title": "ブログ",
-    "description": "製品アップデートと業界メモ。記事はリポジトリの content/blog の MDX で管理します。",
+    "description": "プロンプト改善とイベント・現場コミュニケーションに役立つヒント、そして Elevate チームからの製品ニュースをお届けします。",
     "empty": "まだ記事がありません。",
     "published": "公開日 {date}",
     "readMore": "記事を読む",

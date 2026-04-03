@@ -20,31 +20,12 @@ export async function Footer() {
             href: "/product/ebooks-and-guides",
             label: nav("productEbooksAndGuides"),
           },
-          { href: "/product/org-workspace", label: nav("productOrgWorkspace") },
-          { href: "/product/security", label: nav("productSecurity") },
-        ],
-      },
-      {
-        title: t("solutions"),
-        links: [
-          { href: "/solutions/conferences", label: nav("solConferences") },
-          { href: "/solutions/exhibitions", label: nav("solExhibitions") },
-          {
-            href: "/solutions/incentive-travel",
-            label: nav("solIncentiveTravel"),
-          },
-          {
-            href: "/solutions/corporate-meetings",
-            label: nav("solCorporateMeetings"),
-          },
         ],
       },
       {
         title: t("company"),
         links: [
           { href: "/#waitlist", label: t("newsletter") },
-          { href: "/about", label: t("about") },
-          { href: "/careers", label: t("careers") },
           { href: "/blog", label: t("blog") },
           { href: "/contact", label: nav("contactSales") },
         ],
@@ -54,8 +35,6 @@ export async function Footer() {
         links: [
           { href: "/terms", label: t("termsOfService") },
           { href: "/privacy", label: t("privacyPolicy") },
-          { href: "/security", label: t("security") },
-          { href: "/compliance", label: t("compliance") },
         ],
       },
     ];
@@ -63,7 +42,7 @@ export async function Footer() {
   return (
     <footer className="border-t border-border-subtle bg-surface">
       <div className="mx-auto max-w-[1584px] px-4 py-10 lg:px-8">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div className="col-span-2 md:col-span-1">
             <ElevateLogo size="sm" />
             <p className="mt-4 text-xs text-text-tertiary leading-relaxed max-w-[220px]">

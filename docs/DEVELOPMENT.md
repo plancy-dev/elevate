@@ -17,6 +17,26 @@ Apply SQL migrations in order from `supabase/README.md` (Supabase SQL Editor or 
 
 **Database types:** After changing the remote schema, run **`pnpm db:types`** so `src/types/database.types.ts` matches Supabase (requires access token / project ref — see `scripts/gen-db-types.mjs`).
 
+## Supabase Site URL (auth & redirects)
+
+Production hostname (e.g. **`https://elevate.ai.kr`**) must be consistent across the app and Supabase, or OAuth/email magic links and server-side redirects break.
+
+| Check | Action |
+|-------|--------|
+| **App origin** | Set **`NEXT_PUBLIC_APP_URL`** to the public URL **without** a trailing slash (same value in Vercel / hosting env). Used by `getSiteUrl()`, invite links, and auth helpers. |
+| **Supabase → Authentication → URL configuration** | **Site URL** = that same origin (e.g. `https://elevate.ai.kr`). |
+| **Redirect URLs** | Include at least: `https://elevate.ai.kr/**`, `https://elevate.ai.kr/auth/callback`, and local dev (`http://localhost:3000/**`, `http://localhost:3000/auth/callback`) if you test auth locally. Add preview deployment URLs if you use Supabase auth on Vercel previews. |
+| **Recovery / email templates** | If Supabase emails link to the Site URL root, ensure PKCE/code handling matches `src/proxy.ts` → `/auth/callback` flow (see `supabase/README.md`). |
+| **Payments (Toss)** | Success/fail URLs registered in the Toss dashboard must use the **same host** as `NEXT_PUBLIC_APP_URL`. See [`PHASE2_ENV.md`](./PHASE2_ENV.md). |
+
+After changing Site URL or redirects, smoke-test: sign-in, sign-up, password recovery, and (if enabled) checkout return URLs.
+
+## Waitlist `source` field
+
+`waitlist_signups.source` stores where the signup came from (default `home`). Allowed values are defined in **`src/lib/waitlist/sources.ts`** (`WAITLIST_SOURCE_VALUES`). The POST **`/api/waitlist`** body may include `source`; unknown values fall back to `home`.
+
+To add a new surface (e.g. blog CTA), add the string to `WAITLIST_SOURCE_VALUES`, use it as `<WaitlistForm source="…" />`, and deploy—no schema change required (`source` is `text`).
+
 ## Scripts
 
 | Command | Purpose |

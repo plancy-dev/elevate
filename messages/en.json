@@ -214,7 +214,7 @@
   "Blog": {
     "metaTitle": "Blog",
     "title": "Blog",
-    "description": "Product updates and industry notes. Posts live in the repo as MDX under content/blog.",
+    "description": "Practical ideas on prompt improvement and event communications—plus product news from the Elevate team.",
     "empty": "No posts yet.",
     "published": "Published {date}",
     "readMore": "Read article",

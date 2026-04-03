@@ -6,9 +6,10 @@ import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { PostHogEvent } from "@/lib/analytics/posthog-events";
 import { cn } from "@/lib/utils";
+import type { WaitlistSource } from "@/lib/waitlist/sources";
 
 type WaitlistFormProps = {
-  source: "home" | "footer" | "band";
+  source: WaitlistSource;
   className?: string;
   /** Larger padding on band/footer variants */
   variant?: "inline" | "panel";

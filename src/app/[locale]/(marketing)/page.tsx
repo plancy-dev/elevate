@@ -274,31 +274,6 @@ export default async function Home({ params }: Props) {
 
           <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-3">
             <MarketingTrackedLocaleLink
-              href="/product/ebooks-and-guides"
-              ctaId={MarketingCtaId.BAND_EBOOKS}
-            >
-              <Button
-                variant="ghost"
-                size="lg"
-                className="text-white/90 hover:text-white hover:bg-white/10 border border-white/30"
-              >
-                {t("ctaBandEbooks")}
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </MarketingTrackedLocaleLink>
-            <MarketingTrackedNextLink
-              href="/signup"
-              ctaId={MarketingCtaId.BAND_SIGNUP}
-            >
-              <Button
-                variant="ghost"
-                size="lg"
-                className="text-white/80 hover:text-white hover:bg-white/10"
-              >
-                {t("ctaBandSignUp")}
-              </Button>
-            </MarketingTrackedNextLink>
-            <MarketingTrackedLocaleLink
               href="/contact"
               ctaId={MarketingCtaId.BAND_CONTACT}
             >

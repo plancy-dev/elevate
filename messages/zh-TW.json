@@ -206,7 +206,7 @@
   "Blog": {
     "metaTitle": "部落格",
     "title": "部落格",
-    "description": "產品更新與產業筆記。文章以儲存庫中的 content/blog MDX 管理。",
+    "description": "分享提示詞改進與活動／現場溝通的實用觀點，以及 Elevate 團隊的產品消息。",
     "empty": "尚無文章。",
     "published": "發布 {date}",
     "readMore": "閱讀全文",

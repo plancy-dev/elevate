@@ -40,21 +40,8 @@ export function Header() {
       items: [
         { href: "/product/prompt-studio", label: t("productPromptStudio") },
         { href: "/product/ebooks-and-guides", label: t("productEbooksAndGuides") },
-        { href: "/product/org-workspace", label: t("productOrgWorkspace") },
-        { href: "/product/security", label: t("productSecurity") },
       ],
     },
-    {
-      type: "dropdown",
-      label: t("solutions"),
-      items: [
-        { href: "/solutions/conferences", label: t("solConferences") },
-        { href: "/solutions/exhibitions", label: t("solExhibitions") },
-        { href: "/solutions/incentive-travel", label: t("solIncentiveTravel") },
-        { href: "/solutions/corporate-meetings", label: t("solCorporateMeetings") },
-      ],
-    },
-    { type: "link", label: t("pricing"), href: "/pricing" },
     { type: "link", label: t("blog"), href: "/blog" },
   ];
 
@@ -98,9 +85,6 @@ export function Header() {
               {t("joinWaitlist")}
             </IntlButtonLink>
           ) : null}
-          <IntlButtonLink href="/product/ebooks-and-guides" variant="ghost" size="sm">
-            {t("ebooks")}
-          </IntlButtonLink>
           <IntlButtonLink href="/contact" variant="ghost" size="sm">
             {t("contactSales")}
           </IntlButtonLink>
@@ -171,15 +155,6 @@ export function Header() {
                   {t("joinWaitlist")}
                 </IntlButtonLink>
               ) : null}
-              <IntlButtonLink
-                href="/product/ebooks-and-guides"
-                variant="ghost"
-                size="md"
-                className={cn("w-full")}
-                onClick={() => setMobileOpen(false)}
-              >
-                {t("ebooks")}
-              </IntlButtonLink>
               <IntlButtonLink
                 href="/contact"
                 variant="ghost"

@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { normalizeWaitlistSource } from "@/lib/waitlist/sources";
 
 const EMAIL_RE =
-  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-Z](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-
-const ALLOWED_SOURCES = new Set(["home", "footer", "band"]);
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
 function normalizeEmail(raw: string): string {
   return raw.trim().toLowerCase();
@@ -40,10 +39,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
 
-  let sourceVal = typeof source === "string" ? source : "home";
-  if (!ALLOWED_SOURCES.has(sourceVal)) {
-    sourceVal = "home";
-  }
+  const sourceVal = normalizeWaitlistSource(source);
 
   let localeVal: string | null = null;
   if (typeof locale === "string" && locale.length <= 12) {

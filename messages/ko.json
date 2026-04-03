@@ -214,7 +214,7 @@
   "Blog": {
     "metaTitle": "블로그",
     "title": "블로그",
-    "description": "제품 업데이트와 산업 메모. 글은 저장소의 content/blog MDX로 관리합니다.",
+    "description": "프롬프트 개선과 행사·현장 커뮤니케이션에 바로 쓸 만한 인사이트, 그리고 Elevate 팀의 제품 소식을 모았습니다.",
     "empty": "아직 게시물이 없습니다.",
     "published": "게시 {date}",
     "readMore": "글 읽기",

@@ -21,10 +21,6 @@ export const MarketingCtaId = {
   HERO_EBOOKS: "hero_ebooks",
   HERO_WAITLIST_ANCHOR: "hero_waitlist_anchor",
   HERO_PROMPT_STUDIO: "hero_prompt_studio",
-  HERO_EXPLORE_PLATFORM: "hero_explore_platform",
   HERO_SIGNUP: "hero_signup",
-  BAND_EBOOKS: "band_ebooks",
-  BAND_SIGNUP: "band_signup",
-  BAND_DEMO: "band_demo",
   BAND_CONTACT: "band_contact",
 } as const;
