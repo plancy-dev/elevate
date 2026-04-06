@@ -45,12 +45,33 @@ Save until all validation errors are gone.
 
 ### If Supabase returns `Error getting user email from external provider`
 
-GoTrue needs a usable **email** from Microsoft. In **Entra ID → App registration**:
+GoTrue needs a usable **email** from Microsoft. Fix **both** the Azure app and (usually) optional claims.
 
-1. **Token configuration** → **Add optional claim** → ID token → include **email** (and/or **upn** if your tenant uses it).
-2. **API permissions**: **Microsoft Graph** — `openid`, `profile`, `email`, `User.Read` (grant admin consent for the tenant if prompted).
+#### A. Azure Portal — API permissions
 
-Without this, OAuth can “succeed” at Microsoft while Supabase aborts the link/sign-in and redirects to `/auth/callback?error=...`.
+1. **App registration** → **API permissions** → **Add a permission** → **Microsoft Graph** → **Delegated**.
+2. Ensure these are present: **`openid`**, **`profile`**, **`email`**, **`User.Read`**.
+3. Click **Grant admin consent for your tenant** if the table shows “Not granted”.
+
+#### B. Azure Portal — ID token optional claims (often required)
+
+Many Entra tenants do **not** put `email` in the ID token until you add an optional claim:
+
+1. **Token configuration** → **Add optional claim**.
+2. Choose **ID** token (not Access).
+3. Check **email** (and optionally **upn** / **preferred_username** if your org relies on UPN instead of mail).
+4. Save. Sign out of any test Microsoft session and try again (or use a private window).
+
+#### C. This repo’s app code
+
+Login, signup, and **Link Microsoft** request OAuth scopes including `email` and Graph `User.Read` (`MICROSOFT_ENTRA_OAUTH_SCOPES` in `src/lib/auth/oauth-sign-in.ts`). If Azure still does not emit an email claim, **B** above is the fix; scopes alone cannot invent a missing directory email.
+
+#### D. Edge cases
+
+- **Guests / B2B** users may not have `email` populated like members — use accounts with a primary SMTP address in the tenant for testing.
+- **Single- vs multi-tenant** app: the **Azure Tenant URL** in Supabase must match how the app is registered.
+
+Without **A** + **B**, OAuth can “succeed” at Microsoft while Supabase aborts and redirects to `/auth/callback?error=server_error&error_description=...email...`.
 
 ---
 

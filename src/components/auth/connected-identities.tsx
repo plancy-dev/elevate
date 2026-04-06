@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { getAuthCallbackUrl } from "@/lib/auth-redirect-urls";
+import { MICROSOFT_ENTRA_OAUTH_SCOPES } from "@/lib/auth/oauth-sign-in";
 
 type Identity = { provider: string; id?: string };
 
@@ -52,6 +53,9 @@ export function ConnectedIdentities() {
       provider,
       options: {
         redirectTo: getAuthCallbackUrl("/dashboard/settings"),
+        ...(provider === "azure"
+          ? { scopes: MICROSOFT_ENTRA_OAUTH_SCOPES }
+          : {}),
       },
     });
     setBusy(null);
