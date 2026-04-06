@@ -654,13 +654,17 @@
       "overview": "Overview",
       "promptStudio": "Prompt Studio",
       "library": "Library",
-      "adminService": "Admin service",
       "workspace": "Workspace",
       "team": "Team",
       "billing": "Billing",
       "settings": "Settings",
       "helpSupport": "Help & Support",
-      "adminServiceTitle": "Organization administration — audit, billing, settings"
+      "organizationSection": "Organization",
+      "orgAudit": "Audit log",
+      "orgTeam": "Team",
+      "orgBilling": "Billing",
+      "orgSettings": "Settings",
+      "orgNavComingSoon": "Coming soon"
     },
     "overview": {
       "title": "Overview",
@@ -686,8 +690,8 @@
       "gettingStarted": "Getting started",
       "gettingStartedSub": "Use Prompt Studio and Library as your primary workspace.",
       "openStudio": "Open Studio",
-      "bodyAdmin": "Your overview highlights Prompt Studio, Library entitlements, and team size. Open <link>Admin service</link> for audit logs, billing, and organization settings.",
-      "bodyNonAdmin": "Your overview highlights Prompt Studio, Library entitlements, and team size. For billing, audit access, and org-wide settings, ask your organization administrator.",
+      "bodyAdmin": "Your overview highlights Prompt Studio, Library entitlements, and team size. Use the Organization section in the sidebar, or open <link>Team</link> to start.",
+      "bodyNonAdmin": "Use this overview to see Prompt Studio, Library entitlements, and team size at a glance.",
       "recentActivity": "Recent Activity",
       "recentActivityEmpty": "Activity will appear here as your team uses Prompt Studio and Library."
     },
@@ -702,7 +706,7 @@
       "language": {
         "section": "Language",
         "label": "Display language",
-        "hint": "Applies to the signed-in dashboard, admin area, and in-app chrome. Marketing pages use the site header language switcher.",
+        "hint": "Applies to the signed-in dashboard and in-app chrome. Marketing pages use the site header language switcher.",
         "saving": "Saving…",
         "error": "Could not save language. Try again.",
         "errors": {
@@ -712,14 +716,13 @@
       }
     },
     "adminShell": {
-      "logoAria": "Admin home",
-      "administrator": "Administrator",
-      "description": "Organization operations and compliance. Product work stays in the product dashboard.",
-      "backToProduct": "Back to product dashboard",
+      "logoAria": "Elevate admin home",
+      "navAriaLabel": "Elevate admin navigation",
       "sectionOrg": "Organization",
       "navOverview": "Overview",
       "navAudit": "Audit log",
       "navContent": "Library catalog",
+      "navWaitlist": "Waitlist",
       "navPurchaseAllowlist": "Checkout allowlist",
       "navTeam": "Team",
       "navBilling": "Billing",
@@ -755,7 +758,77 @@
         "purchaseAllowlist": {
           "title": "Checkout allowlist",
           "desc": "Emails allowed to start catalog checkout when the server requires it."
+        },
+        "waitlist": {
+          "title": "Marketing waitlist",
+          "desc": "Signups, confirmation email BCC, and Resend-powered notices."
         }
+      }
+    },
+    "organization": {
+      "title": "Organization",
+      "metaTitle": "Organization",
+      "intro": "Audit, billing, team, and settings for your organization. Elevate platform tools (catalog, waitlist) stay in Elevate admin.",
+      "backToOverview": "Back to overview",
+      "backFromAudit": "Back to team",
+      "cards": {
+        "audit": {
+          "title": "Audit log",
+          "desc": "Security and compliance trail (service role writes)."
+        },
+        "team": {
+          "title": "Team & invitations",
+          "desc": "Members, roles, and pending invites."
+        },
+        "billing": {
+          "title": "Billing & payments",
+          "desc": "Toss checkout and catalog entitlements."
+        },
+        "settings": {
+          "title": "Organization settings",
+          "desc": "Org profile and notification preferences."
+        }
+      }
+    },
+    "adminElevate": {
+      "title": "Elevate admin",
+      "metaTitle": "Elevate admin",
+      "intro": "Internal tools for the Elevate product: library catalog, marketing waitlist, and checkout allowlist. Organization administrators use Organization in the product dashboard.",
+      "cards": {
+        "catalog": {
+          "title": "Digital products & e-books",
+          "desc": "Upload files and manage catalog rows for Library and marketing pages."
+        },
+        "purchaseAllowlist": {
+          "title": "Checkout allowlist",
+          "desc": "Emails allowed to start catalog checkout when the server requires it."
+        },
+        "waitlist": {
+          "title": "Marketing waitlist",
+          "desc": "Signups, confirmation email BCC, and Resend-powered notices."
+        }
+      }
+    },
+    "adminWaitlist": {
+      "metaTitle": "Waitlist",
+      "title": "Marketing waitlist",
+      "intro": "People who joined the Prompt Studio beta waitlist from the marketing site. New signups trigger a localized confirmation email via Resend; set BCC below.",
+      "bccHeading": "BCC on confirmation emails",
+      "bccIntro": "When someone new joins the waitlist, they receive a confirmation in their selected language. This address gets a blind copy (leave empty to disable BCC).",
+      "bccLabel": "BCC email",
+      "bccPlaceholder": "ops@company.com",
+      "bccSave": "Save",
+      "saving": "Saving…",
+      "bccSaved": "Saved.",
+      "listHeading": "Signups",
+      "refresh": "Refresh",
+      "empty": "No signups yet.",
+      "colEmail": "Email",
+      "colLocale": "Locale",
+      "colSource": "Source",
+      "colTime": "Signed up (UTC)",
+      "errors": {
+        "invalidEmail": "Enter a valid email address."
       }
     },
     "adminPurchaseAllowlist": {

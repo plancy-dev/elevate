@@ -1,5 +1,6 @@
 "use client";
 
+import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -7,11 +8,11 @@ import {
   LayoutDashboard,
   BookOpen,
   Sparkles,
-  Building2,
   CreditCard,
   Settings,
   HelpCircle,
-  Shield,
+  FileText,
+  Users,
 } from "lucide-react";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
@@ -28,18 +29,58 @@ export type SidebarUser = {
   initials: string;
 };
 
+type BottomNavItem = {
+  href: string;
+  label: string;
+  icon: typeof CreditCard;
+};
+
+function isBottomNavActive(pathname: string, href: string): boolean {
+  if (pathname === href) return true;
+  return pathname.startsWith(`${href}/`);
+}
+
+function isOrgNavItemActive(pathname: string, href: string): boolean {
+  if (href === "/dashboard/organization/audit") {
+    return (
+      pathname === href || pathname.startsWith("/dashboard/organization/audit/")
+    );
+  }
+  if (href === "/dashboard/team") {
+    return pathname === href || pathname.startsWith("/dashboard/team/");
+  }
+  if (href === "/dashboard/billing") {
+    return pathname === href || pathname.startsWith("/dashboard/billing/");
+  }
+  if (href === "/dashboard/settings") {
+    return pathname === href || pathname.startsWith("/dashboard/settings/");
+  }
+  return false;
+}
+
+type OrgNavItem = {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  /** Sidebar only — page remains reachable by URL */
+  disabled?: boolean;
+};
+
 export function Sidebar({
   user,
   showBilling = true,
-  showAdminHub = false,
+  showOrganizationHub = false,
 }: {
   user: SidebarUser;
   showBilling?: boolean;
-  showAdminHub?: boolean;
+  showOrganizationHub?: boolean;
 }) {
   const pathname = usePathname();
   const t = useTranslations("Dashboard.sidebar");
   const tRoles = useTranslations("Dashboard.roles");
+
+  /** Non–org-admins use bottom billing/settings; org admins use the Organization section only. */
+  const showBottomBillingSettings = showBilling && !showOrganizationHub;
 
   const primaryNavItems = [
     { label: t("overview"), href: "/dashboard", icon: LayoutDashboard },
@@ -47,15 +88,40 @@ export function Sidebar({
     { label: t("promptStudio"), href: "/dashboard/studio", icon: Sparkles },
   ];
 
-  const workspaceNavItems = [
-    { label: t("team"), href: "/dashboard/team", icon: Building2 },
-  ];
+  const organizationNavItems: OrgNavItem[] = showOrganizationHub
+    ? [
+        {
+          label: t("orgAudit"),
+          href: "/dashboard/organization/audit",
+          icon: FileText,
+        },
+        {
+          label: t("orgTeam"),
+          href: "/dashboard/team",
+          icon: Users,
+          disabled: true,
+        },
+        {
+          label: t("orgBilling"),
+          href: "/dashboard/billing",
+          icon: CreditCard,
+          disabled: true,
+        },
+        {
+          label: t("orgSettings"),
+          href: "/dashboard/settings",
+          icon: Settings,
+        },
+      ]
+    : [];
 
-  const bottomItems = [
-    ...(showBilling
+  const bottomItems: BottomNavItem[] = [
+    ...(showBottomBillingSettings
       ? [{ label: t("billing"), href: "/dashboard/billing", icon: CreditCard }]
       : []),
-    { label: t("settings"), href: "/dashboard/settings", icon: Settings },
+    ...(showBottomBillingSettings
+      ? [{ label: t("settings"), href: "/dashboard/settings", icon: Settings }]
+      : []),
     { label: t("helpSupport"), href: "/dashboard/help", icon: HelpCircle },
   ];
 
@@ -92,69 +158,79 @@ export function Sidebar({
           })}
         </div>
 
-        {showAdminHub ? (
-          <div className="mt-3 px-2">
-            <Link
-              href="/admin"
-              title={t("adminServiceTitle")}
-              aria-current={
-                pathname === "/admin" || pathname.startsWith("/admin/")
-                  ? "page"
-                  : undefined
-              }
-              className={cn(
-                "flex items-center gap-3 rounded-sm px-3 py-2 text-sm transition-colors",
-                pathname === "/admin" || pathname.startsWith("/admin/")
-                  ? "bg-highlight text-primary font-medium border-l-2 border-primary"
-                  : "text-text-secondary hover:text-text-primary hover:bg-layer-02 border-l-2 border-transparent",
-              )}
-            >
-              <Shield className="h-4 w-4 shrink-0" aria-hidden />
-              {t("adminService")}
-            </Link>
+        {organizationNavItems.length > 0 ? (
+          <div className="mt-3 border-t border-border-subtle pt-3">
+            <p className="px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
+              {t("organizationSection")}
+            </p>
+            <div className="space-y-0.5">
+              {organizationNavItems.map((item) => {
+                const isDisabled = Boolean(item.disabled);
+                const active =
+                  !isDisabled && isOrgNavItemActive(pathname, item.href);
+                const onDisabledRoute =
+                  isDisabled && isOrgNavItemActive(pathname, item.href);
+
+                if (isDisabled) {
+                  return (
+                    <span
+                      key={item.href}
+                      title={t("orgNavComingSoon")}
+                      aria-disabled="true"
+                      aria-current={onDisabledRoute ? "page" : undefined}
+                      className={cn(
+                        "flex items-center gap-3 px-3 py-2 text-sm select-none",
+                        "cursor-not-allowed text-text-tertiary opacity-55",
+                        onDisabledRoute && "opacity-70",
+                      )}
+                    >
+                      <item.icon className="h-4 w-4 shrink-0" aria-hidden />
+                      {item.label}
+                    </span>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2 text-sm transition-colors",
+                      active
+                        ? "bg-highlight text-primary font-medium border-l-2 border-primary"
+                        : "text-text-secondary hover:text-text-primary hover:bg-layer-02",
+                    )}
+                  >
+                    <item.icon className="h-4 w-4 shrink-0" aria-hidden />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         ) : null}
-
-        <div className="mt-4 px-3 pb-1 pt-2 border-t border-border-subtle">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-text-tertiary">
-            {t("workspace")}
-          </p>
-        </div>
-        <div className="space-y-0.5">
-          {workspaceNavItems.map((item) => {
-            const isActive =
-              pathname === item.href ||
-              (item.href !== "/dashboard" && pathname.startsWith(item.href));
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2 text-sm transition-colors",
-                  isActive
-                    ? "bg-highlight text-primary font-medium border-l-2 border-primary"
-                    : "text-text-secondary hover:text-text-primary hover:bg-layer-02",
-                )}
-              >
-                <item.icon className="h-4 w-4 shrink-0" aria-hidden />
-                {item.label}
-              </Link>
-            );
-          })}
-        </div>
       </nav>
 
       <div className="border-t border-border-subtle py-3 px-2 space-y-0.5">
-        {bottomItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="flex items-center gap-3 px-3 py-2 text-sm text-text-tertiary hover:text-text-primary hover:bg-layer-02 transition-colors"
-          >
-            <item.icon className="h-4 w-4 shrink-0" aria-hidden />
-            {item.label}
-          </Link>
-        ))}
+        {bottomItems.map((item) => {
+          const active = isBottomNavActive(pathname, item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={active ? "page" : undefined}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2 text-sm transition-colors",
+                active
+                  ? "text-text-secondary font-medium bg-layer-02"
+                  : "text-text-tertiary hover:text-text-primary hover:bg-layer-02",
+              )}
+            >
+              <item.icon className="h-4 w-4 shrink-0" aria-hidden />
+              {item.label}
+            </Link>
+          );
+        })}
       </div>
 
       <div className="border-t border-border-subtle p-3">

@@ -43,6 +43,15 @@ Include **`/auth/callback`** on each origin you use.
 
 Save until all validation errors are gone.
 
+### If Supabase returns `Error getting user email from external provider`
+
+GoTrue needs a usable **email** from Microsoft. In **Entra ID → App registration**:
+
+1. **Token configuration** → **Add optional claim** → ID token → include **email** (and/or **upn** if your tenant uses it).
+2. **API permissions**: **Microsoft Graph** — `openid`, `profile`, `email`, `User.Read` (grant admin consent for the tenant if prompted).
+
+Without this, OAuth can “succeed” at Microsoft while Supabase aborts the link/sign-in and redirects to `/auth/callback?error=...`.
+
 ---
 
 ## 4. Same email = one account (account linking)

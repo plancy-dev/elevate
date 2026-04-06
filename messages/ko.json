@@ -654,13 +654,17 @@
       "overview": "개요",
       "promptStudio": "프롬프트 스튜디오",
       "library": "라이브러리",
-      "adminService": "관리자 서비스",
       "workspace": "워크스페이스",
       "team": "팀",
       "billing": "결제",
       "settings": "설정",
       "helpSupport": "도움말 및 지원",
-      "adminServiceTitle": "조직 관리 — 감사, 결제, 설정"
+      "organizationSection": "조직",
+      "orgAudit": "감사 로그",
+      "orgTeam": "팀",
+      "orgBilling": "결제",
+      "orgSettings": "설정",
+      "orgNavComingSoon": "준비 중"
     },
     "overview": {
       "title": "개요",
@@ -686,8 +690,8 @@
       "gettingStarted": "시작하기",
       "gettingStartedSub": "주요 작업 공간으로 프롬프트 스튜디오와 라이브러리를 사용하세요.",
       "openStudio": "스튜디오 열기",
-      "bodyAdmin": "개요는 프롬프트 스튜디오, 라이브러리 권한, 팀 규모를 강조합니다. 감사 로그, 결제, 조직 설정은 <link>관리자 서비스</link>에서 열 수 있습니다.",
-      "bodyNonAdmin": "개요는 프롬프트 스튜디오, 라이브러리 권한, 팀 규모를 강조합니다. 결제, 감사 접근, 조직 전체 설정은 조직 관리자에게 문의하세요.",
+      "bodyAdmin": "개요는 프롬프트 스튜디오, 라이브러리 권한, 팀 규모를 강조합니다. 사이드바의 조직 섹션을 쓰거나 <link>팀</link>부터 열 수 있습니다.",
+      "bodyNonAdmin": "프롬프트 스튜디오, 라이브러리 권한, 팀 규모를 개요에서 한눈에 확인하세요.",
       "recentActivity": "최근 활동",
       "recentActivityEmpty": "팀이 프롬프트 스튜디오와 라이브러리를 사용하면 여기에 표시됩니다."
     },
@@ -702,7 +706,7 @@
       "language": {
         "section": "언어",
         "label": "표시 언어",
-        "hint": "로그인한 대시보드, 관리자 영역, 앱 크롬에 적용됩니다. 마케팅 페이지는 사이트 헤더의 언어 전환을 사용합니다.",
+        "hint": "로그인한 대시보드와 앱 크롬에 적용됩니다. 마케팅 페이지는 사이트 헤더의 언어 전환을 사용합니다.",
         "saving": "저장 중…",
         "error": "언어를 저장하지 못했습니다. 다시 시도해 주세요.",
         "errors": {
@@ -712,14 +716,13 @@
       }
     },
     "adminShell": {
-      "logoAria": "관리자 홈",
-      "administrator": "관리자",
-      "description": "조직 운영과 컴플라이언스입니다. 제품 작업은 제품 대시보드에서 진행합니다.",
-      "backToProduct": "제품 대시보드로 돌아가기",
+      "logoAria": "Elevate 관리 홈",
+      "navAriaLabel": "Elevate 관리 내비게이션",
       "sectionOrg": "조직",
       "navOverview": "개요",
       "navAudit": "감사 로그",
       "navContent": "라이브러리 카탈로그",
+      "navWaitlist": "대기명단",
       "navPurchaseAllowlist": "결제 허용 목록",
       "navTeam": "팀",
       "navBilling": "결제",
@@ -755,7 +758,77 @@
         "purchaseAllowlist": {
           "title": "결제 허용 목록",
           "desc": "서버에서 요구할 때 카탈로그 결제를 시작할 수 있는 이메일입니다."
+        },
+        "waitlist": {
+          "title": "마케팅 대기명단",
+          "desc": "가입자, 확인 메일 BCC, Resend 알림."
         }
+      }
+    },
+    "organization": {
+      "title": "조직 관리",
+      "metaTitle": "조직 관리",
+      "intro": "조직의 감사, 결제, 팀, 설정입니다. Elevate 플랫폼 도구(카탈로그, 대기명단)는 Elevate 관리에서 진행합니다.",
+      "backToOverview": "개요로 돌아가기",
+      "backFromAudit": "팀으로 돌아가기",
+      "cards": {
+        "audit": {
+          "title": "감사 로그",
+          "desc": "보안·컴플라이언스 기록(서비스 역할 기록)."
+        },
+        "team": {
+          "title": "팀 및 초대",
+          "desc": "멤버, 역할, 대기 중인 초대."
+        },
+        "billing": {
+          "title": "결제 및 결제 수단",
+          "desc": "토스 결제 및 카탈로그 권한."
+        },
+        "settings": {
+          "title": "조직 설정",
+          "desc": "조직 프로필 및 알림 환경설정."
+        }
+      }
+    },
+    "adminElevate": {
+      "title": "Elevate 관리",
+      "metaTitle": "Elevate 관리",
+      "intro": "Elevate 제품 내부 도구: 라이브러리 카탈로그, 마케팅 대기명단, 결제 허용 목록. 조직 관리자는 제품 대시보드의 조직 관리를 사용합니다.",
+      "cards": {
+        "catalog": {
+          "title": "디지털 상품 및 전자책",
+          "desc": "파일을 업로드하고 라이브러리·마케팅 페이지용 카탈로그 행을 관리합니다."
+        },
+        "purchaseAllowlist": {
+          "title": "결제 허용 목록",
+          "desc": "서버에서 요구할 때 카탈로그 결제를 시작할 수 있는 이메일입니다."
+        },
+        "waitlist": {
+          "title": "마케팅 대기명단",
+          "desc": "가입자, 확인 메일 BCC, Resend 알림."
+        }
+      }
+    },
+    "adminWaitlist": {
+      "metaTitle": "대기명단",
+      "title": "마케팅 대기명단",
+      "intro": "마케팅 사이트에서 Prompt Studio 베타 대기명단에 등록한 사람입니다. 신규 가입 시 선택한 언어로 확인 메일이 Resend로 발송되며, 아래에서 BCC를 설정합니다.",
+      "bccHeading": "확인 메일 BCC",
+      "bccIntro": "대기명단에 새로 가입하면 선택한 언어로 확인 메일이 갑니다. 이 주소로 숨은 참조가 전송됩니다(BCC를 끄려면 비워 두세요).",
+      "bccLabel": "BCC 이메일",
+      "bccPlaceholder": "ops@company.com",
+      "bccSave": "저장",
+      "saving": "저장 중…",
+      "bccSaved": "저장되었습니다.",
+      "listHeading": "가입 목록",
+      "refresh": "새로고침",
+      "empty": "아직 가입이 없습니다.",
+      "colEmail": "이메일",
+      "colLocale": "로케일",
+      "colSource": "출처",
+      "colTime": "가입 시각(UTC)",
+      "errors": {
+        "invalidEmail": "유효한 이메일을 입력하세요."
       }
     },
     "adminPurchaseAllowlist": {

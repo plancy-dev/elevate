@@ -1,23 +1,15 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import {
-  BookOpen,
-  CreditCard,
-  FileText,
-  ListChecks,
-  Settings,
-  Shield,
-  Users,
-} from "lucide-react";
+import { BookOpen, ListChecks, Mail, Shield } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("Dashboard.admin");
+  const t = await getTranslations("Dashboard.adminElevate");
   return { title: t("metaTitle") };
 }
 
-export default async function AdminHomePage() {
-  const t = await getTranslations("Dashboard.admin");
+export default async function ElevateServiceAdminHomePage() {
+  const t = await getTranslations("Dashboard.adminElevate");
 
   const links = [
     {
@@ -27,73 +19,30 @@ export default async function AdminHomePage() {
       icon: BookOpen,
     },
     {
+      href: "/admin/waitlist",
+      title: t("cards.waitlist.title"),
+      desc: t("cards.waitlist.desc"),
+      icon: Mail,
+    },
+    {
       href: "/admin/purchase-allowlist",
       title: t("cards.purchaseAllowlist.title"),
       desc: t("cards.purchaseAllowlist.desc"),
       icon: ListChecks,
     },
-    {
-      href: "/admin/audit",
-      title: t("cards.audit.title"),
-      desc: t("cards.audit.desc"),
-      icon: FileText,
-    },
-    {
-      href: "/dashboard/team",
-      title: t("cards.team.title"),
-      desc: t("cards.team.desc"),
-      icon: Users,
-    },
-    {
-      href: "/dashboard/billing",
-      title: t("cards.billing.title"),
-      desc: t("cards.billing.desc"),
-      icon: CreditCard,
-    },
-    {
-      href: "/dashboard/settings",
-      title: t("cards.settings.title"),
-      desc: t("cards.settings.desc"),
-      icon: Settings,
-    },
   ];
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border-subtle bg-background px-6 h-12">
+      <div className="sticky top-0 z-30 flex h-12 items-center border-b border-border-subtle bg-background px-6">
         <div className="flex items-center gap-2">
           <Shield className="h-4 w-4 text-primary" aria-hidden />
           <h1 className="text-sm font-medium text-text-primary">{t("title")}</h1>
         </div>
-        <Link
-          href="/dashboard"
-          className="text-xs text-interactive hover:text-primary transition-colors"
-        >
-          {t("backToOverview")}
-        </Link>
       </div>
 
       <div className="p-6 max-w-3xl space-y-6">
-        <div className="text-sm text-text-secondary leading-relaxed">
-          {t.rich("intro", {
-            studio: (chunks) => (
-              <Link
-                href="/dashboard/studio"
-                className="text-interactive hover:text-primary font-medium"
-              >
-                {chunks}
-              </Link>
-            ),
-            library: (chunks) => (
-              <Link
-                href="/dashboard/library"
-                className="text-interactive hover:text-primary font-medium"
-              >
-                {chunks}
-              </Link>
-            ),
-          })}
-        </div>
+        <p className="text-sm text-text-secondary leading-relaxed">{t("intro")}</p>
 
         <ul className="space-y-3">
           {links.map((item) => (

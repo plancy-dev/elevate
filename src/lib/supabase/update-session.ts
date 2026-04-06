@@ -105,6 +105,14 @@ export async function updateSession(
     user &&
     (path === "/login" || path === "/signup" || path === "/forgot-password")
   ) {
+    /**
+     * OAuth failures redirect to `/login?auth_error=...` (see auth callback).
+     * Logged-in users (e.g. failed `linkIdentity` from settings) must still see
+     * that banner — do not bounce them to `/dashboard` before the client runs.
+     */
+    if (path === "/login" && request.nextUrl.searchParams.has("auth_error")) {
+      return supabaseResponse;
+    }
     logAuthFlow("middleware.session_guard", {
       action: "authed_user_to_dashboard",
       path,

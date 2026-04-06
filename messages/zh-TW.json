@@ -646,13 +646,17 @@
       "overview": "總覽",
       "promptStudio": "提示工作室",
       "library": "資料庫",
-      "adminService": "管理服務",
       "workspace": "工作區",
       "team": "團隊",
       "billing": "帳單",
       "settings": "設定",
       "helpSupport": "說明與支援",
-      "adminServiceTitle": "組織管理 — 稽核、帳單、設定"
+      "organizationSection": "組織",
+      "orgAudit": "稽核日誌",
+      "orgTeam": "團隊",
+      "orgBilling": "帳單",
+      "orgSettings": "設定",
+      "orgNavComingSoon": "即將推出"
     },
     "overview": {
       "title": "總覽",
@@ -678,8 +682,8 @@
       "gettingStarted": "入門",
       "gettingStartedSub": "請將提示工作室與資料庫作為主要工作區。",
       "openStudio": "開啟工作室",
-      "bodyAdmin": "總覽凸顯提示工作室、資料庫權益與團隊規模。稽核日誌、帳單與組織設定請開啟 <link>管理服務</link>。",
-      "bodyNonAdmin": "總覽凸顯提示工作室、資料庫權益與團隊規模。帳單、稽核與組織層級設定請聯絡組織管理員。",
+      "bodyAdmin": "總覽凸顯提示工作室、資料庫權益與團隊規模。請使用側邊欄「組織」區塊，或從 <link>團隊</link> 進入。",
+      "bodyNonAdmin": "在總覽中一覽提示工作室、資料庫權益與團隊規模。",
       "recentActivity": "最近活動",
       "recentActivityEmpty": "團隊使用提示工作室與資料庫後，活動將顯示在這裡。"
     },
@@ -694,7 +698,7 @@
       "language": {
         "section": "語言",
         "label": "顯示語言",
-        "hint": "適用於登入後的主控台、管理後台與應用介面。行銷網站請使用頁首語言切換。",
+        "hint": "適用於登入後的主控台與應用介面。行銷網站請使用頁首語言切換。",
         "saving": "正在儲存…",
         "error": "無法儲存語言，請再試一次。",
         "errors": {
@@ -704,14 +708,13 @@
       }
     },
     "adminShell": {
-      "logoAria": "管理首頁",
-      "administrator": "管理員",
-      "description": "組織營運與合規。產品工作請在產品主控台進行。",
-      "backToProduct": "返回產品主控台",
+      "logoAria": "Elevate 管理首頁",
+      "navAriaLabel": "Elevate 管理導覽",
       "sectionOrg": "組織",
       "navOverview": "總覽",
       "navAudit": "稽核日誌",
       "navContent": "資料庫目錄",
+      "navWaitlist": "候補名單",
       "navPurchaseAllowlist": "結帳許可名單",
       "navTeam": "團隊",
       "navBilling": "帳單",
@@ -747,7 +750,77 @@
         "purchaseAllowlist": {
           "title": "結帳許可名單",
           "desc": "伺服器啟用時，僅這些電子郵件可發起目錄結帳。"
+        },
+        "waitlist": {
+          "title": "行銷候補名單",
+          "desc": "報名、確認郵件密件副本、Resend 通知。"
         }
+      }
+    },
+    "organization": {
+      "title": "組織管理",
+      "metaTitle": "組織管理",
+      "intro": "組織的稽核、帳單、團隊與設定。Elevate 平台工具（目錄、候補名單）請在 Elevate 管理操作。",
+      "backToOverview": "返回總覽",
+      "backFromAudit": "返回團隊",
+      "cards": {
+        "audit": {
+          "title": "稽核日誌",
+          "desc": "安全與合規紀錄（服務角色寫入）。"
+        },
+        "team": {
+          "title": "團隊與邀請",
+          "desc": "成員、角色與待處理邀請。"
+        },
+        "billing": {
+          "title": "帳單與付款",
+          "desc": "Toss 結帳與目錄權益。"
+        },
+        "settings": {
+          "title": "組織設定",
+          "desc": "組織資料與通知偏好。"
+        }
+      }
+    },
+    "adminElevate": {
+      "title": "Elevate 管理",
+      "metaTitle": "Elevate 管理",
+      "intro": "Elevate 產品內部工具：資料庫目錄、行銷候補名單、結帳許可名單。組織管理員請使用產品主控台的組織管理。",
+      "cards": {
+        "catalog": {
+          "title": "數位產品與電子書",
+          "desc": "上傳檔案並管理資料庫與行銷頁面的目錄列。"
+        },
+        "purchaseAllowlist": {
+          "title": "結帳許可名單",
+          "desc": "伺服器啟用時，僅這些電子郵件可發起目錄結帳。"
+        },
+        "waitlist": {
+          "title": "行銷候補名單",
+          "desc": "報名、確認郵件密件副本、Resend 通知。"
+        }
+      }
+    },
+    "adminWaitlist": {
+      "metaTitle": "候補名單",
+      "title": "行銷候補名單",
+      "intro": "從行銷網站加入 Prompt Studio 測試版候補名單的使用者。新報名會依所選語言透過 Resend 寄送確認郵件；在此設定密件副本。",
+      "bccHeading": "確認郵件密件副本（BCC）",
+      "bccIntro": "有新報名時，使用者會收到所選語言的確認郵件。以下地址會收到密件副本（留空則不寄送密件副本）。",
+      "bccLabel": "密件副本電子郵件",
+      "bccPlaceholder": "ops@company.com",
+      "bccSave": "儲存",
+      "saving": "儲存中…",
+      "bccSaved": "已儲存。",
+      "listHeading": "報名列表",
+      "refresh": "重新整理",
+      "empty": "尚無報名。",
+      "colEmail": "電子郵件",
+      "colLocale": "語系",
+      "colSource": "來源",
+      "colTime": "報名時間（UTC）",
+      "errors": {
+        "invalidEmail": "請輸入有效的電子郵件地址。"
       }
     },
     "adminPurchaseAllowlist": {

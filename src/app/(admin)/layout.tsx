@@ -10,7 +10,7 @@ import { getPosthogPublicConfig } from "@/lib/env/posthog-public";
 import { getAppLocale } from "@/lib/i18n/app-locale";
 import { loadMessagesForLocale } from "@/lib/i18n/app-messages";
 import { createClient } from "@/lib/supabase/server";
-import { canAccessPlatformAdmin } from "@/lib/auth/platform-admin";
+import { canAccessElevateServiceAdmin } from "@/lib/auth/platform-admin";
 
 export default async function AdminLayout({
   children,
@@ -41,7 +41,7 @@ export default async function AdminLayout({
     .eq("id", user.id)
     .maybeSingle();
 
-  if (!canAccessPlatformAdmin(user.email, prof?.role)) {
+  if (!canAccessElevateServiceAdmin(user.email)) {
     redirect("/dashboard");
   }
 

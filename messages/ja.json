@@ -646,13 +646,17 @@
       "overview": "概要",
       "promptStudio": "プロンプトスタジオ",
       "library": "ライブラリ",
-      "adminService": "管理者サービス",
       "workspace": "ワークスペース",
       "team": "チーム",
       "billing": "請求",
       "settings": "設定",
       "helpSupport": "ヘルプとサポート",
-      "adminServiceTitle": "組織管理 — 監査、請求、設定"
+      "organizationSection": "組織",
+      "orgAudit": "監査ログ",
+      "orgTeam": "チーム",
+      "orgBilling": "請求",
+      "orgSettings": "設定",
+      "orgNavComingSoon": "準備中"
     },
     "overview": {
       "title": "概要",
@@ -678,8 +682,8 @@
       "gettingStarted": "はじめる",
       "gettingStartedSub": "メインの作業スペースとしてプロンプトスタジオとライブラリをご利用ください。",
       "openStudio": "スタジオを開く",
-      "bodyAdmin": "概要ではプロンプトスタジオ、ライブラリ権限、チーム規模を強調します。監査ログ、請求、組織設定は <link>管理者サービス</link> から開けます。",
-      "bodyNonAdmin": "概要ではプロンプトスタジオ、ライブラリ権限、チーム規模を強調します。請求、監査、組織設定は組織管理者にお問い合わせください。",
+      "bodyAdmin": "概要ではプロンプトスタジオ、ライブラリ権限、チーム規模を強調します。サイドバーの組織セクションを使うか、<link>チーム</link> から開けます。",
+      "bodyNonAdmin": "プロンプトスタジオ、ライブラリ権限、チーム規模を概要で一覧できます。",
       "recentActivity": "最近のアクティビティ",
       "recentActivityEmpty": "チームがプロンプトスタジオとライブラリを使うとここに表示されます。"
     },
@@ -694,7 +698,7 @@
       "language": {
         "section": "言語",
         "label": "表示言語",
-        "hint": "ログイン後のダッシュボード、管理者エリア、アプリのUIに適用されます。マーケティングページはヘッダーの言語切替を使用します。",
+        "hint": "ログイン後のダッシュボードとアプリのUIに適用されます。マーケティングページはヘッダーの言語切替を使用します。",
         "saving": "保存中…",
         "error": "言語を保存できませんでした。もう一度お試しください。",
         "errors": {
@@ -704,14 +708,13 @@
       }
     },
     "adminShell": {
-      "logoAria": "管理者ホーム",
-      "administrator": "管理者",
-      "description": "組織運用とコンプライアンス。製品作業は製品ダッシュボードで行います。",
-      "backToProduct": "製品ダッシュボードに戻る",
+      "logoAria": "Elevate 管理ホーム",
+      "navAriaLabel": "Elevate 管理ナビゲーション",
       "sectionOrg": "組織",
       "navOverview": "概要",
       "navAudit": "監査ログ",
       "navContent": "ライブラリカタログ",
+      "navWaitlist": "ウェイトリスト",
       "navPurchaseAllowlist": "チェックアウト許可リスト",
       "navTeam": "チーム",
       "navBilling": "請求",
@@ -747,7 +750,77 @@
         "purchaseAllowlist": {
           "title": "チェックアウト許可リスト",
           "desc": "サーバー設定時にカタログ決済を開始できるメールアドレスです。"
+        },
+        "waitlist": {
+          "title": "マーケティングウェイトリスト",
+          "desc": "登録者、確認メールのBCC、Resend通知。"
         }
+      }
+    },
+    "organization": {
+      "title": "組織管理",
+      "metaTitle": "組織管理",
+      "intro": "組織の監査、請求、チーム、設定です。Elevate のプラットフォームツールは Elevate 管理で行います。",
+      "backToOverview": "概要に戻る",
+      "backFromAudit": "チームに戻る",
+      "cards": {
+        "audit": {
+          "title": "監査ログ",
+          "desc": "セキュリティとコンプライアンスの記録（サービスロール書き込み）。"
+        },
+        "team": {
+          "title": "チームと招待",
+          "desc": "メンバー、ロール、保留中の招待。"
+        },
+        "billing": {
+          "title": "請求と支払い",
+          "desc": "Toss checkout とカタログ権限。"
+        },
+        "settings": {
+          "title": "組織設定",
+          "desc": "組織プロフィールと通知設定。"
+        }
+      }
+    },
+    "adminElevate": {
+      "title": "Elevate 管理",
+      "metaTitle": "Elevate 管理",
+      "intro": "Elevate 製品の内部ツール：ライブラリカタログ、マーケティングウェイトリスト、チェックアウト許可リスト。組織管理者は製品ダッシュボードの組織管理を使います。",
+      "cards": {
+        "catalog": {
+          "title": "デジタル商品と電子書籍",
+          "desc": "ファイルをアップロードし、ライブラリとマーケティングページ用のカタログ行を管理します。"
+        },
+        "purchaseAllowlist": {
+          "title": "チェックアウト許可リスト",
+          "desc": "サーバー設定時にカタログ決済を開始できるメールアドレスです。"
+        },
+        "waitlist": {
+          "title": "マーケティングウェイトリスト",
+          "desc": "登録者、確認メールのBCC、Resend通知。"
+        }
+      }
+    },
+    "adminWaitlist": {
+      "metaTitle": "ウェイトリスト",
+      "title": "マーケティングウェイトリスト",
+      "intro": "マーケティングサイトから Prompt Studio ベータのウェイトリストに登録した方です。新規登録時は選択した言語で確認メールが Resend 経由で送信されます。BCCは下で設定します。",
+      "bccHeading": "確認メールのBCC",
+      "bccIntro": "ウェイトリストに新規登録があると、選択した言語で確認メールが届きます。このアドレスにBCCが送られます（無効にするには空にしてください）。",
+      "bccLabel": "BCCメール",
+      "bccPlaceholder": "ops@company.com",
+      "bccSave": "保存",
+      "saving": "保存中…",
+      "bccSaved": "保存しました。",
+      "listHeading": "登録一覧",
+      "refresh": "更新",
+      "empty": "まだ登録がありません。",
+      "colEmail": "メール",
+      "colLocale": "ロケール",
+      "colSource": "ソース",
+      "colTime": "登録日時（UTC）",
+      "errors": {
+        "invalidEmail": "有効なメールアドレスを入力してください。"
       }
     },
     "adminPurchaseAllowlist": {

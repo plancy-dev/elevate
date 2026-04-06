@@ -92,6 +92,14 @@ export function formatOAuthCallbackError(
   if (code === "access_denied") {
     return "Sign-in was cancelled. Try again when you’re ready.";
   }
+  if (/getting user email from external provider/i.test(d)) {
+    return (
+      "Microsoft did not return an email address Supabase can use (common with Entra ID when optional email claims are missing). " +
+      "In Azure Portal → App registration → Token configuration: add an optional claim for ID tokens — claim **email** (or ensure **user principal name** is exposed). " +
+      "Under API permissions, ensure **openid**, **profile**, **email**, and **User.Read** are granted (admin consent if required). " +
+      "Then try linking again. See docs/SOCIAL_AUTH.md."
+    );
+  }
   if (/space/i.test(d) || /client/i.test(d)) {
     return "Provider configuration failed. In Supabase: Google Client IDs must have no spaces (comma-separated only). Check Azure Client ID, secret Value, and Tenant URL.";
   }

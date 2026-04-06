@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { sendWaitlistConfirmationEmail } from "@/lib/email/send-waitlist-confirmation-email";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getWaitlistBccEmail } from "@/lib/platform/platform-email-settings";
 import { normalizeWaitlistSource } from "@/lib/waitlist/sources";
 
 const EMAIL_RE =
@@ -64,6 +66,15 @@ export async function POST(request: Request) {
         { status: 503 },
       );
     }
+
+    const bcc = await getWaitlistBccEmail();
+    void sendWaitlistConfirmationEmail({
+      to: normalized,
+      locale: localeVal,
+      bcc,
+    }).catch((err) => {
+      console.error("waitlist confirmation email:", err);
+    });
   } catch (e) {
     console.error("waitlist:", e);
     const message = e instanceof Error ? e.message : String(e);

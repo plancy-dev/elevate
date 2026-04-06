@@ -4,6 +4,14 @@ const { mockInsert } = vi.hoisted(() => ({
   mockInsert: vi.fn(),
 }));
 
+vi.mock("@/lib/platform/platform-email-settings", () => ({
+  getWaitlistBccEmail: vi.fn().mockResolvedValue(null),
+}));
+
+vi.mock("@/lib/email/send-waitlist-confirmation-email", () => ({
+  sendWaitlistConfirmationEmail: vi.fn().mockResolvedValue({ ok: true }),
+}));
+
 vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: vi.fn(() => ({
     from: vi.fn(() => ({

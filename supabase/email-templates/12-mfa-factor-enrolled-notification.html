@@ -1,0 +1,43 @@
+<!--
+  Supabase → Security → MFA factor enrolled notification
+  Subject: New two-step verification on your Elevate account
+  Variables: {{ .FactorType }}, {{ .Email }}
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MFA enrolled</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f5;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f4f5;padding:24px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background-color:#ffffff;border-radius:12px;border:1px solid #e4e4e7;">
+          <tr>
+            <td style="padding:28px 28px 8px 28px;">
+              <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.02em;color:#18181b;">Elevate</p>
+              <h1 style="margin:16px 0 0 0;font-size:22px;line-height:1.25;font-weight:600;color:#09090b;">Two-step verification added</h1>
+              <p style="margin:12px 0 0 0;font-size:15px;line-height:1.55;color:#3f3f46;">
+                A new factor (<strong style="color:#18181b;">{{ .FactorType }}</strong>) was enrolled for <strong style="color:#18181b;">{{ .Email }}</strong>.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 28px 24px 28px;">
+              <p style="margin:0;font-size:14px;line-height:1.55;color:#3f3f46;">If you turned this on, you’re all set.</p>
+              <p style="margin:12px 0 0 0;font-size:14px;line-height:1.55;color:#b91c1c;">If this wasn’t you, remove the factor and contact support immediately.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 28px 24px 28px;border-top:1px solid #f4f4f5;">
+              <p style="margin:0;font-size:11px;line-height:1.5;color:#a1a1aa;">Elevate Inc. · Security notification</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

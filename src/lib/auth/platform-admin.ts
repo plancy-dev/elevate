@@ -1,13 +1,11 @@
 import { isOrganizationAdmin } from "@/lib/user-roles";
 
 /**
- * Emails allowed to use `/admin` when `ADMIN_EMAIL` / `PLATFORM_ADMIN_EMAILS` is set.
- * - `PLATFORM_ADMIN_EMAILS`: comma-separated list (preferred for multiple).
- * - `ADMIN_EMAIL`: single email (same as seed script; merged into the list).
- * When the combined set is non-empty, **only** those emails may access the platform admin shell.
- * When empty (not configured), falls back to **organization admin** (`profiles.role === "admin"`).
+ * Emails allowed to use the **Elevate service admin** shell (`/admin`: catalog, waitlist,
+ * checkout allowlist). Configure via `PLATFORM_ADMIN_EMAILS` (comma-separated) or `ADMIN_EMAIL`.
+ * When the combined set is **empty**, no one can access `/admin` (set at least one email in dev/prod).
  */
-export function getPlatformAdminEmails(): Set<string> {
+export function getElevateServiceAdminEmails(): Set<string> {
   const fromList = process.env.PLATFORM_ADMIN_EMAILS?.trim();
   const single = process.env.ADMIN_EMAIL?.trim();
   const parts: string[] = [];
@@ -20,14 +18,28 @@ export function getPlatformAdminEmails(): Set<string> {
   return new Set(parts.map((e) => e.toLowerCase()));
 }
 
-export function canAccessPlatformAdmin(
-  email: string | undefined,
+/** @deprecated Use {@link getElevateServiceAdminEmails} */
+export function getPlatformAdminEmails(): Set<string> {
+  return getElevateServiceAdminEmails();
+}
+
+/**
+ * **Elevate platform / service staff** — `/admin` (catalog, waitlist, purchase allowlist).
+ * Independent of organization role; uses the email allowlist only.
+ */
+export function canAccessElevateServiceAdmin(email: string | undefined): boolean {
+  const allow = getElevateServiceAdminEmails();
+  if (allow.size === 0) return false;
+  const e = email?.trim().toLowerCase();
+  return e != null && e.length > 0 && allow.has(e);
+}
+
+/**
+ * **Organization administrator** (`profiles.role === "admin"`) — org console, audit, billing.
+ * Routes under `/dashboard/organization`.
+ */
+export function canAccessOrganizationAdminConsole(
   orgRole: string | undefined,
 ): boolean {
-  const allow = getPlatformAdminEmails();
-  if (allow.size > 0) {
-    const e = email?.trim().toLowerCase();
-    return e != null && e.length > 0 && allow.has(e);
-  }
   return isOrganizationAdmin(orgRole);
 }

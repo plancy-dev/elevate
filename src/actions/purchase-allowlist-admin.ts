@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { canAccessPlatformAdmin } from "@/lib/auth/platform-admin";
+import { canAccessElevateServiceAdmin } from "@/lib/auth/platform-admin";
 import { normalizePurchaseAllowlistEmail } from "@/lib/payments/purchase-allowlist";
 
 async function assertPlatformAdmin(): Promise<
@@ -15,13 +15,7 @@ async function assertPlatformAdmin(): Promise<
   } = await supabase.auth.getUser();
   if (!user?.email) return { ok: false, error: "unauthorized" };
 
-  const { data: prof } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (!canAccessPlatformAdmin(user.email, prof?.role)) {
+  if (!canAccessElevateServiceAdmin(user.email)) {
     return { ok: false, error: "forbidden" };
   }
   return { ok: true };

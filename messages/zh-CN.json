@@ -646,13 +646,17 @@
       "overview": "概览",
       "promptStudio": "提示工作室",
       "library": "资料库",
-      "adminService": "管理服务",
       "workspace": "工作区",
       "team": "团队",
       "billing": "账单",
       "settings": "设置",
       "helpSupport": "帮助与支持",
-      "adminServiceTitle": "组织管理 — 审计、账单、设置"
+      "organizationSection": "组织",
+      "orgAudit": "审计日志",
+      "orgTeam": "团队",
+      "orgBilling": "账单",
+      "orgSettings": "设置",
+      "orgNavComingSoon": "即将推出"
     },
     "overview": {
       "title": "概览",
@@ -678,8 +682,8 @@
       "gettingStarted": "入门",
       "gettingStartedSub": "请将提示工作室与资料库作为主要工作区。",
       "openStudio": "打开工作室",
-      "bodyAdmin": "概览突出提示工作室、资料库权益与团队规模。审计日志、账单与组织设置请打开 <link>管理服务</link>。",
-      "bodyNonAdmin": "概览突出提示工作室、资料库权益与团队规模。账单、审计与组织级设置请联系组织管理员。",
+      "bodyAdmin": "概览突出提示工作室、资料库权益与团队规模。请使用侧边栏「组织」分区，或从 <link>团队</link> 进入。",
+      "bodyNonAdmin": "在概览中一览提示工作室、资料库权益与团队规模。",
       "recentActivity": "最近活动",
       "recentActivityEmpty": "团队使用提示工作室与资料库后，活动将显示在这里。"
     },
@@ -694,7 +698,7 @@
       "language": {
         "section": "语言",
         "label": "显示语言",
-        "hint": "适用于登录后的控制台、管理后台与应用界面。营销站点请使用页眉语言切换。",
+        "hint": "适用于登录后的控制台与应用界面。营销站点请使用页眉语言切换。",
         "saving": "正在保存…",
         "error": "无法保存语言，请重试。",
         "errors": {
@@ -704,14 +708,13 @@
       }
     },
     "adminShell": {
-      "logoAria": "管理首页",
-      "administrator": "管理员",
-      "description": "组织运营与合规。产品工作请在产品控制台进行。",
-      "backToProduct": "返回产品控制台",
+      "logoAria": "Elevate 管理首页",
+      "navAriaLabel": "Elevate 管理导航",
       "sectionOrg": "组织",
       "navOverview": "概览",
       "navAudit": "审计日志",
       "navContent": "资料库目录",
+      "navWaitlist": "候补名单",
       "navPurchaseAllowlist": "结账许可名单",
       "navTeam": "团队",
       "navBilling": "账单",
@@ -747,7 +750,77 @@
         "purchaseAllowlist": {
           "title": "结账许可名单",
           "desc": "在服务器启用时，仅这些邮箱可发起目录结账。"
+        },
+        "waitlist": {
+          "title": "营销候补名单",
+          "desc": "报名、确认邮件密送、Resend 通知。"
         }
+      }
+    },
+    "organization": {
+      "title": "组织管理",
+      "metaTitle": "组织管理",
+      "intro": "组织的审计、账单、团队与设置。Elevate 平台工具（目录、候补名单）在 Elevate 管理中操作。",
+      "backToOverview": "返回概览",
+      "backFromAudit": "返回团队",
+      "cards": {
+        "audit": {
+          "title": "审计日志",
+          "desc": "安全与合规记录（服务角色写入）。"
+        },
+        "team": {
+          "title": "团队与邀请",
+          "desc": "成员、角色与待处理邀请。"
+        },
+        "billing": {
+          "title": "账单与支付",
+          "desc": "Toss 结账与目录权益。"
+        },
+        "settings": {
+          "title": "组织设置",
+          "desc": "组织资料与通知偏好。"
+        }
+      }
+    },
+    "adminElevate": {
+      "title": "Elevate 管理",
+      "metaTitle": "Elevate 管理",
+      "intro": "Elevate 产品内部工具：资料库目录、营销候补名单、结账许可名单。组织管理员请使用产品控制台的组织管理。",
+      "cards": {
+        "catalog": {
+          "title": "数字商品与电子书",
+          "desc": "上传文件并管理资料库与营销页面的目录行。"
+        },
+        "purchaseAllowlist": {
+          "title": "结账许可名单",
+          "desc": "在服务器要求时允许开始目录结账的邮箱。"
+        },
+        "waitlist": {
+          "title": "营销候补名单",
+          "desc": "报名、确认邮件密送、Resend 通知。"
+        }
+      }
+    },
+    "adminWaitlist": {
+      "metaTitle": "候补名单",
+      "title": "营销候补名单",
+      "intro": "从营销站点加入 Prompt Studio 测试版候补名单的用户。新报名会按所选语言通过 Resend 发送确认邮件；在此设置密送。",
+      "bccHeading": "确认邮件密送（BCC）",
+      "bccIntro": "有新报名时，用户会收到所选语言的确认邮件。以下地址将收到密送（留空则不发密送）。",
+      "bccLabel": "密送邮箱",
+      "bccPlaceholder": "ops@company.com",
+      "bccSave": "保存",
+      "saving": "保存中…",
+      "bccSaved": "已保存。",
+      "listHeading": "报名列表",
+      "refresh": "刷新",
+      "empty": "尚无报名。",
+      "colEmail": "邮箱",
+      "colLocale": "语言",
+      "colSource": "来源",
+      "colTime": "报名时间（UTC）",
+      "errors": {
+        "invalidEmail": "请输入有效的邮箱地址。"
       }
     },
     "adminPurchaseAllowlist": {

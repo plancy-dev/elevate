@@ -16,6 +16,27 @@ import {
 import { setRecoveryPendingClient } from "@/lib/auth-recovery-cookie";
 import { resolvePostPkceRedirect } from "@/lib/auth-recovery-redirect";
 
+/** Dedup PKCE exchange: React Strict Mode or remounts must not call `exchangeCodeForSession` twice with the same code. */
+const pkceExchangeInflight = new Map<
+  string,
+  ReturnType<ReturnType<typeof createClient>["auth"]["exchangeCodeForSession"]>
+>();
+
+function getOrCreatePkceExchange(
+  code: string,
+): ReturnType<ReturnType<typeof createClient>["auth"]["exchangeCodeForSession"]> {
+  let p = pkceExchangeInflight.get(code);
+  if (!p) {
+    const supabase = createClient();
+    p = supabase.auth.exchangeCodeForSession(code);
+    pkceExchangeInflight.set(code, p);
+    void p.finally(() => {
+      window.setTimeout(() => pkceExchangeInflight.delete(code), 15_000);
+    });
+  }
+  return p;
+}
+
 function AuthCallbackInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -80,13 +101,42 @@ function AuthCallbackInner() {
         nextFallback,
       });
       const supabase = createClient();
-      void supabase.auth
-        .exchangeCodeForSession(code)
-        .then(({ data, error: err }) => {
+      void getOrCreatePkceExchange(code)
+        .then(async ({ data, error: err }) => {
           if (err) {
             logAuthFlow("auth.callback.pkce_error", {
               message: err.message.slice(0, 300),
             });
+            const {
+              data: { session },
+            } = await supabase.auth.getSession();
+            if (session?.user) {
+              logAuthFlow("auth.callback.pkce_error_recovered_session", {
+                message: err.message.slice(0, 200),
+              });
+              const redirectType =
+                data &&
+                typeof data === "object" &&
+                "redirectType" in data &&
+                typeof (data as { redirectType?: unknown }).redirectType ===
+                  "string"
+                  ? (data as { redirectType: string }).redirectType
+                  : null;
+              const destination = resolvePostPkceRedirect(
+                nextFallback,
+                { session, redirectType },
+                searchParams,
+              );
+              if (
+                redirectType === "recovery" ||
+                destination === AUTH_UPDATE_PASSWORD_PATH
+              ) {
+                setRecoveryPendingClient();
+              }
+              router.replace(destination);
+              router.refresh();
+              return;
+            }
             router.replace("/auth/auth-code-error");
             return;
           }
@@ -112,7 +162,7 @@ function AuthCallbackInner() {
           router.replace(destination);
           router.refresh();
         })
-        .catch((reason: unknown) => {
+        .catch(async (reason: unknown) => {
           const message =
             reason &&
             typeof reason === "object" &&
@@ -121,6 +171,20 @@ function AuthCallbackInner() {
               ? (reason as { message: string }).message.slice(0, 300)
               : String(reason).slice(0, 300);
           logAuthFlow("auth.callback.pkce_reject", { message });
+          const {
+            data: { session },
+          } = await supabase.auth.getSession();
+          if (session?.user) {
+            logAuthFlow("auth.callback.pkce_reject_recovered_session", {});
+            const destination = resolvePostPkceRedirect(
+              nextFallback,
+              { session },
+              searchParams,
+            );
+            router.replace(destination);
+            router.refresh();
+            return;
+          }
           router.replace("/auth/auth-code-error");
         });
       return;

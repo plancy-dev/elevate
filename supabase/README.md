@@ -15,6 +15,9 @@
    - `migrations/010_content_product_kind.sql` — `content_products.product_kind` (`ebook` default) for ebook-first funnel
    - `migrations/011_toss_payment_intent_content_product.sql` — optional `content_product_id` on `toss_payment_intents` for checkout → entitlement
    - `migrations/012_content_product_storage_path.sql` — optional `storage_object_path` for signed downloads
+   - `migrations/013_waitlist_signups.sql` — marketing waitlist (service-role inserts from `/api/waitlist`)
+   - `migrations/014_catalog_purchase_allowlist.sql` — optional catalog checkout email gate
+   - `migrations/015_platform_email_settings.sql` — singleton row for waitlist BCC etc.
 
 After applying new migrations, regenerate types: **`pnpm db:types`** (requires `NEXT_PUBLIC_PROJECT_ID` or parseable `NEXT_PUBLIC_SUPABASE_URL` in `.env.local` — see `scripts/gen-db-types.mjs`).
 

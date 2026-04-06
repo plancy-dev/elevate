@@ -12,22 +12,27 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/dashboard/audit-log",
-        destination: "/admin/audit",
+        destination: "/dashboard/organization/audit",
         permanent: true,
       },
       {
         source: "/dashboard/admin",
-        destination: "/admin",
+        destination: "/dashboard/team",
         permanent: true,
       },
       {
         source: "/dashboard/admin/:path*",
-        destination: "/admin",
+        destination: "/dashboard/team",
+        permanent: true,
+      },
+      {
+        source: "/dashboard/organization",
+        destination: "/dashboard/team",
         permanent: true,
       },
       {
         source: "/dashboard/audit",
-        destination: "/admin/audit",
+        destination: "/dashboard/organization/audit",
         permanent: true,
       },
       {

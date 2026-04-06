@@ -437,6 +437,24 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_email_settings: {
+        Row: {
+          id: number
+          updated_at: string
+          waitlist_bcc_email: string | null
+        }
+        Insert: {
+          id?: number
+          updated_at?: string
+          waitlist_bcc_email?: string | null
+        }
+        Update: {
+          id?: number
+          updated_at?: string
+          waitlist_bcc_email?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

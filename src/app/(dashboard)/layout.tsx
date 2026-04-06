@@ -10,7 +10,7 @@ import { getPosthogPublicConfig } from "@/lib/env/posthog-public";
 import { getAppLocale } from "@/lib/i18n/app-locale";
 import { loadMessagesForLocale } from "@/lib/i18n/app-messages";
 import { createClient } from "@/lib/supabase/server";
-import { canAccessPlatformAdmin } from "@/lib/auth/platform-admin";
+import { canAccessOrganizationAdminConsole } from "@/lib/auth/platform-admin";
 
 export default async function DashboardLayout({
   children,
@@ -44,7 +44,7 @@ export default async function DashboardLayout({
     .maybeSingle();
 
   const ph = getPosthogPublicConfig();
-  const showAdminHub = canAccessPlatformAdmin(user.email, prof?.role);
+  const showOrganizationHub = canAccessOrganizationAdminConsole(prof?.role);
 
   const locale = await getAppLocale();
   setRequestLocale(locale);
@@ -56,7 +56,7 @@ export default async function DashboardLayout({
         <Sidebar
           user={sidebarUser}
           showBilling
-          showAdminHub={showAdminHub}
+          showOrganizationHub={showOrganizationHub}
         />
         <div className="flex-1 ml-[240px]">
           {ph && prof?.organization_id ? (

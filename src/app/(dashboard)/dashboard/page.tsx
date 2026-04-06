@@ -16,7 +16,7 @@ import { ActionErrorMessage } from "@/components/i18n/action-error-message";
 import { ButtonLink } from "@/components/ui/button";
 import { getLibraryPageData } from "@/lib/data/library";
 import { listOrgMembers } from "@/lib/data/team";
-import { canAccessPlatformAdmin } from "@/lib/auth/platform-admin";
+import { canAccessOrganizationAdminConsole } from "@/lib/auth/platform-admin";
 import { createClient } from "@/lib/supabase/server";
 
 const recentActivity: { text: string; time: string }[] = [];
@@ -56,8 +56,7 @@ export default async function DashboardPage() {
     supabase.from("profiles").select("role").eq("id", user.id).maybeSingle(),
   ]);
 
-  const showPlatformAdmin = canAccessPlatformAdmin(
-    user.email,
+  const showOrgAdminOverview = canAccessOrganizationAdminConsole(
     profileRow.data?.role,
   );
   const t = await getTranslations("Dashboard.overview");
@@ -231,12 +230,12 @@ export default async function DashboardPage() {
               </Link>
             </div>
             <div className="px-5 py-8 text-sm text-text-secondary leading-relaxed">
-              {showPlatformAdmin ? (
+              {showOrgAdminOverview ? (
                 <div>
                   {t.rich("bodyAdmin", {
                     link: (chunks) => (
                       <Link
-                        href="/admin"
+                        href="/dashboard/team"
                         className="font-medium text-interactive hover:text-primary"
                       >
                         {chunks}

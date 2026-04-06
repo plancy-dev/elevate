@@ -68,4 +68,14 @@ describe("formatOAuthCallbackError", () => {
       /cancelled/,
     );
   });
+
+  it("explains Microsoft missing email from provider", () => {
+    expect(
+      formatOAuthCallbackError(
+        "server_error",
+        "Error getting user email from external provider",
+        "unexpected_failure",
+      ),
+    ).toMatch(/Microsoft did not return an email/);
+  });
 });
