@@ -58,4 +58,14 @@ export const blogMdxComponents = {
   hr: (props: ComponentPropsWithoutRef<"hr">) => (
     <hr className="my-10 border-border-subtle" {...props} />
   ),
+  img: ({ alt, ...rest }: ComponentPropsWithoutRef<"img">) => (
+    // eslint-disable-next-line @next/next/no-img-element -- MDX uses /public or allowed remote hero URLs
+    <img
+      alt={alt ?? ""}
+      className="mt-6 w-full max-w-full rounded-md border border-border-subtle object-cover"
+      loading="lazy"
+      decoding="async"
+      {...rest}
+    />
+  ),
 };

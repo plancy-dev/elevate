@@ -36,6 +36,7 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문�
 | M2 캘린더 | [`marketing-pillars-m2.md`](marketing-pillars-m2.md) § Q2 2026 — M3 MDX로 승격 시 front matter 일정 확정 |
 | Prompt Studio 베타 허용 | 마이그레이션 `016` `prompt_studio_beta_allowlist` · `/admin/prompt-studio-allowlist` · env `STUDIO_BETA_REQUIRE_ALLOWLIST` |
 | 블로그 조회 이벤트 | PostHog `elevate_blog_post_viewed` — `src/components/blog/blog-post-viewed-capture.tsx` |
+| **M3 (en+ko 플래그십)** | 슬러그 `the-prompt-is-your-product-surface` — [`en`](../content/blog/en/the-prompt-is-your-product-surface.mdx) · [`ko`](../content/blog/ko/the-prompt-is-your-product-surface.mdx) · 파이프라인 [`docs/BLOG_POST_PIPELINE.md`](../docs/BLOG_POST_PIPELINE.md) · ja/zh는 샘플 유지 → 번역 시 결정 |
 
 ## AI / Cursor
 

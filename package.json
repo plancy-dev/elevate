@@ -20,6 +20,8 @@
     "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
     "db:seed-admin": "node scripts/seed-admin.mjs",
     "generate:brand": "node scripts/generate-brand-assets.mjs",
+    "og:default": "node scripts/build-og-default.mjs",
+    "og:default:webp": "node scripts/build-og-default.mjs --webp",
     "db:types": "node scripts/gen-db-types.mjs",
     "prepare": "husky"
   },

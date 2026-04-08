@@ -12,9 +12,21 @@ export type BlogPostMeta = {
   title: string;
   description: string;
   date: string;
+  /** Absolute path from site root for OG/Twitter preview, e.g. `/blog/my-slug/hero.jpg`. Must live under `public/`. */
+  ogImage?: string;
 };
 
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/** Public URL path only — blocks `..` and protocol-relative URLs. */
+function parseOgImage(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const t = value.trim();
+  if (!t.startsWith("/") || t.includes("..") || t.includes("//"))
+    return undefined;
+  if (!/^\/[a-zA-Z0-9/_-]+\.[a-zA-Z0-9]+$/.test(t)) return undefined;
+  return t;
+}
 
 function parseFrontmatter(
   data: Record<string, unknown>,
@@ -26,7 +38,8 @@ function parseFrontmatter(
     typeof data.date === "string"
       ? data.date
       : new Date().toISOString().slice(0, 10);
-  return { title, description, date };
+  const ogImage = parseOgImage(data.ogImage);
+  return { title, description, date, ...(ogImage ? { ogImage } : {}) };
 }
 
 function listMdxFiles(dir: string): string[] {
@@ -37,7 +50,7 @@ function listMdxFiles(dir: string): string[] {
 }
 
 /**
- * Blog posts live under `content/blog/<locale>/<slug>.mdx` (e.g. `content/blog/en/welcome.mdx`).
+ * Blog posts live under `content/blog/<locale>/<slug>.mdx` (e.g. `content/blog/en/the-prompt-is-your-product-surface.mdx`).
  * Each locale has its own files—no fallback to English at runtime.
  */
 export function getAllPostMetaForLocale(locale: string): BlogPostMeta[] {

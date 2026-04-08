@@ -68,6 +68,7 @@ Use **`docs/AI_ORCHESTRATION.md`** — Memory Bank holds **what** we ship; gstac
 
 ## Related
 
+- **Per-post workflow (en/ko, meta, social pack):** [`docs/BLOG_POST_PIPELINE.md`](../docs/BLOG_POST_PIPELINE.md)
 - [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md)
 - [`docs/CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md)
 - [`docs/adr/ADR-002-prompt-studio-mvp.md`](../docs/adr/ADR-002-prompt-studio-mvp.md)

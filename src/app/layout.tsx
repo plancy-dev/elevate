@@ -50,6 +50,18 @@ export const metadata: Metadata = {
       "Improve prompts with structured analysis; join the waitlist for Prompt Studio beta. Library and catalog in parallel.",
     type: "website",
     locale: "en_US",
+    images: [
+      {
+        url: "/og-default.webp",
+        width: 1200,
+        height: 630,
+        alt: "Elevate — AI workflows for serious teams",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og-default.webp"],
   },
   icons: {
     icon: [

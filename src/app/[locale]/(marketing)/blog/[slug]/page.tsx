@@ -42,6 +42,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonicalUrl = `${getSiteUrl()}${pathname}`;
   const languageAlternates = buildBlogPostAlternatesLanguages(slug);
   const published = `${post.meta.date}T12:00:00.000Z`;
+  const ogImagePath = post.meta.ogImage ?? "/og-default.webp";
+  const ogImages = [
+    {
+      url: ogImagePath,
+      width: 1200,
+      height: 630,
+      alt: post.meta.title,
+    },
+  ];
   return {
     title: post.meta.title,
     description: post.meta.description || undefined,
@@ -58,11 +67,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: published,
       modifiedTime: published,
       locale,
+      images: ogImages,
     },
     twitter: {
       card: "summary_large_image",
       title: post.meta.title,
       description: post.meta.description || undefined,
+      images: ogImages.map((i) => i.url),
     },
   };
 }
@@ -80,6 +91,8 @@ export default async function BlogPostPage({ params }: Props) {
     href: `/blog/${slug}` as never,
   });
   const canonicalUrl = `${base}${pathname}`;
+  const imagePath = post.meta.ogImage ?? "/og-default.webp";
+  const imageUrl = `${base}${imagePath.startsWith("/") ? imagePath : `/${imagePath}`}`;
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -87,6 +100,7 @@ export default async function BlogPostPage({ params }: Props) {
     inLanguage: locale === "zh-CN" ? "zh-CN" : locale === "zh-TW" ? "zh-TW" : locale,
     datePublished: `${post.meta.date}T12:00:00.000Z`,
     dateModified: `${post.meta.date}T12:00:00.000Z`,
+    image: imageUrl,
     mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
     isPartOf: { "@id": websiteJsonLdId(base), "@type": "WebSite" },
     publisher: {

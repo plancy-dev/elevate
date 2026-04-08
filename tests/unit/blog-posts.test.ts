@@ -5,22 +5,36 @@ vi.mock("server-only", () => ({}));
 import { routing } from "@/i18n/routing";
 import { getAllPostMetaForLocale, getPostBySlug } from "@/lib/blog/posts";
 
+/** Locales with en+ko-first flagship blog; others keep legacy sample slugs until localized. */
+const FLAGSHIP_LOCALES = new Set(["en", "ko"]);
+
 describe("blog posts (locale MDX)", () => {
-  it("lists the same two slugs for every locale", () => {
-    const expected = ["seo-and-waitlist", "welcome"].sort();
+  it("lists expected slugs per locale (en+ko flagship vs legacy samples)", () => {
+    const flagship = ["the-prompt-is-your-product-surface"].sort();
+    const legacy = ["seo-and-waitlist", "welcome"].sort();
     for (const locale of routing.locales) {
       const slugs = getAllPostMetaForLocale(locale)
         .map((p) => p.slug)
         .sort();
-      expect(slugs).toEqual(expected);
+      expect(slugs).toEqual(FLAGSHIP_LOCALES.has(locale) ? flagship : legacy);
     }
   });
 
-  it("loads body and meta for welcome in English", () => {
-    const post = getPostBySlug("welcome", "en");
+  it("loads body and meta for flagship post in English", () => {
+    const post = getPostBySlug("the-prompt-is-your-product-surface", "en");
     expect(post).not.toBeNull();
     expect(post!.meta.title.length).toBeGreaterThan(0);
-    expect(post!.body).toContain("Elevate");
+    expect(post!.meta.ogImage).toBe(
+      "/blog/the-prompt-is-your-product-surface/hero.jpg",
+    );
+    expect(post!.body).toContain("Prompt Studio");
+    expect(post!.body).toContain("/blog/the-prompt-is-your-product-surface/hero.jpg");
+  });
+
+  it("loads Korean flagship post", () => {
+    const post = getPostBySlug("the-prompt-is-your-product-surface", "ko");
+    expect(post).not.toBeNull();
+    expect(post!.body).toContain("Prompt Studio");
   });
 
   it("returns null for unknown slug", () => {
