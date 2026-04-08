@@ -21,7 +21,6 @@
 
 ```bash
 NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=phc_...
-# or: NEXT_PUBLIC_POSTHOG_KEY=phc_...
 NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```
 

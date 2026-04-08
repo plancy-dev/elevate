@@ -76,7 +76,7 @@ Copy `.cursor/mcp.json.example` → `.cursor/mcp.json` and add tokens locally. `
 
 **PostHog**
 
-- **App (browser SDK):** set `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` (or legacy `NEXT_PUBLIC_POSTHOG_KEY`) and `NEXT_PUBLIC_POSTHOG_HOST` in `.env.local` — see `.env.local.example`. Implemented in `PostHogRoot` + `getPosthogPublicConfig()`.
+- **App (browser SDK):** set `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` in `.env.local` — see `.env.local.example`. Implemented in `PostHogRoot` + `getPosthogPublicConfig()`.
 - **MCP (Cursor):** `.cursor/mcp.json.example` includes `posthog` → `https://mcp.posthog.com/mcp` (US). EU: `https://mcp-eu.posthog.com/mcp`. First MCP use → **OAuth**; else `Authorization: Bearer phx_…` ([personal API key, MCP preset](https://app.posthog.com/settings/user-api-keys?preset=mcp_server)) — different from the **`phc_` project token** used in the app. Optional headers: `x-posthog-project-id`, `x-posthog-organization-id`. Wizard: `npx @posthog/wizard mcp add`. Docs: [PostHog MCP for Cursor](https://posthog.com/docs/model-context-protocol/cursor).
 
 ## Admin user

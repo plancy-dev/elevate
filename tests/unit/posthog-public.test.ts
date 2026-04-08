@@ -7,23 +7,14 @@ describe("getPosthogPublicConfig", () => {
     vi.unstubAllEnvs();
   });
 
-  it("returns null when no key or project token", () => {
+  it("returns null when PROJECT_TOKEN is unset", () => {
     expect(getPosthogPublicConfig()).toBeNull();
   });
 
-  it("uses NEXT_PUBLIC_POSTHOG_KEY when set", () => {
-    vi.stubEnv(POSTHOG_PUBLIC_ENV.KEY, "phc_from_key");
-    vi.stubEnv(POSTHOG_PUBLIC_ENV.PROJECT_TOKEN, "phc_from_wizard");
+  it("returns config when NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN is set", () => {
+    vi.stubEnv(POSTHOG_PUBLIC_ENV.PROJECT_TOKEN, "phc_x");
     expect(getPosthogPublicConfig()).toEqual({
-      apiKey: "phc_from_key",
-      apiHost: "https://us.i.posthog.com",
-    });
-  });
-
-  it("falls back to NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN (wizard)", () => {
-    vi.stubEnv(POSTHOG_PUBLIC_ENV.PROJECT_TOKEN, "phc_wizard_only");
-    expect(getPosthogPublicConfig()).toEqual({
-      apiKey: "phc_wizard_only",
+      apiKey: "phc_x",
       apiHost: "https://us.i.posthog.com",
     });
   });

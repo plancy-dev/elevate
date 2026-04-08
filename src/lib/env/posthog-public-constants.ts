@@ -1,11 +1,10 @@
 /**
- * Public env names for PostHog browser SDK (see PostHog Next.js install wizard).
- * Prefer PROJECT_TOKEN when following dashboard copy; KEY is legacy alias.
+ * Public env names for PostHog browser SDK (`posthog-js`).
+ *
+ * Set `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` to the Project API key from PostHog → Project settings (`phc_…`).
  */
 export const POSTHOG_PUBLIC_ENV = {
   HOST: "NEXT_PUBLIC_POSTHOG_HOST",
-  /** Legacy single name */
-  KEY: "NEXT_PUBLIC_POSTHOG_KEY",
-  /** Name used by `npx @posthog/wizard` / project setup UI */
+  /** Project API key (browser SDK). */
   PROJECT_TOKEN: "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN",
 } as const;

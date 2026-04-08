@@ -115,9 +115,19 @@ Slack 링크·내보내기가 읽기 쉽도록 아래 이름을 쓰는 것을 �
 
 | 증상 | 확인할 것 |
 |------|-----------|
+| **대시보드에 이벤트가 전혀 없음** (“This project has no events yet”) | 아래 **이벤트가 안 쌓일 때** 체크리스트 |
 | 커스텀 이벤트가 안 보임 | 광고 차단기; Vercel의 `NEXT_PUBLIC_POSTHOG_*`; 나중에 동의 배너를 넣으면 consent 흐름 |
 | 페이지뷰만 있고 커스텀은 없음 | 마케팅 레이아웃에서 [`PostHogRoot`](../src/app/layout.tsx)가 자식을 감싸는지 |
 | 1단계만 100%, 2단계 0%에 가깝다 | 세션이 다름(익명 블로그 vs 식별된 대기명단) — 전환 창을 넓히기; 대기명단은 성공 시에만 발사되는지 확인 |
+
+### 이벤트가 전혀 안 쌓일 때 (체크리스트)
+
+1. **프로덕션에 키가 있는가** — `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` (`phc_...`) 이 **Vercel(또는 배포 환경) 환경 변수**에 들어가 있고, 넣은 뒤 **재배포**했는가. (`NEXT_PUBLIC_*` 는 **빌드 시** 번들에 박힘.) 예전에 `NEXT_PUBLIC_POSTHOG_KEY`만 쓰던 경우 **이름을 `PROJECT_TOKEN`으로 바꿔** 값을 넣는다.
+2. **키가 이 프로젝트 것인가** — PostHog **Project Settings → Project API key** 의 `phc_...` 가 대시보드에서 보고 있는 **같은 프로젝트**와 일치하는가. `phx_...` 등 **브라우저 SDK용이 아닌 키**를 넣으면 수집되지 않는다.
+3. **호스트 일치** — 미국 클라우드면 `NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com` (기본값과 동일). EU 프로젝트면 `https://eu.i.posthog.com`.
+4. **코드 경로** — 키가 없으면 [`PostHogRoot`](../src/components/analytics/posthog-root.tsx)는 PostHog를 **아예 로드하지 않음** → 이벤트 0.
+5. **브라우저** — 광고 차단·개인정보 확장 끄고 **프로덕션 URL**에서 페이지 한 번 열기 → **Activity** 또는 **Live events** 에 `$pageview` 가 뜨는지 확인.
+6. **날짜 필터** — 인사이트/대시보드에서 기간을 **Last 7 days** 등으로 넓혀 보기.
 
 ---
 
