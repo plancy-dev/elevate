@@ -26,7 +26,7 @@ function ThemeToggleInner({
     return (
       <div
         className={cn(
-          "h-8 w-[7.5rem] shrink-0 rounded-sm border border-border-subtle bg-layer-02",
+          "h-8 w-[7.5rem] shrink-0 rounded-md border border-border-subtle bg-layer-02",
           className,
         )}
         aria-hidden
@@ -49,7 +49,7 @@ function ThemeToggleInner({
       aria-label={labels.aria}
       title={`${labels.light} / ${labels.dark} / ${labels.system}`}
       className={cn(
-        "flex h-8 shrink-0 items-center gap-2 rounded-sm border border-border-subtle bg-layer-01 px-3 text-xs text-text-secondary",
+        "flex h-8 shrink-0 items-center gap-2 rounded-md border border-border-subtle bg-layer-01 px-3 text-xs text-text-secondary",
         "shadow-none outline-none transition-colors",
         "hover:bg-layer-02 hover:text-text-primary",
         "focus-visible:border-focus focus-visible:ring-2 focus-visible:ring-focus/25",

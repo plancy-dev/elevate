@@ -1,7 +1,7 @@
 "use client";
 
 const oauthButtonClass =
-  "flex items-center justify-center gap-3 h-12 w-full bg-layer-01 border border-border-subtle text-sm text-text-primary hover:bg-layer-02 transition-colors disabled:opacity-50";
+  "flex items-center justify-center gap-3 h-12 w-full rounded-lg bg-layer-01 border border-border-subtle text-sm text-text-primary hover:bg-layer-02 transition-colors disabled:opacity-50";
 
 function GoogleIcon({ className }: { className?: string }) {
   return (

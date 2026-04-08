@@ -150,12 +150,12 @@ export function LoginForm() {
   return (
     <>
       {oauthBanner && (
-        <p className="mb-4 rounded-sm border border-border-subtle bg-layer-02 px-3 py-2 text-xs text-text-secondary">
+        <p className="mb-4 rounded-md border border-border-subtle bg-layer-02 px-3 py-2 text-xs text-text-secondary">
           {oauthBanner}
         </p>
       )}
       {error && (
-        <p className="mb-4 rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="mb-4 rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {error}
         </p>
       )}
@@ -169,7 +169,7 @@ export function LoginForm() {
       <AuthMethodDivider />
 
       <div
-        className="mb-4 flex rounded-sm border border-border-subtle p-0.5"
+        className="mb-4 flex rounded-lg border border-border-subtle p-0.5"
         role="tablist"
         aria-label="Sign-in method"
       >
@@ -177,7 +177,7 @@ export function LoginForm() {
           type="button"
           role="tab"
           aria-selected={authMode === "password"}
-          className={`flex-1 rounded-sm px-3 py-2 text-xs font-medium transition-colors ${
+          className={`flex-1 rounded-md px-3 py-2 text-xs font-medium transition-colors ${
             authMode === "password"
               ? "bg-layer-01 text-text-primary"
               : "text-text-tertiary hover:text-text-secondary"
@@ -193,7 +193,7 @@ export function LoginForm() {
           type="button"
           role="tab"
           aria-selected={authMode === "magic"}
-          className={`flex-1 rounded-sm px-3 py-2 text-xs font-medium transition-colors ${
+          className={`flex-1 rounded-md px-3 py-2 text-xs font-medium transition-colors ${
             authMode === "magic"
               ? "bg-layer-01 text-text-primary"
               : "text-text-tertiary hover:text-text-secondary"
@@ -208,7 +208,7 @@ export function LoginForm() {
       </div>
 
       {magicMessage && (
-        <p className="mb-4 rounded-sm border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-text-secondary">
+        <p className="mb-4 rounded-md border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-text-secondary">
           {magicMessage}
         </p>
       )}

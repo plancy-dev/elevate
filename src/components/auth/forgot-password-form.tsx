@@ -42,12 +42,12 @@ export function ForgotPasswordForm() {
   return (
     <>
       {error && (
-        <p className="mb-4 rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="mb-4 rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {error}
         </p>
       )}
       {message && (
-        <p className="mb-4 rounded-sm border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-text-secondary">
+        <p className="mb-4 rounded-md border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-text-secondary">
           {message}
         </p>
       )}

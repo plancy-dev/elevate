@@ -87,7 +87,7 @@ export function ConnectedIdentities() {
         )}
       </ul>
       {message ? (
-        <p className="text-xs text-danger border border-danger/40 bg-danger/10 px-3 py-2 rounded-sm">
+        <p className="text-xs text-danger border border-danger/40 bg-danger/10 px-3 py-2 rounded-md">
           {message}
         </p>
       ) : null}

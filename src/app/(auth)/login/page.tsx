@@ -8,7 +8,7 @@ export const metadata = { title: "Log In" };
 
 function LoginFormFallback() {
   return (
-    <div className="mt-8 h-80 animate-pulse rounded-sm bg-layer-01/50" aria-hidden />
+    <div className="mt-8 h-80 animate-pulse rounded-md bg-layer-01/50" aria-hidden />
   );
 }
 

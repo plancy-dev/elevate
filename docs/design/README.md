@@ -8,6 +8,8 @@ See **[`SYSTEM.md`](SYSTEM.md)** for how [awesome-design-md](https://github.com/
 
 **Quality (gstack + verify):** **[`QUALITY_PIPELINE.md`](QUALITY_PIPELINE.md)** — designer plan review → engineering plan review → build → verify → optional visual QA.
 
+**Audit (consistency + UX redesign judgment):** **[`DESIGN_UX_AUDIT_REPORT.md`](DESIGN_UX_AUDIT_REPORT.md)** — code/docs review (2026-04-06) + live screenshots in [`audit-screenshots/`](audit-screenshots/) (2026-04-08).
+
 ## Purpose
 
 - **Shipped UI** is driven by **`src/app/globals.css`** and Tailwind v4 `@theme` tokens.
