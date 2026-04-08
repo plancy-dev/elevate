@@ -8,6 +8,30 @@ const nextConfig: NextConfig = {
     // Smaller client bundles when importing many lucide icons (dashboard sidebar, etc.)
     optimizePackageImports: ["lucide-react"],
   },
+  /**
+   * Baseline security headers (Vercel also sets HSTS on production).
+   * CSP is not set here — Next.js + PostHog + inline hydration need a nonce-based
+   * policy if we add one; see docs/PRODUCTION_SECURITY.md.
+   */
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       // Marketing short links — clean bio URLs; UTM attached server-side for analytics.

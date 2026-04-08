@@ -3,14 +3,14 @@
 **Shipped MDX:** `content/blog/en/the-prompt-is-your-product-surface.mdx`, `content/blog/ko/the-prompt-is-your-product-surface.mdx`  
 **Date:** 2026-04-07
 
-Replace `<DOMAIN>` with production host (e.g. `elevate.ai.kr` or your Vercel URL).
+Canonical and share links below use **https://elevate.ai.kr**; substitute your production host or Vercel preview URL if different.
 
 ---
 
 ## Canonical URLs
 
-- English: `https://<DOMAIN>/en/blog/the-prompt-is-your-product-surface`
-- Korean: `https://<DOMAIN>/ko/blog/the-prompt-is-your-product-surface`
+- English: `https://elevate.ai.kr/en/blog/the-prompt-is-your-product-surface`
+- Korean: `https://elevate.ai.kr/ko/blog/the-prompt-is-your-product-surface`
 
 ---
 
@@ -47,11 +47,11 @@ Use 3–6 per post on X; Threads tolerates a few more in the same block or as a 
 
 **Post A (link + hook):**  
 Your prompts aren’t “chat.” They’re your product surface—brand, compliance, and conversion in one sentence. First post on our blog: why we’re building Prompt Studio + what to do this week without buying anything 👇  
-`https://<DOMAIN>/en/blog/the-prompt-is-your-product-surface`
+`https://elevate.ai.kr/en/blog/the-prompt-is-your-product-surface`
 
 **Post B (Korean, same article):**  
 소리만 큰 팀이 이기는 게 아니라 운영이 이긴다—프롬프트도 똑같다는 이야기. Elevate 블로그 첫 글: Prompt Studio까지 이어지는 생각, 그리고 이번 주에 해볼 수 있는 것들.  
-`https://<DOMAIN>/ko/blog/the-prompt-is-your-product-surface`
+`https://elevate.ai.kr/ko/blog/the-prompt-is-your-product-surface`
 
 **Optional thread (2/1):**  
 One habit beats a new model: split “policy” from “task,” name who owns the default instructions, write for a skeptical reader. That’s the bar.
@@ -64,12 +64,12 @@ Threads allows more room; keep the first line scroll-stopping.
 
 **EN:**  
 Fifteen years in marketing: the winners were never the loudest—they were the ones who turned craft into a system. Same thing is happening with prompts. First post on what that means for us (Prompt Studio, en/ko-first writing, waitlist).  
-`https://<DOMAIN>/en/blog/the-prompt-is-your-product-surface`  
+`https://elevate.ai.kr/en/blog/the-prompt-is-your-product-surface`  
 #AI #PromptEngineering #B2B
 
 **KO:**  
 마케팅 오래 해온 사람이라면 감 온다. 이번엔 ‘문장’이 판이다. 첫 블로그 글에서 프롬프트를 제품처럼 보는 이유, Prompt Studio, 영·한 우선 콘텐츠까지 솔직하게 적었다.  
-`https://<DOMAIN>/ko/blog/the-prompt-is-your-product-surface`
+`https://elevate.ai.kr/ko/blog/the-prompt-is-your-product-surface`
 
 ---
 

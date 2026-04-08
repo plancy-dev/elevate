@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { mockInsert } = vi.hoisted(() => ({
   mockInsert: vi.fn(),
@@ -20,20 +20,33 @@ vi.mock("@/lib/supabase/admin", () => ({
   })),
 }));
 
+import { resetWaitlistRateLimitBucketsForTests } from "@/lib/api/waitlist-rate-limit";
 import { POST } from "@/app/api/waitlist/route";
 
-function jsonRequest(body: unknown): Request {
+function jsonRequest(
+  body: unknown,
+  extraHeaders?: Record<string, string>,
+): Request {
   return new Request("http://localhost/api/waitlist", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...extraHeaders,
+    },
     body: JSON.stringify(body),
   });
 }
 
 describe("POST /api/waitlist", () => {
   beforeEach(() => {
+    resetWaitlistRateLimitBucketsForTests();
+    vi.stubEnv("WAITLIST_RATE_LIMIT_MAX", "10000");
     mockInsert.mockReset();
     mockInsert.mockResolvedValue({ error: null });
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
 
   it("returns 200 and inserts normalized email when valid", async () => {
@@ -99,5 +112,37 @@ describe("POST /api/waitlist", () => {
     expect(mockInsert).toHaveBeenCalledWith(
       expect.objectContaining({ source: "home" }),
     );
+  });
+
+  it("returns 413 when JSON body exceeds max bytes", async () => {
+    vi.stubEnv("WAITLIST_MAX_BODY_BYTES", "80");
+    const big = "z".repeat(120);
+    const res = await POST(
+      jsonRequest({
+        email: "tiny@example.com",
+        website: "",
+        pad: big,
+      }),
+    );
+    expect(res.status).toBe(413);
+    expect(mockInsert).not.toHaveBeenCalled();
+  });
+
+  describe("rate limit", () => {
+    beforeEach(() => {
+      vi.stubEnv("WAITLIST_RATE_LIMIT_MAX", "2");
+      vi.stubEnv("WAITLIST_RATE_LIMIT_WINDOW_SEC", "60");
+    });
+
+    it("returns 429 with Retry-After after exceeding max requests per IP", async () => {
+      const body = { email: "rl@example.com", website: "" };
+      const hdr = { "x-forwarded-for": "203.0.113.10" };
+      expect((await POST(jsonRequest(body, hdr))).status).toBe(200);
+      expect((await POST(jsonRequest(body, hdr))).status).toBe(200);
+      const third = await POST(jsonRequest(body, hdr));
+      expect(third.status).toBe(429);
+      expect(third.headers.get("Retry-After")).toBeTruthy();
+      expect(mockInsert).toHaveBeenCalledTimes(2);
+    });
   });
 });

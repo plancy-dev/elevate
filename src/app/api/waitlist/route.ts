@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { getClientIpFromHeaders } from "@/lib/api/get-client-ip";
+import { consumeWaitlistRateLimitToken } from "@/lib/api/waitlist-rate-limit";
 import { sendWaitlistConfirmationEmail } from "@/lib/email/send-waitlist-confirmation-email";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getWaitlistBccEmail } from "@/lib/platform/platform-email-settings";
@@ -7,14 +9,54 @@ import { normalizeWaitlistSource } from "@/lib/waitlist/sources";
 const EMAIL_RE =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
+/** Max JSON body size for waitlist POST (bytes). Override with WAITLIST_MAX_BODY_BYTES (cap 1 MiB). */
+function maxWaitlistBodyBytes(): number {
+  const raw = process.env.WAITLIST_MAX_BODY_BYTES?.trim() ?? "";
+  const n = Number.parseInt(raw, 10);
+  if (!Number.isFinite(n) || n <= 0) return 4096;
+  return Math.min(n, 1_048_576);
+}
+
 function normalizeEmail(raw: string): string {
   return raw.trim().toLowerCase();
 }
 
 export async function POST(request: Request) {
+  const clientIp = getClientIpFromHeaders(request.headers);
+  const rate = consumeWaitlistRateLimitToken(clientIp);
+  if (!rate.ok) {
+    return NextResponse.json(
+      { error: "Too many requests. Try again later." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(rate.retryAfterSec) },
+      },
+    );
+  }
+
+  const maxBytes = maxWaitlistBodyBytes();
+  const lenHeader = request.headers.get("content-length");
+  if (lenHeader !== null) {
+    const n = Number.parseInt(lenHeader, 10);
+    if (Number.isFinite(n) && n > maxBytes) {
+      return NextResponse.json({ error: "Payload too large" }, { status: 413 });
+    }
+  }
+
+  let rawBody: string;
+  try {
+    rawBody = await request.text();
+  } catch {
+    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+  }
+
+  if (rawBody.length > maxBytes) {
+    return NextResponse.json({ error: "Payload too large" }, { status: 413 });
+  }
+
   let body: unknown;
   try {
-    body = await request.json();
+    body = rawBody.length === 0 ? {} : JSON.parse(rawBody);
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
