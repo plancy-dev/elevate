@@ -140,7 +140,12 @@ export default async function BlogPostPage({ params }: Props) {
           </p>
         ) : null}
 
-        <BlogShareLinkButton url={canonicalUrl} slug={slug} locale={locale} />
+        <BlogShareLinkButton
+          url={canonicalUrl}
+          slug={slug}
+          locale={locale}
+          title={post.meta.title}
+        />
 
         <div className="mt-10 prose-blog">
           <MDXRemote source={post.body} components={blogMdxComponents} />

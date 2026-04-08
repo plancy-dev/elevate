@@ -2,7 +2,7 @@
 
 **Purpose:** Repeatable steps so each post ships with **en + ko** (default), optional **meta/social packs**, and quality consistent with positioning in [`memory-bank/creative-elevate-ai-pivot.md`](../memory-bank/creative-elevate-ai-pivot.md). **Locale policy:** English first, then Korean for the same slug; additional locales only after an explicit “translate this” decision.
 
-**Analytics:** Post views → `elevate_blog_post_viewed` ([`docs/CONTENT_FUNNEL.md`](CONTENT_FUNNEL.md)). CTAs → homepage waitlist `#waitlist`.
+**Analytics:** Post views → `elevate_blog_post_viewed`; share dialog → `elevate_blog_post_share_channel` (+ `elevate_blog_post_share_link_copied` on **Copy**) ([`docs/CONTENT_FUNNEL.md`](CONTENT_FUNNEL.md)). CTAs → homepage waitlist `#waitlist`.
 
 ---
 

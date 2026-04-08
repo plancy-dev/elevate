@@ -30,7 +30,7 @@ This document aligns **Elevate AI**’s first MVP (**prompt improvement / Prompt
 
 ## Analytics (PostHog)
 
-- **Event names** (single source: `src/lib/analytics/posthog-events.ts`): `elevate_funnel_*` (Library, Billing, purchase, download, ebook reader link/view); `elevate_blog_post_share_link_copied` (blog share — `slug`, `locale`); **`elevate_blog_post_viewed`** (blog read — `slug`, `locale`, `post_title` public title only); `elevate_waitlist_submitted` / `elevate_waitlist_submit_failed` (properties: `source`, `locale`, optional `http_status`); `elevate_marketing_cta_click` (property `cta_id` from `MarketingCtaId`, e.g. `hero_waitlist_anchor`, `hero_prompt_studio`, `hero_ebooks`).
+- **Event names** (single source: `src/lib/analytics/posthog-events.ts`): `elevate_funnel_*` (Library, Billing, purchase, download, ebook reader link/view); `elevate_blog_post_share_link_copied` (blog clipboard — `slug`, `locale`; still fired when user taps **Copy** in the share dialog); **`elevate_blog_post_share_channel`** (blog share destination — `slug`, `locale`, `channel`: `copy` \| `x` \| `facebook` \| `linkedin` \| `threads` \| `email`); **`elevate_blog_post_viewed`** (blog read — `slug`, `locale`, `post_title` public title only); `elevate_waitlist_submitted` / `elevate_waitlist_submit_failed` (properties: `source`, `locale`, optional `http_status`); `elevate_marketing_cta_click` (property `cta_id` from `MarketingCtaId`, e.g. `hero_waitlist_anchor`, `hero_prompt_studio`, `hero_ebooks`).
 - **Dashboards:** step-by-step funnel recipes: **[`docs/POSTHOG_FUNNELS.md`](./POSTHOG_FUNNELS.md)** (blog → waitlist, CTA → waitlist, etc.). Pageviews are auto-captured on marketing routes.
 
 ## Blog vs catalog (product narrative vs code)
