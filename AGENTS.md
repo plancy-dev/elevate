@@ -4,6 +4,10 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
+## Design system (incremental)
+
+For UI polish and “Cursor-inspired” direction, see **`docs/design/README.md`** (hub), **`docs/design/elevate-cursor-alignment.md`** (mapping to `globals.css`), and the vendored reference **`docs/design/third-party/cursor-awesome-design-md/DESIGN.md`**. Prefer small, scoped changes (marketing vs dashboard vs shared tokens).
+
 ## Product vision (AI pivot)
 
 Before large feature work, align with **`memory-bank/creative-elevate-ai-pivot.md`** (North Star) and **`memory-bank/tasks.md`** (roadmap SoT). Legacy MICE modules remain in the repo but are not the default story for new work.

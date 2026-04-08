@@ -1,0 +1,30 @@
+/* Productions: compact “film strip” frame — sprocket edge */
+.film-strip-frame {
+  position: relative;
+  padding-left: 0.5rem;
+}
+.film-strip-frame::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 3px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0,
+    transparent 5px,
+    color-mix(in srgb, var(--text-tertiary) 35%, transparent) 5px,
+    color-mix(in srgb, var(--text-tertiary) 35%, transparent) 7px
+  );
+}
+.dark .film-strip-frame::before {
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0,
+    transparent 5px,
+    color-mix(in srgb, #ffffff 18%, transparent) 5px,
+    color-mix(in srgb, #ffffff 18%, transparent) 7px
+  );
+}

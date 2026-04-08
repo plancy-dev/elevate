@@ -7,13 +7,20 @@ type Props = {
   line1: string;
   line2: string;
   sub: string;
+  /** Warm marketing hero: accent line uses `--marketing-accent` instead of product primary blue */
+  variant?: "default" | "marketing";
 };
 
 /**
  * Uses Pretext to align min-height with wrapped text (resize-safe).
  * Motion: CSS fade/slide on the block (separate from Pretext measurement).
  */
-export function PretextHeroStatement({ line1, line2, sub }: Props) {
+export function PretextHeroStatement({
+  line1,
+  line2,
+  sub,
+  variant = "default",
+}: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const probeRef = useRef<HTMLSpanElement>(null);
   const [minHeight, setMinHeight] = useState<number | undefined>(undefined);
@@ -58,7 +65,15 @@ export function PretextHeroStatement({ line1, line2, sub }: Props) {
           className="elevate-pretext-hero-animate text-2xl sm:text-3xl font-semibold tracking-[-0.02em] leading-[1.15] text-text-primary whitespace-pre-wrap"
           style={minHeight ? { minHeight } : undefined}
         >
-          <span className="text-primary">{line1}</span>
+          <span
+            className={
+              variant === "marketing"
+                ? "text-marketing-accent"
+                : "text-primary"
+            }
+          >
+            {line1}
+          </span>
           {"\n"}
           <span className="text-text-secondary">{line2}</span>
         </div>

@@ -93,38 +93,43 @@ export default async function Home({ params }: Props) {
 
   return (
     <div className="flex flex-col">
-      <section className="relative overflow-hidden border-b border-border-subtle">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(15,98,254,0.08),transparent_60%)]" />
+      <section className="relative overflow-hidden border-b border-marketing-border-subtle bg-marketing-canvas">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--marketing-glow),transparent_58%)]" />
 
         <div className="relative mx-auto max-w-[1584px] px-4 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 py-16 lg:py-24">
-            <div className="flex flex-col justify-center">
-              <Badge variant="blue" className="w-fit mb-6">
+          <div className="grid gap-12 py-16 lg:grid-cols-2 lg:gap-16 lg:py-24">
+            <div className="elevate-marketing-hero-copy flex flex-col justify-center">
+              <Badge variant="blue" className="mb-6 w-fit">
                 {t("badge")}
               </Badge>
 
-              <h1 className="text-4xl font-semibold tracking-[-0.02em] leading-[1.15] lg:text-[56px] text-text-primary">
+              <h1 className="text-4xl font-semibold tracking-[-0.02em] leading-[1.15] text-text-primary lg:text-[56px]">
                 {t("headline")}
                 <br />
                 <span className="text-text-tertiary">{t("headlineAccent")}</span>
               </h1>
 
-              <p className="mt-6 text-base text-text-secondary leading-relaxed max-w-lg">
+              <p className="mt-6 max-w-lg text-base leading-relaxed text-text-secondary">
                 {t("subhead")}
               </p>
 
               <PretextHeroStatement
+                variant="marketing"
                 line1={t("pretextLine1")}
                 line2={t("pretextLine2")}
                 sub={t("pretextSub")}
               />
 
-              <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <MarketingTrackedLocaleLink
                   href="/#waitlist"
                   ctaId={MarketingCtaId.HERO_WAITLIST_ANCHOR}
                 >
-                  <Button variant="primary" size="lg">
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className="rounded-full bg-marketing-accent px-6 hover:bg-marketing-accent-hover active:bg-[#c03d00] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marketing-accent"
+                  >
                     {t("ctaWaitlist")}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
@@ -133,7 +138,7 @@ export default async function Home({ params }: Props) {
                   href="/product/prompt-studio"
                   ctaId={MarketingCtaId.HERO_PROMPT_STUDIO}
                 >
-                  <Button variant="tertiary" size="lg">
+                  <Button variant="tertiary" size="lg" className="rounded-full">
                     {t("ctaPromptStudio")}
                   </Button>
                 </MarketingTrackedLocaleLink>
@@ -141,7 +146,7 @@ export default async function Home({ params }: Props) {
                   href="/product/ebooks-and-guides"
                   ctaId={MarketingCtaId.HERO_EBOOKS}
                 >
-                  <Button variant="tertiary" size="lg">
+                  <Button variant="tertiary" size="lg" className="rounded-full">
                     {t("ctaEbooks")}
                   </Button>
                 </MarketingTrackedLocaleLink>
@@ -151,7 +156,7 @@ export default async function Home({ params }: Props) {
                 <MarketingTrackedNextLink
                   href="/signup"
                   ctaId={MarketingCtaId.HERO_SIGNUP}
-                  className="text-interactive hover:text-primary transition-colors font-medium"
+                  className="font-medium text-interactive transition-colors hover:text-marketing-accent-hover"
                 >
                   {t("ctaSignUp")}
                 </MarketingTrackedNextLink>

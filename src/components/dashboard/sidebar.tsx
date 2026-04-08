@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   BookOpen,
+  Clapperboard,
   Sparkles,
   CreditCard,
   Settings,
@@ -85,6 +86,7 @@ export function Sidebar({
   const primaryNavItems = [
     { label: t("overview"), href: "/dashboard", icon: LayoutDashboard },
     { label: t("library"), href: "/dashboard/library", icon: BookOpen },
+    { label: t("productions"), href: "/dashboard/productions", icon: Clapperboard },
     { label: t("promptStudio"), href: "/dashboard/studio", icon: Sparkles },
   ];
 
@@ -127,15 +129,15 @@ export function Sidebar({
 
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-[240px] flex-col border-r border-border-subtle bg-layer-01">
-      <div className="flex h-12 items-center justify-between gap-2 px-4 border-b border-border-subtle">
+      <div className="flex h-12 items-center justify-between gap-2 border-b border-border-subtle px-4">
         <Link href="/dashboard">
           <ElevateLogo size="sm" />
         </Link>
         <ThemeToggle />
       </div>
 
-      <nav className="flex-1 overflow-y-auto py-3 px-2">
-        <div className="space-y-0.5">
+      <nav className="flex-1 overflow-y-auto px-2 py-3">
+        <div className="space-y-1">
           {primaryNavItems.map((item) => {
             const isActive =
               pathname === item.href ||
@@ -145,7 +147,7 @@ export function Sidebar({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2 text-sm transition-colors",
+                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
                   isActive
                     ? "bg-highlight text-primary font-medium border-l-2 border-primary"
                     : "text-text-secondary hover:text-text-primary hover:bg-layer-02",
@@ -160,10 +162,10 @@ export function Sidebar({
 
         {organizationNavItems.length > 0 ? (
           <div className="mt-3 border-t border-border-subtle pt-3">
-            <p className="px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
+            <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
               {t("organizationSection")}
             </p>
-            <div className="space-y-0.5">
+            <div className="space-y-1">
               {organizationNavItems.map((item) => {
                 const isDisabled = Boolean(item.disabled);
                 const active =
@@ -179,7 +181,7 @@ export function Sidebar({
                       aria-disabled="true"
                       aria-current={onDisabledRoute ? "page" : undefined}
                       className={cn(
-                        "flex items-center gap-3 px-3 py-2 text-sm select-none",
+                        "flex select-none items-center gap-3 rounded-md px-3 py-2 text-sm",
                         "cursor-not-allowed text-text-tertiary opacity-55",
                         onDisabledRoute && "opacity-70",
                       )}
@@ -195,7 +197,7 @@ export function Sidebar({
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2 text-sm transition-colors",
+                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
                       active
                         ? "bg-highlight text-primary font-medium border-l-2 border-primary"
                         : "text-text-secondary hover:text-text-primary hover:bg-layer-02",
@@ -211,7 +213,7 @@ export function Sidebar({
         ) : null}
       </nav>
 
-      <div className="border-t border-border-subtle py-3 px-2 space-y-0.5">
+      <div className="space-y-1 border-t border-border-subtle px-2 py-3">
         {bottomItems.map((item) => {
           const active = isBottomNavActive(pathname, item.href);
           return (
@@ -220,10 +222,10 @@ export function Sidebar({
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 text-sm transition-colors",
+                "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
                 active
-                  ? "text-text-secondary font-medium bg-layer-02"
-                  : "text-text-tertiary hover:text-text-primary hover:bg-layer-02",
+                  ? "bg-layer-02 font-medium text-text-secondary"
+                  : "text-text-tertiary hover:bg-layer-02 hover:text-text-primary",
               )}
             >
               <item.icon className="h-4 w-4 shrink-0" aria-hidden />

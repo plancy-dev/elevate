@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./film-strip.css";
 
 /* Light theme (default when .dark is not on <html>) */
 :root {
@@ -30,6 +31,16 @@
   --focus: #0f62fe;
   --interactive: #0f62fe;
   --highlight: rgba(15, 98, 254, 0.12);
+
+  /* Marketing-only (Cursor-inspired cream + accent; use under [locale]/(marketing)) */
+  --marketing-canvas: #f2f1ed;
+  --marketing-ink: #26251e;
+  --marketing-ink-secondary: #3f3e38;
+  --marketing-ink-tertiary: #6f6d63;
+  --marketing-accent: #f54e00;
+  --marketing-accent-hover: #e04400;
+  --marketing-glow: rgba(245, 78, 0, 0.12);
+  --marketing-border-subtle: rgba(38, 37, 30, 0.1);
 }
 
 .dark {
@@ -90,8 +101,27 @@
   --color-focus: var(--focus);
   --color-interactive: var(--interactive);
   --color-highlight: var(--highlight);
+  --color-marketing-canvas: var(--marketing-canvas);
+  --color-marketing-ink: var(--marketing-ink);
+  --color-marketing-ink-secondary: var(--marketing-ink-secondary);
+  --color-marketing-ink-tertiary: var(--marketing-ink-tertiary);
+  --color-marketing-accent: var(--marketing-accent);
+  --color-marketing-accent-hover: var(--marketing-accent-hover);
+  --color-marketing-glow: var(--marketing-glow);
+  --color-marketing-border-subtle: var(--marketing-border-subtle);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/**
+ * Scoped copy on marketing pages: warm ink + interactive accent without changing global --primary (product UI).
+ */
+.elevate-marketing-hero-copy {
+  --text-primary: var(--marketing-ink);
+  --text-secondary: var(--marketing-ink-secondary);
+  --text-tertiary: var(--marketing-ink-tertiary);
+  --interactive: var(--marketing-accent);
+  --focus: var(--marketing-accent);
 }
 
 body {
