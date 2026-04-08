@@ -63,7 +63,7 @@ export function PromptStudioBetaAllowlistAdminClient({ initialRows }: Props) {
     <div className="max-w-2xl space-y-8">
       <p className="text-sm text-text-secondary leading-relaxed">{t("intro")}</p>
 
-      <div className="rounded-sm border border-border-subtle bg-layer-02/50 p-4 space-y-3">
+      <div className="space-y-3 rounded-lg border border-border-subtle bg-layer-02/50 p-4 shadow-ambient">
         <div>
           <label htmlFor="ps-allow-email" className="text-xs font-medium text-text-tertiary">
             {t("emailLabel")}
@@ -111,7 +111,7 @@ export function PromptStudioBetaAllowlistAdminClient({ initialRows }: Props) {
         {rows.length === 0 ? (
           <p className="mt-2 text-sm text-text-tertiary">{t("empty")}</p>
         ) : (
-          <ul className="mt-3 divide-y divide-border-subtle border border-border-subtle rounded-sm">
+          <ul className="mt-3 divide-y divide-border-subtle rounded-lg border border-border-subtle shadow-ambient">
             {rows.map((row) => (
               <li
                 key={row.id}

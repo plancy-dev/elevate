@@ -52,7 +52,7 @@ export function WaitlistAdminClient({
     <div className="space-y-8 max-w-4xl">
       <form
         onSubmit={onSaveBcc}
-        className="rounded-sm border border-border-subtle bg-layer-01 p-4 space-y-3"
+        className="space-y-3 rounded-lg border border-border-subtle bg-layer-01 p-4 shadow-ambient"
       >
         <h2 className="text-sm font-medium text-text-primary">{t("bccHeading")}</h2>
         <p className="text-xs text-text-tertiary leading-relaxed">{t("bccIntro")}</p>
@@ -102,7 +102,7 @@ export function WaitlistAdminClient({
         {rows.length === 0 ? (
           <p className="text-xs text-text-tertiary">{t("empty")}</p>
         ) : (
-          <div className="overflow-x-auto border border-border-subtle rounded-sm">
+          <div className="overflow-x-auto rounded-lg border border-border-subtle shadow-ambient">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-border-subtle bg-layer-02">

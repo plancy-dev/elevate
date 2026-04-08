@@ -84,7 +84,7 @@ export function ContentProductsAdminClient({
         {initialRows.length === 0 ? (
           <p className="text-sm text-text-secondary">{t("empty")}</p>
         ) : (
-          <div className="overflow-x-auto rounded-sm border border-border-subtle">
+          <div className="overflow-x-auto rounded-lg border border-border-subtle shadow-ambient">
             <table className="w-full text-left text-sm">
               <thead className="bg-layer-02 text-text-secondary">
                 <tr>

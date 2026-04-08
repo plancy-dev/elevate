@@ -60,20 +60,22 @@ export default async function LibraryPage() {
       </div>
 
       {showStarterSubscription ? (
-        <div
-          className="mb-8 rounded-sm border border-border-subtle bg-layer-02/80 px-4 py-3 max-w-2xl"
+        <Card
+          className="mb-8 max-w-2xl border-dashed bg-layer-02/80 shadow-ambient"
           role="note"
         >
-          <p className="text-sm text-text-secondary leading-relaxed">
-            {t("subscriptionBanner")}
-          </p>
-          <Link
-            href="/dashboard/billing"
-            className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
-          >
-            {t("subscriptionBillingCta")}
-          </Link>
-        </div>
+          <CardContent className="p-4">
+            <p className="text-sm leading-relaxed text-text-secondary">
+              {t("subscriptionBanner")}
+            </p>
+            <Link
+              href="/dashboard/billing"
+              className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
+            >
+              {t("subscriptionBillingCta")}
+            </Link>
+          </CardContent>
+        </Card>
       ) : null}
 
       {products.length === 0 ? (

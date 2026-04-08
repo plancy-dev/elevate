@@ -12,7 +12,6 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { MarketingNavDropdown } from "@/components/layout/marketing-nav-dropdown";
 import { useAuthUser } from "@/hooks/use-auth-user";
 import { cn } from "@/lib/utils";
-import { marketingPrimaryCtaClassName } from "@/lib/ui/marketing-cta";
 
 type NavDropdownDef = {
   type: "dropdown";
@@ -82,12 +81,7 @@ export function Header() {
           <LanguageSwitcher />
           <ThemeToggle />
           {showLeadGen ? (
-            <IntlButtonLink
-              href="/#waitlist"
-              variant="primary"
-              size="sm"
-              className={marketingPrimaryCtaClassName()}
-            >
+            <IntlButtonLink href="/#waitlist" variant="marketing" size="sm">
               {t("joinWaitlist")}
             </IntlButtonLink>
           ) : null}
@@ -153,9 +147,9 @@ export function Header() {
               {showLeadGen ? (
                 <IntlButtonLink
                   href="/#waitlist"
-                  variant="primary"
+                  variant="marketing"
                   size="md"
-                  className={marketingPrimaryCtaClassName("w-full")}
+                  className="w-full"
                   onClick={() => setMobileOpen(false)}
                 >
                   {t("joinWaitlist")}

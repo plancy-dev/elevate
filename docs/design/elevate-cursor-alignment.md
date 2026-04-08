@@ -29,7 +29,7 @@ Use this table to **translate** when refactoring: pick a Cursor role, map to an 
 
 - Cursor: **8px base**, fine-grained sub-steps — Elevate: use Tailwind spacing; prefer **multiples of 2** and a consistent section padding scale per surface (marketing vs dashboard).
 - **Radius / shadow (in `globals.css`):** `--elevate-radius-*` → `@theme` `--radius-*`; `--elevate-shadow-ambient`, `--elevate-shadow-card` → utilities `shadow-ambient`, `shadow-card`. **Card** uses `rounded-lg` + `shadow-card`.
-- **Marketing shell:** `.elevate-marketing-chrome` on `[locale]/(marketing)/layout.tsx`; primary CTAs use `marketingPrimaryCtaClassName` in `src/lib/ui/marketing-cta.ts`.
+- **Marketing shell:** `.elevate-marketing-chrome` on `[locale]/(marketing)/layout.tsx`; primary CTAs use **`Button` / links with `variant="marketing"`** (`src/components/ui/button.tsx`).
 
 ## Where to apply first (suggested order)
 

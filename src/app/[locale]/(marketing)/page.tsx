@@ -23,7 +23,6 @@ import { getSiteUrl } from "@/lib/seo/site-url";
 import { KPIDashboardPreview } from "@/components/marketing/kpi-dashboard-preview";
 import { PretextHeroStatement } from "@/components/marketing/pretext-hero-statement";
 import { WaitlistForm } from "@/components/marketing/waitlist-form";
-import { marketingPrimaryCtaClassName } from "@/lib/ui/marketing-cta";
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -126,11 +125,7 @@ export default async function Home({ params }: Props) {
                   href="/#waitlist"
                   ctaId={MarketingCtaId.HERO_WAITLIST_ANCHOR}
                 >
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    className={marketingPrimaryCtaClassName("px-6")}
-                  >
+                  <Button variant="marketing" size="lg" className="px-6">
                     {t("ctaWaitlist")}
                     <ArrowRight className="h-4 w-4" />
                   </Button>

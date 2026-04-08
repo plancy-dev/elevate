@@ -49,7 +49,7 @@ export default async function ElevateServiceAdminHomePage() {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="flex gap-4 rounded-sm border border-border-subtle bg-layer-01 p-4 transition-colors hover:bg-layer-02"
+                className="flex gap-4 rounded-lg border border-border-subtle bg-layer-01 p-4 shadow-ambient transition-colors hover:bg-layer-02"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-highlight text-primary">
                   <item.icon className="h-5 w-5" aria-hidden />

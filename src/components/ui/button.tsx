@@ -7,7 +7,9 @@ export type ButtonVariant =
   | "secondary"
   | "tertiary"
   | "ghost"
-  | "danger";
+  | "danger"
+  /** Marketing chrome only: warm orange pill CTA (see `docs/design/SYSTEM.md`) */
+  | "marketing";
 export type ButtonSize = "sm" | "md" | "lg" | "xl";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -25,6 +27,8 @@ const variantStyles: Record<ButtonVariant, string> = {
   ghost:
     "bg-transparent text-interactive hover:bg-surface-03 active:bg-[#353535]",
   danger: "bg-danger text-white hover:bg-[#BA1B23] active:bg-[#750E13]",
+  marketing:
+    "rounded-full border-0 bg-marketing-accent text-white hover:bg-marketing-accent-hover active:bg-[#c03d00] focus:outline-marketing-accent",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -54,7 +58,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           "inline-flex items-center justify-center gap-2 font-medium transition-colors duration-100 cursor-pointer",
           "disabled:opacity-40 disabled:cursor-not-allowed",
-          "focus:outline-2 focus:outline-offset-2 focus:outline-focus",
+          variant !== "marketing" &&
+            "focus:outline-2 focus:outline-offset-2 focus:outline-focus",
+          variant === "marketing" &&
+            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
           variantStyles[variant],
           sizeStyles[size],
           className,
@@ -90,15 +97,20 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
 Button.displayName = "Button";
 
-const linkBase =
-  "inline-flex items-center justify-center gap-2 font-medium transition-colors duration-100 cursor-pointer focus:outline-2 focus:outline-offset-2 focus:outline-focus";
-
 export function buttonLinkClassName(
   variant: ButtonVariant = "primary",
   size: ButtonSize = "md",
   className?: string,
 ) {
-  return cn(linkBase, variantStyles[variant], sizeStyles[size], className);
+  return cn(
+    "inline-flex items-center justify-center gap-2 font-medium transition-colors duration-100 cursor-pointer",
+    variant === "marketing"
+      ? "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+      : "focus:outline-2 focus:outline-offset-2 focus:outline-focus",
+    variantStyles[variant],
+    sizeStyles[size],
+    className,
+  );
 }
 
 type ButtonLinkProps = {

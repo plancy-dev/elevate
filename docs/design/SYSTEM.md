@@ -63,10 +63,10 @@ Use this as a working queue; check off in PRs or `memory-bank/tasks.md` when sco
 | Priority | Area | Action |
 |----------|------|--------|
 | P1 | Marketing inner pages | ✅ Borders/grid tokens rolled across `(marketing)` routes; keep iterating on section alternation per page. |
-| P2 | Dashboard content | Apply `shadow-card` / `rounded-lg` to overview KPI tiles and library cards where not yet using `Card`. |
-| P3 | Admin | `(admin)/` layout: keep neutral shell; optional subtle `shadow-ambient` on panels only. |
-| P4 | Reference | Optionally vendor a second `DESIGN.md` (e.g. Vercel) for **dashboard** density — product decision first. |
-| P5 | Button API | If orange CTA classes spread further, add `variant="marketing"` on `Button` / `IntlButtonLink`. |
+| P2 | Dashboard content | ✅ Overview uses `Card` for hero links, KPIs, getting started, activity; library subscription note uses `Card` + `shadow-ambient`. |
+| P3 | Admin | ✅ Overview link tiles + waitlist / allowlist / catalog admin panels: `rounded-lg` + `shadow-ambient` on main panels. |
+| P4 | Reference | Deferred — vendor a second `DESIGN.md` only after product decision (`§7`). |
+| P5 | Button API | ✅ `variant="marketing"` on `Button` / `buttonLinkClassName` (orange pill; use only under marketing chrome). |
 
 ## 7. Future extensions (optional)
 
