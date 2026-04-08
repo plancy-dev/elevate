@@ -72,4 +72,4 @@ Use **`docs/AI_ORCHESTRATION.md`** — Memory Bank holds **what** we ship; gstac
 - [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md)
 - [`docs/CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md)
 - [`docs/adr/ADR-002-prompt-studio-mvp.md`](../docs/adr/ADR-002-prompt-studio-mvp.md)
-- [`reflect-ebook-content-funnel.md`](reflect-ebook-content-funnel.md)
+- [`archive/work-history/reflect-ebook-content-funnel.md`](archive/work-history/reflect-ebook-content-funnel.md)

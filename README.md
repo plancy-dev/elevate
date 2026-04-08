@@ -20,7 +20,7 @@ Elevate helps teams turn **measurable AI outcomes** into repeatable workflows: p
 | [`memory-bank/creative-elevate-ai-pivot.md`](memory-bank/creative-elevate-ai-pivot.md) | North Star: flywheel, dual GTM, pivot phases |
 | [`memory-bank/inventory-ai-pivot-phase0.md`](memory-bank/inventory-ai-pivot-phase0.md) | Legacy vs new surface inventory |
 | [`docs/CONTENT_FUNNEL.md`](docs/CONTENT_FUNNEL.md) | Ebook-first funnel & journey vs codebase |
-| [`memory-bank/reflect-ebook-content-funnel.md`](memory-bank/reflect-ebook-content-funnel.md) | REFLECT audit (implementation + gaps) |
+| [`memory-bank/archive/work-history/reflect-ebook-content-funnel.md`](memory-bank/archive/work-history/reflect-ebook-content-funnel.md) | REFLECT audit (implementation + gaps; archived) |
 | [`memory-bank/tasks.md`](memory-bank/tasks.md) | Roadmap SoT |
 | [`docs/design/SYSTEM.md`](docs/design/SYSTEM.md) | Design tokens, marketing vs app shell, component map |
 | [`docs/design/VISUAL_LANGUAGE_V2.md`](docs/design/VISUAL_LANGUAGE_V2.md) | Visual execution contract (accents, radius, rollout) |

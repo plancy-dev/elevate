@@ -84,7 +84,7 @@
 - **Phase 1 MVP MICE**: 이벤트·venue·세션·참석자 CRUD, 설정, `proxy`
 - **Phase 2 Growth**: 팀 초대 `006`, 분석, 감사 `007`, Toss PoC `008`, PostHog
 
-상세 체크리스트는 git 히스토리·`reflect-phase1-closeout.md` 참고.
+상세 체크리스트는 git 히스토리·[`archive/work-history/reflect-phase1-closeout.md`](archive/work-history/reflect-phase1-closeout.md) 참고.
 
 ---
 

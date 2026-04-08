@@ -1,10 +1,12 @@
-# Archive Index — Elevate
+# Archive index — Elevate
 
-큰 설계 결정·폐기된 대안을 보관할 때만 사용한다.
+역사적 REFLECT·감사·대체된 CREATIVE 문서. 최신 우선순위·비전은 **`../tasks.md`**, **`../creative-elevate-ai-pivot.md`** 를 본다.
 
-| 문서 | 비고 |
-|------|------|
-| [../creative-elevate-ai-pivot.md](../creative-elevate-ai-pivot.md) | AI 피벗 North Star (플라이휠·듀얼 GTM·단계) |
-| [../inventory-ai-pivot-phase0.md](../inventory-ai-pivot-phase0.md) | Phase 0 MICE/문서 인벤토리 |
-| [../reflect-ebook-content-funnel.md](../reflect-ebook-content-funnel.md) | REFLECT: 구현 검수·전자책 퍼널 |
-| `creative-architecture.md` | (기존) 아키텍처 창작 메모 — 필요 시 스냅샷 날짜별로 추가 |
+## work-history/
+
+| Document | Description |
+|----------|-------------|
+| [`reflect-phase1-closeout.md`](work-history/reflect-phase1-closeout.md) | Phase 1 MICE MVP close-out (1B–1D) |
+| [`reflect-ebook-content-funnel.md`](work-history/reflect-ebook-content-funnel.md) | Ebook / content funnel REFLECT |
+| [`reflect-mvp-waitlist-landing-audit.md`](work-history/reflect-mvp-waitlist-landing-audit.md) | Waitlist landing audit |
+| [`creative-settings-org-profile.md`](work-history/creative-settings-org-profile.md) | Settings org/profile CREATIVE (superseded by migration `005` + implementation) |

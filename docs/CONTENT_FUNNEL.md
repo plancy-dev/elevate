@@ -56,5 +56,5 @@ This document aligns **Elevate AI**’s first MVP (**prompt improvement / Prompt
 
 - **Who may read ebooks (subscription vs per-purchase):** [`docs/EBOOK_READ_ALLOWLIST.md`](./EBOOK_READ_ALLOWLIST.md)
 - **Optional invite-only checkout (catalog Toss):** [`docs/CATALOG_PURCHASE_ALLOWLIST.md`](./CATALOG_PURCHASE_ALLOWLIST.md)
-- Reflection / audit: [`memory-bank/reflect-ebook-content-funnel.md`](../memory-bank/reflect-ebook-content-funnel.md), [`memory-bank/reflect-mvp-waitlist-landing-audit.md`](../memory-bank/reflect-mvp-waitlist-landing-audit.md)
+- Reflection / audit (archived): [`memory-bank/archive/work-history/reflect-ebook-content-funnel.md`](../memory-bank/archive/work-history/reflect-ebook-content-funnel.md), [`memory-bank/archive/work-history/reflect-mvp-waitlist-landing-audit.md`](../memory-bank/archive/work-history/reflect-mvp-waitlist-landing-audit.md)
 - gstack (YC-style review loops): [`docs/GSTACK.md`](GSTACK.md)

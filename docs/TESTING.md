@@ -29,6 +29,7 @@ Covers:
 - Public env helpers: `getPublicSupabaseEnv`, `assertPublicSupabaseEnv`
 - **`loadSidebarUser`** — chainable Supabase mock (profile + org)
 - **`POST /api/waitlist`** — mocked Supabase admin insert (honeypot, validation, duplicate)
+- **`dashboard-access`** — `canUseDashboard` / strict mode / org-admin flag / waitlist & beta allowlist (mocked service client)
 
 ## Integration tests (`pnpm test:integration`)
 

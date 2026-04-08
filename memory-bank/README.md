@@ -15,7 +15,7 @@
 | **creative-architecture.md** | 아키텍처·스키마·라우트 구조 결정 |
 | **techStack.md** | 기술 스택 한 페이지 요약 |
 | **domainKnowledge.md** | MICE 용어·도메인 메모 |
-| **archive/** | 완료된 큰 결정만 (선택) |
+| **archive/** | REFLECT·대체된 CREATIVE 등 — [`archive/index.md`](archive/index.md) |
 
 ## 갱신 규칙
 

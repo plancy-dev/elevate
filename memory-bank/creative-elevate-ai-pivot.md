@@ -15,7 +15,7 @@
 
 ## 상업 Phase 0 — 전자책·디지털 콘텐츠 우선
 
-최초 런칭은 **전자책(E-book) 및 디지털 패키지** 판매로 현금 흐름·시장 검증을 한다. 카탈로그(`content_products`)의 기본 `product_kind`는 **`ebook`**이며, 이후 가이드·템플릿·번들로 확장. 상세 퍼널·여정은 [`docs/CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md), 검수 기록은 [`reflect-ebook-content-funnel.md`](reflect-ebook-content-funnel.md).
+최초 런칭은 **전자책(E-book) 및 디지털 패키지** 판매로 현금 흐름·시장 검증을 한다. 카탈로그(`content_products`)의 기본 `product_kind`는 **`ebook`**이며, 이후 가이드·템플릿·번들로 확장. 상세 퍼널·여정은 [`docs/CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md), 검수 기록은 [`archive/work-history/reflect-ebook-content-funnel.md`](archive/work-history/reflect-ebook-content-funnel.md).
 
 ## 플라이휠 (4단계)
 
