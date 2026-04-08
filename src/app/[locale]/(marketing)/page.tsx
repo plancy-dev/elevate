@@ -23,6 +23,7 @@ import { getSiteUrl } from "@/lib/seo/site-url";
 import { KPIDashboardPreview } from "@/components/marketing/kpi-dashboard-preview";
 import { PretextHeroStatement } from "@/components/marketing/pretext-hero-statement";
 import { WaitlistForm } from "@/components/marketing/waitlist-form";
+import { marketingPrimaryCtaClassName } from "@/lib/ui/marketing-cta";
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -93,12 +94,12 @@ export default async function Home({ params }: Props) {
 
   return (
     <div className="flex flex-col">
-      <section className="relative overflow-hidden border-b border-marketing-border-subtle bg-marketing-canvas">
+      <section className="relative overflow-hidden border-b border-marketing-border-subtle">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--marketing-glow),transparent_58%)]" />
 
         <div className="relative mx-auto max-w-[1584px] px-4 lg:px-8">
           <div className="grid gap-12 py-16 lg:grid-cols-2 lg:gap-16 lg:py-24">
-            <div className="elevate-marketing-hero-copy flex flex-col justify-center">
+            <div className="flex flex-col justify-center">
               <Badge variant="blue" className="mb-6 w-fit">
                 {t("badge")}
               </Badge>
@@ -128,7 +129,7 @@ export default async function Home({ params }: Props) {
                   <Button
                     variant="primary"
                     size="lg"
-                    className="rounded-full bg-marketing-accent px-6 hover:bg-marketing-accent-hover active:bg-[#c03d00] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marketing-accent"
+                    className={marketingPrimaryCtaClassName("px-6")}
                   >
                     {t("ctaWaitlist")}
                     <ArrowRight className="h-4 w-4" />
@@ -172,13 +173,13 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
-      <section className="border-b border-border-subtle bg-layer-01">
+      <section className="border-b border-marketing-border-subtle bg-layer-01">
         <div className="mx-auto max-w-[1584px] px-4 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4">
             {pillars.map((p, i) => (
               <div
                 key={p.title}
-                className={`py-8 px-6 ${i < 3 ? "border-r border-border-subtle" : ""}`}
+                className={`py-8 px-6 ${i < 3 ? "border-r border-marketing-border-subtle" : ""}`}
               >
                 <div className="text-sm font-medium text-text-primary leading-snug">
                   {p.title}
@@ -192,7 +193,7 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
-      <section className="border-b border-border-subtle">
+      <section className="border-b border-marketing-border-subtle">
         <div className="mx-auto max-w-[1584px] px-4 py-20 lg:px-8">
           <div className="max-w-2xl mb-12">
             <h2 className="text-3xl font-semibold tracking-[-0.02em] text-text-primary">
@@ -203,11 +204,11 @@ export default async function Home({ params }: Props) {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-border-subtle border border-border-subtle">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-marketing-border-subtle border border-marketing-border-subtle">
             {capabilities.map((cap) => (
               <Card
                 key={cap.title}
-                className="border-0 bg-layer-01 hover:bg-layer-02 transition-colors duration-150"
+                className="border-0 bg-layer-01 shadow-none transition-colors duration-150 hover:bg-layer-02"
               >
                 <CardContent className="p-6">
                   <div className="flex h-10 w-10 items-center justify-center bg-highlight text-primary mb-4">
@@ -228,7 +229,7 @@ export default async function Home({ params }: Props) {
 
       <section
         id="waitlist"
-        className="border-b border-border-subtle bg-layer-01 scroll-mt-20"
+        className="border-b border-marketing-border-subtle bg-layer-01 scroll-mt-20"
       >
         <div className="mx-auto max-w-[1584px] px-4 py-16 lg:px-8">
           <div className="max-w-xl">
@@ -243,7 +244,7 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
-      <section className="border-b border-border-subtle bg-layer-01">
+      <section className="border-b border-marketing-border-subtle bg-layer-01">
         <div className="mx-auto max-w-[1584px] px-4 py-20 lg:px-8">
           <div className="max-w-xl">
             <Badge variant="green" className="mb-4">

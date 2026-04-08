@@ -8,6 +8,7 @@ import { clearRecoveryPendingClient } from "@/lib/auth-recovery-cookie";
 import { logAuthFlow } from "@/lib/auth-flow-log";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function UpdatePasswordForm() {
   const router = useRouter();
@@ -102,7 +103,7 @@ export function UpdatePasswordForm() {
         >
           New password
         </label>
-        <input
+        <Input
           id="new-password"
           type="password"
           value={password}
@@ -110,7 +111,6 @@ export function UpdatePasswordForm() {
           autoComplete="new-password"
           required
           minLength={8}
-          className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus transition-colors"
         />
       </div>
       <div>
@@ -120,7 +120,7 @@ export function UpdatePasswordForm() {
         >
           Confirm password
         </label>
-        <input
+        <Input
           id="confirm-password"
           type="password"
           value={confirm}
@@ -128,7 +128,6 @@ export function UpdatePasswordForm() {
           autoComplete="new-password"
           required
           minLength={8}
-          className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus transition-colors"
         />
       </div>
       <Button

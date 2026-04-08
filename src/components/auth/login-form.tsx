@@ -20,6 +20,7 @@ import {
   OAuthProviderButtons,
 } from "@/components/auth/oauth-provider-buttons";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function LoginForm() {
   const router = useRouter();
@@ -220,7 +221,7 @@ export function LoginForm() {
           >
             Work email
           </label>
-          <input
+          <Input
             id="email"
             type="email"
             value={email}
@@ -228,7 +229,6 @@ export function LoginForm() {
             autoComplete="email"
             required
             placeholder="you@company.com"
-            className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus transition-colors"
           />
         </div>
 
@@ -248,7 +248,7 @@ export function LoginForm() {
                 Forgot password?
               </Link>
             </div>
-            <input
+            <Input
               id="password"
               type="password"
               value={password}
@@ -256,7 +256,6 @@ export function LoginForm() {
               autoComplete="current-password"
               required
               placeholder="••••••••"
-              className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus transition-colors"
             />
           </div>
         )}

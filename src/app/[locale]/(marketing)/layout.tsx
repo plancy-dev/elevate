@@ -14,9 +14,11 @@ export default async function MarketingLayout({
   return (
     <>
       <MarketingSiteJsonLd locale={locale} />
-      <Header />
-      <main>{children}</main>
-      <Footer />
+      <div className="elevate-marketing-chrome flex min-h-dvh flex-col bg-marketing-canvas">
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </div>
     </>
   );
 }

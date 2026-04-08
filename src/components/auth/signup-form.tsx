@@ -15,6 +15,7 @@ import {
   OAuthProviderButtons,
 } from "@/components/auth/oauth-provider-buttons";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function SignupForm() {
   const router = useRouter();
@@ -123,7 +124,7 @@ export function SignupForm() {
           >
             Full name
           </label>
-          <input
+          <Input
             id="full_name"
             type="text"
             value={fullName}
@@ -131,7 +132,6 @@ export function SignupForm() {
             autoComplete="name"
             required
             placeholder="Jane Doe"
-            className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus transition-colors"
           />
         </div>
 
@@ -142,7 +142,7 @@ export function SignupForm() {
           >
             Work email
           </label>
-          <input
+          <Input
             id="email"
             type="email"
             value={email}
@@ -150,7 +150,6 @@ export function SignupForm() {
             autoComplete="email"
             required
             placeholder="you@company.com"
-            className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus transition-colors"
           />
         </div>
 
@@ -161,7 +160,7 @@ export function SignupForm() {
           >
             Password
           </label>
-          <input
+          <Input
             id="password"
             type="password"
             value={password}
@@ -170,7 +169,6 @@ export function SignupForm() {
             required
             minLength={8}
             placeholder="At least 8 characters"
-            className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus transition-colors"
           />
         </div>
 

@@ -10,8 +10,8 @@ Use this table to **translate** when refactoring: pick a Cursor role, map to an 
 
 | Cursor concept (from DESIGN.md) | Elevate today (`globals.css`) | Notes / next step |
 |----------------------------------|-------------------------------|-------------------|
-| Cursor Cream `#f2f1ed` | `--marketing-canvas` in `globals.css` (home hero) | App shell unchanged; marketing-only tokens `--marketing-*` |
-| Cursor Dark `#26251e` | `--foreground` / `--text-primary` | Warm black vs neutral — adjust per route bundle if desired |
+| Cursor Cream `#f2f1ed` | `--marketing-canvas` + layout wrapper | Marketing locale layout; app shell unchanged |
+| Cursor Dark `#26251e` | `--marketing-ink` / inherited text in `.elevate-marketing-chrome` | Dark mode: overridden in `.dark` for marketing tokens |
 | Cursor Orange `#f54e00` | `--marketing-accent` / hero CTA overrides | Product `--primary` remains blue; dashboard unchanged |
 | Surface 200–500 | `--surface`, `--surface-02`, `--layer-*` | Align naming over time; avoid duplicate meanings |
 | Border Primary (oklab / 0.1) | `--border`, `--border-subtle` | Could add `--border-warm` later; oklab in CSS is fine |
@@ -25,10 +25,11 @@ Use this table to **translate** when refactoring: pick a Cursor role, map to an 
 | berkeleyMono code | `--font-geist-mono` | Swap only if license and performance are acceptable |
 | jjannon body | Geist sans | Marketing long-form could use a serif via `next/font` later |
 
-## Spacing & components
+## Spacing, radius, and components
 
-- Cursor: **8px base**, fine-grained sub-steps — Elevate: use Tailwind spacing; when touching layouts, prefer **multiples of 2** and align section padding to a single scale per surface (marketing vs dashboard).
-- Pills / radius: match existing `rounded-*` patterns in each area before introducing new radius tokens.
+- Cursor: **8px base**, fine-grained sub-steps — Elevate: use Tailwind spacing; prefer **multiples of 2** and a consistent section padding scale per surface (marketing vs dashboard).
+- **Radius / shadow (in `globals.css`):** `--elevate-radius-*` → `@theme` `--radius-*`; `--elevate-shadow-ambient`, `--elevate-shadow-card` → utilities `shadow-ambient`, `shadow-card`. **Card** uses `rounded-lg` + `shadow-card`.
+- **Marketing shell:** `.elevate-marketing-chrome` on `[locale]/(marketing)/layout.tsx`; primary CTAs use `marketingPrimaryCtaClassName` in `src/lib/ui/marketing-cta.ts`.
 
 ## Where to apply first (suggested order)
 

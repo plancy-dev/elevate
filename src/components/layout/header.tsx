@@ -12,6 +12,7 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { MarketingNavDropdown } from "@/components/layout/marketing-nav-dropdown";
 import { useAuthUser } from "@/hooks/use-auth-user";
 import { cn } from "@/lib/utils";
+import { marketingPrimaryCtaClassName } from "@/lib/ui/marketing-cta";
 
 type NavDropdownDef = {
   type: "dropdown";
@@ -46,7 +47,7 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border-subtle bg-surface/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 border-b border-marketing-border-subtle bg-marketing-canvas/90 backdrop-blur-md supports-[backdrop-filter]:bg-marketing-canvas/75">
       <div className="mx-auto flex h-12 max-w-[1584px] items-center justify-between gap-2 px-4 lg:px-8">
         <div className="flex min-w-0 items-center gap-4 lg:gap-8">
           <Link href="/" className="flex shrink-0 items-center">
@@ -81,7 +82,12 @@ export function Header() {
           <LanguageSwitcher />
           <ThemeToggle />
           {showLeadGen ? (
-            <IntlButtonLink href="/#waitlist" variant="primary" size="sm">
+            <IntlButtonLink
+              href="/#waitlist"
+              variant="primary"
+              size="sm"
+              className={marketingPrimaryCtaClassName()}
+            >
               {t("joinWaitlist")}
             </IntlButtonLink>
           ) : null}
@@ -107,7 +113,7 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden border-t border-border-subtle bg-surface">
+        <div className="border-t border-marketing-border-subtle bg-marketing-canvas lg:hidden">
           <div className="flex items-center justify-between gap-2 border-b border-border-subtle px-4 py-2">
             <LanguageSwitcher className="flex-1" />
             <ThemeToggle />
@@ -149,7 +155,7 @@ export function Header() {
                   href="/#waitlist"
                   variant="primary"
                   size="md"
-                  className={cn("w-full")}
+                  className={marketingPrimaryCtaClassName("w-full")}
                   onClick={() => setMobileOpen(false)}
                 >
                   {t("joinWaitlist")}

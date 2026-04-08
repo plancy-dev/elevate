@@ -6,7 +6,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Design system (incremental)
 
-For UI polish and “Cursor-inspired” direction, see **`docs/design/README.md`** (hub), **`docs/design/elevate-cursor-alignment.md`** (mapping to `globals.css`), and the vendored reference **`docs/design/third-party/cursor-awesome-design-md/DESIGN.md`**. Prefer small, scoped changes (marketing vs dashboard vs shared tokens).
+Structure and layers: **`docs/design/SYSTEM.md`**. Workflow hub: **`docs/design/README.md`**. Token mapping: **`docs/design/elevate-cursor-alignment.md`**. Reference doc (vendored from [awesome-design-md](https://github.com/VoltAgent/awesome-design-md)): **`docs/design/third-party/cursor-awesome-design-md/DESIGN.md`**. Prefer small, scoped changes (marketing vs dashboard vs shared tokens).
 
 ## Product vision (AI pivot)
 

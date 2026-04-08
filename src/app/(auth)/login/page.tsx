@@ -18,7 +18,7 @@ export default function LoginPage() {
       <div className="absolute right-4 top-4 z-10">
         <ThemeToggleEnglish />
       </div>
-      <div className="hidden lg:flex lg:w-[480px] xl:w-[560px] flex-col justify-between bg-layer-01 border-r border-border-subtle p-10">
+      <div className="hidden lg:flex lg:w-[480px] xl:w-[560px] flex-col justify-between border-r border-marketing-border-subtle bg-marketing-canvas p-10">
         <Link href="/">
           <ElevateLogo size="md" />
         </Link>

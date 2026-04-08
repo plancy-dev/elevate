@@ -41,6 +41,16 @@
   --marketing-accent-hover: #e04400;
   --marketing-glow: rgba(245, 78, 0, 0.12);
   --marketing-border-subtle: rgba(38, 37, 30, 0.1);
+
+  /* Radius / elevation (aligned with Cursor DESIGN.md §5–6; app + marketing) */
+  --elevate-radius-sm: 0.25rem;
+  --elevate-radius-md: 0.5rem;
+  --elevate-radius-lg: 0.625rem;
+  --elevate-radius-pill: 9999px;
+  --elevate-shadow-ambient: 0 0 16px rgba(0, 0, 0, 0.02), 0 0 8px rgba(0, 0, 0, 0.008);
+  --elevate-shadow-card:
+    0 1px 0 color-mix(in oklab, var(--border) 35%, transparent),
+    0 14px 32px rgba(0, 0, 0, 0.07);
 }
 
 .dark {
@@ -72,6 +82,16 @@
   --focus: #0f62fe;
   --interactive: #4589ff;
   --highlight: rgba(15, 98, 254, 0.1);
+
+  --marketing-canvas: #141413;
+  --marketing-ink: #f2f1ed;
+  --marketing-ink-secondary: #c9c8c2;
+  --marketing-ink-tertiary: #8b8a84;
+  --marketing-glow: rgba(245, 78, 0, 0.14);
+  --marketing-border-subtle: rgba(255, 255, 255, 0.12);
+  --elevate-shadow-card:
+    0 1px 0 rgba(255, 255, 255, 0.06),
+    0 18px 40px rgba(0, 0, 0, 0.35);
 }
 
 @theme inline {
@@ -109,17 +129,26 @@
   --color-marketing-accent-hover: var(--marketing-accent-hover);
   --color-marketing-glow: var(--marketing-glow);
   --color-marketing-border-subtle: var(--marketing-border-subtle);
+  --radius-sm: var(--elevate-radius-sm);
+  --radius-md: var(--elevate-radius-md);
+  --radius-lg: var(--elevate-radius-lg);
+  --radius-pill: var(--elevate-radius-pill);
+  --shadow-ambient: var(--elevate-shadow-ambient);
+  --shadow-card: var(--elevate-shadow-card);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 /**
- * Scoped copy on marketing pages: warm ink + interactive accent without changing global --primary (product UI).
+ * Full marketing locale shell: warm typography + borders; `--primary` stays product blue for charts/logos.
+ * Use on `[locale]/(marketing)` layout wrapper only.
  */
-.elevate-marketing-hero-copy {
+.elevate-marketing-chrome {
+  --foreground: var(--marketing-ink);
   --text-primary: var(--marketing-ink);
   --text-secondary: var(--marketing-ink-secondary);
   --text-tertiary: var(--marketing-ink-tertiary);
+  --border-subtle: var(--marketing-border-subtle);
   --interactive: var(--marketing-accent);
   --focus: var(--marketing-accent);
 }

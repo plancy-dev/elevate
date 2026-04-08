@@ -1,5 +1,9 @@
 # Design documentation (Elevate)
 
+## Architecture
+
+See **[`SYSTEM.md`](SYSTEM.md)** for how [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) references, Elevate tokens, and surface modes (marketing chrome vs app shell) fit together.
+
 ## Purpose
 
 - **Shipped UI** is driven by **`src/app/globals.css`** and Tailwind v4 `@theme` tokens.

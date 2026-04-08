@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { usePostHog } from "posthog-js/react";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { PostHogEvent } from "@/lib/analytics/posthog-events";
 import { cn } from "@/lib/utils";
 import { WAITLIST_API_PATH, type WaitlistSource } from "@/lib/waitlist/sources";
@@ -118,7 +119,7 @@ export function WaitlistForm({
             <label htmlFor={`waitlist-email-${source}`} className="sr-only">
               {t("labelEmail")}
             </label>
-            <input
+            <Input
               id={`waitlist-email-${source}`}
               type="email"
               name="email"
@@ -129,9 +130,8 @@ export function WaitlistForm({
               placeholder={t("placeholderEmail")}
               disabled={status === "loading"}
               className={cn(
-                "h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus",
                 variant === "panel" &&
-                  "bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/40",
+                  "border-white/20 bg-white/10 text-white placeholder:text-white/50 focus:border-white/40 focus:ring-white/25",
               )}
             />
             <p
