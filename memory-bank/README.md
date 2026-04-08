@@ -7,6 +7,8 @@
 | 파일 | 용도 |
 |------|------|
 | **tasks.md** | 로드맵·페이즈·우선순위 (SoT) |
+| **marketing-content-pipeline.md** | PLG·블로그↔전자책·PostHog·gstack 역할 (Phase M) |
+| **marketing-pillars-m2.md** | M2 필라 5개·다국어 우선순위·에디토리얼 캘린더 템플릿 |
 | **activeContext.md** | 지금 페이즈, 다음 작업 앵커 |
 | **progress.md** | 완료 vs 남은 일 |
 | **creative-architecture.md** | 아키텍처·스키마·라우트 구조 결정 |

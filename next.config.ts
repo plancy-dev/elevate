@@ -10,6 +10,37 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Marketing short links — clean bio URLs; UTM attached server-side for analytics.
+      // Instagram / X / Threads / YouTube "about" fields: use https://elevate.ai.kr/ig etc.
+      {
+        source: "/ig",
+        destination:
+          "/?utm_source=instagram&utm_medium=social&utm_campaign=bio_shortlink",
+        permanent: false,
+      },
+      {
+        source: "/x",
+        destination:
+          "/?utm_source=twitter&utm_medium=social&utm_campaign=bio_shortlink",
+        permanent: false,
+      },
+      {
+        source: "/threads",
+        destination:
+          "/?utm_source=threads&utm_medium=social&utm_campaign=bio_shortlink",
+        permanent: false,
+      },
+      {
+        source: "/yt",
+        destination:
+          "/?utm_source=youtube&utm_medium=social&utm_campaign=bio_shortlink",
+        permanent: false,
+      },
+      {
+        source: "/links",
+        destination: "https://linktr.ee/elevate_ai",
+        permanent: false,
+      },
       {
         source: "/dashboard/audit-log",
         destination: "/dashboard/organization/audit",

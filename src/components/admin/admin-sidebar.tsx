@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { BookOpen, LayoutDashboard, ListChecks, Mail } from "lucide-react";
+import { BookOpen, LayoutDashboard, ListChecks, Mail, Sparkles } from "lucide-react";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
@@ -23,6 +23,11 @@ export function AdminSidebar({ user }: { user: SidebarUser }) {
       label: t("navPurchaseAllowlist"),
       href: "/admin/purchase-allowlist",
       icon: ListChecks,
+    },
+    {
+      label: t("navPromptStudioAllowlist"),
+      href: "/admin/prompt-studio-allowlist",
+      icon: Sparkles,
     },
   ];
 

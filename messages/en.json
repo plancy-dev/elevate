@@ -724,6 +724,7 @@
       "navContent": "Library catalog",
       "navWaitlist": "Waitlist",
       "navPurchaseAllowlist": "Checkout allowlist",
+      "navPromptStudioAllowlist": "Prompt Studio beta",
       "navTeam": "Team",
       "navBilling": "Billing",
       "navSettings": "Settings",
@@ -846,6 +847,21 @@
         "duplicate": "That email is already on the list."
       }
     },
+    "adminPromptStudioAllowlist": {
+      "metaTitle": "Prompt Studio beta allowlist",
+      "title": "Prompt Studio beta allowlist",
+      "intro": "When STUDIO_BETA_REQUIRE_ALLOWLIST=true, only emails listed here can open /dashboard/studio. Independent of the marketing waitlist and checkout allowlist. Profile email must match (normalized).",
+      "emailLabel": "Email",
+      "noteLabel": "Note (optional)",
+      "add": "Add email",
+      "listHeading": "Allowed emails",
+      "empty": "No emails yet. When the gate is enabled, add testers here first.",
+      "remove": "Remove",
+      "errors": {
+        "invalidEmail": "Enter a valid email address.",
+        "duplicate": "That email is already on the list."
+      }
+    },
     "adminContent": {
       "metaTitle": "Library catalog",
       "title": "Library catalog",
@@ -912,7 +928,11 @@
       "building": "Building in public",
       "note": "API contract for improvements is defined in docs/adr/ADR-002-prompt-studio-mvp.md. Until enabled, requests return a clear not-ready response.",
       "ctaLibrary": "Open Library",
-      "ctaBilling": "Billing & checkout"
+      "ctaBilling": "Billing & checkout",
+      "gatedTitle": "Prompt Studio beta access",
+      "gatedBodyAllowlist": "Your account email is not on the Prompt Studio beta allowlist yet. Ask your team to add it in the admin console, or join the public waitlist for updates.",
+      "gatedBodyAuth": "We could not verify an email for this session. Sign in with an email-based provider or add an email to your profile, then try again.",
+      "gatedCtaWaitlist": "Join the waitlist on the marketing site"
     },
     "library": {
       "metaTitle": "Library",

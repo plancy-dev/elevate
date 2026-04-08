@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { PostHogRoot } from "@/components/analytics/posthog-root";
 import { getSiteUrl } from "@/lib/seo/site-url";
-import { NAVER_SITE_VERIFICATION_CONTENT } from "@/lib/seo/site-verification";
+import {
+  GOOGLE_SITE_VERIFICATION_CONTENT,
+  NAVER_SITE_VERIFICATION_CONTENT,
+} from "@/lib/seo/site-verification";
 import { SupabaseUrlHashHandler } from "@/components/auth/supabase-url-hash-handler";
 import { AppThemeProvider } from "@/components/providers/app-theme-provider";
 import "./globals.css";
@@ -19,6 +22,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
+  alternates: {
+    types: {
+      "application/atom+xml": "/feed.xml",
+    },
+  },
   title: {
     default: "Elevate AI — Prompt improvement & early access",
     template: "%s | Elevate",
@@ -54,6 +62,13 @@ export const metadata: Metadata = {
   other: {
     "naver-site-verification": NAVER_SITE_VERIFICATION_CONTENT,
   },
+  ...(GOOGLE_SITE_VERIFICATION_CONTENT
+    ? {
+        verification: {
+          google: GOOGLE_SITE_VERIFICATION_CONTENT,
+        },
+      }
+    : {}),
 };
 
 export default function RootLayout({

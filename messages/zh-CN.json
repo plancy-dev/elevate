@@ -716,6 +716,7 @@
       "navContent": "资料库目录",
       "navWaitlist": "候补名单",
       "navPurchaseAllowlist": "结账许可名单",
+      "navPromptStudioAllowlist": "Prompt Studio 测试版",
       "navTeam": "团队",
       "navBilling": "账单",
       "navSettings": "设置",
@@ -838,6 +839,21 @@
         "duplicate": "该邮箱已在列表中。"
       }
     },
+    "adminPromptStudioAllowlist": {
+      "metaTitle": "Prompt Studio 测试版许可",
+      "title": "Prompt Studio 测试版许可",
+      "intro": "当 STUDIO_BETA_REQUIRE_ALLOWLIST=true 时，仅此处列出的邮箱可访问 /dashboard/studio。与营销候补名单、结账许可无关；须与资料邮箱一致（规范化）。",
+      "emailLabel": "邮箱",
+      "noteLabel": "备注（可选）",
+      "add": "添加邮箱",
+      "listHeading": "已许可邮箱",
+      "empty": "尚无邮箱。启用门禁前请先添加测试人员。",
+      "remove": "移除",
+      "errors": {
+        "invalidEmail": "请输入有效的邮箱地址。",
+        "duplicate": "该邮箱已在列表中。"
+      }
+    },
     "adminContent": {
       "metaTitle": "资料库目录",
       "title": "资料库目录",
@@ -904,7 +920,11 @@
       "building": "公开构建中",
       "note": "改进 API 约定见 docs/adr/ADR-002-prompt-studio-mvp.md。在启用前，接口会返回明确的「未就绪」响应。",
       "ctaLibrary": "打开资料库",
-      "ctaBilling": "账单与结账"
+      "ctaBilling": "账单与结账",
+      "gatedTitle": "Prompt Studio 测试版访问",
+      "gatedBodyAllowlist": "您的账户邮箱尚未列入 Prompt Studio 测试许可。请联系管理员在后台添加，或加入公开候补名单获取通知。",
+      "gatedBodyAuth": "当前会话无法验证邮箱。请使用邮箱登录或为资料补充邮箱后重试。",
+      "gatedCtaWaitlist": "在营销网站加入候补名单"
     },
     "library": {
       "metaTitle": "资料库",

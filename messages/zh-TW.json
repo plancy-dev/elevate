@@ -716,6 +716,7 @@
       "navContent": "資料庫目錄",
       "navWaitlist": "候補名單",
       "navPurchaseAllowlist": "結帳許可名單",
+      "navPromptStudioAllowlist": "Prompt Studio 測試版",
       "navTeam": "團隊",
       "navBilling": "帳單",
       "navSettings": "設定",
@@ -838,6 +839,21 @@
         "duplicate": "該電子郵件已在名單中。"
       }
     },
+    "adminPromptStudioAllowlist": {
+      "metaTitle": "Prompt Studio 測試版許可",
+      "title": "Prompt Studio 測試版許可",
+      "intro": "當 STUDIO_BETA_REQUIRE_ALLOWLIST=true 時，僅此處列出的電子郵件可存取 /dashboard/studio。與行銷候補名單、結帳許可無關；須與個人資料電子郵件一致（正規化）。",
+      "emailLabel": "電子郵件",
+      "noteLabel": "備註（選填）",
+      "add": "新增電子郵件",
+      "listHeading": "已許可電子郵件",
+      "empty": "尚無電子郵件。啟用門檻前請先新增測試人員。",
+      "remove": "移除",
+      "errors": {
+        "invalidEmail": "請輸入有效的電子郵件地址。",
+        "duplicate": "該電子郵件已在名單中。"
+      }
+    },
     "adminContent": {
       "metaTitle": "資料庫目錄",
       "title": "資料庫目錄",
@@ -904,7 +920,11 @@
       "building": "公開建置中",
       "note": "改進 API 約定見 docs/adr/ADR-002-prompt-studio-mvp.md。在啟用前，介面會回傳明確的「未就緒」回應。",
       "ctaLibrary": "開啟資料庫",
-      "ctaBilling": "帳單與結帳"
+      "ctaBilling": "帳單與結帳",
+      "gatedTitle": "Prompt Studio 測試版存取",
+      "gatedBodyAllowlist": "您的帳戶電子郵件尚未列入 Prompt Studio 測試許可。請洽管理員於後台新增，或加入公開候補名單以取得通知。",
+      "gatedBodyAuth": "目前工作階段無法驗證電子郵件。請使用電子郵件登入或於個人資料補上電子郵件後再試。",
+      "gatedCtaWaitlist": "在行銷網站加入候補名單"
     },
     "library": {
       "metaTitle": "資料庫",

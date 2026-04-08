@@ -724,6 +724,7 @@
       "navContent": "라이브러리 카탈로그",
       "navWaitlist": "대기명단",
       "navPurchaseAllowlist": "결제 허용 목록",
+      "navPromptStudioAllowlist": "Prompt Studio 베타",
       "navTeam": "팀",
       "navBilling": "결제",
       "navSettings": "설정",
@@ -846,6 +847,21 @@
         "duplicate": "이미 목록에 있는 이메일입니다."
       }
     },
+    "adminPromptStudioAllowlist": {
+      "metaTitle": "Prompt Studio 베타 허용 목록",
+      "title": "Prompt Studio 베타 허용 목록",
+      "intro": "STUDIO_BETA_REQUIRE_ALLOWLIST=true일 때 여기에 등록된 이메일만 /dashboard/studio에 접근할 수 있습니다. 마케팅 대기명단·결제 허용 목록과는 별개이며, 프로필 이메일과 일치해야 합니다(정규화).",
+      "emailLabel": "이메일",
+      "noteLabel": "메모(선택)",
+      "add": "이메일 추가",
+      "listHeading": "허용된 이메일",
+      "empty": "아직 등록된 이메일이 없습니다. 게이트를 켤 때는 먼저 테스터를 추가하세요.",
+      "remove": "삭제",
+      "errors": {
+        "invalidEmail": "유효한 이메일을 입력하세요.",
+        "duplicate": "이미 목록에 있는 이메일입니다."
+      }
+    },
     "adminContent": {
       "metaTitle": "라이브러리 카탈로그",
       "title": "라이브러리 카탈로그",
@@ -912,7 +928,11 @@
       "building": "공개 개발 중",
       "note": "개선 API 계약은 docs/adr/ADR-002-prompt-studio-mvp.md에 정의되어 있습니다. 활성화 전까지는 명확한 미준비 응답을 반환합니다.",
       "ctaLibrary": "라이브러리 열기",
-      "ctaBilling": "결제 및 체크아웃"
+      "ctaBilling": "결제 및 체크아웃",
+      "gatedTitle": "Prompt Studio 베타 접근",
+      "gatedBodyAllowlist": "계정 이메일이 아직 Prompt Studio 베타 허용 목록에 없습니다. 관리 콘솔에서 추가를 요청하거나, 공개 대기명단에 가입해 소식을 받아보세요.",
+      "gatedBodyAuth": "이 세션에서 이메일을 확인할 수 없습니다. 이메일 기반 로그인을 사용하거나 프로필에 이메일을 추가한 뒤 다시 시도하세요.",
+      "gatedCtaWaitlist": "마케팅 사이트에서 대기명단 가입"
     },
     "library": {
       "metaTitle": "라이브러리",

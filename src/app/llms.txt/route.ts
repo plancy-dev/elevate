@@ -11,6 +11,7 @@ export function GET(): Response {
 
 Site: ${base}
 Sitemap: ${base}/sitemap.xml
+Atom feed (blog, default locale): ${base}/feed.xml
 Robots: ${base}/robots.txt
 
 Public locales: en, ko, ja, zh-CN, zh-TW (path prefixes per next-intl).

@@ -4,6 +4,8 @@ import { getTranslations } from "next-intl/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { ButtonLink } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { StudioBetaGated } from "@/components/dashboard/studio-beta-gated";
+import { assertPromptStudioBetaAccess } from "@/lib/prompt-studio/assert-studio-beta-access";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +15,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function StudioPage() {
+  const beta = await assertPromptStudioBetaAccess();
+  if (!beta.ok) {
+    return <StudioBetaGated reason={beta.reason} />;
+  }
+
   const t = await getTranslations("Dashboard.studio");
   const bullets = [t("bullet1"), t("bullet2"), t("bullet3")];
 

@@ -13,6 +13,7 @@ import {
   websiteJsonLdId,
 } from "@/lib/seo/site-jsonld";
 import { getSiteUrl } from "@/lib/seo/site-url";
+import { BlogPostViewedCapture } from "@/components/blog/blog-post-viewed-capture";
 import { BlogShareLinkButton } from "@/components/blog/blog-share-link-button";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -101,6 +102,11 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <div className="border-t border-border-subtle">
+      <BlogPostViewedCapture
+        slug={slug}
+        locale={locale}
+        title={post.meta.title}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

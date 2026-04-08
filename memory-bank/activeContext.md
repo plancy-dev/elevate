@@ -31,6 +31,11 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문�
 | 전자책 퍼널 문서 | `docs/CONTENT_FUNNEL.md` |
 | REFLECT 검수 | `memory-bank/reflect-ebook-content-funnel.md` |
 | 랜딩 Pretext | `src/components/marketing/pretext-hero-statement.tsx` |
+| PLG·블로그·전자책 로드맵 | [`marketing-content-pipeline.md`](marketing-content-pipeline.md) · [`marketing-pillars-m2.md`](marketing-pillars-m2.md) · `tasks.md` Phase M |
+| PostHog 퍼널 레시피 | [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) — 저장 인사이트 이름·UI 체크리스트 포함; 대시보드는 PostHog 프로젝트에서 수동 저장 |
+| M2 캘린더 | [`marketing-pillars-m2.md`](marketing-pillars-m2.md) § Q2 2026 — M3 MDX로 승격 시 front matter 일정 확정 |
+| Prompt Studio 베타 허용 | 마이그레이션 `016` `prompt_studio_beta_allowlist` · `/admin/prompt-studio-allowlist` · env `STUDIO_BETA_REQUIRE_ALLOWLIST` |
+| 블로그 조회 이벤트 | PostHog `elevate_blog_post_viewed` — `src/components/blog/blog-post-viewed-capture.tsx` |
 
 ## AI / Cursor
 

@@ -145,6 +145,27 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_studio_beta_allowlist: {
+        Row: {
+          created_at: string
+          email_normalized: string
+          id: string
+          note: string | null
+        }
+        Insert: {
+          created_at?: string
+          email_normalized: string
+          id?: string
+          note?: string | null
+        }
+        Update: {
+          created_at?: string
+          email_normalized?: string
+          id?: string
+          note?: string | null
+        }
+        Relationships: []
+      }
       content_products: {
         Row: {
           created_at: string

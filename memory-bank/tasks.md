@@ -50,6 +50,31 @@
 
 ---
 
+## PLG 검증 — Phase M (블로그·전자책·분석)
+
+상세 페이즈·gstack 역할: [`marketing-content-pipeline.md`](marketing-content-pipeline.md)
+
+| # | 항목 | 상태 |
+|---|------|------|
+| M0 | PostHog `elevate_blog_post_viewed`; 퍼널 문서 [`CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md) 정합 | ✅ |
+| M1 | Supabase `016` `prompt_studio_beta_allowlist` + `/admin/prompt-studio-allowlist` + `STUDIO_BETA_REQUIRE_ALLOWLIST` | ✅ (마이그레이션 적용·`pnpm db:types`는 연결 프로젝트에서) |
+| M2 | 콘텐츠 필라·분기 캘린더 (다국어) — [`marketing-pillars-m2.md`](marketing-pillars-m2.md) (Q2 2026 주차·각도 채움) | ✅ 기획안 |
+| M3 | 블로그 단편 글 (필라별, CTA→대기명단) | ⏳ |
+| M4 | 전자책 SKU 슬라이스 (카탈로그·MDX·권한 — 기존 파이프라인에 맞춰 분할 출시) | ⏳ |
+| M5 | PostHog: [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 퍼널 레시피 + 프로젝트 UI에서 대시보드 저장 | 레시피 ✅ · UI ⏳ |
+| M2.1 | 소셜·Linktree·자사 짧은 링크(`/ig`,`/yt`,`/links` 등) — [`MARKETING_OPS_CHECKLIST.md`](../docs/MARKETING_OPS_CHECKLIST.md) | ✅ 채널 1차·문서 |
+
+**마케팅 실행 순서 (채널 구축 후 → 콘텐츠):** 아래를 위에서부터. 상세·카피는 [`MARKETING_OPS_CHECKLIST.md`](../docs/MARKETING_OPS_CHECKLIST.md) · 필라·캘린더는 [`marketing-pillars-m2.md`](marketing-pillars-m2.md).
+
+1. **측정 열기:** PostHog 대시보드 저장(M5) · GSC 속성·사이트맵(미완 시).
+2. **공유 품질:** 루트 `openGraph` 기본 이미지(1200×630) 1장 — [`MARKETING_OPS_CHECKLIST`](../docs/MARKETING_OPS_CHECKLIST.md) B4.
+3. **블로그 1편(M3):** [`marketing-pillars-m2.md`](marketing-pillars-m2.md) Q2 표 **W1 각도** → `content/blog/en/` (또는 우선 로케일) MDX · CTA→대기명단.
+4. **소셜 리듬:** 주 2~3회 X+Threads(동일 소재·시간错开) · 유튜브는 **첫 영상 1개** 스크립트·썸네일 준비 후 업로드.
+5. **바이오 정합:** 인스타/Threads/X/유튜브에 `elevate.ai.kr/ig`·`/links`·`/yt` 등 문서(E1f)와 동일하게 유지.
+6. **월 1회:** GSC 검색어 + PostHog 퍼널 A 점검 · 다음 달 필라 믹스 조정.
+
+---
+
 ## Legacy — 이전 Phase 요약 (완료, MICE)
 
 > 신규 기능은 MICE 모델에 추가하지 않는다.
@@ -67,7 +92,7 @@
 | 우선순위 | 항목 | 비고 |
 |---------|------|------|
 | P0 | Production Toss keys·웹훅 URL·상용 컴플라이언스 | 운영 |
-| P1 | PostHog 대시보드(퍼널 시각화) | 이벤트: `elevate_funnel_*`, `elevate_waitlist_*`, `elevate_marketing_cta_click` — 대시보드 수동 구성 |
+| P1 | PostHog 대시보드(퍼널 시각화) | 이벤트: `elevate_funnel_*`, `elevate_waitlist_*`, `elevate_marketing_cta_click`, `elevate_blog_post_viewed` — [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 참고 후 UI에서 구성 |
 | P1 | E2E CI — PR에 `run-e2e` 라벨 또는 수동 workflow | `e2e.yml` |
 | P2 | MICE 스키마 제거 또는 아카이브 | 데이터·고객 영향 검토 후 |
 

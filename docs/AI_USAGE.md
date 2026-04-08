@@ -8,7 +8,8 @@
 1. **`memory-bank/tasks.md`** — 지금 해야 할 일 (SoT)  
 2. **`memory-bank/activeContext.md`** — 단계·앵커 파일  
 3. **`AGENTS.md` / `CLAUDE.md`** — Next.js 16 · gstack 요약  
-4. **구현·스크립트** — [`DEVELOPMENT.md`](./DEVELOPMENT.md)
+4. **구현·스크립트** — [`DEVELOPMENT.md`](./DEVELOPMENT.md)  
+5. **PostHog 퍼널 (UI에서 구성)** — [`POSTHOG_FUNNELS.md`](./POSTHOG_FUNNELS.md)
 
 **자동**: 구현·버그·기능 요청은 `.cursor/rules/ai-session-bootstrap.mdc`가 위 컨텍스트를 로드한다.  
 **권장 입력 형식**: [`AI_USER_TEMPLATES.md`](./AI_USER_TEMPLATES.md) · **타 프로젝트 이식**: [`AI_WORKFLOW_PORTABILITY.md`](./AI_WORKFLOW_PORTABILITY.md).

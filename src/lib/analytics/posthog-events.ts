@@ -14,6 +14,8 @@ export const PostHogEvent = {
   ELEVATE_FUNNEL_EBOOK_READER_LINK_CLICK: "elevate_funnel_ebook_reader_link_click",
   /** Blog — share current URL to clipboard (no PII in properties) */
   ELEVATE_BLOG_POST_SHARE_LINK_COPIED: "elevate_blog_post_share_link_copied",
+  /** Blog — one event per post view (`slug`, `locale`, `post_title` — public title only) */
+  ELEVATE_BLOG_POST_VIEWED: "elevate_blog_post_viewed",
   /** Marketing / waitlist — no PII in properties */
   ELEVATE_WAITLIST_SUBMITTED: "elevate_waitlist_submitted",
   ELEVATE_WAITLIST_SUBMIT_FAILED: "elevate_waitlist_submit_failed",

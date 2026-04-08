@@ -716,6 +716,7 @@
       "navContent": "ライブラリカタログ",
       "navWaitlist": "ウェイトリスト",
       "navPurchaseAllowlist": "チェックアウト許可リスト",
+      "navPromptStudioAllowlist": "Prompt Studio ベータ",
       "navTeam": "チーム",
       "navBilling": "請求",
       "navSettings": "設定",
@@ -838,6 +839,21 @@
         "duplicate": "このメールはすでにリストにあります。"
       }
     },
+    "adminPromptStudioAllowlist": {
+      "metaTitle": "Prompt Studio ベータ許可リスト",
+      "title": "Prompt Studio ベータ許可リスト",
+      "intro": "STUDIO_BETA_REQUIRE_ALLOWLIST=true のとき、ここに登録されたメールのみ /dashboard/studio にアクセスできます。マーケティングのウェイトリストやチェックアウト許可とは別で、プロフィールのメールと一致する必要があります（正規化）。",
+      "emailLabel": "メール",
+      "noteLabel": "メモ（任意）",
+      "add": "メールを追加",
+      "listHeading": "許可されたメール",
+      "empty": "まだメールがありません。ゲートを有効にする前にテスターを追加してください。",
+      "remove": "削除",
+      "errors": {
+        "invalidEmail": "有効なメールアドレスを入力してください。",
+        "duplicate": "このメールはすでにリストにあります。"
+      }
+    },
     "adminContent": {
       "metaTitle": "ライブラリカタログ",
       "title": "ライブラリカタログ",
@@ -904,7 +920,11 @@
       "building": "公開開発中",
       "note": "改善 API の契約は docs/adr/ADR-002-prompt-studio-mvp.md に定義されています。有効化までは、明確な未準備応答を返します。",
       "ctaLibrary": "ライブラリを開く",
-      "ctaBilling": "請求とチェックアウト"
+      "ctaBilling": "請求とチェックアウト",
+      "gatedTitle": "Prompt Studio ベータへのアクセス",
+      "gatedBodyAllowlist": "アカウントのメールはまだ Prompt Studio ベータ許可リストにありません。管理者コンソールでの追加を依頼するか、公開ウェイトリストに登録して情報を受け取ってください。",
+      "gatedBodyAuth": "このセッションでメールを確認できません。メールベースのサインインを使うか、プロフィールにメールを追加してから再試行してください。",
+      "gatedCtaWaitlist": "マーケティングサイトでウェイトリストに登録"
     },
     "library": {
       "metaTitle": "ライブラリ",

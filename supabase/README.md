@@ -18,6 +18,7 @@
    - `migrations/013_waitlist_signups.sql` — marketing waitlist (service-role inserts from `/api/waitlist`)
    - `migrations/014_catalog_purchase_allowlist.sql` — optional catalog checkout email gate
    - `migrations/015_platform_email_settings.sql` — singleton row for waitlist BCC etc.
+   - `migrations/016_prompt_studio_beta_allowlist.sql` — optional Prompt Studio beta email gate (`STUDIO_BETA_REQUIRE_ALLOWLIST`; manage `/admin/prompt-studio-allowlist`)
 
 After applying new migrations, regenerate types: **`pnpm db:types`** (requires `NEXT_PUBLIC_PROJECT_ID` or parseable `NEXT_PUBLIC_SUPABASE_URL` in `.env.local` — see `scripts/gen-db-types.mjs`).
 

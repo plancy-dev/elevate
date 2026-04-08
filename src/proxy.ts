@@ -28,7 +28,17 @@ const SKIP_INTL_PREFIXES = [
   "/favicon.ico",
 ];
 
+/** next.config redirects — must not pass through locale prefix. */
+const MARKETING_SHORTLINKS = new Set([
+  "/ig",
+  "/x",
+  "/threads",
+  "/yt",
+  "/links",
+]);
+
 function shouldSkipIntl(pathname: string) {
+  if (MARKETING_SHORTLINKS.has(pathname)) return true;
   if (pathname.startsWith("/dashboard")) return true;
   if (pathname.startsWith("/admin")) return true;
   if (pathname.startsWith("/invite")) return true;
