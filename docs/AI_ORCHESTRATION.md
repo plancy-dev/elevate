@@ -26,6 +26,7 @@
 | 아이디어·제품 방향을 압축하고 싶음 | gstack **`/office-hours`** 또는 **`/plan-ceo-review`** → 결과를 North Star·`tasks.md`에 반영 |
 | 아키텍처·엣지 케이스 확정 | **`/plan-eng-review`** (또는 Cursor Plan) → ADR·`creative-architecture.md` |
 | 랜딩·UI 품질 | **`/plan-design-review`** + 필요 시 `ui-ux-pro-max` 스킬 |
+| **UI·제품 피처 — 전체 순서** | **[`docs/design/QUALITY_PIPELINE.md`](design/QUALITY_PIPELINE.md)** (디자인 플랜 리뷰 → 엔지 플랜 리뷰 → 빌드 → verify) |
 | PR 전 품질·리그레션 | **`/review`**; 브라우저 검증은 **`/qa`** 또는 **`/browse`** (설치 시) |
 | 출하 파이프라인 | **`/ship`** — 단, **이 저장소는 `pnpm verify`·커밋 규칙을 반드시 지킨다** (gstack 기본과 다를 수 있음) |
 
@@ -79,6 +80,7 @@
 | [`DEVELOPMENT.md`](./DEVELOPMENT.md) | 스크립트·CI |
 | [`memory-bank/README.md`](../memory-bank/README.md) | Memory Bank 파일 역할 |
 | [`AI_AGENT_MATURITY_REPORT.md`](./AI_AGENT_MATURITY_REPORT.md) | 성숙도 리포트·벤치마크·점수 |
+| [`design/QUALITY_PIPELINE.md`](./design/QUALITY_PIPELINE.md) | gstack 디자인·엔지 리뷰 순서 + repo 게이트 |
 
 ---
 

@@ -6,6 +6,8 @@ The repo has a root **`DESIGN.md`** (pointer) so agents that expect `DESIGN.md` 
 
 See **[`SYSTEM.md`](SYSTEM.md)** for how [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) references, Elevate tokens, and surface modes (marketing chrome vs app shell) fit together.
 
+**Quality (gstack + verify):** **[`QUALITY_PIPELINE.md`](QUALITY_PIPELINE.md)** — designer plan review → engineering plan review → build → verify → optional visual QA.
+
 ## Purpose
 
 - **Shipped UI** is driven by **`src/app/globals.css`** and Tailwind v4 `@theme` tokens.

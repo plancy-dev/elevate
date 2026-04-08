@@ -21,6 +21,7 @@ cd .agents/skills/gstack
 | 단계 | gstack (선택) | 저장소 측 |
 |------|----------------|-----------|
 | 방향·압축 | `/office-hours`, `/plan-ceo-review` | `memory-bank/creative-elevate-ai-pivot.md`, `tasks.md` |
+| **UI 품질 파이프라인 (권장 순서)** | `/plan-design-review` → `/plan-eng-review` → (구현 후) `/design-review` 또는 `/qa` | **[`docs/design/QUALITY_PIPELINE.md`](./design/QUALITY_PIPELINE.md)** — 하네스(`DESIGN.md`, `SYSTEM.md`)와 함께 쓸 것 |
 | 설계·구멍 | `/plan-eng-review` | ADR, `creative-architecture.md` |
 | 구현 | — | Cursor INIT→BUILD, `pnpm verify` |
 | 출하 전 | `/review`, `/qa` | 커밋 훅 통과 (스킵 금지); 콘텐츠·권한 서사는 [`docs/CONTENT_FUNNEL.md`](./CONTENT_FUNNEL.md)와 구현이 맞는지 대조 |

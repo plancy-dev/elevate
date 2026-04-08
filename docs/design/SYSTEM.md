@@ -49,14 +49,18 @@ Product surfaces **keep IBM-style blue primary** inside the app shell; marketing
 | Input | `src/components/ui/input.tsx` | Border, focus ring, 8px-radius alignment |
 | Badge | `src/components/ui/badge.tsx` | |
 
-## 5. Rollout checklist (when touching UI)
+## 5. Quality pipeline (gstack)
+
+For **CTO/Eng + Designer** review order, optional **`/plan-ceo-review`**, and repo gates, see **[`QUALITY_PIPELINE.md`](QUALITY_PIPELINE.md)** (single page; complements [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md)).
+
+## 6. Rollout checklist (when touching UI)
 
 1. Decide surface: **marketing** vs **app** vs **auth**.
 2. Prefer existing CSS variables + Tailwind semantic colors (`bg-layer-01`, `text-text-secondary`, …).
 3. For marketing polish, read vendored `DESIGN.md` § relevant section, then map via `elevate-cursor-alignment.md`.
 4. Run `pnpm verify`; check light/dark and focus states.
 
-## 6. Backlog (iterate until done)
+## 7. Backlog (iterate until done)
 
 Use this as a working queue; check off in PRs or `memory-bank/tasks.md` when scoped.
 
@@ -65,10 +69,10 @@ Use this as a working queue; check off in PRs or `memory-bank/tasks.md` when sco
 | P1 | Marketing inner pages | ✅ Borders/grid tokens rolled across `(marketing)` routes; keep iterating on section alternation per page. |
 | P2 | Dashboard content | ✅ Overview uses `Card` for hero links, KPIs, getting started, activity; library subscription note uses `Card` + `shadow-ambient`. |
 | P3 | Admin | ✅ Overview link tiles + waitlist / allowlist / catalog admin panels: `rounded-lg` + `shadow-ambient` on main panels. |
-| P4 | Reference | Deferred — vendor a second `DESIGN.md` only after product decision (`§7`). |
+| P4 | Reference | Deferred — vendor a second `DESIGN.md` only after product decision (`§8` Future extensions). |
 | P5 | Button API | ✅ `variant="marketing"` on `Button` / `buttonLinkClassName` (orange pill; use only under marketing chrome). |
 
-## 7. Future extensions (optional)
+## 8. Future extensions (optional)
 
 - Add a second vendored `DESIGN.md` under `docs/design/third-party/` for a distinct surface (e.g. data-dense dashboard) — only after explicit product decision.
 - Custom display font for marketing headings — subset + license review.
