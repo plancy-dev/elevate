@@ -20,6 +20,8 @@
    - `migrations/015_platform_email_settings.sql` — singleton row for waitlist BCC etc.
    - `migrations/016_prompt_studio_beta_allowlist.sql` — optional Prompt Studio beta email gate (`STUDIO_BETA_REQUIRE_ALLOWLIST`; manage `/admin/prompt-studio-allowlist`)
 
+The **`waitlist_signups`** and **`prompt_studio_beta_allowlist`** tables are also used when **`DASHBOARD_ACCESS_STRICT=true`** to decide who may open **`/dashboard`** (see `src/lib/auth/dashboard-access.ts` and [`docs/DEVELOPMENT.md`](../docs/DEVELOPMENT.md) § Dashboard access).
+
 After applying new migrations, regenerate types: **`pnpm db:types`** (requires `NEXT_PUBLIC_PROJECT_ID` or parseable `NEXT_PUBLIC_SUPABASE_URL` in `.env.local` — see `scripts/gen-db-types.mjs`).
 
 ## Auth redirect URLs

@@ -63,7 +63,7 @@
 | M4 | 전자책 SKU 슬라이스 (카탈로그·MDX·권한 — 기존 파이프라인에 맞춰 분할 출시) | ⏳ |
 | M5 | PostHog: [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 퍼널 레시피 + 프로젝트 UI에서 대시보드 저장 | 레시피 ✅ · UI ⏳ |
 | M2.1 | 소셜·Linktree·자사 짧은 링크(`/ig`,`/yt`,`/links` 등) — [`MARKETING_OPS_CHECKLIST.md`](../docs/MARKETING_OPS_CHECKLIST.md) | ✅ 채널 1차·문서 |
-| M3.1 | **Studio Productions** — 외부 AI 툴 산출물·프롬프트 원장 (v1: 링크·레이블·선택 숏컷만, API 연동 없음) | ⏳ PLAN 입력 [`docs/features/PLAN-studio-productions.md`](../docs/features/PLAN-studio-productions.md) · ADR [`003`](../docs/adr/ADR-003-studio-productions-mvp.md) · 리뷰 [`GSTACK_REVIEW`](../docs/features/GSTACK_REVIEW-production-workbench.md) § I–K |
+| M3.1 | **Studio Productions** — 외부 AI 툴 산출물·프롬프트 원장 (v1: 링크·레이블·선택 숏컷만, API 연동 없음) | ✅ v1 앱 경로·워크벤치; 확장은 [`PLAN-studio-productions.md`](../docs/features/PLAN-studio-productions.md) · ADR [`003`](../docs/adr/ADR-003-studio-productions-mvp.md) |
 
 **마케팅 실행 순서 (채널 구축 후 → 콘텐츠):** 아래를 위에서부터. 상세·카피는 [`MARKETING_OPS_CHECKLIST.md`](../docs/MARKETING_OPS_CHECKLIST.md) · 필라·캘린더는 [`marketing-pillars-m2.md`](marketing-pillars-m2.md).
 
@@ -92,10 +92,12 @@
 
 | 우선순위 | 항목 | 비고 |
 |---------|------|------|
-| P1 | **시각 언어 v2** — [`docs/design/VISUAL_LANGUAGE_V2.md`](../docs/design/VISUAL_LANGUAGE_V2.md) 롤아웃 · [`PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md`](../docs/design/PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md) | ✅ PR-1–5 + 문서/PR-6(부분) 반영(2026-04); 스테이징 스크린샷·감사 리포트 갱신은 선택 |
 | P0 | Production Toss keys·웹훅 URL·상용 컴플라이언스 | 운영 |
+| P1 | **시각 언어 v2** — [`docs/design/VISUAL_LANGUAGE_V2.md`](../docs/design/VISUAL_LANGUAGE_V2.md) 롤아웃 · [`PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md`](../docs/design/PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md) | ✅ PR-1–5 + 문서/PR-6(부분) 반영(2026-04); 스테이징 스크린샷·감사 리포트 갱신은 선택 |
+| P1 | **대시보드 단일 표면 UX** — [`docs/design/DASHBOARD_UX_PRINCIPLES.md`](../docs/design/DASHBOARD_UX_PRINCIPLES.md) | ✅ 개요·라이브러리·설정·스튜디오·프로덕션 목록 등(2026-04); 팀·빌링 등은 동일 패턴으로 확장 가능 |
 | P1 | PostHog 대시보드(퍼널 시각화) | 이벤트: `elevate_funnel_*`, `elevate_waitlist_*`, `elevate_marketing_cta_click`, `elevate_blog_post_viewed` — [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 참고 후 UI에서 구성 |
 | P1 | E2E CI — PR에 `run-e2e` 라벨 또는 수동 workflow | `e2e.yml` |
+| P2 | **대시보드 접근 게이트 (운영)** — `DASHBOARD_ACCESS_STRICT` · [`src/lib/auth/dashboard-access.ts`](../src/lib/auth/dashboard-access.ts) · `/access-pending` | ✅ 코드 반영; 프로덕션 켤 때 Vercel에 `SUPABASE_SERVICE_ROLE_KEY` + 플래그 |
 | P2 | MICE 스키마 제거 또는 아카이브 | 데이터·고객 영향 검토 후 |
 | P2 | **롱폼·모바일 타이포 리듬** | ✅ Phase A–C [`docs/features/PLAN-responsive-longform-typography.md`](../docs/features/PLAN-responsive-longform-typography.md) — 배포 후 Lighthouse로 CV·LCP만 점검 |
 

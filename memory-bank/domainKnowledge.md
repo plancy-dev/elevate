@@ -10,6 +10,7 @@
 | 프로필 | `profiles` — Auth 연동, 역할, `organization_id` |
 | 콘텐츠 카탈로그 | `content_products` — 판매 단위 메타데이터; **`product_kind`**: `ebook`(기본) → `guide` / `template` / `bundle` |
 | 권한(엔타이틀먼트) | `organization_content_entitlements` — 조직이 어떤 콘텐츠에 접근하는지 |
+| 대시보드 접근 (운영 플래그) | `DASHBOARD_ACCESS_STRICT=true`일 때 이메일이 `waitlist_signups` 또는 `prompt_studio_beta_allowlist`에 있거나 플랫폼/조직 관리자여야 함 — [`src/lib/auth/dashboard-access.ts`](../src/lib/auth/dashboard-access.ts) |
 
 **콘텐츠 퍼널(요약)**: 인지(랜딩·SEO) → 관심(가격·데모) → 결제(Toss 등) → **Library**에서 엔타이틀먼트 확인 → (향후) 다운로드/링크. 전자책 우선 전략·단계별 갭은 [`docs/CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md). **읽기 허용(구독 vs 개별 구매)** 정의는 [`docs/EBOOK_READ_ALLOWLIST.md`](../docs/EBOOK_READ_ALLOWLIST.md).
 

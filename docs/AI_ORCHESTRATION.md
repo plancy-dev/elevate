@@ -77,7 +77,8 @@
 |------|------|
 | [`AI_USAGE.md`](./AI_USAGE.md) | 짧은 진입점 |
 | [`GSTACK.md`](./GSTACK.md) | vendored gstack 설치 |
-| [`DEVELOPMENT.md`](./DEVELOPMENT.md) | 스크립트·CI |
+| [`DEVELOPMENT.md`](./DEVELOPMENT.md) | 스크립트·CI·대시보드 접근 env |
+| [`design/SYSTEM.md`](./design/SYSTEM.md) | 디자인 토큰·마케팅/앱 셸 |
 | [`memory-bank/README.md`](../memory-bank/README.md) | Memory Bank 파일 역할 |
 | [`AI_AGENT_MATURITY_REPORT.md`](./AI_AGENT_MATURITY_REPORT.md) | 성숙도 리포트·벤치마크·점수 |
 | [`design/QUALITY_PIPELINE.md`](./design/QUALITY_PIPELINE.md) | gstack 디자인·엔지 리뷰 순서 + repo 게이트 |

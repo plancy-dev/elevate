@@ -77,7 +77,7 @@ Use this as a working queue; check off in PRs or `memory-bank/tasks.md` when sco
 | Priority | Area | Action |
 |----------|------|--------|
 | P1 | Marketing inner pages | ✅ Borders/grid tokens rolled across `(marketing)` routes; keep iterating on section alternation per page. |
-| P2 | Dashboard content | ✅ Overview uses `Card` for hero links, KPIs, getting started, activity; library subscription note uses `Card` + `shadow-ambient`. |
+| P2 | Dashboard content | ✅ Single bounded panels (`rounded-xl` + `divide-y` / hairline grid per [`DASHBOARD_UX_PRINCIPLES.md`](DASHBOARD_UX_PRINCIPLES.md)) — overview, library list, settings, studio, productions list; subscription callout stays dashed where needed. |
 | P3 | Admin | ✅ Overview link tiles + waitlist / allowlist / catalog admin panels: `rounded-lg` + `shadow-ambient` on main panels. |
 | P4 | Reference | Deferred — vendor a second `DESIGN.md` only after product decision (`§8` Future extensions). |
 | P5 | Button API | ✅ `variant="marketing"` on `Button` / `buttonLinkClassName` (orange pill; use only under marketing chrome). |

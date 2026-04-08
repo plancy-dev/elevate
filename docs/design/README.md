@@ -14,6 +14,8 @@ See **[`SYSTEM.md`](SYSTEM.md)** for how [awesome-design-md](https://github.com/
 
 **Audit (consistency + UX redesign judgment):** **[`DESIGN_UX_AUDIT_REPORT.md`](DESIGN_UX_AUDIT_REPORT.md)** — code/docs review (2026-04-06) + live screenshots in [`audit-screenshots/`](audit-screenshots/) (2026-04-08).
 
+**Dashboard (app shell) anti-template rules:** **[`DASHBOARD_UX_PRINCIPLES.md`](DASHBOARD_UX_PRINCIPLES.md)** — lists as one container + row hover; nav marker discipline.
+
 ## Purpose
 
 - **Shipped UI** is driven by **`src/app/globals.css`** and Tailwind v4 `@theme` tokens.

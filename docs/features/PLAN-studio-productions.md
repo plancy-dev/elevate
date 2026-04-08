@@ -1,5 +1,7 @@
 # PLAN input — Studio Productions MVP
 
+**Status (2026-04):** v1 is **shipped** — routes under `/dashboard/productions` (list, new, episode detail, workbench). This document stays useful for **backlog slices**, open decisions, and `/autoplan` scope.
+
 **Purpose:** One file for **Cursor Plan** and optional **gstack `/autoplan`**. Scope matches **ADR-003** and **GSTACK_REVIEW § A.4** (links, optional shortcuts, labels; no vendor APIs).
 
 ## Goal
@@ -17,7 +19,7 @@ Ship **org-scoped production ledger**: episodes (deliverables) + artifacts (prom
 - Migration: `supabase/migrations/017_studio_productions.sql` (renumber if taken).
 - Tables: `studio_production_episodes`, `studio_production_artifacts` (see ADR-003).
 - RLS: `organization_id = user_organization_id()`; artifacts denormalize org_id; trigger optional.
-- Routes: **TBD in Plan** — e.g. `src/app/(dashboard)/dashboard/productions/`.
+- Routes: `src/app/(dashboard)/dashboard/productions/` (implemented).
 
 ## MVP slices (BUILD order)
 

@@ -8,7 +8,7 @@ Elevate helps teams turn **measurable AI outcomes** into repeatable workflows: p
 
 - **Framework**: Next.js 16 (App Router, React Server Components)
 - **Language**: TypeScript (strict mode)
-- **Styling**: Tailwind CSS v4 (Carbon-inspired enterprise dark theme)
+- **Styling**: Tailwind CSS v4 + semantic tokens (`globals.css`; marketing vs app surfaces)
 - **Auth & Database**: Supabase (PostgreSQL + Auth + Storage + Realtime)
 - **Deployment**: Vercel
 - **Design Prototyping**: Google Stitch MCP (optional)
@@ -22,9 +22,12 @@ Elevate helps teams turn **measurable AI outcomes** into repeatable workflows: p
 | [`docs/CONTENT_FUNNEL.md`](docs/CONTENT_FUNNEL.md) | Ebook-first funnel & journey vs codebase |
 | [`memory-bank/reflect-ebook-content-funnel.md`](memory-bank/reflect-ebook-content-funnel.md) | REFLECT audit (implementation + gaps) |
 | [`memory-bank/tasks.md`](memory-bank/tasks.md) | Roadmap SoT |
+| [`docs/design/SYSTEM.md`](docs/design/SYSTEM.md) | Design tokens, marketing vs app shell, component map |
+| [`docs/design/VISUAL_LANGUAGE_V2.md`](docs/design/VISUAL_LANGUAGE_V2.md) | Visual execution contract (accents, radius, rollout) |
+| [`docs/design/DASHBOARD_UX_PRINCIPLES.md`](docs/design/DASHBOARD_UX_PRINCIPLES.md) | Dashboard list/nav patterns (anti-template) |
 | [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) | AI 도구 레이어 (gstack·Memory Bank·규칙) |
 | [`docs/AI_AGENT_MATURITY_REPORT.md`](docs/AI_AGENT_MATURITY_REPORT.md) | AI 에이전트 활용 성숙도·벤치마크·점수 (리포트) |
-| [`docs/MANUAL_OPERATOR_CHECKLIST.md`](docs/MANUAL_OPERATOR_CHECKLIST.md) | Toss / Supabase / PostHog 수동 작업 체크리스트 |
+| [`docs/MANUAL_OPERATOR_CHECKLIST.md`](docs/MANUAL_OPERATOR_CHECKLIST.md) | Toss / Supabase / PostHog / env 수동 작업 체크리스트 |
 | [`docs/AI_USER_TEMPLATES.md`](docs/AI_USER_TEMPLATES.md) | 버그·기능 요청 권장 형식 |
 | [`docs/AI_WORKFLOW_PORTABILITY.md`](docs/AI_WORKFLOW_PORTABILITY.md) | 다른 프로젝트로 워크플로 이식 시 수정 파일 |
 
@@ -59,8 +62,8 @@ Open [http://localhost:3000](http://localhost:3000).
 src/
 ├── app/                        # Next.js App Router
 │   ├── [locale]/(marketing)/   # Landing, pricing, about
-│   ├── (auth)/                 # Login, signup
-│   ├── (dashboard)/            # App dashboard (library + legacy MICE)
+│   ├── (auth)/                 # Login, signup, access-pending
+│   ├── (dashboard)/            # App dashboard (library, studio, productions, …)
 │   └── api/                    # API routes, webhooks
 ├── components/
 │   ├── ui/                     # Button, Card, Badge (Carbon-inspired)
@@ -89,16 +92,16 @@ supabase/migrations/            # Database migration SQL
 
 ## Design System
 
-Carbon-inspired enterprise dark theme:
+Semantic tokens live in **`src/app/globals.css`** (Tailwind v4 `@theme`). **Marketing** routes use **`.elevate-marketing-chrome`** (warm cream canvas, orange **marketing** CTA variant). **App** (`(dashboard)`, `(admin)`) keeps **IBM-style blue** primary for interactive elements — see [`docs/design/VISUAL_LANGUAGE_V2.md`](docs/design/VISUAL_LANGUAGE_V2.md).
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| Primary | `#0F62FE` | Brand, interactive, focus |
-| Accent | `#42BE65` | Growth indicators, positive KPIs |
-| Background | `#0D0D0D` | Page background |
-| Layer 01 | `#161616` | Cards, panels |
-| Layer 02 | `#1C1C1C` | Elevated surfaces |
-| Border | `#393939` | Dividers, outlines |
+| Token (examples) | Typical usage |
+|------------------|----------------|
+| `primary` / `interactive` | App shell buttons, links, focus |
+| `marketing-accent` | Marketing primary CTA only (scoped) |
+| `layer-01` / `layer-02` | Panels, list row hover |
+| `background` / `border-subtle` | Page chrome, dividers |
+
+Full mapping: [`docs/design/SYSTEM.md`](docs/design/SYSTEM.md) · [`docs/design/elevate-cursor-alignment.md`](docs/design/elevate-cursor-alignment.md).
 
 ## License
 

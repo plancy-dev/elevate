@@ -1,5 +1,7 @@
 # Creative Decision: Elevate Architecture
 
+> **2026 product note:** The pivot adds **content catalog / entitlements**, **Prompt Studio**, and **Studio Productions** (episodes·artifacts) alongside the schema below. The **events → sessions → attendees** tree is **legacy MICE** (kept for compatibility); new features target the AI platform surfaces in [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md).
+
 ## Decision: Application Architecture
 
 ### Option A: Monolithic Next.js + Supabase (Selected)

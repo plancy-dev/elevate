@@ -12,8 +12,9 @@
 ## 환경 변수 (요약)
 
 - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY` (서버 전용, 온보딩 등)
+- `SUPABASE_SERVICE_ROLE_KEY` (서버 전용 — 온보딩, waitlist insert, **대시보드 엄격 모드** 시 allowlist 조회 등)
 - `NEXT_PUBLIC_APP_URL` (OAuth·이메일 리다이렉트)
+- **`DASHBOARD_ACCESS_STRICT`** / **`DASHBOARD_ALLOW_ORG_ADMIN`** — 선택; 켜면 `/dashboard` 접근이 제한되고 `/access-pending`으로 보냄 ([`docs/DEVELOPMENT.md`](../docs/DEVELOPMENT.md))
 - MCP용 `SUPABASE_ACCESS_TOKEN`은 **Supabase 대시보드 Personal Access Token** — 서비스 롤 JWT와 혼동 금지
 
 ## 금지

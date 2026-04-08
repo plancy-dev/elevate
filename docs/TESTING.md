@@ -6,7 +6,7 @@
 2. **Integration** (`tests/integration/`) — real Supabase (service role); **opt-in** via env.
 3. **E2E** (`tests/e2e/`) — Playwright against a running app; **manual or optional CI** (browser install).
 
-4. **Middleware → proxy** (Next.js 16 deprecation): tracked upstream; migrate when following the official Next guide — not blocking day-to-day.
+4. **Middleware → proxy** (Next.js 16): request pipeline lives in **`src/proxy.ts`** (session refresh, next-intl, auth forwarding). Locale-skipped paths include `/login`, `/dashboard`, `/access-pending`, `/auth`, etc. Migrate when following the official Next guide if the API renames — not blocking day-to-day.
 
 ## Commands
 

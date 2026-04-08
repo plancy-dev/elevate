@@ -31,6 +31,16 @@ Production hostname (e.g. **`https://elevate.ai.kr`**) must be consistent across
 
 After changing Site URL or redirects, smoke-test: sign-in, sign-up, password recovery, and (if enabled) checkout return URLs.
 
+## Dashboard access (optional production gate)
+
+When **`DASHBOARD_ACCESS_STRICT=true`**, signed-in users must be **platform admins**, **org admins** (unless `DASHBOARD_ALLOW_ORG_ADMIN=false`), or listed in **`waitlist_signups`** / **`prompt_studio_beta_allowlist`** (email normalized like the purchase allowlist) to use **`/dashboard`**. Others are redirected to **`/access-pending`**.
+
+- **Server:** `SUPABASE_SERVICE_ROLE_KEY` is required for allowlist checks (same as other admin paths).
+- **Code:** `src/lib/auth/dashboard-access.ts`, gate in `src/app/(dashboard)/layout.tsx`, page `src/app/(auth)/access-pending/page.tsx`, proxy skip in `src/proxy.ts`.
+- **Env:** see `.env.local.example` (`DASHBOARD_ACCESS_STRICT`, `DASHBOARD_ALLOW_ORG_ADMIN`).
+
+Local dev usually leaves strict mode **off** so all logged-in users can open the dashboard.
+
 ## Waitlist `source` field
 
 `waitlist_signups.source` stores where the signup came from (default `home`). Allowed values are defined in **`src/lib/waitlist/sources.ts`** (`WAITLIST_SOURCE_VALUES`). The POST **`/api/waitlist`** body may include `source`; unknown values fall back to `home`.

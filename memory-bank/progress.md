@@ -1,53 +1,37 @@
 # Progress — Elevate
 
-## 현재 상태
-
-**Phase 1 MVP 핵심 루프 완료** (1B·1C·1D 반영)
+**SoT for roadmap priority:** [`tasks.md`](tasks.md) · **current focus:** [`activeContext.md`](activeContext.md)
 
 ---
 
-## 완료 요약
+## Product surface (2026)
 
-### 제품·UI
-- 마케팅 라우트, Pricing, Contact, Product/Solutions 등 엔터프라이즈 셸
-- 인증: Login, Signup, Forgot password (Supabase 연동)
-- 대시보드 레이아웃(사이드바), 이벤트 목록·상세·**신규 이벤트 생성** 페이지
-- 목 데이터: 일부 화면(참석자·장소·분석)은 여전히 목 또는 부분 연동
-
-### 백엔드·데이터
-- 마이그레이션: `000` … `002` + **`003_session_attendees_policies`** (세션–참석자 RLS 쓰기)
-- GitHub Actions: lint · typecheck · build (`/.github/workflows/ci.yml`)
-- 조직 자동 온보딩 + 대시보드·이벤트 **실데이터** 조회
-- 이벤트 **생성** 서버 액션
-
-### 인프라
-- `pnpm build` 통과
-- Next.js 16: `src/proxy.ts` + `Database` 타입 (`pnpm db:types`)
+- **Marketing** (`[locale]/(marketing)/`): shared **`elevate-marketing-chrome`** shell, Pretext hero, catalog/pricing/contact/blog, etc. Tokens and rollout: [`docs/design/VISUAL_LANGUAGE_V2.md`](../docs/design/VISUAL_LANGUAGE_V2.md), [`docs/design/SYSTEM.md`](../docs/design/SYSTEM.md).
+- **App** (`(dashboard)/`): IBM-style blue primary, sidebar, Library · Prompt Studio · Studio Productions · Billing · Team · Settings. List/overview patterns: [`docs/design/DASHBOARD_UX_PRINCIPLES.md`](../docs/design/DASHBOARD_UX_PRINCIPLES.md).
+- **Access control**: Optional strict dashboard gate (`DASHBOARD_ACCESS_STRICT`) — platform/org admins or emails on `waitlist_signups` / `prompt_studio_beta_allowlist`; otherwise `/access-pending`. Implementation: `src/lib/auth/dashboard-access.ts`, `src/app/(auth)/access-pending/page.tsx`.
+- **Legacy MICE** (events/venues/attendees): schema retained; several `/dashboard/events|venues|…` paths redirect to `/dashboard` per `next.config.ts`. No new features here.
 
 ---
 
-## 진행 중 / 다음
+## Engineering
 
-| 항목 | 상태 |
-|------|------|
-| 이벤트 수정·삭제 | ✅ |
-| Venue CRUD | ✅ |
-| Session CRUD | ✅ |
-| 참석자 DB + CSV | ✅ |
-| Settings + DB `005` | ✅ (마이그레이션 수동 적용) |
-| `proxy` + Supabase 타입 | ✅ |
-| Vercel 프로덕션 | 운영 시 env·리다이렉트 점검 |
-| Phase 2 팀·초대 | `006` + `/dashboard/team`, `/invite` |
-| Phase 2 분석 | 참석자 기준 월 집계 |
+- **Stack**: Next.js 16 (App Router, RSC), TypeScript, Tailwind v4, Supabase, Vercel. Request boundary: `src/proxy.ts` (session + next-intl; see [`docs/TESTING.md`](../docs/TESTING.md) § middleware note).
+- **CI**: `.github/workflows/ci.yml` — lint, typecheck, unit tests, build (`pnpm verify` equivalent).
+- **Quality gate**: `pnpm verify` before ship; Husky + lint-staged on commit (no `commit --no-verify`).
 
 ---
 
-## 타임라인 (가이드)
+## Completed vs open (high level)
 
-| 구간 | 목표 |
-|------|------|
-| Phase 1B–C | 운영 CRUD + 참석자 루프 |
-| Phase 1D | 설정·플랫폼·배포 |
-| Phase 2 | 팀·분석·결제 |
+| Area | Status |
+|------|--------|
+| Content catalog, entitlements, Toss PoC, Library | Shipped (see `tasks.md` Phase B) |
+| Prompt Studio placeholder + beta allowlist | Shipped |
+| Studio Productions v1 (episodes, artifacts, workbench) | Shipped — ADR [`docs/adr/ADR-003-studio-productions-mvp.md`](../docs/adr/ADR-003-studio-productions-mvp.md) |
+| Visual language v2 + marketing/dashboard surface alignment | Shipped (see `tasks.md` P1 backlog) |
+| PostHog funnels saved in UI | Ops — [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) |
+| E2E on PR label | Optional — `e2e.yml` |
 
-마지막 갱신: tasks.md의 Phase 정의와 동기화할 것.
+---
+
+마지막 구조 갱신: `tasks.md` Phase 정의와 맞출 것.
