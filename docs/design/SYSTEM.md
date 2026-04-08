@@ -62,7 +62,7 @@ Use this as a working queue; check off in PRs or `memory-bank/tasks.md` when sco
 
 | Priority | Area | Action |
 |----------|------|--------|
-| P1 | Marketing inner pages | Align `border-marketing-border-subtle` / alternating surfaces on `/product`, `/pricing`, `/blog`, `/contact` (same tokens as home). |
+| P1 | Marketing inner pages | ✅ Borders/grid tokens rolled across `(marketing)` routes; keep iterating on section alternation per page. |
 | P2 | Dashboard content | Apply `shadow-card` / `rounded-lg` to overview KPI tiles and library cards where not yet using `Card`. |
 | P3 | Admin | `(admin)/` layout: keep neutral shell; optional subtle `shadow-ambient` on panels only. |
 | P4 | Reference | Optionally vendor a second `DESIGN.md` (e.g. Vercel) for **dashboard** density — product decision first. |

@@ -25,9 +25,9 @@ export default async function ProductPage({ params }: Props) {
   const t = await getTranslations("Product");
 
   return (
-    <div className="border-t border-border-subtle">
+    <div className="border-t border-marketing-border-subtle">
       <MarketingSection title={t("title")} description={t("description")}>
-        <div className="grid gap-px bg-border-subtle border border-border-subtle md:grid-cols-2">
+        <div className="grid gap-px bg-marketing-border-subtle border border-marketing-border-subtle md:grid-cols-2">
           {SLUGS.map((slug) => (
             <Link
               key={slug}

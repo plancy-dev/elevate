@@ -25,9 +25,9 @@ export default async function SolutionsIndexPage({ params }: Props) {
   const t = await getTranslations("Solutions");
 
   return (
-    <div className="border-t border-border-subtle">
+    <div className="border-t border-marketing-border-subtle">
       <MarketingSection title={t("title")} description={t("description")}>
-        <ul className="grid gap-px bg-border-subtle border border-border-subtle md:grid-cols-2">
+        <ul className="grid gap-px bg-marketing-border-subtle border border-marketing-border-subtle md:grid-cols-2">
           {SLUGS.map((slug) => (
             <li key={slug} className="bg-layer-01">
               <Link

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { MarketingSection } from "@/components/marketing/marketing-section";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -18,38 +20,30 @@ export default async function ContactPage({ params }: Props) {
   const t = await getTranslations("Contact");
 
   return (
-    <div className="border-t border-border-subtle">
+    <div className="border-t border-marketing-border-subtle">
       <MarketingSection title={t("title")} description={t("description")}>
         <form className="max-w-md space-y-4">
           <div>
             <label className="block text-xs font-medium text-text-secondary mb-1.5">
               {t("labelEmail")}
             </label>
-            <input
+            <Input
               type="email"
-              className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus"
               placeholder={t("placeholderEmail")}
+              autoComplete="email"
             />
           </div>
           <div>
             <label className="block text-xs font-medium text-text-secondary mb-1.5">
               {t("labelCompany")}
             </label>
-            <input
-              type="text"
-              className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus"
-              placeholder={t("placeholderCompany")}
-            />
+            <Input type="text" placeholder={t("placeholderCompany")} />
           </div>
           <div>
             <label className="block text-xs font-medium text-text-secondary mb-1.5">
               {t("labelMessage")}
             </label>
-            <textarea
-              rows={4}
-              className="w-full bg-field border border-border-subtle px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-focus"
-              placeholder={t("placeholderMessage")}
-            />
+            <Textarea placeholder={t("placeholderMessage")} rows={4} />
           </div>
           <Button variant="primary" size="lg" type="submit">
             {t("submit")}

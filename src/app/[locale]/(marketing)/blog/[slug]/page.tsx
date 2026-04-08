@@ -115,7 +115,7 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   return (
-    <div className="border-t border-border-subtle">
+    <div className="border-t border-marketing-border-subtle">
       <BlogPostViewedCapture
         slug={slug}
         locale={locale}
@@ -151,7 +151,7 @@ export default async function BlogPostPage({ params }: Props) {
           <MDXRemote source={post.body} components={blogMdxComponents} />
         </div>
 
-        <div className="mt-14 border-t border-border-subtle pt-8">
+        <div className="mt-14 border-t border-marketing-border-subtle pt-8">
           <Link
             href="/blog"
             className="text-sm font-medium text-interactive hover:underline"

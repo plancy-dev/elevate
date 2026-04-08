@@ -44,7 +44,7 @@ export default async function ProductModulePage({ params }: Props) {
   ];
 
   return (
-    <div className="border-t border-border-subtle">
+    <div className="border-t border-marketing-border-subtle">
       <MarketingArticle
         title={t(`${slug}.title`)}
         lead={t(`${slug}.lead`)}

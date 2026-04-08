@@ -59,7 +59,7 @@ export default async function PricingPage({ params }: Props) {
   const featureRows = t.raw("featureRows") as FeatureRow[];
 
   return (
-    <div className="border-t border-border-subtle">
+    <div className="border-t border-marketing-border-subtle">
       <section className="mx-auto max-w-[1584px] px-4 py-16 lg:px-8 text-center">
         <h1 className="text-4xl font-semibold tracking-[-0.02em] text-text-primary lg:text-5xl">
           {t("heroTitle")}
@@ -70,7 +70,7 @@ export default async function PricingPage({ params }: Props) {
       </section>
 
       <section className="mx-auto max-w-[1584px] px-4 lg:px-8 pb-16">
-        <div className="grid md:grid-cols-3 gap-px bg-border-subtle border border-border-subtle">
+        <div className="grid md:grid-cols-3 gap-px bg-marketing-border-subtle border border-marketing-border-subtle">
           {plans.map((plan) => (
             <div
               key={plan.key}
@@ -132,15 +132,15 @@ export default async function PricingPage({ params }: Props) {
           {t("compareTitle")}
         </h2>
 
-        <div className="border border-border-subtle bg-layer-01 overflow-x-auto">
-          <div className="grid grid-cols-[1fr_140px_140px_140px] gap-0 border-b border-border-subtle sticky top-0 bg-layer-01 z-10">
+        <div className="border border-marketing-border-subtle bg-layer-01 overflow-x-auto">
+          <div className="grid grid-cols-[1fr_140px_140px_140px] gap-0 border-b border-marketing-border-subtle sticky top-0 bg-layer-01 z-10">
             <div className="px-5 py-3 text-xs font-medium text-text-tertiary uppercase tracking-wider">
               {t("featureColumn")}
             </div>
             {plans.map((plan) => (
               <div
                 key={plan.key}
-                className={`px-5 py-3 text-xs font-medium text-center uppercase tracking-wider border-l border-border-subtle ${plan.highlight ? "text-primary bg-highlight" : "text-text-tertiary"}`}
+                className={`px-5 py-3 text-xs font-medium text-center uppercase tracking-wider border-l border-marketing-border-subtle ${plan.highlight ? "text-primary bg-highlight" : "text-text-tertiary"}`}
               >
                 {plan.name}
               </div>
@@ -150,7 +150,7 @@ export default async function PricingPage({ params }: Props) {
           {featureRows.map((row, i) => (
             <div
               key={row.label}
-              className={`grid grid-cols-[1fr_140px_140px_140px] gap-0 ${i < featureRows.length - 1 ? "border-b border-border-subtle" : ""} hover:bg-layer-02 transition-colors`}
+              className={`grid grid-cols-[1fr_140px_140px_140px] gap-0 ${i < featureRows.length - 1 ? "border-b border-marketing-border-subtle" : ""} hover:bg-layer-02 transition-colors`}
             >
               <div className="px-5 py-3 text-sm text-text-secondary">
                 {row.label}
@@ -159,7 +159,7 @@ export default async function PricingPage({ params }: Props) {
                 (col) => (
                   <div
                     key={col}
-                    className={`px-5 py-3 flex items-center justify-center border-l border-border-subtle ${col === "professional" ? "bg-highlight/50" : ""}`}
+                    className={`px-5 py-3 flex items-center justify-center border-l border-marketing-border-subtle ${col === "professional" ? "bg-highlight/50" : ""}`}
                   >
                     <FeatureCell value={row[col]} />
                   </div>
@@ -170,7 +170,7 @@ export default async function PricingPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="border-t border-border-subtle bg-layer-01">
+      <section className="border-t border-marketing-border-subtle bg-layer-01">
         <div className="mx-auto max-w-[1584px] px-4 py-16 lg:px-8 text-center">
           <h2 className="text-2xl font-semibold text-text-primary">
             {t("faqTitle")}

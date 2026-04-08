@@ -18,7 +18,7 @@ export default async function DemoPage({ params }: Props) {
   const t = await getTranslations("Demo");
 
   return (
-    <div className="border-t border-border-subtle">
+    <div className="border-t border-marketing-border-subtle">
       <MarketingSection title={t("pausedTitle")} description={t("pausedDescription")}>
         <p>
           <Link

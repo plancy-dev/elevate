@@ -44,14 +44,14 @@ export default async function BlogPage({ params }: Props) {
   const posts = getAllPostMetaForLocale(locale);
 
   return (
-    <div className="border-t border-border-subtle">
+    <div className="border-t border-marketing-border-subtle">
       <MarketingSection title={t("title")} description={t("description")} />
 
       <div className="mx-auto max-w-[960px] px-4 pb-16 lg:px-8">
         {posts.length === 0 ? (
           <p className="text-sm text-text-secondary">{t("empty")}</p>
         ) : (
-          <ul className="grid gap-px bg-border-subtle border border-border-subtle rounded-sm overflow-hidden">
+          <ul className="grid gap-px bg-marketing-border-subtle border border-marketing-border-subtle rounded-sm overflow-hidden">
             {posts.map((post) => (
               <li key={post.slug} className="bg-layer-01">
                 <Link

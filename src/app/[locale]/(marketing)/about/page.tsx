@@ -17,7 +17,7 @@ export default async function AboutPage({ params }: Props) {
   const t = await getTranslations("About");
 
   return (
-    <div className="border-t border-border-subtle">
+    <div className="border-t border-marketing-border-subtle">
       <MarketingSection title={t("title")} description={t("description")} />
     </div>
   );

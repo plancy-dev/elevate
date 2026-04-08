@@ -17,9 +17,9 @@ export default async function CaseStudiesPage({ params }: Props) {
   const t = await getTranslations("CaseStudies");
 
   return (
-    <div className="border-t border-border-subtle">
+    <div className="border-t border-marketing-border-subtle">
       <MarketingSection title={t("title")} description={t("description")}>
-        <div className="border border-border-subtle bg-layer-01 p-8 text-sm text-text-secondary">
+        <div className="border border-marketing-border-subtle bg-layer-01 p-8 text-sm text-text-secondary">
           {t("body")}
         </div>
       </MarketingSection>

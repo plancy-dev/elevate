@@ -29,7 +29,7 @@ export default async function PrivacyPage({ params }: Props) {
   ];
 
   return (
-    <div className="border-t border-border-subtle">
+    <div className="border-t border-marketing-border-subtle">
       <MarketingSection title={t("title")} description={t("updated")}>
         <div className="max-w-3xl space-y-5 text-sm text-text-secondary leading-relaxed">
           {paragraphs.map((p, i) => (
