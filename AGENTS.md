@@ -6,7 +6,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Design system (incremental)
 
-Structure and layers: **`docs/design/SYSTEM.md`**. Workflow hub: **`docs/design/README.md`**. Token mapping: **`docs/design/elevate-cursor-alignment.md`**. Reference doc (vendored from [awesome-design-md](https://github.com/VoltAgent/awesome-design-md)): **`docs/design/third-party/cursor-awesome-design-md/DESIGN.md`**. Prefer small, scoped changes (marketing vs dashboard vs shared tokens).
+Root **`DESIGN.md`** is the discovery entry (Stitch / [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) convention: `AGENTS.md` + `DESIGN.md`). Implementation SoT: **`docs/design/SYSTEM.md`**, workflow **`docs/design/README.md`**, token mapping **`docs/design/elevate-cursor-alignment.md`**. Full vendored reference: **`docs/design/third-party/cursor-awesome-design-md/DESIGN.md`**. Prefer small, scoped changes (marketing vs dashboard vs shared tokens).
 
 ## Product vision (AI pivot)
 

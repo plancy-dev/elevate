@@ -2,6 +2,8 @@
 
 ## Architecture
 
+The repo has a root **`DESIGN.md`** (pointer) so agents that expect `DESIGN.md` next to `AGENTS.md` land in the right place; the long-form vendored file stays under `third-party/` to avoid drift.
+
 See **[`SYSTEM.md`](SYSTEM.md)** for how [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) references, Elevate tokens, and surface modes (marketing chrome vs app shell) fit together.
 
 ## Purpose
