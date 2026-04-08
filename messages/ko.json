@@ -131,6 +131,7 @@
     "event3Location": "정책",
     "recentTitle": "최근 활동",
     "previewTitle": "워크스페이스(미리보기)",
+    "productUiPreview": "제품 UI 미리보기",
     "illustration": "Illustration",
     "recentSample": "최근 활동(샘플)",
     "statusDraft": "Draft",
@@ -202,6 +203,15 @@
     "submit": "Schedule demo",
     "signUpHint": "구매용 계정이 필요하신가요?",
     "signUpLink": "계정 만들기"
+  },
+  "AccessPending": {
+    "metaTitle": "접근 대기",
+    "title": "이 계정으로는 아직 대시보드를 쓸 수 없습니다",
+    "body": "Elevate는 단계적으로 공개 중입니다. 조직 관리자에게 문의하거나, 이 이메일로 웨이트리스트에 등록하거나, Prompt Studio 베타 화이트리스트에 포함되거나, 문의해 주세요.",
+    "joinWaitlist": "웨이트리스트 등록",
+    "contact": "문의하기",
+    "signOut": "로그아웃",
+    "backHome": "홈으로"
   },
   "About": {
     "metaTitle": "소개",

@@ -64,64 +64,66 @@ export default async function SettingsPage() {
         <h1 className="text-sm font-medium text-text-primary">{t("title")}</h1>
       </div>
 
-      <div className="p-6 max-w-xl space-y-8">
-        <section>
-          <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider">
-            {t("connectedAccounts")}
-          </h2>
-          <div className="mt-3">
-            <ConnectedIdentities />
-          </div>
-        </section>
+      <div className="p-6 max-w-xl">
+        <div className="divide-y divide-border-subtle overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
+          <section className="px-5 py-6">
+            <h2 className="text-xs font-medium uppercase tracking-wider text-text-tertiary">
+              {t("connectedAccounts")}
+            </h2>
+            <div className="mt-4">
+              <ConnectedIdentities />
+            </div>
+          </section>
 
-        <section>
-          <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider">
-            {t("language.section")}
-          </h2>
-          <div className="mt-3">
-            <SettingsLocaleForm defaultLocale={locale} />
-          </div>
-        </section>
+          <section className="px-5 py-6">
+            <h2 className="text-xs font-medium uppercase tracking-wider text-text-tertiary">
+              {t("language.section")}
+            </h2>
+            <div className="mt-4">
+              <SettingsLocaleForm defaultLocale={locale} />
+            </div>
+          </section>
 
-        <section>
-          <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider">
-            {t("organization")}
-          </h2>
-          <div className="mt-3">
-            {canManageOrg ? (
-              <SettingsOrgForm defaultName={org?.name ?? ""} />
-            ) : (
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-xs text-text-secondary mb-1">
-                    {t("orgNameReadOnly")}
-                  </label>
-                  <input
-                    type="text"
-                    readOnly
-                    value={org?.name ?? ""}
-                    className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-tertiary focus:outline-none"
-                  />
-                  <p className="mt-1 text-xs text-text-tertiary">
-                    {t("orgNameHint")}
-                  </p>
+          <section className="px-5 py-6">
+            <h2 className="text-xs font-medium uppercase tracking-wider text-text-tertiary">
+              {t("organization")}
+            </h2>
+            <div className="mt-4">
+              {canManageOrg ? (
+                <SettingsOrgForm defaultName={org?.name ?? ""} />
+              ) : (
+                <div className="space-y-3">
+                  <div>
+                    <label className="mb-1 block text-xs text-text-secondary">
+                      {t("orgNameReadOnly")}
+                    </label>
+                    <input
+                      type="text"
+                      readOnly
+                      value={org?.name ?? ""}
+                      className="h-10 w-full border border-border-subtle bg-field px-3 text-sm text-text-tertiary focus:outline-none"
+                    />
+                    <p className="mt-1 text-xs text-text-tertiary">
+                      {t("orgNameHint")}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        </section>
+              )}
+            </div>
+          </section>
 
-        <section>
-          <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider">
-            {t("yourProfile")}
-          </h2>
-          <div className="mt-3">
-            <SettingsProfileForm
-              defaultDisplayName={profile?.display_name ?? ""}
-              defaultEmailMilestoneDigest={digest}
-            />
-          </div>
-        </section>
+          <section className="px-5 py-6">
+            <h2 className="text-xs font-medium uppercase tracking-wider text-text-tertiary">
+              {t("yourProfile")}
+            </h2>
+            <div className="mt-4">
+              <SettingsProfileForm
+                defaultDisplayName={profile?.display_name ?? ""}
+                defaultEmailMilestoneDigest={digest}
+              />
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );

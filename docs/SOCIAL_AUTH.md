@@ -9,12 +9,25 @@ Your app uses `signInWithOAuth` with redirect to **`/auth/callback`**. The **Sup
 | Supabase **Callback URL** (shown in provider settings) | `https://<PROJECT_REF>.supabase.co/auth/v1/callback` |
 | Your app (Vercel) | `https://<your-domain>/auth/callback` |
 
-Add **Site URL** and **Redirect URLs** under **Authentication → URL Configuration**:
+Add **Site URL** and **Redirect URLs** under **Authentication → URL Configuration**.
 
-- `http://localhost:3000` (dev)
-- `https://<production-domain>` (Vercel)
+**Redirect URLs** must list the **exact app callback origins** you use. Recommended entries:
 
-Include **`/auth/callback`** on each origin you use.
+| Purpose | Example |
+|--------|---------|
+| Local dev (PKCE + cookies stay on this origin) | `http://localhost:3000/auth/callback` |
+| Same machine, numeric host (different cookie jar than `localhost`) | `http://127.0.0.1:3000/auth/callback` |
+| Production | `https://<production-domain>/auth/callback` |
+
+You can also use Supabase wildcards such as `http://localhost:3000/**` if your project allows it.
+
+**Site URL** is usually production (`https://<production-domain>`). **`NEXT_PUBLIC_APP_URL`** in `.env.local` should be `http://localhost:3000` when running locally (see `.env.local.example`).
+
+### PKCE: “code verifier not found” on `/auth/auth-code-error`
+
+This almost always means the **browser finished OAuth on a different origin** than where sign-in started (e.g. flow started on `localhost`, callback opened on production). Supabase stores the PKCE verifier in **this app’s** storage for the origin that called `signInWithOAuth`. If **`redirectTo`** is not allowed, GoTrue may fall back to **Site URL**, so Google returns you to `https://elevate.ai.kr/auth/callback` while the verifier stayed on `http://localhost:3000` → exchange fails.
+
+**Fix:** Add every dev origin you use (full `/auth/callback` URLs above) to **Redirect URLs**, save, then sign in again from the same origin (and prefer either `localhost` or `127.0.0.1` consistently).
 
 ---
 

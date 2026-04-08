@@ -125,17 +125,17 @@ export default async function BlogPostPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <article className="mx-auto max-w-[720px] px-4 py-10 lg:px-8">
+      <article className="mx-auto max-w-[min(45rem,100%)] px-4 py-10 sm:px-6 lg:px-8">
         <p className="text-xs text-text-tertiary">
           <time dateTime={post.meta.date}>
             {t("published", { date: post.meta.date })}
           </time>
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-text-primary">
+        <h1 className="mt-2 font-semibold tracking-tight text-text-primary text-[length:var(--elevate-prose-hero-title-size)] leading-[1.15]">
           {post.meta.title}
         </h1>
         {post.meta.description ? (
-          <p className="mt-3 text-sm text-text-secondary leading-relaxed">
+          <p className="mt-3 text-[length:var(--elevate-prose-body-size)] text-text-secondary leading-relaxed">
             {post.meta.description}
           </p>
         ) : null}

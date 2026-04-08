@@ -27,7 +27,7 @@ export function SettingsProfileForm({
   return (
     <form action={formAction} className="space-y-4">
       {state?.error && (
-        <p className="rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       )}

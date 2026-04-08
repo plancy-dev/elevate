@@ -34,7 +34,7 @@ export function FieldSelect({
         id={id}
         className={cn(
           height,
-          "w-full min-w-0 appearance-none rounded-sm border border-border-subtle bg-field",
+          "w-full min-w-0 appearance-none rounded-lg border border-border-subtle bg-field",
           "pl-3 pr-10",
           "text-sm",
           "text-text-primary",
@@ -52,7 +52,7 @@ export function FieldSelect({
         ))}
       </select>
       <span
-        className="pointer-events-none absolute right-3 top-1/2 z-[1] -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-sm bg-field/90 text-text-tertiary"
+        className="pointer-events-none absolute right-3 top-1/2 z-[1] -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-md bg-field/90 text-text-tertiary"
         aria-hidden
       >
         <ChevronDown className="h-4 w-4 shrink-0 opacity-80" strokeWidth={2} />

@@ -46,11 +46,51 @@
   --elevate-radius-sm: 0.25rem;
   --elevate-radius-md: 0.5rem;
   --elevate-radius-lg: 0.625rem;
+  /** 12px — cards / large surfaces (VISUAL_LANGUAGE_V2) */
+  --elevate-radius-xl: 0.75rem;
   --elevate-radius-pill: 9999px;
   --elevate-shadow-ambient: 0 0 16px rgba(0, 0, 0, 0.02), 0 0 8px rgba(0, 0, 0, 0.008);
   --elevate-shadow-card:
     0 1px 0 color-mix(in oklab, var(--border) 35%, transparent),
     0 14px 32px rgba(0, 0, 0, 0.07);
+
+  /* Long-form reading (blog MDX, library reader) — PLAN-responsive-longform-typography.md */
+  --elevate-prose-body-size: clamp(0.9375rem, 0.875rem + 0.2vw, 1.0625rem);
+  --elevate-prose-body-leading: 1.65;
+  --elevate-prose-hero-title-size: clamp(1.75rem, 1.45rem + 1.25vw, 2.25rem);
+  --elevate-prose-mdx-h1-size: clamp(1.375rem, 1.2rem + 0.85vw, 1.5rem);
+  --elevate-prose-mdx-h2-size: clamp(1.2rem, 1.05rem + 0.65vw, 1.25rem);
+  --elevate-prose-mdx-h3-size: clamp(1.0625rem, 0.98rem + 0.4vw, 1.125rem);
+
+  /* Marketing layouts — PLAN Phase B (home, blog index, section headers) */
+  --elevate-marketing-gutter-x: 1rem;
+  --elevate-app-gutter-x: 1rem;
+  --elevate-marketing-home-hero-size: clamp(2rem, 1.2rem + 3.2vw, 3.5rem);
+  --elevate-marketing-section-title-size: clamp(1.375rem, 1.12rem + 1.05vw, 1.875rem);
+  --elevate-marketing-page-title-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+  --elevate-marketing-lead-size: clamp(1rem, 0.94rem + 0.22vw, 1.125rem);
+  --elevate-pretext-hero-line-size: clamp(1.375rem, 1.05rem + 1.35vw, 1.875rem);
+  /** Blog index rows, compact titles */
+  --elevate-marketing-list-title-size: clamp(1.0625rem, 0.96rem + 0.45vw, 1.25rem);
+  /**
+   * Blog index `content-visibility` placeholder height (title + 2-line excerpt + padding).
+   * Tune after Lighthouse mobile run; set to 0 to effectively disable intrinsic hint (more layout shift).
+   */
+  --elevate-cv-list-row-intrinsic: 8.5rem;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --elevate-marketing-gutter-x: 1.5rem;
+    --elevate-app-gutter-x: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --elevate-marketing-gutter-x: 2rem;
+    --elevate-app-gutter-x: 2rem;
+  }
 }
 
 .dark {
@@ -132,6 +172,7 @@
   --radius-sm: var(--elevate-radius-sm);
   --radius-md: var(--elevate-radius-md);
   --radius-lg: var(--elevate-radius-lg);
+  --radius-xl: var(--elevate-radius-xl);
   --radius-pill: var(--elevate-radius-pill);
   --shadow-ambient: var(--elevate-shadow-ambient);
   --shadow-card: var(--elevate-shadow-card);
@@ -151,6 +192,34 @@
   --border-subtle: var(--marketing-border-subtle);
   --interactive: var(--marketing-accent);
   --focus: var(--marketing-accent);
+}
+
+/**
+ * Fluid body copy inside MDX / reader shells. Children should use `text-[1em]` where
+ * fixed Tailwind `text-sm` would fight this scale.
+ */
+.prose-blog {
+  font-size: var(--elevate-prose-body-size);
+  line-height: var(--elevate-prose-body-leading);
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+/**
+ * Max-width marketing column + responsive horizontal padding (mobile-first).
+ */
+.elevate-marketing-shell {
+  margin-inline: auto;
+  max-width: 1584px;
+  padding-inline: var(--elevate-marketing-gutter-x);
+}
+
+/**
+ * Long off-screen lists (blog index rows). Approximate row height avoids layout jump.
+ * Revisit with Performance panel / Lighthouse mobile — see PLAN-responsive-longform-typography.md §Phase C.
+ */
+.elevate-cv-list-item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto var(--elevate-cv-list-row-intrinsic);
 }
 
 body {

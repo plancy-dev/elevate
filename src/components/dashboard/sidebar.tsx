@@ -41,6 +41,20 @@ function isBottomNavActive(pathname: string, href: string): boolean {
   return pathname.startsWith(`${href}/`);
 }
 
+/**
+ * App nav: short rounded **marker** (not full-height rail / not generic pill wash).
+ * See docs/design/DASHBOARD_UX_PRINCIPLES.md
+ */
+const sidebarNavLinkBase =
+  "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-[background-color,color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/35 focus-visible:ring-offset-2 focus-visible:ring-offset-layer-01";
+const sidebarNavActive =
+  "bg-layer-02 font-medium text-text-primary [&>svg]:text-primary";
+const sidebarNavInactive =
+  "text-text-secondary hover:bg-layer-02 hover:text-text-primary";
+/** Softer label for footer links (billing, help) when idle */
+const sidebarNavInactiveQuiet =
+  "text-text-tertiary hover:bg-layer-02 hover:text-text-primary";
+
 function isOrgNavItemActive(pathname: string, href: string): boolean {
   if (href === "/dashboard/organization/audit") {
     return (
@@ -147,12 +161,16 @@ export function Sidebar({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
-                  isActive
-                    ? "bg-highlight text-primary font-medium border-l-2 border-primary"
-                    : "text-text-secondary hover:text-text-primary hover:bg-layer-02",
+                  sidebarNavLinkBase,
+                  isActive ? sidebarNavActive : sidebarNavInactive,
                 )}
               >
+                {isActive ? (
+                  <span
+                    className="absolute left-1 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-primary"
+                    aria-hidden
+                  />
+                ) : null}
                 <item.icon className="h-4 w-4 shrink-0" aria-hidden />
                 {item.label}
               </Link>
@@ -181,7 +199,7 @@ export function Sidebar({
                       aria-disabled="true"
                       aria-current={onDisabledRoute ? "page" : undefined}
                       className={cn(
-                        "flex select-none items-center gap-3 rounded-md px-3 py-2 text-sm",
+                        "flex select-none items-center gap-3 rounded-lg px-3 py-2 text-sm",
                         "cursor-not-allowed text-text-tertiary opacity-55",
                         onDisabledRoute && "opacity-70",
                       )}
@@ -197,12 +215,16 @@ export function Sidebar({
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
-                      active
-                        ? "bg-highlight text-primary font-medium border-l-2 border-primary"
-                        : "text-text-secondary hover:text-text-primary hover:bg-layer-02",
+                      sidebarNavLinkBase,
+                      active ? sidebarNavActive : sidebarNavInactive,
                     )}
                   >
+                    {active ? (
+                      <span
+                        className="absolute left-1 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-primary"
+                        aria-hidden
+                      />
+                    ) : null}
                     <item.icon className="h-4 w-4 shrink-0" aria-hidden />
                     {item.label}
                   </Link>
@@ -222,12 +244,16 @@ export function Sidebar({
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
-                active
-                  ? "bg-layer-02 font-medium text-text-secondary"
-                  : "text-text-tertiary hover:bg-layer-02 hover:text-text-primary",
+                sidebarNavLinkBase,
+                active ? sidebarNavActive : sidebarNavInactiveQuiet,
               )}
             >
+              {active ? (
+                <span
+                  className="absolute left-1 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-primary"
+                  aria-hidden
+                />
+              ) : null}
               <item.icon className="h-4 w-4 shrink-0" aria-hidden />
               {item.label}
             </Link>

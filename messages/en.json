@@ -131,6 +131,7 @@
     "event3Location": "Policy",
     "recentTitle": "Recent activity",
     "previewTitle": "Workspace (preview)",
+    "productUiPreview": "Product UI preview",
     "illustration": "Illustration",
     "recentSample": "Recent activity (sample)",
     "statusDraft": "Draft",
@@ -202,6 +203,15 @@
     "placeholderEmail": "you@company.com",
     "labelDate": "Preferred date",
     "submit": "Schedule demo"
+  },
+  "AccessPending": {
+    "metaTitle": "Access pending",
+    "title": "Dashboard access isn’t enabled for this account yet",
+    "body": "Elevate is in a controlled rollout. Ask your org admin for access, join the waitlist with this email, get on the Prompt Studio beta allowlist, or contact us and we’ll help.",
+    "joinWaitlist": "Join the waitlist",
+    "contact": "Contact us",
+    "signOut": "Sign out",
+    "backHome": "Back to home"
   },
   "About": {
     "metaTitle": "About",

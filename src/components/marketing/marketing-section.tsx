@@ -10,16 +10,16 @@ export function MarketingSection({
   children?: ReactNode;
 }) {
   return (
-    <div className="mx-auto max-w-[1584px] px-4 py-16 lg:px-8">
-      <h1 className="text-3xl font-semibold tracking-[-0.02em] text-text-primary lg:text-4xl">
+    <div className="elevate-marketing-shell py-12 sm:py-16">
+      <h1 className="text-[length:var(--elevate-marketing-page-title-size)] font-semibold tracking-[-0.02em] text-text-primary">
         {title}
       </h1>
       {description && (
-        <p className="mt-4 max-w-2xl text-sm text-text-secondary leading-relaxed">
+        <p className="mt-4 max-w-2xl text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-text-secondary">
           {description}
         </p>
       )}
-      {children && <div className="mt-10">{children}</div>}
+      {children && <div className="mt-8 sm:mt-10">{children}</div>}
     </div>
   );
 }

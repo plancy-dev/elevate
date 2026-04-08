@@ -14,7 +14,6 @@ import { getTranslations } from "next-intl/server";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { ActionErrorMessage } from "@/components/i18n/action-error-message";
 import { ButtonLink } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getLibraryPageData } from "@/lib/data/library";
 import { listOrgMembers } from "@/lib/data/team";
 import { canAccessOrganizationAdminConsole } from "@/lib/auth/platform-admin";
@@ -127,9 +126,12 @@ export default async function DashboardPage() {
       </div>
 
       <div className="space-y-6 p-6">
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <Card hoverable className="p-0">
-            <Link href="/dashboard/studio" className="group block p-6">
+        <div className="overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
+          <div className="divide-y divide-border-subtle">
+            <Link
+              href="/dashboard/studio"
+              className="group block p-6 transition-colors duration-150 hover:bg-layer-02"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="mb-2 flex items-center gap-2 text-primary">
@@ -151,9 +153,10 @@ export default async function DashboardPage() {
                 />
               </div>
             </Link>
-          </Card>
-          <Card hoverable className="p-0">
-            <Link href="/dashboard/library" className="group block p-6">
+            <Link
+              href="/dashboard/library"
+              className="group block p-6 transition-colors duration-150 hover:bg-layer-02"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="mb-2 flex items-center gap-2 text-primary">
@@ -175,13 +178,13 @@ export default async function DashboardPage() {
                 />
               </div>
             </Link>
-          </Card>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {kpis.map((kpi) => (
-            <Card key={kpi.label}>
-              <CardContent className="p-5">
+        <div className="overflow-hidden rounded-xl border border-border-subtle bg-border-subtle shadow-card">
+          <div className="grid grid-cols-1 gap-px sm:grid-cols-2 xl:grid-cols-4">
+            {kpis.map((kpi) => (
+              <div key={kpi.label} className="bg-layer-01 p-5">
                 <div className="mb-3 flex items-center gap-2">
                   <kpi.icon className="h-4 w-4 text-text-tertiary" aria-hidden />
                   <span className="text-xs text-text-tertiary">{kpi.label}</span>
@@ -210,33 +213,31 @@ export default async function DashboardPage() {
                     </>
                   )}
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-3">
-          <Card className="xl:col-span-2">
-            <CardHeader>
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <h2 className="text-sm font-medium text-text-primary">
-                    {t("gettingStarted")}
-                  </h2>
-                  <p className="mt-0.5 text-xs text-text-tertiary">
-                    {t("gettingStartedSub")}
-                  </p>
-                </div>
-                <Link
-                  href="/dashboard/studio"
-                  className="flex shrink-0 items-center gap-1 text-xs text-interactive transition-colors hover:text-primary"
-                >
-                  {t("openStudio")}{" "}
-                  <ArrowRight className="h-3 w-3" aria-hidden />
-                </Link>
+        <div className="overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card xl:grid xl:grid-cols-3">
+          <div className="border-b border-border-subtle xl:col-span-2 xl:border-b-0 xl:border-r">
+            <div className="flex items-center justify-between gap-4 border-b border-border-subtle px-5 pt-5 pb-3">
+              <div>
+                <h2 className="text-sm font-medium text-text-primary">
+                  {t("gettingStarted")}
+                </h2>
+                <p className="mt-0.5 text-xs text-text-tertiary">
+                  {t("gettingStartedSub")}
+                </p>
               </div>
-            </CardHeader>
-            <CardContent className="px-5 py-8 text-sm leading-relaxed text-text-secondary">
+              <Link
+                href="/dashboard/studio"
+                className="flex shrink-0 items-center gap-1 text-xs text-interactive transition-colors hover:text-primary"
+              >
+                {t("openStudio")}{" "}
+                <ArrowRight className="h-3 w-3" aria-hidden />
+              </Link>
+            </div>
+            <div className="px-5 py-8 text-sm leading-relaxed text-text-secondary">
               {showOrgAdminOverview ? (
                 <div>
                   {t.rich("bodyAdmin", {
@@ -253,19 +254,19 @@ export default async function DashboardPage() {
               ) : (
                 <p>{t("bodyNonAdmin")}</p>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader>
+          <div>
+            <div className="border-b border-border-subtle px-5 pt-5 pb-3">
               <h2 className="text-sm font-medium text-text-primary">
                 {t("recentActivity")}
               </h2>
-            </CardHeader>
+            </div>
             {recentActivity.length === 0 ? (
-              <CardContent className="py-8 text-sm text-text-tertiary">
+              <div className="px-5 py-8 text-sm text-text-tertiary">
                 {t("recentActivityEmpty")}
-              </CardContent>
+              </div>
             ) : (
               <div className="divide-y divide-border-subtle">
                 {recentActivity.map((activity, i) => (
@@ -280,7 +281,7 @@ export default async function DashboardPage() {
                 ))}
               </div>
             )}
-          </Card>
+          </div>
         </div>
       </div>
     </div>

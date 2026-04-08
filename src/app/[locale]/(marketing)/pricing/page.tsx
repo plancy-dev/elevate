@@ -42,7 +42,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 function FeatureCell({ value }: { value: boolean | string }) {
   if (typeof value === "string") {
-    return <span className="text-sm text-text-primary">{value}</span>;
+    return (
+      <span className="text-[length:var(--elevate-prose-body-size)] text-text-primary">
+        {value}
+      </span>
+    );
   }
   return value ? (
     <Check className="h-4 w-4 text-accent" />
@@ -60,17 +64,17 @@ export default async function PricingPage({ params }: Props) {
 
   return (
     <div className="border-t border-marketing-border-subtle">
-      <section className="mx-auto max-w-[1584px] px-4 py-16 lg:px-8 text-center">
-        <h1 className="text-4xl font-semibold tracking-[-0.02em] text-text-primary lg:text-5xl">
+      <section className="elevate-marketing-shell py-14 text-center sm:py-16">
+        <h1 className="text-[length:var(--elevate-marketing-home-hero-size)] font-semibold tracking-[-0.02em] leading-[1.1] text-text-primary">
           {t("heroTitle")}
         </h1>
-        <p className="mt-4 text-base text-text-secondary max-w-xl mx-auto">
+        <p className="mx-auto mt-4 max-w-xl text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-text-secondary">
           {t("heroSub")}
         </p>
       </section>
 
-      <section className="mx-auto max-w-[1584px] px-4 lg:px-8 pb-16">
-        <div className="grid md:grid-cols-3 gap-px bg-marketing-border-subtle border border-marketing-border-subtle">
+      <section className="elevate-marketing-shell pb-14 sm:pb-16">
+        <div className="grid gap-px overflow-hidden rounded-xl border border-marketing-border-subtle bg-marketing-border-subtle md:grid-cols-3">
           {plans.map((plan) => (
             <div
               key={plan.key}
@@ -81,7 +85,7 @@ export default async function PricingPage({ params }: Props) {
                   {t("mostPopular")}
                 </span>
               )}
-              <h2 className="text-lg font-semibold text-text-primary">
+              <h2 className="text-[length:var(--elevate-marketing-lead-size)] font-semibold text-text-primary">
                 {plan.name}
               </h2>
               <div className="mt-3 flex items-baseline gap-1">
@@ -94,7 +98,7 @@ export default async function PricingPage({ params }: Props) {
                   </span>
                 )}
               </div>
-              <p className="mt-3 text-sm text-text-tertiary leading-relaxed flex-1">
+              <p className="mt-3 flex-1 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-tertiary">
                 {plan.description}
               </p>
               <div className="mt-6">
@@ -127,12 +131,12 @@ export default async function PricingPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1584px] px-4 pb-20 lg:px-8">
-        <h2 className="text-2xl font-semibold tracking-[-0.02em] text-text-primary mb-8 text-center">
+      <section className="elevate-marketing-shell pb-16 sm:pb-20">
+        <h2 className="mb-8 text-center text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-text-primary">
           {t("compareTitle")}
         </h2>
 
-        <div className="border border-marketing-border-subtle bg-layer-01 overflow-x-auto">
+        <div className="overflow-x-auto rounded-xl border border-marketing-border-subtle bg-layer-01">
           <div className="grid grid-cols-[1fr_140px_140px_140px] gap-0 border-b border-marketing-border-subtle sticky top-0 bg-layer-01 z-10">
             <div className="px-5 py-3 text-xs font-medium text-text-tertiary uppercase tracking-wider">
               {t("featureColumn")}
@@ -152,7 +156,7 @@ export default async function PricingPage({ params }: Props) {
               key={row.label}
               className={`grid grid-cols-[1fr_140px_140px_140px] gap-0 ${i < featureRows.length - 1 ? "border-b border-marketing-border-subtle" : ""} hover:bg-layer-02 transition-colors`}
             >
-              <div className="px-5 py-3 text-sm text-text-secondary">
+              <div className="px-5 py-3 text-[length:var(--elevate-prose-body-size)] text-text-secondary">
                 {row.label}
               </div>
               {(["starter", "professional", "enterprise"] as const).map(
@@ -171,11 +175,11 @@ export default async function PricingPage({ params }: Props) {
       </section>
 
       <section className="border-t border-marketing-border-subtle bg-layer-01">
-        <div className="mx-auto max-w-[1584px] px-4 py-16 lg:px-8 text-center">
-          <h2 className="text-2xl font-semibold text-text-primary">
+        <div className="elevate-marketing-shell py-14 text-center sm:py-16">
+          <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-text-primary">
             {t("faqTitle")}
           </h2>
-          <p className="mt-2 text-sm text-text-tertiary max-w-md mx-auto">
+          <p className="mx-auto mt-2 max-w-md text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-tertiary">
             {t("faqSub")}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">

@@ -31,7 +31,7 @@ export function MarketingNavDropdown({ label, items, className }: Props) {
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[240px] z-[100] rounded-sm border border-border-subtle bg-surface py-1 shadow-md"
+          className="min-w-[240px] z-[100] rounded-lg border border-border-subtle bg-surface py-1 shadow-md"
           sideOffset={4}
           align="start"
         >

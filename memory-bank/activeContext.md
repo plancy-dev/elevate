@@ -24,6 +24,7 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문�
 | 제품 방향 | AI 가이드·워크플로 플랫폼으로 피벗; MICE는 레거시 보관 |
 | MICE 스키마 | 당분간 삭제 마이그레이션 없음 |
 | SoT 문서 | `creative-elevate-ai-pivot.md` + `tasks.md` |
+| **시각 언어 v2 (CREATIVE)** | [`docs/design/VISUAL_LANGUAGE_V2.md`](../docs/design/VISUAL_LANGUAGE_V2.md) — 마케팅=오렌지 CTA만 / 앱=블루 인터랙션만, 반경·모션·롤아웃 순서 고정. 요약: [`creative-apple-tier-visual-system.md`](creative-apple-tier-visual-system.md) · **PLAN(PR-1…6):** [`PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md`](../docs/design/PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md) |
 
 ## 레거시 (MICE) 앵커
 

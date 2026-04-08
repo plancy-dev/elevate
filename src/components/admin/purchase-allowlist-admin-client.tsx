@@ -77,7 +77,7 @@ export function PurchaseAllowlistAdminClient({ initialRows }: Props) {
             autoComplete="off"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full rounded-sm border border-border-subtle bg-background px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
             placeholder="you@company.com"
           />
         </div>
@@ -90,14 +90,14 @@ export function PurchaseAllowlistAdminClient({ initialRows }: Props) {
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            className="mt-1 w-full rounded-sm border border-border-subtle bg-background px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
           />
         </div>
         <button
           type="button"
           disabled={busy || !email.trim()}
           onClick={() => void onAdd()}
-          className="rounded-sm bg-primary px-3 py-2 text-sm font-medium text-text-on-color hover:bg-primary-hover disabled:opacity-50"
+          className="rounded-lg bg-primary px-3 py-2 text-sm font-medium text-text-on-color hover:bg-primary-hover disabled:opacity-50"
         >
           {t("add")}
         </button>

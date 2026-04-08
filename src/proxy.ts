@@ -19,6 +19,7 @@ const SKIP_INTL_PREFIXES = [
   "/login",
   "/signup",
   "/forgot-password",
+  "/access-pending",
   "/dashboard",
   "/admin",
   "/auth",
@@ -43,6 +44,7 @@ function shouldSkipIntl(pathname: string) {
   if (pathname.startsWith("/admin")) return true;
   if (pathname.startsWith("/invite")) return true;
   if (pathname.startsWith("/auth")) return true;
+  if (pathname.startsWith("/access-pending")) return true;
   if (pathname.startsWith("/_next")) return true;
   if (pathname.startsWith("/api")) return true;
   if (SKIP_INTL_PREFIXES.some((p) => pathname === p)) return true;

@@ -99,7 +99,7 @@ export function StudioEpisodeDistributionFields({
             maxLength={500}
             autoComplete="off"
             placeholder={t("distributionCustomPlaceholder")}
-            className="h-10 w-full rounded-sm border border-border-subtle bg-field px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+            className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
           />
         </div>
       ) : (
@@ -121,7 +121,7 @@ export function StudioEpisodeDistributionFields({
           defaultValue={publishUrl}
           placeholder={t(placeholderKey)}
           autoComplete="off"
-          className="h-10 w-full rounded-sm border border-border-subtle bg-field px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+          className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
         />
         <p className="mt-2 text-xs text-text-tertiary leading-relaxed">
           {t(hintKey)}

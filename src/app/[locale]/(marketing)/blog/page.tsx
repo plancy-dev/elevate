@@ -47,16 +47,19 @@ export default async function BlogPage({ params }: Props) {
     <div className="border-t border-marketing-border-subtle">
       <MarketingSection title={t("title")} description={t("description")} />
 
-      <div className="mx-auto max-w-[960px] px-4 pb-16 lg:px-8">
+      <div className="elevate-marketing-shell pb-12 sm:pb-16">
+        <div className="mx-auto w-full max-w-[min(60rem,100%)]">
         {posts.length === 0 ? (
-          <p className="text-sm text-text-secondary">{t("empty")}</p>
+          <p className="text-[length:var(--elevate-prose-body-size)] text-text-secondary">
+            {t("empty")}
+          </p>
         ) : (
-          <ul className="grid gap-px bg-marketing-border-subtle border border-marketing-border-subtle rounded-sm overflow-hidden">
+          <ul className="grid gap-px overflow-hidden rounded-md border border-marketing-border-subtle bg-marketing-border-subtle">
             {posts.map((post) => (
-              <li key={post.slug} className="bg-layer-01">
+              <li key={post.slug} className="elevate-cv-list-item bg-layer-01">
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="block p-6 hover:bg-layer-02 transition-colors"
+                  className="block p-5 sm:p-6 hover:bg-layer-02 transition-colors"
                 >
                   <time
                     dateTime={post.date}
@@ -64,11 +67,11 @@ export default async function BlogPage({ params }: Props) {
                   >
                     {t("published", { date: post.date })}
                   </time>
-                  <h2 className="mt-1 text-lg font-semibold text-text-primary">
+                  <h2 className="mt-1 text-[length:var(--elevate-marketing-list-title-size)] font-semibold leading-snug text-text-primary">
                     {post.title}
                   </h2>
                   {post.description ? (
-                    <p className="mt-2 text-sm text-text-secondary leading-relaxed line-clamp-2">
+                    <p className="mt-2 line-clamp-2 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-secondary">
                       {post.description}
                     </p>
                   ) : null}
@@ -80,6 +83,7 @@ export default async function BlogPage({ params }: Props) {
             ))}
           </ul>
         )}
+        </div>
       </div>
     </div>
   );

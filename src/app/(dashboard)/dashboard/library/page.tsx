@@ -9,7 +9,6 @@ import { hasPaidServiceSubscription } from "@/lib/organizations/plan";
 import { FunnelCaptureOnce } from "@/components/analytics/funnel-capture";
 import { LibraryDownloadButton } from "@/components/dashboard/library-download-button";
 import { LibraryReadOnlineButton } from "@/components/dashboard/library-read-online-button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PostHogEvent } from "@/lib/analytics/posthog-events";
 import { formatCurrencyMinor } from "@/lib/format-currency";
@@ -60,22 +59,20 @@ export default async function LibraryPage() {
       </div>
 
       {showStarterSubscription ? (
-        <Card
-          className="mb-8 max-w-2xl border-dashed bg-layer-02/80 shadow-ambient"
+        <div
+          className="mb-8 max-w-2xl rounded-xl border border-dashed border-border-subtle bg-layer-02/80 p-4 shadow-ambient"
           role="note"
         >
-          <CardContent className="p-4">
-            <p className="text-sm leading-relaxed text-text-secondary">
-              {t("subscriptionBanner")}
-            </p>
-            <Link
-              href="/dashboard/billing"
-              className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
-            >
-              {t("subscriptionBillingCta")}
-            </Link>
-          </CardContent>
-        </Card>
+          <p className="text-sm leading-relaxed text-text-secondary">
+            {t("subscriptionBanner")}
+          </p>
+          <Link
+            href="/dashboard/billing"
+            className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
+          >
+            {t("subscriptionBillingCta")}
+          </Link>
+        </div>
       ) : null}
 
       {products.length === 0 ? (
@@ -88,39 +85,44 @@ export default async function LibraryPage() {
           ) : null}
         </div>
       ) : (
-        <ul className="space-y-4">
-          {products.map((p) => {
-            const canRead = canReadCatalogProduct({
-              organizationPlan,
-              entitledProductIds: entitledIds,
-              productId: p.id,
-            });
-            const kindLabel = t(productKindMessageKey(p.product_kind));
-            return (
-              <li key={p.id}>
-                <Card className="border-border-subtle">
-                  <CardContent className="p-5 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                    <div>
+        <div className="overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
+          <ul className="divide-y divide-border-subtle">
+            {products.map((p) => {
+              const canRead = canReadCatalogProduct({
+                organizationPlan,
+                entitledProductIds: entitledIds,
+                productId: p.id,
+              });
+              const kindLabel = t(productKindMessageKey(p.product_kind));
+              return (
+                <li key={p.id}>
+                  <div className="flex flex-col gap-4 px-5 py-4 transition-colors duration-150 hover:bg-layer-02 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant="blue">{kindLabel}</Badge>
+                        <Badge variant="blue" className="shrink-0">
+                          {kindLabel}
+                        </Badge>
                         <h2 className="text-base font-semibold text-text-primary">
                           {p.title}
                         </h2>
-                        <Badge variant={canRead ? "green" : "warm-gray"}>
+                        <Badge
+                          variant={canRead ? "green" : "warm-gray"}
+                          className="shrink-0"
+                        >
                           {canRead ? t("included") : t("notIncluded")}
                         </Badge>
                       </div>
                       {p.description ? (
-                        <p className="mt-2 text-sm text-text-tertiary leading-relaxed">
+                        <p className="mt-2 text-sm leading-relaxed text-text-tertiary">
                           {p.description}
                         </p>
                       ) : null}
-                      <p className="mt-2 text-xs text-text-tertiary font-mono">
+                      <p className="mt-2 font-mono text-xs text-text-tertiary">
                         {p.slug}
                       </p>
                     </div>
-                    <div className="flex flex-col items-end gap-2 text-right">
-                      <span className="text-sm font-medium text-text-primary whitespace-nowrap">
+                    <div className="flex flex-col items-stretch gap-2 text-right sm:items-end">
+                      <span className="text-sm font-medium whitespace-nowrap text-text-primary">
                         {formatCurrencyMinor(p.price_cents, p.currency)}
                       </span>
                       {!canRead ? (
@@ -147,12 +149,12 @@ export default async function LibraryPage() {
                         </LibraryReadOnlineButton>
                       ) : null}
                     </div>
-                  </CardContent>
-                </Card>
-              </li>
-            );
-          })}
-        </ul>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       )}
     </div>
   );

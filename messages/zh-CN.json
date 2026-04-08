@@ -123,6 +123,7 @@
     "event3Location": "Policy",
     "recentTitle": "Recent activity",
     "previewTitle": "Workspace (preview)",
+    "productUiPreview": "产品界面预览",
     "illustration": "Illustration",
     "recentSample": "Recent activity (sample)",
     "statusDraft": "Draft",
@@ -194,6 +195,15 @@
     "placeholderEmail": "you@company.com",
     "labelDate": "Preferred date",
     "submit": "Schedule demo"
+  },
+  "AccessPending": {
+    "metaTitle": "访问待开通",
+    "title": "此账户暂无法使用控制台",
+    "body": "Elevate 正在分阶段开放。请联系组织管理员、使用此邮箱加入等候名单、加入 Prompt Studio 测试白名单，或联系我们获取帮助。",
+    "joinWaitlist": "加入等候名单",
+    "contact": "联系我们",
+    "signOut": "退出登录",
+    "backHome": "返回首页"
   },
   "About": {
     "metaTitle": "关于",

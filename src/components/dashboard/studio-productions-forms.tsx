@@ -75,7 +75,7 @@ export function StudioProductionsNewForm({
   return (
     <form action={formAction} className="space-y-6 max-w-2xl">
       {state?.error ? (
-        <p className="rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       ) : null}
@@ -94,7 +94,7 @@ export function StudioProductionsNewForm({
               required
               maxLength={500}
               placeholder={t("titlePlaceholder")}
-              className="h-10 w-full rounded-sm border border-border-subtle bg-field px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
           <div>
@@ -169,7 +169,7 @@ export function StudioProductionsEpisodeEditForm({
     <form action={formAction} className="space-y-6 max-w-2xl">
       <input type="hidden" name="episode_id" value={episode.id} />
       {state?.error ? (
-        <p className="rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       ) : null}
@@ -188,7 +188,7 @@ export function StudioProductionsEpisodeEditForm({
               required
               defaultValue={episode.title}
               maxLength={500}
-              className="h-10 w-full rounded-sm border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
           <div>
@@ -253,7 +253,7 @@ export function StudioProductionsDeleteEpisodeForm({
     <form action={formAction} className="inline">
       <input type="hidden" name="episode_id" value={episodeId} />
       {state?.error ? (
-        <p className="mb-2 rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="mb-2 rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       ) : null}
@@ -304,7 +304,7 @@ function ArtifactAddForm({
       <input type="hidden" name="episode_id" value={episodeId} />
       <p className="text-sm font-medium text-text-primary">{t("artifactAdd")}</p>
       {state?.error ? (
-        <p className="rounded-sm border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       ) : null}
@@ -407,7 +407,7 @@ function ArtifactEditForm({
       <input type="hidden" name="artifact_id" value={artifact.id} />
       <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto overscroll-contain px-3 pb-2 pt-3">
         {state?.error ? (
-          <p className="rounded-sm border border-danger/40 bg-danger/10 px-2 py-1.5 text-[11px] text-danger">
+          <p className="rounded-md border border-danger/40 bg-danger/10 px-2 py-1.5 text-[11px] text-danger">
             {translateActionErrorMessage(state.error, tAction)}
           </p>
         ) : null}
@@ -420,7 +420,7 @@ function ArtifactEditForm({
               name="artifact_role"
               required
               defaultValue={artifact.artifact_role}
-              className="h-8 w-full rounded-sm border border-border-subtle bg-field px-2 text-xs text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
+              className="h-8 w-full rounded-lg border border-border-subtle bg-field px-2 text-xs text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
             />
           </div>
           <div>
@@ -431,7 +431,7 @@ function ArtifactEditForm({
               name="tool_platform"
               required
               defaultValue={artifact.tool_platform}
-              className="h-8 w-full rounded-sm border border-border-subtle bg-field px-2 text-xs text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
+              className="h-8 w-full rounded-lg border border-border-subtle bg-field px-2 text-xs text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
             />
           </div>
         </div>
@@ -443,7 +443,7 @@ function ArtifactEditForm({
             name="content_text"
             rows={3}
             defaultValue={artifact.content_text}
-            className="w-full resize-none rounded-sm border border-border-subtle bg-field px-2 py-1.5 text-xs leading-relaxed text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
+            className="w-full resize-none rounded-lg border border-border-subtle bg-field px-2 py-1.5 text-xs leading-relaxed text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
           />
         </div>
         <div>
@@ -456,7 +456,7 @@ function ArtifactEditForm({
             inputMode="url"
             defaultValue={artifact.external_url ?? ""}
             placeholder="https://"
-            className="h-8 w-full rounded-sm border border-border-subtle bg-field px-2 text-xs text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
+            className="h-8 w-full rounded-lg border border-border-subtle bg-field px-2 text-xs text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
           />
         </div>
         <div>
@@ -467,7 +467,7 @@ function ArtifactEditForm({
             name="metadata_json"
             rows={2}
             defaultValue={metadataToFormString(artifact.metadata)}
-            className="w-full resize-none rounded-sm border border-border-subtle bg-field px-2 py-1.5 font-mono text-[11px] leading-snug text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
+            className="w-full resize-none rounded-lg border border-border-subtle bg-field px-2 py-1.5 font-mono text-[11px] leading-snug text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
           />
           <p className="mt-0.5 text-[10px] leading-snug text-text-tertiary">
             {t("artifactMetadataHint")}

@@ -2,6 +2,16 @@
 
 This document defines **how** we layer external references, tokens, and UI so agents and humans can extend the product consistently. It complements [`README.md`](README.md) (workflow) and [`elevate-cursor-alignment.md`](elevate-cursor-alignment.md) (token mapping).
 
+## 0. Visual execution contract (CREATIVE lock)
+
+**Product-facing rules for calm, Apple-tier consistency** — marketing vs app accents, radius semantics, motion, rollout order:
+
+→ **[`VISUAL_LANGUAGE_V2.md`](VISUAL_LANGUAGE_V2.md)**  
+Dashboard nav/list anti-template notes: [`DASHBOARD_UX_PRINCIPLES.md`](DASHBOARD_UX_PRINCIPLES.md)  
+Memory-bank pointer: [`memory-bank/creative-apple-tier-visual-system.md`](../memory-bank/creative-apple-tier-visual-system.md)
+
+If `SYSTEM.md` and `VISUAL_LANGUAGE_V2.md` disagree on **visual behavior**, **V2 wins** until amended.
+
 ## 1. Reference layer — [awesome-design-md](https://github.com/VoltAgent/awesome-design-md)
 
 [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) is a **curated collection of `DESIGN.md` files** (Stitch-style) extracted from public sites — markdown that LLMs read well for UI generation. It is **not** official brand guidance from those companies.
@@ -36,7 +46,7 @@ Product surfaces **keep IBM-style blue primary** inside the app shell; marketing
 
 | Mode | Where | Behavior |
 |------|-------|----------|
-| **Marketing chrome** | `[locale]/(marketing)/` layout | Wrapper sets warm text/border/interactive tokens; header/footer/main share cream canvas |
+| **Marketing chrome** | `[locale]/(marketing)/` layout | Wrapper sets warm text/border/interactive tokens; header/footer/main share cream canvas. Long-form pages share **`elevate-marketing-shell`** + typography tokens ([`PLAN-responsive-longform-typography.md`](../features/PLAN-responsive-longform-typography.md)). |
 | **App shell** | `(dashboard)/`, `(admin)/` | Default `--primary` blue, neutral layers, existing sidebar/card patterns |
 | **Auth** | `(auth)/` | Neutral + optional marketing canvas on **panels** only (no full marketing chrome) |
 

@@ -123,6 +123,7 @@
     "event3Location": "Policy",
     "recentTitle": "Recent activity",
     "previewTitle": "Workspace (preview)",
+    "productUiPreview": "プロダクトUIプレビュー",
     "illustration": "Illustration",
     "recentSample": "Recent activity (sample)",
     "statusDraft": "Draft",
@@ -194,6 +195,15 @@
     "placeholderEmail": "you@company.com",
     "labelDate": "Preferred date",
     "submit": "Schedule demo"
+  },
+  "AccessPending": {
+    "metaTitle": "アクセス待ち",
+    "title": "このアカウントではまだダッシュボードを利用できません",
+    "body": "Elevate は段階的に公開しています。組織の管理者に問い合わせるか、このメールでウェイトリストに登録するか、Prompt Studio ベータの許可リストに載るか、お問い合わせください。",
+    "joinWaitlist": "ウェイトリストに登録",
+    "contact": "お問い合わせ",
+    "signOut": "サインアウト",
+    "backHome": "ホームへ"
   },
   "About": {
     "metaTitle": "会社情報",

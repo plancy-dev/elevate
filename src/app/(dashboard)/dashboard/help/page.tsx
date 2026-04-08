@@ -13,37 +13,47 @@ export default async function HelpPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-30 flex items-center border-b border-border-subtle bg-background px-6 h-12">
-        <h1 className="text-sm font-medium text-text-primary">{t("title")}</h1>
+      <div className="sticky top-0 z-30 flex h-12 items-center border-b border-border-subtle bg-background px-[var(--elevate-app-gutter-x)]">
+        <h1 className="text-[length:var(--elevate-marketing-lead-size)] font-medium text-text-primary">
+          {t("title")}
+        </h1>
       </div>
 
-      <div className="p-6 max-w-lg space-y-4">
+      <div className="mx-auto max-w-lg space-y-3 px-[var(--elevate-app-gutter-x)] pb-10 pt-4 sm:space-y-4 sm:pt-6">
         <Link
           href="https://docs.elevate.example"
-          className="flex items-center gap-3 border border-border-subtle bg-layer-01 p-4 hover:bg-layer-02 transition-colors"
+          className="flex items-center gap-3 rounded-lg border border-border-subtle bg-layer-01 p-4 transition-colors hover:bg-layer-02"
         >
-          <BookOpen className="h-5 w-5 text-text-tertiary" aria-hidden />
-          <div>
-            <div className="text-sm font-medium text-text-primary">
+          <BookOpen className="h-5 w-5 shrink-0 text-text-tertiary" aria-hidden />
+          <div className="min-w-0">
+            <div className="text-[length:var(--elevate-marketing-lead-size)] font-medium text-text-primary">
               {t("documentation")}
             </div>
-            <div className="text-xs text-text-tertiary">{t("documentationSub")}</div>
+            <div className="mt-0.5 text-[length:var(--elevate-prose-body-size)] leading-snug text-text-tertiary">
+              {t("documentationSub")}
+            </div>
           </div>
         </Link>
-        <div className="flex items-center gap-3 border border-border-subtle bg-layer-01 p-4">
-          <Mail className="h-5 w-5 text-text-tertiary" aria-hidden />
-          <div>
-            <div className="text-sm font-medium text-text-primary">
+        <div className="flex items-center gap-3 rounded-lg border border-border-subtle bg-layer-01 p-4">
+          <Mail className="h-5 w-5 shrink-0 text-text-tertiary" aria-hidden />
+          <div className="min-w-0">
+            <div className="text-[length:var(--elevate-marketing-lead-size)] font-medium text-text-primary">
               {t("emailLabel")}
             </div>
-            <div className="text-xs text-text-tertiary">support@elevate.example</div>
+            <div className="mt-0.5 text-[length:var(--elevate-prose-body-size)] leading-snug text-text-tertiary">
+              support@elevate.example
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-3 border border-border-subtle bg-layer-01 p-4">
-          <MessageCircle className="h-5 w-5 text-text-tertiary" aria-hidden />
-          <div>
-            <div className="text-sm font-medium text-text-primary">{t("chat")}</div>
-            <div className="text-xs text-text-tertiary">{t("chatSub")}</div>
+        <div className="flex items-center gap-3 rounded-lg border border-border-subtle bg-layer-01 p-4">
+          <MessageCircle className="h-5 w-5 shrink-0 text-text-tertiary" aria-hidden />
+          <div className="min-w-0">
+            <div className="text-[length:var(--elevate-marketing-lead-size)] font-medium text-text-primary">
+              {t("chat")}
+            </div>
+            <div className="mt-0.5 text-[length:var(--elevate-prose-body-size)] leading-snug text-text-tertiary">
+              {t("chatSub")}
+            </div>
           </div>
         </div>
       </div>

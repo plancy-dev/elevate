@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Sparkles, BookOpen, CreditCard } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Card, CardContent } from "@/components/ui/card";
 import { ButtonLink } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StudioBetaGated } from "@/components/dashboard/studio-beta-gated";
@@ -65,17 +64,18 @@ export default async function StudioPage() {
         </ul>
       </div>
 
-      <StudioSendToProductions episodes={episodeOptions} />
-
-      <Card className="border-border-subtle mb-8 mt-8">
-        <CardContent className="p-8 flex flex-col items-center justify-center min-h-[120px] text-center border border-dashed border-border-subtle rounded-none bg-layer-02/50">
-          <Sparkles className="h-10 w-10 text-primary mb-4" aria-hidden />
+      <div className="mb-8 mt-8 overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
+        <div className="border-b border-border-subtle p-5 lg:p-6">
+          <StudioSendToProductions episodes={episodeOptions} />
+        </div>
+        <div className="flex min-h-[120px] flex-col items-center justify-center bg-layer-02/40 px-5 py-10 text-center">
+          <Sparkles className="mb-4 h-10 w-10 text-primary" aria-hidden />
           <p className="text-sm font-medium text-text-primary">{t("building")}</p>
-          <p className="mt-2 text-xs text-text-tertiary max-w-md leading-relaxed">
+          <p className="mt-2 max-w-md text-xs leading-relaxed text-text-tertiary">
             {t("note")}
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
         <ButtonLink href="/dashboard/library" variant="primary" size="lg">

@@ -201,7 +201,7 @@ export function BillingTossWidget({
         type="button"
         onClick={() => void handlePay()}
         disabled={!ready || busy}
-        className="rounded-sm bg-primary px-4 py-2 text-sm font-medium text-text-on-color hover:bg-primary-hover disabled:opacity-50"
+        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-text-on-color hover:bg-primary-hover disabled:opacity-50"
       >
         {busy
           ? t("widgetOpening")

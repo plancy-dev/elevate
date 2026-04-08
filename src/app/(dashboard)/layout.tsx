@@ -11,6 +11,7 @@ import { getAppLocale } from "@/lib/i18n/app-locale";
 import { loadMessagesForLocale } from "@/lib/i18n/app-messages";
 import { createClient } from "@/lib/supabase/server";
 import { canAccessOrganizationAdminConsole } from "@/lib/auth/platform-admin";
+import { canUseDashboard } from "@/lib/auth/dashboard-access";
 
 export default async function DashboardLayout({
   children,
@@ -26,6 +27,20 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  const { data: prof } = await supabase
+    .from("profiles")
+    .select("organization_id, role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const dashboardAllowed = await canUseDashboard(
+    user.email ?? undefined,
+    prof?.role,
+  );
+  if (!dashboardAllowed) {
+    redirect("/access-pending");
+  }
+
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
@@ -36,12 +51,6 @@ export default async function DashboardLayout({
   }
 
   const sidebarUser = await loadSidebarUser(supabase, user);
-
-  const { data: prof } = await supabase
-    .from("profiles")
-    .select("organization_id, role")
-    .eq("id", user.id)
-    .maybeSingle();
 
   const ph = getPosthogPublicConfig();
   const showOrganizationHub = canAccessOrganizationAdminConsole(prof?.role);

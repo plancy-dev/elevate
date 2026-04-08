@@ -147,7 +147,7 @@ export function ContentProductsAdminClient({
               name="slug"
               type="text"
               required
-              className="w-full rounded-sm border border-border-subtle bg-background px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
               placeholder="team-alignment-ebook"
               autoComplete="off"
             />
@@ -170,7 +170,7 @@ export function ContentProductsAdminClient({
               name="title"
               type="text"
               required
-              className="w-full rounded-sm border border-border-subtle bg-background px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
             />
           </div>
           <div>
@@ -181,7 +181,7 @@ export function ContentProductsAdminClient({
               id="cp-desc"
               name="description"
               rows={3}
-              className="w-full rounded-sm border border-border-subtle bg-background px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
             />
           </div>
           <div>
@@ -195,7 +195,7 @@ export function ContentProductsAdminClient({
               min={0}
               step={1}
               defaultValue={TOSS_POC_AMOUNT_KRW}
-              className="w-full max-w-[200px] rounded-sm border border-border-subtle bg-background px-3 py-2 text-sm tabular-nums"
+              className="w-full max-w-[200px] rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm tabular-nums"
             />
           </div>
           <div>
@@ -206,7 +206,7 @@ export function ContentProductsAdminClient({
               id="cp-kind"
               name="productKind"
               defaultValue="ebook"
-              className="w-full max-w-xs rounded-sm border border-border-subtle bg-background px-3 py-2 text-sm"
+              className="w-full max-w-xs rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
             >
               {KINDS.map((k) => (
                 <option key={k} value={k}>
@@ -225,7 +225,7 @@ export function ContentProductsAdminClient({
               type="file"
               required
               accept=".pdf,.epub,.zip,application/pdf,application/epub+zip,application/zip"
-              className="block w-full text-sm text-text-secondary file:mr-3 file:rounded-sm file:border-0 file:bg-highlight file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-primary"
+              className="block w-full text-sm text-text-secondary file:mr-3 file:rounded-md file:border-0 file:bg-highlight file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-primary"
             />
             <p className="mt-1 text-[11px] text-text-tertiary">{t("fileHint")}</p>
           </div>
@@ -245,7 +245,7 @@ export function ContentProductsAdminClient({
             type="submit"
             disabled={pending}
             className={cn(
-              "inline-flex items-center justify-center rounded-sm px-4 py-2 text-sm font-medium transition-colors",
+              "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors",
               pending
                 ? "bg-surface-03 text-text-tertiary cursor-not-allowed"
                 : "bg-primary text-[var(--color-text-on-color)] hover:opacity-90",

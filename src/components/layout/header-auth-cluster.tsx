@@ -39,7 +39,7 @@ export function HeaderAuthCluster({
     return (
       <div
         className={cn(
-          "h-8 shrink-0 rounded-sm bg-layer-02 animate-pulse",
+          "h-8 shrink-0 rounded-md bg-layer-02 animate-pulse",
           size === "sm" ? "w-[7.5rem]" : "w-full",
         )}
         aria-hidden

@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { ButtonLink } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/server";
 import { listStudioEpisodesForOrg } from "@/lib/data/studio-productions";
@@ -84,45 +83,48 @@ export default async function ProductionsListPage() {
           </ButtonLink>
         </div>
       ) : (
-        <ul className="space-y-3">
-          {episodes.map((ep) => {
-            const statusKey = STATUS_I18N[ep.status as StudioEpisodeStatus] ?? "statusDraft";
-            const updated = new Date(ep.updated_at).toLocaleString(locale, {
-              dateStyle: "medium",
-              timeStyle: "short",
-            });
-            return (
-              <li key={ep.id}>
-                <Card className="border-border-subtle">
-                  <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant="blue">{t(statusKey)}</Badge>
-                        <Link
-                          href={`/dashboard/productions/${ep.id}`}
-                          className="text-base font-semibold text-text-primary hover:text-primary truncate"
-                        >
+        <div className="overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
+          <ul className="divide-y divide-border-subtle">
+            {episodes.map((ep) => {
+              const statusKey =
+                STATUS_I18N[ep.status as StudioEpisodeStatus] ?? "statusDraft";
+              const updated = new Date(ep.updated_at).toLocaleString(locale, {
+                dateStyle: "medium",
+                timeStyle: "short",
+              });
+              return (
+                <li key={ep.id}>
+                  <Link
+                    href={`/dashboard/productions/${ep.id}`}
+                    className="group flex flex-col gap-2 px-5 py-4 transition-colors duration-150 hover:bg-layer-02 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                        <Badge variant="blue" className="shrink-0 tabular-nums">
+                          {t(statusKey)}
+                        </Badge>
+                        <span className="min-w-0 text-base font-semibold text-text-primary transition-colors group-hover:text-primary">
                           {ep.title}
-                        </Link>
+                        </span>
                       </div>
                       {ep.distribution_label ? (
-                        <p className="mt-1 text-xs text-text-tertiary">
+                        <p className="mt-1.5 text-xs text-text-tertiary">
                           {distributionDisplayLabel(ep.distribution_label, (key) =>
                             t(key as never),
                           )}
                         </p>
                       ) : null}
                     </div>
-                    <div className="text-xs text-text-tertiary shrink-0">
+                    <div className="shrink-0 text-xs text-text-tertiary sm:text-right">
                       <span className="text-text-secondary">{t("colUpdated")}: </span>
                       {updated}
                     </div>
-                  </CardContent>
-                </Card>
-              </li>
-            );
-          })}
-        </ul>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       )}
     </div>
   );

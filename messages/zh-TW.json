@@ -123,6 +123,7 @@
     "event3Location": "Policy",
     "recentTitle": "Recent activity",
     "previewTitle": "Workspace (preview)",
+    "productUiPreview": "產品介面預覽",
     "illustration": "Illustration",
     "recentSample": "Recent activity (sample)",
     "statusDraft": "Draft",
@@ -194,6 +195,15 @@
     "placeholderEmail": "you@company.com",
     "labelDate": "Preferred date",
     "submit": "Schedule demo"
+  },
+  "AccessPending": {
+    "metaTitle": "存取待開通",
+    "title": "此帳號尚無法使用控制台",
+    "body": "Elevate 採分階段開放。請洽組織管理員、以這個信箱加入等候名單、加入 Prompt Studio 測試白名單，或與我們聯絡。",
+    "joinWaitlist": "加入等候名單",
+    "contact": "聯絡我們",
+    "signOut": "登出",
+    "backHome": "返回首頁"
   },
   "About": {
     "metaTitle": "關於",

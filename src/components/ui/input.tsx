@@ -4,7 +4,7 @@ import { forwardRef, type InputHTMLAttributes } from "react";
 export type InputProps = InputHTMLAttributes<HTMLInputElement>;
 
 /**
- * Shared text field — 8px radius, focus ring (Cursor DESIGN.md–aligned).
+ * Shared text field — `rounded-lg` (10px token), focus ring (Cursor DESIGN.md–aligned).
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, type = "text", ...props }, ref) => {

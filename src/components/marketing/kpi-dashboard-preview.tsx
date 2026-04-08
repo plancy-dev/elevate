@@ -96,13 +96,18 @@ export function KPIDashboardPreview() {
 
   return (
     <div
-      className="relative rounded-sm border border-border-subtle bg-layer-01 shadow-2xl overflow-hidden"
+      className="relative overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-2xl"
       aria-label={t("previewTitle")}
     >
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle bg-layer-02">
-        <span className="text-xs font-medium text-text-secondary">
-          {t("previewTitle")}
-        </span>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle bg-layer-02 px-4 py-3">
+        <div className="min-w-0">
+          <span className="text-[10px] font-medium uppercase tracking-wider text-text-tertiary">
+            {t("productUiPreview")}
+          </span>
+          <div className="text-xs font-medium text-text-secondary">
+            {t("previewTitle")}
+          </div>
+        </div>
         <span className="text-[10px] text-text-tertiary uppercase tracking-wider">
           {t("illustration")}
         </span>
@@ -113,7 +118,7 @@ export function KPIDashboardPreview() {
           {kpiCards.map((kpi) => (
             <div
               key={kpi.label}
-              className="rounded-sm border border-border-subtle bg-background p-3"
+              className="rounded-lg border border-border-subtle bg-background p-3"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="text-text-tertiary">{kpi.icon}</div>
@@ -123,15 +128,15 @@ export function KPIDashboardPreview() {
                 {kpi.value}
               </div>
               <div className="text-[11px] text-text-tertiary">{kpi.label}</div>
-              <div className="mt-1 flex items-center gap-1 text-[11px] text-accent">
-                <TrendingUp className="h-3 w-3" />
+              <div className="mt-1 flex items-center gap-1 text-[11px] text-text-tertiary">
+                <TrendingUp className="h-3 w-3 shrink-0" strokeWidth={2} />
                 {kpi.change}
               </div>
             </div>
           ))}
         </div>
 
-        <div className="rounded-sm border border-border-subtle overflow-hidden">
+        <div className="overflow-hidden rounded-lg border border-border-subtle">
           <div className="px-3 py-2 bg-layer-02 text-[11px] font-medium text-text-secondary uppercase tracking-wider">
             {t("recentSample")}
           </div>

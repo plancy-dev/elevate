@@ -27,17 +27,17 @@ export default async function ProductPage({ params }: Props) {
   return (
     <div className="border-t border-marketing-border-subtle">
       <MarketingSection title={t("title")} description={t("description")}>
-        <div className="grid gap-px bg-marketing-border-subtle border border-marketing-border-subtle md:grid-cols-2">
+        <div className="grid gap-px overflow-hidden rounded-xl border border-marketing-border-subtle bg-marketing-border-subtle md:grid-cols-2">
           {SLUGS.map((slug) => (
             <Link
               key={slug}
               href={`/product/${slug}`}
-              className="bg-layer-01 p-6 hover:bg-layer-02 transition-colors"
+              className="bg-layer-01 p-5 transition-colors duration-150 hover:bg-layer-02 sm:p-6"
             >
-              <h2 className="text-base font-semibold text-text-primary">
+              <h2 className="text-[length:var(--elevate-marketing-lead-size)] font-semibold leading-snug text-text-primary">
                 {t(`modules.${slug}.title`)}
               </h2>
-              <p className="mt-2 text-sm text-text-tertiary">
+              <p className="mt-2 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-tertiary">
                 {t(`modules.${slug}.desc`)}
               </p>
             </Link>

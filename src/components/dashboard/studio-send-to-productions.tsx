@@ -90,10 +90,7 @@ export function StudioSendToProductions({
   ];
 
   return (
-    <section
-      className="rounded-2xl border border-border-subtle bg-gradient-to-b from-layer-01 to-layer-02/60 p-5 shadow-sm dark:border-white/10 dark:from-[#0c121a] dark:to-[#080c12]"
-      aria-labelledby="studio-prompt-heading"
-    >
+    <section className="space-y-3" aria-labelledby="studio-prompt-heading">
       <div className="flex items-center gap-2 mb-3">
         <Clapperboard className="h-5 w-5 text-primary shrink-0" aria-hidden />
         <h2

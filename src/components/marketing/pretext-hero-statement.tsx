@@ -7,7 +7,10 @@ type Props = {
   line1: string;
   line2: string;
   sub: string;
-  /** Warm marketing hero: accent line uses `--marketing-accent` instead of product primary blue */
+  /**
+   * `marketing`: first line uses ink primary (hero CTAs carry orange — V2 one-accent band).
+   * `default`: first line uses product primary blue.
+   */
   variant?: "default" | "marketing";
 };
 
@@ -55,21 +58,19 @@ export function PretextHeroStatement({
     <div className="mt-8 max-w-lg">
       <span
         ref={probeRef}
-        className="pointer-events-none absolute -z-10 opacity-0 text-2xl sm:text-3xl font-semibold tracking-[-0.02em] leading-[1.15] whitespace-pre-wrap"
+        className="pointer-events-none absolute -z-10 opacity-0 text-[length:var(--elevate-pretext-hero-line-size)] font-semibold tracking-[-0.02em] leading-[1.15] whitespace-pre-wrap"
         aria-hidden
       >
         {text}
       </span>
       <div ref={wrapRef}>
         <div
-          className="elevate-pretext-hero-animate text-2xl sm:text-3xl font-semibold tracking-[-0.02em] leading-[1.15] text-text-primary whitespace-pre-wrap"
+          className="elevate-pretext-hero-animate text-[length:var(--elevate-pretext-hero-line-size)] font-semibold tracking-[-0.02em] leading-[1.15] text-text-primary whitespace-pre-wrap"
           style={minHeight ? { minHeight } : undefined}
         >
           <span
             className={
-              variant === "marketing"
-                ? "text-marketing-accent"
-                : "text-primary"
+              variant === "marketing" ? "text-text-primary" : "text-primary"
             }
           >
             {line1}
@@ -78,7 +79,9 @@ export function PretextHeroStatement({
           <span className="text-text-secondary">{line2}</span>
         </div>
       </div>
-      <p className="mt-4 text-sm text-text-tertiary leading-relaxed">{sub}</p>
+      <p className="mt-4 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-tertiary">
+        {sub}
+      </p>
     </div>
   );
 }
