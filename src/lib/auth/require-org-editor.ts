@@ -10,6 +10,48 @@ export type OrgEditorContext = {
   role: string;
 };
 
+/** Any org member (including viewer) bound to an organization. For RLS-aligned CRUD where editors-only is too strict. */
+export type OrgMemberContext = {
+  userId: string;
+  organizationId: string;
+  role: string;
+};
+
+/**
+ * Resolves the current user as a member of an organization (any role, including viewer).
+ * Use for Studio Productions and similar org-scoped data where RLS allows all org members.
+ */
+export async function getOrgMemberContext(
+  supabase: SupabaseClient,
+): Promise<
+  { ok: true; ctx: OrgMemberContext } | { ok: false; error: string }
+> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: ActionErrorCode.authNotAuthenticated };
+
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("organization_id, role")
+    .eq("id", user.id)
+    .single();
+
+  if (error) return { ok: false, error: ActionErrorCode.dbError };
+  if (!profile?.organization_id) {
+    return { ok: false, error: ActionErrorCode.authNoOrganization };
+  }
+
+  return {
+    ok: true,
+    ctx: {
+      userId: user.id,
+      organizationId: profile.organization_id,
+      role: profile.role ?? "viewer",
+    },
+  };
+}
+
 /**
  * Resolves the current user as an org-bound editor (admin | organizer | coordinator).
  * Use in server actions that mirror RLS expectations for `events`, `sessions`, etc.

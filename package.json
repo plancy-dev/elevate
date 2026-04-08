@@ -19,6 +19,7 @@
     "test:e2e": "playwright test",
     "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
     "db:seed-admin": "node scripts/seed-admin.mjs",
+    "db:seed-demo-studio": "tsx scripts/seed-demo-studio-productions.ts",
     "generate:brand": "node scripts/generate-brand-assets.mjs",
     "og:default": "node scripts/build-og-default.mjs",
     "og:default:webp": "node scripts/build-og-default.mjs --webp",
@@ -58,6 +59,7 @@
     "lint-staged": "^16.4.0",
     "sharp": "^0.34.5",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^3.2.4"
   },

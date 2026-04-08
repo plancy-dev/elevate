@@ -104,7 +104,7 @@ Run this **after** en + ko MDX exist, **before** wide distribution.
 
 ### 5.1 Local / preview
 
-- [ ] `pnpm dev` — open `/en/blog/<slug>` and `/ko/blog/<slug>`.
+- [ ] `pnpm dev` — open **`/blog/<slug>`** (English, default locale; `/en/blog/…` redirects) and **`/ko/blog/<slug>`**.
 - [ ] **Hero** loads (fixed path under `/public/blog/...`).
 - [ ] **Caption / license** line is accurate; no broken outbound links.
 - [ ] **Skim test:** headings tell the story; optional “if you’re skimming, jump to …” line for long posts.
@@ -131,22 +131,65 @@ Incorporate feedback in **both** locales unless the issue is language-specific.
 
 ## 6. Distribution pack (same PR or follow-up)
 
-Create `docs/blog/distribution/<slug>.md` (not loaded by the app) containing:
+Create `docs/blog/distribution/<slug>.md` (not loaded by the app). **Goal:** each pack is a **mini growth brief**—not only copy-paste text, but **who should discover it, why they click, and what we want them to do next** (see [`CONTENT_FUNNEL.md`](CONTENT_FUNNEL.md): Awareness → Interest → `#waitlist` / product).
 
-- Full URL template: `https://<production-domain>/<locale>/blog/<slug>`
-- **X (Twitter):** 1–2 short posts + link; thread optional.
-- **Threads:** slightly longer hook; can match X or extend.
-- **Optional:** LinkedIn intro, newsletter one-liner.
-- **Hashtag sets** (copy-paste): primary + secondary.
-- **Alt text** reminder for hero image (for social image posts).
-- **OG image path** documented for social scheduling tools.
+**Folder:** [`docs/blog/distribution/`](blog/distribution/) — see [`README.md`](blog/distribution/README.md) for the required sections and [`_TEMPLATE.md`](blog/distribution/_TEMPLATE.md) to start a new pack.
+
+### 6.1 Funnel & CTAs (every pack must spell this out)
+
+| Layer | Purpose | Typical URL (production) |
+|-------|---------|---------------------------|
+| **1 — Article** | Teach + earn trust; SEO/social landing | **English (default):** `https://<domain>/blog/<slug>` — **not** `/en/blog/…` (see below). **Other locales:** `https://<domain>/<locale>/blog/<slug>`. Add UTM. |
+| **2 — Home + waitlist** | Primary conversion (Prompt Studio interest) | **English:** `https://<domain>/?utm_…#waitlist` (query before `#`). **Other locales:** `https://<domain>/<locale>#waitlist` + UTM. |
+| **3 — Product** | Deeper interest (feature clarity) | **`/product/prompt-studio`** (English has no `/en` prefix); localized paths for other locales. |
+
+**Default locale (`en`) and social crawlers:** With **next-intl** `localePrefix: "as-needed"`, paths like **`/en/blog/<slug>`** respond with **307** to **`/blog/<slug>`**. X / LinkedIn / Meta crawlers often **fail to render link preview cards** on the redirecting URL. **Always put canonical English links** (`/blog/…`, `/?…#waitlist`) in social posts and distribution packs — see [`docs/blog/distribution/README.md`](blog/distribution/README.md).
+
+**Rule:** At least **one** social variant should point **straight to the article** (story + link preview); at least **one** variant (or a follow-up post the next day) can point to **`#waitlist`** with a one-line “why join” so measurement in PostHog separates **read** vs **signup intent** ([`POSTHOG_FUNNELS.md`](POSTHOG_FUNNELS.md)).
+
+### 6.2 Discovery — hashtags & communities (not decoration)
+
+Hashtags are for **topic feeds** (people who don’t follow you yet). Structure them in **three tiers** (copy-paste blocks in the pack):
+
+| Tier | Role | Example intent |
+|------|------|----------------|
+| **A — Broad** | Reach | `#AI`, `#MachineLearning` (use sparingly; noisy) |
+| **B — ICP** | Job/problem fit | `#PromptEngineering`, `#MarketingOps`, `#B2B`, `#GTM` |
+| **C — Branded** | Recall | `#Elevate` (one per post is enough) |
+
+**Platform norms (adjust per network):**
+
+- **X:** Prefer **3–6** hashtags on discovery-oriented posts; put them **at the end** or after the link so the hook line stays human. Avoid the same hashtag set on every post (reads as spam).
+- **Threads:** Similar to X; first line = hook; link + hashtags can follow.
+- **LinkedIn:** **3–5** hashtags at the bottom is standard for B2B; lead with a professional hook, then link, then hashtags.
+- **Hashtags in the blog MDX body:** Only if editorially useful; default is **social-only** (§3).
+
+### 6.3 UTM (align with analytics)
+
+Use a **consistent campaign name** per post, e.g. `utm_campaign=blog_<short_slug>`, and differentiate channel + locale:
+
+- `utm_source=x` \| `threads` \| `linkedin` \| `newsletter`
+- `utm_medium=social` (or `email` for newsletter)
+- `utm_content=en` \| `ko`
+
+Document the **exact query strings** in the pack so schedulers don’t invent ad-hoc names. Homepage waitlist links should repeat the same campaign where you’re driving **one** coordinated launch.
+
+### 6.4 Required contents of `<slug>.md`
+
+- **Positioning:** Pillar (from [`marketing-pillars-m2.md`](../memory-bank/marketing-pillars-m2.md)), one-line ICP, **single primary CTA** for the campaign.
+- **Canonical URLs** (en + ko) + **UTM examples** for article and for `#waitlist`.
+- **Hashtag tiers** (EN + KO if both ship).
+- **X:** Short post(s) + optional thread; **Threads** variant; **LinkedIn** variant (B2B).
+- **One-liners** for Slack / newsletter / DM.
+- **Follow-up ideas** (reply, quote, “day 2” waitlist nudge)—so the pack isn’t a one-shot.
+- **SEO/META / OG** reminders and image alt for image posts.
 
 ---
 
 ## 7. QA before ship
 
 - [ ] `pnpm verify`
-- [ ] Open `/en/blog/<slug>` and `/ko/blog/<slug>`; CTA links work.
+- [ ] Open **`/blog/<slug>`** (English) and **`/ko/blog/<slug>`**; CTA links work. For social sharing tests, use these canonical URLs (not `/en/…`).
 - [ ] No broken MDX; images load; caption credits present.
 - [ ] Front matter includes **`ogImage`** when you want post-specific link previews (see §3).
 - [ ] **Voice:** §**2.5** pass done—read aloud once per locale; KO does not read like English translated line-by-line.

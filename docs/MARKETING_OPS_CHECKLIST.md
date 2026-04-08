@@ -144,6 +144,31 @@ PostHog는 행동 분석용이고, **검색 키워드 원본**은 GSC가 적합�
 | **중복 팔로워** | 같은 사람이 둘 다 팔로우하면 비슷한 글이 연속으로 보일 수 있음 → **같은 날이면 시간 간격**을 두거나, 한쪽은 “짧은 요약본”만 올리기. |
 | **인스타그램 본피드** | 스토리/릴스는 **별 크리에이티브**가 필요한 경우가 많아서, **지금은 Threads만** X와 묶어 운영해도 됨. |
 
+### E1a2. 블로그 배포 팩 — “글만 올리지 않기”
+
+블로그 글과 별도로 **`docs/blog/distribution/<slug>.md`** 에 **소셜 발견·전환**을 적어 둔다 ([`blog/distribution/README.md`](blog/distribution/README.md)). 한 팩 안에 다음이 들어가야 **파이프라인이 CTA까지 연결**된다.
+
+| 포함할 것 | 이유 |
+|-----------|------|
+| **피라·ICP·이번 캠페인의 1차 CTA** | 글 읽기 vs 웨이트리스트 직행을 섞지 않고 의도를 고정 |
+| **해시태그 3단(넓은 피드 / ICP / 브랜드)** | 관심사 피드를 쓰는 비구독자에게 노출 |
+| **기사 URL + `#waitlist` URL 각각에 UTM** | PostHog·캠페인별 성과 구분 ([`docs/BLOG_POST_PIPELINE.md`](BLOG_POST_PIPELINE.md) §6, [`docs/CONTENT_FUNNEL.md`](CONTENT_FUNNEL.md)) |
+| **X / Threads / LinkedIn용 별도 카피** | 플랫폼마다 훅 길이·해시태그 위치가 다름 |
+| **48시간 내 후속(인용·웨이트리스트 각도)** | 한 번 올리고 끝이 아니라 “바이럴”이 아니라 **도달 반복** |
+
+신규 글은 [`blog/distribution/_TEMPLATE.md`](blog/distribution/_TEMPLATE.md)로 복사해 시작한다.
+
+### E1a3. Threads 커뮤니티 (예: AI Threads)
+
+Threads에는 **주제별 커뮤니티**(베타 등)가 있고, 가입 후 글을 **해당 커뮤니티에 올리면** AI·빌더 관심층 등 **관심사가 맞는 피드**로 들어갈 수 있다. (예: **AI Threads** — 대규모 멤버·AI 주제 허브.)
+
+| 관점 | 팁 |
+|------|-----|
+| **언제 쓰나** | 제품·블로그 톤이 **AI 실무·도구·프롬프트**와 맞을 때. 일반 피드만 쓸 때와 **노출·댓글 톤**이 다를 수 있으니 장기적으로 **A/B**해볼 가치가 있음. |
+| **카피** | 배포 팩의 Threads 문단은 **피드·커뮤니티 겸용**으로 두고, 커뮤니티에만 올릴 때 **첫 문장만** 더 캐주얼·반전 있게 다듬는 식이 부담이 적다. |
+| **UTM** | 기본은 여전히 `utm_source=threads`. **커뮤니티 출처만** PostHog에서 따로 보고 싶을 때만 `utm_content`에 **한 가지 고정 값**(예: `threads_ai_community`)을 쓰고, 같은 플래그를 여기저기 흩뿌리지 않는다 ([`.cursor/rules/posthog-integration.mdc`](../.cursor/rules/posthog-integration.mdc)). |
+| **한계** | 커뮤니티 UI·노출 규칙은 Meta 쪽 변경 가능 → **채널 SoT는 여전히 자사 사이트·웨이트리스트**로 두고, 커뮤니티는 **발견·대화 레이어**로 본다. |
+
 ### E1b. Threads는 인스타 계정이 필수 — 브랜딩하려면?
 
 **Threads 단독 가입은 없다.** Meta 정책상 [Threads](https://www.threads.net/)는 **Instagram 계정과 연동**되는 형태다. 그래서 **개인 인스타**에 묶인 Threads는 @핸들·정체성이 개인 계정을 따른다.

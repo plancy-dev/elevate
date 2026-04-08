@@ -612,6 +612,114 @@ export type Database = {
           },
         ]
       }
+      studio_production_artifacts: {
+        Row: {
+          artifact_role: string
+          content_text: string
+          created_at: string
+          episode_id: string
+          external_url: string | null
+          id: string
+          metadata: Json
+          organization_id: string
+          sort_order: number
+          tool_platform: string
+        }
+        Insert: {
+          artifact_role: string
+          content_text?: string
+          created_at?: string
+          episode_id: string
+          external_url?: string | null
+          id?: string
+          metadata?: Json
+          organization_id: string
+          sort_order?: number
+          tool_platform: string
+        }
+        Update: {
+          artifact_role?: string
+          content_text?: string
+          created_at?: string
+          episode_id?: string
+          external_url?: string | null
+          id?: string
+          metadata?: Json
+          organization_id?: string
+          sort_order?: number
+          tool_platform?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_production_artifacts_episode_id_fkey"
+            columns: ["episode_id"]
+            isOneToOne: false
+            referencedRelation: "studio_production_episodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_production_artifacts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_production_episodes: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          distribution_label: string
+          id: string
+          notes: string
+          organization_id: string
+          publish_url: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          distribution_label?: string
+          id?: string
+          notes?: string
+          organization_id: string
+          publish_url?: string | null
+          status: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          distribution_label?: string
+          id?: string
+          notes?: string
+          organization_id?: string
+          publish_url?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_production_episodes_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_production_episodes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       toss_payment_intents: {
         Row: {
           amount_krw: number

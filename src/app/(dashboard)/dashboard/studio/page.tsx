@@ -5,7 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ButtonLink } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StudioBetaGated } from "@/components/dashboard/studio-beta-gated";
+import { StudioSendToProductions } from "@/components/dashboard/studio-send-to-productions";
 import { assertPromptStudioBetaAccess } from "@/lib/prompt-studio/assert-studio-beta-access";
+import { createClient } from "@/lib/supabase/server";
+import { listStudioEpisodesForOrg } from "@/lib/data/studio-productions";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +22,26 @@ export default async function StudioPage() {
   if (!beta.ok) {
     return <StudioBetaGated reason={beta.reason} />;
   }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("organization_id")
+    .eq("id", user?.id ?? "")
+    .maybeSingle();
+
+  const orgId = profile?.organization_id ?? null;
+  const episodes = orgId
+    ? await listStudioEpisodesForOrg(supabase, orgId)
+    : [];
+  const episodeOptions = episodes.map((e) => ({
+    id: e.id,
+    title: e.title,
+  }));
 
   const t = await getTranslations("Dashboard.studio");
   const bullets = [t("bullet1"), t("bullet2"), t("bullet3")];
@@ -42,8 +65,10 @@ export default async function StudioPage() {
         </ul>
       </div>
 
-      <Card className="border-border-subtle mb-8">
-        <CardContent className="p-8 flex flex-col items-center justify-center min-h-[200px] text-center border border-dashed border-border-subtle rounded-none bg-layer-02/50">
+      <StudioSendToProductions episodes={episodeOptions} />
+
+      <Card className="border-border-subtle mb-8 mt-8">
+        <CardContent className="p-8 flex flex-col items-center justify-center min-h-[120px] text-center border border-dashed border-border-subtle rounded-none bg-layer-02/50">
           <Sparkles className="h-10 w-10 text-primary mb-4" aria-hidden />
           <p className="text-sm font-medium text-text-primary">{t("building")}</p>
           <p className="mt-2 text-xs text-text-tertiary max-w-md leading-relaxed">
@@ -56,6 +81,10 @@ export default async function StudioPage() {
         <ButtonLink href="/dashboard/library" variant="primary" size="lg">
           <BookOpen className="h-4 w-4 shrink-0" aria-hidden />
           {t("ctaLibrary")}
+        </ButtonLink>
+        <ButtonLink href="/dashboard/productions" variant="secondary" size="lg">
+          <Sparkles className="h-4 w-4 shrink-0" aria-hidden />
+          {t("ctaProductions")}
         </ButtonLink>
         <ButtonLink href="/dashboard/billing" variant="tertiary" size="lg">
           <CreditCard className="h-4 w-4 shrink-0" aria-hidden />

@@ -22,6 +22,11 @@ export const PostHogEvent = {
   ELEVATE_WAITLIST_SUBMITTED: "elevate_waitlist_submitted",
   ELEVATE_WAITLIST_SUBMIT_FAILED: "elevate_waitlist_submit_failed",
   ELEVATE_MARKETING_CTA_CLICK: "elevate_marketing_cta_click",
+  /**
+   * Prompt Studio → Productions handoff (sessionStorage + navigate).
+   * Properties: `target` = new_episode | existing_episode
+   */
+  ELEVATE_STUDIO_TO_PRODUCTIONS_HANDOFF: "elevate_studio_to_productions_handoff",
 } as const;
 
 /** `elevate_marketing_cta_click` — stable `cta_id` values */

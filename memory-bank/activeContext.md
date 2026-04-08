@@ -5,6 +5,18 @@
 **AI 피벗 — Phase A/B**  
 North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문서·랜딩(Pretext)·gstack·신규 DB(콘텐츠 카탈로그·엔타이틀먼트)와 대시보드 Library 우선 네비.
 
+### 진행 중 → **PLAN 핸드오프 직전 완료**
+
+**Studio Productions (제작 원장)** — 외부 툴 산출물을 **에피소드 + 아티팩트**로 조직 단위 저장. Library(카탈로그)와 분리.
+
+**v1 합의 (고정):** 벤더 **연동·API 없음**. 저장된 **링크 열기**, 선택적 **숏컷(북마크 수준)**, **`tool_platform` 등 레이블**로 나열·필터. “이런 툴로 할 수 있어요”는 **카피/정적 안내**로 충분.
+
+- ADR: [`docs/adr/ADR-003-studio-productions-mvp.md`](../docs/adr/ADR-003-studio-productions-mvp.md)  
+- 리뷰 + 백로그 + `/autoplan` 절차 + PLAN 체크리스트: [`docs/features/GSTACK_REVIEW-production-workbench.md`](../docs/features/GSTACK_REVIEW-production-workbench.md) § I–K  
+- 단일 플랜 파일(Plan/autoplan용): [`docs/features/PLAN-studio-productions.md`](../docs/features/PLAN-studio-productions.md)  
+
+**다음:** Cursor **Plan** 모드에서 § K 및 `PLAN-studio-productions.md`로 상세 설계 → 이후 Agent BUILD.
+
 ## 최근 확정 결정
 
 | 주제 | 결정 |

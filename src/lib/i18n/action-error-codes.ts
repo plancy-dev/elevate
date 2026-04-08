@@ -37,6 +37,18 @@ export const ActionErrorCode = {
   onboardingServiceRoleMissing: "onboardingServiceRoleMissing",
   onboardingOrgCreateFailed: "onboardingOrgCreateFailed",
   onboardingProfileUnavailable: "onboardingProfileUnavailable",
+
+  studioEpisodeNotFound: "studioEpisodeNotFound",
+  studioArtifactNotFound: "studioArtifactNotFound",
+  studioInvalidUrl: "studioInvalidUrl",
+  studioTextTooLong: "studioTextTooLong",
+  studioMetadataTooLarge: "studioMetadataTooLarge",
+  studioInvalidStatus: "studioInvalidStatus",
+  studioTitleRequired: "studioTitleRequired",
+  studioRoleRequired: "studioRoleRequired",
+
+  studioDemoSeedDisabled: "studioDemoSeedDisabled",
+  studioDemoSeedNotEmpty: "studioDemoSeedNotEmpty",
 } as const;
 
 export type ActionErrorCode =

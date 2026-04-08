@@ -74,6 +74,31 @@ Prompt Studio 랜딩 트래픽이 늘면 쓰면 됩니다.
 
 ---
 
+## 퍼널 E — Prompt Studio → 제작 (선택)
+
+**목표:** 스튜디오 스크래치패드에서 **Send to Productions** 로 넘어가는 흐름을 측정합니다.
+
+| 단계 | 이벤트 | 비고 |
+|------|--------|------|
+| 1 | `elevate_studio_to_productions_handoff` | 속성 **`target`**: `new_episode` 또는 `existing_episode` |
+
+인사이트에서 **Breakdown** → `target` 으로 신규 에피소드 vs 기존 에피소드 비율을 볼 수 있습니다. 이후 저장(에피소드 생성·아티팩트 추가)까지 연결하려면 제작 관련 저장 이벤트가 추가되면 같은 퍼널에 단계로 붙이면 됩니다.
+
+### 퍼널 E — PostHog에서 인사이트·대시보드 추가 (수동)
+
+API로 위젯을 자동 생성하지 않습니다. 아래 순서로 **한 번** 만들어 두면 됩니다.
+
+1. PostHog → **Product analytics** → **New insight** → **Trends**.
+2. **Series A**: 이벤트 `elevate_studio_to_productions_handoff` → **Total count** (또는 **Unique users**).
+3. 기간: **Last 30 days** (팀에 맞게 조정).
+4. (선택) **Breakdown by** → 이벤트 속성 **`target`** — 막대/둘 이상 시리즈로 `new_episode` vs `existing_episode` 비교.
+5. 우측 상단 **Save** → 이름 예: `Elevate — Trend — studio → productions handoff`.
+6. **Add to dashboard** → 기존 **Elevate — Marketing** 대시보드에 넣거나, 제품 전용으로 **Elevate — Product** 대시보드를 새로 만든 뒤 같은 방식으로 추가.
+
+**확인:** Activity / Live events에서 해당 이벤트가 보인 뒤에 인사이트를 저장하면 빈 그래프 문제를 줄일 수 있습니다.
+
+---
+
 ## 대시보드 (권장 구성)
 
 **“Elevate — Marketing”** 대시보드 하나에 다음을 넣습니다:
@@ -99,6 +124,7 @@ Slack 링크·내보내기가 읽기 쉽도록 아래 이름을 쓰는 것을 �
 | 트렌드 블로그 조회 | `Elevate — Trend — blog_post_viewed (weekly)` |
 | 트렌드 대기명단 | `Elevate — Trend — waitlist_submitted (weekly)` |
 | 퍼널 D (선택) | `Elevate — Funnel D — dashboard library or billing` |
+| 퍼널 E (스튜디오→제작) | `Elevate — Trend — studio → productions handoff` |
 
 ### UI 체크리스트 (순서)
 
