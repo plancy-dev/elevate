@@ -208,6 +208,38 @@ export type Database = {
         }
         Relationships: []
       }
+      content_product_lemon_links: {
+        Row: {
+          content_product_id: string
+          created_at: string
+          lemon_product_id: string | null
+          lemon_variant_id: string
+          updated_at: string
+        }
+        Insert: {
+          content_product_id: string
+          created_at?: string
+          lemon_product_id?: string | null
+          lemon_variant_id: string
+          updated_at?: string
+        }
+        Update: {
+          content_product_id?: string
+          created_at?: string
+          lemon_product_id?: string | null
+          lemon_variant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_product_lemon_links_content_product_id_fkey"
+            columns: ["content_product_id"]
+            isOneToOne: true
+            referencedRelation: "content_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_ebook_first_opens: {
         Row: {
           content_product_id: string

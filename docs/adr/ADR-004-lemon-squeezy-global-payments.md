@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed / in progress — webhook route + entitlement path implemented; checkout links, SKU catalog alignment, and refunds policy are follow-ups.
+In progress — webhook + entitlements shipped; operator-managed variant links (`content_product_lemon_links`) + `POST /v1/checkouts` for billing shipped; see `docs/features/PLAN-lemon-operator-catalog-sync.md`. Refunds/chargeback revocation remain follow-ups.
 
 ## Context
 

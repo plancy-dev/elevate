@@ -7,6 +7,11 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database.types";
 
 type ContentProductRow = Database["public"]["Tables"]["content_products"]["Row"];
+type LemonLinkRow = Database["public"]["Tables"]["content_product_lemon_links"]["Row"];
+
+type ContentProductWithLemon = ContentProductRow & {
+  lemonLink: LemonLinkRow | null;
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.adminContent");
@@ -16,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AdminContentCatalogPage() {
   const t = await getTranslations("Dashboard.adminContent");
   const tAdmin = await getTranslations("Dashboard.admin");
-  let rows: ContentProductRow[] = [];
+  let rows: ContentProductWithLemon[] = [];
   let loadError: string | null = null;
 
   try {
@@ -28,7 +33,22 @@ export default async function AdminContentCatalogPage() {
     if (error) {
       loadError = error.message;
     } else {
-      rows = data ?? [];
+      const catalog = data ?? [];
+      const ids = catalog.map((r) => r.id);
+      const linkMap = new Map<string, LemonLinkRow>();
+      if (ids.length > 0) {
+        const { data: links } = await admin
+          .from("content_product_lemon_links")
+          .select("*")
+          .in("content_product_id", ids);
+        for (const link of links ?? []) {
+          linkMap.set(link.content_product_id, link);
+        }
+      }
+      rows = catalog.map((r) => ({
+        ...r,
+        lemonLink: linkMap.get(r.id) ?? null,
+      }));
     }
   } catch (e) {
     loadError = e instanceof Error ? e.message : "unknown";
@@ -50,8 +70,11 @@ export default async function AdminContentCatalogPage() {
         </Link>
       </div>
 
-      <div className="p-6 max-w-4xl space-y-8">
-        <p className="text-sm text-text-secondary leading-relaxed">{t("intro")}</p>
+      <div className="p-6 max-w-6xl space-y-8">
+        <div className="space-y-2 max-w-2xl">
+          <p className="text-sm text-text-secondary leading-relaxed">{t("intro")}</p>
+          <p className="text-sm text-text-tertiary leading-relaxed">{t("lemonBlurb")}</p>
+        </div>
 
         {loadError ? (
           <p className="text-sm text-amber-600 dark:text-amber-400" role="alert">

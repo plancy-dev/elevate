@@ -11,8 +11,14 @@ import {
 import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
 import type { Database } from "@/types/database.types";
 import { cn } from "@/lib/utils";
+import { ContentProductLemonCell } from "@/components/admin/content-product-lemon-cell";
 
 type ContentProductRow = Database["public"]["Tables"]["content_products"]["Row"];
+type LemonLinkRow = Database["public"]["Tables"]["content_product_lemon_links"]["Row"];
+
+type ContentProductWithLemon = ContentProductRow & {
+  lemonLink: LemonLinkRow | null;
+};
 
 const KINDS = ["ebook", "guide", "template", "bundle"] as const;
 
@@ -58,7 +64,7 @@ function errorMessage(
 export function ContentProductsAdminClient({
   initialRows,
 }: {
-  initialRows: ContentProductRow[];
+  initialRows: ContentProductWithLemon[];
 }) {
   const t = useTranslations("Dashboard.adminContent");
   const tKinds = useTranslations("Dashboard.library.productKind");
@@ -96,6 +102,7 @@ export function ContentProductsAdminClient({
                   <th className="px-3 py-2 font-medium min-w-[140px]">
                     {t("colStorage")}
                   </th>
+                  <th className="px-3 py-2 font-medium min-w-[220px]">{t("colLemon")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -124,6 +131,9 @@ export function ContentProductsAdminClient({
                       title={row.storage_object_path ?? ""}
                     >
                       {row.storage_object_path ?? "—"}
+                    </td>
+                    <td className="px-3 py-2 align-top">
+                      <ContentProductLemonCell row={row} lemonLink={row.lemonLink} />
                     </td>
                   </tr>
                 ))}

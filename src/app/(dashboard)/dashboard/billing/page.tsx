@@ -4,9 +4,12 @@ import { getTranslations } from "next-intl/server";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { ActionErrorMessage } from "@/components/i18n/action-error-message";
 import { BillingFunnelCapture } from "@/components/analytics/billing-funnel-capture";
-import { BillingLemonCheckout } from "@/components/dashboard/billing-lemon-checkout";
+import {
+  BillingLemonCheckout,
+  type LemonBillingUnconfiguredReason,
+} from "@/components/dashboard/billing-lemon-checkout";
 import { BillingTossWidget } from "@/components/dashboard/billing-toss-widget";
-import { getLemonCheckoutUrlForSlug } from "@/lib/env/lemon-checkout-urls";
+import { resolveLemonCheckoutForBillingPage } from "@/lib/payments/resolve-lemon-checkout-for-billing";
 import { getTossWidgetClientKey } from "@/lib/env/toss";
 import { getCatalogPaymentProvider } from "@/lib/payments/catalog-payment-provider";
 import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
@@ -59,13 +62,34 @@ export default async function BillingPage({
     : { data: null };
 
   const provider = getCatalogPaymentProvider();
-  const lemonCheckoutUrl =
-    contentProductSlug && provider === "lemon"
-      ? getLemonCheckoutUrlForSlug(contentProductSlug)
-      : null;
+  const origin = await resolveAppOrigin();
+
+  let lemonCheckoutUrl: string | null = null;
+  let lemonEmbedsCustomData = false;
+  let lemonUnconfigured: LemonBillingUnconfiguredReason | null = null;
+
+  if (provider === "lemon" && contentProductSlug) {
+    const r = await resolveLemonCheckoutForBillingPage({
+      contentProductSlug,
+      organizationId: prof?.organization_id ?? null,
+      appOrigin: origin,
+    });
+    if (r.checkoutUrl) {
+      lemonCheckoutUrl = r.checkoutUrl;
+      lemonEmbedsCustomData = r.embedsCustomDataInCheckout;
+    } else if ("reason" in r) {
+      const map: Record<string, LemonBillingUnconfiguredReason> = {
+        not_linked: "not_linked",
+        api_not_configured: "api_not_configured",
+        checkout_api_failed: "checkout_api_failed",
+        unknown_product: "unknown_product",
+        no_slug: "not_linked",
+      };
+      lemonUnconfigured = map[r.reason] ?? "not_linked";
+    }
+  }
 
   const widgetKey = getTossWidgetClientKey();
-  const origin = await resolveAppOrigin();
   const t = await getTranslations("Dashboard.pages");
   const tb = await getTranslations("Dashboard.billing");
 
@@ -84,6 +108,8 @@ export default async function BillingPage({
               checkoutUrl={lemonCheckoutUrl}
               organizationId={prof?.organization_id ?? null}
               profileEmail={user?.email ?? null}
+              embedsCustomDataInCheckout={lemonEmbedsCustomData}
+              unconfiguredReason={lemonUnconfigured}
             />
             <p className="text-sm text-text-tertiary border-t border-border-subtle pt-4">
               {tb("footerDocs")}
