@@ -78,3 +78,22 @@ export async function getLibraryPageData(
     organizationPlan,
   };
 }
+
+/** Single catalog row for Library detail; reuses list fetch (fine for small catalogs). */
+export async function getLibraryProductBySlug(
+  supabase: SupabaseClient<Database>,
+  organizationId: string | null,
+  slug: string,
+): Promise<{
+  product: LibraryProductRow | null;
+  entitledIds: Set<string>;
+  organizationPlan: OrgPlan | null;
+}> {
+  const page = await getLibraryPageData(supabase, organizationId);
+  const product = page.products.find((p) => p.slug === slug) ?? null;
+  return {
+    product,
+    entitledIds: page.entitledIds,
+    organizationPlan: page.organizationPlan,
+  };
+}

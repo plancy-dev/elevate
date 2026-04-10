@@ -26,6 +26,7 @@
 | Area | Status |
 |------|--------|
 | Content catalog, entitlements, Toss PoC, Library | Shipped (see `tasks.md` Phase B) |
+| Library detail, Lemon billing entry, purchase history, admin catalog edits (`020`–`021`) | Shipped 2026-04 — [`archive/work-history/archive-dashboard-billing-library-lemon-2026-04.md`](archive/work-history/archive-dashboard-billing-library-lemon-2026-04.md) |
 | Prompt Studio placeholder + beta allowlist | Shipped |
 | Studio Productions v1 (episodes, artifacts, workbench) | Shipped — ADR [`docs/adr/ADR-003-studio-productions-mvp.md`](../docs/adr/ADR-003-studio-productions-mvp.md) |
 | Visual language v2 + marketing/dashboard surface alignment | Shipped (see `tasks.md` P1 backlog) |

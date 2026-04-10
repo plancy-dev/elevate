@@ -1,32 +1,26 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { ActionErrorMessage } from "@/components/i18n/action-error-message";
 import { BillingFunnelCapture } from "@/components/analytics/billing-funnel-capture";
+import { BillingOrgSummary } from "@/components/dashboard/billing-org-summary";
 import {
   BillingLemonCheckout,
   type LemonBillingUnconfiguredReason,
 } from "@/components/dashboard/billing-lemon-checkout";
 import { BillingTossWidget } from "@/components/dashboard/billing-toss-widget";
+import type { OrgPlan } from "@/lib/organizations/plan";
 import { resolveLemonCheckoutForBillingPage } from "@/lib/payments/resolve-lemon-checkout-for-billing";
 import { getTossWidgetClientKey } from "@/lib/env/toss";
 import { getCatalogPaymentProvider } from "@/lib/payments/catalog-payment-provider";
 import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
 import { createClient } from "@/lib/supabase/server";
+import { resolveAppOrigin } from "@/lib/url/resolve-app-origin";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.pages");
   return { title: t("billing.title") };
-}
-
-async function resolveAppOrigin(): Promise<string> {
-  const env = process.env.NEXT_PUBLIC_APP_URL?.trim();
-  if (env) return env.replace(/\/$/, "");
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? "http";
-  return `${proto}://${host}`;
 }
 
 export default async function BillingPage({
@@ -61,6 +55,21 @@ export default async function BillingPage({
         .maybeSingle()
     : { data: null };
 
+  let billingOrg: { name: string; plan: OrgPlan } | null = null;
+  if (prof?.organization_id) {
+    const { data: org } = await supabase
+      .from("organizations")
+      .select("name, plan")
+      .eq("id", prof.organization_id)
+      .maybeSingle();
+    if (org?.name) {
+      billingOrg = {
+        name: org.name,
+        plan: (org.plan ?? "starter") as OrgPlan,
+      };
+    }
+  }
+
   const provider = getCatalogPaymentProvider();
   const origin = await resolveAppOrigin();
 
@@ -82,6 +91,7 @@ export default async function BillingPage({
         not_linked: "not_linked",
         api_not_configured: "api_not_configured",
         checkout_api_failed: "checkout_api_failed",
+        price_below_lemon_minimum: "price_below_lemon_minimum",
         unknown_product: "unknown_product",
         no_slug: "not_linked",
       };
@@ -99,23 +109,29 @@ export default async function BillingPage({
         <h1 className="text-sm font-medium text-text-primary">{t("billing.title")}</h1>
       </div>
       <div className="mx-auto w-full max-w-xl space-y-6 p-6">
+        <div className="flex justify-end">
+          <Link
+            href="/dashboard/billing/purchases"
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            {tb("linkPurchaseHistory")}
+          </Link>
+        </div>
         <BillingFunnelCapture productSlug={contentProductSlug} />
-        {provider === "lemon" ? (
-          <>
-            <p className="text-sm text-text-secondary leading-relaxed">{tb("lemonIntro")}</p>
-            <BillingLemonCheckout
-              contentProductSlug={contentProductSlug}
-              checkoutUrl={lemonCheckoutUrl}
-              organizationId={prof?.organization_id ?? null}
-              profileEmail={user?.email ?? null}
-              embedsCustomDataInCheckout={lemonEmbedsCustomData}
-              unconfiguredReason={lemonUnconfigured}
-            />
-            <p className="text-sm text-text-tertiary border-t border-border-subtle pt-4">
-              {tb("footerDocs")}
-            </p>
-          </>
-        ) : (
+        {billingOrg ? (
+          <BillingOrgSummary organizationName={billingOrg.name} plan={billingOrg.plan} />
+        ) : null}
+        {provider === "lemon" && contentProductSlug ? (
+          <BillingLemonCheckout
+            contentProductSlug={contentProductSlug}
+            checkoutUrl={lemonCheckoutUrl}
+            organizationId={prof?.organization_id ?? null}
+            profileEmail={user?.email ?? null}
+            embedsCustomDataInCheckout={lemonEmbedsCustomData}
+            unconfiguredReason={lemonUnconfigured}
+          />
+        ) : null}
+        {provider === "toss" ? (
           <>
             {contentProductSlug ? (
               <p className="text-sm text-text-secondary leading-relaxed">
@@ -124,13 +140,16 @@ export default async function BillingPage({
                   amount: TOSS_POC_AMOUNT_KRW,
                 })}
               </p>
+            ) : (
+              <p className="text-sm text-text-secondary leading-relaxed">
+                {tb("tossIntroNoSlug", { amount: TOSS_POC_AMOUNT_KRW })}
+              </p>
+            )}
+            {contentProductSlug ? (
+              <p className="text-sm text-text-secondary leading-relaxed">
+                {tb("tossIntro", { amount: TOSS_POC_AMOUNT_KRW })}
+              </p>
             ) : null}
-            <p className="text-sm text-text-secondary leading-relaxed">
-              {tb("tossIntro", { amount: TOSS_POC_AMOUNT_KRW })}
-            </p>
-            <p className="text-xs text-text-tertiary leading-relaxed">
-              {tb("registerUrls")}
-            </p>
             {user && widgetKey ? (
               <BillingTossWidget
                 clientKey={widgetKey}
@@ -143,11 +162,8 @@ export default async function BillingPage({
             ) : (
               <p className="text-sm text-text-tertiary">{tb("setClientKey")}</p>
             )}
-            <p className="text-sm text-text-tertiary border-t border-border-subtle pt-4">
-              {tb("footerDocs")}
-            </p>
           </>
-        )}
+        ) : null}
       </div>
     </div>
   );

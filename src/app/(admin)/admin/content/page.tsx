@@ -2,16 +2,12 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, Shield } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import type { ContentProductWithLemon } from "@/components/admin/content-catalog-edit-dialog";
 import { ContentProductsAdminClient } from "@/components/admin/content-products-admin-client";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database.types";
 
-type ContentProductRow = Database["public"]["Tables"]["content_products"]["Row"];
 type LemonLinkRow = Database["public"]["Tables"]["content_product_lemon_links"]["Row"];
-
-type ContentProductWithLemon = ContentProductRow & {
-  lemonLink: LemonLinkRow | null;
-};
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.adminContent");

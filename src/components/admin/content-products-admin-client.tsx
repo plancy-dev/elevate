@@ -1,24 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
+  deleteContentProduct,
   uploadContentProduct,
   type UploadContentProductResult,
 } from "@/actions/content-products-admin";
+import {
+  ContentCatalogEditDialog,
+  type ContentProductWithLemon,
+} from "@/components/admin/content-catalog-edit-dialog";
+import { LEMON_CUSTOM_PRICE_MIN_KRW } from "@/lib/payments/lemon-custom-price-minimum";
 import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
-import type { Database } from "@/types/database.types";
 import { cn } from "@/lib/utils";
-import { ContentProductLemonCell } from "@/components/admin/content-product-lemon-cell";
-
-type ContentProductRow = Database["public"]["Tables"]["content_products"]["Row"];
-type LemonLinkRow = Database["public"]["Tables"]["content_product_lemon_links"]["Row"];
-
-type ContentProductWithLemon = ContentProductRow & {
-  lemonLink: LemonLinkRow | null;
-};
 
 const KINDS = ["ebook", "guide", "template", "bundle"] as const;
 
@@ -28,7 +25,7 @@ function formatKrwFromCents(cents: number): string {
   }).format(Math.round(cents / 100));
 }
 
-function errorMessage(
+function uploadErrorMessage(
   t: ReturnType<typeof useTranslations>,
   code: string | undefined,
 ): string {
@@ -61,6 +58,27 @@ function errorMessage(
   }
 }
 
+function deleteErrorMessage(
+  t: ReturnType<typeof useTranslations>,
+  code: string | undefined,
+): string {
+  if (!code) return t("errors.unknown");
+  switch (code) {
+    case "unauthorized":
+      return t("errors.unauthorized");
+    case "forbidden":
+      return t("errors.forbidden");
+    case "not_found":
+      return t("errors.not_found");
+    case "invalid_id":
+      return t("errors.invalid_id");
+    case "db_delete_failed":
+      return t("errors.db_delete_failed");
+    default:
+      return t("errors.unknown");
+  }
+}
+
 export function ContentProductsAdminClient({
   initialRows,
 }: {
@@ -69,29 +87,67 @@ export function ContentProductsAdminClient({
   const t = useTranslations("Dashboard.adminContent");
   const tKinds = useTranslations("Dashboard.library.productKind");
   const router = useRouter();
+  const [editing, setEditing] = useState<ContentProductWithLemon | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [pendingDelete, startDelete] = useTransition();
 
-  const [state, formAction, pending] = useActionState(
+  const [uploadState, uploadAction, uploadPending] = useActionState(
     uploadContentProduct,
     undefined as UploadContentProductResult | undefined,
   );
 
+  const onSaved = useCallback(() => {
+    router.refresh();
+  }, [router]);
+
+  const closeEdit = useCallback(() => {
+    setEditing(null);
+  }, []);
+
   useEffect(() => {
-    if (state?.ok) {
+    if (uploadState?.ok) {
       router.refresh();
     }
-  }, [state?.ok, router]);
+  }, [uploadState?.ok, router]);
+
+  function requestDelete(row: ContentProductWithLemon) {
+    setDeleteError(null);
+    const ok = window.confirm(t("deleteConfirm", { title: row.title }));
+    if (!ok) return;
+    startDelete(async () => {
+      const r = await deleteContentProduct(row.id);
+      if (!r.ok) {
+        setDeleteError(deleteErrorMessage(t, r.error));
+        return;
+      }
+      router.refresh();
+      if (editing?.id === row.id) {
+        setEditing(null);
+      }
+    });
+  }
 
   return (
     <div className="space-y-10">
-      <section>
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-3">
-          {t("listHeading")}
-        </h2>
+      <section aria-labelledby="catalog-list-heading">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between mb-3">
+          <h2
+            id="catalog-list-heading"
+            className="text-xs font-semibold uppercase tracking-wider text-text-tertiary"
+          >
+            {t("sectionListTitle")}
+          </h2>
+        </div>
+        {deleteError ? (
+          <p className="mb-2 text-sm text-red-600 dark:text-red-400" role="alert">
+            {deleteError}
+          </p>
+        ) : null}
         {initialRows.length === 0 ? (
           <p className="text-sm text-text-secondary">{t("empty")}</p>
         ) : (
           <div className="overflow-x-auto rounded-lg border border-border-subtle shadow-ambient">
-            <table className="w-full text-left text-sm">
+            <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="bg-layer-02 text-text-secondary">
                 <tr>
                   <th className="px-3 py-2 font-medium">{t("colSlug")}</th>
@@ -99,10 +155,10 @@ export function ContentProductsAdminClient({
                   <th className="px-3 py-2 font-medium">{t("colKind")}</th>
                   <th className="px-3 py-2 font-medium">{t("colPrice")}</th>
                   <th className="px-3 py-2 font-medium">{t("colActive")}</th>
-                  <th className="px-3 py-2 font-medium min-w-[140px]">
-                    {t("colStorage")}
+                  <th className="px-3 py-2 font-medium min-w-[120px]">{t("colStorage")}</th>
+                  <th className="px-3 py-2 font-medium text-right w-[1%] whitespace-nowrap">
+                    {t("colActions")}
                   </th>
-                  <th className="px-3 py-2 font-medium min-w-[220px]">{t("colLemon")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,29 +167,45 @@ export function ContentProductsAdminClient({
                     key={row.id}
                     className="border-t border-border-subtle hover:bg-layer-01"
                   >
-                    <td className="px-3 py-2 font-mono text-xs">{row.slug}</td>
-                    <td className="px-3 py-2 max-w-[200px] truncate" title={row.title}>
+                    <td className="px-3 py-2 font-mono text-xs align-middle">{row.slug}</td>
+                    <td className="px-3 py-2 max-w-[200px] truncate align-middle" title={row.title}>
                       {row.title}
                     </td>
-                    <td className="px-3 py-2 text-text-secondary">
+                    <td className="px-3 py-2 text-text-secondary align-middle">
                       {KINDS.includes(row.product_kind as (typeof KINDS)[number])
                         ? tKinds(row.product_kind as (typeof KINDS)[number])
                         : row.product_kind}
                     </td>
-                    <td className="px-3 py-2 tabular-nums">
+                    <td className="px-3 py-2 tabular-nums align-middle">
                       {formatKrwFromCents(row.price_cents)}
                     </td>
-                    <td className="px-3 py-2">
+                    <td className="px-3 py-2 align-middle">
                       {row.is_active ? t("yes") : t("no")}
                     </td>
                     <td
-                      className="px-3 py-2 font-mono text-[11px] text-text-tertiary max-w-[220px] truncate"
+                      className="px-3 py-2 font-mono text-[11px] text-text-tertiary max-w-[180px] truncate align-middle"
                       title={row.storage_object_path ?? ""}
                     >
                       {row.storage_object_path ?? "—"}
                     </td>
-                    <td className="px-3 py-2 align-top">
-                      <ContentProductLemonCell row={row} lemonLink={row.lemonLink} />
+                    <td className="px-3 py-2 align-middle text-right">
+                      <div className="flex flex-wrap justify-end gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setEditing(row)}
+                          className="rounded-md border border-border-subtle bg-layer-01 px-2.5 py-1 text-xs font-medium text-text-primary hover:bg-layer-02"
+                        >
+                          {t("editAction")}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={pendingDelete}
+                          onClick={() => requestDelete(row)}
+                          className="rounded-md border border-red-500/30 bg-red-500/5 px-2.5 py-1 text-xs font-medium text-red-700 dark:text-red-400 hover:bg-red-500/10 disabled:opacity-50"
+                        >
+                          {t("deleteAction")}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -143,11 +215,15 @@ export function ContentProductsAdminClient({
         )}
       </section>
 
-      <section>
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-3">
-          {t("formHeading")}
+      <section aria-labelledby="catalog-create-heading" className="rounded-xl border border-border-subtle bg-layer-01/50 p-5 shadow-ambient">
+        <h2
+          id="catalog-create-heading"
+          className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-4"
+        >
+          {t("sectionCreateTitle")}
         </h2>
-        <form action={formAction} className="max-w-lg space-y-4">
+        <p className="text-sm text-text-tertiary mb-4 max-w-xl leading-relaxed">{t("createIntro")}</p>
+        <form action={uploadAction} className="max-w-lg space-y-4">
           <div>
             <label htmlFor="cp-slug" className="block text-xs font-medium text-text-secondary mb-1">
               {t("slug")}
@@ -207,6 +283,9 @@ export function ContentProductsAdminClient({
               defaultValue={TOSS_POC_AMOUNT_KRW}
               className="w-full max-w-[200px] rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm tabular-nums"
             />
+            <p className="mt-1 text-[11px] text-text-tertiary leading-relaxed">
+              {t("priceKrwLemonHint", { minKrw: LEMON_CUSTOM_PRICE_MIN_KRW })}
+            </p>
           </div>
           <div>
             <label htmlFor="cp-kind" className="block text-xs font-medium text-text-secondary mb-1">
@@ -240,31 +319,38 @@ export function ContentProductsAdminClient({
             <p className="mt-1 text-[11px] text-text-tertiary">{t("fileHint")}</p>
           </div>
 
-          {state && !state.ok ? (
+          {uploadState && !uploadState.ok ? (
             <p className="text-sm text-red-600 dark:text-red-400" role="alert">
-              {errorMessage(t, state.error)}
+              {uploadErrorMessage(t, uploadState.error)}
             </p>
           ) : null}
-          {state?.ok ? (
+          {uploadState?.ok ? (
             <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
-              {state.replaced ? t("successReplaced") : t("successCreated")}
+              {uploadState.replaced ? t("successReplaced") : t("successCreated")}
             </p>
           ) : null}
 
           <button
             type="submit"
-            disabled={pending}
+            disabled={uploadPending}
             className={cn(
               "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors",
-              pending
+              uploadPending
                 ? "bg-surface-03 text-text-tertiary cursor-not-allowed"
                 : "bg-primary text-[var(--color-text-on-color)] hover:opacity-90",
             )}
           >
-            {pending ? t("pending") : t("submit")}
+            {uploadPending ? t("pending") : t("submitCreate")}
           </button>
         </form>
       </section>
+
+      <ContentCatalogEditDialog
+        row={editing}
+        open={editing !== null}
+        onClose={closeEdit}
+        onSaved={onSaved}
+      />
     </div>
   );
 }

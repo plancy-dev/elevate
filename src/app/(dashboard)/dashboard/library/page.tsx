@@ -7,7 +7,7 @@ import { getLibraryPageData } from "@/lib/data/library";
 import { canReadCatalogProduct } from "@/lib/content/ebook-access";
 import { hasPaidServiceSubscription } from "@/lib/organizations/plan";
 import { FunnelCaptureOnce } from "@/components/analytics/funnel-capture";
-import { LibraryDownloadButton } from "@/components/dashboard/library-download-button";
+import { LibraryPdfDownloadActions } from "@/components/dashboard/library-download-button";
 import { LibraryReadOnlineButton } from "@/components/dashboard/library-read-online-button";
 import { Badge } from "@/components/ui/badge";
 import { PostHogEvent } from "@/lib/analytics/posthog-events";
@@ -26,6 +26,7 @@ function productKindMessageKey(
 
 export default async function LibraryPage() {
   const t = await getTranslations("Dashboard.library");
+  const tBilling = await getTranslations("Dashboard.billing");
   const supabase = await createClient();
   const {
     data: { user },
@@ -48,13 +49,21 @@ export default async function LibraryPage() {
   return (
     <div className="mx-auto w-full max-w-4xl p-6 lg:p-8">
       <FunnelCaptureOnce event={PostHogEvent.ELEVATE_FUNNEL_LIBRARY_VIEW} />
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-text-primary tracking-tight">
-          {t("metaTitle")}
-        </h1>
-        <p className="mt-2 text-sm text-text-tertiary leading-relaxed max-w-2xl">
-          {t("subtitle")}
-        </p>
+      <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-semibold text-text-primary tracking-tight">
+            {t("metaTitle")}
+          </h1>
+          <p className="mt-2 text-sm text-text-tertiary leading-relaxed max-w-2xl">
+            {t("subtitle")}
+          </p>
+        </div>
+        <Link
+          href="/dashboard/billing/purchases"
+          className="shrink-0 text-sm font-medium text-primary hover:underline sm:pt-1"
+        >
+          {tBilling("linkPurchaseHistory")}
+        </Link>
       </div>
 
       {showStarterSubscription ? (
@@ -102,7 +111,12 @@ export default async function LibraryPage() {
                           {kindLabel}
                         </Badge>
                         <h2 className="text-base font-semibold text-text-primary">
-                          {p.title}
+                          <Link
+                            href={`/dashboard/library/${encodeURIComponent(p.slug)}`}
+                            className="hover:text-primary hover:underline"
+                          >
+                            {p.title}
+                          </Link>
                         </h2>
                         <Badge
                           variant={canRead ? "green" : "warm-gray"}
@@ -126,7 +140,8 @@ export default async function LibraryPage() {
                       </span>
                       {!canRead ? (
                         <Link
-                          href={`/dashboard/billing?product=${encodeURIComponent(p.slug)}`}
+                          href={`/dashboard/library/${encodeURIComponent(p.slug)}/checkout`}
+                          prefetch={false}
                           className="text-sm font-medium text-primary hover:underline"
                         >
                           {t("payCatalog")}
@@ -135,9 +150,7 @@ export default async function LibraryPage() {
                       {canRead &&
                       p.delivery_mode === "pdf" &&
                       p.storage_object_path ? (
-                        <LibraryDownloadButton productId={p.id}>
-                          {t("download")}
-                        </LibraryDownloadButton>
+                        <LibraryPdfDownloadActions productId={p.id} />
                       ) : null}
                       {canRead && p.delivery_mode === "web_only" ? (
                         <LibraryReadOnlineButton

@@ -4,6 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import { getContentStorageBucket } from "@/lib/env/content-storage";
 import { canReadCatalogProduct } from "@/lib/content/ebook-access";
 import { getOrganizationCatalogAccess } from "@/lib/data/organization-catalog-access";
+import {
+  downloadFilenameFromStoragePath,
+  normalizeOriginalFileNameForDb,
+} from "@/lib/content/storage-filename";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -12,12 +16,20 @@ const UUID_RE =
  * Redirects to a short-lived signed URL when the org may read the SKU
  * (`canReadCatalogProduct`), `delivery_mode` is `pdf`, and
  * `storage_object_path` is set. `web_only` products return 403.
+ *
+ * Query: `disposition=inline` (or `open=1`) opens in the browser; default and
+ * `disposition=attachment` use Supabase `download` so PDFs save instead of
+ * navigating inline.
  */
 export async function GET(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ productId: string }> },
 ) {
   const { productId } = await params;
+  const url = new URL(req.url);
+  const inline =
+    url.searchParams.get("disposition") === "inline" ||
+    url.searchParams.get("open") === "1";
   if (!UUID_RE.test(productId)) {
     return NextResponse.json({ error: "invalid product id" }, { status: 400 });
   }
@@ -48,7 +60,7 @@ export async function GET(
   const admin = createAdminClient();
   const { data: product, error: pe } = await admin
     .from("content_products")
-    .select("storage_object_path, delivery_mode")
+    .select("storage_object_path, delivery_mode, original_file_name")
     .eq("id", productId)
     .maybeSingle();
 
@@ -70,9 +82,16 @@ export async function GET(
   const bucket = getContentStorageBucket();
   const path = product.storage_object_path.trim();
 
+  const filename = product.original_file_name?.trim()
+    ? normalizeOriginalFileNameForDb(product.original_file_name)
+    : downloadFilenameFromStoragePath(path);
+  const signOptions = inline
+    ? undefined
+    : ({ download: filename } satisfies { download: string });
+
   const { data: signed, error: se } = await admin.storage
     .from(bucket)
-    .createSignedUrl(path, 120);
+    .createSignedUrl(path, 120, signOptions);
 
   if (se || !signed?.signedUrl) {
     return NextResponse.json({ error: "could not sign url" }, { status: 502 });

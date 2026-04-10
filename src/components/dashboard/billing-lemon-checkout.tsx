@@ -2,21 +2,25 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { LEMON_CUSTOM_PRICE_MIN_KRW } from "@/lib/payments/lemon-custom-price-minimum";
 
 export type LemonBillingUnconfiguredReason =
   | "not_linked"
   | "api_not_configured"
   | "checkout_api_failed"
+  | "price_below_lemon_minimum"
   | "unknown_product";
 
 type Props = {
-  contentProductSlug: string | null;
+  contentProductSlug: string;
   checkoutUrl: string | null;
   organizationId: string | null;
   profileEmail: string | null;
   /** When true, custom_data is embedded in the checkout session (API-generated URL). */
   embedsCustomDataInCheckout: boolean;
   unconfiguredReason?: LemonBillingUnconfiguredReason | null;
+  /** JSON / manual paste panels for Lemon integration (admin tooling). Hidden for end users. */
+  showManualIntegrationPanel?: boolean;
 };
 
 function CopyButton({ text, label }: { text: string; label: string }) {
@@ -51,13 +55,11 @@ export function BillingLemonCheckout({
   profileEmail,
   embedsCustomDataInCheckout,
   unconfiguredReason,
+  showManualIntegrationPanel = false,
 }: Props) {
   const t = useTranslations("Dashboard.billing");
 
   const customDataJson = useMemo(() => {
-    if (!contentProductSlug) {
-      return "";
-    }
     if (organizationId) {
       return JSON.stringify(
         {
@@ -72,13 +74,9 @@ export function BillingLemonCheckout({
   }, [contentProductSlug, organizationId]);
 
   const showManualCustomData =
-    Boolean(organizationId && customDataJson) && !embedsCustomDataInCheckout;
-
-  if (!contentProductSlug) {
-    return (
-      <p className="text-sm text-text-secondary leading-relaxed">{t("lemonPickFromLibrary")}</p>
-    );
-  }
+    showManualIntegrationPanel &&
+    Boolean(organizationId && customDataJson) &&
+    !embedsCustomDataInCheckout;
 
   if (!checkoutUrl) {
     const titleKey =
@@ -86,17 +84,21 @@ export function BillingLemonCheckout({
         ? "lemonMissingApiTitle"
         : unconfiguredReason === "checkout_api_failed"
           ? "lemonCheckoutFailedTitle"
-          : unconfiguredReason === "unknown_product"
-            ? "lemonUnknownProductTitle"
-            : "lemonMissingUrlTitle";
+          : unconfiguredReason === "price_below_lemon_minimum"
+            ? "lemonPriceBelowMinimumTitle"
+            : unconfiguredReason === "unknown_product"
+              ? "lemonUnknownProductTitle"
+              : "lemonMissingUrlTitle";
     const bodyKey =
       unconfiguredReason === "api_not_configured"
         ? "lemonMissingApiBody"
         : unconfiguredReason === "checkout_api_failed"
           ? "lemonCheckoutFailedBody"
-          : unconfiguredReason === "unknown_product"
-            ? "lemonUnknownProductBody"
-            : "lemonMissingUrlBody";
+          : unconfiguredReason === "price_below_lemon_minimum"
+            ? "lemonPriceBelowMinimumBody"
+            : unconfiguredReason === "unknown_product"
+              ? "lemonUnknownProductBody"
+              : "lemonMissingUrlBody";
 
     return (
       <div className="space-y-4">
@@ -105,7 +107,11 @@ export function BillingLemonCheckout({
           role="alert"
         >
           <p className="font-medium text-text-primary">{t(titleKey)}</p>
-          <p className="mt-2 leading-relaxed">{t(bodyKey)}</p>
+          <p className="mt-2 leading-relaxed">
+            {unconfiguredReason === "price_below_lemon_minimum"
+              ? t("lemonPriceBelowMinimumBody", { minKrw: LEMON_CUSTOM_PRICE_MIN_KRW })
+              : t(bodyKey)}
+          </p>
         </div>
         {showManualCustomData ? (
           <div className="rounded-lg border border-border-subtle bg-layer-02 p-3">

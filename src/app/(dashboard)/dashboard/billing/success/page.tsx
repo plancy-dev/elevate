@@ -17,15 +17,46 @@ export default async function BillingPaymentSuccessPage({
   const sp = await searchParams;
   const paymentKey = typeof sp.paymentKey === "string" ? sp.paymentKey : "";
   const orderId = typeof sp.orderId === "string" ? sp.orderId : "";
-  const amount = Number(typeof sp.amount === "string" ? sp.amount : "");
+  const amountRaw = typeof sp.amount === "string" ? sp.amount : "";
+  const hasTossReturnParams =
+    paymentKey.length > 0 && orderId.length > 0 && amountRaw.length > 0;
+  const amount = Number(amountRaw);
+
+  const t = await getTranslations("Dashboard.billing");
+
+  /** Lemon / legacy redirects hit this URL without Toss query params. */
+  if (!hasTossReturnParams || !Number.isFinite(amount)) {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <h1 className="text-lg font-medium text-text-primary">
+          {t("externalCheckoutReturnTitle")}
+        </h1>
+        <p className="text-sm text-text-secondary mt-2 max-w-md leading-relaxed">
+          {t("externalCheckoutReturnBody")}
+        </p>
+        <Link
+          href="/dashboard/library"
+          className="text-sm text-primary mt-6 inline-block hover:underline"
+        >
+          {t("externalCheckoutReturnLibrary")}
+        </Link>
+        <p className="mt-4">
+          <Link
+            href="/dashboard/billing"
+            className="text-sm text-text-tertiary hover:text-primary hover:underline"
+          >
+            {t("backToBilling")}
+          </Link>
+        </p>
+      </div>
+    );
+  }
 
   const result = await confirmTossPaymentFromRedirect({
     paymentKey,
     orderId,
     amount,
   });
-
-  const t = await getTranslations("Dashboard.billing");
 
   return (
     <div className="min-h-screen bg-background p-6">

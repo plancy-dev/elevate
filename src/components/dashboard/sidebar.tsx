@@ -115,13 +115,11 @@ export function Sidebar({
           label: t("orgTeam"),
           href: "/dashboard/team",
           icon: Users,
-          disabled: true,
         },
         {
           label: t("orgBilling"),
           href: "/dashboard/billing",
           icon: CreditCard,
-          disabled: true,
         },
         {
           label: t("orgSettings"),

@@ -1,4 +1,5 @@
 import { getLemonCheckoutUrlForSlug } from "@/lib/env/lemon-checkout-urls";
+import { contentProductPriceMeetsLemonMinimum } from "@/lib/payments/lemon-custom-price-minimum";
 import {
   createLemonCheckoutSession,
   getLemonSqueezyServerConfig,
@@ -21,7 +22,8 @@ export type LemonCheckoutResolution =
         | "unknown_product"
         | "not_linked"
         | "api_not_configured"
-        | "checkout_api_failed";
+        | "checkout_api_failed"
+        | "price_below_lemon_minimum";
       /** Optional developer-facing detail (dev only) */
       detail?: string;
     };
@@ -39,6 +41,11 @@ export async function resolveLemonCheckoutForBillingPage(opts: {
   contentProductSlug: string | null;
   organizationId: string | null;
   appOrigin: string;
+  /**
+   * Path (and optional query) on this app for Lemon `redirect_url` after payment.
+   * Must start with `/`. Default: `/dashboard/billing/success`.
+   */
+  checkoutSuccessPath?: string;
 }): Promise<LemonCheckoutResolution> {
   const slug = opts.contentProductSlug?.trim() ?? "";
   if (!slug) {
@@ -53,7 +60,7 @@ export async function resolveLemonCheckoutForBillingPage(opts: {
   const admin = createAdminClient();
   const { data: product } = await admin
     .from("content_products")
-    .select("id, slug, price_cents")
+    .select("id, slug, price_cents, currency")
     .eq("slug", slug)
     .eq("is_active", true)
     .maybeSingle();
@@ -77,6 +84,15 @@ export async function resolveLemonCheckoutForBillingPage(opts: {
   const apiCfg = getLemonSqueezyServerConfig();
 
   if (variantId && apiCfg) {
+    if (!contentProductPriceMeetsLemonMinimum(Number(product.price_cents), product.currency)) {
+      return {
+        checkoutUrl: null,
+        source: null,
+        embedsCustomDataInCheckout: false,
+        reason: "price_below_lemon_minimum",
+      };
+    }
+
     const customData: Record<string, string> = {
       content_product_id: product.id,
       content_product_slug: product.slug,
@@ -86,7 +102,10 @@ export async function resolveLemonCheckoutForBillingPage(opts: {
     }
 
     try {
-      const redirectUrl = `${opts.appOrigin.replace(/\/$/, "")}/dashboard/billing/success`;
+      const rawPath = opts.checkoutSuccessPath?.trim();
+      const successPath =
+        rawPath && rawPath.startsWith("/") ? rawPath : "/dashboard/billing/success";
+      const redirectUrl = `${opts.appOrigin.replace(/\/$/, "")}${successPath}`;
       const url = await createLemonCheckoutSession({
         variantId,
         customData,

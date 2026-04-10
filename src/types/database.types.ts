@@ -174,6 +174,7 @@ export type Database = {
           description: string
           id: string
           is_active: boolean
+          original_file_name: string | null
           price_cents: number
           product_kind: string
           slug: string
@@ -187,6 +188,7 @@ export type Database = {
           description?: string
           id?: string
           is_active?: boolean
+          original_file_name?: string | null
           price_cents?: number
           product_kind?: string
           slug: string
@@ -200,6 +202,7 @@ export type Database = {
           description?: string
           id?: string
           is_active?: boolean
+          original_file_name?: string | null
           price_cents?: number
           product_kind?: string
           slug?: string

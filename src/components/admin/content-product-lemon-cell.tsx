@@ -1,19 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import {
-  clearContentProductLemonLink,
   listLemonProductsForAdmin,
   listLemonVariantsForAdmin,
-  upsertContentProductLemonLink,
 } from "@/actions/lemon-squeezy-catalog-admin";
 import type { LemonProductSummary, LemonVariantSummary } from "@/lib/payments/lemon-squeezy-api";
 import type { Database } from "@/types/database.types";
 import { cn } from "@/lib/utils";
 
-type ContentProductRow = Database["public"]["Tables"]["content_products"]["Row"];
 type LemonLinkRow = Database["public"]["Tables"]["content_product_lemon_links"]["Row"];
 
 function lemonErrorMessage(
@@ -40,24 +36,16 @@ function lemonErrorMessage(
   }
 }
 
-export function ContentProductLemonCell({
-  row,
-  lemonLink,
-}: {
-  row: ContentProductRow;
-  lemonLink: LemonLinkRow | null;
-}) {
-  const router = useRouter();
+export function ContentProductLemonCell({ lemonLink }: { lemonLink: LemonLinkRow | null }) {
   const t = useTranslations("Dashboard.adminContent");
   const tLemon = useTranslations("Dashboard.adminContent.lemon");
   const [variantInput, setVariantInput] = useState(lemonLink?.lemon_variant_id ?? "");
+  const [lemonProductId, setLemonProductId] = useState(lemonLink?.lemon_product_id ?? "");
   const [browseOpen, setBrowseOpen] = useState(false);
   const [products, setProducts] = useState<LemonProductSummary[] | null>(null);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [variants, setVariants] = useState<LemonVariantSummary[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [banner, setBanner] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
-  const [pending, startTransition] = useTransition();
 
   function resetBrowse() {
     setProducts(null);
@@ -100,113 +88,69 @@ export function ContentProductLemonCell({
     })();
   }
 
-  function saveLink(variantId: string, lemonProductId: string | null) {
-    setBanner(null);
-    startTransition(async () => {
-      const r = await upsertContentProductLemonLink({
-        contentProductId: row.id,
-        lemonVariantId: variantId,
-        lemonProductId,
-      });
-      if (!r.ok) {
-        setBanner({ kind: "err", text: lemonErrorMessage(t, r.error) });
-        return;
-      }
-      setVariantInput(variantId);
-      setBanner({ kind: "ok", text: tLemon("saveOk") });
-      setBrowseOpen(false);
-      resetBrowse();
-      router.refresh();
-    });
+  function pickVariant(variantId: string, productId: string | null) {
+    setVariantInput(variantId);
+    setLemonProductId(productId ?? "");
+    setBrowseOpen(false);
+    resetBrowse();
   }
 
-  function saveQuick() {
-    saveLink(variantInput.trim(), lemonLink?.lemon_product_id ?? null);
+  function onClearLocal() {
+    setVariantInput("");
+    setLemonProductId("");
   }
 
-  function onClear() {
-    setBanner(null);
-    startTransition(async () => {
-      const r = await clearContentProductLemonLink(row.id);
-      if (!r.ok) {
-        setBanner({ kind: "err", text: lemonErrorMessage(t, r.error) });
-        return;
-      }
-      setVariantInput("");
-      setBanner({ kind: "ok", text: tLemon("clearOk") });
-      router.refresh();
-    });
-  }
+  const showClear = variantInput.trim() !== "" || Boolean(lemonLink?.lemon_variant_id);
 
   return (
     <div className="space-y-2 min-w-[200px]">
+      <input type="hidden" name="lemonProductId" value={lemonProductId} />
       <div className="flex flex-wrap items-center gap-1">
         <input
           type="text"
+          name="lemonVariantId"
           value={variantInput}
           onChange={(e) => setVariantInput(e.target.value)}
           placeholder={tLemon("variantPlaceholder")}
-          className="w-full min-w-[120px] max-w-[160px] rounded border border-border-subtle bg-background px-2 py-1 text-[11px] font-mono"
+          className="w-full min-w-[120px] max-w-[200px] rounded border border-border-subtle bg-background px-2 py-1 text-[11px] font-mono"
           aria-label={tLemon("variantAria")}
+          autoComplete="off"
         />
         <button
           type="button"
-          disabled={pending}
-          onClick={saveQuick}
-          className={cn(
-            "rounded border border-border-subtle px-2 py-1 text-[11px] font-medium",
-            pending ? "opacity-50" : "hover:bg-layer-02",
-          )}
-        >
-          {tLemon("save")}
-        </button>
-        <button
-          type="button"
-          disabled={pending}
           onClick={openBrowse}
           className={cn(
-            "rounded border border-border-subtle px-2 py-1 text-[11px] font-medium",
-            pending ? "opacity-50" : "hover:bg-layer-02",
+            "rounded border border-border-subtle px-2 py-1 text-[11px] font-medium hover:bg-layer-02",
           )}
         >
           {tLemon("browse")}
         </button>
-        {lemonLink ? (
+        {showClear ? (
           <button
             type="button"
-            disabled={pending}
-            onClick={onClear}
+            onClick={onClearLocal}
             className={cn(
-              "rounded border border-border-subtle px-2 py-1 text-[11px] text-text-tertiary",
-              pending ? "opacity-50" : "hover:bg-layer-02",
+              "rounded border border-border-subtle px-2 py-1 text-[11px] text-text-tertiary hover:bg-layer-02",
             )}
           >
             {tLemon("clear")}
           </button>
         ) : null}
       </div>
-      {lemonLink ? (
-        <p className="text-[10px] text-text-tertiary font-mono truncate" title={lemonLink.lemon_variant_id}>
-          {tLemon("linked", { id: lemonLink.lemon_variant_id })}
+      {variantInput.trim() ? (
+        <p
+          className="text-[10px] text-text-tertiary font-mono truncate"
+          title={variantInput.trim()}
+        >
+          {tLemon("linked", { id: variantInput.trim() })}
         </p>
       ) : (
         <p className="text-[10px] text-text-tertiary">{tLemon("notLinked")}</p>
       )}
-      {banner ? (
-        <p
-          className={cn(
-            "text-[11px]",
-            banner.kind === "ok" ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400",
-          )}
-          role="status"
-        >
-          {banner.text}
-        </p>
-      ) : null}
 
       {browseOpen ? (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 p-4"
           role="dialog"
           aria-modal="true"
           aria-labelledby="lemon-browse-title"
@@ -273,9 +217,8 @@ export function ContentProductLemonCell({
                           <li key={v.id}>
                             <button
                               type="button"
-                              disabled={pending}
-                              className="w-full text-left px-2 py-2 text-xs hover:bg-layer-02 disabled:opacity-50"
-                              onClick={() => saveLink(v.id, selectedProductId)}
+                              className="w-full text-left px-2 py-2 text-xs hover:bg-layer-02"
+                              onClick={() => pickVariant(v.id, selectedProductId)}
                             >
                               <span className="font-medium">{v.name}</span>
                               <span className="ml-2 font-mono text-text-tertiary">#{v.id}</span>
