@@ -46,7 +46,7 @@ export default async function StudioPage() {
   const bullets = [t("bullet1"), t("bullet2"), t("bullet3")];
 
   return (
-    <div className="p-6 lg:p-8 max-w-3xl">
+    <div className="mx-auto w-full max-w-3xl p-6 lg:p-8">
       <div className="mb-8">
         <div className="flex flex-wrap items-center gap-2 mb-2">
           <h1 className="text-2xl font-semibold text-text-primary tracking-tight">

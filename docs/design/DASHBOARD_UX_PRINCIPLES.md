@@ -31,6 +31,10 @@ Generated UIs often reuse the same **affordance clichés**: full-height left str
 - No layout-shift animation on default navigation.
 - Respect **`prefers-reduced-motion`** for any future non-critical motion.
 
+## Pointers (tabs, links, actions)
+
+Tab rows, sidebar links, and buttons should use the **hand pointer** on hover so affordances match appearance. Defaults are defined in **`src/app/globals.css`** (`@layer base`) and documented in [`INTERACTIVE_AFFORDANCES.md`](INTERACTIVE_AFFORDANCES.md). Segmented tabs (e.g. episode workbench) may use **selected** = filled surface + ring and **unselected** = text + hover wash — both states remain clickable with `cursor: pointer`.
+
 ## When marketing differs
 
 Marketing may use warmer chrome and stronger hero contrast; **dashboard rules above stay in `(dashboard)`** unless a specific feature is approved as an exception in `VISUAL_LANGUAGE_V2.md`.

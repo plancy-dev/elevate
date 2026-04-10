@@ -4,7 +4,8 @@ import type { Json } from "@/types/database.types";
 
 type LogParams = {
   organizationId: string;
-  actorId: string;
+  /** When unknown (e.g. external webhook), omit or pass null — `audit_logs.actor_id` is nullable. */
+  actorId?: string | null;
   action: string;
   entityType?: string;
   entityId?: string | null;
@@ -20,7 +21,7 @@ export async function logAudit(params: LogParams): Promise<void> {
     const admin = createAdminClient();
     const { error } = await admin.from("audit_logs").insert({
       organization_id: params.organizationId,
-      actor_id: params.actorId,
+      actor_id: params.actorId ?? null,
       action: params.action,
       entity_type: params.entityType ?? "",
       entity_id: params.entityId ?? null,

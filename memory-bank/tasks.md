@@ -76,6 +76,69 @@
 
 ---
 
+## Creator GTM — Phase G (전자책 1 SKU + Productions + 글로벌 결제)
+
+**의사결정 요약 (2026-04):** 1차로 **전자책(또는 가이드) 1개 SKU**로 노하우를 팔고, **Studio Productions**로 숏폼·툴 실험·산출물을 **원장**처럼 정리한다. **글로벌 결제**는 기존 Toss(KR PoC)와 별도로 **Lemon Squeezy** 등 글로벌 Merchant of Record 후보를 검토·연동한다. 상세 퍼널·채널은 [`CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md) · [`MARKETING_OPS_CHECKLIST.md`](../docs/MARKETING_OPS_CHECKLIST.md) · [`marketing-pillars-m2.md`](marketing-pillars-m2.md).
+
+| 단계 | 이름 | 목표 |
+|------|------|------|
+| **G0** | 범위·결제 전략 | 무엇을 파는지·어디에 결제를 걸지 확정 |
+| **G1** | 상품·콘텐츠 1 SKU | 카탈로그·MDX·Library에서 구매·읽기 가능 |
+| **G2** | 글로벌 결제 연동 | Lemon Squeezy(또는 동급) 웹훅 → 엔타이틀먼트 |
+| **G3** | Productions 루틴 | 실험 기록 습관화(전자책 2판 재료) |
+| **G4** | 숏폼 2주 스프린트 | 채널·업로드·CTA 최소 검증 |
+| **G5** | 측정·회고 | PostHog·구매 전환·다음 스프린트 |
+
+### G0 — 범위·결제 전략 (½~1일)
+
+- [ ] **전자책 1편** 주제·약속 한 줄(“무엇을 파는가”) 확정 · 우선 **로케일 1개**(예: en)로 시작할지 결정
+- [ ] **Lemon Squeezy vs Toss**: KR·글로벌 분기 — Toss는 기존 [`011`](../supabase/migrations) intent·confirm 흐름, LS는 **별도 웹훅·SKU 매핑** 필요 → 짧은 **의사결정 메모**(ADR 초안 또는 `docs/features/` 스케치)
+- [ ] 가격·통화·환불·세금(MoR 정책) 초안
+
+### G1 — 상품·콘텐츠 (M4 슬라이스와 동일 선상)
+
+- [ ] `content_products`에 **ebook/guide SKU 1개** · slug · `product_kind` 정합
+- [ ] 본문 **MDX** · Storage 다운로드 경로 · RLS·엔타이틀먼트와 [`ebook-access`](../src/lib/content/ebook-access.ts) 정합
+- [ ] 랜딩/블로그 **CTA 1개** — 대기명단 또는 바로 결제(결제 수단 준비 후)
+
+### G2 — 글로벌 결제 (Lemon Squeezy)
+
+- [ ] LS(또는 대안) **상품·웹훅 URL·시크릿** · 테스트 모드
+- [ ] 앱: **웹훅 수신** → `organization_content_entitlements`(또는 동일 패턴) **grant** — Toss confirm과 **공통 엔타이틀먼트 레이어** 재사용 여부 설계
+- [ ] 프로덕션 전 **구매→라이브러리 열람** E2E 또는 수동 시나리오
+- [ ] 백로그 정리: P0 “Toss 상용”과 **역할 분담**(KR vs 글로벌)
+
+### G3 — Productions 운영 루틴 (도구: 이미 v1 있음)
+
+- [ ] 에피소드 **네이밍 규칙**(예: 플랫폼·실험 번호)
+- [ ] **아티팩트**에 프롬프트·공개 URL·메타데이터 습관화 — [ADR-003 Studio Productions](../docs/adr/ADR-003-studio-productions-mvp.md)
+- [ ] (선택) Prompt Studio → Productions **핸드오프** 이미 있음 — 실제로 한 사이클 돌려보기
+
+### G4 — 숏폼 2주 스프린트 (초미니 체크리스트)
+
+**전제:** 조회·바이럴은 플랫폼 측; Elevate는 **기록·상품·결제** 측.
+
+| | Week 1 | Week 2 |
+|---|--------|--------|
+| 채널 | Shorts **또는** Reels **또는** TikTok **1개만** 고정 | 동일 채널 유지 |
+| 업로드 | **최소 3회**(짧게라도) | **최소 3회** |
+| Productions | 업로드·프롬프트·툴 링크 **에피소드/아티팩트로 기록** | 동일 + 1회 **회고 메모** 에피소드 |
+| CTA | 바이오·고정댓 **한 URL**만 (`/links`·랜딩·스토어) | 동일 |
+| 시간 | 총 **2~3시간** 블록 캘린더에 박기 | 주말에 2주차 편집·정리 |
+
+- [ ] Week 1 종료 시: “계속할 채널” vs “채널 변경” 15분 결정
+- [ ] Week 2 종료 시: 전자책 **개정 후보 3줄**만 적기(다음 인쇄/버전용)
+
+### G5 — 측정·회고
+
+- [ ] PostHog: [`POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 중 **최소 1개 퍼널** 저장(가능 시)
+- [ ] Library 구매(또는 대기명단) **전환 1건이라도** 추적 가능한지 확인
+- [ ] gstack: 회고는 **`/retro`** 또는 팀 룰에 맞게 30분
+
+**gstack 파이프라인 (참고):** 스코프·서사 **`/office-hours`** · **`/plan-ceo-review`** → 실행 **`/plan-eng-review`**(결제·웹훅·RLS) → 빌드 후 **`pnpm verify`** → 런칭 후 **`/design-review`**(랜딩·Library) · 선택 **`/qa`**. 허브: [`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md).
+
+---
+
 ## Legacy — 이전 Phase 요약 (완료, MICE)
 
 > 신규 기능은 MICE 모델에 추가하지 않는다.
@@ -93,6 +156,7 @@
 | 우선순위 | 항목 | 비고 |
 |---------|------|------|
 | P0 | Production Toss keys·웹훅 URL·상용 컴플라이언스 | 운영 |
+| P1 | **글로벌 결제(MoR)** — Lemon Squeezy(또는 동급) 웹훅 → `content` 엔타이틀먼트 · Toss와 역할 분리 | Phase G2 · ADR·[`CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md) |
 | P1 | **시각 언어 v2** — [`docs/design/VISUAL_LANGUAGE_V2.md`](../docs/design/VISUAL_LANGUAGE_V2.md) 롤아웃 · [`PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md`](../docs/design/PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md) | ✅ PR-1–5 + 문서/PR-6(부분) 반영(2026-04); 스테이징 스크린샷·감사 리포트 갱신은 선택 |
 | P1 | **대시보드 단일 표면 UX** — [`docs/design/DASHBOARD_UX_PRINCIPLES.md`](../docs/design/DASHBOARD_UX_PRINCIPLES.md) | ✅ 개요·라이브러리·설정·스튜디오·프로덕션 목록 등(2026-04); 팀·빌링 등은 동일 패턴으로 확장 가능 |
 | P1 | PostHog 대시보드(퍼널 시각화) | 이벤트: `elevate_funnel_*`, `elevate_waitlist_*`, `elevate_marketing_cta_click`, `elevate_blog_post_viewed` — [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 참고 후 UI에서 구성 |

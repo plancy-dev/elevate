@@ -65,7 +65,7 @@ export default async function BillingPage({
       <div className="sticky top-0 z-30 flex items-center border-b border-border-subtle bg-background px-6 h-12">
         <h1 className="text-sm font-medium text-text-primary">{t("billing.title")}</h1>
       </div>
-      <div className="p-6 max-w-xl space-y-6">
+      <div className="mx-auto w-full max-w-xl space-y-6 p-6">
         <BillingFunnelCapture productSlug={contentProductSlug} />
         {contentProductSlug ? (
           <p className="text-sm text-text-secondary leading-relaxed">

@@ -8,7 +8,7 @@ import {
   Package,
 } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { DashboardNavLink } from "@/components/dashboard/dashboard-nav-link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
@@ -128,7 +128,7 @@ export default async function DashboardPage() {
       <div className="space-y-6 p-6">
         <div className="overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
           <div className="divide-y divide-border-subtle">
-            <Link
+            <DashboardNavLink
               href="/dashboard/studio"
               className="group block p-6 transition-colors duration-150 hover:bg-layer-02"
             >
@@ -152,8 +152,8 @@ export default async function DashboardPage() {
                   aria-hidden
                 />
               </div>
-            </Link>
-            <Link
+            </DashboardNavLink>
+            <DashboardNavLink
               href="/dashboard/library"
               className="group block p-6 transition-colors duration-150 hover:bg-layer-02"
             >
@@ -177,7 +177,7 @@ export default async function DashboardPage() {
                   aria-hidden
                 />
               </div>
-            </Link>
+            </DashboardNavLink>
           </div>
         </div>
 
@@ -229,25 +229,27 @@ export default async function DashboardPage() {
                   {t("gettingStartedSub")}
                 </p>
               </div>
-              <Link
+              <DashboardNavLink
                 href="/dashboard/studio"
+                layout="inline"
                 className="flex shrink-0 items-center gap-1 text-xs text-interactive transition-colors hover:text-primary"
               >
                 {t("openStudio")}{" "}
                 <ArrowRight className="h-3 w-3" aria-hidden />
-              </Link>
+              </DashboardNavLink>
             </div>
             <div className="px-5 py-8 text-sm leading-relaxed text-text-secondary">
               {showOrgAdminOverview ? (
                 <div>
                   {t.rich("bodyAdmin", {
                     link: (chunks) => (
-                      <Link
+                      <DashboardNavLink
                         href="/dashboard/team"
+                        layout="inline"
                         className="font-medium text-interactive hover:text-primary"
                       >
                         {chunks}
-                      </Link>
+                      </DashboardNavLink>
                     ),
                   })}
                 </div>

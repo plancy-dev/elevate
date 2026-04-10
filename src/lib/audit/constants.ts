@@ -34,4 +34,5 @@ export const AuditEntityType = {
   ORGANIZATION: "organization",
   VENUE: "venue",
   PAYMENT: "toss_payment",
+  LEMON_ORDER: "lemon_order",
 } as const;

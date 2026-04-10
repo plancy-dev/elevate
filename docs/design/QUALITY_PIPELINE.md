@@ -31,7 +31,7 @@ Ideation / scope  →  Design plan review  →  Eng plan review  →  BUILD  →
 2. **Designer lens (plan)**: gstack **`/plan-design-review`** when the change includes **new layouts, flows, or marketing surfaces**. Input: `docs/design/SYSTEM.md`, vendored `DESIGN.md`, `elevate-cursor-alignment.md`.
 3. **CTO / engineering lens (plan)**: gstack **`/plan-eng-review`** to lock **data flow, auth/RLS, failure modes, performance, tests**. Output: ADR snippet, `tasks.md` bullets, or a short note in `memory-bank/activeContext.md`.
 4. **BUILD**: Cursor **Agent** + repo rules; run **`pnpm verify`** before commit.
-5. **Post-build visual pass** (if UI changed): gstack **`/design-review`** (polish in source) or **`/browse`** / **`/qa`** if installed — not a substitute for verify.
+5. **Post-build visual pass** (if UI changed): gstack **`/design-review`** (polish in source — hover, **pointer**, spacing) or **`/browse`** / **`/qa`** if installed — not a substitute for verify. Harness: [`INTERACTIVE_AFFORDANCES.md`](INTERACTIVE_AFFORDANCES.md).
 6. **Pre-merge**: gstack **`/review`** on the diff (security/SQL/LLM boundaries) — optional but recommended for risky changes.
 
 ---

@@ -64,7 +64,7 @@ export default async function SettingsPage() {
         <h1 className="text-sm font-medium text-text-primary">{t("title")}</h1>
       </div>
 
-      <div className="p-6 max-w-xl">
+      <div className="mx-auto w-full max-w-xl p-6">
         <div className="divide-y divide-border-subtle overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
           <section className="px-5 py-6">
             <h2 className="text-xs font-medium uppercase tracking-wider text-text-tertiary">

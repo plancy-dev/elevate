@@ -11,7 +11,7 @@ export default async function ProductionsNewPage() {
   const t = await getTranslations("Dashboard.productions");
 
   return (
-    <div className="p-6 lg:p-8 max-w-5xl">
+    <div className="mx-auto w-full max-w-5xl p-6 lg:p-8">
       <header className="mb-8 rounded-2xl border border-border-subtle bg-gradient-to-br from-layer-01 via-[#f0f4ff]/40 to-layer-02 px-6 py-6 shadow-sm dark:via-[#0a1628]/60">
         <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
           {t("newMetaTitle")}

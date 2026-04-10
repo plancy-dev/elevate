@@ -1,5 +1,7 @@
+"use client";
+
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { type ButtonHTMLAttributes, forwardRef, type ReactNode } from "react";
 
 export type ButtonVariant =
@@ -124,6 +126,38 @@ type ButtonLinkProps = {
   onClick?: () => void;
 };
 
+function ButtonLinkNavPendingOverlay() {
+  const { pending } = useLinkStatus();
+  if (!pending) return null;
+  return (
+    <span
+      className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[inherit] bg-layer-01/75 backdrop-blur-[0.5px] dark:bg-black/50"
+      aria-hidden
+    >
+      <svg
+        className="h-4 w-4 animate-spin text-primary"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+        />
+      </svg>
+    </span>
+  );
+}
+
 export function ButtonLink({
   href,
   variant = "primary",
@@ -136,9 +170,15 @@ export function ButtonLink({
     <Link
       href={href}
       onClick={onClick}
-      className={buttonLinkClassName(variant, size, className)}
+      className={cn(
+        "relative overflow-hidden",
+        buttonLinkClassName(variant, size, className),
+      )}
     >
-      {children}
+      <ButtonLinkNavPendingOverlay />
+      <span className="relative inline-flex items-center justify-center gap-2">
+        {children}
+      </span>
     </Link>
   );
 }

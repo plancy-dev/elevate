@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { BookOpen, LayoutDashboard, ListChecks, Mail, Sparkles } from "lucide-react";
+import { BookOpen, Cable, LayoutDashboard, ListChecks, Mail, Sparkles } from "lucide-react";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
@@ -18,6 +18,7 @@ export function AdminSidebar({ user }: { user: SidebarUser }) {
   const primaryNavItems = [
     { label: t("navOverview"), href: "/admin", icon: LayoutDashboard },
     { label: t("navContent"), href: "/admin/content", icon: BookOpen },
+    { label: t("navLemonWebhook"), href: "/admin/lemon-webhook", icon: Cable },
     { label: t("navWaitlist"), href: "/admin/waitlist", icon: Mail },
     {
       label: t("navPurchaseAllowlist"),

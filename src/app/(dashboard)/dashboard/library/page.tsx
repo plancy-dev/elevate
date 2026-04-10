@@ -47,7 +47,7 @@ export default async function LibraryPage() {
     orgId !== null && organizationPlan !== null && !subscribed;
 
   return (
-    <div className="p-6 lg:p-8 max-w-4xl">
+    <div className="mx-auto w-full max-w-4xl p-6 lg:p-8">
       <FunnelCaptureOnce event={PostHogEvent.ELEVATE_FUNNEL_LIBRARY_VIEW} />
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-text-primary tracking-tight">

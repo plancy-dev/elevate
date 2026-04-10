@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { BookOpen, ListChecks, Mail, Shield } from "lucide-react";
+import { BookOpen, Cable, ListChecks, Mail, Shield } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -17,6 +17,12 @@ export default async function ElevateServiceAdminHomePage() {
       title: t("cards.catalog.title"),
       desc: t("cards.catalog.desc"),
       icon: BookOpen,
+    },
+    {
+      href: "/admin/lemon-webhook",
+      title: t("cards.lemonWebhook.title"),
+      desc: t("cards.lemonWebhook.desc"),
+      icon: Cable,
     },
     {
       href: "/admin/waitlist",

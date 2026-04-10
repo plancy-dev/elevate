@@ -14,7 +14,13 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문�
 
 **대시보드 접근 (운영 옵션)** — `DASHBOARD_ACCESS_STRICT=true`일 때 플랫폼/조직 관리자 또는 `waitlist_signups`·`prompt_studio_beta_allowlist`에 없으면 `/access-pending`. 코드: `src/lib/auth/dashboard-access.ts`, `src/app/(auth)/access-pending/page.tsx`.
 
-**다음 (로드맵):** [`tasks.md`](tasks.md) Phase M·백로그 — 블로그 번역 확대, PostHog 대시보드 UI, 전자책 SKU 등.
+**다음 (로드맵):** [`tasks.md`](tasks.md) — **Phase G (Creator GTM)** 전자책 1 SKU + Productions 루틴 + Lemon Squeezy 등 글로벌 결제 · Phase M·백로그(블로그·PostHog·전자책 M4) 병행.
+
+### 다음 BUILD 앵커 (구현 예정)
+
+**결정된 다음 작업:** **Phase G2 — Lemon Squeezy 웹훅 → 콘텐츠 엔타이틀먼트** (글로벌 결제 루프). 선행: **G0**를 짧은 **ADR 또는 `docs/features/PLAN-*.md`**로 고정(Toss vs LS 역할, SKU 매핑 규칙). 참조 구현: [`src/app/api/webhooks/toss/route.ts`](../src/app/api/webhooks/toss/route.ts), [`src/lib/payments/content-entitlement.ts`](../src/lib/payments/content-entitlement.ts). 병행 가능: **G1** 전자책 SKU 1개(카탈로그·MDX)는 콘텐츠 준비되면 같은 스프린트에 묶기.
+
+**INIT → 다음:** L3 → **PLAN**(웹훅 보안·idempotency·테스트) 권장 후 **BUILD**.
 
 ## 최근 확정 결정
 

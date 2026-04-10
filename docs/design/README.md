@@ -16,6 +16,10 @@ See **[`SYSTEM.md`](SYSTEM.md)** for how [awesome-design-md](https://github.com/
 
 **Dashboard (app shell) anti-template rules:** **[`DASHBOARD_UX_PRINCIPLES.md`](DASHBOARD_UX_PRINCIPLES.md)** — lists as one container + row hover; nav marker discipline.
 
+**Pointers & cursors:** **[`INTERACTIVE_AFFORDANCES.md`](INTERACTIVE_AFFORDANCES.md)** — links, tabs, buttons, selects; base layer in `globals.css`.
+
+**Navigation loading:** **[`NAVIGATION_LOADING.md`](NAVIGATION_LOADING.md)** — `loading.tsx`, `useLinkStatus`, `DashboardNavLink` / `ButtonLink`.
+
 ## Purpose
 
 - **Shipped UI** is driven by **`src/app/globals.css`** and Tailwind v4 `@theme` tokens.

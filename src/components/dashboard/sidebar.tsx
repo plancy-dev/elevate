@@ -1,7 +1,7 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import Link from "next/link";
+import { DashboardNavLink } from "@/components/dashboard/dashboard-nav-link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
@@ -46,7 +46,7 @@ function isBottomNavActive(pathname: string, href: string): boolean {
  * See docs/design/DASHBOARD_UX_PRINCIPLES.md
  */
 const sidebarNavLinkBase =
-  "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-[background-color,color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/35 focus-visible:ring-offset-2 focus-visible:ring-offset-layer-01";
+  "relative flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-[background-color,color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/35 focus-visible:ring-offset-2 focus-visible:ring-offset-layer-01";
 const sidebarNavActive =
   "bg-layer-02 font-medium text-text-primary [&>svg]:text-primary";
 const sidebarNavInactive =
@@ -144,9 +144,13 @@ export function Sidebar({
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-[240px] flex-col border-r border-border-subtle bg-layer-01">
       <div className="flex h-12 items-center justify-between gap-2 border-b border-border-subtle px-4">
-        <Link href="/dashboard">
+        <DashboardNavLink
+          href="/dashboard"
+          layout="inline"
+          className="shrink-0 p-0"
+        >
           <ElevateLogo size="sm" />
-        </Link>
+        </DashboardNavLink>
         <ThemeToggle />
       </div>
 
@@ -157,7 +161,7 @@ export function Sidebar({
               pathname === item.href ||
               (item.href !== "/dashboard" && pathname.startsWith(item.href));
             return (
-              <Link
+              <DashboardNavLink
                 key={item.href}
                 href={item.href}
                 className={cn(
@@ -173,7 +177,7 @@ export function Sidebar({
                 ) : null}
                 <item.icon className="h-4 w-4 shrink-0" aria-hidden />
                 {item.label}
-              </Link>
+              </DashboardNavLink>
             );
           })}
         </div>
@@ -211,7 +215,7 @@ export function Sidebar({
                 }
 
                 return (
-                  <Link
+                  <DashboardNavLink
                     key={item.href}
                     href={item.href}
                     className={cn(
@@ -227,7 +231,7 @@ export function Sidebar({
                     ) : null}
                     <item.icon className="h-4 w-4 shrink-0" aria-hidden />
                     {item.label}
-                  </Link>
+                  </DashboardNavLink>
                 );
               })}
             </div>
@@ -239,7 +243,7 @@ export function Sidebar({
         {bottomItems.map((item) => {
           const active = isBottomNavActive(pathname, item.href);
           return (
-            <Link
+            <DashboardNavLink
               key={item.href}
               href={item.href}
               aria-current={active ? "page" : undefined}
@@ -256,7 +260,7 @@ export function Sidebar({
               ) : null}
               <item.icon className="h-4 w-4 shrink-0" aria-hidden />
               {item.label}
-            </Link>
+            </DashboardNavLink>
           );
         })}
       </div>

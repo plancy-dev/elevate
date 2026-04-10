@@ -46,7 +46,7 @@ export default async function ProductionsListPage() {
 
   if (!orgId) {
     return (
-      <div className="p-6 lg:p-8 max-w-4xl">
+      <div className="mx-auto w-full max-w-4xl p-6 lg:p-8">
         <h1 className="text-2xl font-semibold text-text-primary tracking-tight">
           {t("metaTitle")}
         </h1>
@@ -59,7 +59,7 @@ export default async function ProductionsListPage() {
   const showDemoSeed = process.env.ENABLE_STUDIO_DEMO_SEED === "true";
 
   return (
-    <div className="p-6 lg:p-8 max-w-4xl">
+    <div className="mx-auto w-full max-w-4xl p-6 lg:p-8">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-text-primary tracking-tight">

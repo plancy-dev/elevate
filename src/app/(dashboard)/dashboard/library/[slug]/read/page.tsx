@@ -80,7 +80,7 @@ export default async function EbookReaderPage({ params }: Props) {
   const t = await getTranslations("Dashboard.library");
 
   return (
-    <div className="p-6 lg:p-8 max-w-[720px]">
+    <div className="mx-auto w-full max-w-[720px] p-6 lg:p-8">
       <FunnelCaptureOnce
         event={PostHogEvent.ELEVATE_FUNNEL_EBOOK_READER_VIEW}
         properties={{ product_id: product.id, slug }}

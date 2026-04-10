@@ -341,6 +341,51 @@ export type Database = {
           },
         ]
       }
+      lemon_squeezy_processed_orders: {
+        Row: {
+          content_product_id: string
+          created_at: string
+          event_name: string
+          ls_order_identifier: string
+          organization_id: string
+          user_email: string | null
+          variant_id: number | null
+        }
+        Insert: {
+          content_product_id: string
+          created_at?: string
+          event_name?: string
+          ls_order_identifier: string
+          organization_id: string
+          user_email?: string | null
+          variant_id?: number | null
+        }
+        Update: {
+          content_product_id?: string
+          created_at?: string
+          event_name?: string
+          ls_order_identifier?: string
+          organization_id?: string
+          user_email?: string | null
+          variant_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lemon_squeezy_processed_orders_content_product_id_fkey"
+            columns: ["content_product_id"]
+            isOneToOne: false
+            referencedRelation: "content_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lemon_squeezy_processed_orders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_content_entitlements: {
         Row: {
           content_product_id: string

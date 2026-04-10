@@ -38,6 +38,7 @@ If `SYSTEM.md` and `VISUAL_LANGUAGE_V2.md` disagree on **visual behavior**, **V2
 | `:root` / `.dark` | Semantic colors (`--background`, `--text-primary`, `--primary`, …) |
 | Marketing-only | `--marketing-*` (cream canvas, warm ink, orange accent) — scoped by `.elevate-marketing-chrome` |
 | `@theme inline` | Tailwind v4 token bridge (`--color-*`, `--radius-*`, shadows) |
+| `@layer base` (interactive) | Default **cursor** for links, buttons, tabs, selects — see [`INTERACTIVE_AFFORDANCES.md`](INTERACTIVE_AFFORDANCES.md) |
 | Feature CSS | e.g. `src/app/film-strip.css` imported from `globals.css` |
 
 Product surfaces **keep IBM-style blue primary** inside the app shell; marketing uses **warm marketing accent** for primary CTAs where specified in components.
@@ -68,7 +69,9 @@ For **CTO/Eng + Designer** review order, optional **`/plan-ceo-review`**, and re
 1. Decide surface: **marketing** vs **app** vs **auth**.
 2. Prefer existing CSS variables + Tailwind semantic colors (`bg-layer-01`, `text-text-secondary`, …).
 3. For marketing polish, read vendored `DESIGN.md` § relevant section, then map via `elevate-cursor-alignment.md`.
-4. Run `pnpm verify`; check light/dark and focus states.
+4. Interactive controls: follow [`INTERACTIVE_AFFORDANCES.md`](INTERACTIVE_AFFORDANCES.md) (pointer on clickable elements; disabled → `not-allowed`).
+5. Route changes: follow [`NAVIGATION_LOADING.md`](NAVIGATION_LOADING.md) (segment `loading.tsx`, link pending UI where needed).
+6. Run `pnpm verify`; check light/dark and focus states.
 
 ## 7. Backlog (iterate until done)
 

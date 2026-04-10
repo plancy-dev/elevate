@@ -4,12 +4,12 @@ import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Suspense,
-  startTransition,
   useCallback,
   useEffect,
   useId,
   useRef,
   useState,
+  useTransition,
   type KeyboardEvent,
   type ReactNode,
 } from "react";
@@ -48,6 +48,7 @@ function ProductionEpisodeWorkbenchInner({
   const tabButtonRefs = useRef<Partial<Record<TabId, HTMLButtonElement | null>>>(
     {},
   );
+  const [isTabUrlPending, startTabUrlTransition] = useTransition();
 
   /**
    * Sync `?tab=` without calling `router.replace` before the client router is ready
@@ -61,7 +62,7 @@ function ProductionEpisodeWorkbenchInner({
       params.set("tab", next);
       const href = `${pathname}?${params.toString()}`;
       window.setTimeout(() => {
-        startTransition(() => {
+        startTabUrlTransition(() => {
           router.replace(href, { scroll: false });
         });
       }, 0);
@@ -130,7 +131,11 @@ function ProductionEpisodeWorkbenchInner({
       <div
         role="tablist"
         aria-label={t("workbenchAriaLabel")}
-        className="flex flex-wrap gap-1 rounded-xl border border-border-subtle bg-layer-02/40 p-1 dark:border-white/10 dark:bg-white/[0.03]"
+        aria-busy={isTabUrlPending}
+        className={cn(
+          "relative flex flex-wrap gap-1 rounded-xl border border-border-subtle bg-layer-02/40 p-1 transition-shadow duration-150 dark:border-white/10 dark:bg-white/[0.03]",
+          isTabUrlPending && "ring-1 ring-primary/25 shadow-[0_0_0_1px_rgba(15,98,254,0.12)]",
+        )}
         onKeyDown={onTabListKeyDown}
       >
         {tabs.map(({ id, label }) => {
@@ -148,7 +153,7 @@ function ProductionEpisodeWorkbenchInner({
               aria-selected={selected}
               tabIndex={selected ? 0 : -1}
               className={cn(
-                "min-h-[40px] flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors sm:flex-none sm:px-4",
+                "min-h-[40px] flex-1 cursor-pointer rounded-lg px-3 py-2 text-sm font-medium transition-colors sm:flex-none sm:px-4",
                 selected
                   ? "bg-layer-01 text-text-primary shadow-sm ring-1 ring-border-subtle dark:bg-[#0f141c] dark:ring-white/10"
                   : "text-text-secondary hover:bg-layer-01/80 hover:text-text-primary dark:hover:bg-white/5",

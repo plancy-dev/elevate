@@ -105,7 +105,7 @@ export default async function ProductionEpisodePage({
     : null;
 
   return (
-    <div className="p-6 lg:p-8 max-w-5xl">
+    <div className="mx-auto w-full max-w-5xl p-6 lg:p-8">
       <div className="mb-6">
         <Link
           href="/dashboard/productions"

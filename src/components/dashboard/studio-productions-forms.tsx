@@ -1,6 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import {
+  useActionState,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   createStudioArtifact,
@@ -21,7 +28,7 @@ import {
   type StudioEpisodeStatus,
 } from "@/lib/studio-productions/constants";
 import type { Json } from "@/types/database.types";
-import { Clapperboard } from "lucide-react";
+import { Clapperboard, ExternalLink } from "lucide-react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { FieldSelect } from "@/components/ui/field-select";
 import { StudioEpisodeDistributionFields } from "@/components/dashboard/studio-episode-distribution-fields";
@@ -36,6 +43,20 @@ function metadataToFormString(metadata: Json | null): string {
     return JSON.stringify(metadata, null, 2);
   } catch {
     return "";
+  }
+}
+
+function excerptArtifactText(text: string, max: number): string {
+  const s = text.trim().replace(/\s+/g, " ");
+  if (s.length <= max) return s;
+  return `${s.slice(0, max)}…`;
+}
+
+function artifactLinkHostLabel(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return excerptArtifactText(url, 56);
   }
 }
 
@@ -378,76 +399,84 @@ function ArtifactAddForm({
   );
 }
 
-function ArtifactEditForm({
+/** Full-width edit form in modal; `key={artifact.id}` on parent resets action state per row. */
+function ArtifactEditDialogBody({
   episodeId,
   artifact,
+  onSaved,
+  onCancel,
 }: {
   episodeId: string;
   artifact: StudioProductionArtifactRow;
+  onSaved: () => void;
+  onCancel: () => void;
 }) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
+  const router = useRouter();
   const [state, formAction, pending] = useActionState(
     updateStudioArtifact,
     initialState,
   );
-  /** Stable id so the save button can live outside the <form> (avoids nested forms with delete). */
+  const prevPendingRef = useRef(false);
+
+  useEffect(() => {
+    if (prevPendingRef.current && !pending && state === undefined) {
+      router.refresh();
+      onSaved();
+    }
+    prevPendingRef.current = pending;
+  }, [onSaved, pending, router, state]);
+
   const editFormId = `studio-artifact-edit-${artifact.id}`;
 
   return (
-    <div
-      className="film-strip-frame flex h-[min(70vh,380px)] w-[min(100%,272px)] shrink-0 flex-col overflow-hidden rounded-lg border border-border-subtle bg-layer-01/95 shadow-sm transition-shadow hover:border-primary/25 hover:shadow-md dark:border-white/12 dark:bg-[rgba(8,12,20,0.92)] dark:hover:border-primary/35"
-    >
-      <form
-        id={editFormId}
-        action={formAction}
-        className="flex min-h-0 flex-1 flex-col overflow-hidden"
-      >
-      <input type="hidden" name="episode_id" value={episodeId} />
-      <input type="hidden" name="artifact_id" value={artifact.id} />
-      <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto overscroll-contain px-3 pb-2 pt-3">
+    <>
+      <form id={editFormId} action={formAction} className="space-y-4">
+        <input type="hidden" name="episode_id" value={episodeId} />
+        <input type="hidden" name="artifact_id" value={artifact.id} />
         {state?.error ? (
-          <p className="rounded-md border border-danger/40 bg-danger/10 px-2 py-1.5 text-[11px] text-danger">
+          <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
             {translateActionErrorMessage(state.error, tAction)}
           </p>
         ) : null}
-        <div className="grid grid-cols-1 gap-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="mb-0.5 block text-[10px] font-medium uppercase tracking-wide text-text-tertiary">
+            <label className="mb-1 block text-xs font-medium text-text-secondary">
               {t("artifactRoleLabel")}
             </label>
             <input
               name="artifact_role"
               required
               defaultValue={artifact.artifact_role}
-              className="h-8 w-full rounded-lg border border-border-subtle bg-field px-2 text-xs text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
+              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
             />
           </div>
           <div>
-            <label className="mb-0.5 block text-[10px] font-medium uppercase tracking-wide text-text-tertiary">
+            <label className="mb-1 block text-xs font-medium text-text-secondary">
               {t("artifactPlatformLabel")}
             </label>
             <input
               name="tool_platform"
               required
               defaultValue={artifact.tool_platform}
-              className="h-8 w-full rounded-lg border border-border-subtle bg-field px-2 text-xs text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
+              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
             />
           </div>
         </div>
         <div>
-          <label className="mb-0.5 block text-[10px] font-medium uppercase tracking-wide text-text-tertiary">
+          <label className="mb-1 block text-xs font-medium text-text-secondary">
             {t("artifactContentLabel")}
           </label>
           <textarea
             name="content_text"
-            rows={3}
+            rows={10}
             defaultValue={artifact.content_text}
-            className="w-full resize-none rounded-lg border border-border-subtle bg-field px-2 py-1.5 text-xs leading-relaxed text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
+            className="min-h-[200px] w-full rounded-lg border border-border-subtle bg-field px-3 py-2.5 text-sm leading-relaxed text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
           />
         </div>
         <div>
-          <label className="mb-0.5 block text-[10px] font-medium uppercase tracking-wide text-text-tertiary">
+          <label className="mb-1 block text-xs font-medium text-text-secondary">
             {t("artifactExternalUrlLabel")}
           </label>
           <input
@@ -456,26 +485,26 @@ function ArtifactEditForm({
             inputMode="url"
             defaultValue={artifact.external_url ?? ""}
             placeholder="https://"
-            className="h-8 w-full rounded-lg border border-border-subtle bg-field px-2 text-xs text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
+            className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
           />
         </div>
         <div>
-          <label className="mb-0.5 block text-[10px] font-medium uppercase tracking-wide text-text-tertiary">
+          <label className="mb-1 block text-xs font-medium text-text-secondary">
             {t("artifactMetadataLabel")}
           </label>
           <textarea
             name="metadata_json"
-            rows={2}
+            rows={6}
             defaultValue={metadataToFormString(artifact.metadata)}
-            className="w-full resize-none rounded-lg border border-border-subtle bg-field px-2 py-1.5 font-mono text-[11px] leading-snug text-text-primary focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/30 dark:border-white/10"
+            className="min-h-[140px] w-full rounded-lg border border-border-subtle bg-field px-3 py-2.5 font-mono text-xs leading-relaxed text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
           />
-          <p className="mt-0.5 text-[10px] leading-snug text-text-tertiary">
-            {t("artifactMetadataHint")}
-          </p>
+          <p className="mt-1.5 text-xs text-text-tertiary">{t("artifactMetadataHint")}</p>
         </div>
-      </div>
       </form>
-      <div className="flex shrink-0 flex-wrap gap-2 border-t border-border-subtle/80 bg-layer-02/50 px-3 py-2.5 dark:border-white/10 dark:bg-black/25">
+      <div className="mt-6 flex flex-wrap justify-end gap-2 border-t border-border-subtle pt-4 dark:border-white/10">
+        <Button variant="secondary" type="button" size="sm" onClick={onCancel}>
+          {t("artifactDialogCancel")}
+        </Button>
         <Button
           variant="primary"
           type="submit"
@@ -485,9 +514,8 @@ function ArtifactEditForm({
         >
           {t("artifactSave")}
         </Button>
-        <ArtifactDeleteForm episodeId={episodeId} artifactId={artifact.id} />
       </div>
-    </div>
+    </>
   );
 }
 
@@ -536,6 +564,20 @@ export function StudioProductionsArtifactsSection({
   } | null;
 }) {
   const t = useTranslations("Dashboard.productions");
+  const [editing, setEditing] = useState<StudioProductionArtifactRow | null>(
+    null,
+  );
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  const closeArtifactDialog = useCallback(() => {
+    dialogRef.current?.close();
+  }, []);
+
+  useEffect(() => {
+    if (editing) {
+      queueMicrotask(() => dialogRef.current?.showModal());
+    }
+  }, [editing]);
 
   return (
     <section
@@ -560,19 +602,96 @@ export function StudioProductionsArtifactsSection({
       </div>
       <ArtifactAddForm episodeId={episodeId} prefill={artifactAddPrefill} />
       {artifacts.length > 0 ? (
-        <div className="rounded-lg bg-zinc-950/[0.03] px-1.5 py-2 ring-1 ring-zinc-950/10 dark:bg-black/35 dark:ring-white/10">
-          <ul
-            className="flex min-h-[200px] gap-2 overflow-x-auto overscroll-x-contain touch-pan-x scroll-pl-3 px-1 pb-2 pt-1 [scrollbar-width:thin] snap-x snap-mandatory [-webkit-overflow-scrolling:touch]"
-            aria-label={t("artifactsHeading")}
-          >
-            {artifacts.map((a) => (
-              <li key={a.id} className="snap-start">
-                <ArtifactEditForm episodeId={episodeId} artifact={a} />
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul
+          className="list-none rounded-xl border border-border-subtle bg-layer-02/30 p-0 m-0 divide-y divide-border-subtle dark:border-white/10 dark:bg-white/2"
+          aria-label={t("artifactsHeading")}
+        >
+          {artifacts.map((a) => (
+            <li key={a.id}>
+              <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-start sm:gap-5 sm:py-5">
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="flex flex-wrap gap-1.5">
+                    <span className="inline-flex max-w-full items-center truncate rounded-md bg-primary/12 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-primary dark:bg-primary/20">
+                      {a.artifact_role}
+                    </span>
+                    <span className="inline-flex max-w-full items-center truncate rounded-md bg-layer-02/90 px-2 py-0.5 text-xs text-text-secondary dark:bg-white/5">
+                      {a.tool_platform}
+                    </span>
+                  </div>
+                  <p className="text-sm leading-relaxed text-text-secondary line-clamp-3 whitespace-pre-wrap">
+                    {a.content_text.trim()
+                      ? excerptArtifactText(a.content_text, 280)
+                      : t("artifactPreviewEmpty")}
+                  </p>
+                  {a.external_url ? (
+                    <p className="text-xs">
+                      <a
+                        href={a.external_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex max-w-full items-center gap-1.5 text-primary hover:underline"
+                      >
+                        <ExternalLink
+                          className="h-3.5 w-3.5 shrink-0"
+                          aria-hidden
+                        />
+                        <span className="min-w-0 truncate">
+                          {artifactLinkHostLabel(a.external_url)}
+                        </span>
+                      </a>
+                    </p>
+                  ) : null}
+                </div>
+                <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-col sm:items-stretch">
+                  <Button
+                    variant="secondary"
+                    type="button"
+                    size="sm"
+                    className="sm:min-w-28"
+                    onClick={() => setEditing(a)}
+                  >
+                    {t("artifactEdit")}
+                  </Button>
+                  <ArtifactDeleteForm episodeId={episodeId} artifactId={a.id} />
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       ) : null}
+
+      <dialog
+        ref={dialogRef}
+        className="fixed left-1/2 top-1/2 z-[200] m-0 max-h-[min(90vh,52rem)] w-[min(100vw-1.5rem,42rem)] max-w-[calc(100vw-1.5rem)] -translate-x-1/2 -translate-y-1/2 border-0 bg-transparent p-0 backdrop:bg-black/45 dark:backdrop:bg-black/60"
+        aria-labelledby="artifact-edit-dialog-title"
+        onClose={() => setEditing(null)}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            closeArtifactDialog();
+          }
+        }}
+      >
+        <div
+          className="max-h-[min(90vh-2rem,52rem)] overflow-y-auto rounded-xl border border-border-subtle bg-layer-01 p-5 shadow-xl dark:border-white/12 dark:bg-[#0d141c]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h3
+            id="artifact-edit-dialog-title"
+            className="text-base font-semibold text-text-primary mb-4 pr-8"
+          >
+            {t("artifactEditTitle")}
+          </h3>
+          {editing ? (
+            <ArtifactEditDialogBody
+              key={editing.id}
+              episodeId={episodeId}
+              artifact={editing}
+              onSaved={closeArtifactDialog}
+              onCancel={closeArtifactDialog}
+            />
+          ) : null}
+        </div>
+      </dialog>
     </section>
   );
 }

@@ -38,7 +38,7 @@ export function FieldSelect({
           "pl-3 pr-10",
           "text-sm",
           "text-text-primary",
-          "shadow-none outline-none transition-colors",
+          "cursor-pointer shadow-none outline-none transition-colors",
           "hover:border-border-subtle focus:border-focus focus:ring-2 focus:ring-focus/25",
           "disabled:cursor-not-allowed disabled:opacity-50",
           className,
