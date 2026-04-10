@@ -631,7 +631,19 @@
       "tossIntro": "테스트 결제: 아래 위젯으로 {amount}원을 결제합니다. 성공 후 이 화면으로 돌아와 서버에서 결제를 확인합니다.",
       "registerUrls": "토스 가맹점 설정에서 성공·실패 시 돌아올 주소를 이 앱 주소에 맞게 등록하세요.",
       "setClientKey": "이 환경에서는 결제용 클라이언트 키가 설정되지 않아 결제를 사용할 수 없습니다.",
-      "footerDocs": "문제가 있으면 관리자에게 결제 키와 돌아올 URL이 이 환경에 맞게 설정되어 있는지 확인해 달라고 요청하세요.",
+      "footerDocs": "문제가 있으면 관리자에게 결제 키, Lemon 웹훅 URL, 체크아웃 URL 매핑이 이 환경에 맞게 설정되어 있는지 확인해 달라고 요청하세요.",
+      "lemonIntro": "카탈로그 구매는 Lemon Squeezy 호스팅 체크아웃을 사용합니다. Lemon이 주문을 확인하면 웹훅을 통해 조직에 라이브러리 접근 권한이 부여됩니다.",
+      "lemonPickFromLibrary": "라이브러리에서 잠긴 항목을 열면(제품이 URL에 포함됩니다) 이 페이지로 연결되거나, 이 페이지 주소에 ?product=카탈로그-slug 를 붙여 사용할 수 있습니다.",
+      "lemonCheckoutWithSlug": "카탈로그 항목 「{slug}」를 구매합니다. 새 탭에서 Lemon 체크아웃을 완료하세요.",
+      "lemonMissingUrlTitle": "체크아웃 링크가 설정되지 않았습니다",
+      "lemonMissingUrlBody": "NEXT_PUBLIC_LEMON_CHECKOUT_URL_BY_SLUG 에 각 카탈로그 slug를 Lemon 공유/체크아웃 URL에 매핑한 JSON을 설정하세요. 프로덕션에서는 관리자가 배포 환경에 구성합니다.",
+      "lemonOpenCheckout": "Lemon 체크아웃 열기",
+      "lemonEmailCurrent": "로그인 이메일: {email}",
+      "lemonEmailHint": "가능하면 Elevate 계정과 같은 이메일로 Lemon에서 결제하면 웹훅이 조직을 매칭하기 쉽습니다(custom_data에 organization_id를 넣을 수도 있습니다).",
+      "lemonCustomDataLabel": "custom_data (Lemon 흐름이 지원할 때)",
+      "lemonCopyCustomData": "JSON 복사",
+      "lemonCopied": "복사됨",
+      "lemonAfterPay": "Lemon이 결제를 확인한 뒤 보통 1분 이내에 라이브러리에 반영됩니다. 필요하면 라이브러리를 새로고침하세요.",
       "errors": {
         "pocAmountOnly": "이 테스트 결제는 {amount}원만 지원합니다.",
         "missingWidgetKey": "결제가 비활성화되어 있습니다. 클라이언트 키가 없습니다.",
@@ -778,7 +790,7 @@
         },
         "billing": {
           "title": "결제 및 결제 수단",
-          "desc": "토스 결제 및 카탈로그 권한."
+          "desc": "Lemon 체크아웃 및 카탈로그 권한."
         },
         "settings": {
           "title": "조직 설정",
@@ -815,7 +827,7 @@
         },
         "billing": {
           "title": "결제 및 결제 수단",
-          "desc": "토스 결제 및 카탈로그 권한."
+          "desc": "Lemon 체크아웃 및 카탈로그 권한."
         },
         "settings": {
           "title": "조직 설정",
@@ -1140,6 +1152,7 @@
       "included": "조직에 포함됨",
       "notIncluded": "라이선스 없음",
       "payPoc": "{amount}원 결제(PoC)",
+      "payCatalog": "구매하기",
       "download": "다운로드",
       "readOnline": "온라인으로 읽기",
       "readerMetaTitle": "{title}",

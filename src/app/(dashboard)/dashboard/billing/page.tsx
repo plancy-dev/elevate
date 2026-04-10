@@ -4,8 +4,11 @@ import { getTranslations } from "next-intl/server";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { ActionErrorMessage } from "@/components/i18n/action-error-message";
 import { BillingFunnelCapture } from "@/components/analytics/billing-funnel-capture";
+import { BillingLemonCheckout } from "@/components/dashboard/billing-lemon-checkout";
 import { BillingTossWidget } from "@/components/dashboard/billing-toss-widget";
+import { getLemonCheckoutUrlForSlug } from "@/lib/env/lemon-checkout-urls";
 import { getTossWidgetClientKey } from "@/lib/env/toss";
+import { getCatalogPaymentProvider } from "@/lib/payments/catalog-payment-provider";
 import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
 import { createClient } from "@/lib/supabase/server";
 
@@ -50,10 +53,16 @@ export default async function BillingPage({
   const { data: prof } = user
     ? await supabase
         .from("profiles")
-        .select("display_name")
+        .select("display_name, organization_id")
         .eq("id", user.id)
         .maybeSingle()
     : { data: null };
+
+  const provider = getCatalogPaymentProvider();
+  const lemonCheckoutUrl =
+    contentProductSlug && provider === "lemon"
+      ? getLemonCheckoutUrlForSlug(contentProductSlug)
+      : null;
 
   const widgetKey = getTossWidgetClientKey();
   const origin = await resolveAppOrigin();
@@ -67,35 +76,52 @@ export default async function BillingPage({
       </div>
       <div className="mx-auto w-full max-w-xl space-y-6 p-6">
         <BillingFunnelCapture productSlug={contentProductSlug} />
-        {contentProductSlug ? (
-          <p className="text-sm text-text-secondary leading-relaxed">
-            {tb("checkoutWithSlug", {
-              slug: contentProductSlug,
-              amount: TOSS_POC_AMOUNT_KRW,
-            })}
-          </p>
-        ) : null}
-        <p className="text-sm text-text-secondary leading-relaxed">
-          {tb("tossIntro", { amount: TOSS_POC_AMOUNT_KRW })}
-        </p>
-        <p className="text-xs text-text-tertiary leading-relaxed">
-          {tb("registerUrls")}
-        </p>
-        {user && widgetKey ? (
-          <BillingTossWidget
-            clientKey={widgetKey}
-            customerKey={user.id}
-            appOrigin={origin}
-            customerEmail={user.email ?? null}
-            customerName={prof?.display_name?.trim() || null}
-            contentProductSlug={contentProductSlug}
-          />
+        {provider === "lemon" ? (
+          <>
+            <p className="text-sm text-text-secondary leading-relaxed">{tb("lemonIntro")}</p>
+            <BillingLemonCheckout
+              contentProductSlug={contentProductSlug}
+              checkoutUrl={lemonCheckoutUrl}
+              organizationId={prof?.organization_id ?? null}
+              profileEmail={user?.email ?? null}
+            />
+            <p className="text-sm text-text-tertiary border-t border-border-subtle pt-4">
+              {tb("footerDocs")}
+            </p>
+          </>
         ) : (
-          <p className="text-sm text-text-tertiary">{tb("setClientKey")}</p>
+          <>
+            {contentProductSlug ? (
+              <p className="text-sm text-text-secondary leading-relaxed">
+                {tb("checkoutWithSlug", {
+                  slug: contentProductSlug,
+                  amount: TOSS_POC_AMOUNT_KRW,
+                })}
+              </p>
+            ) : null}
+            <p className="text-sm text-text-secondary leading-relaxed">
+              {tb("tossIntro", { amount: TOSS_POC_AMOUNT_KRW })}
+            </p>
+            <p className="text-xs text-text-tertiary leading-relaxed">
+              {tb("registerUrls")}
+            </p>
+            {user && widgetKey ? (
+              <BillingTossWidget
+                clientKey={widgetKey}
+                customerKey={user.id}
+                appOrigin={origin}
+                customerEmail={user.email ?? null}
+                customerName={prof?.display_name?.trim() || null}
+                contentProductSlug={contentProductSlug}
+              />
+            ) : (
+              <p className="text-sm text-text-tertiary">{tb("setClientKey")}</p>
+            )}
+            <p className="text-sm text-text-tertiary border-t border-border-subtle pt-4">
+              {tb("footerDocs")}
+            </p>
+          </>
         )}
-        <p className="text-sm text-text-tertiary border-t border-border-subtle pt-4">
-          {tb("footerDocs")}
-        </p>
       </div>
     </div>
   );

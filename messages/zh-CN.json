@@ -623,7 +623,19 @@
       "tossIntro": "测试结账：使用下方组件支付 {amount} KRW。成功后会返回此页，由服务器确认支付。",
       "registerUrls": "请在 Toss 商户后台将成功/失败回跳地址配置为与本应用一致。",
       "setClientKey": "当前环境未配置结账客户端密钥，无法使用支付。",
-      "footerDocs": "若遇到问题，请让管理员确认已为该环境配置支付密钥与回跳地址。",
+      "footerDocs": "若遇到问题，请让管理员确认已为该环境配置支付密钥、Lemon Webhook URL 与结账 URL 映射。",
+      "lemonIntro": "目录购买使用 Lemon Squeezy 托管结账。Lemon 确认订单后，将通过 Webhook 为您的组织开通资料库访问权限。",
+      "lemonPickFromLibrary": "从资料库打开锁定条目（链接会带上商品参数），或在本页地址后添加 ?product=目录-slug。",
+      "lemonCheckoutWithSlug": "您正在购买目录商品「{slug}」。请在新标签页完成 Lemon 结账。",
+      "lemonMissingUrlTitle": "未配置结账链接",
+      "lemonMissingUrlBody": "请将 NEXT_PUBLIC_LEMON_CHECKOUT_URL_BY_SLUG 设置为 JSON，把每个目录 slug 映射到对应的 Lemon 分享/结账 URL。生产环境由管理员在部署中配置。",
+      "lemonOpenCheckout": "打开 Lemon 结账",
+      "lemonEmailCurrent": "当前登录邮箱：{email}",
+      "lemonEmailHint": "尽量使用与 Elevate 账户相同的邮箱在 Lemon 结账，以便 Webhook 匹配组织（也可在 custom_data 中包含 organization_id）。",
+      "lemonCustomDataLabel": "custom_data（若您的 Lemon 流程支持）",
+      "lemonCopyCustomData": "复制 JSON",
+      "lemonCopied": "已复制",
+      "lemonAfterPay": "Lemon 确认付款后，资料库权限通常在 1 分钟内更新。必要时请刷新资料库页面。",
       "errors": {
         "pocAmountOnly": "此测试结账仅支持 {amount} KRW。",
         "missingWidgetKey": "支付未启用：缺少客户端密钥。",
@@ -770,7 +782,7 @@
         },
         "billing": {
           "title": "账单与付款",
-          "desc": "Toss 结账与目录权益。"
+          "desc": "Lemon 结账与目录权益。"
         },
         "settings": {
           "title": "组织设置",
@@ -807,7 +819,7 @@
         },
         "billing": {
           "title": "账单与支付",
-          "desc": "Toss 结账与目录权益。"
+          "desc": "Lemon 结账与目录权益。"
         },
         "settings": {
           "title": "组织设置",
@@ -1132,6 +1144,7 @@
       "included": "已包含在组织中",
       "notIncluded": "未获许可",
       "payPoc": "支付 {amount} 韩元（PoC）",
+      "payCatalog": "购买",
       "download": "下载",
       "readOnline": "在线阅读",
       "readerMetaTitle": "{title}",

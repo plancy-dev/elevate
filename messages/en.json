@@ -631,7 +631,19 @@
       "tossIntro": "Test checkout: pay {amount} KRW with the widget below. After success you return here so we can confirm the payment on the server.",
       "registerUrls": "In the Toss merchant dashboard, set return URLs to match your app (success and failure under Billing).",
       "setClientKey": "Payments are disabled in this environment until the checkout keys are configured for your deployment.",
-      "footerDocs": "Having trouble? Ask your administrator to confirm payment keys and return URLs are set for this environment.",
+      "footerDocs": "Having trouble? Ask your administrator to confirm payment keys, Lemon webhook URL, and checkout URL mapping are set for this environment.",
+      "lemonIntro": "Catalog purchases use Lemon Squeezy hosted checkout. After Lemon confirms the order, your organization receives Library access via webhook.",
+      "lemonPickFromLibrary": "Open a locked item from the Library (it links here with the product in the URL), or add ?product=your-catalog-slug to this page.",
+      "lemonCheckoutWithSlug": "You are purchasing catalog item “{slug}.” Complete checkout on Lemon in the new tab.",
+      "lemonMissingUrlTitle": "Checkout link not configured",
+      "lemonMissingUrlBody": "Set NEXT_PUBLIC_LEMON_CHECKOUT_URL_BY_SLUG to JSON mapping each catalog slug to its Lemon Share/checkout URL. Your administrator configures this on the deployment.",
+      "lemonOpenCheckout": "Open Lemon checkout",
+      "lemonEmailCurrent": "Signed in as {email}",
+      "lemonEmailHint": "Use the same email as your Elevate account at Lemon checkout when possible so the webhook can match your organization (or include organization_id in custom_data).",
+      "lemonCustomDataLabel": "custom_data (if your Lemon flow supports it)",
+      "lemonCopyCustomData": "Copy JSON",
+      "lemonCopied": "Copied",
+      "lemonAfterPay": "Library access usually appears within a minute after Lemon confirms payment. Refresh the Library page if needed.",
       "errors": {
         "pocAmountOnly": "This test checkout only supports {amount} KRW.",
         "missingWidgetKey": "Payments are not enabled: the checkout client key is missing.",
@@ -778,7 +790,7 @@
         },
         "billing": {
           "title": "Billing & payments",
-          "desc": "Toss checkout and catalog entitlements."
+          "desc": "Lemon checkout and catalog entitlements."
         },
         "settings": {
           "title": "Organization settings",
@@ -815,7 +827,7 @@
         },
         "billing": {
           "title": "Billing & payments",
-          "desc": "Toss checkout and catalog entitlements."
+          "desc": "Lemon checkout and catalog entitlements."
         },
         "settings": {
           "title": "Organization settings",
@@ -1140,6 +1152,7 @@
       "included": "Included for your org",
       "notIncluded": "Not licensed",
       "payPoc": "Pay {amount} KRW (PoC)",
+      "payCatalog": "Purchase",
       "download": "Download",
       "readOnline": "Read online",
       "readerMetaTitle": "{title}",

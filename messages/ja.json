@@ -623,7 +623,19 @@
       "tossIntro": "テスト決済: 下のウィジェットで {amount} KRW を支払います。成功後にこの画面へ戻り、サーバー側で確認します。",
       "registerUrls": "Toss の管理画面で、成功・失敗時の戻り URL をこのアプリの URL に合わせて設定してください。",
       "setClientKey": "この環境では決済用のクライアントキーが未設定のため、決済を利用できません。",
-      "footerDocs": "お困りの場合は、管理者に決済キーとリダイレクト URL がこの環境向けに設定されているか確認してください。",
+      "footerDocs": "お困りの場合は、管理者に決済キー、Lemon の Webhook URL、チェックアウト URL のマッピングがこの環境向けに設定されているか確認してください。",
+      "lemonIntro": "カタログ購入は Lemon Squeezy のホスト型チェックアウトを使います。Lemon が注文を確認すると、Webhook 経由で組織にライブラリ権限が付与されます。",
+      "lemonPickFromLibrary": "ライブラリのロックされた項目から開く（URL に商品が含まれます）か、このページに ?product=カタログ-slug を付けてください。",
+      "lemonCheckoutWithSlug": "カタログ「{slug}」を購入します。新しいタブで Lemon のチェックアウトを完了してください。",
+      "lemonMissingUrlTitle": "チェックアウト URL が未設定です",
+      "lemonMissingUrlBody": "NEXT_PUBLIC_LEMON_CHECKOUT_URL_BY_SLUG に、各カタログ slug を Lemon の共有／チェックアウト URL に対応付けた JSON を設定してください。本番では管理者がデプロイ環境に設定します。",
+      "lemonOpenCheckout": "Lemon のチェックアウトを開く",
+      "lemonEmailCurrent": "ログイン中のメール: {email}",
+      "lemonEmailHint": "可能なら Elevate と同じメールで Lemon 決済すると、Webhook が組織に紐づけやすくなります（custom_data に organization_id を含めることもできます）。",
+      "lemonCustomDataLabel": "custom_data（Lemon のフローが対応している場合）",
+      "lemonCopyCustomData": "JSON をコピー",
+      "lemonCopied": "コピーしました",
+      "lemonAfterPay": "Lemon が支払いを確認してから通常 1 分以内にライブラリに反映されます。必要ならページを更新してください。",
       "errors": {
         "pocAmountOnly": "このテスト決済は {amount} KRW のみ対応しています。",
         "missingWidgetKey": "決済が無効です。クライアントキーがありません。",
@@ -770,7 +782,7 @@
         },
         "billing": {
           "title": "請求と支払い",
-          "desc": "Toss checkout とカタログ権限。"
+          "desc": "Lemon チェックアウトとカタログ権限。"
         },
         "settings": {
           "title": "組織設定",
@@ -807,7 +819,7 @@
         },
         "billing": {
           "title": "請求と支払い",
-          "desc": "Toss checkout とカタログ権限。"
+          "desc": "Lemon チェックアウトとカタログ権限。"
         },
         "settings": {
           "title": "組織設定",
@@ -1132,6 +1144,7 @@
       "included": "組織に含まれる",
       "notIncluded": "未ライセンス",
       "payPoc": "{amount} KRW で決済（PoC）",
+      "payCatalog": "購入する",
       "download": "ダウンロード",
       "readOnline": "オンラインで読む",
       "readerMetaTitle": "{title}",

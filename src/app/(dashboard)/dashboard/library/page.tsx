@@ -12,7 +12,6 @@ import { LibraryReadOnlineButton } from "@/components/dashboard/library-read-onl
 import { Badge } from "@/components/ui/badge";
 import { PostHogEvent } from "@/lib/analytics/posthog-events";
 import { formatCurrencyMinor } from "@/lib/format-currency";
-import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.library");
@@ -130,7 +129,7 @@ export default async function LibraryPage() {
                           href={`/dashboard/billing?product=${encodeURIComponent(p.slug)}`}
                           className="text-sm font-medium text-primary hover:underline"
                         >
-                          {t("payPoc", { amount: TOSS_POC_AMOUNT_KRW })}
+                          {t("payCatalog")}
                         </Link>
                       ) : null}
                       {canRead &&
