@@ -60,8 +60,8 @@
 | M1 | Supabase `016` `prompt_studio_beta_allowlist` + `/admin/prompt-studio-allowlist` + `STUDIO_BETA_REQUIRE_ALLOWLIST` | ✅ (마이그레이션 적용·`pnpm db:types`는 연결 프로젝트에서) |
 | M2 | 콘텐츠 필라·분기 캘린더 (다국어) — [`marketing-pillars-m2.md`](marketing-pillars-m2.md) (Q2 2026 주차·각도 채움) | ✅ 기획안 |
 | M3 | 블로그 단편 글 (필라별, CTA→대기명단) | en+ko 플래그십 `the-prompt-is-your-product-surface` + [`docs/BLOG_POST_PIPELINE.md`](../docs/BLOG_POST_PIPELINE.md); ja/zh/TW 샘플·번역 ⏳ |
-| M4 | 전자책 SKU 슬라이스 (카탈로그·MDX·권한 — 기존 파이프라인에 맞춰 분할 출시) | ⏳ |
-| M5 | PostHog: [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 퍼널 레시피 + 프로젝트 UI에서 대시보드 저장 | 레시피 ✅ · UI ⏳ |
+| M4 | 전자책 SKU 슬라이스 (카탈로그·MDX·권한 — 기존 파이프라인에 맞춰 분할 출시) | MDX+런북 ✅ · **DB+Lemon 연결은 운영** [`PLAN-g1-first-ebook-sku-runbook.md`](../docs/features/PLAN-g1-first-ebook-sku-runbook.md) |
+| M5 | PostHog: [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 퍼널 레시피 + 프로젝트 UI에서 대시보드 저장 | 레시피 ✅ · **UI 저장 절차** [`POSTHOG_DASHBOARD_FIRST_SAVE.md`](../docs/POSTHOG_DASHBOARD_FIRST_SAVE.md) |
 | M2.1 | 소셜·Linktree·자사 짧은 링크(`/ig`,`/yt`,`/links` 등) — [`MARKETING_OPS_CHECKLIST.md`](../docs/MARKETING_OPS_CHECKLIST.md) | ✅ 채널 1차·문서 |
 | M3.1 | **Studio Productions** — 외부 AI 툴 산출물·프롬프트 원장 (v1: 링크·레이블·선택 숏컷만, API 연동 없음) | ✅ v1 앱 경로·워크벤치; 확장은 [`PLAN-studio-productions.md`](../docs/features/PLAN-studio-productions.md) · ADR [`003`](../docs/adr/ADR-003-studio-productions-mvp.md) |
 
@@ -91,14 +91,14 @@
 
 ### G0 — 범위·결제 전략 (½~1일)
 
-- [ ] **전자책 1편** 주제·약속 한 줄(“무엇을 파는가”) 확정 · 우선 **로케일 1개**(예: en)로 시작할지 결정
-- [ ] **Lemon Squeezy vs Toss**: KR·글로벌 분기 — Toss는 기존 [`011`](../supabase/migrations) intent·confirm 흐름, LS는 **별도 웹훅·SKU 매핑** 필요 → 짧은 **의사결정 메모**(ADR 초안 또는 `docs/features/` 스케치)
-- [ ] 가격·통화·환불·세금(MoR 정책) 초안
+- [x] **전자책 1편** 주제·약속 한 줄·시작 로케일 — [`docs/features/PLAN-g0-creator-commerce-decisions.md`](../docs/features/PLAN-g0-creator-commerce-decisions.md) (플레이북 제목·약속·**en 우선**)
+- [x] **Lemon vs Toss** — [`docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md`](../docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md): **Lemon 우선**, Toss 신규 카탈로그는 **당분간 보류** (사용자 결정 반영)
+- [x] 가격·통화·환불·세금(MoR) 초안 — 동일 G0 문서 §2 (USD 리스트·Lemon MoR·환불은 약관·후속 자동화와 정합)
 
 ### G1 — 상품·콘텐츠 (M4 슬라이스와 동일 선상)
 
-- [ ] `content_products`에 **ebook/guide SKU 1개** · slug · `product_kind` 정합
-- [ ] 본문 **MDX** · Storage 다운로드 경로 · RLS·엔타이틀먼트와 [`ebook-access`](../src/lib/content/ebook-access.ts) 정합
+- [ ] `content_products`에 **ebook/guide SKU 1개** — Supabase에 행 삽입·Lemon 변형 연결은 운영자가 수행: [`docs/features/PLAN-g1-first-ebook-sku-runbook.md`](../docs/features/PLAN-g1-first-ebook-sku-runbook.md) (슬러그 `prompt-surface-playbook`)
+- [x] 본문 **MDX** (`web_only`) — [`content/ebooks/prompt-surface-playbook/index.mdx`](../content/ebooks/prompt-surface-playbook/index.mdx); 엔타이틀먼트·[`ebook-access`](../src/lib/content/ebook-access.ts)는 기존 코드 경로와 정합
 - [ ] 랜딩/블로그 **CTA 1개** — 대기명단 또는 바로 결제(결제 수단 준비 후)
 
 ### G2 — 글로벌 결제 (Lemon Squeezy)

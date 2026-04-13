@@ -9,7 +9,7 @@ This document aligns **Elevate AI**’s first MVP (**prompt improvement / Prompt
 | Awareness | SEO, social, referrals, ads | Localized home (`/[locale]`): **Prompt Studio** + waitlist; blog/resources for inbound |
 | Interest | Learn product; join whitelist without account | `/product/prompt-studio`, `/pricing`, `/demo`, `/contact`; **`#waitlist`** → `waitlist_signups` |
 | Conversion (lead) | Waitlist (Prompt Studio beta) | `POST /api/waitlist`; PostHog `elevate_waitlist_submitted` (no email in analytics) |
-| Conversion (pay) | Pay | Toss (`docs/adr/ADR-001-toss-payments-poc.md`) — `?product=<slug>`; `content_product_id` on intent (`011`) |
+| Conversion (pay) | Pay | **Lemon Squeezy** (global MoR) — variant ↔ `content_products` + webhook; Toss PoC는 레거시·KR 실험용 ([`ADR-001`](./adr/ADR-001-toss-payments-poc.md)). G0 기본 경로: [`PLAN-g0-creator-commerce-decisions.md`](./features/PLAN-g0-creator-commerce-decisions.md) |
 | Access | Prompt improvement + files | **Prompt Studio** (MVP roadmap); **Library** — read access = paid org plan **or** per-SKU entitlement (`013`); PDF download vs **web-only** in-app reader |
 | Expand | Team, more SKUs, B2B | Invites (`006`), org billing, future upsell |
 

@@ -1,6 +1,6 @@
 # PostHog 퍼널 — Elevate (수동 설정)
 
-이벤트 이름·속성은 코드 [`src/lib/analytics/posthog-events.ts`](../src/lib/analytics/posthog-events.ts)에 정의되어 있습니다. 이 문서는 `NEXT_PUBLIC_POSTHOG_*`가 설정되어 있고 실제 트래픽이 들어온 뒤 **PostHog 화면에서 무엇을 만들면 되는지**만 정리합니다.
+이벤트 이름·속성은 코드 [`src/lib/analytics/posthog-events.ts`](../src/lib/analytics/posthog-events.ts)에 정의되어 있습니다. 이 문서는 `NEXT_PUBLIC_POSTHOG_*`가 설정되어 있고 실제 트래픽이 들어온 뒤 **PostHog 화면에서 무엇을 만들면 되는지**만 정리합니다. **대시보드를 처음 저장하는 15분 절차(M5)**는 [`POSTHOG_DASHBOARD_FIRST_SAVE.md`](./POSTHOG_DASHBOARD_FIRST_SAVE.md)를 따른다.
 
 **공식 문서:** [Funnels](https://posthog.com/docs/product-analytics/funnels) · [Insights](https://posthog.com/docs/product-analytics/insights).
 

@@ -20,7 +20,7 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문�
 
 ### 다음 BUILD 앵커 (구현 예정)
 
-**결정된 다음 작업:** **Phase G2 — Lemon Squeezy 웹훅 → 콘텐츠 엔타이틀먼트** (글로벌 결제 루프). 선행: **G0**를 짧은 **ADR 또는 `docs/features/PLAN-*.md`**로 고정(Toss vs LS 역할, SKU 매핑 규칙). 참조 구현: [`src/app/api/webhooks/toss/route.ts`](../src/app/api/webhooks/toss/route.ts), [`src/lib/payments/content-entitlement.ts`](../src/lib/payments/content-entitlement.ts). 병행 가능: **G1** 전자책 SKU 1개(카탈로그·MDX)는 콘텐츠 준비되면 같은 스프린트에 묶기.
+**결정된 다음 작업:** **Phase G2 — Lemon Squeezy 웹훅 → 콘텐츠 엔타이틀먼트** (글로벌 결제 루프). **G0는 문서 확정됨:** [`docs/features/PLAN-g0-creator-commerce-decisions.md`](../docs/features/PLAN-g0-creator-commerce-decisions.md) · [`docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md`](../docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md) (Lemon 우선, Toss 신규는 보류). **G1/M4:** MDX+런북 [`PLAN-g1-first-ebook-sku-runbook.md`](../docs/features/PLAN-g1-first-ebook-sku-runbook.md) — Supabase 행·Lemon 변형은 운영 삽입. **M5:** [`docs/POSTHOG_DASHBOARD_FIRST_SAVE.md`](../docs/POSTHOG_DASHBOARD_FIRST_SAVE.md). 참조: [`src/lib/payments/content-entitlement.ts`](../src/lib/payments/content-entitlement.ts).
 
 **병행 후보 (숏·제작 레저 P0):** [`tasks.md`](tasks.md) **§ G3.1 — Productions P0** — **P0-1·P0-2·P0-3 구현됨 (2026-04):** 권장 역할·`<datalist>`·순서 배지·`sort_order` 편집·에피소드 도움말에 런북 경로 안내 — [`docs/STUDIO_ARTIFACT_ROLES.md`](../docs/STUDIO_ARTIFACT_ROLES.md). **남음:** 팀 습관 체크리스트(P0-1 미체크 항목).
 

@@ -11,10 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- G0 creator commerce decisions: [`docs/features/PLAN-g0-creator-commerce-decisions.md`](docs/features/PLAN-g0-creator-commerce-decisions.md).
+- ADR-005: Lemon primary payment rail; Toss deferred for new catalog work ([`docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md`](docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md)).
+- G1/M4 runbook + ebook MDX slice: [`docs/features/PLAN-g1-first-ebook-sku-runbook.md`](docs/features/PLAN-g1-first-ebook-sku-runbook.md), `content/ebooks/prompt-surface-playbook/index.mdx`.
+- PostHog M5: dashboard save checklist [`docs/POSTHOG_DASHBOARD_FIRST_SAVE.md`](docs/POSTHOG_DASHBOARD_FIRST_SAVE.md).
+
 ### Changed
 
 - Blog: dedicated editorial hero for the v0.2.0 release post (`public/blog/release-0-2-0/hero.jpg`) — no longer reuses the flagship post image.
 - Blog: v0.2.0 release copy (en/ko) rewritten for **customers only** — removed internal sections (migrations, ADRs, repo paths, roadmap codenames); templates and versioning docs updated so future release posts stay outward-facing.
+- [`docs/CONTENT_FUNNEL.md`](docs/CONTENT_FUNNEL.md): conversion row notes Lemon-first; G0 doc linked.
 
 <!-- New changes go here; move into a dated section when you cut the next release. -->
 
