@@ -14,43 +14,19 @@
 
 ---
 
-## 2. Insert `content_products` row (Supabase SQL)
+## 2. Insert `content_products` row
 
-Run in **SQL Editor** (service role / dashboard) against your project. Adjust `price_cents` to match your Lemon variant before launch.
+**Preferred:** apply the versioned migration so staging/prod stay aligned:
 
-```sql
-insert into public.content_products (
-  slug,
-  title,
-  description,
-  price_cents,
-  currency,
-  product_kind,
-  delivery_mode,
-  is_active,
-  storage_object_path
-) values (
-  'prompt-surface-playbook',
-  'The Prompt Is Your Product Surface — Playbook',
-  'A short playbook for teams who want prompts to behave like an owned product surface—before compliance and voice drift in chat threads.',
-  1900,
-  'USD',
-  'ebook',
-  'web_only',
-  true,
-  null
-)
-on conflict (slug) do update set
-  title = excluded.title,
-  description = excluded.description,
-  price_cents = excluded.price_cents,
-  currency = excluded.currency,
-  product_kind = excluded.product_kind,
-  delivery_mode = excluded.delivery_mode,
-  is_active = excluded.is_active;
-```
+- File: [`supabase/migrations/022_content_product_prompt_surface_playbook.sql`](../../supabase/migrations/022_content_product_prompt_surface_playbook.sql)
+- Local: `supabase db push` / `supabase migration up` (your usual workflow)
+- Hosted: run pending migrations from CI or Supabase **Migrations** UI so `022` is applied
 
-Then: `pnpm db:types` locally if you regenerate types from that project.
+The SQL is **idempotent** (`on conflict (slug) do update`).
+
+**If you must patch one environment by hand** (hotfix), you can paste the same `insert` into **SQL Editor**—keep it in sync with `022` so drift doesn’t accumulate.
+
+Adjust **`price_cents`** / copy in a **new migration** if you change list price after launch (don’t edit `022` once it has shipped to prod unless you know the team’s migration policy).
 
 ---
 

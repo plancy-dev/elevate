@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Migration `022`: seed catalog row for `prompt-surface-playbook` ebook SKU ([`supabase/migrations/022_content_product_prompt_surface_playbook.sql`](supabase/migrations/022_content_product_prompt_surface_playbook.sql)).
 - G0 creator commerce decisions: [`docs/features/PLAN-g0-creator-commerce-decisions.md`](docs/features/PLAN-g0-creator-commerce-decisions.md).
 - ADR-005: Lemon primary payment rail; Toss deferred for new catalog work ([`docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md`](docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md)).
 - G1/M4 runbook + ebook MDX slice: [`docs/features/PLAN-g1-first-ebook-sku-runbook.md`](docs/features/PLAN-g1-first-ebook-sku-runbook.md), `content/ebooks/prompt-surface-playbook/index.mdx`.
