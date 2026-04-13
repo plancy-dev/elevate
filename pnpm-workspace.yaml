@@ -1,3 +1,7 @@
+# Single-package repo: required so pnpm treats the root as a workspace (pnpm 9+).
+packages:
+  - "."
+
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
