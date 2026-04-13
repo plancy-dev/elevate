@@ -10,7 +10,7 @@ const FLAGSHIP_LOCALES = new Set(["en", "ko"]);
 
 describe("blog posts (locale MDX)", () => {
   it("lists expected slugs per locale (en+ko flagship vs legacy samples)", () => {
-    const flagship = ["the-prompt-is-your-product-surface"].sort();
+    const flagship = ["release-0-2-0", "the-prompt-is-your-product-surface"].sort();
     const legacy = ["seo-and-waitlist", "welcome"].sort();
     for (const locale of routing.locales) {
       const slugs = getAllPostMetaForLocale(locale)
@@ -35,6 +35,16 @@ describe("blog posts (locale MDX)", () => {
     const post = getPostBySlug("the-prompt-is-your-product-surface", "ko");
     expect(post).not.toBeNull();
     expect(post!.body).toContain("Prompt Studio");
+  });
+
+  it("loads v0.2.0 release posts (en + ko)", () => {
+    const en = getPostBySlug("release-0-2-0", "en");
+    const ko = getPostBySlug("release-0-2-0", "ko");
+    expect(en).not.toBeNull();
+    expect(ko).not.toBeNull();
+    expect(en!.meta.ogImage).toBe("/blog/release-0-2-0/hero.jpg");
+    expect(en!.body).toContain("0.2.0");
+    expect(ko!.body).toContain("0.2.0");
   });
 
   it("returns null for unknown slug", () => {

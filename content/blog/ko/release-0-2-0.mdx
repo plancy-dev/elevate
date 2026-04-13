@@ -1,0 +1,32 @@
+---
+title: "Elevate v0.2.0 — 제작(Productions) 다듬기와 운영 문서"
+description: "스튜디오 제작에 권장 역할·스토리 순서 편집·런웨이 런북 안내가 추가됐습니다. 버전·CHANGELOG·PR 템플릿으로 릴리스 습관도 정리했습니다."
+date: "2026-04-10"
+ogImage: "/blog/release-0-2-0/hero.jpg"
+---
+
+![릴리스 히어로](/blog/release-0-2-0/hero.jpg)
+
+*플래그십 포스트와 동일한 히어로로 미리보기 일관성 유지; 전용 이미지가 생기면 교체하면 됩니다.*
+
+v0.2.0은 **제작 원장** 경험을 다듬습니다. Runway 등에서 복사한 프롬프트·링크를 붙일 때 **역할 이름을 팀 규칙에 맞게** 쓰기 쉽고, **컷 순서**를 한눈에 보고 **편집**할 수 있습니다. 대시보드 도움말에 **저장소 내 런웨이 런북 경로**를 한 줄 넣어 운영자가 문서와 앱을 같이 쓰기 좋게 했습니다.
+
+## 주요 변경
+
+- **Studio Productions** — 권장 아티팩트 역할(`script`, `prompt`, `settings` 등)과 `<datalist>` 힌트; 스토리 순서 배지(#1, 2, …); 아티팩트별 **`sort_order`** 편집·검증.
+- **에피소드 도움말** — “쓸 수 있는 도구” 아래 두 번째 문단에 `docs/RUNWAY_SHORTS_RUNBOOK.md`, `docs/RUNWAY_SCENE_BUILDER_STEP2.md` 경로 안내.
+- **출하 습관** — 루트 `CHANGELOG.md`, `docs/VERSIONING_AND_RELEASES.md`, GitHub **PR 템플릿**으로 마이너 릴리스와 내러티브를 맞추기 쉽게 정리.
+
+## 개선
+
+- 잘못된 정렬 순서에 대한 액션 오류(`studioInvalidSortOrder`) 메시지를 로케일에 맞게 정리.
+
+## 빌더·운영자용
+
+- 이번 마이너에 **DB 마이그레이션은 없습니다.** Lemon 웹훅·빌링 경로는 그대로이며, 결제 스모크는 ADR-004·PLAN 문서를 참고하세요.
+
+## 다음
+
+- 로드맵상 **Phase G**(글로벌 결제·카탈로그)와 **크리에이터 워크플로**를 이어갑니다(`memory-bank/tasks.md`).
+
+**바로가기:** [앱 열기](/dashboard) · [제작](/dashboard/productions) · [대기명단](/ko#waitlist)

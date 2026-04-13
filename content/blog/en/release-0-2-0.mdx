@@ -1,0 +1,32 @@
+---
+title: "Elevate v0.2.0 — Productions workflow polish & operator docs"
+description: "Studio Productions gets clearer roles, story order you can edit, and Runway runbook pointers in the dashboard. Plus versioning docs and a PR checklist for steady releases."
+date: "2026-04-10"
+ogImage: "/blog/release-0-2-0/hero.jpg"
+---
+
+![Release notes hero — editorial](/blog/release-0-2-0/hero.jpg)
+
+*Hero image aligned with our flagship post for consistent previews; swap when you have release-specific art.*
+
+v0.2.0 tightens the **production ledger** story: teams copying prompts and links from Runway and other tools can **name roles consistently**, **see cut order at a glance**, and **reorder artifacts** without leaving the episode page. We also ship **operator-facing pointers** to in-repo Runway runbooks so your stack stays documented next to the app.
+
+## Highlights
+
+- **Studio Productions** — Suggested artifact roles (`script`, `prompt`, `settings`, …) with datalist hints; story-order badges (#1, 2, …); **`sort_order`** editable per artifact with validation.
+- **Episode help** — Second line under “Tools you can use” points operators to `docs/RUNWAY_SHORTS_RUNBOOK.md` and `docs/RUNWAY_SCENE_BUILDER_STEP2.md` in this repository.
+- **Shipping discipline** — Root `CHANGELOG.md`, `docs/VERSIONING_AND_RELEASES.md`, and a GitHub **PR template** so minor releases stay paired with narrative when you want them.
+
+## Improvements
+
+- Action error coverage for invalid sort order (`studioInvalidSortOrder`) across locales.
+
+## For builders
+
+- No new database migrations in this minor. Lemon webhook and billing paths unchanged; see ADR-004 and PLAN docs for payment smoke tests.
+
+## What’s next
+
+- Continue **Phase G** (global payments hardening, catalog) and **creator workflows** on the roadmap (`memory-bank/tasks.md` in the repo).
+
+**Try it:** [Open the app](/dashboard) · [Productions](/dashboard/productions) · [Join the waitlist](/#waitlist)
