@@ -52,3 +52,19 @@ Adjust **`price_cents`** / copy in a **new migration** if you change list price 
 - [ ] Lemon link attached  
 - [ ] Terms / refund copy aligned with G0 MoR draft  
 - [ ] Marketing CTA points to catalog or checkout entry you want (`/product/...`, Library, or billing deep link)
+
+---
+
+## 6. Implementation review (codebase)
+
+Verified end-to-end shape:
+
+| Layer | Notes |
+|-------|--------|
+| **Catalog** | `content_products.slug` = `prompt-surface-playbook`, `delivery_mode = web_only`, `is_active = true` |
+| **Library detail** | `/dashboard/library/[slug]` — entitlement via subscription **or** `organization_content_entitlements` ([`ebook-access.ts`](../../src/lib/content/ebook-access.ts)) |
+| **Checkout** | `/dashboard/library/[slug]/checkout` → Lemon API checkout when variant linked + env; `custom_data` includes `content_product_id`, `content_product_slug`, `organization_id` ([`resolve-lemon-checkout-for-billing.ts`](../../src/lib/payments/resolve-lemon-checkout-for-billing.ts)) |
+| **Webhook** | `order_created` + paid → grant org entitlement ([`lemon-squeezy-webhook.ts`](../../src/lib/payments/lemon-squeezy-webhook.ts)); fallback org resolution by buyer email if `organization_id` missing |
+| **Reader** | `/dashboard/library/[slug]/read` — loads [`content/ebooks/<slug>/index.mdx`](../../content/ebooks/prompt-surface-playbook/index.mdx) via [`loadEbookMdxSource`](../../src/lib/content/ebook-mdx.ts) |
+
+**Refactor:** Library product-by-slug now uses **one DB query per slug** + shared entitlement context ([`getLibraryEntitlementContext`](../../src/lib/data/library.ts)) instead of loading the full catalog on every detail page.

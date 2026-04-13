@@ -89,7 +89,6 @@ export default async function EbookReaderPage({ params }: Props) {
         <h1 className="text-2xl font-semibold text-text-primary tracking-tight">
           {product.title}
         </h1>
-        <p className="mt-1 text-xs text-text-tertiary font-mono">{slug}</p>
         <p className="mt-4 text-xs text-text-tertiary leading-relaxed max-w-prose">
           {t("readerUsageNotice")}
         </p>

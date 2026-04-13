@@ -2,6 +2,19 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database.types";
 import type { OrgPlan } from "@/lib/organizations/plan";
 
+type ContentProductListRow = Pick<
+  Database["public"]["Tables"]["content_products"]["Row"],
+  | "id"
+  | "slug"
+  | "title"
+  | "description"
+  | "price_cents"
+  | "currency"
+  | "product_kind"
+  | "delivery_mode"
+  | "storage_object_path"
+>;
+
 /** Aligns with `content_products.product_kind` (migration 010). */
 export type ContentProductKind = "ebook" | "guide" | "template" | "bundle";
 
@@ -20,26 +33,31 @@ export type LibraryProductRow = {
   storage_object_path: string | null;
 };
 
-export async function getLibraryPageData(
+const PRODUCT_LIST_SELECT =
+  "id, slug, title, description, price_cents, currency, product_kind, delivery_mode, storage_object_path" as const;
+
+function mapContentProductRow(p: ContentProductListRow): LibraryProductRow {
+  return {
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    description: p.description,
+    price_cents: p.price_cents,
+    currency: p.currency,
+    product_kind: (p.product_kind ?? "ebook") as ContentProductKind,
+    delivery_mode: (p.delivery_mode ?? "pdf") as EbookDeliveryMode,
+    storage_object_path: p.storage_object_path ?? null,
+  };
+}
+
+/** Org plan + entitlement IDs for Library / catalog detail (shared by list + detail). */
+export async function getLibraryEntitlementContext(
   supabase: SupabaseClient<Database>,
   organizationId: string | null,
 ): Promise<{
-  products: LibraryProductRow[];
   entitledIds: Set<string>;
   organizationPlan: OrgPlan | null;
 }> {
-  const { data: products, error: pErr } = await supabase
-    .from("content_products")
-    .select(
-      "id, slug, title, description, price_cents, currency, product_kind, delivery_mode, storage_object_path",
-    )
-    .eq("is_active", true)
-    .order("created_at", { ascending: false });
-
-  if (pErr) {
-    throw pErr;
-  }
-
   let entitledIds = new Set<string>();
   let organizationPlan: OrgPlan | null = null;
 
@@ -66,20 +84,41 @@ export async function getLibraryPageData(
     entitledIds = new Set((ents ?? []).map((e) => e.content_product_id));
   }
 
-  const rows = (products ?? []) as LibraryProductRow[];
+  return { entitledIds, organizationPlan };
+}
+
+export async function getLibraryPageData(
+  supabase: SupabaseClient<Database>,
+  organizationId: string | null,
+): Promise<{
+  products: LibraryProductRow[];
+  entitledIds: Set<string>;
+  organizationPlan: OrgPlan | null;
+}> {
+  const ctx = await getLibraryEntitlementContext(supabase, organizationId);
+
+  const { data: products, error: pErr } = await supabase
+    .from("content_products")
+    .select(PRODUCT_LIST_SELECT)
+    .eq("is_active", true)
+    .order("created_at", { ascending: false });
+
+  if (pErr) {
+    throw pErr;
+  }
+
+  const rows = (products ?? []) as ContentProductListRow[];
   return {
-    products: rows.map((p) => ({
-      ...p,
-      product_kind: (p.product_kind ?? "ebook") as ContentProductKind,
-      delivery_mode: (p.delivery_mode ?? "pdf") as EbookDeliveryMode,
-      storage_object_path: p.storage_object_path ?? null,
-    })),
-    entitledIds,
-    organizationPlan,
+    products: rows.map(mapContentProductRow),
+    entitledIds: ctx.entitledIds,
+    organizationPlan: ctx.organizationPlan,
   };
 }
 
-/** Single catalog row for Library detail; reuses list fetch (fine for small catalogs). */
+/**
+ * Single catalog row for Library detail — **one query by slug** + entitlement context
+ * (avoids loading the full catalog on every detail view).
+ */
 export async function getLibraryProductBySlug(
   supabase: SupabaseClient<Database>,
   organizationId: string | null,
@@ -89,11 +128,30 @@ export async function getLibraryProductBySlug(
   entitledIds: Set<string>;
   organizationPlan: OrgPlan | null;
 }> {
-  const page = await getLibraryPageData(supabase, organizationId);
-  const product = page.products.find((p) => p.slug === slug) ?? null;
+  const ctx = await getLibraryEntitlementContext(supabase, organizationId);
+
+  const { data: row, error } = await supabase
+    .from("content_products")
+    .select(PRODUCT_LIST_SELECT)
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!row) {
+    return {
+      product: null,
+      entitledIds: ctx.entitledIds,
+      organizationPlan: ctx.organizationPlan,
+    };
+  }
+
   return {
-    product,
-    entitledIds: page.entitledIds,
-    organizationPlan: page.organizationPlan,
+    product: mapContentProductRow(row as ContentProductListRow),
+    entitledIds: ctx.entitledIds,
+    organizationPlan: ctx.organizationPlan,
   };
 }
