@@ -46,6 +46,7 @@ export const ActionErrorCode = {
   studioInvalidStatus: "studioInvalidStatus",
   studioTitleRequired: "studioTitleRequired",
   studioRoleRequired: "studioRoleRequired",
+  studioInvalidSortOrder: "studioInvalidSortOrder",
 
   studioDemoSeedDisabled: "studioDemoSeedDisabled",
   studioDemoSeedNotEmpty: "studioDemoSeedNotEmpty",

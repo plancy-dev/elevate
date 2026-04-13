@@ -242,6 +242,16 @@ export async function updateStudioArtifact(
   const metaCheck = validateMetadataJson(metaParsed);
   if (!metaCheck.ok) return { error: metaCheck.error };
 
+  const sortRaw = String(formData.get("sort_order") ?? "").trim();
+  let sortOrder: number | undefined;
+  if (sortRaw.length > 0) {
+    const n = Number.parseInt(sortRaw, 10);
+    if (Number.isNaN(n) || n < 0 || n > 1_000_000) {
+      return { error: ActionErrorCode.studioInvalidSortOrder };
+    }
+    sortOrder = n;
+  }
+
   const supabase = await createClient();
   const auth = await getOrgMemberContext(supabase);
   if (!auth.ok) return { error: auth.error };
@@ -254,6 +264,7 @@ export async function updateStudioArtifact(
       content_text: contentCheck.value,
       external_url: urlCheck.value,
       metadata: metaCheck.value,
+      ...(sortOrder !== undefined ? { sort_order: sortOrder } : {}),
     })
     .eq("id", artifactId)
     .eq("episode_id", episodeId)

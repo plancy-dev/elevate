@@ -22,7 +22,17 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문�
 
 **결정된 다음 작업:** **Phase G2 — Lemon Squeezy 웹훅 → 콘텐츠 엔타이틀먼트** (글로벌 결제 루프). 선행: **G0**를 짧은 **ADR 또는 `docs/features/PLAN-*.md`**로 고정(Toss vs LS 역할, SKU 매핑 규칙). 참조 구현: [`src/app/api/webhooks/toss/route.ts`](../src/app/api/webhooks/toss/route.ts), [`src/lib/payments/content-entitlement.ts`](../src/lib/payments/content-entitlement.ts). 병행 가능: **G1** 전자책 SKU 1개(카탈로그·MDX)는 콘텐츠 준비되면 같은 스프린트에 묶기.
 
+**병행 후보 (숏·제작 레저 P0):** [`tasks.md`](tasks.md) **§ G3.1 — Productions P0** — **P0-1·P0-2·P0-3 구현됨 (2026-04):** 권장 역할·`<datalist>`·순서 배지·`sort_order` 편집·에피소드 도움말에 런북 경로 안내 — [`docs/STUDIO_ARTIFACT_ROLES.md`](../docs/STUDIO_ARTIFACT_ROLES.md). **남음:** 팀 습관 체크리스트(P0-1 미체크 항목).
+
 **INIT → 다음:** L3 → **PLAN**(웹훅 보안·idempotency·테스트) 권장 후 **BUILD**.
+
+### 의사결정 (Productions P0 vs 결제)
+
+| 상황 | 추천 |
+|------|------|
+| 수익·글로벌 결제가 급함 | **G2 우선**, G3.1은 다음 스프린트 |
+| 숏·도구 실험 기록이 제품 스토리의 중심 | **G3.1 먼저** 0.5~1스프린트, G2는 병행 또는 직후 |
+| 한 명만 개발 | **한 줄로만** 정함: “이번 주는 G2” 또는 “이번 주는 G3.1” |
 
 ## 최근 확정 결정
 

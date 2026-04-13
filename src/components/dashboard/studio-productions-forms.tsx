@@ -24,10 +24,24 @@ import type {
   StudioProductionEpisodeRow,
 } from "@/lib/data/studio-productions";
 import {
+  STUDIO_ARTIFACT_ROLE_DATALIST_ID,
+  STUDIO_SUGGESTED_ARTIFACT_ROLES,
+} from "@/lib/studio-productions/artifact-roles";
+import {
   STUDIO_EPISODE_STATUSES,
   type StudioEpisodeStatus,
 } from "@/lib/studio-productions/constants";
 import type { Json } from "@/types/database.types";
+
+function ArtifactRoleDatalist() {
+  return (
+    <datalist id={STUDIO_ARTIFACT_ROLE_DATALIST_ID}>
+      {STUDIO_SUGGESTED_ARTIFACT_ROLES.map((role) => (
+        <option key={role} value={role} />
+      ))}
+    </datalist>
+  );
+}
 import { Clapperboard, ExternalLink } from "lucide-react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { FieldSelect } from "@/components/ui/field-select";
@@ -337,10 +351,15 @@ function ArtifactAddForm({
           <input
             name="artifact_role"
             required
+            list={STUDIO_ARTIFACT_ROLE_DATALIST_ID}
+            autoComplete="off"
             defaultValue={prefill?.artifact_role ?? ""}
             placeholder={t("artifactRolePlaceholder")}
             className="h-9 w-full bg-field border border-border-subtle px-2 text-sm text-text-primary focus:outline-none focus:border-focus"
           />
+          <p className="mt-1 text-xs text-text-tertiary leading-snug">
+            {t("artifactRoleHint")}
+          </p>
         </div>
         <div>
           <label className="block text-xs text-text-secondary mb-1">
@@ -448,9 +467,14 @@ function ArtifactEditDialogBody({
             <input
               name="artifact_role"
               required
+              list={STUDIO_ARTIFACT_ROLE_DATALIST_ID}
+              autoComplete="off"
               defaultValue={artifact.artifact_role}
               className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
             />
+            <p className="mt-1 text-xs text-text-tertiary leading-snug">
+              {t("artifactRoleHint")}
+            </p>
           </div>
           <div>
             <label className="mb-1 block text-xs font-medium text-text-secondary">
@@ -463,6 +487,21 @@ function ArtifactEditDialogBody({
               className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
             />
           </div>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-medium text-text-secondary">
+            {t("artifactSortLabel")}
+          </label>
+          <input
+            name="sort_order"
+            type="number"
+            min={0}
+            max={1_000_000}
+            step={1}
+            defaultValue={artifact.sort_order}
+            className="h-10 w-full max-w-[12rem] rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
+          />
+          <p className="mt-1.5 text-xs text-text-tertiary">{t("artifactSortHint")}</p>
         </div>
         <div>
           <label className="mb-1 block text-xs font-medium text-text-secondary">
@@ -600,15 +639,22 @@ export function StudioProductionsArtifactsSection({
           </p>
         </div>
       </div>
+      <ArtifactRoleDatalist />
       <ArtifactAddForm episodeId={episodeId} prefill={artifactAddPrefill} />
       {artifacts.length > 0 ? (
         <ul
           className="list-none rounded-xl border border-border-subtle bg-layer-02/30 p-0 m-0 divide-y divide-border-subtle dark:border-white/10 dark:bg-white/2"
           aria-label={t("artifactsHeading")}
         >
-          {artifacts.map((a) => (
+          {artifacts.map((a, idx) => (
             <li key={a.id}>
               <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-start sm:gap-5 sm:py-5">
+                <div
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-layer-02/90 text-xs font-bold tabular-nums text-text-secondary dark:border-white/10 dark:bg-white/5"
+                  aria-label={t("artifactStepBadge", { step: idx + 1 })}
+                >
+                  {idx + 1}
+                </div>
                 <div className="min-w-0 flex-1 space-y-2">
                   <div className="flex flex-wrap gap-1.5">
                     <span className="inline-flex max-w-full items-center truncate rounded-md bg-primary/12 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-primary dark:bg-primary/20">

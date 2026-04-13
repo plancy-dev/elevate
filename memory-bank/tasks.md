@@ -114,6 +114,37 @@
 - [ ] **아티팩트**에 프롬프트·공개 URL·메타데이터 습관화 — [ADR-003 Studio Productions](../docs/adr/ADR-003-studio-productions-mvp.md)
 - [ ] (선택) Prompt Studio → Productions **핸드오프** 이미 있음 — 실제로 한 사이클 돌려보기
 
+### G3.1 — Productions **P0** (레저·숏 워크플로 정착) — 구현 체크리스트
+
+> **목표:** 수동(Runway·챗봇)이어도 **한 숏 = 한 에피소드**에 스크립트·프롬프트·설정·출력·(선택) 정책 메모가 **끊기지 않게** 담는다.  
+> **비목표:** Runway OAuth/API 연동(ADR-003 v1 밖) — [`docs/adr/ADR-003-studio-productions-mvp.md`](../docs/adr/ADR-003-studio-productions-mvp.md).  
+> **런북(참고):** [`docs/RUNWAY_SHORTS_RUNBOOK.md`](../docs/RUNWAY_SHORTS_RUNBOOK.md) · Step2·JSON: [`docs/RUNWAY_SCENE_BUILDER_STEP2.md`](../docs/RUNWAY_SCENE_BUILDER_STEP2.md).
+
+#### P0-1 — `artifact_role` · 라벨 규칙 팀 내 고정
+
+- [x] **권장 역할 이름**을 문서·코드로 고정: [`docs/STUDIO_ARTIFACT_ROLES.md`](../docs/STUDIO_ARTIFACT_ROLES.md) · [`src/lib/studio-productions/artifact-roles.ts`](../src/lib/studio-productions/artifact-roles.ts) (`STUDIO_SUGGESTED_ARTIFACT_ROLES`)  
+- [ ] **에피소드당 최소 습관:** 스크립트(또는 훅 문장) 1 · 컷별 `prompt` 또는 `settings`(JSON) · 공개 URL(`render_output` 또는 `external_url`) 1 — **팀 운영** (앱 강제 아님)  
+- [x] **위치:** 워크벤치 UI — `Dashboard.productions` i18n · 역할 입력 `<datalist>` · `artifactRoleHint` (en/ko/ja/zh)
+
+#### P0-2 — 에피소드 상세에서 **컷 순서**가 보이게
+
+- [x] 아티팩트 목록에 **스토리 순서** 배지(1, 2, 3…) + 부제·도움말에 순서 설명; 편집 다이얼로그에서 **`sort_order`** 변경 가능  
+- [x] **위치:** [`src/components/dashboard/studio-productions-forms.tsx`](../src/components/dashboard/studio-productions-forms.tsx) · [`src/actions/studio-productions.ts`](../src/actions/studio-productions.ts) (`updateStudioArtifact` + `studioInvalidSortOrder`)
+
+#### P0-3 — (선택) 제작 도움말에 **내부 런북 링크** 1줄
+
+- [x] 팀·운영자: 저장소 내 경로 안내 (`docs/RUNWAY_SHORTS_RUNBOOK.md`, `docs/RUNWAY_SCENE_BUILDER_STEP2.md`) — 공개 Notion URL은 필요 시 `NEXT_PUBLIC_*` 등으로 별도 추가 가능  
+- [x] **위치:** `Dashboard.productions.helpRunbook` — 에피소드 상세 도움말 블록 두 번째 문단 (`/dashboard/productions/[episodeId]`)
+
+#### 의사결정 가이드 (이 블록만 읽어도 됨)
+
+| 질문 | 권장 |
+|------|------|
+| 지금 **Runway를 매일** 돌려야 하나? | **아니오.** P0는 **앱에 기록 구조를 굳히는 것**이 우선. Runway는 샘플·채널용 **배치**로 충분. |
+| **G2 Lemon**과 동시에 할까? | **병행 가능:** G2는 결제·웹훅, G3.1은 제작 UX — 사람 다르면 나눠도 됨. **한 사람**이면 G2 먼저 또는 G3.1 먼저 **한 줄로** 정하기. |
+| `compliance_note`를 지금 필수로? | **선택.** 유튜브 제재 대비가 목표면 **에피소드 `notes` 또는 아티팩트 1개**로 시작. |
+| DB 마이그레이션 필요? | P0는 **기존 `artifact_role` 텍스트 + `metadata` jsonb**로 대부분 가능. 스키마 변경은 **P1**에서 검토. |
+
 ### G4 — 숏폼 2주 스프린트 (초미니 체크리스트)
 
 **전제:** 조회·바이럴은 플랫폼 측; Elevate는 **기록·상품·결제** 측.

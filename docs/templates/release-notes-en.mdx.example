@@ -1,0 +1,31 @@
+---
+title: "Elevate v0.2.0 — short headline for humans"
+description: "One paragraph: what shipped and why readers should care. Shown in listings and SEO."
+date: "YYYY-MM-DD"
+ogImage: "/blog/release-0-2-0/hero.jpg"
+---
+
+![Optional hero — product or abstract editorial](/blog/release-0-2-0/hero.jpg)
+
+*Optional caption — source / license if not original.*
+
+Short opener: what this release means for teams using Elevate (one or two paragraphs).
+
+## Highlights
+
+- **Area A** — User-visible change; link to docs or dashboard path if useful.
+- **Area B** — Same.
+
+## Improvements
+
+- Smaller fixes or polish worth naming (or fold into Highlights if few).
+
+## For builders
+
+- Bullet list of technical notes (migrations, env vars, breaking changes). If none, omit this section.
+
+## What’s next
+
+- Tease the next minor or theme (honest, not hype).
+
+**Try it:** [Open the app](/en/dashboard) · [Join the waitlist](/#waitlist)

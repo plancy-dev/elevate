@@ -159,6 +159,9 @@ export default async function ProductionEpisodePage({
               <p className="mt-1.5 text-sm text-text-tertiary leading-relaxed">
                 {t("helpBody")}
               </p>
+              <p className="mt-2 text-sm text-text-tertiary leading-relaxed">
+                {t("helpRunbook")}
+              </p>
             </section>
 
             <section className="mb-10">

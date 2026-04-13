@@ -196,14 +196,27 @@ Document the **exact query strings** in the pack so schedulers don’t invent ad
 
 ---
 
-## 8. File checklist
+## 8. SemVer release posts (product “we ship” narrative)
+
+For **minor** (`y`) or **major** (`x`) version bumps—not routine editorials—follow **[`VERSIONING_AND_RELEASES.md`](VERSIONING_AND_RELEASES.md)**:
+
+- Copy **[`docs/templates/release-notes-en.mdx.example`](templates/release-notes-en.mdx.example)** → `content/blog/en/release-x-y-z.mdx` (slug uses digits, e.g. `release-0-2-0`).
+- Copy **[`docs/templates/release-notes-ko.mdx.example`](templates/release-notes-ko.mdx.example)** → `content/blog/ko/release-x-y-z.mdx`.
+- Update **[`CHANGELOG.md`](../CHANGELOG.md)** and **`package.json`** version in the same change set; tag **`vx.y.z`** on `main` when releasing.
+
+**Patch** (`z`) releases: usually **`CHANGELOG.md` only**; add a blog post only when the story is worth a public note.
+
+---
+
+## 9. File checklist
 
 ```
 public/blog/<slug>/hero.jpg        # or hero.webp / og.jpg (1200×630) for strict OG
 content/blog/en/<slug>.mdx
 content/blog/ko/<slug>.mdx
 docs/blog/distribution/<slug>.md   # optional but recommended for social/meta
+CHANGELOG.md                       # technical notes for every shipped version
 tests/unit/blog-posts.test.ts      # update expected slugs for en/ko when posts change
 ```
 
-**Related:** [`memory-bank/marketing-content-pipeline.md`](../memory-bank/marketing-content-pipeline.md), [`docs/MARKETING_OPS_CHECKLIST.md`](MARKETING_OPS_CHECKLIST.md).
+**Related:** [`memory-bank/marketing-content-pipeline.md`](../memory-bank/marketing-content-pipeline.md), [`docs/MARKETING_OPS_CHECKLIST.md`](MARKETING_OPS_CHECKLIST.md), [`VERSIONING_AND_RELEASES.md`](VERSIONING_AND_RELEASES.md).
