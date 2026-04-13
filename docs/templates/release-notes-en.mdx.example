@@ -7,7 +7,9 @@ ogImage: "/blog/release-0-2-0/hero.jpg"
 
 ![Optional hero — product or abstract editorial](/blog/release-0-2-0/hero.jpg)
 
-*Optional caption — source / license if not original.*
+*Use **original art for this release** (do not copy another post’s `hero.jpg`). Caption: source / license if not original.*
+
+**Hero rule:** One image under `public/blog/<slug>/hero.jpg` per release slug. If you only have time for one export, prefer a **new** 1200×630 illustration over recycling the flagship hero — readers and OG previews should match *this* ship.
 
 Short opener: what this release means for teams using Elevate (one or two paragraphs).
 

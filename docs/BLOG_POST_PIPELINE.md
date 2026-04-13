@@ -82,6 +82,7 @@ Treat KO as a **second original**, not a localization line-by-line.
 |-------|--------|
 | **Hero image (in-post)** | Store under **`public/blog/<slug>/hero.jpg`** (or `.webp`). Reference in MDX as `![alt](/blog/<slug>/hero.jpg)`. **Do not rely on remote hotlinks** for the hero—Unsplash URLs can 404 or be blocked; self-host for consistent rendering and social parity. |
 | **`ogImage` (front matter)** | Optional. Same path as hero is typical, e.g. `ogImage: "/blog/<slug>/hero.jpg"`. Drives **Open Graph** and **Twitter** `summary_large_image` in [`blog/[slug]/page.tsx`](../src/app/[locale]/(marketing)/blog/[slug]/page.tsx). If omitted, site default **`/og-default.webp`** is used. |
+| **Release posts (`release-x-y-z`)** | Use a **distinct hero** per minor/major release — same story as the flagship post is fine for voice, but **avoid reusing another post’s `hero.jpg`** so share cards and the article feel intentional. Align art with what shipped (e.g. workflow, ledger, shipping). Templates: [`docs/templates/release-notes-en.mdx.example`](templates/release-notes-en.mdx.example). |
 | **OG dimensions** | Platforms accept a range; **1200×630** is the usual design target. In-post hero can be larger; for pixel-perfect cards, export a dedicated **`og.jpg`** at 1200×630 and set `ogImage` to that path. |
 | **Keywords (SEO)** | 5–12 phrases; use in title, description, first `h2`, and naturally in body—no stuffing. |
 | **Meta title / description** | Front matter `title` / `description` feed Next.js metadata. Keep description **~150–160 chars** where possible. |
