@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Blog: dedicated editorial hero for the v0.2.0 release post (`public/blog/release-0-2-0/hero.jpg`) — no longer reuses the flagship post image.
+- Blog: v0.2.0 release copy (en/ko) rewritten for **customers only** — removed internal sections (migrations, ADRs, repo paths, roadmap codenames); templates and versioning docs updated so future release posts stay outward-facing.
 
 <!-- New changes go here; move into a dated section when you cut the next release. -->
 

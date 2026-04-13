@@ -205,6 +205,8 @@ For **minor** (`y`) or **major** (`x`) version bumps—not routine editorials—
 - Copy **[`docs/templates/release-notes-ko.mdx.example`](templates/release-notes-ko.mdx.example)** → `content/blog/ko/release-x-y-z.mdx`.
 - Update **[`CHANGELOG.md`](../CHANGELOG.md)** and **`package.json`** version in the same change set; tag **`vx.y.z`** on `main` when releasing.
 
+**Audience (strict):** Public release posts are for **customers and prospects**. Do **not** include internal-only content: database migrations, webhook/PSP names, ADR or PLAN references, `memory-bank/` or other repo paths, “Phase” codenames, or contributor workflow (PR templates, CI). Put that in **`CHANGELOG.md`** (and internal docs) only.
+
 **Patch** (`z`) releases: usually **`CHANGELOG.md` only**; add a blog post only when the story is worth a public note.
 
 ---

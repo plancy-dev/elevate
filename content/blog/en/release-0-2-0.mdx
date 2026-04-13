@@ -1,6 +1,6 @@
 ---
-title: "Elevate v0.2.0 — Productions workflow polish & operator docs"
-description: "Studio Productions gets clearer roles, story order you can edit, and Runway runbook pointers in the dashboard. Plus versioning docs and a PR checklist for steady releases."
+title: "Elevate v0.2.0 — Smarter Productions for short-form workflows"
+description: "Clearer roles and story order in Studio Productions—so prompts, links, and cuts stay organized in one place."
 date: "2026-04-10"
 ogImage: "/blog/release-0-2-0/hero.jpg"
 ---
@@ -9,24 +9,17 @@ ogImage: "/blog/release-0-2-0/hero.jpg"
 
 *Original hero for this release: story order and production ledger (abstract).*
 
-v0.2.0 tightens the **production ledger** story: teams copying prompts and links from Runway and other tools can **name roles consistently**, **see cut order at a glance**, and **reorder artifacts** without leaving the episode page. We also ship **operator-facing pointers** to in-repo Runway runbooks so your stack stays documented next to the app.
+Short-form teams juggle prompts, settings, and links across a bunch of tools. **Studio Productions** is where Elevate keeps that work in one **episode**—so nothing gets lost between Runway, chat apps, and your channel.
 
-## Highlights
+v0.2.0 makes that ledger easier to **read** and **maintain**:
 
-- **Studio Productions** — Suggested artifact roles (`script`, `prompt`, `settings`, …) with datalist hints; story-order badges (#1, 2, …); **`sort_order`** editable per artifact with validation.
-- **Episode help** — Second line under “Tools you can use” points operators to `docs/RUNWAY_SHORTS_RUNBOOK.md` and `docs/RUNWAY_SCENE_BUILDER_STEP2.md` in this repository.
-- **Shipping discipline** — Root `CHANGELOG.md`, `docs/VERSIONING_AND_RELEASES.md`, and a GitHub **PR template** so minor releases stay paired with narrative when you want them.
+## What’s new
 
-## Improvements
+- **Clearer labels** — When you add an artifact, you get friendly suggestions for roles (like script, prompt, or settings) so the list stays scannable for your team.
+- **Order you can see** — Each step shows its place in the story, so everyone agrees what comes first in the cut.
+- **Reorder without friction** — Change step order when the plan shifts—right from the episode page.
+- **Help for Runway Shorts** — If you produce with Runway, the episode screen adds a short tip that points you to the same step-by-step guides your operators already use—next to the app, not buried in a repo.
 
-- Action error coverage for invalid sort order (`studioInvalidSortOrder`) across locales.
-
-## For builders
-
-- No new database migrations in this minor. Lemon webhook and billing paths unchanged; see ADR-004 and PLAN docs for payment smoke tests.
-
-## What’s next
-
-- Continue **Phase G** (global payments hardening, catalog) and **creator workflows** on the roadmap (`memory-bank/tasks.md` in the repo).
+Smoother validation when something can’t be saved, in every language we support.
 
 **Try it:** [Open the app](/dashboard) · [Productions](/dashboard/productions) · [Join the waitlist](/#waitlist)

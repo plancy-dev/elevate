@@ -27,6 +27,7 @@
    - Copy [`docs/templates/release-notes-en.mdx.example`](templates/release-notes-en.mdx.example) → `content/blog/en/release-x-y-z.mdx` (slug: `release-0-2-0` style, digits only in the slug).
    - Copy the Korean example → `content/blog/ko/release-x-y-z.mdx`.
    - Adjust title, date, `description`, hero image under `public/blog/...` if needed.
+   - **Blog = outward story only** (benefits, product links). Technical truth (migrations, ADRs, payment plumbing) stays in **`CHANGELOG.md`**—see [`BLOG_POST_PIPELINE.md`](BLOG_POST_PIPELINE.md) §8.
 5. **Git:** on `main` (or your release branch), commit with a conventional message, then:
    ```bash
    git tag -a vx.y.z -m "vx.y.z"
@@ -49,8 +50,8 @@
 
 | Artifact | Audience |
 |----------|----------|
-| **`CHANGELOG.md`** | Developers, contributors, GitHub readers |
-| **Blog MDX** | Prospects, customers, community — “we ship” story |
+| **`CHANGELOG.md`** | Developers, contributors, GitHub readers — migrations, integrations, internal refs |
+| **Blog MDX** | Prospects, customers, community — “we ship” story **without** repo paths, ADRs, or contributor-only process |
 | **Git tag `vx.y.z`** | Exact code snapshot for support and rollbacks |
 
 ---

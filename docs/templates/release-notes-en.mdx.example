@@ -1,3 +1,8 @@
+<!--
+  Before you publish: this file is the PUBLIC blog shape only.
+  Migrations, webhooks, ADRs, repo paths, and phase codenames belong in CHANGELOG.md — not here.
+-->
+
 ---
 title: "Elevate v0.2.0 — short headline for humans"
 description: "One paragraph: what shipped and why readers should care. Shown in listings and SEO."
@@ -7,27 +12,17 @@ ogImage: "/blog/release-0-2-0/hero.jpg"
 
 ![Optional hero — product or abstract editorial](/blog/release-0-2-0/hero.jpg)
 
-*Use **original art for this release** (do not copy another post’s `hero.jpg`). Caption: source / license if not original.*
+*Caption — credit / license if not original.*
 
-**Hero rule:** One image under `public/blog/<slug>/hero.jpg` per release slug. If you only have time for one export, prefer a **new** 1200×630 illustration over recycling the flagship hero — readers and OG previews should match *this* ship.
+**Hero:** One image at `public/blog/<slug>/hero.jpg` per release; prefer new art for each minor so share previews match the story.
 
-Short opener: what this release means for teams using Elevate (one or two paragraphs).
+Short opener: what this release means for teams using Elevate (one or two paragraphs). Write for **customers and prospects**, not contributors.
 
-## Highlights
+## What’s new
 
-- **Area A** — User-visible change; link to docs or dashboard path if useful.
+- **Area A** — Benefit-first; link to product paths like `/dashboard/...` when helpful.
 - **Area B** — Same.
 
-## Improvements
+Optional short paragraph for polish or validation improvements—still in plain language.
 
-- Smaller fixes or polish worth naming (or fold into Highlights if few).
-
-## For builders
-
-- Bullet list of technical notes (migrations, env vars, breaking changes). If none, omit this section.
-
-## What’s next
-
-- Tease the next minor or theme (honest, not hype).
-
-**Try it:** [Open the app](/en/dashboard) · [Join the waitlist](/#waitlist)
+**Try it:** [Open the app](/dashboard) · [Join the waitlist](/#waitlist)
