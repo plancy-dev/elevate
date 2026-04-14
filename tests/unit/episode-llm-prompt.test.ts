@@ -1,5 +1,23 @@
 import { describe, expect, it } from "vitest";
-import { buildDraftPrompt } from "@/lib/studio-productions/episode-llm";
+import {
+  buildDraftPrompt,
+  hasNonEmptyDraftText,
+} from "@/lib/studio-productions/episode-llm";
+
+describe("hasNonEmptyDraftText", () => {
+  it("is false for undefined or all-empty fields", () => {
+    expect(hasNonEmptyDraftText(undefined)).toBe(false);
+    expect(
+      hasNonEmptyDraftText({ hook: "", title: "  ", script_draft: "\n" }),
+    ).toBe(false);
+  });
+
+  it("is true when any field has content", () => {
+    expect(
+      hasNonEmptyDraftText({ hook: "a", title: "", script_draft: "" }),
+    ).toBe(true);
+  });
+});
 
 describe("buildDraftPrompt", () => {
   const base = {
@@ -33,5 +51,37 @@ describe("buildDraftPrompt", () => {
     const prompt = buildDraftPrompt({ ...base });
     expect(prompt).toContain("do not have internet access");
     expect(prompt).toContain("YouTube");
+  });
+
+  it("develop mode includes current draft JSON when provided", () => {
+    const prompt = buildDraftPrompt({
+      ...base,
+      generateMode: "develop",
+      currentDraft: {
+        hook: "H",
+        title: "T",
+        script_draft: "S",
+      },
+    });
+    expect(prompt).toContain("Generation mode: DEVELOP");
+    expect(prompt).toContain("Current on-editor draft");
+    expect(prompt).toContain('"hook":"H"');
+  });
+
+  it("fresh mode omits current draft and adds staleness instructions", () => {
+    const prompt = buildDraftPrompt({
+      ...base,
+      generateMode: "fresh",
+      userBriefing: "Soldiers dancing; no office theme.",
+      currentDraft: {
+        hook: "office",
+        title: "office",
+        script_draft: "office",
+      },
+    });
+    expect(prompt).toContain("Generation mode: FRESH");
+    expect(prompt).not.toContain("Current on-editor draft");
+    expect(prompt).toContain("Soldiers dancing");
+    expect(prompt).toContain("Reminder (fresh mode)");
   });
 });

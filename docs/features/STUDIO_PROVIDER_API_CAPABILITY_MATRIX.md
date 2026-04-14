@@ -19,7 +19,7 @@
 |----------|----------------|--------------|------------|
 | **OpenAI** | Chat Completions 등 — BYO key | 에피소드 초안 생성·다듬기 (`episode-llm`) | 키 연결 시 사용 가능 |
 | **Anthropic** | Messages API — BYO key | 동일 | 키 연결 시 사용 가능 |
-| **Runway** | Dev API: 조직·태스크 등 ([공식 문서](https://docs.dev.runwayml.com/)) | 키 **검증**(`verifyRunwayApiKey` → `GET /v1/organization`), `runStep`은 **스텁** (`not_implemented`) | 앱에서 렌더 **잡을 시작하는 UI는 미연결** — 수동 내보내기 또는 추후 연동 |
+| **Runway** | Dev API: 조직·태스크 등 ([공식 문서](https://docs.dev.runwayml.com/)) | 키 검증 + **`@runwayml/sdk`** `textToVideo` (gen4.5) → `waitForTaskOutput`; [`runway-adapter`](../../src/lib/studio-integrations/providers/runway/runway-adapter.ts) `runStep`; 에피소드 패널 [`submitRunwayRenderJob`](../../src/actions/studio-episode-llm.ts) | `STUDIO_INTEGRATIONS_ENABLED` + 암호화 + 조직 Runway 키일 때 에피소드에서 **텍스트→비디오** 시작 가능; 결과는 `render_output` 아티팩트 |
 | **YouTube Data API** | 업로드·메타 등 (OAuth 정책 별도) | 미구현 / 스텁 수준 | 미연결 |
 | **기타** (Kling, Gemini OAuth, …) | 각 벤더 정책 상이 | 없음 | 문서·아티팩트로 수동 기록 (v1 정합) |
 
@@ -29,10 +29,10 @@
 |------|------|-----------|
 | API 키 형식 검증 / 조직 조회 | ✅ 서버에서 사용 | [`src/lib/studio-integrations/runway-verify.ts`](../../src/lib/studio-integrations/runway-verify.ts), `X-Runway-Version` 필수 |
 | 어댑터 `healthCheck` | ✅ | [`runway-adapter.ts`](../../src/lib/studio-integrations/providers/runway/runway-adapter.ts) |
-| 어댑터 `runStep` (잡 제출·폴링) | ❌ 스텁 | `PLAN-studio-provider-integrations` **Phase 3** — 제출·폴링·아티팩트 반영 |
-| UI “Runway로 렌더” | 버튼 → 스텁 액션 | [`triggerRunwayRenderStub`](../../src/actions/studio-episode-llm.ts) → `studioRunwayManualOnly` |
+| 어댑터 `runStep` (잡 제출·폴링) | ✅ 텍스트→비디오 (gen4.5) | SDK 폴링 내장; 타임아웃 기본 120s — [`runway-text-to-video.ts`](../../src/lib/studio-integrations/providers/runway/runway-text-to-video.ts) |
+| UI “Runway · text-to-video” | 에피소드 초안 패널 | [`submitRunwayRenderJob`](../../src/actions/studio-episode-llm.ts); 미구성 시 통합 페이지 안내 |
 
-**다음 BUILD (합의):** [`PLAN-runway-integration.md`](./PLAN-runway-integration.md) — 엔드포인트·내부 페이로드·UI 상태머신·아티팩트·BUILD 체크리스트. 구현 시 공식 문서/SDK 최신 기준으로 필드 확정, 잡 ID·결과 URL은 아티팩트/`metadata`에 저장, 멱등·감사는 ADR-006과 정렬.
+**추가 확장 (선택):** 이미지→비디오, 폴링 분리(장시간 잡), 멱등 키 — [`PLAN-runway-integration.md`](./PLAN-runway-integration.md).
 
 ## 에피소드 초안 (LLM)
 
@@ -46,6 +46,6 @@
 ## 사용자 카피 가이드
 
 - **금지:** “Runway는 API가 없어서 안 된다” (사실과 다를 수 있음)
-- **권장:** “Elevate 앱에서 Runway 렌더를 **아직 시작하지 않는다** / **다음 릴리스에서 연결**” + 수동 런북 링크 ([`RUNWAY_SHORTS_RUNBOOK.md`](../RUNWAY_SHORTS_RUNBOOK.md))
+- **권장:** 키·플래그가 없을 때는 **통합 설정** 안내 + 수동 런북 ([`RUNWAY_SHORTS_RUNBOOK.md`](../RUNWAY_SHORTS_RUNBOOK.md)) 유지.
 
-i18n 키 `Dashboard.actionErrors.studioRunwayManualOnly`는 이 가이드에 맞게 주기적으로 다듬는다.
+i18n: Runway 관련 오류는 `studioRunwayPromptRequired` 등 구체 코드를 사용; `studioRunwayManualOnly`는 레거시 문구로 남길 수 있음.

@@ -130,7 +130,7 @@ stateDiagram-v2
 | `success` | 토스트 또는 인라인: “링크가 에피소드에 저장됨” + 워크벤치 새로고침 |
 | `error` | `translateActionErrorMessage` + 수동 [`RUNWAY_SHORTS_RUNBOOK.md`](../RUNWAY_SHORTS_RUNBOOK.md) 링크 유지 |
 
-**PostHog:** `ELEVATE_STUDIO_EPISODE_RUNWAY_STUB_CLICKED`는 실연동 후 **성공/실패/단계별**로 이벤트 이름을 나누거나 props로 구분 — [posthog-integration 규칙](../../.cursor/rules/posthog-integration.mdc)에 맞게 **한 enum 파일**에만 추가.
+**PostHog:** `ELEVATE_STUDIO_EPISODE_RUNWAY_RENDER` — properties `outcome`: `started` | `completed` ([`posthog-events.ts`](../../src/lib/analytics/posthog-events.ts)).
 
 ---
 
@@ -143,12 +143,12 @@ stateDiagram-v2
 
 ## 8. BUILD 체크리스트 (순서)
 
-1. `runwayAdapter.runStep` — 실제 API 호출 + 위 결과 타입 (`src/lib/studio-integrations/providers/types.ts` 확장).
-2. `getOrgLlmCredentialForProvider` 패턴으로 **`runway` 시크릿 로드** 헬퍼 (또는 기존 함수 일반화).
-3. `triggerRunwayRenderStub` → **`submitRunwayRenderJob`** (및 필요 시 **`pollRunwayTask`**) in `studio-episode-llm.ts`.
-4. 아티팩트 upsert + `revalidatePath` 에피소드.
-5. `production-episode-draft-panel.tsx` — 상태머신 + 플래그/키 게이트.
-6. [`STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md`](./STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md) 표 업데이트 + `pnpm verify`.
+1. ~~`runwayAdapter.runStep` — 실제 API 호출 + 결과 타입 (`providers/types.ts` `ProviderRunStepResult`).~~ ✅
+2. ~~`getOrgProviderApiKey` (`org-provider-secret.ts`)로 Runway 시크릿 로드.~~ ✅
+3. ~~`submitRunwayRenderJob` (`studio-episode-llm.ts`) — 단일 액션에서 SDK `waitForTaskOutput` (기본 120s).~~ ✅ (폴링 분리는 장시간 잡 시 선택)
+4. ~~`insertRunwayRenderArtifact` + `revalidatePath`.~~ ✅
+5. ~~`production-episode-draft-panel.tsx` — `runwayRenderReady` 게이트 + PostHog.~~ ✅
+6. ~~[`STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md`](./STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md) + `pnpm verify`.~~ ✅
 
 ---
 

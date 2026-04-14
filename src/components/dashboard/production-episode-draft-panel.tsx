@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 import { useFormatter, useTranslations } from "next-intl";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { PostHogEvent } from "@/lib/analytics/posthog-events";
@@ -18,7 +19,7 @@ import {
   refineStudioEpisodeDraft,
   restoreStudioEpisodeDraftFromSnapshot,
   saveStudioEpisodeDraftManual,
-  triggerRunwayRenderStub,
+  submitRunwayRenderJob,
   triggerYoutubeUploadStub,
 } from "@/actions/studio-episode-llm";
 import {
@@ -137,6 +138,7 @@ function ProductionEpisodeDraftPanelEditable({
   artifacts,
   draftLlmAvailability: draftLlmAvailabilityProp,
   draftSnapshots,
+  runwayRenderReady = false,
   className,
   embedded,
 }: {
@@ -145,6 +147,7 @@ function ProductionEpisodeDraftPanelEditable({
   /** When omitted, both providers are treated as unavailable (safe default for hooks). */
   draftLlmAvailability?: { openai: boolean; anthropic: boolean } | null;
   draftSnapshots: StudioEpisodeDraftSnapshotRow[];
+  runwayRenderReady?: boolean;
   className?: string;
   /** When true, omit outer card chrome (parent provides section boundaries). */
   embedded?: boolean;
@@ -162,6 +165,7 @@ function ProductionEpisodeDraftPanelEditable({
   const prevSavePending = useRef(false);
   const snapshotBeforeAi = useRef<StudioEpisodeLlmDraftPayload | null>(null);
   const processedAiResultId = useRef<string>("");
+  const processedRunwayTaskId = useRef<string>("");
   const revertSaveRequested = useRef(false);
 
   const seed = draftFromArtifacts(artifacts);
@@ -253,7 +257,7 @@ function ProductionEpisodeDraftPanelEditable({
     studioEpisodeLlmInitialState,
   );
   const [rwState, rwAction, rwPending] = useActionState(
-    triggerRunwayRenderStub,
+    submitRunwayRenderJob,
     studioEpisodeLlmInitialState,
   );
   const [ytState, ytAction, ytPending] = useActionState(
@@ -277,10 +281,16 @@ function ProductionEpisodeDraftPanelEditable({
     refState?.success ??
     saveState?.success ??
     restoreState?.success ??
+    rwState?.success ??
     undefined;
 
   /** Manual save only — generate/refine use the compare panel instead of a toast. */
-  const successMsg = ok === "draftSaved" ? t("draftSuccessSaved") : null;
+  const successMsg =
+    ok === "draftSaved"
+      ? t("draftSuccessSaved")
+      : ok === "runwayRenderComplete"
+        ? t("draftRunwaySuccess")
+        : null;
 
   function labelForSnapshotSource(source: string) {
     switch (source) {
@@ -331,6 +341,18 @@ function ProductionEpisodeDraftPanelEditable({
     }
     router.refresh();
   }, [genState, refState, router, episodeId]);
+
+  useEffect(() => {
+    if (rwState?.success !== "runwayRenderComplete" || !rwState.runway) return;
+    const tid = rwState.runway.taskId;
+    if (processedRunwayTaskId.current === tid) return;
+    processedRunwayTaskId.current = tid;
+    posthogRef.current?.capture(PostHogEvent.ELEVATE_STUDIO_EPISODE_RUNWAY_RENDER, {
+      episode_id: episodeId,
+      outcome: "completed",
+    });
+    router.refresh();
+  }, [rwState, episodeId, router]);
 
   useEffect(() => {
     if (saveState?.success !== "draftSaved" || !revertSaveRequested.current) return;
@@ -554,6 +576,37 @@ function ProductionEpisodeDraftPanelEditable({
         <input type="hidden" name="episode_id" value={episodeId} />
         <input type="hidden" name="llm_provider" value={effectiveProvider} />
         <input type="hidden" name="llm_model" value={resolvedModel} />
+        <fieldset className="space-y-2 rounded-lg border border-border-subtle/80 bg-layer-02/20 p-3">
+          <legend className="text-xs font-medium text-text-secondary">
+            {t("draftGenerateModeLabel")}
+          </legend>
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2">
+            <label className="flex cursor-pointer items-start gap-2 text-sm text-text-secondary">
+              <input
+                type="radio"
+                name="draft_generate_mode"
+                value="develop"
+                defaultChecked
+                className="mt-1 accent-primary"
+                disabled={!llmReady}
+              />
+              <span>{t("draftGenerateModeDevelop")}</span>
+            </label>
+            <label className="flex cursor-pointer items-start gap-2 text-sm text-text-secondary">
+              <input
+                type="radio"
+                name="draft_generate_mode"
+                value="fresh"
+                className="mt-1 accent-primary"
+                disabled={!llmReady}
+              />
+              <span>{t("draftGenerateModeFresh")}</span>
+            </label>
+          </div>
+          <p className="text-[11px] text-text-tertiary leading-relaxed">
+            {t("draftGenerateModeHint")}
+          </p>
+        </fieldset>
         <div>
           <label
             className="block text-xs font-medium text-text-secondary mb-1.5"
@@ -674,33 +727,54 @@ function ProductionEpisodeDraftPanelEditable({
         </Button>
       </form>
 
-      <div className="flex flex-wrap gap-2 border-t border-border-subtle pt-4">
-        <form
-          action={rwAction}
-          onSubmit={() =>
-            posthog?.capture(PostHogEvent.ELEVATE_STUDIO_EPISODE_RUNWAY_STUB_CLICKED, {
-              episode_id: episodeId,
-            })
-          }
-        >
-          <input type="hidden" name="episode_id" value={episodeId} />
-          <Button type="submit" variant="ghost" size="sm" isLoading={rwPending}>
-            {t("draftRunwayCta")}
-          </Button>
-        </form>
-        <form
-          action={ytAction}
-          onSubmit={() =>
-            posthog?.capture(PostHogEvent.ELEVATE_STUDIO_EPISODE_YOUTUBE_UPLOAD_STUB_CLICKED, {
-              episode_id: episodeId,
-            })
-          }
-        >
-          <input type="hidden" name="episode_id" value={episodeId} />
-          <Button type="submit" variant="ghost" size="sm" isLoading={ytPending}>
-            {t("draftYoutubeCta")}
-          </Button>
-        </form>
+      <div className="flex flex-col gap-2 border-t border-border-subtle pt-4">
+        {!runwayRenderReady ? (
+          <p className="text-[11px] text-text-tertiary max-w-prose leading-relaxed">
+            {t("draftRunwayDisabledHint")}{" "}
+            <Link
+              href="/dashboard/productions/integrations"
+              className="font-medium text-primary hover:underline"
+            >
+              {t("draftRunwayIntegrationsLink")}
+            </Link>
+          </p>
+        ) : null}
+        <div className="flex flex-wrap gap-2">
+          <form
+            action={rwAction}
+            onSubmit={() =>
+              posthog?.capture(PostHogEvent.ELEVATE_STUDIO_EPISODE_RUNWAY_RENDER, {
+                episode_id: episodeId,
+                outcome: "started",
+              })
+            }
+          >
+            <input type="hidden" name="episode_id" value={episodeId} />
+            <input type="hidden" name="runway_duration" value="5" />
+            <Button
+              type="submit"
+              variant="ghost"
+              size="sm"
+              isLoading={rwPending}
+              disabled={!runwayRenderReady}
+            >
+              {t("draftRunwayCta")}
+            </Button>
+          </form>
+          <form
+            action={ytAction}
+            onSubmit={() =>
+              posthog?.capture(PostHogEvent.ELEVATE_STUDIO_EPISODE_YOUTUBE_UPLOAD_STUB_CLICKED, {
+                episode_id: episodeId,
+              })
+            }
+          >
+            <input type="hidden" name="episode_id" value={episodeId} />
+            <Button type="submit" variant="ghost" size="sm" isLoading={ytPending}>
+              {t("draftYoutubeCta")}
+            </Button>
+          </form>
+        </div>
       </div>
 
       <div className="border-t border-border-subtle pt-5 space-y-3">
@@ -757,6 +831,7 @@ export function ProductionEpisodeDraftPanel({
   canEdit,
   draftLlmAvailability,
   draftSnapshots = [],
+  runwayRenderReady = false,
   className,
   embedded = false,
 }: {
@@ -765,6 +840,7 @@ export function ProductionEpisodeDraftPanel({
   canEdit: boolean;
   draftLlmAvailability?: { openai: boolean; anthropic: boolean } | null;
   draftSnapshots?: StudioEpisodeDraftSnapshotRow[];
+  runwayRenderReady?: boolean;
   className?: string;
   /** Single-column episode workspace: no outer card; section titles match parent rhythm. */
   embedded?: boolean;
@@ -799,6 +875,7 @@ export function ProductionEpisodeDraftPanel({
       artifacts={artifacts}
       draftLlmAvailability={draftLlmAvailability}
       draftSnapshots={draftSnapshots}
+      runwayRenderReady={runwayRenderReady}
       className={className}
       embedded={embedded}
     />

@@ -15,6 +15,9 @@ import {
   getStudioEpisodeForOrg,
   listStudioArtifactsForEpisode,
 } from "@/lib/data/studio-productions";
+import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrations/crypto";
+import { getOrgProviderApiKey } from "@/lib/studio-integrations/org-provider-secret";
+import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/feature";
 import { getOrgLlmProviderAvailability } from "@/lib/studio-productions/episode-llm";
 import { listDraftSnapshotsForEpisode } from "@/lib/studio-productions/draft-snapshots";
 import type { StudioEpisodeStatus } from "@/lib/studio-productions/constants";
@@ -110,6 +113,12 @@ export default async function ProductionEpisodePage({
   const draftSnapshots = canEditDraft
     ? await listDraftSnapshotsForEpisode(supabase, episodeId, orgId, 30)
     : [];
+
+  const runwayRenderReady =
+    canEditDraft &&
+    readStudioIntegrationsServerEnabled() &&
+    isStudioIntegrationsEncryptionConfigured() &&
+    Boolean(await getOrgProviderApiKey(supabase, orgId, "runway"));
 
   const t = await getTranslations("Dashboard.productions");
   const statusKey =
@@ -212,6 +221,7 @@ export default async function ProductionEpisodePage({
                     canEdit={canEditDraft}
                     draftLlmAvailability={draftLlmAvailability}
                     draftSnapshots={draftSnapshots}
+                    runwayRenderReady={runwayRenderReady}
                     embedded
                   />
                 </section>

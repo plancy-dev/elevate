@@ -6,5 +6,6 @@ export { getStudioProviderAdapter } from "./registry";
 export type {
   ProviderAdapterHealthResult,
   ProviderRunStepNotImplemented,
+  ProviderRunStepResult,
   StudioProviderAdapter,
 } from "./types";

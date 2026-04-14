@@ -7,6 +7,9 @@ import { createClient } from "@/lib/supabase/server";
 import { getStudioEpisodeForOrg } from "@/lib/data/studio-productions";
 import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/feature";
 import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrations/crypto";
+import { getOrgProviderApiKey } from "@/lib/studio-integrations/org-provider-secret";
+import { getStudioProviderAdapter } from "@/lib/studio-integrations/providers/registry";
+import type { ProviderRunStepResult } from "@/lib/studio-integrations/providers/types";
 import { chooseStudioDraftLlmProvider } from "@/lib/studio-productions/episode-llm-models";
 import {
   EPISODE_DRAFT_ROLES,
@@ -26,6 +29,7 @@ import {
   shouldArchiveSupersededDraft,
   upsertEpisodeDraftArtifactsFromPayload,
 } from "@/lib/studio-productions/draft-snapshots";
+import { insertRunwayRenderArtifact } from "@/lib/studio-productions/runway-render-artifact";
 
 type LlmTurn = { role: "user" | "assistant"; content: string; at: string };
 
@@ -153,6 +157,36 @@ async function insertDraftArtifacts(
   return error;
 }
 
+function buildRunwayEpisodePrompt(episodeTitle: string, draft: LlmDraftPayload): string {
+  const parts = [
+    episodeTitle.trim(),
+    draft.hook.trim(),
+    draft.title.trim(),
+    draft.script_draft.trim(),
+  ].filter(Boolean);
+  return parts.join("\n\n").trim();
+}
+
+function runwayRunStepToActionError(
+  r: Extract<ProviderRunStepResult, { ok: false }>,
+): string {
+  switch (r.code) {
+    case "not_implemented":
+      return ActionErrorCode.studioRunwayApiError;
+    case "runway_missing_prompt":
+    case "runway_empty_prompt":
+      return ActionErrorCode.studioRunwayPromptRequired;
+    case "runway_task_failed":
+      return ActionErrorCode.studioRunwayTaskFailed;
+    case "runway_timeout":
+      return ActionErrorCode.studioRunwayTimeout;
+    case "runway_api_error":
+      return ActionErrorCode.studioRunwayApiError;
+    default:
+      return ActionErrorCode.unexpected;
+  }
+}
+
 async function loadEpisodeDraftPayload(
   supabase: Awaited<ReturnType<typeof createClient>>,
   episodeId: string,
@@ -266,6 +300,16 @@ export async function generateStudioEpisodeDraft(
   const briefingRaw = String(formData.get("draft_briefing") ?? "");
   const userBriefing = briefingRaw.trim().slice(0, DRAFT_BRIEFING_MAX_CHARS);
 
+  const modeRaw = String(formData.get("draft_generate_mode") ?? "develop").trim();
+  const generateMode: "develop" | "fresh" =
+    modeRaw === "fresh" ? "fresh" : "develop";
+
+  const priorLive = await loadEpisodeDraftPayload(
+    supabase,
+    episodeId,
+    auth.ctx.organizationId,
+  );
+
   const userPrompt = buildDraftPrompt({
     episodeTitle: episode.title,
     notes: episode.notes ?? "",
@@ -276,6 +320,8 @@ export async function generateStudioEpisodeDraft(
     channelMetadata: episode.studio_distribution_channels?.metadata ?? {},
     distributionLabel: episode.distribution_label ?? "",
     userBriefing,
+    generateMode,
+    currentDraft: generateMode === "develop" ? priorLive : undefined,
   });
 
   const result = await generateDraftWithLlm(cred, userPrompt, {
@@ -285,12 +331,6 @@ export async function generateStudioEpisodeDraft(
     if (result.status === 422) return { error: ActionErrorCode.studioLlmBadResponse };
     return { error: ActionErrorCode.studioLlmRequestFailed };
   }
-
-  const priorLive = await loadEpisodeDraftPayload(
-    supabase,
-    episodeId,
-    auth.ctx.organizationId,
-  );
 
   const supersededOk = await archiveSupersededDraftIfNeeded(
     supabase,
@@ -324,16 +364,24 @@ export async function generateStudioEpisodeDraft(
         script_draft: result.payload.script_draft,
       },
       "llm_generate",
-      { provider: cred.provider, model: result.model } as Json,
+      {
+        provider: cred.provider,
+        model: result.model,
+        generate_mode: generateMode,
+      } as Json,
     );
   } catch {
     return { error: ActionErrorCode.dbError };
   }
 
-  const generateUserTurn =
-    userBriefing.length > 0
-      ? `[generate initial draft]\n\nUser direction:\n${userBriefing}`
-      : "[generate initial draft]";
+  const generateUserTurn = [
+    generateMode === "fresh"
+      ? "[generate initial draft · mode=fresh]"
+      : "[generate initial draft · mode=develop]",
+    userBriefing.length > 0 ? `User direction:\n${userBriefing}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n\n");
 
   await upsertThreadTurns(supabase, auth.ctx.organizationId, episodeId, cred.provider, result.model, [
     {
@@ -553,13 +601,91 @@ export async function restoreStudioEpisodeDraftFromSnapshot(
   return { success: "draftSaved" };
 }
 
-export async function triggerRunwayRenderStub(
+/**
+ * Runway text-to-video (gen4.5): uses org Runway API key, episode title + draft fields as prompt.
+ * Requires `STUDIO_INTEGRATIONS_ENABLED` and encrypted provider storage.
+ */
+export async function submitRunwayRenderJob(
   _prev: StudioEpisodeLlmActionState,
   formData: FormData,
 ): Promise<StudioEpisodeLlmActionState> {
   void _prev;
-  void formData;
-  return { error: ActionErrorCode.studioRunwayManualOnly };
+  const episodeId = String(formData.get("episode_id") ?? "").trim();
+  if (!episodeId) return { error: ActionErrorCode.unexpected };
+
+  if (!readStudioIntegrationsServerEnabled()) {
+    return { error: ActionErrorCode.studioIntegrationsDisabled };
+  }
+  if (!isStudioIntegrationsEncryptionConfigured()) {
+    return { error: ActionErrorCode.studioIntegrationsEncryptionNotConfigured };
+  }
+
+  const supabase = await createClient();
+  const auth = await getOrgEditorContext(supabase);
+  if (!auth.ok) return { error: auth.error };
+
+  const organizationId = auth.ctx.organizationId;
+
+  const apiKey = await getOrgProviderApiKey(supabase, organizationId, "runway");
+  if (!apiKey) {
+    return { error: ActionErrorCode.studioRunwayNotConfigured };
+  }
+
+  const episode = await getStudioEpisodeForOrg(supabase, episodeId, organizationId);
+  if (!episode) return { error: ActionErrorCode.studioEpisodeNotFound };
+
+  const draft = await loadEpisodeDraftPayload(supabase, episodeId, organizationId);
+  const prompt = buildRunwayEpisodePrompt(episode.title ?? "", draft);
+  if (!prompt.trim()) {
+    return { error: ActionErrorCode.studioRunwayPromptRequired };
+  }
+
+  const durationRaw = Number.parseInt(String(formData.get("runway_duration") ?? "5"), 10);
+  const duration = Number.isFinite(durationRaw) ? durationRaw : 5;
+
+  const adapter = getStudioProviderAdapter("runway");
+  if (!adapter?.runStep) {
+    return { error: ActionErrorCode.unexpected };
+  }
+
+  const result = await adapter.runStep(apiKey, {
+    prompt_text: prompt,
+    ratio: "720:1280",
+    duration,
+    episode_id: episodeId,
+    organization_id: organizationId,
+  });
+
+  if (!result.ok) {
+    return { error: runwayRunStepToActionError(result) };
+  }
+
+  const summaryLine = `Runway gen4.5 · ${duration}s — ${episode.title}`.slice(0, 500);
+
+  const okArtifact = await insertRunwayRenderArtifact(
+    supabase,
+    organizationId,
+    episodeId,
+    {
+      taskId: result.task_id,
+      outputUrls: result.output_urls,
+      summaryLine,
+      duration,
+      ratio: "720:1280",
+      model: "gen4.5",
+    },
+  );
+
+  if (!okArtifact) return { error: ActionErrorCode.dbError };
+
+  revalidatePath(`/dashboard/productions/${episodeId}`);
+  revalidatePath("/dashboard/productions");
+
+  const outputUrl = result.output_urls[0] ?? "";
+  return {
+    success: "runwayRenderComplete",
+    runway: { taskId: result.task_id, outputUrl },
+  };
 }
 
 export async function triggerYoutubeUploadStub(

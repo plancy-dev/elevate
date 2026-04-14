@@ -75,6 +75,16 @@ export async function getOrgLlmCredential(
   return getOrgLlmCredentialForProvider(supabase, organizationId, "anthropic");
 }
 
+/** True if any of hook / title / script_draft has non-whitespace content. */
+export function hasNonEmptyDraftText(d: LlmDraftPayload | undefined): boolean {
+  if (!d) return false;
+  return (
+    d.hook.trim().length > 0 ||
+    d.title.trim().length > 0 ||
+    d.script_draft.trim().length > 0
+  );
+}
+
 export function buildDraftPrompt(context: {
   episodeTitle: string;
   notes: string;
@@ -86,6 +96,13 @@ export function buildDraftPrompt(context: {
   distributionLabel: string;
   /** Optional user instructions (tone, audience, channel angle, references). */
   userBriefing?: string;
+  /**
+   * develop — include current on-editor draft so the model can refine/continue it.
+   * fresh — ignore current draft text; also down-rank stale episode metadata if it conflicts with direction.
+   */
+  generateMode?: "develop" | "fresh";
+  /** Current hook/title/script from the editor; used when generateMode is develop. */
+  currentDraft?: LlmDraftPayload;
 }): string {
   const meta =
     typeof context.channelMetadata === "object" &&
@@ -94,7 +111,22 @@ export function buildDraftPrompt(context: {
       ? JSON.stringify(context.channelMetadata)
       : "{}";
   const briefing = (context.userBriefing ?? "").trim();
-  return [
+  const mode = context.generateMode ?? "develop";
+  const draft = context.currentDraft;
+  const hasDraftForDevelop =
+    mode === "develop" && hasNonEmptyDraftText(draft);
+
+  const modePreamble =
+    mode === "fresh"
+      ? "Generation mode: FRESH. Write a new hook, title, and script_draft as if starting from scratch for this episode. " +
+        "Do not treat the episode working title, creator notes, niche, format, or channel profile as binding for topic, setting, or vocabulary when they conflict with 'Additional direction' below—those fields may reflect an older idea. " +
+        "The on-editor draft text is intentionally omitted from this prompt; do not assume or revive its themes."
+      : "Generation mode: DEVELOP. Improve, tighten, or re-angle the current on-editor draft (below when present). " +
+        "Keep continuity unless Additional direction explicitly asks for a different angle.";
+
+  const lines: string[] = [
+    modePreamble,
+    "",
     `Episode working title: ${context.episodeTitle}`,
     `Distribution preset: ${context.distributionLabel || "(none)"}`,
     context.nicheName ? `Niche: ${context.nicheName}` : "",
@@ -105,13 +137,36 @@ export function buildDraftPrompt(context: {
     context.channelPlatform ? `Channel platform: ${context.channelPlatform}` : "",
     `Channel profile JSON (tone/modes; may be empty): ${meta}`,
     `Creator notes: ${context.notes || "(none)"}`,
-    briefing
-      ? [
-          "",
-          "Additional direction for this generation (prioritize over generic defaults):",
-          briefing,
-        ].join("\n")
-      : "",
+  ];
+
+  if (hasDraftForDevelop && draft) {
+    lines.push(
+      "",
+      "Current on-editor draft (revise from this; JSON):",
+      JSON.stringify({
+        hook: draft.hook,
+        title: draft.title,
+        script_draft: draft.script_draft,
+      }),
+    );
+  }
+
+  if (briefing.length > 0) {
+    lines.push(
+      "",
+      "Additional direction for this generation (highest priority for topic, tone, and new subject matter):",
+      briefing,
+    );
+  }
+
+  if (mode === "fresh" && briefing.length > 0) {
+    lines.push(
+      "",
+      "Reminder (fresh mode): If any background field above (title, notes, niche, channel) suggests a different audience or theme than Additional direction, follow Additional direction and omit the conflicting vocabulary and setting from the output.",
+    );
+  }
+
+  lines.push(
     "",
     "Important: You do not have internet access, YouTube access, or any ability to fetch URLs. " +
       "URLs mentioned by the user are opaque unless the same message includes pasted text " +
@@ -123,9 +178,9 @@ export function buildDraftPrompt(context: {
     "",
     "Respond with a single JSON object only, keys: hook (string), title (string), script_draft (string).",
     "title = suggested video/post title; hook = opening hook line; script_draft = short draft body suitable for the channel (not stage directions).",
-  ]
-    .filter(Boolean)
-    .join("\n");
+  );
+
+  return lines.filter(Boolean).join("\n");
 }
 
 export async function generateDraftWithLlm(

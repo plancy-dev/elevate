@@ -13,6 +13,8 @@ export type StudioEpisodeLlmActionState =
       success?: string;
       /** Returned on draftGenerated / draftRefined so the client can review before syncing UI. */
       draft?: StudioEpisodeLlmDraftPayload;
+      /** Set when Runway text-to-video completes; first output URL for UI. */
+      runway?: { taskId: string; outputUrl: string };
     }
   | undefined;
 

@@ -78,7 +78,13 @@ export const ActionErrorCode = {
   studioLlmBadResponse: "studioLlmBadResponse",
   /** Refine-with-LLM: empty instruction field */
   studioLlmInstructionRequired: "studioLlmInstructionRequired",
+  /** @deprecated Prefer specific Runway errors; kept for older clients */
   studioRunwayManualOnly: "studioRunwayManualOnly",
+  studioRunwayPromptRequired: "studioRunwayPromptRequired",
+  studioRunwayNotConfigured: "studioRunwayNotConfigured",
+  studioRunwayTaskFailed: "studioRunwayTaskFailed",
+  studioRunwayTimeout: "studioRunwayTimeout",
+  studioRunwayApiError: "studioRunwayApiError",
   studioYoutubeUploadNotAvailable: "studioYoutubeUploadNotAvailable",
 } as const;
 

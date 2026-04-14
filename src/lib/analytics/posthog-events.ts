@@ -31,8 +31,11 @@ export const PostHogEvent = {
   ELEVATE_STUDIO_EPISODE_DRAFT_GENERATED: "elevate_studio_episode_draft_generated",
   ELEVATE_STUDIO_EPISODE_DRAFT_REFINED: "elevate_studio_episode_draft_refined",
   ELEVATE_STUDIO_EPISODE_DRAFT_SAVED_MANUAL: "elevate_studio_episode_draft_saved_manual",
-  /** Placeholders until Runway/YouTube server flows ship */
-  ELEVATE_STUDIO_EPISODE_RUNWAY_STUB_CLICKED: "elevate_studio_episode_runway_stub_clicked",
+  /**
+   * Runway text-to-video from episode draft panel.
+   * Properties: `episode_id`; `outcome` = started | completed | failed (no PII).
+   */
+  ELEVATE_STUDIO_EPISODE_RUNWAY_RENDER: "elevate_studio_episode_runway_render",
   ELEVATE_STUDIO_EPISODE_YOUTUBE_UPLOAD_STUB_CLICKED:
     "elevate_studio_episode_youtube_upload_stub_clicked",
 } as const;

@@ -16,5 +16,7 @@ export {
 } from "./providers";
 export type {
   ProviderAdapterHealthResult,
+  ProviderRunStepResult,
   StudioProviderAdapter,
 } from "./providers/types";
+export { getOrgProviderApiKey } from "./org-provider-secret";

@@ -14,6 +14,23 @@ export type ProviderRunStepNotImplemented = {
   code: "not_implemented";
 };
 
+/** Runway `runStep` outcomes (other providers may extend later). */
+export type ProviderRunStepResult =
+  | ProviderRunStepNotImplemented
+  | { ok: true; task_id: string; output_urls: string[] }
+  | {
+      ok: false;
+      code:
+        | "not_implemented"
+        | "runway_missing_prompt"
+        | "runway_empty_prompt"
+        | "runway_task_failed"
+        | "runway_timeout"
+        | "runway_api_error";
+      message?: string;
+      status?: number;
+    };
+
 /** Thin adapter: verify credentials + future runStep (jobs, uploads, …). */
 export type StudioProviderAdapter = {
   id: StudioIntegrationProviderId;
@@ -25,5 +42,5 @@ export type StudioProviderAdapter = {
   runStep?: (
     secret: string,
     _args: Record<string, unknown>,
-  ) => Promise<ProviderRunStepNotImplemented | { ok: true }>;
+  ) => Promise<ProviderRunStepResult>;
 };
