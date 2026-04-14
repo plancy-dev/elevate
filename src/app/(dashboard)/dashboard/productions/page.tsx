@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { ExternalLink } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/server";
@@ -69,9 +70,14 @@ export default async function ProductionsListPage() {
             {t("listSubtitle")}
           </p>
         </div>
-        <ButtonLink href="/dashboard/productions/new" variant="primary" size="md">
-          {t("listCtaNew")}
-        </ButtonLink>
+        <div className="flex flex-wrap gap-2 shrink-0">
+          <ButtonLink href="/dashboard/productions/channels" variant="secondary" size="md">
+            {t("channelsNav")}
+          </ButtonLink>
+          <ButtonLink href="/dashboard/productions/new" variant="primary" size="md">
+            {t("listCtaNew")}
+          </ButtonLink>
+        </div>
       </div>
 
       {episodes.length === 0 ? (
@@ -92,34 +98,56 @@ export default async function ProductionsListPage() {
                 dateStyle: "medium",
                 timeStyle: "short",
               });
+              const channelUrl = ep.studio_distribution_channels?.channel_url;
               return (
-                <li key={ep.id}>
+                <li
+                  key={ep.id}
+                  className="flex flex-col gap-3 px-5 py-4 transition-colors duration-150 hover:bg-layer-02 sm:flex-row sm:items-start sm:justify-between sm:gap-6"
+                >
                   <Link
                     href={`/dashboard/productions/${ep.id}`}
-                    className="group flex flex-col gap-2 px-5 py-4 transition-colors duration-150 hover:bg-layer-02 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
+                    className="group min-w-0 flex-1 outline-none"
                   >
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                        <Badge variant="blue" className="shrink-0 tabular-nums">
-                          {t(statusKey)}
-                        </Badge>
-                        <span className="min-w-0 text-base font-semibold text-text-primary transition-colors group-hover:text-primary">
-                          {ep.title}
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                      <Badge variant="blue" className="shrink-0 tabular-nums">
+                        {t(statusKey)}
+                      </Badge>
+                      <span className="min-w-0 text-base font-semibold text-text-primary transition-colors group-hover:text-primary">
+                        {ep.title}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-text-tertiary">
+                      {ep.studio_niches?.display_name ? (
+                        <span className="rounded-md bg-layer-02/90 px-1.5 py-0.5 text-text-secondary">
+                          {ep.studio_niches.display_name}
                         </span>
-                      </div>
+                      ) : null}
                       {ep.distribution_label ? (
-                        <p className="mt-1.5 text-xs text-text-tertiary">
+                        <span>
                           {distributionDisplayLabel(ep.distribution_label, (key) =>
                             t(key as never),
                           )}
-                        </p>
+                        </span>
                       ) : null}
                     </div>
-                    <div className="shrink-0 text-xs text-text-tertiary sm:text-right">
+                  </Link>
+                  <div className="flex shrink-0 flex-col items-end gap-2 text-xs text-text-tertiary sm:text-right">
+                    {channelUrl ? (
+                      <a
+                        href={channelUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+                      >
+                        <ExternalLink className="h-3 w-3" aria-hidden />
+                        {t("listChannelOpen")}
+                      </a>
+                    ) : null}
+                    <div>
                       <span className="text-text-secondary">{t("colUpdated")}: </span>
                       {updated}
                     </div>
-                  </Link>
+                  </div>
                 </li>
               );
             })}

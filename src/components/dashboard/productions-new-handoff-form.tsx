@@ -2,9 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { consumeHandoffForNewEpisodePage } from "@/lib/studio-productions/studio-to-production-handoff";
+import type { StudioShortsCatalog } from "@/lib/studio-productions/shorts-catalog";
 import { StudioProductionsNewForm } from "@/components/dashboard/studio-productions-forms";
 
-export function ProductionsNewHandoffForm() {
+export function ProductionsNewHandoffForm({
+  catalog,
+}: {
+  catalog: StudioShortsCatalog;
+}) {
   const [initialNotes, setInitialNotes] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -30,6 +35,7 @@ export function ProductionsNewHandoffForm() {
           ? `prefill-${initialNotes.length}-${initialNotes.charCodeAt(0) ?? 0}`
           : "no-prefill"
       }
+      catalog={catalog}
       initialNotes={initialNotes}
     />
   );

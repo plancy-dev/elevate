@@ -34,7 +34,7 @@
 |---|------|------|
 | B1 | 마이그레이션 `009` — `content_products`, `organization_content_entitlements` + RLS | ✅ |
 | B2 | 대시보드 **Library** 우선 네비; MICE는 Legacy 그룹으로 이동 | ✅ |
-| B3 | `pnpm db:types` 재생성 | 로컬 Supabase 프로젝트에서 적용 후 실행 |
+| B3 | `pnpm db:types` 재생성 | **원격** Supabase(`.env.local`에 연결된 프로젝트)를 SoT로 `src/types/database.types.ts` 동기화. 로컬 CLI만 쓸 때는 그 프로젝트에 마이그레이션 적용 후 동일하게 실행 |
 | B4 | Toss·결제와 `content_products` 정합 (`011` intent link, confirm/webhook → entitlement; Library→Billing `?product=`) | ✅ |
 | B5 | `010` `product_kind` + Library 표시 + [`docs/CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md) | ✅ |
 

@@ -50,6 +50,10 @@ export const ActionErrorCode = {
 
   studioDemoSeedDisabled: "studioDemoSeedDisabled",
   studioDemoSeedNotEmpty: "studioDemoSeedNotEmpty",
+
+  studioInvalidFormatTemplate: "studioInvalidFormatTemplate",
+  studioChannelLabelRequired: "studioChannelLabelRequired",
+  studioTopicLineTooLong: "studioTopicLineTooLong",
 } as const;
 
 export type ActionErrorCode =

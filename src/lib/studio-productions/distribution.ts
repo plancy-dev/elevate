@@ -36,6 +36,11 @@ export function resolveDistributionLabelFromForm(formData: FormData): string {
   return custom.slice(0, 500);
 }
 
+/** True when the stored or form-resolved label is the `youtube_shorts` preset (not free-text custom). */
+export function isYoutubeShortsDistributionLabel(label: string): boolean {
+  return label.trim() === "youtube_shorts";
+}
+
 export function parseStoredDistribution(stored: string): {
   preset: string;
   custom: string;

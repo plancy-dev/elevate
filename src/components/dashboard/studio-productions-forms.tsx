@@ -4,6 +4,7 @@ import {
   useActionState,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -21,7 +22,7 @@ import {
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import type {
   StudioProductionArtifactRow,
-  StudioProductionEpisodeRow,
+  StudioProductionEpisodeRowWithEmbeds,
 } from "@/lib/data/studio-productions";
 import {
   STUDIO_ARTIFACT_ROLE_DATALIST_ID,
@@ -31,7 +32,9 @@ import {
   STUDIO_EPISODE_STATUSES,
   type StudioEpisodeStatus,
 } from "@/lib/studio-productions/constants";
+import type { StudioShortsCatalog } from "@/lib/studio-productions/shorts-catalog";
 import type { Json } from "@/types/database.types";
+import { StudioEpisodeShortsFields } from "@/components/dashboard/studio-episode-shorts-fields";
 
 function ArtifactRoleDatalist() {
   return (
@@ -46,6 +49,10 @@ import { Clapperboard, ExternalLink } from "lucide-react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { FieldSelect } from "@/components/ui/field-select";
 import { StudioEpisodeDistributionFields } from "@/components/dashboard/studio-episode-distribution-fields";
+import {
+  isYoutubeShortsDistributionLabel,
+  parseStoredDistribution,
+} from "@/lib/studio-productions/distribution";
 
 function metadataToFormString(metadata: Json | null): string {
   if (metadata == null) return "";
@@ -91,9 +98,11 @@ const EPISODE_STATUS_I18N: Record<
 
 export function StudioProductionsNewForm({
   initialNotes = "",
+  catalog,
 }: {
   /** From Prompt Studio → Productions sessionStorage handoff */
   initialNotes?: string;
+  catalog: StudioShortsCatalog;
 }) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
@@ -106,6 +115,10 @@ export function StudioProductionsNewForm({
     value: s,
     label: t(EPISODE_STATUS_I18N[s]),
   }));
+
+  const [distributionPreset, setDistributionPreset] = useState("");
+  const showShortsPlan =
+    isYoutubeShortsDistributionLabel(distributionPreset);
 
   return (
     <form action={formAction} className="space-y-6 max-w-2xl">
@@ -153,7 +166,13 @@ export function StudioProductionsNewForm({
         idPrefix="new"
         distributionStored=""
         publishUrl=""
+        preset={distributionPreset}
+        onPresetChange={setDistributionPreset}
       />
+
+      {showShortsPlan ? (
+        <StudioEpisodeShortsFields catalog={catalog} idPrefix="new" showTopicLine />
+      ) : null}
 
       <div>
         <label
@@ -185,8 +204,10 @@ export function StudioProductionsNewForm({
 
 export function StudioProductionsEpisodeEditForm({
   episode,
+  catalog,
 }: {
-  episode: StudioProductionEpisodeRow;
+  episode: StudioProductionEpisodeRowWithEmbeds;
+  catalog: StudioShortsCatalog;
 }) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
@@ -199,6 +220,16 @@ export function StudioProductionsEpisodeEditForm({
     value: s,
     label: t(EPISODE_STATUS_I18N[s]),
   }));
+
+  const parsedDistribution = useMemo(
+    () => parseStoredDistribution(episode.distribution_label),
+    [episode.distribution_label],
+  );
+  const [distributionPreset, setDistributionPreset] = useState(
+    parsedDistribution.preset,
+  );
+  const showShortsPlan =
+    isYoutubeShortsDistributionLabel(distributionPreset);
 
   return (
     <form action={formAction} className="space-y-6 max-w-2xl">
@@ -248,7 +279,20 @@ export function StudioProductionsEpisodeEditForm({
         idPrefix="edit"
         distributionStored={episode.distribution_label}
         publishUrl={episode.publish_url ?? ""}
+        preset={distributionPreset}
+        onPresetChange={setDistributionPreset}
       />
+
+      {showShortsPlan ? (
+        <StudioEpisodeShortsFields
+          key={`${episode.id}-${episode.updated_at}-${episode.studio_niche_id}-${episode.studio_format_template_id}-${episode.studio_distribution_channel_id}`}
+          catalog={catalog}
+          idPrefix="edit"
+          initialNicheId={episode.studio_niche_id}
+          initialTemplateId={episode.studio_format_template_id}
+          initialChannelId={episode.studio_distribution_channel_id}
+        />
+      ) : null}
 
       <div>
         <label

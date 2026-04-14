@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { FieldSelect } from "@/components/ui/field-select";
 import {
@@ -17,20 +17,28 @@ type Props = {
   distributionStored: string;
   publishUrl: string;
   idPrefix: "new" | "edit";
+  /** Controlled preset key (including `""`, `__custom__`, or a `DISTRIBUTION_PRESET_KEYS` value). */
+  preset: string;
+  onPresetChange: (preset: string) => void;
 };
 
 export function StudioEpisodeDistributionFields({
   distributionStored,
   publishUrl,
   idPrefix,
+  preset,
+  onPresetChange,
 }: Props) {
   const t = useTranslations("Dashboard.productions");
   const parsed = useMemo(
     () => parseStoredDistribution(distributionStored),
     [distributionStored],
   );
-  const [preset, setPreset] = useState(parsed.preset);
   const [customLine, setCustomLine] = useState(parsed.custom);
+
+  useEffect(() => {
+    setCustomLine(parseStoredDistribution(distributionStored).custom);
+  }, [distributionStored]);
 
   const presetOptions = useMemo(() => {
     const opts = DISTRIBUTION_PRESET_KEYS.map((key) => ({
@@ -71,7 +79,7 @@ export function StudioEpisodeDistributionFields({
           id={`${idPrefix}_distribution_preset`}
           name="distribution_preset"
           value={preset}
-          onChange={(e) => setPreset(e.target.value)}
+          onChange={(e) => onPresetChange(e.target.value)}
           options={presetOptions}
           aria-describedby={`${idPrefix}_distribution_hint`}
         />

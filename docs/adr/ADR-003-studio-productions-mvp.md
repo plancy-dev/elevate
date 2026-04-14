@@ -61,6 +61,25 @@ Index: `(organization_id, updated_at DESC)`.
 
 Index: `(episode_id, sort_order)`.
 
+**Shorts planning & channels (follow-up migration, e.g. `023_studio_niches_format_packs_channels.sql`)**
+
+Reference data and org-scoped links extend the ledger without vendor APIs:
+
+- **`studio_niches`** — Curated interest verticals (slug, display name, sort). Seeded in migrations; RLS allows authenticated read of active rows.
+- **`studio_format_packs`** — Bundles of templates under a niche (`studio_niche_id`, unique slug per niche).
+- **`studio_format_templates`** — Repeatable short patterns: duration hint, hook/script shell text, optional `metadata` jsonb. Episodes may reference one template.
+- **`studio_distribution_channels`** — Per-org saved channel pages (`label`, `platform` check, **HTTPS** `channel_url`). Used for one-click “open channel” from the dashboard.
+
+**`studio_production_episodes` (additional columns)**
+
+| Column | Type | Notes |
+|--------|------|--------|
+| `studio_niche_id` | uuid NULL → `studio_niches` | Planning / reporting |
+| `studio_format_template_id` | uuid NULL → `studio_format_templates` | Chosen format; pack niche must match `studio_niche_id` when both set |
+| `studio_distribution_channel_id` | uuid NULL → `studio_distribution_channels` | Target channel; must belong to same `organization_id` |
+
+Triggers enforce org match on the channel FK and niche/template consistency. The UI may show “Shorts plan” (niche, format, topic line, channel) only when the user’s **distribution preset** is YouTube Shorts, while `distribution_label` remains the existing freeform/preset string for publish URL hints.
+
 **RLS**
 
 - Enable RLS on both tables.

@@ -3,6 +3,7 @@ import { MAX_SETTINGS_TEXT_LEN } from "@/lib/settings-validation";
 import {
   STUDIO_CONTENT_TEXT_MAX,
   STUDIO_METADATA_JSON_MAX_CHARS,
+  STUDIO_TOPIC_LINE_MAX,
 } from "@/lib/studio-productions/constants";
 
 type ActionErrorsTranslate = (
@@ -28,6 +29,9 @@ export function translateActionErrorMessage(
   }
   if (code === ActionErrorCode.studioMetadataTooLarge) {
     return t("studioMetadataTooLarge", { max: STUDIO_METADATA_JSON_MAX_CHARS });
+  }
+  if (code === ActionErrorCode.studioTopicLineTooLong) {
+    return t("studioTopicLineTooLong", { max: STUDIO_TOPIC_LINE_MAX });
   }
   return t(code);
 }

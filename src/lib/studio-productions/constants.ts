@@ -1,6 +1,9 @@
 /** Max length for artifact prompt/script body (aligned with safe text handling). */
 export const STUDIO_CONTENT_TEXT_MAX = 32_000;
 
+/** Short “topic” line for replacing `{topic}` in format template shells. */
+export const STUDIO_TOPIC_LINE_MAX = 500;
+
 /** Rough cap for JSON stringified metadata stored in jsonb. */
 export const STUDIO_METADATA_JSON_MAX_CHARS = 64_000;
 

@@ -6,34 +6,63 @@ export type StudioProductionEpisodeRow =
 export type StudioProductionArtifactRow =
   Database["public"]["Tables"]["studio_production_artifacts"]["Row"];
 
+/** Nested rows from FK embeds (Supabase select). */
+export type StudioEpisodeEmbeddedRelations = {
+  studio_niches: { id: string; display_name: string } | null;
+  studio_format_templates: { id: string; display_name: string } | null;
+  studio_distribution_channels: {
+    id: string;
+    label: string;
+    channel_url: string;
+    platform: string;
+  } | null;
+};
+
+export type StudioProductionEpisodeRowWithEmbeds = StudioProductionEpisodeRow &
+  StudioEpisodeEmbeddedRelations;
+
 export async function listStudioEpisodesForOrg(
   supabase: SupabaseClient<Database>,
   organizationId: string,
-): Promise<StudioProductionEpisodeRow[]> {
+): Promise<StudioProductionEpisodeRowWithEmbeds[]> {
   const { data, error } = await supabase
     .from("studio_production_episodes")
-    .select("*")
+    .select(
+      `
+      *,
+      studio_niches ( id, display_name ),
+      studio_format_templates ( id, display_name ),
+      studio_distribution_channels ( id, label, channel_url, platform )
+    `,
+    )
     .eq("organization_id", organizationId)
     .order("updated_at", { ascending: false });
 
   if (error) throw error;
-  return (data ?? []) as StudioProductionEpisodeRow[];
+  return (data ?? []) as StudioProductionEpisodeRowWithEmbeds[];
 }
 
 export async function getStudioEpisodeForOrg(
   supabase: SupabaseClient<Database>,
   episodeId: string,
   organizationId: string,
-): Promise<StudioProductionEpisodeRow | null> {
+): Promise<StudioProductionEpisodeRowWithEmbeds | null> {
   const { data, error } = await supabase
     .from("studio_production_episodes")
-    .select("*")
+    .select(
+      `
+      *,
+      studio_niches ( id, display_name ),
+      studio_format_templates ( id, display_name ),
+      studio_distribution_channels ( id, label, channel_url, platform )
+    `,
+    )
     .eq("id", episodeId)
     .eq("organization_id", organizationId)
     .maybeSingle();
 
   if (error) throw error;
-  return data as StudioProductionEpisodeRow | null;
+  return data as StudioProductionEpisodeRowWithEmbeds | null;
 }
 
 export async function listStudioArtifactsForEpisode(

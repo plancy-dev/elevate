@@ -145,26 +145,76 @@ export type Database = {
         }
         Relationships: []
       }
-      prompt_studio_beta_allowlist: {
+      content_ebook_first_opens: {
         Row: {
-          created_at: string
-          email_normalized: string
+          content_product_id: string
           id: string
-          note: string | null
+          opened_at: string
+          organization_id: string
+          user_id: string
         }
         Insert: {
-          created_at?: string
-          email_normalized: string
+          content_product_id: string
           id?: string
-          note?: string | null
+          opened_at?: string
+          organization_id: string
+          user_id: string
         }
         Update: {
-          created_at?: string
-          email_normalized?: string
+          content_product_id?: string
           id?: string
-          note?: string | null
+          opened_at?: string
+          organization_id?: string
+          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "content_ebook_first_opens_content_product_id_fkey"
+            columns: ["content_product_id"]
+            isOneToOne: false
+            referencedRelation: "content_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_ebook_first_opens_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_product_lemon_links: {
+        Row: {
+          content_product_id: string
+          created_at: string
+          lemon_product_id: string | null
+          lemon_variant_id: string
+          updated_at: string
+        }
+        Insert: {
+          content_product_id: string
+          created_at?: string
+          lemon_product_id?: string | null
+          lemon_variant_id: string
+          updated_at?: string
+        }
+        Update: {
+          content_product_id?: string
+          created_at?: string
+          lemon_product_id?: string | null
+          lemon_variant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_product_lemon_links_content_product_id_fkey"
+            columns: ["content_product_id"]
+            isOneToOne: true
+            referencedRelation: "content_products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       content_products: {
         Row: {
@@ -210,77 +260,6 @@ export type Database = {
           title?: string
         }
         Relationships: []
-      }
-      content_product_lemon_links: {
-        Row: {
-          content_product_id: string
-          created_at: string
-          lemon_product_id: string | null
-          lemon_variant_id: string
-          updated_at: string
-        }
-        Insert: {
-          content_product_id: string
-          created_at?: string
-          lemon_product_id?: string | null
-          lemon_variant_id: string
-          updated_at?: string
-        }
-        Update: {
-          content_product_id?: string
-          created_at?: string
-          lemon_product_id?: string | null
-          lemon_variant_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "content_product_lemon_links_content_product_id_fkey"
-            columns: ["content_product_id"]
-            isOneToOne: true
-            referencedRelation: "content_products"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      content_ebook_first_opens: {
-        Row: {
-          content_product_id: string
-          id: string
-          opened_at: string
-          organization_id: string
-          user_id: string
-        }
-        Insert: {
-          content_product_id: string
-          id?: string
-          opened_at?: string
-          organization_id: string
-          user_id: string
-        }
-        Update: {
-          content_product_id?: string
-          id?: string
-          opened_at?: string
-          organization_id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "content_ebook_first_opens_content_product_id_fkey"
-            columns: ["content_product_id"]
-            isOneToOne: false
-            referencedRelation: "content_products"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "content_ebook_first_opens_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       events: {
         Row: {
@@ -545,7 +524,7 @@ export type Database = {
           waitlist_bcc_email: string | null
         }
         Insert: {
-          id?: number
+          id: number
           updated_at?: string
           waitlist_bcc_email?: string | null
         }
@@ -602,6 +581,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      prompt_studio_beta_allowlist: {
+        Row: {
+          created_at: string
+          email_normalized: string
+          id: string
+          note: string | null
+        }
+        Insert: {
+          created_at?: string
+          email_normalized: string
+          id?: string
+          note?: string | null
+        }
+        Update: {
+          created_at?: string
+          email_normalized?: string
+          id?: string
+          note?: string | null
+        }
+        Relationships: []
       }
       session_attendees: {
         Row: {
@@ -692,6 +692,186 @@ export type Database = {
           },
         ]
       }
+      studio_distribution_channels: {
+        Row: {
+          channel_url: string
+          created_at: string
+          id: string
+          label: string
+          notes: string
+          organization_id: string
+          platform: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          channel_url: string
+          created_at?: string
+          id?: string
+          label: string
+          notes?: string
+          organization_id: string
+          platform?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          channel_url?: string
+          created_at?: string
+          id?: string
+          label?: string
+          notes?: string
+          organization_id?: string
+          platform?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_distribution_channels_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_format_packs: {
+        Row: {
+          created_at: string
+          description: string
+          display_name: string
+          id: string
+          is_active: boolean
+          slug: string
+          sort_order: number
+          studio_niche_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          display_name: string
+          id?: string
+          is_active?: boolean
+          slug: string
+          sort_order?: number
+          studio_niche_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          display_name?: string
+          id?: string
+          is_active?: boolean
+          slug?: string
+          sort_order?: number
+          studio_niche_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_format_packs_studio_niche_id_fkey"
+            columns: ["studio_niche_id"]
+            isOneToOne: false
+            referencedRelation: "studio_niches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_format_templates: {
+        Row: {
+          caption_style: string
+          created_at: string
+          display_name: string
+          format_pack_id: string
+          hook_structure: string
+          id: string
+          is_active: boolean
+          metadata: Json
+          script_prompt_shell: string
+          slug: string
+          sort_order: number
+          target_duration_seconds: number | null
+          thumbnail_spec: string
+          updated_at: string
+        }
+        Insert: {
+          caption_style?: string
+          created_at?: string
+          display_name: string
+          format_pack_id: string
+          hook_structure?: string
+          id?: string
+          is_active?: boolean
+          metadata?: Json
+          script_prompt_shell?: string
+          slug: string
+          sort_order?: number
+          target_duration_seconds?: number | null
+          thumbnail_spec?: string
+          updated_at?: string
+        }
+        Update: {
+          caption_style?: string
+          created_at?: string
+          display_name?: string
+          format_pack_id?: string
+          hook_structure?: string
+          id?: string
+          is_active?: boolean
+          metadata?: Json
+          script_prompt_shell?: string
+          slug?: string
+          sort_order?: number
+          target_duration_seconds?: number | null
+          thumbnail_spec?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_format_templates_format_pack_id_fkey"
+            columns: ["format_pack_id"]
+            isOneToOne: false
+            referencedRelation: "studio_format_packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_niches: {
+        Row: {
+          created_at: string
+          description: string
+          display_name: string
+          id: string
+          is_active: boolean
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          display_name: string
+          id?: string
+          is_active?: boolean
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          display_name?: string
+          id?: string
+          is_active?: boolean
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       studio_production_artifacts: {
         Row: {
           artifact_role: string
@@ -756,6 +936,9 @@ export type Database = {
           organization_id: string
           publish_url: string | null
           status: string
+          studio_distribution_channel_id: string | null
+          studio_format_template_id: string | null
+          studio_niche_id: string | null
           title: string
           updated_at: string
         }
@@ -768,6 +951,9 @@ export type Database = {
           organization_id: string
           publish_url?: string | null
           status: string
+          studio_distribution_channel_id?: string | null
+          studio_format_template_id?: string | null
+          studio_niche_id?: string | null
           title: string
           updated_at?: string
         }
@@ -780,6 +966,9 @@ export type Database = {
           organization_id?: string
           publish_url?: string | null
           status?: string
+          studio_distribution_channel_id?: string | null
+          studio_format_template_id?: string | null
+          studio_niche_id?: string | null
           title?: string
           updated_at?: string
         }
@@ -796,6 +985,27 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_production_episodes_studio_distribution_channel_id_fkey"
+            columns: ["studio_distribution_channel_id"]
+            isOneToOne: false
+            referencedRelation: "studio_distribution_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_production_episodes_studio_format_template_id_fkey"
+            columns: ["studio_format_template_id"]
+            isOneToOne: false
+            referencedRelation: "studio_format_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_production_episodes_studio_niche_id_fkey"
+            columns: ["studio_niche_id"]
+            isOneToOne: false
+            referencedRelation: "studio_niches"
             referencedColumns: ["id"]
           },
         ]

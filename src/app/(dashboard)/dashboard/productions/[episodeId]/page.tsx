@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { ProductionEpisodeAtAGlance } from "@/components/dashboard/production-episode-at-glance";
@@ -14,6 +15,7 @@ import {
   getStudioEpisodeForOrg,
   listStudioArtifactsForEpisode,
 } from "@/lib/data/studio-productions";
+import { listStudioShortsCatalogForOrg } from "@/lib/studio-productions/shorts-catalog";
 import type { StudioEpisodeStatus } from "@/lib/studio-productions/constants";
 import { distributionDisplayLabel } from "@/lib/studio-productions/distribution";
 import { parseWorkbenchTabParam } from "@/lib/studio-productions/workbench-tab";
@@ -94,6 +96,8 @@ export default async function ProductionEpisodePage({
     orgId,
   );
 
+  const catalog = await listStudioShortsCatalogForOrg(supabase, orgId);
+
   const t = await getTranslations("Dashboard.productions");
   const statusKey =
     STATUS_I18N[episode.status as StudioEpisodeStatus] ?? "statusDraft";
@@ -103,6 +107,10 @@ export default async function ProductionEpisodePage({
         t(key as never),
       )
     : null;
+
+  const linkedChannel = episode.studio_distribution_channels;
+  const linkedNiche = episode.studio_niches;
+  const linkedFormat = episode.studio_format_templates;
 
   return (
     <div className="mx-auto w-full max-w-5xl p-6 lg:p-8">
@@ -127,9 +135,32 @@ export default async function ProductionEpisodePage({
                 {t(statusKey)}
               </span>
             </div>
-            {channelLine ? (
-              <p className="text-sm text-text-secondary">{channelLine}</p>
-            ) : null}
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+              {linkedNiche ? (
+                <span className="inline-flex w-fit rounded-full border border-border-subtle bg-layer-02/80 px-2.5 py-0.5 text-xs font-medium text-text-secondary">
+                  {linkedNiche.display_name}
+                </span>
+              ) : null}
+              {linkedFormat ? (
+                <span className="inline-flex w-fit rounded-full border border-primary/20 bg-primary/8 px-2.5 py-0.5 text-xs font-medium text-primary">
+                  {linkedFormat.display_name}
+                </span>
+              ) : null}
+              {channelLine ? (
+                <p className="text-sm text-text-secondary">{channelLine}</p>
+              ) : null}
+              {linkedChannel ? (
+                <a
+                  href={linkedChannel.channel_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-border-subtle bg-layer-02/80 px-3 py-1.5 text-sm font-medium text-primary hover:bg-layer-02"
+                >
+                  <ExternalLink className="h-4 w-4 shrink-0" aria-hidden />
+                  {t("episodeChannelCta", { label: linkedChannel.label })}
+                </a>
+              ) : null}
+            </div>
           </div>
         </div>
       </header>
@@ -168,7 +199,11 @@ export default async function ProductionEpisodePage({
               <h2 className="text-sm font-semibold text-text-primary mb-4">
                 {t("formSectionTitle")}
               </h2>
-              <StudioProductionsEpisodeEditForm episode={episode} />
+              <StudioProductionsEpisodeEditForm
+                key={`${episode.id}-${episode.updated_at}`}
+                episode={episode}
+                catalog={catalog}
+              />
             </section>
 
             <div className="mb-10 rounded-xl border border-border-subtle bg-layer-02/20 p-4">
