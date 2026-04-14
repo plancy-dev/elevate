@@ -27,6 +27,14 @@ export const PostHogEvent = {
    * Properties: `target` = new_episode | existing_episode
    */
   ELEVATE_STUDIO_TO_PRODUCTIONS_HANDOFF: "elevate_studio_to_productions_handoff",
+  /** Studio episode — LLM hook/title/script drafts (`episode_id` only; no content) */
+  ELEVATE_STUDIO_EPISODE_DRAFT_GENERATED: "elevate_studio_episode_draft_generated",
+  ELEVATE_STUDIO_EPISODE_DRAFT_REFINED: "elevate_studio_episode_draft_refined",
+  ELEVATE_STUDIO_EPISODE_DRAFT_SAVED_MANUAL: "elevate_studio_episode_draft_saved_manual",
+  /** Placeholders until Runway/YouTube server flows ship */
+  ELEVATE_STUDIO_EPISODE_RUNWAY_STUB_CLICKED: "elevate_studio_episode_runway_stub_clicked",
+  ELEVATE_STUDIO_EPISODE_YOUTUBE_UPLOAD_STUB_CLICKED:
+    "elevate_studio_episode_youtube_upload_stub_clicked",
 } as const;
 
 /** `elevate_marketing_cta_click` — stable `cta_id` values */

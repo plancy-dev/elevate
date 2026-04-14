@@ -9,8 +9,10 @@ export type StudioChannelActionState = { error?: string } | undefined;
 
 const PLATFORMS = new Set([
   "youtube_shorts",
+  "youtube_long",
   "instagram_reels",
   "tiktok",
+  "x",
   "other",
 ]);
 

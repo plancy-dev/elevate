@@ -6,8 +6,10 @@ import { getOrgMemberContext } from "@/lib/auth/require-org-editor";
 import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import { createClient } from "@/lib/supabase/server";
 import { isStudioEpisodeStatus } from "@/lib/studio-productions/constants";
-import { resolveDistributionLabelFromForm } from "@/lib/studio-productions/distribution";
-import { STUDIO_TOPIC_LINE_MAX } from "@/lib/studio-productions/constants";
+import {
+  isDistributionChannelPresetLabel,
+  resolveDistributionLabelFromForm,
+} from "@/lib/studio-productions/distribution";
 import { parseOptionalUuidFromForm } from "@/lib/studio-productions/form-uuid";
 import {
   validateContentText,
@@ -27,23 +29,12 @@ function parseJsonField(raw: string | null): Json {
   }
 }
 
-function replaceTopicPlaceholder(shell: string, topic: string): string {
-  const t = topic.trim() || "(주제 미입력)";
-  return shell.replaceAll("{topic}", t);
-}
-
 export async function createStudioEpisode(
   _prev: StudioProductionActionState,
   formData: FormData,
 ): Promise<StudioProductionActionState> {
   const title = String(formData.get("title") ?? "").trim();
   if (!title) return { error: ActionErrorCode.studioTitleRequired };
-
-  const topicLineRaw = String(formData.get("topic_line") ?? "");
-  if (topicLineRaw.length > STUDIO_TOPIC_LINE_MAX) {
-    return { error: ActionErrorCode.studioTopicLineTooLong };
-  }
-  const topicLine = topicLineRaw.trim();
 
   const statusRaw = String(formData.get("status") ?? "draft").trim();
   if (!isStudioEpisodeStatus(statusRaw)) {
@@ -62,58 +53,9 @@ export async function createStudioEpisode(
 
   const distributionLabel = resolveDistributionLabelFromForm(formData);
 
-  let studioNicheId = parseOptionalUuidFromForm(formData, "studio_niche_id");
-  let studioFormatTemplateId = parseOptionalUuidFromForm(
-    formData,
-    "studio_format_template_id",
-  );
-  let studioDistributionChannelId = parseOptionalUuidFromForm(
-    formData,
-    "studio_distribution_channel_id",
-  );
-
-  if (distributionLabel !== "youtube_shorts") {
-    studioNicheId = null;
-    studioFormatTemplateId = null;
-    studioDistributionChannelId = null;
-  }
-
   const supabase = await createClient();
   const auth = await getOrgMemberContext(supabase);
   if (!auth.ok) return { error: auth.error };
-
-  let templateRow: {
-    hook_structure: string;
-    script_prompt_shell: string;
-  } | null = null;
-
-  if (studioFormatTemplateId) {
-    const { data: tmpl, error: te } = await supabase
-      .from("studio_format_templates")
-      .select("id, hook_structure, script_prompt_shell, format_pack_id, is_active")
-      .eq("id", studioFormatTemplateId)
-      .maybeSingle();
-
-    if (te || !tmpl || !tmpl.is_active) {
-      return { error: ActionErrorCode.studioInvalidFormatTemplate };
-    }
-
-    const { data: pack, error: pe } = await supabase
-      .from("studio_format_packs")
-      .select("id, studio_niche_id, is_active")
-      .eq("id", tmpl.format_pack_id)
-      .maybeSingle();
-
-    if (pe || !pack || !pack.is_active) {
-      return { error: ActionErrorCode.studioInvalidFormatTemplate };
-    }
-
-    studioNicheId = pack.studio_niche_id;
-    templateRow = {
-      hook_structure: tmpl.hook_structure,
-      script_prompt_shell: tmpl.script_prompt_shell,
-    };
-  }
 
   const { data, error } = await supabase
     .from("studio_production_episodes")
@@ -126,53 +68,14 @@ export async function createStudioEpisode(
       notes: notesCheck.value,
       created_by: auth.ctx.userId,
       updated_at: new Date().toISOString(),
-      studio_niche_id: studioNicheId,
-      studio_format_template_id: studioFormatTemplateId,
-      studio_distribution_channel_id: studioDistributionChannelId,
+      studio_niche_id: null,
+      studio_format_template_id: null,
+      studio_distribution_channel_id: null,
     })
     .select("id")
     .single();
 
   if (error || !data?.id) return { error: ActionErrorCode.dbError };
-
-  if (templateRow) {
-    const scriptBody = replaceTopicPlaceholder(
-      templateRow.script_prompt_shell,
-      topicLine,
-    );
-    const hookBody = templateRow.hook_structure.trim();
-
-    const scriptCheck = validateContentText(scriptBody);
-    if (!scriptCheck.ok) {
-      return { error: scriptCheck.error };
-    }
-    const hookCheck = validateContentText(hookBody);
-    if (!hookCheck.ok) {
-      return { error: hookCheck.error };
-    }
-
-    const { error: a1 } = await supabase.from("studio_production_artifacts").insert({
-      organization_id: auth.ctx.organizationId,
-      episode_id: data.id,
-      artifact_role: "script",
-      tool_platform: "other",
-      content_text: scriptCheck.value,
-      sort_order: 0,
-    });
-    if (a1) return { error: ActionErrorCode.dbError };
-
-    if (hookBody.length > 0) {
-      const { error: a2 } = await supabase.from("studio_production_artifacts").insert({
-        organization_id: auth.ctx.organizationId,
-        episode_id: data.id,
-        artifact_role: "prompt",
-        tool_platform: "runway",
-        content_text: hookCheck.value,
-        sort_order: 1,
-      });
-      if (a2) return { error: ActionErrorCode.dbError };
-    }
-  }
 
   revalidatePath("/dashboard/productions");
   redirect(`/dashboard/productions/${data.id}`);
@@ -193,11 +96,6 @@ export async function updateStudioEpisode(
     return { error: ActionErrorCode.studioInvalidStatus };
   }
 
-  const publishCheck = validateOptionalHttpsUrl(
-    String(formData.get("publish_url") ?? ""),
-  );
-  if (!publishCheck.ok) return { error: publishCheck.error };
-
   const notesCheck = validateContentText(
     String(formData.get("notes") ?? ""),
   );
@@ -207,40 +105,43 @@ export async function updateStudioEpisode(
   const auth = await getOrgMemberContext(supabase);
   if (!auth.ok) return { error: auth.error };
 
+  const { data: existing, error: loadErr } = await supabase
+    .from("studio_production_episodes")
+    .select("publish_url, studio_distribution_channel_id")
+    .eq("id", id)
+    .eq("organization_id", auth.ctx.organizationId)
+    .maybeSingle();
+
+  if (loadErr || !existing) return { error: ActionErrorCode.studioEpisodeNotFound };
+
+  const publishCheck = formData.has("publish_url")
+    ? validateOptionalHttpsUrl(String(formData.get("publish_url") ?? ""))
+    : ({ ok: true, value: existing.publish_url } as const);
+  if (!publishCheck.ok) return { error: publishCheck.error };
+
   const distributionLabel = resolveDistributionLabelFromForm(formData);
 
-  let studioNicheId = parseOptionalUuidFromForm(formData, "studio_niche_id");
-  let studioFormatTemplateId = parseOptionalUuidFromForm(
-    formData,
-    "studio_format_template_id",
-  );
-  let studioDistributionChannelId = parseOptionalUuidFromForm(
-    formData,
-    "studio_distribution_channel_id",
-  );
-
-  if (distributionLabel !== "youtube_shorts") {
-    studioNicheId = null;
-    studioFormatTemplateId = null;
-    studioDistributionChannelId = null;
-  } else if (studioFormatTemplateId) {
-    const { data: tmpl, error: te } = await supabase
-      .from("studio_format_templates")
-      .select("format_pack_id, is_active")
-      .eq("id", studioFormatTemplateId)
-      .maybeSingle();
-    if (te || !tmpl || !tmpl.is_active) {
-      return { error: ActionErrorCode.studioInvalidFormatTemplate };
+  let studioDistributionChannelId: string | null;
+  if (formData.has("studio_distribution_channel_id")) {
+    let parsed = parseOptionalUuidFromForm(
+      formData,
+      "studio_distribution_channel_id",
+    );
+    if (!isDistributionChannelPresetLabel(distributionLabel)) {
+      parsed = null;
     }
-    const { data: pack, error: pe } = await supabase
-      .from("studio_format_packs")
-      .select("studio_niche_id, is_active")
-      .eq("id", tmpl.format_pack_id)
-      .maybeSingle();
-    if (pe || !pack || !pack.is_active) {
-      return { error: ActionErrorCode.studioInvalidFormatTemplate };
+    if (parsed) {
+      const { data: chRow } = await supabase
+        .from("studio_distribution_channels")
+        .select("id")
+        .eq("id", parsed)
+        .eq("organization_id", auth.ctx.organizationId)
+        .maybeSingle();
+      if (!chRow) parsed = null;
     }
-    studioNicheId = pack.studio_niche_id;
+    studioDistributionChannelId = parsed;
+  } else {
+    studioDistributionChannelId = existing.studio_distribution_channel_id;
   }
 
   const { data: updatedRows, error } = await supabase
@@ -252,8 +153,8 @@ export async function updateStudioEpisode(
       distribution_label: distributionLabel,
       notes: notesCheck.value,
       updated_at: new Date().toISOString(),
-      studio_niche_id: studioNicheId,
-      studio_format_template_id: studioFormatTemplateId,
+      studio_niche_id: null,
+      studio_format_template_id: null,
       studio_distribution_channel_id: studioDistributionChannelId,
     })
     .eq("id", id)

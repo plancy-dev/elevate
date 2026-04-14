@@ -4,6 +4,9 @@
  * @see docs/STUDIO_ARTIFACT_ROLES.md
  */
 export const STUDIO_SUGGESTED_ARTIFACT_ROLES = [
+  "hook",
+  "title",
+  "script_draft",
   "script",
   "prompt",
   "settings",

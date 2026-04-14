@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database.types";
+import type { Database, Json } from "@/types/database.types";
 
 export type StudioProductionEpisodeRow =
   Database["public"]["Tables"]["studio_production_episodes"]["Row"];
@@ -15,6 +15,7 @@ export type StudioEpisodeEmbeddedRelations = {
     label: string;
     channel_url: string;
     platform: string;
+    metadata: Json | null;
   } | null;
 };
 
@@ -24,19 +25,25 @@ export type StudioProductionEpisodeRowWithEmbeds = StudioProductionEpisodeRow &
 export async function listStudioEpisodesForOrg(
   supabase: SupabaseClient<Database>,
   organizationId: string,
+  opts?: { distributionChannelId?: string | null },
 ): Promise<StudioProductionEpisodeRowWithEmbeds[]> {
-  const { data, error } = await supabase
+  let q = supabase
     .from("studio_production_episodes")
     .select(
       `
       *,
       studio_niches ( id, display_name ),
       studio_format_templates ( id, display_name ),
-      studio_distribution_channels ( id, label, channel_url, platform )
+      studio_distribution_channels ( id, label, channel_url, platform, metadata )
     `,
     )
-    .eq("organization_id", organizationId)
-    .order("updated_at", { ascending: false });
+    .eq("organization_id", organizationId);
+
+  if (opts?.distributionChannelId) {
+    q = q.eq("studio_distribution_channel_id", opts.distributionChannelId);
+  }
+
+  const { data, error } = await q.order("updated_at", { ascending: false });
 
   if (error) throw error;
   return (data ?? []) as StudioProductionEpisodeRowWithEmbeds[];
@@ -54,7 +61,7 @@ export async function getStudioEpisodeForOrg(
       *,
       studio_niches ( id, display_name ),
       studio_format_templates ( id, display_name ),
-      studio_distribution_channels ( id, label, channel_url, platform )
+      studio_distribution_channels ( id, label, channel_url, platform, metadata )
     `,
     )
     .eq("id", episodeId)

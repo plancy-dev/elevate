@@ -13,6 +13,7 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문�
 
 - ADR: [`docs/adr/ADR-003-studio-productions-mvp.md`](../docs/adr/ADR-003-studio-productions-mvp.md)  
 - PLAN·리뷰: [`docs/features/PLAN-studio-productions.md`](../docs/features/PLAN-studio-productions.md) · [`docs/features/GSTACK_REVIEW-production-workbench.md`](../docs/features/GSTACK_REVIEW-production-workbench.md)  
+- **v2 연동(스캐폴딩):** [`docs/adr/ADR-006-studio-provider-integrations-v2.md`](../docs/adr/ADR-006-studio-provider-integrations-v2.md) · [`docs/features/PLAN-studio-provider-integrations.md`](../docs/features/PLAN-studio-provider-integrations.md) · 라우트 `/dashboard/productions/integrations` · `src/lib/studio-integrations/` — 플래그 꺼짐 시에도 문서·상태 표시만.
 
 **대시보드 접근 (운영 옵션)** — `DASHBOARD_ACCESS_STRICT=true`일 때 플랫폼/조직 관리자 또는 `waitlist_signups`·`prompt_studio_beta_allowlist`에 없으면 `/access-pending`. 코드: `src/lib/auth/dashboard-access.ts`, `src/app/(auth)/access-pending/page.tsx`.
 
@@ -20,11 +21,15 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문�
 
 ### 다음 BUILD 앵커 (구현 예정)
 
-**결정된 다음 작업:** **Phase G2 — Lemon Squeezy 웹훅 → 콘텐츠 엔타이틀먼트** (글로벌 결제 루프). **G0는 문서 확정됨:** [`docs/features/PLAN-g0-creator-commerce-decisions.md`](../docs/features/PLAN-g0-creator-commerce-decisions.md) · [`docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md`](../docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md) (Lemon 우선, Toss 신규는 보류). **G1/M4:** MDX+런북 [`PLAN-g1-first-ebook-sku-runbook.md`](../docs/features/PLAN-g1-first-ebook-sku-runbook.md) — Supabase 행·Lemon 변형은 운영 삽입. **M5:** [`docs/POSTHOG_DASHBOARD_FIRST_SAVE.md`](../docs/POSTHOG_DASHBOARD_FIRST_SAVE.md). 참조: [`src/lib/payments/content-entitlement.ts`](../src/lib/payments/content-entitlement.ts).
+**Studio 우선순위 (제품 합의 2026-04):** (1) **Runway Dev API — 잡 제출·폴링 실연동** (`runwayAdapter.runStep`, 아티팩트 반영) — **PLAN:** [`docs/features/PLAN-runway-integration.md`](../docs/features/PLAN-runway-integration.md) (엔드포인트·페이로드·UI 상태머신·BUILD 체크리스트) (2) **에피소드 초안** — 짧은 입력만으로도 채널에 맞는 **구조적 초안**이 나오도록 프롬프트·템플릿 리팩터. SoT: [`docs/features/STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md`](../docs/features/STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md) · [`docs/features/PLAN-studio-provider-integrations.md`](../docs/features/PLAN-studio-provider-integrations.md) Phase 3 · [`src/lib/studio-productions/episode-llm.ts`](../src/lib/studio-productions/episode-llm.ts).
 
-**병행 후보 (숏·제작 레저 P0):** [`tasks.md`](tasks.md) **§ G3.1 — Productions P0** — **P0-1·P0-2·P0-3 구현됨 (2026-04):** 권장 역할·`<datalist>`·순서 배지·`sort_order` 편집·에피소드 도움말에 런북 경로 안내 — [`docs/STUDIO_ARTIFACT_ROLES.md`](../docs/STUDIO_ARTIFACT_ROLES.md). **남음:** 팀 습관 체크리스트(P0-1 미체크 항목).
+**상업·운영 병행:** **Phase G2 — Lemon Squeezy 웹훅 → 콘텐츠 엔타이틀먼트**. **G0:** [`PLAN-g0-creator-commerce-decisions.md`](../docs/features/PLAN-g0-creator-commerce-decisions.md) · [`ADR-005`](../docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md). **G1/M4:** [`PLAN-g1-first-ebook-sku-runbook.md`](../docs/features/PLAN-g1-first-ebook-sku-runbook.md). **M5:** [`POSTHOG_DASHBOARD_FIRST_SAVE.md`](../docs/POSTHOG_DASHBOARD_FIRST_SAVE.md). 참조: [`src/lib/payments/content-entitlement.ts`](../src/lib/payments/content-entitlement.ts).
 
-**INIT → 다음:** L3 → **PLAN**(웹훅 보안·idempotency·테스트) 권장 후 **BUILD**.
+**Productions P0:** [`tasks.md`](tasks.md) **§ G3.1** — P0-1·P0-2·P0-3 구현됨; 남은 것은 팀 습관 체크리스트.
+
+**INIT → 다음:** Studio 스프린트면 **PLAN**(Runway 잡·ToS·멱등) 후 **BUILD**; 결제 스프린트면 G2 **PLAN** 후 **BUILD**.
+
+**INIT (2026-04) — Studio AI 콘텐츠 OS 보완:** SoT: [`tasks.md`](tasks.md) **§ G3.3**. **완료:** Anthropic 연동 + Runway **스텁** (`healthCheck` + `runStep` → `not_implemented`). **다음:** 위 Studio 우선순위 + 매트릭스 문서로 API/구현 상태 고정.
 
 ### 의사결정 (Productions P0 vs 결제)
 

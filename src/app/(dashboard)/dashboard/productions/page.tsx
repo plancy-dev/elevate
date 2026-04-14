@@ -6,10 +6,13 @@ import { ButtonLink } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/server";
 import { listStudioEpisodesForOrg } from "@/lib/data/studio-productions";
+import { listStudioDistributionChannelsForOrg } from "@/lib/studio-productions/shorts-catalog";
+import { ProductionsChannelFilter } from "@/components/dashboard/productions-channel-filter";
 import { getAppLocale } from "@/lib/i18n/app-locale";
 import type { StudioEpisodeStatus } from "@/lib/studio-productions/constants";
 import { distributionDisplayLabel } from "@/lib/studio-productions/distribution";
 import { ProductionsDemoSeedPanel } from "@/components/dashboard/productions-demo-seed-panel";
+import { StudioProductionsDeleteEpisodeForm } from "@/components/dashboard/studio-productions-forms";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.productions");
@@ -29,7 +32,15 @@ const STATUS_I18N: Record<
   archived: "statusArchived",
 };
 
-export default async function ProductionsListPage() {
+type PageProps = {
+  searchParams: Promise<{ channel?: string | string[] }>;
+};
+
+export default async function ProductionsListPage({ searchParams }: PageProps) {
+  const sp = await searchParams;
+  const channelParam = Array.isArray(sp.channel) ? sp.channel[0] : sp.channel;
+  const channelParamRaw = channelParam?.trim() || null;
+
   const t = await getTranslations("Dashboard.productions");
   const supabase = await createClient();
   const {
@@ -56,8 +67,20 @@ export default async function ProductionsListPage() {
     );
   }
 
-  const episodes = await listStudioEpisodesForOrg(supabase, orgId);
+  const channels = await listStudioDistributionChannelsForOrg(supabase, orgId);
+  const validChannelId =
+    channelParamRaw && channels.some((c) => c.id === channelParamRaw)
+      ? channelParamRaw
+      : null;
+
+  const episodes = await listStudioEpisodesForOrg(supabase, orgId, {
+    distributionChannelId: validChannelId ?? undefined,
+  });
   const showDemoSeed = process.env.ENABLE_STUDIO_DEMO_SEED === "true";
+
+  const newEpisodeHref = validChannelId
+    ? `/dashboard/productions/new?channel=${encodeURIComponent(validChannelId)}`
+    : "/dashboard/productions/new";
 
   return (
     <div className="mx-auto w-full max-w-4xl p-6 lg:p-8">
@@ -70,13 +93,35 @@ export default async function ProductionsListPage() {
             {t("listSubtitle")}
           </p>
         </div>
-        <div className="flex flex-wrap gap-2 shrink-0">
-          <ButtonLink href="/dashboard/productions/channels" variant="secondary" size="md">
-            {t("channelsNav")}
-          </ButtonLink>
-          <ButtonLink href="/dashboard/productions/new" variant="primary" size="md">
-            {t("listCtaNew")}
-          </ButtonLink>
+        <div className="flex flex-col items-stretch gap-3 sm:items-end shrink-0">
+          {channels.length > 0 ? (
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+              <ProductionsChannelFilter
+                channels={channels.map((c) => ({
+                  id: c.id,
+                  label: c.label,
+                  platform: c.platform,
+                }))}
+                currentChannelId={validChannelId}
+              />
+              {validChannelId ? (
+                <ButtonLink href={newEpisodeHref} variant="secondary" size="md" className="w-full sm:w-auto">
+                  {t("listNewWithChannel")}
+                </ButtonLink>
+              ) : null}
+            </div>
+          ) : null}
+          <div className="flex flex-wrap gap-2 justify-end">
+            <ButtonLink href="/dashboard/productions/channels" variant="secondary" size="md">
+              {t("channelsNav")}
+            </ButtonLink>
+            <ButtonLink href="/dashboard/productions/integrations" variant="secondary" size="md">
+              {t("integrationsNav")}
+            </ButtonLink>
+            <ButtonLink href={newEpisodeHref} variant="primary" size="md">
+              {t("listCtaNew")}
+            </ButtonLink>
+          </div>
         </div>
       </div>
 
@@ -84,7 +129,7 @@ export default async function ProductionsListPage() {
         <div className="space-y-4 max-w-2xl">
           <p className="text-sm text-text-secondary">{t("listEmpty")}</p>
           {showDemoSeed ? <ProductionsDemoSeedPanel /> : null}
-          <ButtonLink href="/dashboard/productions/new" variant="secondary">
+          <ButtonLink href={newEpisodeHref} variant="secondary">
             {t("listCtaNew")}
           </ButtonLink>
         </div>
@@ -117,11 +162,6 @@ export default async function ProductionsListPage() {
                       </span>
                     </div>
                     <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-text-tertiary">
-                      {ep.studio_niches?.display_name ? (
-                        <span className="rounded-md bg-layer-02/90 px-1.5 py-0.5 text-text-secondary">
-                          {ep.studio_niches.display_name}
-                        </span>
-                      ) : null}
                       {ep.distribution_label ? (
                         <span>
                           {distributionDisplayLabel(ep.distribution_label, (key) =>
@@ -131,13 +171,13 @@ export default async function ProductionsListPage() {
                       ) : null}
                     </div>
                   </Link>
-                  <div className="flex shrink-0 flex-col items-end gap-2 text-xs text-text-tertiary sm:text-right">
+                  <div className="flex w-full shrink-0 flex-col items-stretch gap-2 text-xs text-text-tertiary sm:w-auto sm:items-end sm:text-right">
                     {channelUrl ? (
                       <a
                         href={channelUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+                        className="inline-flex items-center gap-1 font-medium text-primary hover:underline sm:justify-end"
                       >
                         <ExternalLink className="h-3 w-3" aria-hidden />
                         {t("listChannelOpen")}
@@ -147,6 +187,11 @@ export default async function ProductionsListPage() {
                       <span className="text-text-secondary">{t("colUpdated")}: </span>
                       {updated}
                     </div>
+                    <StudioProductionsDeleteEpisodeForm
+                      episodeId={ep.id}
+                      buttonSize="sm"
+                      className="w-full sm:w-auto"
+                    />
                   </div>
                 </li>
               );

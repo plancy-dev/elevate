@@ -33,5 +33,8 @@ export function translateActionErrorMessage(
   if (code === ActionErrorCode.studioTopicLineTooLong) {
     return t("studioTopicLineTooLong", { max: STUDIO_TOPIC_LINE_MAX });
   }
+  if (code === ActionErrorCode.studioIntegrationsSecretTooLong) {
+    return t("studioIntegrationsSecretTooLong", { max: 8192 });
+  }
   return t(code);
 }

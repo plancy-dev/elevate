@@ -41,6 +41,19 @@ export function isYoutubeShortsDistributionLabel(label: string): boolean {
   return label.trim() === "youtube_shorts";
 }
 
+/** Presets where an optional `studio_distribution_channel_id` may be saved. */
+export const DISTRIBUTION_CHANNEL_PRESETS: ReadonlySet<string> = new Set([
+  "youtube_shorts",
+  "youtube_long",
+  "instagram_reels",
+  "tiktok",
+  "x_twitter",
+]);
+
+export function isDistributionChannelPresetLabel(label: string): boolean {
+  return DISTRIBUTION_CHANNEL_PRESETS.has(label.trim());
+}
+
 export function parseStoredDistribution(stored: string): {
   preset: string;
   custom: string;

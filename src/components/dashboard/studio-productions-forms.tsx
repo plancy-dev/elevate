@@ -32,9 +32,17 @@ import {
   STUDIO_EPISODE_STATUSES,
   type StudioEpisodeStatus,
 } from "@/lib/studio-productions/constants";
-import type { StudioShortsCatalog } from "@/lib/studio-productions/shorts-catalog";
 import type { Json } from "@/types/database.types";
-import { StudioEpisodeShortsFields } from "@/components/dashboard/studio-episode-shorts-fields";
+import { Clapperboard, ExternalLink } from "lucide-react";
+import {
+  Button,
+  ButtonLink,
+  type ButtonSize,
+} from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { FieldSelect } from "@/components/ui/field-select";
+import { StudioEpisodeDistributionFields } from "@/components/dashboard/studio-episode-distribution-fields";
+import { parseStoredDistribution } from "@/lib/studio-productions/distribution";
 
 function ArtifactRoleDatalist() {
   return (
@@ -45,14 +53,6 @@ function ArtifactRoleDatalist() {
     </datalist>
   );
 }
-import { Clapperboard, ExternalLink } from "lucide-react";
-import { Button, ButtonLink } from "@/components/ui/button";
-import { FieldSelect } from "@/components/ui/field-select";
-import { StudioEpisodeDistributionFields } from "@/components/dashboard/studio-episode-distribution-fields";
-import {
-  isYoutubeShortsDistributionLabel,
-  parseStoredDistribution,
-} from "@/lib/studio-productions/distribution";
 
 function metadataToFormString(metadata: Json | null): string {
   if (metadata == null) return "";
@@ -98,11 +98,9 @@ const EPISODE_STATUS_I18N: Record<
 
 export function StudioProductionsNewForm({
   initialNotes = "",
-  catalog,
 }: {
   /** From Prompt Studio → Productions sessionStorage handoff */
   initialNotes?: string;
-  catalog: StudioShortsCatalog;
 }) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
@@ -117,8 +115,6 @@ export function StudioProductionsNewForm({
   }));
 
   const [distributionPreset, setDistributionPreset] = useState("");
-  const showShortsPlan =
-    isYoutubeShortsDistributionLabel(distributionPreset);
 
   return (
     <form action={formAction} className="space-y-6 max-w-2xl">
@@ -165,14 +161,9 @@ export function StudioProductionsNewForm({
       <StudioEpisodeDistributionFields
         idPrefix="new"
         distributionStored=""
-        publishUrl=""
         preset={distributionPreset}
         onPresetChange={setDistributionPreset}
       />
-
-      {showShortsPlan ? (
-        <StudioEpisodeShortsFields catalog={catalog} idPrefix="new" showTopicLine />
-      ) : null}
 
       <div>
         <label
@@ -204,10 +195,14 @@ export function StudioProductionsNewForm({
 
 export function StudioProductionsEpisodeEditForm({
   episode,
-  catalog,
+  className,
+  layout = "standalone",
 }: {
   episode: StudioProductionEpisodeRowWithEmbeds;
-  catalog: StudioShortsCatalog;
+  /** e.g. `max-w-none` in wide layouts. */
+  className?: string;
+  /** `embedded`: flat fields for a single-column episode workspace (no nested promo card). */
+  layout?: "standalone" | "embedded";
 }) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
@@ -228,71 +223,103 @@ export function StudioProductionsEpisodeEditForm({
   const [distributionPreset, setDistributionPreset] = useState(
     parsedDistribution.preset,
   );
-  const showShortsPlan =
-    isYoutubeShortsDistributionLabel(distributionPreset);
+
+  const embedded = layout === "embedded";
 
   return (
-    <form action={formAction} className="space-y-6 max-w-2xl">
+    <form
+      action={formAction}
+      className={cn("space-y-6", !embedded && "max-w-2xl", className)}
+    >
       <input type="hidden" name="episode_id" value={episode.id} />
       {state?.error ? (
         <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       ) : null}
-      <div className="rounded-2xl border border-border-subtle/90 bg-gradient-to-br from-layer-01 via-layer-02/40 to-layer-01 p-6 shadow-sm">
-        <div className="space-y-4">
-          <div>
-            <label
-              htmlFor="edit_title"
-              className="block text-xs font-medium text-text-secondary mb-1.5"
-            >
-              {t("titleLabel")}
-            </label>
-            <input
-              id="edit_title"
-              name="title"
-              required
-              defaultValue={episode.title}
-              maxLength={500}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
-            />
+      <div
+        className={cn(
+          embedded
+            ? "grid gap-4 sm:grid-cols-2 sm:gap-5"
+            : "rounded-2xl border border-border-subtle/90 bg-gradient-to-br from-layer-01 via-layer-02/40 to-layer-01 p-6 shadow-sm",
+        )}
+      >
+        {embedded ? (
+          <>
+            <div>
+              <label
+                htmlFor="edit_title"
+                className="block text-xs font-medium text-text-secondary mb-1.5"
+              >
+                {t("episodeTitleLabel")}
+              </label>
+              <input
+                id="edit_title"
+                name="title"
+                required
+                defaultValue={episode.title}
+                maxLength={500}
+                className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="edit_status"
+                className="block text-xs font-medium text-text-secondary mb-1.5"
+              >
+                {t("statusLabel")}
+              </label>
+              <FieldSelect
+                id="edit_status"
+                name="status"
+                defaultValue={episode.status}
+                options={statusOptions}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="space-y-4">
+            <div>
+              <label
+                htmlFor="edit_title"
+                className="block text-xs font-medium text-text-secondary mb-1.5"
+              >
+                {t("episodeTitleLabel")}
+              </label>
+              <input
+                id="edit_title"
+                name="title"
+                required
+                defaultValue={episode.title}
+                maxLength={500}
+                className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="edit_status"
+                className="block text-xs font-medium text-text-secondary mb-1.5"
+              >
+                {t("statusLabel")}
+              </label>
+              <FieldSelect
+                id="edit_status"
+                name="status"
+                defaultValue={episode.status}
+                options={statusOptions}
+              />
+            </div>
           </div>
-          <div>
-            <label
-              htmlFor="edit_status"
-              className="block text-xs font-medium text-text-secondary mb-1.5"
-            >
-              {t("statusLabel")}
-            </label>
-            <FieldSelect
-              id="edit_status"
-              name="status"
-              defaultValue={episode.status}
-              options={statusOptions}
-            />
-          </div>
-        </div>
+        )}
       </div>
 
       <StudioEpisodeDistributionFields
         key={`${episode.id}-${episode.updated_at}-${episode.distribution_label}`}
         idPrefix="edit"
         distributionStored={episode.distribution_label}
-        publishUrl={episode.publish_url ?? ""}
         preset={distributionPreset}
         onPresetChange={setDistributionPreset}
       />
-
-      {showShortsPlan ? (
-        <StudioEpisodeShortsFields
-          key={`${episode.id}-${episode.updated_at}-${episode.studio_niche_id}-${episode.studio_format_template_id}-${episode.studio_distribution_channel_id}`}
-          catalog={catalog}
-          idPrefix="edit"
-          initialNicheId={episode.studio_niche_id}
-          initialTemplateId={episode.studio_format_template_id}
-          initialChannelId={episode.studio_distribution_channel_id}
-        />
-      ) : null}
 
       <div>
         <label
@@ -318,8 +345,13 @@ export function StudioProductionsEpisodeEditForm({
 
 export function StudioProductionsDeleteEpisodeForm({
   episodeId,
+  buttonSize = "md",
+  className,
 }: {
   episodeId: string;
+  /** Use `sm` on dense rows (e.g. productions list). */
+  buttonSize?: ButtonSize;
+  className?: string;
 }) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
@@ -329,7 +361,7 @@ export function StudioProductionsDeleteEpisodeForm({
   );
 
   return (
-    <form action={formAction} className="inline">
+    <form action={formAction} className={cn("inline", className)}>
       <input type="hidden" name="episode_id" value={episodeId} />
       {state?.error ? (
         <p className="mb-2 rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
@@ -339,6 +371,7 @@ export function StudioProductionsDeleteEpisodeForm({
       <Button
         variant="danger"
         type="submit"
+        size={buttonSize}
         isLoading={pending}
         onClick={(e) => {
           if (!window.confirm(t("deleteEpisodeConfirm"))) {

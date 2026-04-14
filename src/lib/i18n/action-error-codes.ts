@@ -39,6 +39,7 @@ export const ActionErrorCode = {
   onboardingProfileUnavailable: "onboardingProfileUnavailable",
 
   studioEpisodeNotFound: "studioEpisodeNotFound",
+  studioDraftSnapshotNotFound: "studioDraftSnapshotNotFound",
   studioArtifactNotFound: "studioArtifactNotFound",
   studioInvalidUrl: "studioInvalidUrl",
   studioTextTooLong: "studioTextTooLong",
@@ -54,6 +55,31 @@ export const ActionErrorCode = {
   studioInvalidFormatTemplate: "studioInvalidFormatTemplate",
   studioChannelLabelRequired: "studioChannelLabelRequired",
   studioTopicLineTooLong: "studioTopicLineTooLong",
+
+  studioIntegrationsEncryptionNotConfigured:
+    "studioIntegrationsEncryptionNotConfigured",
+  studioIntegrationsSecretRequired: "studioIntegrationsSecretRequired",
+  studioIntegrationsProviderInvalid: "studioIntegrationsProviderInvalid",
+  studioIntegrationsDisabled: "studioIntegrationsDisabled",
+  studioIntegrationsOpenAiTestFailed: "studioIntegrationsOpenAiTestFailed",
+  studioIntegrationsProviderNotConfigured:
+    "studioIntegrationsProviderNotConfigured",
+  studioIntegrationsProviderVerifyFailed: "studioIntegrationsProviderVerifyFailed",
+  studioIntegrationsSecretTooLong: "studioIntegrationsSecretTooLong",
+  /** DB CHECK / migration missing for provider (e.g. anthropic) */
+  studioIntegrationsDbProviderNotAllowed:
+    "studioIntegrationsDbProviderNotAllowed",
+
+  studioLlmDisabled: "studioLlmDisabled",
+  studioLlmNoProvider: "studioLlmNoProvider",
+  /** Chosen provider has no saved API key (Integrations). */
+  studioLlmProviderNotAvailable: "studioLlmProviderNotAvailable",
+  studioLlmRequestFailed: "studioLlmRequestFailed",
+  studioLlmBadResponse: "studioLlmBadResponse",
+  /** Refine-with-LLM: empty instruction field */
+  studioLlmInstructionRequired: "studioLlmInstructionRequired",
+  studioRunwayManualOnly: "studioRunwayManualOnly",
+  studioYoutubeUploadNotAvailable: "studioYoutubeUploadNotAvailable",
 } as const;
 
 export type ActionErrorCode =

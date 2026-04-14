@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { ProductionsNewHandoffForm } from "@/components/dashboard/productions-new-handoff-form";
 import { createClient } from "@/lib/supabase/server";
-import { listStudioShortsCatalogForOrg } from "@/lib/studio-productions/shorts-catalog";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.productions");
@@ -37,8 +36,6 @@ export default async function ProductionsNewPage() {
     );
   }
 
-  const catalog = await listStudioShortsCatalogForOrg(supabase, orgId);
-
   return (
     <div className="mx-auto w-full max-w-5xl p-6 lg:p-8">
       <header className="mb-8 rounded-2xl border border-border-subtle bg-gradient-to-br from-layer-01 via-[#f0f4ff]/40 to-layer-02 px-6 py-6 shadow-sm dark:via-[#0a1628]/60">
@@ -49,7 +46,7 @@ export default async function ProductionsNewPage() {
           {t("newSubtitle")}
         </p>
       </header>
-      <ProductionsNewHandoffForm catalog={catalog} />
+      <ProductionsNewHandoffForm />
     </div>
   );
 }

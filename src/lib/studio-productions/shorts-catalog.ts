@@ -26,6 +26,11 @@ export type StudioShortsCatalog = {
   channels: StudioDistributionChannelRow[];
 };
 
+/** Episode create/edit forms: org distribution channels only (no niche/format catalog). */
+export type StudioEpisodeFormChannelsContext = {
+  channels: StudioDistributionChannelRow[];
+};
+
 export async function listStudioNichesActive(
   supabase: SupabaseClient<Database>,
 ): Promise<StudioNicheRow[]> {

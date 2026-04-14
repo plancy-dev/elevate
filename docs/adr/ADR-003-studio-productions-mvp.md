@@ -127,8 +127,14 @@ Alternatively, enforce org match only in application layer **if** you add tests;
 
 - File: `supabase/migrations/017_studio_productions.sql` (number adjusted if 017 taken).
 
+## v2 extension (optional provider APIs)
+
+Optional **org-scoped credentials and server adapters** (OpenAI, Runway, YouTube Data API, etc.) are specified in **[`ADR-006`](ADR-006-studio-provider-integrations-v2.md)**. They **do not** change v1 guarantees when feature flags are off; v1 remains paste-only.
+
 ## Related
 
 - [`ADR-002`](ADR-002-prompt-studio-mvp.md) Prompt Studio MVP
+- [`ADR-006`](ADR-006-studio-provider-integrations-v2.md) Studio provider integrations (v2)
+- [`docs/features/studio-episode-llm.md`](../features/studio-episode-llm.md) Channel context + LLM draft artifacts + optional `studio_episode_llm_threads`
 - [`docs/features/GSTACK_REVIEW-production-workbench.md`](../features/GSTACK_REVIEW-production-workbench.md)
 - [`src/lib/data/library.ts`](../../src/lib/data/library.ts) (contrast: catalog only)

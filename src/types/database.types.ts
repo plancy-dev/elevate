@@ -698,6 +698,7 @@ export type Database = {
           created_at: string
           id: string
           label: string
+          metadata: Json
           notes: string
           organization_id: string
           platform: string
@@ -709,6 +710,7 @@ export type Database = {
           created_at?: string
           id?: string
           label: string
+          metadata?: Json
           notes?: string
           organization_id: string
           platform?: string
@@ -720,6 +722,7 @@ export type Database = {
           created_at?: string
           id?: string
           label?: string
+          metadata?: Json
           notes?: string
           organization_id?: string
           platform?: string
@@ -729,6 +732,105 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "studio_distribution_channels_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_episode_draft_snapshots: {
+        Row: {
+          created_at: string
+          episode_id: string
+          hook: string
+          id: string
+          metadata: Json
+          organization_id: string
+          script_draft: string
+          source: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          episode_id: string
+          hook?: string
+          id?: string
+          metadata?: Json
+          organization_id: string
+          script_draft?: string
+          source: string
+          title?: string
+        }
+        Update: {
+          created_at?: string
+          episode_id?: string
+          hook?: string
+          id?: string
+          metadata?: Json
+          organization_id?: string
+          script_draft?: string
+          source?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_episode_draft_snapshots_episode_id_fkey"
+            columns: ["episode_id"]
+            isOneToOne: false
+            referencedRelation: "studio_production_episodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_episode_draft_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_episode_llm_threads: {
+        Row: {
+          created_at: string
+          episode_id: string
+          id: string
+          model: string
+          organization_id: string
+          provider: string
+          turns: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          episode_id: string
+          id?: string
+          model?: string
+          organization_id: string
+          provider: string
+          turns?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          episode_id?: string
+          id?: string
+          model?: string
+          organization_id?: string
+          provider?: string
+          turns?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_episode_llm_threads_episode_id_fkey"
+            columns: ["episode_id"]
+            isOneToOne: true
+            referencedRelation: "studio_production_episodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_episode_llm_threads_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -871,6 +973,64 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      studio_org_provider_connections: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          last_verified_at: string | null
+          organization_id: string
+          provider: string
+          secret_ciphertext: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_verified_at?: string | null
+          organization_id: string
+          provider: string
+          secret_ciphertext: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_verified_at?: string | null
+          organization_id?: string
+          provider?: string
+          secret_ciphertext?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_org_provider_connections_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_org_provider_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_org_provider_connections_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       studio_production_artifacts: {
         Row: {

@@ -145,6 +145,56 @@
 | `compliance_note`를 지금 필수로? | **선택.** 유튜브 제재 대비가 목표면 **에피소드 `notes` 또는 아티팩트 1개**로 시작. |
 | DB 마이그레이션 필요? | P0는 **기존 `artifact_role` 텍스트 + `metadata` jsonb**로 대부분 가능. 스키마 변경은 **P1**에서 검토. |
 
+### G3.2 — Studio **v2** 도구 연동 (ADR-006 · 선택)
+
+> **목표:** v1 원장(붙여 넣기)은 유지하고, 연동을 켠 조직만 서버에서 OpenAI / Runway / YouTube 등 **어댑터**를 호출할 수 있게 한다.  
+> **SoT:** [`docs/adr/ADR-006-studio-provider-integrations-v2.md`](../docs/adr/ADR-006-studio-provider-integrations-v2.md) · [`docs/features/PLAN-studio-provider-integrations.md`](../docs/features/PLAN-studio-provider-integrations.md) · 코드 `src/lib/studio-integrations/`
+
+| 단계 | 상태 |
+|------|------|
+| Phase 0 — ADR·PLAN·스캐폴드·연동 안내 페이지 (`/dashboard/productions/integrations`) | ✅ 준비됨 |
+| Phase 1 — 조직 자격 증명 테이블·암호화·RLS | ⏳ |
+| Phase 2 — OpenAI(호환) 첫 슬라이스 → 아티팩트 반영 | ⏳ |
+| Phase 3+ — Runway · YouTube 등 | ⏳ |
+
+**API vs 구현 SoT (INIT마다 갱신):** [`docs/features/STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md`](../docs/features/STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md) — 벤더 API 가능 여부와 Elevate 구현을 구분; 사용자 카피는 “기술적 불가”와 “미연결”을 혼동하지 않도록 유지.
+
+**다음 구현 우선순위 (2026-04 합의):**
+
+1. **Runway 영상 생성 경로** — `runwayAdapter.runStep` 실제화(공식 Dev API 기준 잡 제출·폴링), 결과 URL·아티팩트 반영, UI 스텁 제거 또는 실동작으로 교체. SoT: 위 매트릭스 + [`PLAN-studio-provider-integrations`](../docs/features/PLAN-studio-provider-integrations.md) Phase 3.
+2. **초안 품질 리팩터** — 짧은 사용자 입력만으로도 니치·채널·포맷에 맞는 **구조적 초안**이 나오도록 `buildDraftPrompt`·시스템 프롬프트·(필요 시) 스키마 확장.
+
+### G3.3 — Studio **AI 콘텐츠 OS** (INIT 보완 준비 · 2026-04)
+
+> **배경:** 에피소드·아티팩트 원장([`ADR-003`](../docs/adr/ADR-003-studio-productions-mvp.md)) + 조직별 연동([`ADR-006`](../docs/adr/ADR-006-studio-provider-integrations-v2.md))은 **“모든 AI 산출물을 한곳에서 관리·생성”**까지 확장 가능한 **뼈대**로 적합하다는 점검 결론.  
+> **PLAN 문서 (인터뷰 반영):** [`docs/features/PLAN-studio-ai-content-os.md`](../docs/features/PLAN-studio-ai-content-os.md) — 범위 문장·우선순위 스택·비목표·다음 단계.  
+> **한계:** v1은 링크·텍스트 중심; **음악·TTS·립싱크·영상 바이너리**와 **다수 SaaS**는 **에셋 저장·잡(폴링)·제공자 매트릭스**가 추가 레이어. North Star([`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md))와 **범위 정렬**(MVP 경계) 선행 권장.
+
+#### 점검 요약 (SoT로 유지)
+
+| 판단 | 내용 |
+|------|------|
+| **데이터 모델** | `studio_production_episodes` + `studio_production_artifacts`로 **시나리오 = 에피소드(+포맷/니치) + 아티팩트 묶음** 해석 가능. 제품 카피에서 “시나리오” 매핑만 통일하면 됨. |
+| **자격 증명** | `studio_org_provider_connections` + 암호화 — **LLM/툴 API 키** 패턴에 맞음. 제공자마다 ToS·검증 엔드포인트 상이. |
+| **갭** | (1) `provider` CHECK·타입에 **Claude·ElevenLabs·음악 생성·립싱크** 등 대중 SaaS 축이 부족할 수 있음 (마이그레이션·PLAN). (2) **오디오/영상 파일**은 URL만으로 버티다 **Storage + asset 메타**로 갈지 결정. (3) **생성 실행**은 어댑터+잡+멱등 — ADR-006 방향과 정합. (4) **시나리오 = 여러 에피소드**가 필요하면 **그룹/폴더** 엔티티 후보. (5) `artifact_role` — TTS·stem·립싱크 등 **역할 확장**을 [`STUDIO_ARTIFACT_ROLES`](../docs/STUDIO_ARTIFACT_ROLES.md)에 합의. |
+
+#### 다음 워크플로 (INIT →)
+
+| 순서 | 산출물 | 담당 모드 |
+|------|--------|-----------|
+| 1 | **제품 범위 한 페이지** — “OS”에 포함할 생성 종류(예: 스크립트만 vs 음성·영상까지) · 비포함 명시 | PLAN / CREATIVE |
+| 2 | **제공자 로드맵** — Claude / TTS(ElevenLabs 등) / 음악(Suno·Udio API 가능 시) / 아바타·립싱크(HeyGen·D-ID 등) **우선순위 2~3개**만 | PLAN |
+| 3 | **스키마** — `024` 패턴으로 `provider` 확장 또는 **카테고리별 테이블** 검토 문서 | CREATIVE + BUILD |
+| 4 | **아티팩트 역할** — 문서·`artifact-roles`에 신규 역할 추가 여부 | BUILD (소규모) |
+| 5 | **에셋·잡** — 바이너리 저장·`studio_generation_jobs` 류 도입 시점 | PLAN (L3+) |
+
+#### 백로그 체크리스트 (완료 시 `[x]`)
+
+- [ ] North Star·운영 가능 리소스 대비 **“AI 콘텐츠 OS” MVP 범위** 문서화 (`docs/features/` 또는 `creative-*.md` 갱신)
+- [ ] 통합 탭/PLAN에 **Anthropic(Claude)** · **TTS** · (선택) **음악·아바타** 제공자 후보와 **검증 전략** 1줄씩
+- [x] `anthropic` provider — 마이그레이션 `025` + [`STUDIO_INTEGRATION_PROVIDER_IDS`](../src/lib/studio-integrations/types.ts) + list-models 검증 + Integrations 탭/i18n (2026-04)
+- [ ] (선택) **에피소드 그룹(시나리오)** — 필요 시 ERD 스케치만 먼저
+
 ### G4 — 숏폼 2주 스프린트 (초미니 체크리스트)
 
 **전제:** 조회·바이럴은 플랫폼 측; Elevate는 **기록·상품·결제** 측.
@@ -195,6 +245,7 @@
 | P2 | **대시보드 접근 게이트 (운영)** — `DASHBOARD_ACCESS_STRICT` · [`src/lib/auth/dashboard-access.ts`](../src/lib/auth/dashboard-access.ts) · `/access-pending` | ✅ 코드 반영; 프로덕션 켤 때 Vercel에 `SUPABASE_SERVICE_ROLE_KEY` + 플래그 |
 | P2 | MICE 스키마 제거 또는 아카이브 | 데이터·고객 영향 검토 후 |
 | P2 | **롱폼·모바일 타이포 리듬** | ✅ Phase A–C [`docs/features/PLAN-responsive-longform-typography.md`](../docs/features/PLAN-responsive-longform-typography.md) — 배포 후 Lighthouse로 CV·LCP만 점검 |
+| P2 | **Studio AI 콘텐츠 OS** — 제공자·에셋·잡 레이어 ([`tasks.md`](tasks.md) § G3.3) | INIT 준비됨 → PLAN 후 단계적 BUILD |
 
 ---
 

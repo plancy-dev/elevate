@@ -16,6 +16,10 @@ export const STUDIO_EPISODE_STATUSES = [
 
 export type StudioEpisodeStatus = (typeof STUDIO_EPISODE_STATUSES)[number];
 
+/** LLM / manual episode draft artifact roles (`studio_production_artifacts.artifact_role`). */
+export const EPISODE_DRAFT_ROLES = ["hook", "title", "script_draft"] as const;
+export type EpisodeDraftRole = (typeof EPISODE_DRAFT_ROLES)[number];
+
 export function isStudioEpisodeStatus(
   value: string,
 ): value is StudioEpisodeStatus {
