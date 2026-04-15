@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { LEMON_CUSTOM_PRICE_MIN_KRW } from "@/lib/payments/lemon-custom-price-minimum";
+import { toast } from "@/lib/ui/app-toast";
 
 export type LemonBillingUnconfiguredReason =
   | "not_linked"
@@ -25,15 +26,13 @@ type Props = {
 
 function CopyButton({ text, label }: { text: string; label: string }) {
   const t = useTranslations("Dashboard.billing");
-  const [copied, setCopied] = useState(false);
 
   async function onCopy() {
     try {
       await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      toast.success(t("lemonCopied"));
     } catch {
-      setCopied(false);
+      // clipboard may be unavailable; avoid noisy toasts
     }
   }
 
@@ -43,7 +42,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
       onClick={onCopy}
       className="rounded-md border border-border-subtle bg-layer-01 px-2 py-1 text-xs text-text-secondary hover:bg-layer-02 hover:text-text-primary transition-colors"
     >
-      {copied ? t("lemonCopied") : label}
+      {label}
     </button>
   );
 }

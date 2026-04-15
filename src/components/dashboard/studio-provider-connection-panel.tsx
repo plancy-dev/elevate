@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Copy, Eye, EyeOff } from "lucide-react";
 import {
@@ -14,13 +14,10 @@ import type { StudioOrgProviderConnectionMeta } from "@/lib/data/studio-org-inte
 import { STUDIO_PROVIDER_KEY_SOURCES } from "@/lib/studio-integrations/provider-key-sources";
 import type { StudioIntegrationProviderId } from "@/lib/studio-integrations/types";
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
+import { toast } from "@/lib/ui/app-toast";
 import { Button } from "@/components/ui/button";
 
 const initialState: StudioOrgIntegrationActionState = undefined;
-
-function successBannerClass() {
-  return "rounded-md border border-emerald-500/35 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-800 dark:text-emerald-200/95";
-}
 
 type ProviderLeaf =
   | "title"
@@ -72,7 +69,9 @@ export function StudioProviderConnectionPanel({
   const [showPlaintext, setShowPlaintext] = useState(false);
   const [revealPending, setRevealPending] = useState(false);
   const [revealError, setRevealError] = useState<string | null>(null);
-  const [copiedFlash, setCopiedFlash] = useState(false);
+  const prevSave = useRef(false);
+  const prevTest = useRef(false);
+  const prevDelete = useRef(false);
 
   const hasSavedKey = Boolean(connectionMeta);
   const lastVerified =
@@ -110,6 +109,27 @@ export function StudioProviderConnectionPanel({
     }
   }, [deleteState?.success]);
 
+  useEffect(() => {
+    const done =
+      prevSave.current && !savePending && saveState?.success === "saved";
+    prevSave.current = savePending;
+    if (done) toast.success(t("integrationsToastSaved"));
+  }, [savePending, saveState?.success, t]);
+
+  useEffect(() => {
+    const done =
+      prevTest.current && !testPending && testState?.success === "testOk";
+    prevTest.current = testPending;
+    if (done) toast.success(t("integrationsToastTestOk"));
+  }, [testPending, testState?.success, t]);
+
+  useEffect(() => {
+    const done =
+      prevDelete.current && !deletePending && deleteState?.success === "deleted";
+    prevDelete.current = deletePending;
+    if (done) toast.success(t("integrationsToastDeleted"));
+  }, [deletePending, deleteState?.success, t]);
+
   async function handleRevealStored() {
     setRevealError(null);
     setRevealPending(true);
@@ -136,8 +156,7 @@ export function StudioProviderConnectionPanel({
     if (!secretValue) return;
     try {
       await navigator.clipboard.writeText(secretValue);
-      setCopiedFlash(true);
-      window.setTimeout(() => setCopiedFlash(false), 2000);
+      toast.success(t("integrationsCopiedToast"));
     } catch {
       /* ignore */
     }
@@ -269,11 +288,6 @@ export function StudioProviderConnectionPanel({
               {translateActionErrorMessage(saveState.error, tAction)}
             </p>
           ) : null}
-          {saveState?.success === "saved" ? (
-            <p className={successBannerClass()} role="status">
-              {t("integrationsToastSaved")}
-            </p>
-          ) : null}
           {hasSavedKey ? (
             <div className="space-y-2">
               <p className="text-xs font-medium text-text-secondary">
@@ -323,11 +337,6 @@ export function StudioProviderConnectionPanel({
                   </>
                 ) : null}
               </div>
-              {copiedFlash ? (
-                <p className="text-xs text-emerald-700 dark:text-emerald-300/90">
-                  {t("integrationsCopiedToast")}
-                </p>
-              ) : null}
               {revealError ? (
                 <p className="text-xs text-danger" role="alert">
                   {translateActionErrorMessage(revealError, tAction)}
@@ -405,11 +414,6 @@ export function StudioProviderConnectionPanel({
                 {translateActionErrorMessage(testState.error, tAction)}
               </p>
             ) : null}
-            {testState?.success === "testOk" ? (
-              <p className={successBannerClass()} role="status">
-                {t("integrationsToastTestOk")}
-              </p>
-            ) : null}
             <Button
               type="submit"
               variant="secondary"
@@ -429,11 +433,6 @@ export function StudioProviderConnectionPanel({
                 role="alert"
               >
                 {translateActionErrorMessage(deleteState.error, tAction)}
-              </p>
-            ) : null}
-            {deleteState?.success === "deleted" ? (
-              <p className={successBannerClass()} role="status">
-                {t("integrationsToastDeleted")}
               </p>
             ) : null}
             <Button

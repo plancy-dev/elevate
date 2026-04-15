@@ -1,3 +1,4 @@
+import { BILLING_RETURN_FLASH_QUERY } from "@/lib/billing/billing-return-flash";
 import { getLemonCheckoutUrlForSlug } from "@/lib/env/lemon-checkout-urls";
 import { contentProductPriceMeetsLemonMinimum } from "@/lib/payments/lemon-custom-price-minimum";
 import {
@@ -104,7 +105,9 @@ export async function resolveLemonCheckoutForBillingPage(opts: {
     try {
       const rawPath = opts.checkoutSuccessPath?.trim();
       const successPath =
-        rawPath && rawPath.startsWith("/") ? rawPath : "/dashboard/billing/success";
+        rawPath && rawPath.startsWith("/")
+          ? rawPath
+          : `/dashboard/billing/success?${BILLING_RETURN_FLASH_QUERY}=success`;
       const redirectUrl = `${opts.appOrigin.replace(/\/$/, "")}${successPath}`;
       const url = await createLemonCheckoutSession({
         variantId,

@@ -21,6 +21,7 @@ import {
   type LlmDraftPayload,
   type OrgLlmCredential,
 } from "@/lib/studio-productions/episode-llm";
+import { resolveDraftTemplateForGenerate } from "@/lib/studio-productions/resolve-draft-template";
 import type { Json } from "@/types/database.types";
 import type { StudioEpisodeLlmActionState } from "@/lib/studio-productions/episode-llm-ui";
 import {
@@ -29,6 +30,7 @@ import {
   shouldArchiveSupersededDraft,
   upsertEpisodeDraftArtifactsFromPayload,
 } from "@/lib/studio-productions/draft-snapshots";
+import { draftTripleFromArtifactTimestamps } from "@/lib/studio-productions/resolve-episode-draft-artifacts";
 import { insertRunwayRenderArtifact } from "@/lib/studio-productions/runway-render-artifact";
 
 type LlmTurn = { role: "user" | "assistant"; content: string; at: string };
@@ -194,18 +196,12 @@ async function loadEpisodeDraftPayload(
 ): Promise<LlmDraftPayload> {
   const { data: arts } = await supabase
     .from("studio_production_artifacts")
-    .select("artifact_role, content_text")
+    .select("artifact_role, content_text, created_at")
     .eq("episode_id", episodeId)
     .eq("organization_id", organizationId)
     .in("artifact_role", [...EPISODE_DRAFT_ROLES]);
 
-  const out: LlmDraftPayload = { hook: "", title: "", script_draft: "" };
-  for (const a of arts ?? []) {
-    if (a.artifact_role === "hook") out.hook = a.content_text ?? "";
-    if (a.artifact_role === "title") out.title = a.content_text ?? "";
-    if (a.artifact_role === "script_draft") out.script_draft = a.content_text ?? "";
-  }
-  return out;
+  return draftTripleFromArtifactTimestamps(arts ?? []);
 }
 
 /** Archives replaced live draft before LLM overwrite; false = DB failure. */
@@ -310,6 +306,13 @@ export async function generateStudioEpisodeDraft(
     auth.ctx.organizationId,
   );
 
+  const rawTemplateKey = String(formData.get("draft_template_key") ?? "");
+  const resolvedTemplate = await resolveDraftTemplateForGenerate(
+    supabase,
+    auth.ctx.organizationId,
+    rawTemplateKey,
+  );
+
   const userPrompt = buildDraftPrompt({
     episodeTitle: episode.title,
     notes: episode.notes ?? "",
@@ -322,6 +325,7 @@ export async function generateStudioEpisodeDraft(
     userBriefing,
     generateMode,
     currentDraft: generateMode === "develop" ? priorLive : undefined,
+    templateBias: resolvedTemplate.bias,
   });
 
   const result = await generateDraftWithLlm(cred, userPrompt, {
@@ -368,6 +372,7 @@ export async function generateStudioEpisodeDraft(
         provider: cred.provider,
         model: result.model,
         generate_mode: generateMode,
+        draft_template_key: resolvedTemplate.resolvedKey,
       } as Json,
     );
   } catch {
@@ -378,6 +383,7 @@ export async function generateStudioEpisodeDraft(
     generateMode === "fresh"
       ? "[generate initial draft · mode=fresh]"
       : "[generate initial draft · mode=develop]",
+    `[template: ${resolvedTemplate.resolvedKey}]`,
     userBriefing.length > 0 ? `User direction:\n${userBriefing}` : "",
   ]
     .filter(Boolean)

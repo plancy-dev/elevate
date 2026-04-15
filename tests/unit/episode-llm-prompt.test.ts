@@ -68,6 +68,15 @@ describe("buildDraftPrompt", () => {
     expect(prompt).toContain('"hook":"H"');
   });
 
+  it("includes template bias block when templateBias is non-empty", () => {
+    const prompt = buildDraftPrompt({
+      ...base,
+      templateBias: "Custom bias line for tests.",
+    });
+    expect(prompt).toContain("Style and structure bias for this generation");
+    expect(prompt).toContain("Custom bias line for tests.");
+  });
+
   it("fresh mode omits current draft and adds staleness instructions", () => {
     const prompt = buildDraftPrompt({
       ...base,

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
+import { BillingReturnFlashToast } from "@/components/dashboard/billing-return-flash-toast";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.billing");
@@ -20,6 +22,9 @@ export default async function BillingPaymentFailPage({
 
   return (
     <div className="min-h-screen bg-background p-6">
+      <Suspense fallback={null}>
+        <BillingReturnFlashToast />
+      </Suspense>
       <h1 className="text-lg font-medium text-text-primary">{t("failTitle")}</h1>
       <p className="text-sm text-text-secondary mt-2 max-w-md">
         {message || t("failBody")}

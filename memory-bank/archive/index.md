@@ -6,6 +6,7 @@
 
 | Document | Description |
 |----------|-------------|
+| [`archive-dashboard-ux-toasts-billing-flash-draft-templates-2026-04.md`](work-history/archive-dashboard-ux-toasts-billing-flash-draft-templates-2026-04.md) | Dashboard Sonner toasts, Productions action success + forms, Lemon copy toast, billing `billingReturn` flash, G3.4 P1 draft prompt templates + snapshot meta (2026-04) |
 | [`archive-dashboard-billing-library-lemon-2026-04.md`](work-history/archive-dashboard-billing-library-lemon-2026-04.md) | Library detail/checkout, billing Lemon UX, admin catalog, i18n cleanup, migrations `020`–`021` (2026-04) |
 | [`reflect-phase1-closeout.md`](work-history/reflect-phase1-closeout.md) | Phase 1 MICE MVP close-out (1B–1D) |
 | [`reflect-ebook-content-funnel.md`](work-history/reflect-ebook-content-funnel.md) | Ebook / content funnel REFLECT |

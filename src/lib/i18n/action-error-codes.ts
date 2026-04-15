@@ -78,6 +78,12 @@ export const ActionErrorCode = {
   studioLlmBadResponse: "studioLlmBadResponse",
   /** Refine-with-LLM: empty instruction field */
   studioLlmInstructionRequired: "studioLlmInstructionRequired",
+
+  studioDraftTemplateNameRequired: "studioDraftTemplateNameRequired",
+  studioDraftTemplateBiasRequired: "studioDraftTemplateBiasRequired",
+  studioDraftTemplateNotFound: "studioDraftTemplateNotFound",
+  studioDraftTemplateNameTooLong: "studioDraftTemplateNameTooLong",
+  studioDraftTemplateBiasTooLong: "studioDraftTemplateBiasTooLong",
   /** @deprecated Prefer specific Runway errors; kept for older clients */
   studioRunwayManualOnly: "studioRunwayManualOnly",
   studioRunwayPromptRequired: "studioRunwayPromptRequired",

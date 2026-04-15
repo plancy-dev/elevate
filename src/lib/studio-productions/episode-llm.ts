@@ -103,6 +103,11 @@ export function buildDraftPrompt(context: {
   generateMode?: "develop" | "fresh";
   /** Current hook/title/script from the editor; used when generateMode is develop. */
   currentDraft?: LlmDraftPayload;
+  /**
+   * Seeded template bias (English). Injected before “Additional direction”; user briefing
+   * remains highest priority for topic and tone when they conflict.
+   */
+  templateBias?: string;
 }): string {
   const meta =
     typeof context.channelMetadata === "object" &&
@@ -111,6 +116,7 @@ export function buildDraftPrompt(context: {
       ? JSON.stringify(context.channelMetadata)
       : "{}";
   const briefing = (context.userBriefing ?? "").trim();
+  const templateBias = (context.templateBias ?? "").trim();
   const mode = context.generateMode ?? "develop";
   const draft = context.currentDraft;
   const hasDraftForDevelop =
@@ -148,6 +154,14 @@ export function buildDraftPrompt(context: {
         title: draft.title,
         script_draft: draft.script_draft,
       }),
+    );
+  }
+
+  if (templateBias.length > 0) {
+    lines.push(
+      "",
+      "Style and structure bias for this generation (applies unless Additional direction below explicitly overrides it):",
+      templateBias,
     );
   }
 

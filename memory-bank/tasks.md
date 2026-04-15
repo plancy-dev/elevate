@@ -195,6 +195,51 @@
 - [x] `anthropic` provider — 마이그레이션 `025` + [`STUDIO_INTEGRATION_PROVIDER_IDS`](../src/lib/studio-integrations/types.ts) + list-models 검증 + Integrations 탭/i18n (2026-04)
 - [ ] (선택) **에피소드 그룹(시나리오)** — 필요 시 ERD 스케치만 먼저
 
+### G3.4 — 에피소드 **초안 템플릿·바이어스** (INIT 준비 · 2026-04)
+
+> **목표:** 숏/채널에 맞춘 **규격·톤·구조**를 사전에 정의하고, 초안 생성 시 **선택한 템플릿을 LLM에 바이어스(추가 지시)**로 주입한다. 시스템 시딩 템플릿 vs 조직 커스텀 vs (선택) 파인튜닝은 **범위를 나눠** 단계 출시한다.  
+> **비목표 (INIT):** 실제 구현·DB 마이그레이션 — 아래는 **다음 PLAN/CREATIVE 입장용 스캐폴드**다.
+
+#### 현재 코드 앵커 (바이어스 주입 지점)
+
+| 레이어 | 파일 / 함수 | 메모 |
+|--------|-------------|------|
+| 사용자 프롬프트 조립 | [`src/lib/studio-productions/episode-llm.ts`](../src/lib/studio-productions/episode-llm.ts) `buildDraftPrompt` | 에피소드 메타·채널·`userBriefing`·develop/fresh·온에디터 초안 JSON. **템플릿 본문은 여기에 블록으로 추가**하는 패턴이 자연스럽다. |
+| 시스템 프롬프트 | 동 파일 `generateDraftWithLlm` | 짧은 역할 고정문; **톤/금지어/출력 스키마**를 템플릿 종류별로 바꾸려면 인자 확장 검토. |
+| 서버 액션 | [`src/actions/studio-episode-llm.ts`](../src/actions/studio-episode-llm.ts) `generateStudioEpisodeDraft` | `FormData`에서 `draft_briefing`, `draft_generate_mode` 수신. **`draft_template_id` 등 필드 추가** 시 동일 패턴. |
+| UI | [`src/components/dashboard/production-episode-draft-panel.tsx`](../src/components/dashboard/production-episode-draft-panel.tsx) | 템플릿 선택·커스텀 편집 진입점. |
+
+#### 제품 결정 (PLAN에서 확정)
+
+1. **템플릿 소스:** (A) 플랫폼 시딩만 (B) 조직별 저장 (C) 둘 다 + 기본값.  
+2. **표현 형태:** 단일 **시스템/유저 블록 텍스트** vs **구조화 필드**(톤·훅 길이·CTA 규칙) + 조립.  
+3. **“파인튜닝”:** 외부 모델 파인튜닝은 비용·거버넌스 큼 — **MVP는 프롬프트 바이어스만**으로 두고, 나중에 별도 ADR.  
+4. **스냅샷 메타:** [`studio_episode_draft_snapshots`](../supabase/migrations/) `source`/메타 JSON에 **template_id** 기록해 재현 가능하게 할지.
+
+#### PLAN 확정 (2026-04) — 실행 슬라이스
+
+**비목표 (전 단계 공통):** 벤더 측 **모델 파인튜닝**; 템플릿만으로 JSON 스키마 자체를 바꾸는 일(키 추가 등) — 필요 시 별 ADR.
+
+| Phase | 범위 | 데이터 | UI·코드 |
+|-------|------|--------|---------|
+| **P1 — MVP** | 플랫폼 **시딩 템플릿만** (코드 상수 또는 i18n 문자열 ID). `draft_template_key`를 FormData로 전달 → `buildDraftPrompt`에 **고정 블록**으로 삽입(예: “Style / structure bias: …”). 기본값 1개 + Shorts 일반·설명형 등 **N개**. | DB 없음. 템플릿은 [`draft-prompt-templates.ts`](../src/lib/studio-productions/draft-prompt-templates.ts)에 **키 + bias 텍스트** + 표시용 i18n 키. | [`production-episode-draft-panel.tsx`](../src/components/dashboard/production-episode-draft-panel.tsx): `FieldSelect`. [`studio-episode-llm.ts`](../src/actions/studio-episode-llm.ts): `normalizeDraftTemplateKey`. 스냅샷 메타 JSON에 `draft_template_key` 추가. **✅ 2026-04 BUILD** |
+| **P2** | **조직 커스텀** 템플릿: 제목 + 바이어스 본문 저장, 목록은 org 스코프. | 마이그레이션 `029` + `studio_episode_draft_templates` + RLS. 폼 값 `custom:<uuid>`. | 패널 **템플릿 관리** 다이얼로그 + `studio-draft-templates` 액션 + `resolveDraftTemplateForGenerate`. **✅ 2026-04 BUILD** |
+| **P3 (선택)** | 템플릿별 **시스템 프롬프트** 변형(톤·금지 강도). | P1 키 또는 P2 id를 `generateDraftWithLlm`에 전달. | 프롬프트 문자열 맵 또는 함수; 회귀 테스트로 JSON-only 유지 확인. |
+
+**우선순위:** **P1만 먼저 BUILD** → 검증 후 P2 CREATIVE(ERD·RLS) → P3는 제품 피드백 후.
+
+**성공 기준 (P1):** 사용자가 템플릿을 바꾸면 **동일 briefing으로도** 생성 결과 톤/구조가 의도적으로 달라짐; 스냅샷/감사에서 **어떤 템플릿으로 생성했는지** 추적 가능.
+
+#### 권장 워크플로
+
+| 단계 | 산출물 |
+|------|--------|
+| **PLAN** | MVP 범위: 시딩 템플릿 N개 + UI 셀렉터 + `buildDraftPrompt` 주입만 vs 조직 커스텀 테이블 포함 |
+| **CREATIVE** | 템플릿 데이터 모델(테이블 vs JSONB), RLS, i18n(템플릿 이름·설명) |
+| **BUILD** | 마이그레이션(필요 시) · 액션 · 패널 · `pnpm verify` |
+
+**복잡도 초안:** 데이터까지 가면 **L3–L4** (스키마·RLS·관리 UI). 프롬프트 상수 + UI만이면 **L2–L3**.
+
 ### G4 — 숏폼 2주 스프린트 (초미니 체크리스트)
 
 **전제:** 조회·바이럴은 플랫폼 측; Elevate는 **기록·상품·결제** 측.

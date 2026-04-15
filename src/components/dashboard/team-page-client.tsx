@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useTransition } from "react";
+import { useActionState, useEffect, useRef, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import {
@@ -14,6 +14,7 @@ import { inviteAbsoluteUrl } from "@/lib/invite-url";
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import type { OrgRoleKey } from "@/lib/user-roles";
 import { normalizeOrgRoleKey } from "@/lib/user-roles";
+import { toast } from "@/lib/ui/app-toast";
 import { Button } from "@/components/ui/button";
 
 type Props = {
@@ -47,12 +48,27 @@ export function TeamPageClient({
     undefined as InvitationActionState,
   );
   const [rolePending, startRole] = useTransition();
+  const prevInvitePending = useRef(false);
+
+  useEffect(() => {
+    const done =
+      prevInvitePending.current &&
+      !invitePending &&
+      inviteState?.success &&
+      !inviteState?.error;
+    prevInvitePending.current = invitePending;
+    if (done) {
+      toast.success(translateActionErrorMessage(inviteState.success!, tAction));
+    }
+  }, [invitePending, inviteState, tAction]);
 
   async function onRevoke(id: string) {
     if (!confirm(t("confirmRevoke"))) return;
     const r = await revokeOrganizationInvitation(id);
     if (r?.error) {
-      window.alert(translateActionErrorMessage(r.error, tAction));
+      toast.error(translateActionErrorMessage(r.error, tAction));
+    } else if (r?.success) {
+      toast.success(translateActionErrorMessage(r.success, tAction));
     }
     router.refresh();
   }
@@ -61,7 +77,7 @@ export function TeamPageClient({
     startRole(async () => {
       const r = await updateMemberRole(memberId, role);
       if (r?.error) {
-        window.alert(translateActionErrorMessage(r.error, tAction));
+        toast.error(translateActionErrorMessage(r.error, tAction));
       }
       router.refresh();
     });
@@ -73,7 +89,7 @@ export function TeamPageClient({
 
   async function copyInviteLink(token: string) {
     await navigator.clipboard.writeText(inviteAbsoluteUrl(token));
-    window.alert(t("linkCopied"));
+    toast.success(t("linkCopied"));
   }
 
   return (
@@ -123,11 +139,6 @@ export function TeamPageClient({
             {inviteState?.error && (
               <p className="text-xs text-danger">
                 {translateActionErrorMessage(inviteState.error, tAction)}
-              </p>
-            )}
-            {inviteState?.success && (
-              <p className="text-xs text-accent">
-                {translateActionErrorMessage(inviteState.success, tAction)}
               </p>
             )}
             <Button

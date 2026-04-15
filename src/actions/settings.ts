@@ -11,7 +11,8 @@ import {
 } from "@/lib/settings-validation";
 import { createClient } from "@/lib/supabase/server";
 
-export type SettingsActionState = { error?: string } | undefined;
+/** Discriminate with `state?.error` vs `state?.success` for narrowing-friendly checks in forms. */
+export type SettingsActionState = { error?: string; success?: true } | undefined;
 
 export async function updateOrganizationName(
   _prev: SettingsActionState,
@@ -43,7 +44,7 @@ export async function updateOrganizationName(
 
   revalidatePath("/dashboard", "layout");
   revalidatePath("/dashboard/settings");
-  return undefined;
+  return { success: true };
 }
 
 export async function updateProfileAndNotifications(
@@ -96,5 +97,5 @@ export async function updateProfileAndNotifications(
 
   revalidatePath("/dashboard", "layout");
   revalidatePath("/dashboard/settings");
-  return undefined;
+  return { success: true };
 }

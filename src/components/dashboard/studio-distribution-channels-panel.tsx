@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { ExternalLink } from "lucide-react";
 import {
@@ -9,6 +9,7 @@ import {
   type StudioChannelActionState,
 } from "@/actions/studio-distribution-channels";
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
+import { toast } from "@/lib/ui/app-toast";
 import type { StudioDistributionChannelRow } from "@/lib/studio-productions/shorts-catalog";
 import { Button } from "@/components/ui/button";
 import { StudioChannelPlatformSelect } from "@/components/dashboard/studio-episode-shorts-fields";
@@ -30,6 +31,22 @@ export function StudioDistributionChannelsPanel({
     deleteStudioDistributionChannel,
     initialState,
   );
+  const prevCreate = useRef(false);
+  const prevDelete = useRef(false);
+
+  useEffect(() => {
+    const done =
+      prevCreate.current && !createPending && createState?.success === "created";
+    prevCreate.current = createPending;
+    if (done) toast.success(t("channelsToastCreated"));
+  }, [createPending, createState?.success, t]);
+
+  useEffect(() => {
+    const done =
+      prevDelete.current && !deletePending && deleteState?.success === "deleted";
+    prevDelete.current = deletePending;
+    if (done) toast.success(t("channelsToastDeleted"));
+  }, [deletePending, deleteState?.success, t]);
 
   return (
     <div className="space-y-10">

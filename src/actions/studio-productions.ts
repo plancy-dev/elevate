@@ -18,7 +18,17 @@ import {
 } from "@/lib/studio-productions/validate";
 import type { Json } from "@/types/database.types";
 
-export type StudioProductionActionState = { error?: string } | undefined;
+/** `success` is set when the action completes without redirect (create/delete episode use `redirect()`). */
+export type StudioProductionActionState =
+  | {
+      error?: string;
+      success?:
+        | "episode_saved"
+        | "artifact_created"
+        | "artifact_updated"
+        | "artifact_deleted";
+    }
+  | undefined;
 
 function parseJsonField(raw: string | null): Json {
   if (raw == null || raw.trim() === "") return {};
@@ -166,7 +176,7 @@ export async function updateStudioEpisode(
 
   revalidatePath("/dashboard/productions");
   revalidatePath(`/dashboard/productions/${id}`);
-  return undefined;
+  return { success: "episode_saved" };
 }
 
 export async function deleteStudioEpisode(
@@ -258,7 +268,7 @@ export async function createStudioArtifact(
   if (error) return { error: ActionErrorCode.dbError };
 
   revalidatePath(`/dashboard/productions/${episodeId}`);
-  return undefined;
+  return { success: "artifact_created" };
 }
 
 export async function updateStudioArtifact(
@@ -321,7 +331,7 @@ export async function updateStudioArtifact(
   if (!updatedArt?.length) return { error: ActionErrorCode.studioArtifactNotFound };
 
   revalidatePath(`/dashboard/productions/${episodeId}`);
-  return undefined;
+  return { success: "artifact_updated" };
 }
 
 export async function deleteStudioArtifact(
@@ -348,5 +358,5 @@ export async function deleteStudioArtifact(
   if (!deletedArt?.length) return { error: ActionErrorCode.studioArtifactNotFound };
 
   revalidatePath(`/dashboard/productions/${episodeId}`);
-  return undefined;
+  return { success: "artifact_deleted" };
 }

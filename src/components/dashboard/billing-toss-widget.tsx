@@ -11,6 +11,7 @@ import {
   PaymentIntentErrorCode,
 } from "@/lib/payments/payment-intent-errors";
 import { isUnhelpfulTossClientErrorMessage } from "@/lib/payments/toss-widget-user-message";
+import { BILLING_RETURN_FLASH_QUERY } from "@/lib/billing/billing-return-flash";
 import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
 
 type WidgetsApi = {
@@ -168,8 +169,8 @@ export function BillingTossWidget({
         orderName: contentProductSlug
           ? t("orderNameWithSlug", { slug: contentProductSlug })
           : t("orderNameDefault"),
-        successUrl: `${appOrigin}/dashboard/billing/success`,
-        failUrl: `${appOrigin}/dashboard/billing/fail`,
+        successUrl: `${appOrigin}/dashboard/billing/success?${BILLING_RETURN_FLASH_QUERY}=success`,
+        failUrl: `${appOrigin}/dashboard/billing/fail?${BILLING_RETURN_FLASH_QUERY}=fail`,
         customerEmail: customerEmail ?? undefined,
         customerName: customerName ?? t("customerFallback"),
       });

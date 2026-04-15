@@ -19,6 +19,8 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문�
 
 **다음 (로드맵):** [`tasks.md`](tasks.md) — **Phase G (Creator GTM)** 전자책 1 SKU + Productions 루틴 + Lemon Squeezy 등 글로벌 결제 · Phase M·백로그(블로그·PostHog·전자책 M4) 병행.
 
+**INIT (2026-04) — 초안 템플릿·바이어스:** [`tasks.md`](tasks.md) **§ G3.4**. **P1+P2:** 시딩 키 + **조직 커스텀**(`029` `studio_episode_draft_templates`, `custom:<uuid>` · 관리 다이얼로그). **다음:** P3 시스템 프롬프트 변형 등은 우선순위에 따라.
+
 ### 다음 BUILD 앵커 (구현 예정)
 
 **Studio 우선순위 (제품 합의 2026-04):** (1) **Runway Dev API — 잡 제출·폴링 실연동** (`runwayAdapter.runStep`, 아티팩트 반영) — **PLAN:** [`docs/features/PLAN-runway-integration.md`](../docs/features/PLAN-runway-integration.md) (엔드포인트·페이로드·UI 상태머신·BUILD 체크리스트) (2) **에피소드 초안** — 짧은 입력만으로도 채널에 맞는 **구조적 초안**이 나오도록 프롬프트·템플릿 리팩터. SoT: [`docs/features/STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md`](../docs/features/STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md) · [`docs/features/PLAN-studio-provider-integrations.md`](../docs/features/PLAN-studio-provider-integrations.md) Phase 3 · [`src/lib/studio-productions/episode-llm.ts`](../src/lib/studio-productions/episode-llm.ts).

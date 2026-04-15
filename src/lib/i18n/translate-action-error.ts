@@ -5,6 +5,10 @@ import {
   STUDIO_METADATA_JSON_MAX_CHARS,
   STUDIO_TOPIC_LINE_MAX,
 } from "@/lib/studio-productions/constants";
+import {
+  STUDIO_DRAFT_TEMPLATE_BIAS_MAX,
+  STUDIO_DRAFT_TEMPLATE_NAME_MAX,
+} from "@/lib/studio-productions/draft-prompt-templates";
 
 type ActionErrorsTranslate = (
   key: string,
@@ -35,6 +39,16 @@ export function translateActionErrorMessage(
   }
   if (code === ActionErrorCode.studioIntegrationsSecretTooLong) {
     return t("studioIntegrationsSecretTooLong", { max: 8192 });
+  }
+  if (code === ActionErrorCode.studioDraftTemplateNameTooLong) {
+    return t("studioDraftTemplateNameTooLong", {
+      max: STUDIO_DRAFT_TEMPLATE_NAME_MAX,
+    });
+  }
+  if (code === ActionErrorCode.studioDraftTemplateBiasTooLong) {
+    return t("studioDraftTemplateBiasTooLong", {
+      max: STUDIO_DRAFT_TEMPLATE_BIAS_MAX,
+    });
   }
   return t(code);
 }

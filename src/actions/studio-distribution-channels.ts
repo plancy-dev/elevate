@@ -5,7 +5,9 @@ import { getOrgMemberContext } from "@/lib/auth/require-org-editor";
 import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import { createClient } from "@/lib/supabase/server";
 
-export type StudioChannelActionState = { error?: string } | undefined;
+export type StudioChannelActionState =
+  | { error?: string; success?: "created" | "deleted" }
+  | undefined;
 
 const PLATFORMS = new Set([
   "youtube_shorts",
@@ -64,7 +66,7 @@ export async function createStudioDistributionChannel(
 
   revalidatePath("/dashboard/productions");
   revalidatePath("/dashboard/productions/channels");
-  return undefined;
+  return { success: "created" };
 }
 
 export async function deleteStudioDistributionChannel(
@@ -90,5 +92,5 @@ export async function deleteStudioDistributionChannel(
 
   revalidatePath("/dashboard/productions");
   revalidatePath("/dashboard/productions/channels");
-  return undefined;
+  return { success: "deleted" };
 }

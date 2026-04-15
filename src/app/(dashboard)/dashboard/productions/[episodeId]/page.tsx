@@ -19,6 +19,7 @@ import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrati
 import { getOrgProviderApiKey } from "@/lib/studio-integrations/org-provider-secret";
 import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/feature";
 import { getOrgLlmProviderAvailability } from "@/lib/studio-productions/episode-llm";
+import { listDraftTemplatesForOrg } from "@/lib/data/studio-draft-templates";
 import { listDraftSnapshotsForEpisode } from "@/lib/studio-productions/draft-snapshots";
 import type { StudioEpisodeStatus } from "@/lib/studio-productions/constants";
 import { distributionDisplayLabel } from "@/lib/studio-productions/distribution";
@@ -112,6 +113,10 @@ export default async function ProductionEpisodePage({
 
   const draftSnapshots = canEditDraft
     ? await listDraftSnapshotsForEpisode(supabase, episodeId, orgId, 30)
+    : [];
+
+  const customDraftTemplates = canEditDraft
+    ? await listDraftTemplatesForOrg(supabase, orgId)
     : [];
 
   const runwayRenderReady =
@@ -219,6 +224,7 @@ export default async function ProductionEpisodePage({
                     episodeId={episode.id}
                     artifacts={artifacts}
                     canEdit={canEditDraft}
+                    customDraftTemplates={customDraftTemplates}
                     draftLlmAvailability={draftLlmAvailability}
                     draftSnapshots={draftSnapshots}
                     runwayRenderReady={runwayRenderReady}

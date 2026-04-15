@@ -8,6 +8,7 @@ import {
 } from "@/lib/seo/site-verification";
 import { SupabaseUrlHashHandler } from "@/components/auth/supabase-url-hash-handler";
 import { AppThemeProvider } from "@/components/providers/app-theme-provider";
+import { AppToaster } from "@/components/ui/app-toaster";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -102,6 +103,7 @@ export default function RootLayout({
           <PostHogRoot>
             <SupabaseUrlHashHandler />
             {children}
+            <AppToaster />
           </PostHogRoot>
         </AppThemeProvider>
       </body>

@@ -1,12 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import {
   updateProfileAndNotifications,
   type SettingsActionState,
 } from "@/actions/settings";
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
+import { toast } from "@/lib/ui/app-toast";
 import { Button } from "@/components/ui/button";
 
 export function SettingsProfileForm({
@@ -23,6 +24,13 @@ export function SettingsProfileForm({
     updateProfileAndNotifications,
     initialState,
   );
+  const prevPending = useRef(false);
+
+  useEffect(() => {
+    const done = prevPending.current && !pending && state?.success === true;
+    prevPending.current = pending;
+    if (done) toast.success(t("savedToast"));
+  }, [pending, state?.success, t]);
 
   return (
     <form action={formAction} className="space-y-4">

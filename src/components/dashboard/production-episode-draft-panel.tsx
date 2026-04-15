@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { toast } from "@/lib/ui/app-toast";
 import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -28,7 +29,10 @@ import {
 } from "@/lib/studio-productions/episode-llm-ui";
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import type { StudioProductionArtifactRow } from "@/lib/data/studio-productions";
-import { EPISODE_DRAFT_ROLES } from "@/lib/studio-productions/constants";
+import {
+  draftArtifactSyncKey,
+  draftTripleFromArtifacts,
+} from "@/lib/studio-productions/resolve-episode-draft-artifacts";
 import {
   ANTHROPIC_DRAFT_MODEL_OPTIONS,
   OPENAI_DRAFT_MODEL_OPTIONS,
@@ -37,6 +41,14 @@ import {
   type StudioDraftLlmProvider,
 } from "@/lib/studio-productions/episode-llm-models";
 import type { StudioEpisodeDraftSnapshotRow } from "@/lib/studio-productions/draft-snapshots";
+import {
+  CUSTOM_DRAFT_TEMPLATE_PREFIX,
+  DEFAULT_DRAFT_TEMPLATE_KEY,
+  DRAFT_TEMPLATE_KEYS,
+  type DraftTemplateKey,
+} from "@/lib/studio-productions/draft-prompt-templates";
+import type { StudioEpisodeDraftTemplateRow } from "@/lib/data/studio-draft-templates";
+import { DraftTemplateManageDialog } from "@/components/dashboard/draft-template-manage-dialog";
 import { Button } from "@/components/ui/button";
 import { FieldSelect } from "@/components/ui/field-select";
 import { cn } from "@/lib/utils";
@@ -56,13 +68,18 @@ function pickInitialProvider(availability: {
   return "openai";
 }
 
-function draftFromArtifacts(artifacts: StudioProductionArtifactRow[]) {
-  const hook = artifacts.find((a) => a.artifact_role === "hook")?.content_text ?? "";
-  const title = artifacts.find((a) => a.artifact_role === "title")?.content_text ?? "";
-  const script_draft =
-    artifacts.find((a) => a.artifact_role === "script_draft")?.content_text ?? "";
-  return { hook, title, script_draft };
-}
+const DRAFT_TEMPLATE_LABEL_KEYS: Record<
+  DraftTemplateKey,
+  | "draftTemplateOptionDefault"
+  | "draftTemplateOptionPunchyShorts"
+  | "draftTemplateOptionStoryEducational"
+  | "draftTemplateOptionSoftCta"
+> = {
+  default: "draftTemplateOptionDefault",
+  punchy_shorts: "draftTemplateOptionPunchyShorts",
+  story_educational: "draftTemplateOptionStoryEducational",
+  soft_cta: "draftTemplateOptionSoftCta",
+};
 
 function draftLlmTierLabelKey(
   tier: DraftModelCostTier,
@@ -75,13 +92,6 @@ function draftLlmTierLabelKey(
     case "high":
       return "draftLlmTierHigh";
   }
-}
-
-function draftArtifactsSyncKey(artifacts: StudioProductionArtifactRow[]) {
-  return EPISODE_DRAFT_ROLES.map((role) => {
-    const row = artifacts.find((a) => a.artifact_role === role);
-    return row ? `${row.id}:${row.created_at}` : `_:${role}`;
-  }).join("|");
 }
 
 function FieldDiffBlock({
@@ -136,6 +146,7 @@ function FieldDiffBlock({
 function ProductionEpisodeDraftPanelEditable({
   episodeId,
   artifacts,
+  customDraftTemplates,
   draftLlmAvailability: draftLlmAvailabilityProp,
   draftSnapshots,
   runwayRenderReady = false,
@@ -144,6 +155,8 @@ function ProductionEpisodeDraftPanelEditable({
 }: {
   episodeId: string;
   artifacts: StudioProductionArtifactRow[];
+  /** Org-scoped custom draft templates (bias text for the LLM). */
+  customDraftTemplates: StudioEpisodeDraftTemplateRow[];
   /** When omitted, both providers are treated as unavailable (safe default for hooks). */
   draftLlmAvailability?: { openai: boolean; anthropic: boolean } | null;
   draftSnapshots: StudioEpisodeDraftSnapshotRow[];
@@ -167,13 +180,17 @@ function ProductionEpisodeDraftPanelEditable({
   const processedAiResultId = useRef<string>("");
   const processedRunwayTaskId = useRef<string>("");
   const revertSaveRequested = useRef(false);
+  const applyFromCompareRef = useRef(false);
 
-  const seed = draftFromArtifacts(artifacts);
+  const seed = draftTripleFromArtifacts(artifacts);
   const [hook, setHook] = useState(seed.hook);
   const [title, setTitle] = useState(seed.title);
   const [scriptDraft, setScriptDraft] = useState(seed.script_draft);
   const [instruction, setInstruction] = useState("");
   const [draftBriefing, setDraftBriefing] = useState("");
+  const [draftTemplateSelection, setDraftTemplateSelection] = useState<string>(
+    DEFAULT_DRAFT_TEMPLATE_KEY,
+  );
 
   const [compareOpen, setCompareOpen] = useState(false);
   const [comparePrevious, setComparePrevious] =
@@ -181,10 +198,13 @@ function ProductionEpisodeDraftPanelEditable({
   const [compareProposed, setCompareProposed] =
     useState<StudioEpisodeLlmDraftPayload | null>(null);
 
-  const artifactSyncKey = useMemo(
-    () => draftArtifactsSyncKey(artifacts),
-    [artifacts],
-  );
+  const [localCustomDraftTemplates, setLocalCustomDraftTemplates] =
+    useState<StudioEpisodeDraftTemplateRow[]>(customDraftTemplates);
+  useEffect(() => {
+    setLocalCustomDraftTemplates(customDraftTemplates);
+  }, [customDraftTemplates]);
+
+  const artifactSyncKey = useMemo(() => draftArtifactSyncKey(artifacts), [artifacts]);
 
   useEffect(() => {
     posthogRef.current = posthog;
@@ -195,7 +215,7 @@ function ProductionEpisodeDraftPanelEditable({
   // props before router.refresh() lands, reverting the editor to the old saved draft.
   useEffect(() => {
     if (compareOpen) return;
-    const s = draftFromArtifacts(artifacts);
+    const s = draftTripleFromArtifacts(artifacts);
     startTransition(() => {
       setHook(s.hook);
       setTitle(s.title);
@@ -234,6 +254,25 @@ function ProductionEpisodeDraftPanelEditable({
       label: `${o.id} — ${t(draftLlmTierLabelKey(o.costTier))} · ${o.pricingHint}`,
     }));
   }, [effectiveProvider, t]);
+
+  const draftTemplateOptions = useMemo(() => {
+    const seeds = DRAFT_TEMPLATE_KEYS.map((k) => ({
+      value: k,
+      label: t(DRAFT_TEMPLATE_LABEL_KEYS[k]),
+    }));
+    const customs = localCustomDraftTemplates.map((row) => ({
+      value: `${CUSTOM_DRAFT_TEMPLATE_PREFIX}${row.id}`,
+      label: row.name,
+    }));
+    return [...seeds, ...customs];
+  }, [t, localCustomDraftTemplates]);
+
+  useEffect(() => {
+    if (!draftTemplateSelection.startsWith(CUSTOM_DRAFT_TEMPLATE_PREFIX)) return;
+    const id = draftTemplateSelection.slice(CUSTOM_DRAFT_TEMPLATE_PREFIX.length);
+    if (localCustomDraftTemplates.some((row) => row.id === id)) return;
+    setDraftTemplateSelection(DEFAULT_DRAFT_TEMPLATE_KEY);
+  }, [localCustomDraftTemplates, draftTemplateSelection]);
 
   const resolvedModel = useMemo(() => {
     const opts =
@@ -276,21 +315,6 @@ function ProductionEpisodeDraftPanelEditable({
     restoreState?.error ??
     rwState?.error ??
     ytState?.error;
-  const ok =
-    genState?.success ??
-    refState?.success ??
-    saveState?.success ??
-    restoreState?.success ??
-    rwState?.success ??
-    undefined;
-
-  /** Manual save only — generate/refine use the compare panel instead of a toast. */
-  const successMsg =
-    ok === "draftSaved"
-      ? t("draftSuccessSaved")
-      : ok === "runwayRenderComplete"
-        ? t("draftRunwaySuccess")
-        : null;
 
   function labelForSnapshotSource(source: string) {
     switch (source) {
@@ -347,24 +371,52 @@ function ProductionEpisodeDraftPanelEditable({
     const tid = rwState.runway.taskId;
     if (processedRunwayTaskId.current === tid) return;
     processedRunwayTaskId.current = tid;
+    toast.success(t("draftRunwaySuccess"));
     posthogRef.current?.capture(PostHogEvent.ELEVATE_STUDIO_EPISODE_RUNWAY_RENDER, {
       episode_id: episodeId,
       outcome: "completed",
     });
     router.refresh();
-  }, [rwState, episodeId, router]);
+  }, [rwState, episodeId, router, t]);
 
   useEffect(() => {
-    if (saveState?.success !== "draftSaved" || !revertSaveRequested.current) return;
-    revertSaveRequested.current = false;
-    startTransition(() => {
-      setCompareOpen(false);
-      setComparePrevious(null);
-      setCompareProposed(null);
-    });
-    snapshotBeforeAi.current = null;
+    if (saveState?.success !== "draftSaved") return;
+
+    if (applyFromCompareRef.current) {
+      applyFromCompareRef.current = false;
+      toast.success(t("draftSuccessSaved"));
+      const applied = compareProposed;
+      startTransition(() => {
+        if (applied) {
+          setHook(applied.hook);
+          setTitle(applied.title);
+          setScriptDraft(applied.script_draft);
+        }
+        setCompareOpen(false);
+        setComparePrevious(null);
+        setCompareProposed(null);
+      });
+      snapshotBeforeAi.current = null;
+      router.refresh();
+      return;
+    }
+
+    if (revertSaveRequested.current) {
+      revertSaveRequested.current = false;
+      toast.success(t("draftSuccessSaved"));
+      startTransition(() => {
+        setCompareOpen(false);
+        setComparePrevious(null);
+        setCompareProposed(null);
+      });
+      snapshotBeforeAi.current = null;
+      router.refresh();
+      return;
+    }
+
+    toast.success(t("draftSuccessSaved"));
     router.refresh();
-  }, [saveState, router]);
+  }, [saveState, router, t, compareProposed]);
 
   useEffect(() => {
     const done =
@@ -381,8 +433,9 @@ function ProductionEpisodeDraftPanelEditable({
 
   useEffect(() => {
     if (restoreState?.success !== "draftSaved") return;
+    toast.success(t("draftSnapshotRestoredToast"));
     router.refresh();
-  }, [restoreState?.success, router]);
+  }, [restoreState?.success, router, t]);
 
   return (
     <section
@@ -417,12 +470,6 @@ function ProductionEpisodeDraftPanelEditable({
           {translateActionErrorMessage(err, tAction)}
         </p>
       ) : null}
-      {successMsg ? (
-        <p className="rounded-md border border-emerald-500/35 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-800 dark:text-emerald-200/95">
-          {successMsg}
-        </p>
-      ) : null}
-
       {compareOpen && comparePrevious && compareProposed ? (
         <div
           className="rounded-xl border border-primary/30 bg-primary/4 p-4 space-y-4"
@@ -467,23 +514,21 @@ function ProductionEpisodeDraftPanelEditable({
             />
           </div>
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            <Button
-              type="button"
-              variant="primary"
-              size="sm"
-              onClick={() => {
-                setHook(compareProposed.hook);
-                setTitle(compareProposed.title);
-                setScriptDraft(compareProposed.script_draft);
-                setCompareOpen(false);
-                setComparePrevious(null);
-                setCompareProposed(null);
-                snapshotBeforeAi.current = null;
-                router.refresh();
+            <form
+              action={saveAction}
+              className="inline"
+              onSubmit={() => {
+                applyFromCompareRef.current = true;
               }}
             >
-              {t("draftCompareApply")}
-            </Button>
+              <input type="hidden" name="episode_id" value={episodeId} />
+              <input type="hidden" name="hook" value={compareProposed.hook} />
+              <input type="hidden" name="title" value={compareProposed.title} />
+              <input type="hidden" name="script_draft" value={compareProposed.script_draft} />
+              <Button type="submit" variant="primary" size="sm" isLoading={savePending}>
+                {t("draftCompareApply")}
+              </Button>
+            </form>
             <form
               action={saveAction}
               className="inline"
@@ -607,6 +652,32 @@ function ProductionEpisodeDraftPanelEditable({
             {t("draftGenerateModeHint")}
           </p>
         </fieldset>
+        <div>
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+            <label
+              className="block text-xs font-medium text-text-secondary"
+              htmlFor={`draft_template_${episodeId}`}
+            >
+              {t("draftTemplateLabel")}
+            </label>
+            <DraftTemplateManageDialog
+              templates={localCustomDraftTemplates}
+              onTemplatesChange={setLocalCustomDraftTemplates}
+            />
+          </div>
+          <FieldSelect
+            id={`draft_template_${episodeId}`}
+            name="draft_template_key"
+            value={draftTemplateSelection}
+            onChange={(e) => setDraftTemplateSelection(e.target.value)}
+            options={draftTemplateOptions}
+            controlSize="sm"
+            disabled={!llmReady}
+          />
+          <p className="mt-1.5 text-[11px] text-text-tertiary leading-snug">
+            {t("draftTemplateHint")}
+          </p>
+        </div>
         <div>
           <label
             className="block text-xs font-medium text-text-secondary mb-1.5"
@@ -829,6 +900,7 @@ export function ProductionEpisodeDraftPanel({
   episodeId,
   artifacts,
   canEdit,
+  customDraftTemplates = [],
   draftLlmAvailability,
   draftSnapshots = [],
   runwayRenderReady = false,
@@ -838,6 +910,7 @@ export function ProductionEpisodeDraftPanel({
   episodeId: string;
   artifacts: StudioProductionArtifactRow[];
   canEdit: boolean;
+  customDraftTemplates?: StudioEpisodeDraftTemplateRow[];
   draftLlmAvailability?: { openai: boolean; anthropic: boolean } | null;
   draftSnapshots?: StudioEpisodeDraftSnapshotRow[];
   runwayRenderReady?: boolean;
@@ -873,6 +946,7 @@ export function ProductionEpisodeDraftPanel({
       key={episodeId}
       episodeId={episodeId}
       artifacts={artifacts}
+      customDraftTemplates={customDraftTemplates}
       draftLlmAvailability={draftLlmAvailability}
       draftSnapshots={draftSnapshots}
       runwayRenderReady={runwayRenderReady}

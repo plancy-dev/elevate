@@ -43,6 +43,7 @@ import { cn } from "@/lib/utils";
 import { FieldSelect } from "@/components/ui/field-select";
 import { StudioEpisodeDistributionFields } from "@/components/dashboard/studio-episode-distribution-fields";
 import { parseStoredDistribution } from "@/lib/studio-productions/distribution";
+import { toast } from "@/lib/ui/app-toast";
 
 function ArtifactRoleDatalist() {
   return (
@@ -223,6 +224,18 @@ export function StudioProductionsEpisodeEditForm({
   const [distributionPreset, setDistributionPreset] = useState(
     parsedDistribution.preset,
   );
+  const prevPendingRef = useRef(false);
+
+  useEffect(() => {
+    if (
+      prevPendingRef.current &&
+      !pending &&
+      state?.success === "episode_saved"
+    ) {
+      toast.success(t("toastEpisodeSaved"));
+    }
+    prevPendingRef.current = pending;
+  }, [pending, state, t]);
 
   const embedded = layout === "embedded";
 
@@ -406,6 +419,18 @@ function ArtifactAddForm({
   const formKey = prefill
     ? `pf-${prefill.artifact_role}-${prefill.contentText.length}`
     : "no-pf";
+  const prevPendingRef = useRef(false);
+
+  useEffect(() => {
+    if (
+      prevPendingRef.current &&
+      !pending &&
+      state?.success === "artifact_created"
+    ) {
+      toast.success(t("toastArtifactCreated"));
+    }
+    prevPendingRef.current = pending;
+  }, [pending, state, t]);
 
   return (
     <form
@@ -517,12 +542,17 @@ function ArtifactEditDialogBody({
   const prevPendingRef = useRef(false);
 
   useEffect(() => {
-    if (prevPendingRef.current && !pending && state === undefined) {
+    if (
+      prevPendingRef.current &&
+      !pending &&
+      state?.success === "artifact_updated"
+    ) {
+      toast.success(t("toastArtifactUpdated"));
       router.refresh();
       onSaved();
     }
     prevPendingRef.current = pending;
-  }, [onSaved, pending, router, state]);
+  }, [onSaved, pending, router, state, t]);
 
   const editFormId = `studio-artifact-edit-${artifact.id}`;
 
@@ -648,6 +678,18 @@ function ArtifactDeleteForm({
     deleteStudioArtifact,
     initialState,
   );
+  const prevPendingRef = useRef(false);
+
+  useEffect(() => {
+    if (
+      prevPendingRef.current &&
+      !pending &&
+      state?.success === "artifact_deleted"
+    ) {
+      toast.success(t("toastArtifactDeleted"));
+    }
+    prevPendingRef.current = pending;
+  }, [pending, state, t]);
 
   return (
     <form action={formAction} className="inline">
