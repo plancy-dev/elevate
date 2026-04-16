@@ -44,7 +44,6 @@ export type ProductionsStudioDialogPayload = {
 type ModalKind = "projects" | "channels" | "integrations" | "newProject" | "editProject" | null;
 
 type Ctx = {
-  openProjects: () => void;
   openChannels: () => void;
   openIntegrations: () => void;
   openNewProject: () => void;
@@ -82,7 +81,6 @@ export function ProductionsStudioDialogProvider({
     setEditProjectId(null);
   }, []);
 
-  const openProjects = useCallback(() => setModalKind("projects"), [setModalKind]);
   const openChannels = useCallback(() => setModalKind("channels"), [setModalKind]);
   const openIntegrations = useCallback(() => setModalKind("integrations"), [setModalKind]);
   const openNewProject = useCallback(() => setModalKind("newProject"), [setModalKind]);
@@ -96,21 +94,13 @@ export function ProductionsStudioDialogProvider({
 
   const ctx = useMemo(
     () => ({
-      openProjects,
       openChannels,
       openIntegrations,
       openNewProject,
       openEditProject,
       close,
     }),
-    [
-      openProjects,
-      openChannels,
-      openIntegrations,
-      openNewProject,
-      openEditProject,
-      close,
-    ],
+    [openChannels, openIntegrations, openNewProject, openEditProject, close],
   );
 
   const projectForEdit = useMemo(() => {
@@ -308,14 +298,6 @@ function ProjectsDialogBody({
           );
         })}
       </ul>
-      <details className="rounded-lg border border-border-subtle bg-layer-02/30">
-        <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-text-primary outline-none [&::-webkit-details-marker]:hidden">
-          {t("projectsExpandNew")}
-        </summary>
-        <div className="border-t border-border-subtle px-4 pb-4 pt-3">
-          <StudioProjectCreateForm />
-        </div>
-      </details>
     </div>
   );
 }
@@ -323,7 +305,7 @@ function ProjectsDialogBody({
 /** Toolbar: 새 프로젝트 + 스튜디오 다이얼로그 트리거 (제작 허브 카드 툴바용). */
 export function ProductionsStudioToolbarActions({ className }: { className?: string }) {
   const t = useTranslations("Dashboard.productions");
-  const { openProjects, openChannels, openIntegrations, openNewProject } = useProductionsStudioDialogs();
+  const { openChannels, openIntegrations, openNewProject } = useProductionsStudioDialogs();
 
   return (
     <div
@@ -331,10 +313,6 @@ export function ProductionsStudioToolbarActions({ className }: { className?: str
     >
       <Button type="button" variant="tertiary" size="sm" onClick={openNewProject}>
         {t("projectsCtaNew")}
-      </Button>
-      <Button type="button" variant="secondary" size="sm" onClick={openProjects} className="gap-1.5">
-        <FolderKanban className="h-3.5 w-3.5" aria-hidden />
-        {t("projectsNav")}
       </Button>
       <Button type="button" variant="secondary" size="sm" onClick={openChannels} className="gap-1.5">
         <Radio className="h-3.5 w-3.5" aria-hidden />
