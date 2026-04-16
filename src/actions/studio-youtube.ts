@@ -5,6 +5,9 @@ import { getOrgMemberContext } from "@/lib/auth/require-org-editor";
 import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import { createClient } from "@/lib/supabase/server";
 import { getStudioEpisodeForOrg } from "@/lib/data/studio-productions";
+import { resolveEpisodeFormat } from "@/lib/studio-productions/episode-format";
+import { logAudit } from "@/lib/audit/log";
+import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/feature";
 import {
   isStudioIntegrationsEncryptionConfigured,
@@ -168,7 +171,7 @@ export async function uploadEpisodeToYouTube(
     description,
     tags,
     privacyStatus,
-    isShort: true,
+    isShort: resolveEpisodeFormat(episode) === "shorts",
     aiGenerated: true,
   });
 
@@ -183,6 +186,15 @@ export async function uploadEpisodeToYouTube(
     .eq("id", episodeId);
 
   await touchStudioYouTubeChannelToken(ytTokenClient, channelToken.id);
+
+  void logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.STUDIO_YOUTUBE_UPLOAD,
+    entityType: AuditEntityType.STUDIO_EPISODE,
+    entityId: episodeId,
+    metadata: { video_id: result.videoId, privacy: privacyStatus },
+  });
 
   revalidatePath(`/dashboard/productions/${episodeId}`);
   return { ok: true, videoId: result.videoId, videoUrl: result.videoUrl };

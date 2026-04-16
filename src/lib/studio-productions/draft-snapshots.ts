@@ -19,8 +19,19 @@ export type DraftTriple = {
   script_draft: string;
 };
 
+/** Unify CRLF/LF and trim so LLM payloads match FormData / DB round-trips for dedup. */
+export function normalizeDraftTripleForSnapshot(p: DraftTriple): DraftTriple {
+  const nl = (s: string) => s.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  return {
+    hook: nl(p.hook ?? "").trim(),
+    title: nl(p.title ?? "").trim(),
+    script_draft: nl(p.script_draft ?? "").trim(),
+  };
+}
+
 function fingerprint(p: DraftTriple): string {
-  return `${p.hook}\u0000${p.title}\u0000${p.script_draft}`;
+  const n = normalizeDraftTripleForSnapshot(p);
+  return `${n.hook}\u0000${n.title}\u0000${n.script_draft}`;
 }
 
 /** Prior live draft before AI replaces artifacts — skip if empty or identical to next. */
@@ -28,10 +39,11 @@ export function shouldArchiveSupersededDraft(
   prior: DraftTriple,
   next: DraftTriple,
 ): boolean {
-  const empty =
-    !prior.hook.trim() && !prior.title.trim() && !prior.script_draft.trim();
+  const p = normalizeDraftTripleForSnapshot(prior);
+  const n = normalizeDraftTripleForSnapshot(next);
+  const empty = !p.hook && !p.title && !p.script_draft;
   if (empty) return false;
-  return fingerprint(prior) !== fingerprint(next);
+  return fingerprint(p) !== fingerprint(n);
 }
 
 /**
@@ -102,23 +114,26 @@ export async function insertDraftSnapshotIfChanged(
   metadata: Json = {},
   options?: { skipDedup?: boolean },
 ): Promise<{ skipped: boolean }> {
+  const payloadNorm = normalizeDraftTripleForSnapshot(payload);
+
   if (!options?.skipDedup) {
-    const { data: last } = await supabase
+    const { data: lastRows } = await supabase
       .from("studio_episode_draft_snapshots")
       .select("hook, title, script_draft")
       .eq("episode_id", episodeId)
       .eq("organization_id", organizationId)
       .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .order("id", { ascending: false })
+      .limit(1);
 
+    const last = lastRows?.[0];
     if (last) {
       const same =
         fingerprint({
-          hook: last.hook,
-          title: last.title,
-          script_draft: last.script_draft,
-        }) === fingerprint(payload);
+          hook: last.hook ?? "",
+          title: last.title ?? "",
+          script_draft: last.script_draft ?? "",
+        }) === fingerprint(payloadNorm);
       if (same) return { skipped: true };
     }
   }
@@ -127,9 +142,9 @@ export async function insertDraftSnapshotIfChanged(
     organization_id: organizationId,
     episode_id: episodeId,
     source,
-    hook: payload.hook,
-    title: payload.title,
-    script_draft: payload.script_draft,
+    hook: payloadNorm.hook,
+    title: payloadNorm.title,
+    script_draft: payloadNorm.script_draft,
     metadata,
   });
   if (error) throw error;
@@ -148,6 +163,7 @@ export async function listDraftSnapshotsForEpisode(
     .eq("episode_id", episodeId)
     .eq("organization_id", organizationId)
     .order("created_at", { ascending: false })
+    .order("id", { ascending: false })
     .limit(limit);
 
   if (error) throw error;

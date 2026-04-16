@@ -39,6 +39,7 @@ import {
   ButtonLink,
   type ButtonSize,
 } from "@/components/ui/button";
+import { modalPanelClassName } from "@/lib/design-system-classes";
 import { cn } from "@/lib/utils";
 import { FieldSelect } from "@/components/ui/field-select";
 import { StudioEpisodeDistributionFields } from "@/components/dashboard/studio-episode-distribution-fields";
@@ -84,6 +85,8 @@ function artifactLinkHostLabel(url: string): string {
 
 const initialState: StudioProductionActionState = undefined;
 
+export type StudioEpisodeProjectOption = { id: string; name: string };
+
 const EPISODE_STATUS_I18N: Record<
   StudioEpisodeStatus,
   | "statusDraft"
@@ -99,9 +102,12 @@ const EPISODE_STATUS_I18N: Record<
 
 export function StudioProductionsNewForm({
   initialNotes = "",
+  projects = [],
 }: {
   /** From Prompt Studio → Productions sessionStorage handoff */
   initialNotes?: string;
+  /** Org projects for optional episode grouping (empty → only “Unassigned”). */
+  projects?: StudioEpisodeProjectOption[];
 }) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
@@ -115,21 +121,43 @@ export function StudioProductionsNewForm({
     label: t(EPISODE_STATUS_I18N[s]),
   }));
 
+  const projectOptions = useMemo(() => {
+    const sorted = [...projects].sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+    );
+    return [
+      { value: "", label: t("episodeProjectUnassigned") },
+      ...sorted.map((p) => ({ value: p.id, label: p.name })),
+    ];
+  }, [projects, t]);
+
   const [distributionPreset, setDistributionPreset] = useState("");
 
+  const inputClass =
+    "h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary placeholder:text-text-tertiary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25";
+
   return (
-    <form action={formAction} className="space-y-6 max-w-2xl">
+    <form action={formAction} className="w-full">
       {state?.error ? (
-        <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p
+          className="mb-4 rounded-lg border border-danger/35 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
+          role="alert"
+        >
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       ) : null}
-      <div className="rounded-xl border border-border-subtle bg-layer-01 p-6">
-        <div className="space-y-4">
-          <div>
+
+      <div
+        className={cn(
+          "overflow-hidden",
+          modalPanelClassName,
+        )}
+      >
+        <div className="space-y-5 px-5 py-6 sm:px-7 sm:py-7">
+          <div className="space-y-2">
             <label
               htmlFor="new_title"
-              className="block text-xs font-medium text-text-secondary mb-1.5"
+              className="block text-xs font-medium text-text-secondary"
             >
               {t("titleLabel")}
             </label>
@@ -139,56 +167,82 @@ export function StudioProductionsNewForm({
               required
               maxLength={500}
               placeholder={t("titlePlaceholder")}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+              className={inputClass}
+              autoComplete="off"
             />
           </div>
-          <div>
+
+          <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
+            <div className="space-y-2">
+              <label
+                htmlFor="new_status"
+                className="block text-xs font-medium text-text-secondary"
+              >
+                {t("statusLabel")}
+              </label>
+              <FieldSelect
+                id="new_status"
+                name="status"
+                defaultValue="draft"
+                options={statusOptions}
+              />
+            </div>
+            <div className="space-y-2">
+              <label
+                htmlFor="new_project"
+                className="block text-xs font-medium text-text-secondary"
+              >
+                {t("episodeProjectLabel")}
+              </label>
+              <FieldSelect
+                id="new_project"
+                name="project_id"
+                defaultValue=""
+                options={projectOptions}
+              />
+              <p className="text-xs leading-relaxed text-text-tertiary">
+                {t("episodeProjectHint")}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-border-subtle px-5 py-6 sm:px-7 sm:py-6">
+          <StudioEpisodeDistributionFields
+            idPrefix="new"
+            distributionStored=""
+            preset={distributionPreset}
+            onPresetChange={setDistributionPreset}
+          />
+        </div>
+
+        <div className="border-t border-border-subtle px-5 py-6 sm:px-7 sm:py-6">
+          <div className="space-y-2">
             <label
-              htmlFor="new_status"
-              className="block text-xs font-medium text-text-secondary mb-1.5"
+              htmlFor="new_notes"
+              className="block text-xs font-medium text-text-secondary"
             >
-              {t("statusLabel")}
+              {t("notesLabel")}
             </label>
-            <FieldSelect
-              id="new_status"
-              name="status"
-              defaultValue="draft"
-              options={statusOptions}
+            <textarea
+              id="new_notes"
+              name="notes"
+              rows={5}
+              defaultValue={initialNotes}
+              placeholder={t("notesPlaceholder")}
+              className="min-h-[8.5rem] w-full rounded-lg border border-border-subtle bg-field px-3 py-3 text-sm leading-relaxed text-text-primary placeholder:text-text-tertiary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25"
             />
           </div>
         </div>
-      </div>
 
-      <StudioEpisodeDistributionFields
-        idPrefix="new"
-        distributionStored=""
-        preset={distributionPreset}
-        onPresetChange={setDistributionPreset}
-      />
-
-      <div>
-        <label
-          htmlFor="new_notes"
-          className="block text-xs font-medium text-text-secondary mb-1.5"
-        >
-          {t("notesLabel")}
-        </label>
-        <textarea
-          id="new_notes"
-          name="notes"
-          rows={5}
-          defaultValue={initialNotes}
-          placeholder={t("notesPlaceholder")}
-          className="w-full min-h-[120px] rounded-xl border border-border-subtle bg-field px-3 py-3 text-sm leading-relaxed text-text-primary placeholder:text-text-tertiary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
-        />
-      </div>
-      <div className="flex flex-wrap gap-3 pt-2">
-        <Button variant="primary" type="submit" isLoading={pending}>
-          {t("submitCreate")}
-        </Button>
-        <ButtonLink href="/dashboard/productions" variant="secondary">
-          {t("cancelNew")}
-        </ButtonLink>
+        <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border-subtle bg-layer-02/50 px-5 py-4 sm:px-7 dark:bg-layer-02/35">
+          <ButtonLink href="/dashboard/productions" variant="secondary">
+            {t("cancelNew")}
+          </ButtonLink>
+          <Button variant="primary" type="submit" isLoading={pending}>
+            {t("submitCreate")}
+          </Button>
+        </div>
       </div>
     </form>
   );
@@ -196,10 +250,13 @@ export function StudioProductionsNewForm({
 
 export function StudioProductionsEpisodeEditForm({
   episode,
+  projects = [],
   className,
   layout = "standalone",
 }: {
   episode: StudioProductionEpisodeRowWithEmbeds;
+  /** Org projects for assigning or clearing episode.project_id. */
+  projects?: StudioEpisodeProjectOption[];
   /** e.g. `max-w-none` in wide layouts. */
   className?: string;
   /** `embedded`: flat fields for a single-column episode workspace (no nested promo card). */
@@ -216,6 +273,29 @@ export function StudioProductionsEpisodeEditForm({
     value: s,
     label: t(EPISODE_STATUS_I18N[s]),
   }));
+
+  const projectOptions = useMemo(() => {
+    const sorted = [...projects].sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+    );
+    const opts: { value: string; label: string }[] = [
+      { value: "", label: t("episodeProjectUnassigned") },
+      ...sorted.map((p) => ({ value: p.id, label: p.name })),
+    ];
+    const pid = episode.project_id;
+    if (pid && !sorted.some((p) => p.id === pid)) {
+      opts.splice(1, 0, {
+        value: pid,
+        label: episode.studio_projects?.name ?? pid,
+      });
+    }
+    return opts;
+  }, [
+    projects,
+    t,
+    episode.project_id,
+    episode.studio_projects?.name,
+  ]);
 
   const parsedDistribution = useMemo(
     () => parseStoredDistribution(episode.distribution_label),
@@ -289,6 +369,23 @@ export function StudioProductionsEpisodeEditForm({
                 options={statusOptions}
               />
             </div>
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="edit_project"
+                className="block text-xs font-medium text-text-secondary mb-1.5"
+              >
+                {t("episodeProjectLabel")}
+              </label>
+              <FieldSelect
+                id="edit_project"
+                name="project_id"
+                defaultValue={episode.project_id ?? ""}
+                options={projectOptions}
+              />
+              <p className="mt-1.5 text-xs text-text-tertiary leading-relaxed">
+                {t("episodeProjectHint")}
+              </p>
+            </div>
           </>
         ) : (
           <div className="space-y-4">
@@ -321,6 +418,23 @@ export function StudioProductionsEpisodeEditForm({
                 defaultValue={episode.status}
                 options={statusOptions}
               />
+            </div>
+            <div>
+              <label
+                htmlFor="edit_project_standalone"
+                className="block text-xs font-medium text-text-secondary mb-1.5"
+              >
+                {t("episodeProjectLabel")}
+              </label>
+              <FieldSelect
+                id="edit_project_standalone"
+                name="project_id"
+                defaultValue={episode.project_id ?? ""}
+                options={projectOptions}
+              />
+              <p className="mt-1.5 text-xs text-text-tertiary leading-relaxed">
+                {t("episodeProjectHint")}
+              </p>
             </div>
           </div>
         )}
@@ -577,7 +691,7 @@ function ArtifactEditDialogBody({
               list={STUDIO_ARTIFACT_ROLE_DATALIST_ID}
               autoComplete="off"
               defaultValue={artifact.artifact_role}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
+              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
             />
             <p className="mt-1 text-xs text-text-tertiary leading-snug">
               {t("artifactRoleHint")}
@@ -591,7 +705,7 @@ function ArtifactEditDialogBody({
               name="tool_platform"
               required
               defaultValue={artifact.tool_platform}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
+              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
             />
           </div>
         </div>
@@ -606,7 +720,7 @@ function ArtifactEditDialogBody({
             max={1_000_000}
             step={1}
             defaultValue={artifact.sort_order}
-            className="h-10 w-full max-w-[12rem] rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
+            className="h-10 w-full max-w-[12rem] rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
           />
           <p className="mt-1.5 text-xs text-text-tertiary">{t("artifactSortHint")}</p>
         </div>
@@ -618,7 +732,7 @@ function ArtifactEditDialogBody({
             name="content_text"
             rows={10}
             defaultValue={artifact.content_text}
-            className="min-h-[200px] w-full rounded-lg border border-border-subtle bg-field px-3 py-2.5 text-sm leading-relaxed text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
+            className="min-h-[200px] w-full rounded-lg border border-border-subtle bg-field px-3 py-2.5 text-sm leading-relaxed text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
           />
         </div>
         <div>
@@ -631,7 +745,7 @@ function ArtifactEditDialogBody({
             inputMode="url"
             defaultValue={artifact.external_url ?? ""}
             placeholder="https://"
-            className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
+            className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
           />
         </div>
         <div>
@@ -642,12 +756,12 @@ function ArtifactEditDialogBody({
             name="metadata_json"
             rows={6}
             defaultValue={metadataToFormString(artifact.metadata)}
-            className="min-h-[140px] w-full rounded-lg border border-border-subtle bg-field px-3 py-2.5 font-mono text-xs leading-relaxed text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
+            className="min-h-[140px] w-full rounded-lg border border-border-subtle bg-field px-3 py-2.5 font-mono text-xs leading-relaxed text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
           />
           <p className="mt-1.5 text-xs text-text-tertiary">{t("artifactMetadataHint")}</p>
         </div>
       </form>
-      <div className="mt-6 flex flex-wrap justify-end gap-2 border-t border-border-subtle pt-4 dark:border-white/10">
+      <div className="mt-6 flex flex-wrap justify-end gap-2 border-t border-border-subtle pt-4 dark:border-border-subtle">
         <Button variant="secondary" type="button" size="sm" onClick={onCancel}>
           {t("artifactDialogCancel")}
         </Button>
@@ -762,14 +876,14 @@ export function StudioProductionsArtifactsSection({
       <ArtifactAddForm episodeId={episodeId} prefill={artifactAddPrefill} />
       {artifacts.length > 0 ? (
         <ul
-          className="list-none rounded-xl border border-border-subtle bg-layer-02/30 p-0 m-0 divide-y divide-border-subtle dark:border-white/10 dark:bg-white/2"
+          className="list-none rounded-xl border border-border-subtle bg-layer-02/30 p-0 m-0 divide-y divide-border-subtle dark:border-border-subtle dark:bg-layer-02/40"
           aria-label={t("artifactsHeading")}
         >
           {artifacts.map((a, idx) => (
             <li key={a.id}>
               <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-start sm:gap-5 sm:py-5">
                 <div
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-layer-02/90 text-xs font-bold tabular-nums text-text-secondary dark:border-white/10 dark:bg-white/5"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-layer-02/90 text-xs font-bold tabular-nums text-text-secondary dark:border-border-subtle dark:bg-layer-03/90"
                   aria-label={t("artifactStepBadge", { step: idx + 1 })}
                 >
                   {idx + 1}
@@ -837,7 +951,10 @@ export function StudioProductionsArtifactsSection({
         }}
       >
         <div
-          className="max-h-[min(90vh-2rem,52rem)] overflow-y-auto rounded-xl border border-border-subtle bg-layer-01 p-5 shadow-xl dark:border-white/12 dark:bg-[#0d141c]"
+          className={cn(
+            "max-h-[min(90vh-2rem,52rem)] overflow-y-auto p-5",
+            modalPanelClassName,
+          )}
           onClick={(e) => e.stopPropagation()}
         >
           <h3

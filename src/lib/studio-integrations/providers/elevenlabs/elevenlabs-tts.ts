@@ -22,6 +22,27 @@ export type ElevenLabsTtsResult =
 const DEFAULT_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // Rachel
 const DEFAULT_MODEL_ID = "eleven_multilingual_v2";
 
+/**
+ * Single-chunk TTS with one automatic retry on transient failures (429 / 5xx).
+ * Designed for paragraph-level calls where rate-limit back-off matters.
+ */
+export async function generateElevenLabsTtsChunk(
+  apiKey: string,
+  opts: ElevenLabsTtsOptions,
+): Promise<ElevenLabsTtsResult> {
+  const first = await generateElevenLabsTts(apiKey, opts);
+  if (first.ok) return first;
+  if (
+    first.code === "elevenlabs_api_error" &&
+    first.message &&
+    /^(429|5\d\d):/.test(first.message)
+  ) {
+    await new Promise((r) => setTimeout(r, 2000));
+    return generateElevenLabsTts(apiKey, opts);
+  }
+  return first;
+}
+
 export async function generateElevenLabsTts(
   apiKey: string,
   opts: ElevenLabsTtsOptions,

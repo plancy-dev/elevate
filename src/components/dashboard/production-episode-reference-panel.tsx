@@ -21,6 +21,8 @@ type Props = {
   episodeId: string;
   artifacts: StudioProductionArtifactRow[];
   className?: string;
+  /** When the parent already shows a panel intro (title + subtitle). */
+  omitSectionHeader?: boolean;
 };
 
 function useRefActionToast(
@@ -64,6 +66,7 @@ export function ProductionEpisodeReferencePanel({
   episodeId,
   artifacts,
   className,
+  omitSectionHeader = false,
 }: Props) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
@@ -91,14 +94,16 @@ export function ProductionEpisodeReferencePanel({
 
   return (
     <div className={cn("flex flex-col gap-4 border-t border-border-subtle pt-5", className)}>
-      <div>
-        <h3 className="text-sm font-semibold text-text-primary">
-          {t("referenceTitle")}
-        </h3>
-        <p className="mt-1 text-xs text-text-tertiary leading-relaxed">
-          {t("referenceSubtitle")}
-        </p>
-      </div>
+      {!omitSectionHeader ? (
+        <div>
+          <h3 className="text-sm font-semibold text-text-primary">
+            {t("referenceTitle")}
+          </h3>
+          <p className="mt-1 text-xs text-text-tertiary leading-relaxed">
+            {t("referenceSubtitle")}
+          </p>
+        </div>
+      ) : null}
 
       {refSources.length > 0 ? (
         <div className="rounded-lg border border-border-subtle bg-layer-02/30 p-3">

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { ProductionsNewHandoffForm } from "@/components/dashboard/productions-new-handoff-form";
+import { listStudioProjectsForOrg } from "@/lib/data/studio-projects";
 import { createClient } from "@/lib/supabase/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -23,14 +24,21 @@ export default async function ProductionsNewPage() {
 
   const orgId = profile?.organization_id ?? null;
 
+  const studioProjects =
+    orgId != null
+      ? await listStudioProjectsForOrg(supabase, orgId)
+      : [];
+
   if (!orgId) {
     return (
       <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
-        <header className="mb-8 rounded-xl border border-border-subtle bg-layer-01 px-5 py-5 sm:px-6 sm:py-6">
+        <header className="mb-6">
           <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
             {t("newMetaTitle")}
           </h1>
-          <p className="mt-4 text-sm text-text-secondary">{t("listEmpty")}</p>
+          <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+            {t("listEmpty")}
+          </p>
         </header>
       </div>
     );
@@ -38,15 +46,17 @@ export default async function ProductionsNewPage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
-      <header className="mb-8 rounded-xl border border-border-subtle bg-layer-01 px-5 py-5 sm:px-6 sm:py-6">
+      <header className="mb-6">
         <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
           {t("newMetaTitle")}
         </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-text-secondary">
+        <p className="mt-1.5 max-w-3xl text-sm leading-relaxed text-text-secondary">
           {t("newSubtitle")}
         </p>
       </header>
-      <ProductionsNewHandoffForm />
+      <ProductionsNewHandoffForm
+        projects={studioProjects.map((p) => ({ id: p.id, name: p.name }))}
+      />
     </div>
   );
 }

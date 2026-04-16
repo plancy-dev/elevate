@@ -49,7 +49,7 @@ export function Modal({ open, onClose, title, description, children, className, 
     >
       <div
         className={cn(
-          "max-h-[90vh] w-full overflow-y-auto rounded-xl border border-border-subtle bg-background p-5 shadow-card",
+          "max-h-[90vh] w-full overflow-y-auto rounded-xl border border-border-subtle bg-layer-01 p-5 shadow-card",
           sizeClass[size],
           className,
         )}

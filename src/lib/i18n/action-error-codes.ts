@@ -48,6 +48,14 @@ export const ActionErrorCode = {
   studioTitleRequired: "studioTitleRequired",
   studioRoleRequired: "studioRoleRequired",
   studioInvalidSortOrder: "studioInvalidSortOrder",
+  /** project_id does not exist in org or is not accessible */
+  studioProjectInvalid: "studioProjectInvalid",
+  /** Pipeline pre-steps: no script_draft content */
+  studioPipelineNeedScript: "studioPipelineNeedScript",
+  /** Thumbnail image step: run packaging step first */
+  studioPipelineNeedPackaging: "studioPipelineNeedPackaging",
+  /** Thumbnail uses OpenAI Images API only */
+  studioOpenAiRequiredForThumbnail: "studioOpenAiRequiredForThumbnail",
 
   studioDemoSeedDisabled: "studioDemoSeedDisabled",
   studioDemoSeedNotEmpty: "studioDemoSeedNotEmpty",

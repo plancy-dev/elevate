@@ -1,14 +1,15 @@
 "use client";
 
+import { LayoutList, Layers, Package, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
+  Fragment,
   Suspense,
   useCallback,
   useEffect,
   useId,
   useRef,
-  useState,
   useTransition,
   type KeyboardEvent,
   type ReactNode,
@@ -23,16 +24,22 @@ import { cn } from "@/lib/utils";
 
 type TabId = WorkbenchTabId;
 
+const TAB_ICONS: Record<TabId, LucideIcon> = {
+  overview: LayoutList,
+  episode: Layers,
+  artifacts: Package,
+};
+
+/** Primary workbench navigation — divider after glance (summary vs work). */
+const TAB_DIVIDER_AFTER: TabId[] = ["overview"];
+
 function ProductionEpisodeWorkbenchInner({
   episodeId,
-  initialTabFromUrl,
   overviewSlot,
   episodeSlot,
   artifactsSlot,
 }: {
   episodeId: string;
-  /** From server `searchParams.tab` so deep links match SSR + first client paint. */
-  initialTabFromUrl: TabId | null;
   overviewSlot: ReactNode;
   episodeSlot: ReactNode;
   artifactsSlot: ReactNode;
@@ -42,51 +49,34 @@ function ProductionEpisodeWorkbenchInner({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [tab, setTab] = useState<TabId>(
-    () => initialTabFromUrl ?? "overview",
-  );
+  /** Single source of truth: avoids double setState + URL sync jank on rapid tab clicks. */
+  const tab: TabId =
+    parseWorkbenchTabParam(searchParams.get("tab")) ?? "overview";
   const tabButtonRefs = useRef<Partial<Record<TabId, HTMLButtonElement | null>>>(
     {},
   );
-  const [isTabUrlPending, startTabUrlTransition] = useTransition();
+  const [, startTabUrlTransition] = useTransition();
 
-  /**
-   * Sync `?tab=` without calling `router.replace` before the client router is ready
-   * (avoids "Router action dispatched before initialization" during fast tab / query churn).
-   */
   const setTabAndUrl = useCallback(
     (next: TabId) => {
-      setTab(next);
       const params = new URLSearchParams(searchParams.toString());
       if (parseWorkbenchTabParam(params.get("tab")) === next) return;
       params.set("tab", next);
       const href = `${pathname}?${params.toString()}`;
-      window.setTimeout(() => {
-        startTabUrlTransition(() => {
-          router.replace(href, { scroll: false });
-        });
-      }, 0);
+      startTabUrlTransition(() => {
+        router.replace(href, { scroll: false });
+      });
     },
     [pathname, router, searchParams],
   );
 
-  /** Keep tab in sync when the query string changes (back/forward, client nav). Missing `tab` → overview. */
-  useEffect(() => {
-    const fromUrl = parseWorkbenchTabParam(searchParams.get("tab"));
-    const id = requestAnimationFrame(() => {
-      setTab(fromUrl ?? "overview");
-    });
-    return () => cancelAnimationFrame(id);
-  }, [searchParams]);
-
-  /** After URL→tab sync; Prompt Studio handoff overrides shared links when pending. */
+  /** Prompt Studio handoff: jump to Artifacts when pending (URL-only; no duplicate local state). */
   useEffect(() => {
     if (!hasPendingHandoffForEpisode(episodeId)) return;
-    const t = window.setTimeout(() => {
-      setTabAndUrl("artifacts");
-    }, 0);
-    return () => clearTimeout(t);
-  }, [episodeId, setTabAndUrl]);
+    const params = new URLSearchParams(searchParams.toString());
+    if (parseWorkbenchTabParam(params.get("tab")) === "artifacts") return;
+    setTabAndUrl("artifacts");
+  }, [episodeId, searchParams, setTabAndUrl]);
 
   const onTabListKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
@@ -120,53 +110,66 @@ function ProductionEpisodeWorkbenchInner({
     [setTabAndUrl, tab],
   );
 
-  const tabs: { id: TabId; label: string }[] = [
-    { id: "overview", label: t("workbenchTabOverview") },
-    { id: "episode", label: t("workbenchTabEpisode") },
-    { id: "artifacts", label: t("workbenchTabArtifacts") },
-  ];
+  const tabLabels: Record<TabId, string> = {
+    overview: t("workbenchTabOverview"),
+    episode: t("workbenchTabEpisode"),
+    artifacts: t("workbenchTabArtifacts"),
+  };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div
         role="tablist"
         aria-label={t("workbenchAriaLabel")}
-        aria-busy={isTabUrlPending}
-        className={cn(
-          "relative flex flex-wrap gap-1 rounded-xl border border-border-subtle bg-layer-02/40 p-1 transition-shadow duration-150 dark:border-white/10 dark:bg-white/[0.03]",
-          isTabUrlPending && "ring-1 ring-primary/25 shadow-[0_0_0_1px_rgba(15,98,254,0.12)]",
-        )}
+        className="flex flex-wrap items-stretch gap-1 rounded-xl border border-border-subtle bg-layer-02/40 p-1.5 dark:border-border-subtle dark:bg-layer-02/60"
         onKeyDown={onTabListKeyDown}
       >
-        {tabs.map(({ id, label }) => {
+        {WORKBENCH_TAB_IDS.map((id) => {
           const selected = tab === id;
           const tabId = `${baseId}-tab-${id}`;
+          const Icon = TAB_ICONS[id];
+          const panelId = `${baseId}-panel-${id}`;
           return (
-            <button
-              key={id}
-              ref={(el) => {
-                tabButtonRefs.current[id] = el;
-              }}
-              id={tabId}
-              type="button"
-              role="tab"
-              aria-selected={selected}
-              tabIndex={selected ? 0 : -1}
-              className={cn(
-                "min-h-[40px] flex-1 cursor-pointer rounded-lg px-3 py-2 text-sm font-medium transition-colors sm:flex-none sm:px-4",
-                selected
-                  ? "bg-layer-01 text-text-primary shadow-sm ring-1 ring-border-subtle dark:bg-[#0f141c] dark:ring-white/10"
-                  : "text-text-secondary hover:bg-layer-01/80 hover:text-text-primary dark:hover:bg-white/5",
-              )}
-              onClick={() => {
-                setTabAndUrl(id);
-              }}
-            >
-              {label}
-            </button>
+            <Fragment key={id}>
+              <button
+                ref={(el) => {
+                  tabButtonRefs.current[id] = el;
+                }}
+                id={tabId}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                aria-controls={panelId}
+                tabIndex={selected ? 0 : -1}
+                className={cn(
+                  "min-h-[42px] inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors sm:flex-none sm:min-w-[7.5rem] sm:px-4",
+                  selected
+                    ? "bg-layer-01 text-text-primary shadow-sm ring-1 ring-border-subtle dark:bg-layer-01 dark:ring-border-subtle"
+                    : "text-text-secondary hover:bg-layer-01/85 hover:text-text-primary dark:hover:bg-white/5",
+                )}
+                onClick={() => {
+                  setTabAndUrl(id);
+                }}
+              >
+                <Icon
+                  className="h-3.5 w-3.5 shrink-0 opacity-80 sm:h-4 sm:w-4"
+                  aria-hidden
+                />
+                <span className="truncate">{tabLabels[id]}</span>
+              </button>
+              {TAB_DIVIDER_AFTER.includes(id) ? (
+                <div
+                  className="hidden h-8 w-px shrink-0 self-center bg-border-subtle/90 sm:block"
+                  aria-hidden
+                />
+              ) : null}
+            </Fragment>
           );
         })}
       </div>
+      <p className="text-xs text-text-tertiary leading-relaxed max-w-prose px-0.5">
+        {t("workbenchTabsLead")}
+      </p>
 
       <div
         id={`${baseId}-panel-overview`}
@@ -202,7 +205,7 @@ function ProductionEpisodeWorkbenchInner({
 function WorkbenchTabsFallback() {
   return (
     <div
-      className="h-[52px] rounded-xl border border-border-subtle bg-layer-02/40 dark:border-white/10 animate-pulse"
+      className="h-[52px] rounded-xl border border-border-subtle bg-layer-02/40 dark:border-border-subtle animate-pulse"
       aria-hidden
     />
   );

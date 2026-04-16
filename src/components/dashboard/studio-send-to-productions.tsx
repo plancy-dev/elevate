@@ -9,6 +9,8 @@ import { PostHogEvent } from "@/lib/analytics/posthog-events";
 import { writeStudioToProductionsHandoff } from "@/lib/studio-productions/studio-to-production-handoff";
 import { Button } from "@/components/ui/button";
 import { FieldSelect } from "@/components/ui/field-select";
+import { modalPanelClassName } from "@/lib/design-system-classes";
+import { cn } from "@/lib/utils";
 
 export type StudioEpisodeOption = { id: string; title: string };
 
@@ -112,7 +114,7 @@ export function StudioSendToProductions({
         onChange={(e) => setPromptText(e.target.value)}
         rows={6}
         placeholder={t("scratchPlaceholder")}
-        className="w-full min-h-[140px] rounded-xl border border-border-subtle bg-field px-3 py-3 text-sm leading-relaxed text-text-primary placeholder:text-text-tertiary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 dark:border-white/10"
+        className="w-full min-h-[140px] rounded-xl border border-border-subtle bg-field px-3 py-3 text-sm leading-relaxed text-text-primary placeholder:text-text-tertiary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
       />
       <div className="mt-4 flex flex-wrap gap-3">
         <Button variant="primary" type="button" onClick={openDialog}>
@@ -122,7 +124,10 @@ export function StudioSendToProductions({
 
       <dialog
         ref={dialogRef}
-        className="w-[min(100%,420px)] rounded-xl border border-border-subtle bg-layer-01 p-5 shadow-xl backdrop:bg-black/40 dark:border-white/15 dark:bg-[#111820]"
+        className={cn(
+          "w-[min(100%,420px)] p-5 backdrop:bg-black/40",
+          modalPanelClassName,
+        )}
         aria-labelledby="studio-handoff-dialog-title"
         aria-describedby="studio-handoff-dialog-desc"
         onClose={() => {}}

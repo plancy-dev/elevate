@@ -22,6 +22,13 @@ export const AuditAction = {
   PAYMENT_CONFIRMED: "payment.confirmed",
   PAYMENT_WEBHOOK: "payment.webhook_status",
   CONTENT_ENTITLEMENT_GRANT: "content.entitlement_grant",
+  STUDIO_PACKAGING_GENERATE: "studio.packaging.generate",
+  STUDIO_THUMBNAIL_GENERATE: "studio.thumbnail.generate",
+  STUDIO_TTS_GENERATE: "studio.tts.generate",
+  STUDIO_SUBTITLE_GENERATE: "studio.subtitle.generate",
+  STUDIO_SCENE_RENDER: "studio.scene.render",
+  STUDIO_VIDEO_ASSEMBLE: "studio.video.assemble",
+  STUDIO_YOUTUBE_UPLOAD: "studio.youtube.upload",
 } as const;
 
 export const AuditEntityType = {
@@ -35,4 +42,6 @@ export const AuditEntityType = {
   VENUE: "venue",
   PAYMENT: "toss_payment",
   LEMON_ORDER: "lemon_order",
+  STUDIO_EPISODE: "studio_episode",
+  STUDIO_ARTIFACT: "studio_artifact",
 } as const;

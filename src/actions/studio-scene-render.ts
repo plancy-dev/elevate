@@ -14,6 +14,9 @@ import {
   parseLlmScenes,
   type SceneDefinition,
 } from "@/lib/studio-productions/scene-splitter";
+import { resolveEpisodeFormat, FORMAT_SPECS } from "@/lib/studio-productions/episode-format";
+import { logAudit } from "@/lib/audit/log";
+import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import type { Json } from "@/types/database.types";
 
 export type SceneRenderActionState = {
@@ -87,12 +90,15 @@ export async function renderEpisodeScenes(
 
   if (scenes.length === 0) return { error: "studioSceneRenderNoScenes" };
 
+  const format = resolveEpisodeFormat(episode);
+  const { ratio } = FORMAT_SPECS[format];
+
   const sceneResults: SceneRenderActionState["sceneResults"] = [];
 
   for (const scene of scenes) {
     const result = await runRunwayTextToVideo(runwayKey, {
       promptText: scene.visualPrompt,
-      ratio: "720:1280",
+      ratio,
       duration: scene.durationSeconds,
     });
 
@@ -134,6 +140,15 @@ export async function renderEpisodeScenes(
       sceneResults.push({ index: scene.index, ok: true, artifactId: artifact.id });
     }
   }
+
+  void logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.STUDIO_SCENE_RENDER,
+    entityType: AuditEntityType.STUDIO_EPISODE,
+    entityId: episodeId,
+    metadata: { scene_count: scenes.length, format, ratio },
+  });
 
   revalidatePath(`/dashboard/productions/${episodeId}`);
   const allOk = sceneResults.every((r) => r.ok);

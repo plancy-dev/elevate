@@ -8,6 +8,9 @@ import { getStudioEpisodeForOrg } from "@/lib/data/studio-productions";
 import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/feature";
 import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrations/crypto";
 import { assembleVideo } from "@/lib/studio-productions/video-assembly";
+import { resolveEpisodeFormat, FORMAT_SPECS } from "@/lib/studio-productions/episode-format";
+import { logAudit } from "@/lib/audit/log";
+import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import type { Json } from "@/types/database.types";
 
 export type VideoAssemblyActionState = {
@@ -90,7 +93,7 @@ export async function assembleEpisodeVideo(
     has_subtitles: !!srtArtifact,
     has_bg_music: !!bgMusicUrl,
     duration_seconds: result.durationSeconds,
-    resolution: "1080x1920",
+    resolution: FORMAT_SPECS[resolveEpisodeFormat(episode)].resolution,
     codec: "h264_aac",
     assembled_at: new Date().toISOString(),
   };
@@ -110,6 +113,15 @@ export async function assembleEpisodeVideo(
     .single();
 
   if (insertErr || !artifact) return { error: "studioAssemblyInsertFailed" };
+
+  void logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.STUDIO_VIDEO_ASSEMBLE,
+    entityType: AuditEntityType.STUDIO_EPISODE,
+    entityId: episodeId,
+    metadata: { clip_count: clipUrls.length, duration_seconds: result.durationSeconds },
+  });
 
   revalidatePath(`/dashboard/productions/${episodeId}`);
   return { ok: true, artifactId: artifact.id, durationSeconds: result.durationSeconds };

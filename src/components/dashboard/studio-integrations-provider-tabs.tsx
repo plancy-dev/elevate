@@ -58,7 +58,7 @@ export function StudioIntegrationsProviderTabs({
       <div
         role="tablist"
         aria-label={t("integrationsTabsAriaLabel")}
-        className="flex flex-wrap gap-1 rounded-xl border border-border-subtle bg-layer-02/40 p-1 dark:border-white/10 dark:bg-white/[0.03]"
+        className="flex flex-wrap gap-1 rounded-xl border border-border-subtle bg-layer-02/40 p-1 dark:border-border-subtle dark:bg-layer-02/60"
       >
         {STUDIO_INTEGRATION_PROVIDER_IDS.map((id) => {
           const selected = active === id;

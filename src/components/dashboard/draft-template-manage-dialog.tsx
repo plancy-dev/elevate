@@ -27,6 +27,7 @@ import {
 } from "@/lib/studio-productions/draft-prompt-templates";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/lib/ui/app-toast";
+import { modalPanelClassName } from "@/lib/design-system-classes";
 import { cn } from "@/lib/utils";
 
 const initialState: StudioDraftTemplateActionState = undefined;
@@ -34,7 +35,7 @@ const initialState: StudioDraftTemplateActionState = undefined;
 /** Shared styles: bias hint + textarea + char limit (create + edit). */
 const biasFieldSectionClassName = cn(
   "space-y-2 rounded-lg border border-border-subtle/90 bg-field/80 p-3",
-  "dark:border-white/12 dark:bg-layer-02/50",
+  "dark:border-border-subtle dark:bg-layer-02/50",
 );
 
 const biasTextareaClassName = cn(
@@ -147,10 +148,13 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
       }}
     >
       <div
-        className="flex max-h-[min(92vh-1rem,52rem)] flex-col overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-xl dark:border-white/12 dark:bg-[#0d141c]"
+        className={cn(
+          "flex max-h-[min(92vh-1rem,52rem)] flex-col overflow-hidden",
+          modalPanelClassName,
+        )}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="shrink-0 border-b border-border-subtle/80 px-5 pb-4 pt-5 dark:border-white/10">
+        <div className="shrink-0 border-b border-border-subtle/80 px-5 pb-4 pt-5 dark:border-border-subtle">
           <h3
             id={titleId}
             className="text-base font-semibold text-text-primary mb-1 pr-8 sm:text-lg"
@@ -177,7 +181,7 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
                   className={
                     editingId === row.id
                       ? "rounded-xl border-2 border-primary/35 bg-primary/6 p-4 shadow-sm ring-1 ring-primary/15 dark:border-primary/40 dark:bg-primary/8"
-                      : "rounded-lg border border-border-subtle/80 bg-layer-02/30 p-3 dark:border-white/10"
+                      : "rounded-lg border border-border-subtle/80 bg-layer-02/30 p-3 dark:border-border-subtle"
                   }
                 >
                   {editingId === row.id ? (
@@ -231,7 +235,7 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-wrap gap-2 border-t border-border-subtle/80 pt-4 dark:border-white/10">
+                      <div className="flex flex-wrap gap-2 border-t border-border-subtle/80 pt-4 dark:border-border-subtle">
                         <Button type="submit" size="sm" isLoading={updatePending}>
                           {t("draftTemplateManageSave")}
                         </Button>
@@ -290,9 +294,9 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
           </ul>
         </div>
 
-        <div className="shrink-0 border-t border-border-subtle px-5 py-4 dark:border-white/10">
+        <div className="shrink-0 border-t border-border-subtle px-5 py-4 dark:border-border-subtle">
           {editingId ? (
-            <p className="rounded-lg border border-dashed border-border-subtle bg-layer-02/40 px-3 py-3 text-center text-[11px] leading-relaxed text-text-tertiary dark:border-white/15">
+            <p className="rounded-lg border border-dashed border-border-subtle bg-layer-02/40 px-3 py-3 text-center text-[11px] leading-relaxed text-text-tertiary dark:border-border-subtle">
               {t("draftTemplateManageAddPausedHint")}
             </p>
           ) : (
@@ -334,7 +338,7 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
           )}
         </div>
 
-        <div className="flex justify-end border-t border-border-subtle px-5 py-3 dark:border-white/10">
+        <div className="flex justify-end border-t border-border-subtle px-5 py-3 dark:border-border-subtle">
           <Button
             type="button"
             variant="secondary"

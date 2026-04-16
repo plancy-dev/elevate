@@ -36,7 +36,7 @@ export function StudioEpisodeOptionalChannelFields({
   }, [channels, t]);
 
   return (
-    <div className="rounded-2xl border border-border-subtle/90 bg-gradient-to-br from-layer-01 via-[#f5f7ff]/40 to-layer-01 p-6 shadow-sm dark:via-[#0c1520]/50">
+    <div className="rounded-2xl border border-border-subtle/90 bg-gradient-to-br from-layer-01 via-primary/10 to-layer-01 p-6 shadow-sm dark:via-primary/15">
       <h3 className="text-sm font-semibold text-text-primary mb-1">
         {t("optionalChannelTitle")}
       </h3>

@@ -2,9 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { consumeHandoffForNewEpisodePage } from "@/lib/studio-productions/studio-to-production-handoff";
-import { StudioProductionsNewForm } from "@/components/dashboard/studio-productions-forms";
+import {
+  StudioProductionsNewForm,
+  type StudioEpisodeProjectOption,
+} from "@/components/dashboard/studio-productions-forms";
 
-export function ProductionsNewHandoffForm() {
+export function ProductionsNewHandoffForm({
+  projects = [],
+}: {
+  projects?: StudioEpisodeProjectOption[];
+}) {
   const [initialNotes, setInitialNotes] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -17,7 +24,7 @@ export function ProductionsNewHandoffForm() {
   if (initialNotes === undefined) {
     return (
       <div
-        className="h-40 max-w-2xl animate-pulse rounded-2xl bg-layer-02/80 dark:bg-white/5"
+        className="h-[28rem] w-full animate-pulse rounded-xl border border-border-subtle bg-layer-02/70 shadow-card dark:bg-layer-02/40"
         aria-hidden
       />
     );
@@ -31,6 +38,7 @@ export function ProductionsNewHandoffForm() {
           : "no-prefill"
       }
       initialNotes={initialNotes}
+      projects={projects}
     />
   );
 }

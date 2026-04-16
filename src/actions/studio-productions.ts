@@ -10,6 +10,7 @@ import {
   isDistributionChannelPresetLabel,
   resolveDistributionLabelFromForm,
 } from "@/lib/studio-productions/distribution";
+import { getStudioProjectById } from "@/lib/data/studio-projects";
 import { parseOptionalUuidFromForm } from "@/lib/studio-productions/form-uuid";
 import {
   validateContentText,
@@ -67,6 +68,18 @@ export async function createStudioEpisode(
   const auth = await getOrgMemberContext(supabase);
   if (!auth.ok) return { error: auth.error };
 
+  const requestedProjectId = parseOptionalUuidFromForm(formData, "project_id");
+  let projectId: string | null = null;
+  if (requestedProjectId) {
+    const proj = await getStudioProjectById(
+      supabase,
+      auth.ctx.organizationId,
+      requestedProjectId,
+    );
+    if (!proj) return { error: ActionErrorCode.studioProjectInvalid };
+    projectId = proj.id;
+  }
+
   const { data, error } = await supabase
     .from("studio_production_episodes")
     .insert({
@@ -81,6 +94,7 @@ export async function createStudioEpisode(
       studio_niche_id: null,
       studio_format_template_id: null,
       studio_distribution_channel_id: null,
+      project_id: projectId,
     })
     .select("id")
     .single();
@@ -88,6 +102,7 @@ export async function createStudioEpisode(
   if (error || !data?.id) return { error: ActionErrorCode.dbError };
 
   revalidatePath("/dashboard/productions");
+  revalidatePath("/dashboard/productions/projects");
   redirect(`/dashboard/productions/${data.id}`);
 }
 
@@ -117,7 +132,7 @@ export async function updateStudioEpisode(
 
   const { data: existing, error: loadErr } = await supabase
     .from("studio_production_episodes")
-    .select("publish_url, studio_distribution_channel_id")
+    .select("publish_url, studio_distribution_channel_id, project_id")
     .eq("id", id)
     .eq("organization_id", auth.ctx.organizationId)
     .maybeSingle();
@@ -154,6 +169,24 @@ export async function updateStudioEpisode(
     studioDistributionChannelId = existing.studio_distribution_channel_id;
   }
 
+  const requestedProjectId = parseOptionalUuidFromForm(formData, "project_id");
+  let nextProjectId: string | null;
+  if (formData.has("project_id")) {
+    if (requestedProjectId) {
+      const proj = await getStudioProjectById(
+        supabase,
+        auth.ctx.organizationId,
+        requestedProjectId,
+      );
+      if (!proj) return { error: ActionErrorCode.studioProjectInvalid };
+      nextProjectId = requestedProjectId;
+    } else {
+      nextProjectId = null;
+    }
+  } else {
+    nextProjectId = existing.project_id;
+  }
+
   const { data: updatedRows, error } = await supabase
     .from("studio_production_episodes")
     .update({
@@ -166,6 +199,7 @@ export async function updateStudioEpisode(
       studio_niche_id: null,
       studio_format_template_id: null,
       studio_distribution_channel_id: studioDistributionChannelId,
+      project_id: nextProjectId,
     })
     .eq("id", id)
     .eq("organization_id", auth.ctx.organizationId)
@@ -175,6 +209,7 @@ export async function updateStudioEpisode(
   if (!updatedRows?.length) return { error: ActionErrorCode.studioEpisodeNotFound };
 
   revalidatePath("/dashboard/productions");
+  revalidatePath("/dashboard/productions/projects");
   revalidatePath(`/dashboard/productions/${id}`);
   return { success: "episode_saved" };
 }

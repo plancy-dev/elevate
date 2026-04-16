@@ -150,8 +150,13 @@ function ProductionEpisodeDraftPanelEditable({
   draftLlmAvailability: draftLlmAvailabilityProp,
   draftSnapshots,
   runwayRenderReady = false,
+  elevenlabsKeyConfigured = false,
+  openaiKeyConfigured: openaiKeyConfiguredProp,
+  packagingLlmReady: packagingLlmReadyProp,
   className,
   embedded,
+  showReferencePanel = true,
+  showPipeline = true,
 }: {
   episodeId: string;
   artifacts: StudioProductionArtifactRow[];
@@ -161,12 +166,29 @@ function ProductionEpisodeDraftPanelEditable({
   draftLlmAvailability?: { openai: boolean; anthropic: boolean } | null;
   draftSnapshots: StudioEpisodeDraftSnapshotRow[];
   runwayRenderReady?: boolean;
+  /** Server: org has ElevenLabs key in integrations (encrypted). */
+  elevenlabsKeyConfigured?: boolean;
+  /** Server: org has OpenAI key (thumbnail images + OpenAI draft). Defaults from draftLlmAvailability.openai. */
+  openaiKeyConfigured?: boolean;
+  /** Server override; defaults to OpenAI/Anthropic availability from draftLlmAvailability. */
+  packagingLlmReady?: boolean;
   className?: string;
   /** When true, omit outer card chrome (parent provides section boundaries). */
   embedded?: boolean;
+  /** When false, hide reference sources (shown in a separate episode sub-tab). */
+  showReferencePanel?: boolean;
+  /** When false, hide content pipeline (shown in a separate episode sub-tab). */
+  showPipeline?: boolean;
 }) {
   const draftLlmAvailability =
     draftLlmAvailabilityProp ?? DEFAULT_DRAFT_LLM_AVAILABILITY;
+
+  const packagingLlmReady =
+    packagingLlmReadyProp ??
+    (draftLlmAvailability.openai || draftLlmAvailability.anthropic);
+
+  const openaiKeyConfigured =
+    openaiKeyConfiguredProp ?? draftLlmAvailability.openai;
 
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
@@ -780,16 +802,23 @@ function ProductionEpisodeDraftPanelEditable({
         </Button>
       </form>
 
-      <ProductionEpisodeReferencePanel
-        episodeId={episodeId}
-        artifacts={artifacts}
-      />
+      {showReferencePanel ? (
+        <ProductionEpisodeReferencePanel
+          episodeId={episodeId}
+          artifacts={artifacts}
+        />
+      ) : null}
 
-      <ProductionEpisodePipeline
-        episodeId={episodeId}
-        artifacts={artifacts}
-        runwayRenderReady={runwayRenderReady}
-      />
+      {showPipeline ? (
+        <ProductionEpisodePipeline
+          episodeId={episodeId}
+          artifacts={artifacts}
+          runwayRenderReady={runwayRenderReady}
+          elevenlabsKeyConfigured={elevenlabsKeyConfigured}
+          openaiKeyConfigured={openaiKeyConfigured}
+          packagingLlmReady={packagingLlmReady}
+        />
+      ) : null}
 
       <div className="border-t border-border-subtle pt-5 space-y-3">
         <div>
@@ -847,8 +876,13 @@ export function ProductionEpisodeDraftPanel({
   draftLlmAvailability,
   draftSnapshots = [],
   runwayRenderReady = false,
+  elevenlabsKeyConfigured = false,
+  openaiKeyConfigured,
+  packagingLlmReady,
   className,
   embedded = false,
+  showReferencePanel = true,
+  showPipeline = true,
 }: {
   episodeId: string;
   artifacts: StudioProductionArtifactRow[];
@@ -857,9 +891,14 @@ export function ProductionEpisodeDraftPanel({
   draftLlmAvailability?: { openai: boolean; anthropic: boolean } | null;
   draftSnapshots?: StudioEpisodeDraftSnapshotRow[];
   runwayRenderReady?: boolean;
+  elevenlabsKeyConfigured?: boolean;
+  openaiKeyConfigured?: boolean;
+  packagingLlmReady?: boolean;
   className?: string;
   /** Single-column episode workspace: no outer card; section titles match parent rhythm. */
   embedded?: boolean;
+  showReferencePanel?: boolean;
+  showPipeline?: boolean;
 }) {
   const t = useTranslations("Dashboard.productions");
 
@@ -893,8 +932,13 @@ export function ProductionEpisodeDraftPanel({
       draftLlmAvailability={draftLlmAvailability}
       draftSnapshots={draftSnapshots}
       runwayRenderReady={runwayRenderReady}
+      elevenlabsKeyConfigured={elevenlabsKeyConfigured}
+      openaiKeyConfigured={openaiKeyConfigured}
+      packagingLlmReady={packagingLlmReady}
       className={className}
       embedded={embedded}
+      showReferencePanel={showReferencePanel}
+      showPipeline={showPipeline}
     />
   );
 }

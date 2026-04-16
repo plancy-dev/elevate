@@ -9,6 +9,12 @@ import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/f
 import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrations/crypto";
 import { getOrgProviderApiKey } from "@/lib/studio-integrations/org-provider-secret";
 import { generateElevenLabsTts } from "@/lib/studio-integrations/providers/elevenlabs/elevenlabs-tts";
+import {
+  runChunkedTts,
+  type TtsSegment,
+} from "@/lib/studio-productions/tts-chunked-pipeline";
+import { logAudit } from "@/lib/audit/log";
+import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import type { Json } from "@/types/database.types";
 
 export type StudioTtsActionState = {
@@ -19,7 +25,8 @@ export type StudioTtsActionState = {
 
 /**
  * Generate TTS audio from episode script text via ElevenLabs.
- * Stores the result as a `tts_audio` artifact on the episode.
+ * When a `timed_script` artifact exists, uses paragraph-level chunked TTS
+ * for precise segment timestamps; otherwise falls back to single-call mode.
  */
 export async function generateTtsFromScript(
   _prev: StudioTtsActionState | null,
@@ -59,25 +66,78 @@ export async function generateTtsFromScript(
   );
   if (!apiKey) return { error: "studioTtsNoElevenLabsKey" };
 
-  const result = await generateElevenLabsTts(apiKey, {
-    text: scriptText,
-    voiceId,
-    language,
-  });
+  const { data: timedRows } = await supabase
+    .from("studio_production_artifacts")
+    .select("content_text")
+    .eq("episode_id", episodeId)
+    .eq("organization_id", auth.ctx.organizationId)
+    .eq("artifact_role", "timed_script")
+    .order("created_at", { ascending: false })
+    .limit(1);
 
-  if (!result.ok) return { error: result.code };
+  const hasTimedScript = Boolean(timedRows?.[0]?.content_text?.trim());
 
-  const base64Audio = Buffer.from(result.audioBuffer).toString("base64");
-  const dataUri = `data:${result.contentType};base64,${base64Audio}`;
+  let audioBuffer: ArrayBuffer;
+  let contentType: string;
+  let segments: TtsSegment[] | undefined;
+  let totalDurationMs: number | undefined;
+
+  if (hasTimedScript) {
+    const chunked = await runChunkedTts(apiKey, scriptText, {
+      voiceId,
+      language,
+    });
+    if (!chunked.ok) return { error: chunked.code };
+    audioBuffer = chunked.audioBuffer;
+    contentType = chunked.contentType;
+    segments = chunked.segments;
+    totalDurationMs = chunked.totalDurationMs;
+  } else {
+    const result = await generateElevenLabsTts(apiKey, {
+      text: scriptText,
+      voiceId,
+      language,
+    });
+    if (!result.ok) return { error: result.code };
+    audioBuffer = result.audioBuffer;
+    contentType = result.contentType;
+  }
+
+  const base64Audio = Buffer.from(audioBuffer).toString("base64");
+  const dataUri = `data:${contentType};base64,${base64Audio}`;
 
   const metadata: Record<string, Json> = {
     source: "elevenlabs",
+    mode: segments ? "chunked" : "single",
     voice_id: voiceId ?? "default",
     language: language ?? "auto",
-    content_type: result.contentType,
-    byte_size: result.audioBuffer.byteLength,
+    content_type: contentType,
+    byte_size: audioBuffer.byteLength,
+    ...(segments ? { chunk_count: segments.length } : {}),
+    ...(segments
+      ? {
+          segments: segments.map((s) => ({
+            i: s.index,
+            t: s.text.slice(0, 200),
+            s: s.startMs,
+            e: s.endMs,
+          })),
+        }
+      : {}),
+    ...(totalDurationMs != null ? { total_duration_ms: totalDurationMs } : {}),
     generated_at: new Date().toISOString(),
   };
+
+  const contentText = segments
+    ? segments
+        .map((s) => {
+          const mm = Math.floor(s.startMs / 60000);
+          const ss = Math.floor((s.startMs % 60000) / 1000);
+          const ms = s.startMs % 1000;
+          return `[${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}.${String(ms).padStart(3, "0")}] ${s.text}`;
+        })
+        .join("\n\n")
+    : scriptText.slice(0, 500);
 
   const { data: artifact, error: insertErr } = await supabase
     .from("studio_production_artifacts")
@@ -86,7 +146,7 @@ export async function generateTtsFromScript(
       organization_id: auth.ctx.organizationId,
       artifact_role: "tts_audio",
       tool_platform: "elevenlabs",
-      content_text: scriptText.slice(0, 500),
+      content_text: contentText,
       external_url: dataUri,
       metadata,
     })
@@ -95,13 +155,23 @@ export async function generateTtsFromScript(
 
   if (insertErr || !artifact) return { error: "studioTtsInsertFailed" };
 
+  void logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.STUDIO_TTS_GENERATE,
+    entityType: AuditEntityType.STUDIO_EPISODE,
+    entityId: episodeId,
+    metadata: { mode: segments ? "chunked" : "single", chunk_count: segments?.length ?? 1 },
+  });
+
   revalidatePath(`/dashboard/productions/${episodeId}`);
   return { ok: true, artifactId: artifact.id };
 }
 
 /**
- * Generate SRT subtitles from TTS audio using OpenAI Whisper API.
- * Requires the org to have an OpenAI API key connected.
+ * Generate subtitles from TTS audio.
+ * - If the TTS artifact has segment timestamps (chunked mode), generates WebVTT directly (no Whisper cost).
+ * - Otherwise falls back to OpenAI Whisper STT → SRT.
  */
 export async function generateSubtitlesFromAudio(
   _prev: StudioTtsActionState | null,
@@ -121,6 +191,67 @@ export async function generateSubtitlesFromAudio(
   const episodeId = String(formData.get("episode_id") ?? "").trim();
   const audioUrl = String(formData.get("audio_url") ?? "").trim();
   if (!episodeId || !audioUrl) return { error: ActionErrorCode.unexpected };
+
+  const { data: ttsRows } = await supabase
+    .from("studio_production_artifacts")
+    .select("metadata")
+    .eq("episode_id", episodeId)
+    .eq("organization_id", auth.ctx.organizationId)
+    .eq("artifact_role", "tts_audio")
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  const ttsMetadata = ttsRows?.[0]?.metadata as Record<string, unknown> | null;
+  const savedSegments = ttsMetadata?.segments as
+    | Array<{ i: number; t: string; s: number; e: number }>
+    | undefined;
+
+  if (savedSegments && savedSegments.length > 0) {
+    const { segmentsToWebVtt } = await import(
+      "@/lib/studio-productions/subtitle-formatter"
+    );
+    const fullSegments: TtsSegment[] = savedSegments.map((s) => ({
+      index: s.i,
+      text: s.t,
+      startMs: s.s,
+      endMs: s.e,
+    }));
+    const vttContent = segmentsToWebVtt(fullSegments);
+
+    const metadata: Record<string, Json> = {
+      source: "tts_segments",
+      format: "webvtt",
+      segment_count: fullSegments.length,
+      generated_at: new Date().toISOString(),
+    };
+
+    const { data: artifact, error: insertErr } = await supabase
+      .from("studio_production_artifacts")
+      .insert({
+        episode_id: episodeId,
+        organization_id: auth.ctx.organizationId,
+        artifact_role: "subtitle_srt",
+        tool_platform: "elevenlabs_segments",
+        content_text: vttContent,
+        metadata,
+      })
+      .select("id")
+      .single();
+
+    if (insertErr || !artifact) return { error: "studioSubtitleInsertFailed" };
+
+    void logAudit({
+      organizationId: auth.ctx.organizationId,
+      actorId: auth.ctx.userId,
+      action: AuditAction.STUDIO_SUBTITLE_GENERATE,
+      entityType: AuditEntityType.STUDIO_EPISODE,
+      entityId: episodeId,
+      metadata: { source: "tts_segments", format: "webvtt" },
+    });
+
+    revalidatePath(`/dashboard/productions/${episodeId}`);
+    return { ok: true, artifactId: artifact.id };
+  }
 
   const openaiKey = await getOrgProviderApiKey(
     supabase,
@@ -180,6 +311,15 @@ export async function generateSubtitlesFromAudio(
     .single();
 
   if (insertErr || !artifact) return { error: "studioSubtitleInsertFailed" };
+
+  void logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.STUDIO_SUBTITLE_GENERATE,
+    entityType: AuditEntityType.STUDIO_EPISODE,
+    entityId: episodeId,
+    metadata: { source: "whisper", format: "srt" },
+  });
 
   revalidatePath(`/dashboard/productions/${episodeId}`);
   return { ok: true, artifactId: artifact.id };
