@@ -29,6 +29,8 @@ export type ProviderRunStepResult =
         | "runway_api_error"
         | "elevenlabs_empty_text"
         | "elevenlabs_api_error"
+        | "elevenlabs_auth_error"
+        | "elevenlabs_quota_exceeded"
         | "elevenlabs_timeout";
       message?: string;
       status?: number;

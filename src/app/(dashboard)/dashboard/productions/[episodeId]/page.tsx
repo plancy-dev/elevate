@@ -16,6 +16,8 @@ import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrati
 import { getOrgProviderApiKey } from "@/lib/studio-integrations/org-provider-secret";
 import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/feature";
 import { getOrgLlmProviderAvailability } from "@/lib/studio-productions/episode-llm";
+import { distributionDisplayLabel } from "@/lib/studio-productions/distribution";
+import { resolveEpisodeFormat } from "@/lib/studio-productions/episode-format";
 import { listDraftTemplatesForOrg } from "@/lib/data/studio-draft-templates";
 import { listDraftSnapshotsForEpisode } from "@/lib/studio-productions/draft-snapshots";
 import { ORG_EDITOR_ROLES } from "@/lib/auth/require-org-editor";
@@ -119,6 +121,21 @@ export default async function ProductionEpisodePage({ params }: Props) {
 
   const t = await getTranslations("Dashboard.productions");
 
+  const { data: youtubeChannelRow } = await supabase
+    .from("studio_youtube_channel_tokens")
+    .select("channel_title")
+    .eq("organization_id", orgId)
+    .limit(1)
+    .maybeSingle();
+
+  const youtubeChannelTitle = youtubeChannelRow?.channel_title?.trim() || null;
+  const episodeFormat = resolveEpisodeFormat(episode);
+  const linkedChannelLabel = episode.studio_distribution_channels?.label?.trim();
+  const presetDistributionLabel = episode.distribution_label?.trim()
+    ? distributionDisplayLabel(episode.distribution_label, (key) => t(key as never)).trim()
+    : "";
+  const distributionChannelLabel = linkedChannelLabel || presetDistributionLabel || null;
+
   return (
     <div className="mx-auto w-full max-w-5xl p-6 lg:p-8">
       <div className="mb-6">
@@ -155,6 +172,9 @@ export default async function ProductionEpisodePage({ params }: Props) {
             elevenlabsKeyConfigured={elevenlabsKeyConfigured}
             openaiKeyConfigured={openaiKeyConfigured}
             packagingLlmReady={packagingLlmReady}
+            youtubeChannelTitle={youtubeChannelTitle}
+            episodeFormat={episodeFormat}
+            distributionChannelLabel={distributionChannelLabel}
             helpSection={
               <section
                 className="rounded-xl border border-dashed border-border-subtle bg-layer-02/30 px-4 py-3"

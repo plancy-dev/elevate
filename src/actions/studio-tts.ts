@@ -13,13 +13,57 @@ import {
   runChunkedTts,
   type TtsSegment,
 } from "@/lib/studio-productions/tts-chunked-pipeline";
+import { resolveVoiceIdFromPreset } from "@/lib/studio-productions/elevenlabs-tts-presets";
 import { logAudit } from "@/lib/audit/log";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import type { Json } from "@/types/database.types";
 
+/** Safe snippet for UI (no newlines spam; max length). */
+function sanitizeProviderErrorDetail(raw: string | undefined): string | undefined {
+  if (!raw?.trim()) return undefined;
+  const s = raw.replace(/\s+/g, " ").trim().slice(0, 400);
+  return s || undefined;
+}
+
+function parseUnitInterval(raw: string | undefined): number | undefined {
+  if (raw == null || raw.trim() === "") return undefined;
+  const n = Number.parseFloat(raw);
+  if (!Number.isFinite(n)) return undefined;
+  return Math.min(1, Math.max(0, n));
+}
+
+function parseSpeakerBoost(
+  formData: FormData,
+): boolean | undefined {
+  const v = String(formData.get("tts_speaker_boost") ?? "").trim();
+  if (v === "") return undefined;
+  if (v === "1" || v === "true" || v === "on") return true;
+  if (v === "0" || v === "false" || v === "off") return false;
+  return undefined;
+}
+
+function mapElevenLabsProviderCode(code: string): (typeof ActionErrorCode)[keyof typeof ActionErrorCode] {
+  switch (code) {
+    case "elevenlabs_api_error":
+      return ActionErrorCode.studioTtsElevenLabsApiError;
+    case "elevenlabs_auth_error":
+      return ActionErrorCode.studioTtsElevenLabsAuthError;
+    case "elevenlabs_quota_exceeded":
+      return ActionErrorCode.studioTtsElevenLabsQuotaError;
+    case "elevenlabs_empty_text":
+      return ActionErrorCode.studioTtsElevenLabsEmptyText;
+    case "elevenlabs_timeout":
+      return ActionErrorCode.studioTtsElevenLabsTimeout;
+    default:
+      return ActionErrorCode.studioTtsElevenLabsApiError;
+  }
+}
+
 export type StudioTtsActionState = {
   ok?: boolean;
   error?: string;
+  /** Provider HTTP status + body snippet (e.g. ElevenLabs) for debugging. */
+  errorDetail?: string;
   artifactId?: string;
 };
 
@@ -54,17 +98,31 @@ export async function generateTtsFromScript(
   if (!episode) return { error: ActionErrorCode.studioEpisodeNotFound };
 
   const scriptText = String(formData.get("script_text") ?? "").trim();
-  if (!scriptText) return { error: "studioTtsEmptyScript" };
+  if (!scriptText) return { error: ActionErrorCode.studioTtsEmptyScript };
 
-  const voiceId = String(formData.get("voice_id") ?? "").trim() || undefined;
+  const voicePreset = String(formData.get("voice_preset") ?? "female").trim();
+  const customVoiceId = String(formData.get("voice_id") ?? "").trim() || undefined;
+  const resolvedVoice = resolveVoiceIdFromPreset(voicePreset, customVoiceId);
+  if (resolvedVoice.error === "custom_voice_required") {
+    return { error: ActionErrorCode.studioTtsCustomVoiceIdRequired };
+  }
+  const voiceId = resolvedVoice.voiceId;
+
   const language = String(formData.get("language") ?? "").trim() || undefined;
+  const modelId = String(formData.get("model_id") ?? "").trim() || undefined;
+
+  const stability = parseUnitInterval(String(formData.get("tts_stability") ?? ""));
+  const similarityBoost = parseUnitInterval(String(formData.get("tts_similarity") ?? ""));
+  const styleRaw = String(formData.get("tts_style") ?? "").trim();
+  const style = styleRaw === "" ? undefined : parseUnitInterval(styleRaw);
+  const useSpeakerBoost = parseSpeakerBoost(formData);
 
   const apiKey = await getOrgProviderApiKey(
     supabase,
     auth.ctx.organizationId,
     "elevenlabs",
   );
-  if (!apiKey) return { error: "studioTtsNoElevenLabsKey" };
+  if (!apiKey) return { error: ActionErrorCode.studioTtsNoElevenLabsKey };
 
   const { data: timedRows } = await supabase
     .from("studio_production_artifacts")
@@ -82,12 +140,30 @@ export async function generateTtsFromScript(
   let segments: TtsSegment[] | undefined;
   let totalDurationMs: number | undefined;
 
+  const ttsVoiceOpts = {
+    voiceId,
+    language,
+    modelId,
+    stability,
+    similarityBoost,
+    style,
+    useSpeakerBoost,
+  };
+
   if (hasTimedScript) {
-    const chunked = await runChunkedTts(apiKey, scriptText, {
-      voiceId,
-      language,
-    });
-    if (!chunked.ok) return { error: chunked.code };
+    const chunked = await runChunkedTts(apiKey, scriptText, ttsVoiceOpts);
+    if (!chunked.ok) {
+      const segHint =
+        chunked.failedIndex != null
+          ? ` (paragraph ${chunked.failedIndex + 1})`
+          : "";
+      return {
+        error: mapElevenLabsProviderCode(chunked.code),
+        errorDetail: sanitizeProviderErrorDetail(
+          [chunked.message, segHint].filter(Boolean).join("") || undefined,
+        ),
+      };
+    }
     audioBuffer = chunked.audioBuffer;
     contentType = chunked.contentType;
     segments = chunked.segments;
@@ -95,10 +171,14 @@ export async function generateTtsFromScript(
   } else {
     const result = await generateElevenLabsTts(apiKey, {
       text: scriptText,
-      voiceId,
-      language,
+      ...ttsVoiceOpts,
     });
-    if (!result.ok) return { error: result.code };
+    if (!result.ok) {
+      return {
+        error: mapElevenLabsProviderCode(result.code),
+        errorDetail: sanitizeProviderErrorDetail(result.message),
+      };
+    }
     audioBuffer = result.audioBuffer;
     contentType = result.contentType;
   }
@@ -109,8 +189,14 @@ export async function generateTtsFromScript(
   const metadata: Record<string, Json> = {
     source: "elevenlabs",
     mode: segments ? "chunked" : "single",
+    voice_preset: voicePreset,
     voice_id: voiceId ?? "default",
+    model_id: modelId ?? "eleven_multilingual_v3",
     language: language ?? "auto",
+    ...(stability != null ? { tts_stability: stability } : {}),
+    ...(similarityBoost != null ? { tts_similarity_boost: similarityBoost } : {}),
+    ...(style != null ? { tts_style: style } : {}),
+    ...(useSpeakerBoost != null ? { tts_speaker_boost: useSpeakerBoost } : {}),
     content_type: contentType,
     byte_size: audioBuffer.byteLength,
     ...(segments ? { chunk_count: segments.length } : {}),
@@ -153,7 +239,7 @@ export async function generateTtsFromScript(
     .select("id")
     .single();
 
-  if (insertErr || !artifact) return { error: "studioTtsInsertFailed" };
+  if (insertErr || !artifact) return { error: ActionErrorCode.studioTtsInsertFailed };
 
   void logAudit({
     organizationId: auth.ctx.organizationId,
@@ -238,7 +324,7 @@ export async function generateSubtitlesFromAudio(
       .select("id")
       .single();
 
-    if (insertErr || !artifact) return { error: "studioSubtitleInsertFailed" };
+    if (insertErr || !artifact) return { error: ActionErrorCode.studioSubtitleInsertFailed };
 
     void logAudit({
       organizationId: auth.ctx.organizationId,
@@ -258,7 +344,7 @@ export async function generateSubtitlesFromAudio(
     auth.ctx.organizationId,
     "openai",
   );
-  if (!openaiKey) return { error: "studioSubtitleNoOpenAiKey" };
+  if (!openaiKey) return { error: ActionErrorCode.studioSubtitleNoOpenAiKey };
 
   let audioBuffer: ArrayBuffer;
   if (audioUrl.startsWith("data:")) {
@@ -267,7 +353,7 @@ export async function generateSubtitlesFromAudio(
     audioBuffer = Buffer.from(base64Part, "base64").buffer;
   } else {
     const res = await fetch(audioUrl);
-    if (!res.ok) return { error: "studioSubtitleAudioFetchFailed" };
+    if (!res.ok) return { error: ActionErrorCode.studioSubtitleAudioFetchFailed };
     audioBuffer = await res.arrayBuffer();
   }
 
@@ -286,7 +372,7 @@ export async function generateSubtitlesFromAudio(
     },
   );
 
-  if (!whisperRes.ok) return { error: "studioSubtitleWhisperError" };
+  if (!whisperRes.ok) return { error: ActionErrorCode.studioSubtitleWhisperError };
 
   const srtContent = await whisperRes.text();
 
@@ -310,7 +396,7 @@ export async function generateSubtitlesFromAudio(
     .select("id")
     .single();
 
-  if (insertErr || !artifact) return { error: "studioSubtitleInsertFailed" };
+  if (insertErr || !artifact) return { error: ActionErrorCode.studioSubtitleInsertFailed };
 
   void logAudit({
     organizationId: auth.ctx.organizationId,

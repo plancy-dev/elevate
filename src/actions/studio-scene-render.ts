@@ -68,6 +68,13 @@ export async function renderEpisodeScenes(
 
   const scriptText = String(formData.get("script_text") ?? "").trim();
   const scenesJsonRaw = String(formData.get("scenes_json") ?? "").trim();
+  const targetSceneRaw = String(formData.get("target_scene_count") ?? "").trim();
+  const targetSceneCountParsed = targetSceneRaw
+    ? Number.parseInt(targetSceneRaw, 10)
+    : NaN;
+  const targetSceneCount = Number.isFinite(targetSceneCountParsed)
+    ? Math.min(12, Math.max(3, targetSceneCountParsed))
+    : undefined;
 
   let scenes: SceneDefinition[];
 
@@ -83,7 +90,7 @@ export async function renderEpisodeScenes(
       return { error: "studioSceneRenderInvalidJson" };
     }
   } else if (scriptText) {
-    scenes = splitScriptToScenes(scriptText).scenes;
+    scenes = splitScriptToScenes(scriptText, targetSceneCount).scenes;
   } else {
     return { error: "studioSceneRenderNoScript" };
   }

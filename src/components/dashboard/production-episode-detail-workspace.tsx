@@ -45,6 +45,7 @@ import {
 } from "@/lib/studio-productions/episode-detail-panel";
 import type { StudioEpisodeStatus } from "@/lib/studio-productions/constants";
 import { distributionDisplayLabel } from "@/lib/studio-productions/distribution";
+import type { EpisodeFormat } from "@/lib/studio-productions/episode-format";
 import { cn } from "@/lib/utils";
 
 const STATUS_I18N: Record<
@@ -127,6 +128,9 @@ function ProductionEpisodeDetailWorkspaceInner({
   openaiKeyConfigured,
   packagingLlmReady,
   helpSection,
+  youtubeChannelTitle,
+  episodeFormat,
+  distributionChannelLabel,
 }: {
   episode: StudioProductionEpisodeRowWithEmbeds;
   studioProjects: ProjectOpt[];
@@ -141,6 +145,9 @@ function ProductionEpisodeDetailWorkspaceInner({
   openaiKeyConfigured: boolean;
   packagingLlmReady: boolean;
   helpSection: ReactNode;
+  youtubeChannelTitle: string | null;
+  episodeFormat: EpisodeFormat;
+  distributionChannelLabel: string | null;
 }) {
   const t = useTranslations("Dashboard.productions");
   const baseId = useId();
@@ -386,6 +393,10 @@ function ProductionEpisodeDetailWorkspaceInner({
             openaiKeyConfigured={openaiKeyConfigured}
             packagingLlmReady={packagingLlmReady}
             publishUrl={episode.publish_url}
+            episodeTitle={episode.title}
+            youtubeChannelTitle={youtubeChannelTitle}
+            episodeFormat={episodeFormat}
+            distributionChannelLabel={distributionChannelLabel}
             className="border-t-0 pt-0"
           />
         </section>

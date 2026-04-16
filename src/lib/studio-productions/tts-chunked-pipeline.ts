@@ -63,7 +63,16 @@ function concatBuffers(buffers: ArrayBuffer[]): ArrayBuffer {
 export async function runChunkedTts(
   apiKey: string,
   scriptText: string,
-  opts?: Pick<ElevenLabsTtsOptions, "voiceId" | "modelId" | "language">,
+  opts?: Pick<
+    ElevenLabsTtsOptions,
+    | "voiceId"
+    | "modelId"
+    | "language"
+    | "stability"
+    | "similarityBoost"
+    | "style"
+    | "useSpeakerBoost"
+  >,
 ): Promise<ChunkedTtsResult> {
   const blocks = splitScriptIntoTimedBlocks(scriptText);
   if (blocks.length === 0) {
@@ -82,6 +91,10 @@ export async function runChunkedTts(
       voiceId: opts?.voiceId,
       modelId: opts?.modelId,
       language: opts?.language,
+      stability: opts?.stability,
+      similarityBoost: opts?.similarityBoost,
+      style: opts?.style,
+      useSpeakerBoost: opts?.useSpeakerBoost,
     });
 
     if (!result.ok) {

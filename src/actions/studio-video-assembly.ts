@@ -73,12 +73,18 @@ export async function assembleEpisodeVideo(
   );
 
   const bgMusicUrl = String(formData.get("bg_music_url") ?? "").trim() || undefined;
+  const bgVolRaw = String(formData.get("bg_music_volume") ?? "").trim();
+  const bgVolParsed = bgVolRaw ? Number.parseFloat(bgVolRaw) : NaN;
+  const bgMusicVolume = Number.isFinite(bgVolParsed)
+    ? Math.min(0.35, Math.max(0.05, bgVolParsed))
+    : undefined;
 
   const result = await assembleVideo({
     clipUrls,
     audioUrl: ttsArtifact?.external_url ?? undefined,
     srtContent: srtArtifact?.content_text ?? undefined,
     bgMusicUrl,
+    bgMusicVolume,
   });
 
   if (!result.ok) return { error: result.code };
@@ -92,6 +98,7 @@ export async function assembleEpisodeVideo(
     has_tts: !!ttsArtifact,
     has_subtitles: !!srtArtifact,
     has_bg_music: !!bgMusicUrl,
+    ...(bgMusicVolume != null ? { bg_music_volume: bgMusicVolume } : {}),
     duration_seconds: result.durationSeconds,
     resolution: FORMAT_SPECS[resolveEpisodeFormat(episode)].resolution,
     codec: "h264_aac",

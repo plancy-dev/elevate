@@ -13,14 +13,38 @@ export type ElevenLabsTtsOptions = {
   language?: string;
   stability?: number;
   similarityBoost?: number;
+  /** 0–1, expressive style (model-dependent; omitted when undefined). */
+  style?: number;
+  useSpeakerBoost?: boolean;
 };
+
+export type ElevenLabsErrorCode =
+  | "elevenlabs_empty_text"
+  | "elevenlabs_api_error"
+  | "elevenlabs_auth_error"
+  | "elevenlabs_quota_exceeded"
+  | "elevenlabs_timeout";
 
 export type ElevenLabsTtsResult =
   | { ok: true; audioBuffer: ArrayBuffer; contentType: string }
-  | { ok: false; code: "elevenlabs_empty_text" | "elevenlabs_api_error" | "elevenlabs_timeout"; message?: string };
+  | { ok: false; code: ElevenLabsErrorCode; message?: string };
 
 const DEFAULT_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // Rachel
-const DEFAULT_MODEL_ID = "eleven_multilingual_v2";
+const DEFAULT_MODEL_ID = "eleven_multilingual_v3";
+
+/** ElevenLabs sometimes returns 401 with JSON body `detail.status: "quota_exceeded"` (not invalid key). */
+function isElevenLabsQuotaErrorBody(errText: string): boolean {
+  const t = errText.trim();
+  if (!t) return false;
+  if (/quota_exceeded/i.test(t)) return true;
+  try {
+    const j = JSON.parse(t) as { detail?: { status?: string; message?: string } };
+    if (j?.detail?.status === "quota_exceeded") return true;
+  } catch {
+    /* not JSON */
+  }
+  return false;
+}
 
 /**
  * Single-chunk TTS with one automatic retry on transient failures (429 / 5xx).
@@ -32,11 +56,11 @@ export async function generateElevenLabsTtsChunk(
 ): Promise<ElevenLabsTtsResult> {
   const first = await generateElevenLabsTts(apiKey, opts);
   if (first.ok) return first;
-  if (
-    first.code === "elevenlabs_api_error" &&
+  const retryable =
+    (first.code === "elevenlabs_api_error" || first.code === "elevenlabs_quota_exceeded") &&
     first.message &&
-    /^(429|5\d\d):/.test(first.message)
-  ) {
+    /^(429|5\d\d):/.test(first.message);
+  if (retryable) {
     await new Promise((r) => setTimeout(r, 2000));
     return generateElevenLabsTts(apiKey, opts);
   }
@@ -72,6 +96,12 @@ export async function generateElevenLabsTts(
         voice_settings: {
           stability: opts.stability ?? 0.5,
           similarity_boost: opts.similarityBoost ?? 0.75,
+          ...(opts.style != null && Number.isFinite(opts.style)
+            ? { style: opts.style }
+            : {}),
+          ...(opts.useSpeakerBoost != null
+            ? { use_speaker_boost: opts.useSpeakerBoost }
+            : {}),
         },
         ...(opts.language ? { language_code: opts.language } : {}),
       }),
@@ -80,10 +110,20 @@ export async function generateElevenLabsTts(
 
     if (!res.ok) {
       const errText = await res.text().catch(() => "");
+      const message = `${res.status}: ${errText.slice(0, 500)}`;
+      if (isElevenLabsQuotaErrorBody(errText)) {
+        return { ok: false, code: "elevenlabs_quota_exceeded", message };
+      }
+      if (res.status === 401 || res.status === 403) {
+        return { ok: false, code: "elevenlabs_auth_error", message };
+      }
+      if (res.status === 402) {
+        return { ok: false, code: "elevenlabs_quota_exceeded", message };
+      }
       return {
         ok: false,
         code: "elevenlabs_api_error",
-        message: `${res.status}: ${errText.slice(0, 200)}`,
+        message,
       };
     }
 
@@ -98,7 +138,10 @@ export async function generateElevenLabsTts(
     return {
       ok: false,
       code: "elevenlabs_api_error",
-      message: err instanceof Error ? err.message : "Unknown error",
+      message:
+        err instanceof Error
+          ? err.message.slice(0, 400)
+          : "Unknown error",
     };
   } finally {
     clearTimeout(tid);

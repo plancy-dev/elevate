@@ -99,6 +99,24 @@ export const ActionErrorCode = {
   studioRunwayTaskFailed: "studioRunwayTaskFailed",
   studioRunwayTimeout: "studioRunwayTimeout",
   studioRunwayApiError: "studioRunwayApiError",
+
+  /** ElevenLabs TTS: generic HTTP / validation error from provider */
+  studioTtsElevenLabsApiError: "studioTtsElevenLabsApiError",
+  /** ElevenLabs TTS: 401 / 403 */
+  studioTtsElevenLabsAuthError: "studioTtsElevenLabsAuthError",
+  /** ElevenLabs TTS: 402 or plan / quota */
+  studioTtsElevenLabsQuotaError: "studioTtsElevenLabsQuotaError",
+  studioTtsElevenLabsEmptyText: "studioTtsElevenLabsEmptyText",
+  studioTtsElevenLabsTimeout: "studioTtsElevenLabsTimeout",
+  studioTtsEmptyScript: "studioTtsEmptyScript",
+  studioTtsNoElevenLabsKey: "studioTtsNoElevenLabsKey",
+  studioTtsInsertFailed: "studioTtsInsertFailed",
+  studioTtsCustomVoiceIdRequired: "studioTtsCustomVoiceIdRequired",
+  studioSubtitleInsertFailed: "studioSubtitleInsertFailed",
+  studioSubtitleNoOpenAiKey: "studioSubtitleNoOpenAiKey",
+  studioSubtitleAudioFetchFailed: "studioSubtitleAudioFetchFailed",
+  studioSubtitleWhisperError: "studioSubtitleWhisperError",
+
   studioYoutubeUploadNotAvailable: "studioYoutubeUploadNotAvailable",
 
   /** Reference pipeline: OpenAI key missing (YouTube STT) */

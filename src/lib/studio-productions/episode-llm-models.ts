@@ -17,9 +17,9 @@ export type DraftModelOption = {
 
 export const OPENAI_DRAFT_MODEL_OPTIONS = [
   {
-    id: "gpt-5.4-nano",
-    costTier: "low",
-    pricingHint: "$0.20/M in · $1.25/M out",
+    id: "gpt-5.4",
+    costTier: "high",
+    pricingHint: "$2.50/M in · $15/M out",
   },
   {
     id: "gpt-5.4-mini",
@@ -27,9 +27,9 @@ export const OPENAI_DRAFT_MODEL_OPTIONS = [
     pricingHint: "$0.75/M in · $4.50/M out",
   },
   {
-    id: "gpt-5.4",
-    costTier: "high",
-    pricingHint: "$2.50/M in · $15/M out",
+    id: "gpt-5.4-nano",
+    costTier: "low",
+    pricingHint: "$0.20/M in · $1.25/M out",
   },
   {
     id: "gpt-4o-mini",
@@ -64,9 +64,9 @@ export const TIMED_SCRIPT_HEURISTIC_MODEL_ID = "heuristic";
 
 export const ANTHROPIC_DRAFT_MODEL_OPTIONS = [
   {
-    id: "claude-haiku-4-5-20251001",
-    costTier: "low",
-    pricingHint: "$1/M in · $5/M out",
+    id: "claude-opus-4-6",
+    costTier: "high",
+    pricingHint: "$5/M in · $25/M out",
   },
   {
     id: "claude-sonnet-4-6",
@@ -74,9 +74,9 @@ export const ANTHROPIC_DRAFT_MODEL_OPTIONS = [
     pricingHint: "$3/M in · $15/M out",
   },
   {
-    id: "claude-opus-4-6",
-    costTier: "high",
-    pricingHint: "$5/M in · $25/M out",
+    id: "claude-haiku-4-5-20251001",
+    costTier: "low",
+    pricingHint: "$1/M in · $5/M out",
   },
   {
     id: "claude-sonnet-4-5-20250929",
@@ -129,9 +129,7 @@ export const ANTHROPIC_DRAFT_MODELS = ANTHROPIC_DRAFT_MODEL_OPTIONS.map((o) => o
 export type StudioDraftLlmProvider = "openai" | "anthropic";
 
 export function defaultDraftModel(provider: StudioDraftLlmProvider): string {
-  return provider === "openai"
-    ? OPENAI_DRAFT_MODEL_OPTIONS[0].id
-    : ANTHROPIC_DRAFT_MODEL_OPTIONS[0].id;
+  return provider === "openai" ? "gpt-5.4" : "claude-opus-4-6";
 }
 
 export function isAllowedDraftModel(

@@ -7,8 +7,9 @@ import {
   useMemo,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -20,9 +21,11 @@ import { generateTtsFromScript, generateSubtitlesFromAudio } from "@/actions/stu
 import { renderEpisodeScenes } from "@/actions/studio-scene-render";
 import { assembleEpisodeVideo } from "@/actions/studio-video-assembly";
 import { uploadEpisodeToYouTube } from "@/actions/studio-youtube";
+import { YoutubeUploadPipelineStep } from "@/components/dashboard/youtube-upload-pipeline-step";
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import type { StudioProductionArtifactRow } from "@/lib/data/studio-productions";
 import { parsePackagingDraftContent } from "@/lib/studio-productions/packaging-draft";
+import type { EpisodeFormat } from "@/lib/studio-productions/episode-format";
 import {
   OPENAI_DRAFT_MODEL_OPTIONS,
   ANTHROPIC_DRAFT_MODEL_OPTIONS,
@@ -34,6 +37,14 @@ import { Modal } from "@/components/ui/modal";
 import { toast } from "@/lib/ui/app-toast";
 import { cn } from "@/lib/utils";
 
+/** Not from messages — curly braces are parsed as ICU placeholders in next-intl. */
+const SCENES_JSON_PLACEHOLDER_EXAMPLE =
+  '[{"narration":"…","visual_prompt":"…","duration_seconds":5}]';
+import {
+  ELEVENLABS_LANGUAGE_SELECT_OPTIONS,
+  appLocaleToElevenLabsLanguage,
+} from "@/lib/studio-productions/elevenlabs-tts-presets";
+
 type PipelineProps = {
   episodeId: string;
   artifacts: StudioProductionArtifactRow[];
@@ -44,15 +55,32 @@ type PipelineProps = {
   openaiKeyConfigured?: boolean;
   /** Episode published URL after YouTube upload (marks upload step complete). */
   publishUrl?: string | null;
+  /** Episode display title (fallback when packaging has no YouTube title). */
+  episodeTitle?: string;
+  /** OAuth-connected channel title (upload target). */
+  youtubeChannelTitle?: string | null;
+  episodeFormat?: EpisodeFormat;
+  /** Planning / linked channel label (may differ from OAuth upload target). */
+  distributionChannelLabel?: string | null;
   className?: string;
 };
 
 type PipelineStepActionState = {
   ok?: boolean;
   error?: string;
+  /** Optional provider detail (e.g. ElevenLabs status + response body). */
+  errorDetail?: string;
 } | null;
 
-type ViewKind = "timed" | "packaging" | "thumbnail" | null;
+type ViewKind =
+  | "timed"
+  | "packaging"
+  | "thumbnail"
+  | "tts"
+  | "subtitle"
+  | "scene"
+  | "assembly"
+  | null;
 
 function usePipelineStepToast(
   state: PipelineStepActionState,
@@ -74,7 +102,13 @@ function usePipelineStepToast(
     }
 
     if (state.error) {
-      toast.error(translateActionErrorMessage(state.error, tAction));
+      const msg = translateActionErrorMessage(state.error, tAction);
+      const detail = state.errorDetail?.trim();
+      if (detail) {
+        toast.error(msg, { description: detail });
+      } else {
+        toast.error(msg);
+      }
     }
   }, [router, state, successKey, tProd, tAction]);
 }
@@ -98,12 +132,24 @@ export function ProductionEpisodePipeline({
   packagingLlmReady = false,
   openaiKeyConfigured = false,
   publishUrl = null,
+  episodeTitle = "",
+  youtubeChannelTitle = null,
+  episodeFormat = "shorts",
+  distributionChannelLabel = null,
   className,
 }: PipelineProps) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
+  const locale = useLocale();
+  const defaultTtsLanguage = useMemo(
+    () => appLocaleToElevenLabsLanguage(locale),
+    [locale],
+  );
   const router = useRouter();
   const [viewOpen, setViewOpen] = useState<ViewKind>(null);
+  const [ttsVoicePreset, setTtsVoicePreset] = useState<"female" | "male" | "custom">(
+    "female",
+  );
 
   const packagingModelOptions = useMemo(() => {
     const openai = OPENAI_DRAFT_MODEL_OPTIONS.map((o) => ({
@@ -157,6 +203,24 @@ export function ProductionEpisodePipeline({
     [artifacts],
   );
   const thumbnailArtifact = useMemo(() => latestArtifact(artifacts, "thumbnail"), [artifacts]);
+  const ttsArtifact = useMemo(() => latestArtifact(artifacts, "tts_audio"), [artifacts]);
+  const subtitleArtifact = useMemo(() => latestArtifact(artifacts, "subtitle_srt"), [artifacts]);
+  const assemblyArtifact = useMemo(() => latestArtifact(artifacts, "assembled_video"), [artifacts]);
+  const sceneClips = useMemo(() => {
+    return [...artifacts]
+      .filter((a) => a.artifact_role === "scene_clip")
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+  }, [artifacts]);
+
+  const elevenlabsTtsModelOptions = useMemo(
+    () => [
+      { id: "eleven_multilingual_v3", label: t("pipelineProduceTtsModelMultilingualV3") },
+      { id: "eleven_multilingual_v2", label: t("pipelineProduceTtsModelMultilingualV2") },
+      { id: "eleven_turbo_v2_5", label: t("pipelineProduceTtsModelTurboV25") },
+      { id: "eleven_flash_v2_5", label: t("pipelineProduceTtsModelFlashV25") },
+    ],
+    [t],
+  );
 
   const packagingParsed = useMemo(() => {
     const raw = packagingArtifact?.content_text ?? "";
@@ -498,6 +562,119 @@ export function ProductionEpisodePipeline({
         )}
       </Modal>
 
+      <Modal
+        open={viewOpen === "tts"}
+        onClose={() => setViewOpen(null)}
+        title={t("pipelineModalTtsTitle")}
+        description={t("pipelineModalTtsDescription")}
+        size="xl"
+      >
+        {ttsArtifact?.external_url ? (
+          <div className="space-y-3">
+            <audio
+              controls
+              src={ttsArtifact.external_url}
+              className="w-full max-w-md"
+            >
+              <track kind="captions" />
+            </audio>
+            {ttsArtifact.content_text?.trim() ? (
+              <pre className="max-h-[min(50vh,24rem)] overflow-auto whitespace-pre-wrap rounded-lg border border-border-subtle bg-layer-02/40 p-3 text-xs text-text-secondary leading-relaxed">
+                {ttsArtifact.content_text}
+              </pre>
+            ) : null}
+          </div>
+        ) : (
+          <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
+        )}
+      </Modal>
+
+      <Modal
+        open={viewOpen === "subtitle"}
+        onClose={() => setViewOpen(null)}
+        title={t("pipelineModalSubtitleTitle")}
+        size="xl"
+      >
+        {subtitleArtifact?.content_text?.trim() ? (
+          <pre className="max-h-[min(70vh,32rem)] overflow-auto whitespace-pre-wrap rounded-lg border border-border-subtle bg-layer-02/40 p-3 text-xs text-text-secondary leading-relaxed font-mono">
+            {subtitleArtifact.content_text}
+          </pre>
+        ) : (
+          <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
+        )}
+      </Modal>
+
+      <Modal
+        open={viewOpen === "scene"}
+        onClose={() => setViewOpen(null)}
+        title={t("pipelineModalSceneTitle")}
+        size="xl"
+      >
+        {sceneClips.length > 0 ? (
+          <ul className="space-y-4 max-h-[min(70vh,36rem)] overflow-y-auto pr-1">
+            {sceneClips.map((clip, idx) => (
+              <li
+                key={clip.id}
+                className="rounded-lg border border-border-subtle bg-layer-02/30 p-3"
+              >
+                <p className="text-[10px] font-medium text-text-tertiary mb-2">
+                  {t("pipelineModalSceneClipLabel", {
+                    index: idx + 1,
+                  })}
+                </p>
+                {clip.external_url?.startsWith("http") ? (
+                  <video
+                    src={clip.external_url}
+                    controls
+                    className="w-full max-h-48 rounded-md border border-border-subtle bg-black/40"
+                  >
+                    <track kind="captions" />
+                  </video>
+                ) : clip.external_url ? (
+                  <p className="text-xs text-text-tertiary break-all">{clip.external_url}</p>
+                ) : null}
+                {clip.content_text?.trim() ? (
+                  <p className="mt-2 text-xs text-text-secondary whitespace-pre-wrap line-clamp-4">
+                    {clip.content_text}
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
+        )}
+      </Modal>
+
+      <Modal
+        open={viewOpen === "assembly"}
+        onClose={() => setViewOpen(null)}
+        title={t("pipelineModalAssemblyTitle")}
+        size="xl"
+      >
+        {assemblyArtifact?.external_url ? (
+          <div className="space-y-3">
+            {assemblyArtifact.external_url.startsWith("data:video") ||
+            assemblyArtifact.external_url.startsWith("http") ? (
+              <video
+                src={assemblyArtifact.external_url}
+                controls
+                className="w-full max-h-[min(70vh,28rem)] rounded-lg border border-border-subtle bg-black/40"
+              >
+                <track kind="captions" />
+              </video>
+            ) : (
+              <p className="text-xs text-text-tertiary break-all">{assemblyArtifact.external_url}</p>
+            )}
+            {assemblyArtifact.content_text?.trim() ? (
+              <p className="text-sm text-text-secondary">{assemblyArtifact.content_text}</p>
+            ) : null}
+          </div>
+        ) : (
+          <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
+        )}
+      </Modal>
+
       <div>
         <h3 className="text-sm font-semibold text-text-primary">
           {t("pipelinePhaseProduceTitle")}
@@ -508,7 +685,8 @@ export function ProductionEpisodePipeline({
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <PipelineStep
+        <PreprodPipelineStep
+          key={`produce-tts-${episodeId}`}
           step={4}
           label={t("draftTtsCta")}
           done={hasTtsAudio}
@@ -519,9 +697,141 @@ export function ProductionEpisodePipeline({
           hiddenFields={{ episode_id: episodeId, script_text: scriptText }}
           runLabel={t("pipelineStepRun")}
           redoLabel={t("pipelineStepRedo")}
+          viewLabel={t("pipelineStepView")}
+          showView={hasTtsAudio && Boolean(ttsAudioUrl)}
+          onView={() => setViewOpen("tts")}
+          modelOptions={elevenlabsTtsModelOptions}
+          defaultModel="eleven_multilingual_v3"
+          modelFieldName="model_id"
+          showCustomInstructions={false}
+          renderAdvancedExtra={(formId) => (
+            <div className="space-y-3">
+              <div>
+                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                  {t("pipelineProduceVoicePresetLabel")}
+                </label>
+                <select
+                  name="voice_preset"
+                  form={formId}
+                  value={ttsVoicePreset}
+                  onChange={(e) =>
+                    setTtsVoicePreset(e.target.value as "female" | "male" | "custom")
+                  }
+                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                >
+                  <option value="female">{t("pipelineProduceVoicePresetFemale")}</option>
+                  <option value="male">{t("pipelineProduceVoicePresetMale")}</option>
+                  <option value="custom">{t("pipelineProduceVoicePresetCustom")}</option>
+                </select>
+              </div>
+              {ttsVoicePreset === "custom" ? (
+                <div>
+                  <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                    {t("pipelineProduceVoiceIdLabel")}
+                  </label>
+                  <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+                    {t("pipelineProduceVoiceIdHintCustom")}
+                  </p>
+                  <input
+                    name="voice_id"
+                    form={formId}
+                    maxLength={64}
+                    placeholder="21m00Tcm4TlvDq8ikWAM"
+                    className="h-7 w-full max-w-md rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary placeholder:text-text-tertiary"
+                  />
+                </div>
+              ) : null}
+              <div>
+                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                  {t("pipelineProduceLanguageLabel")}
+                </label>
+                <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+                  {t("pipelineProduceLanguageHint")}
+                </p>
+                <select
+                  name="language"
+                  form={formId}
+                  defaultValue={defaultTtsLanguage}
+                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                >
+                  {ELEVENLABS_LANGUAGE_SELECT_OPTIONS.map((o) => (
+                    <option key={o.value || "auto"} value={o.value}>
+                      {t(o.labelKey)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <div>
+                  <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                    {t("pipelineProduceTtsStabilityLabel")}
+                  </label>
+                  <input
+                    name="tts_stability"
+                    form={formId}
+                    type="number"
+                    min={0}
+                    max={1}
+                    step={0.05}
+                    defaultValue={0.5}
+                    className="h-7 w-full rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                    {t("pipelineProduceTtsSimilarityLabel")}
+                  </label>
+                  <input
+                    name="tts_similarity"
+                    form={formId}
+                    type="number"
+                    min={0}
+                    max={1}
+                    step={0.05}
+                    defaultValue={0.75}
+                    className="h-7 w-full rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                  {t("pipelineProduceTtsStyleLabel")}
+                </label>
+                <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+                  {t("pipelineProduceTtsStyleHint")}
+                </p>
+                <input
+                  name="tts_style"
+                  form={formId}
+                  type="number"
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  placeholder={t("pipelineProduceTtsStylePlaceholder")}
+                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary placeholder:text-text-tertiary"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                  {t("pipelineProduceTtsSpeakerBoostLabel")}
+                </label>
+                <select
+                  name="tts_speaker_boost"
+                  form={formId}
+                  defaultValue=""
+                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                >
+                  <option value="">{t("pipelineProduceTtsSpeakerBoostDefault")}</option>
+                  <option value="1">{t("pipelineProduceTtsSpeakerBoostOn")}</option>
+                  <option value="0">{t("pipelineProduceTtsSpeakerBoostOff")}</option>
+                </select>
+              </div>
+            </div>
+          )}
         />
 
-        <PipelineStep
+        <PreprodPipelineStep
+          key={`produce-sub-${episodeId}`}
           step={5}
           label={t("draftSubtitleCta")}
           done={hasSubtitleSrt}
@@ -532,9 +842,19 @@ export function ProductionEpisodePipeline({
           hiddenFields={{ episode_id: episodeId, audio_url: ttsAudioUrl }}
           runLabel={t("pipelineStepRun")}
           redoLabel={t("pipelineStepRedo")}
+          viewLabel={t("pipelineStepView")}
+          showView={hasSubtitleSrt && Boolean(subtitleArtifact?.content_text?.trim())}
+          onView={() => setViewOpen("subtitle")}
+          showCustomInstructions={false}
+          renderAdvancedExtra={() => (
+            <p className="text-[10px] text-text-tertiary leading-relaxed">
+              {t("pipelineProduceSubtitleAdvancedHint")}
+            </p>
+          )}
         />
 
-        <PipelineStep
+        <PreprodPipelineStep
+          key={`produce-scene-${episodeId}`}
           step={6}
           label={t("draftSceneRenderCta")}
           done={hasSceneClips}
@@ -545,9 +865,55 @@ export function ProductionEpisodePipeline({
           hiddenFields={{ episode_id: episodeId, script_text: scriptText }}
           runLabel={t("pipelineStepRun")}
           redoLabel={t("pipelineStepRedo")}
+          viewLabel={t("pipelineStepView")}
+          showView={hasSceneClips && sceneClips.length > 0}
+          onView={() => setViewOpen("scene")}
+          showCustomInstructions={false}
+          renderAdvancedExtra={(formId) => (
+            <div className="space-y-2">
+              <div>
+                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                  {t("pipelineProduceTargetSceneCountLabel")}
+                </label>
+                <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+                  {t("pipelineProduceTargetSceneCountHint")}
+                </p>
+                <select
+                  name="target_scene_count"
+                  form={formId}
+                  defaultValue=""
+                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                >
+                  <option value="">{t("pipelineProduceTargetSceneCountAuto")}</option>
+                  {[4, 5, 6, 7, 8].map((n) => (
+                    <option key={n} value={String(n)}>
+                      {t("pipelineProduceTargetSceneCountN", { n })}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                  {t("pipelineProduceScenesJsonLabel")}
+                </label>
+                <p className="text-[10px] text-text-tertiary mb-1.5 leading-relaxed">
+                  {t("pipelineProduceScenesJsonHint")}
+                </p>
+                <textarea
+                  name="scenes_json"
+                  form={formId}
+                  rows={4}
+                  maxLength={50_000}
+                  placeholder={SCENES_JSON_PLACEHOLDER_EXAMPLE}
+                  className="w-full rounded border border-border-subtle bg-field px-2 py-1.5 text-[11px] text-text-primary placeholder:text-text-tertiary font-mono"
+                />
+              </div>
+            </div>
+          )}
         />
 
-        <PipelineStep
+        <PreprodPipelineStep
+          key={`produce-asm-${episodeId}`}
           step={7}
           label={t("draftAssembleCta")}
           done={hasAssembledVideo}
@@ -558,20 +924,65 @@ export function ProductionEpisodePipeline({
           hiddenFields={{ episode_id: episodeId }}
           runLabel={t("pipelineStepRun")}
           redoLabel={t("pipelineStepRedo")}
+          viewLabel={t("pipelineStepView")}
+          showView={hasAssembledVideo && Boolean(assemblyArtifact?.external_url)}
+          onView={() => setViewOpen("assembly")}
+          showCustomInstructions={false}
+          renderAdvancedExtra={(formId) => (
+            <div className="space-y-2">
+              <div>
+                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                  {t("pipelineProduceBgMusicLabel")}
+                </label>
+                <input
+                  name="bg_music_url"
+                  form={formId}
+                  type="url"
+                  maxLength={2000}
+                  placeholder={t("pipelineProduceBgMusicPlaceholder")}
+                  className="h-7 w-full rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary placeholder:text-text-tertiary"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                  {t("pipelineProduceBgMusicVolumeLabel")}
+                </label>
+                <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+                  {t("pipelineProduceBgMusicVolumeHint")}
+                </p>
+                <select
+                  name="bg_music_volume"
+                  form={formId}
+                  defaultValue="0.15"
+                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                >
+                  {[0.05, 0.1, 0.15, 0.2, 0.25].map((v) => (
+                    <option key={v} value={String(v)}>
+                      {t("pipelineProduceBgMusicVolumeOption", { pct: Math.round(v * 100) })}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
         />
 
-        <PipelineStep
+        <YoutubeUploadPipelineStep
+          episodeId={episodeId}
+          episodeTitle={episodeTitle}
+          youtubeTitleDefault={packagingParsed?.youtube_title ?? ""}
+          youtubeDescriptionDefault={packagingParsed?.youtube_description ?? ""}
+          thumbnailUrl={thumbnailArtifact?.external_url?.trim() || null}
+          hasAssembledVideo={hasAssembledVideo}
+          hasYoutubePublish={hasYoutubePublish}
+          publishUrl={publishUrl}
+          youtubeChannelTitle={youtubeChannelTitle}
+          episodeFormat={episodeFormat}
+          distributionChannelLabel={distributionChannelLabel}
           step={8}
-          label={t("draftYoutubeCta")}
-          done={hasYoutubePublish}
-          disabled={!hasAssembledVideo}
-          hint={!hasAssembledVideo ? t("draftYoutubeDisabledHint") : undefined}
-          pending={ytPending}
+          ytState={ytState}
           formAction={ytAction}
-          hiddenFields={{ episode_id: episodeId, privacy: "private" }}
-          fullWidth
-          runLabel={t("pipelineStepRun")}
-          redoLabel={t("pipelineStepRedo")}
+          pending={ytPending}
         />
       </div>
 
@@ -659,7 +1070,9 @@ function PreprodPipelineStep({
   onView,
   modelOptions,
   defaultModel,
-  showCustomInstructions,
+  modelFieldName = "model",
+  showCustomInstructions = true,
+  renderAdvancedExtra,
 }: {
   step: number;
   label: string;
@@ -677,11 +1090,16 @@ function PreprodPipelineStep({
   onView?: () => void;
   modelOptions?: Array<{ id: string; label: string }>;
   defaultModel?: string;
+  /** Form field name for model select (e.g. `model_id` for ElevenLabs TTS). */
+  modelFieldName?: string;
   showCustomInstructions?: boolean;
+  renderAdvancedExtra?: (formId: string) => ReactNode;
 }) {
   const formId = useId();
   const [advOpen, setAdvOpen] = useState(false);
-  const hasAdvanced = Boolean(modelOptions?.length || showCustomInstructions);
+  const hasAdvanced = Boolean(
+    modelOptions?.length || showCustomInstructions || renderAdvancedExtra,
+  );
   const [selectedModel, setSelectedModel] = useState(defaultModel ?? "");
 
   return (
@@ -731,12 +1149,9 @@ function PreprodPipelineStep({
             {Object.entries(hiddenFields).map(([k, v]) => (
               <input key={k} type="hidden" name={k} value={v} />
             ))}
-            {modelOptions?.length && !advOpen ? (
-              <input type="hidden" name="model" value={selectedModel} />
-            ) : null}
-            {advOpen ? null : (
+            {advOpen ? null : showCustomInstructions ? (
               <input type="hidden" name="custom_instructions" value="" />
-            )}
+            ) : null}
             <Button
               type="submit"
               variant={done ? "secondary" : "ghost"}
@@ -754,15 +1169,20 @@ function PreprodPipelineStep({
           {hint}
         </p>
       )}
-      {advOpen && hasAdvanced && !disabled ? (
-        <div className="mt-2 pl-7 space-y-2 border-t border-border-subtle/50 pt-2">
+      {hasAdvanced && !disabled ? (
+        <div
+          className={cn(
+            "mt-2 pl-7 space-y-2 border-t border-border-subtle/50 pt-2",
+            !advOpen && "hidden",
+          )}
+        >
           {modelOptions?.length ? (
             <div>
               <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
                 Model
               </label>
               <select
-                name="model"
+                name={modelFieldName}
                 form={formId}
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
@@ -790,85 +1210,9 @@ function PreprodPipelineStep({
               />
             </div>
           ) : null}
+          {renderAdvancedExtra ? renderAdvancedExtra(formId) : null}
         </div>
       ) : null}
-    </div>
-  );
-}
-
-function PipelineStep({
-  step,
-  label,
-  done,
-  disabled,
-  hint,
-  pending,
-  formAction,
-  hiddenFields,
-  fullWidth,
-  runLabel,
-  redoLabel,
-}: {
-  step: number;
-  label: string;
-  done: boolean;
-  disabled: boolean;
-  hint?: string;
-  pending: boolean;
-  formAction: (payload: FormData) => void;
-  hiddenFields: Record<string, string>;
-  fullWidth?: boolean;
-  runLabel: string;
-  redoLabel: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-lg border px-3 py-3",
-        done
-          ? "border-green-500/30 bg-green-500/5"
-          : disabled
-            ? "border-border-subtle/50 bg-layer-02/20 opacity-60"
-            : "border-border-subtle bg-layer-02/40",
-        fullWidth && "sm:col-span-2",
-      )}
-    >
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <span
-            className={cn(
-              "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
-              done
-                ? "bg-green-500/20 text-green-600 dark:text-green-400"
-                : "bg-layer-03 text-text-tertiary",
-            )}
-          >
-            {done ? "\u2713" : step}
-          </span>
-          <span className="text-xs font-medium text-text-primary truncate">
-            {label}
-          </span>
-        </div>
-        <form action={formAction}>
-          {Object.entries(hiddenFields).map(([k, v]) => (
-            <input key={k} type="hidden" name={k} value={v} />
-          ))}
-          <Button
-            type="submit"
-            variant={done ? "secondary" : "ghost"}
-            size="sm"
-            isLoading={pending}
-            disabled={disabled}
-          >
-            {done ? redoLabel : runLabel}
-          </Button>
-        </form>
-      </div>
-      {hint && !done && (
-        <p className="mt-1.5 text-[10px] text-text-tertiary leading-relaxed pl-7">
-          {hint}
-        </p>
-      )}
     </div>
   );
 }

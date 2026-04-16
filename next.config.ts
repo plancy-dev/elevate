@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
   experimental: {
     // Smaller client bundles when importing many lucide icons (dashboard sidebar, etc.)
     optimizePackageImports: ["lucide-react"],
+    // TTS artifacts may use data:audio/... URLs in FormData (subtitle generation); default 1MB rejects them.
+    serverActions: {
+      bodySizeLimit: "32mb",
+    },
   },
   /**
    * Baseline security headers (Vercel also sets HSTS on production).
