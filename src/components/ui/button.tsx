@@ -21,13 +21,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: "bg-primary text-white hover:bg-primary-hover active:bg-[#002D9C]",
+  primary: "bg-primary text-white hover:bg-primary-hover active:bg-primary-active",
   secondary:
-    "bg-surface-03 text-text-primary hover:bg-surface-hover active:bg-[#353535] border border-transparent",
+    "border border-transparent bg-surface-03 text-text-primary hover:bg-surface-hover active:bg-[#d6d6d6] dark:active:bg-[#333333]",
   tertiary:
-    "bg-transparent text-interactive border border-interactive hover:bg-interactive hover:text-white",
+    "border border-interactive bg-transparent text-interactive hover:bg-interactive hover:text-white active:bg-primary-hover",
   ghost:
-    "bg-transparent text-interactive hover:bg-surface-03 active:bg-[#353535]",
+    "bg-transparent text-interactive hover:bg-surface-03/80 active:bg-surface-hover dark:active:bg-surface-02",
   danger: "bg-danger text-white hover:bg-[#BA1B23] active:bg-[#750E13]",
   marketing:
     "rounded-full border-0 bg-marketing-accent text-white hover:bg-marketing-accent-hover active:bg-[#c03d00] focus:outline-marketing-accent",
@@ -62,7 +62,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           "disabled:opacity-40 disabled:cursor-not-allowed",
           variant !== "marketing" && "rounded-lg",
           variant !== "marketing" &&
-            "focus:outline-2 focus:outline-offset-2 focus:outline-focus",
+            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
           variant === "marketing" &&
             "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
           variantStyles[variant],
@@ -110,7 +110,7 @@ export function buttonLinkClassName(
     variant !== "marketing" && "rounded-lg",
     variant === "marketing"
       ? "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-      : "focus:outline-2 focus:outline-offset-2 focus:outline-focus",
+      : "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
     variantStyles[variant],
     sizeStyles[size],
     className,

@@ -16,6 +16,13 @@ Generated UIs often reuse the same **affordance clichés**: full-height left str
 
 **Rationale:** The eye reads a **dot/capsule** as “you are here” without mimicking every SaaS template. It matches a **depth budget of 2** (V2): background step + one accent.
 
+## Callouts and inline notices (e.g. scope banners)
+
+| Avoid | Prefer |
+|--------|--------|
+| **Left accent bar** (thick primary stripe) + “info alert” look | **Single** hairline `border-border-subtle`, subtle `bg-layer-02` wash, **no** extra vertical color rail — reads calmer and less “component-library default” |
+| Loud info blue on neutral dashboard chrome | Hierarchy from **copy** and spacing; color only when something is actionable |
+
 ## Lists and tables (e.g. Productions, Library)
 
 | Avoid | Prefer |

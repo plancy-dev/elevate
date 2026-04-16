@@ -149,6 +149,7 @@
   --color-text-on-color: var(--text-on-color);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-danger: var(--danger);

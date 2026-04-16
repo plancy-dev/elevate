@@ -22,10 +22,8 @@ export async function ProductionsQueueScopeBanner({ mode, projectName }: Props) 
   }
 
   return (
-    <div className="rounded-lg border border-border-subtle border-l-[3px] border-l-primary bg-layer-01 px-4 py-3">
-      <p className="text-sm leading-relaxed text-text-primary">
-        {t("hubScopeBannerProject", { name: projectName ?? "" })}
-      </p>
+    <div className="rounded-lg border border-border-subtle bg-layer-02/40 px-4 py-3 text-sm text-text-secondary">
+      <p className="leading-relaxed">{t("hubScopeBannerProject", { name: projectName ?? "" })}</p>
     </div>
   );
 }

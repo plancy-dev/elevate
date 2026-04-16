@@ -39,7 +39,7 @@ export function FieldSelect({
           "text-sm",
           "text-text-primary",
           "cursor-pointer shadow-none outline-none transition-colors",
-          "hover:border-border-subtle focus:border-focus focus:ring-2 focus:ring-focus/25",
+          "hover:border-border-subtle focus-visible:border-focus focus-visible:ring-2 focus-visible:ring-focus/20",
           "disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}

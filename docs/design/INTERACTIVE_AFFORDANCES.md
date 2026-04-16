@@ -25,7 +25,7 @@ Users infer **clickability** from the pointer shape. If tabs, buttons, or links 
 ## Hover
 
 - Keep **100–150ms** transitions on color/background for nav and list rows ([`DASHBOARD_UX_PRINCIPLES.md`](DASHBOARD_UX_PRINCIPLES.md)).
-- **Focus** must remain visible (`focus-visible` / ring) — pointer rules do not replace keyboard affordances.
+- **Focus** must remain visible for **keyboard** users: prefer **`focus-visible`** rings/outlines on buttons and fields so **mouse clicks** do not flash a strong focus ring on every press ([`Button`](../../src/components/ui/button.tsx), [`FieldSelect`](../../src/components/ui/field-select.tsx)). Pointer rules do not replace keyboard affordances.
 
 ## Overrides
 
