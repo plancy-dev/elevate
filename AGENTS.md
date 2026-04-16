@@ -6,7 +6,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Design system (incremental)
 
-Root **`DESIGN.md`** is the discovery entry (Stitch / [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) convention: `AGENTS.md` + `DESIGN.md`). Implementation SoT: **`docs/design/SYSTEM.md`**, workflow **`docs/design/README.md`**, token mapping **`docs/design/elevate-cursor-alignment.md`**. **Visual contract:** **`docs/design/VISUAL_LANGUAGE_V2.md`**. **Dashboard lists/nav:** **`docs/design/DASHBOARD_UX_PRINCIPLES.md`**. Full vendored reference: **`docs/design/third-party/cursor-awesome-design-md/DESIGN.md`**. **Quality pipeline (gstack CTO/Eng + Designer + `pnpm verify`):** **`docs/design/QUALITY_PIPELINE.md`**. Prefer small, scoped changes (marketing vs dashboard vs shared tokens).
+Root **`DESIGN.md`** is the discovery entry (Stitch / [awesome-design-md](https://github.com/VoltAgent/awesome-design-md); Cal-inspired moodboard with §0 Elevate contract). Implementation SoT: **`docs/design/SYSTEM.md`**, workflow **`docs/design/README.md`**, token mapping **`docs/design/elevate-cal-alignment.md`** + **`docs/design/elevate-cursor-alignment.md`**. **Visual contract:** **`docs/design/VISUAL_LANGUAGE_V2.md`**. **Dashboard lists/nav:** **`docs/design/DASHBOARD_UX_PRINCIPLES.md`**. Vendored references: **`docs/design/third-party/cal-getdesign/`** (CLI snapshot), **`docs/design/third-party/cursor-awesome-design-md/DESIGN.md`**. **Quality pipeline (gstack CTO/Eng + Designer + `pnpm verify`):** **`docs/design/QUALITY_PIPELINE.md`**. Prefer small, scoped changes (marketing vs dashboard vs shared tokens).
 
 ## Product vision (AI pivot)
 

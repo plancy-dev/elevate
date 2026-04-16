@@ -1,19 +1,5 @@
 # Design System Inspired by Cal.com
 
-## 0. Repository contract (Elevate)
-
-This file is a **Cal.com-inspired design reference** for agents and humans building UI (see VoltAgent’s [What is DESIGN.md?](https://getdesign.md/what-is-design-md) and the [Cal pack](https://getdesign.md/cal/design-md) on getdesign.md). **It is not pixel law** — shipped UI uses semantic tokens in [`src/app/globals.css`](src/app/globals.css) and the translation layers [`docs/design/elevate-cal-alignment.md`](docs/design/elevate-cal-alignment.md), [`docs/design/SYSTEM.md`](docs/design/SYSTEM.md), and [`docs/design/elevate-cursor-alignment.md`](docs/design/elevate-cursor-alignment.md).
-
-| Surface | Cal guidance applies to… | Elevate rule |
-|--------|---------------------------|--------------|
-| **App shell** (`(dashboard)`, `(admin)`) | Neutral surfaces, spacing rhythm, shadow depth (ring + diffuse) | Keep **product primary blue** (`--primary`, IBM-style); do not replace the whole shell with Cal’s charcoal CTA-only system. |
-| **Marketing** (`[locale]/(marketing)`) | Monochrome confidence, generous section spacing | Often combined with **warm cream** marketing chrome where components already use `variant="marketing"` and `--marketing-*` tokens. |
-| **Primitives** | Card elevation, radius scale, focus as keyboard-only affordance | `Button` / `FieldSelect` use **`focus-visible`**; `Card` uses `shadow-card` from tokens tuned toward Cal-like multi-layer elevation. |
-
-A **CLI snapshot** from `npx getdesign@latest add cal` is vendored at [`docs/design/third-party/cal-getdesign/DESIGN.md`](docs/design/third-party/cal-getdesign/DESIGN.md) for upstream diffing; customize the **root** `DESIGN.md` here as the project evolves.
-
----
-
 ## 1. Visual Theme & Atmosphere
 
 Cal.com's website is a masterclass in monochromatic restraint — a grayscale world where boldness comes not from color but from the sheer confidence of black text on white space. Inspired by Uber's minimal aesthetic, the palette is deliberately stripped of hue: near-black headings (`#242424`), mid-gray secondary text (`#898989`), and pure white surfaces. Color is treated as a foreign substance — when it appears (a rare blue link, a green trust badge), it feels like a controlled accent in an otherwise black-and-white photograph.

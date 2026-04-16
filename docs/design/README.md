@@ -2,9 +2,11 @@
 
 ## Architecture
 
-The repo has a root **`DESIGN.md`** (pointer) so agents that expect `DESIGN.md` next to `AGENTS.md` land in the right place; the long-form vendored file stays under `third-party/` to avoid drift.
+The repo has a root **`DESIGN.md`** next to `AGENTS.md` ([Stitch / awesome-design-md](https://github.com/VoltAgent/awesome-design-md) convention). It is **Cal.com–inspired** (neutral SaaS moodboard) with **§0** tying it to Elevate tokens. Vendored snapshots stay under `third-party/` (Cursor pack, Cal CLI pack) so upstream diffs do not fight customized prose.
 
-See **[`SYSTEM.md`](SYSTEM.md)** for how [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) references, Elevate tokens, and surface modes (marketing chrome vs app shell) fit together.
+See **[`SYSTEM.md`](SYSTEM.md)** for how [awesome-design-md](https://github.com/VoltAgent/awesome-design-md), [getdesign.md](https://getdesign.md/what-is-design-md), Elevate tokens, and surface modes (marketing chrome vs app shell) fit together.
+
+**Cal → shipped UI:** [`elevate-cal-alignment.md`](elevate-cal-alignment.md) · **Cursor marketing → tokens:** [`elevate-cursor-alignment.md`](elevate-cursor-alignment.md)
 
 **Visual contract (CREATIVE):** **[`VISUAL_LANGUAGE_V2.md`](VISUAL_LANGUAGE_V2.md)** — accent discipline, radius scale, rollout order for Apple-tier polish.
 
@@ -24,7 +26,7 @@ See **[`SYSTEM.md`](SYSTEM.md)** for how [awesome-design-md](https://github.com/
 
 - **Shipped UI** is driven by **`src/app/globals.css`** and Tailwind v4 `@theme` tokens.
 - **Cursor-inspired reference** (warm marketing aesthetic, typography notes, component language) lives under [`third-party/cursor-awesome-design-md/`](third-party/cursor-awesome-design-md/) as a **vendored** [`DESIGN.md`](third-party/cursor-awesome-design-md/DESIGN.md) from [awesome-design-md](https://github.com/VoltAgent/awesome-design-md/tree/main/design-md/cursor/). It is MIT-licensed third-party material; it is **not** an official Cursor release.
-- **Translation layer:** [`elevate-cursor-alignment.md`](elevate-cursor-alignment.md) maps reference concepts → Elevate variables and suggests rollout order.
+- **Translation layers:** [`elevate-cal-alignment.md`](elevate-cal-alignment.md) (Cal moodboard → tokens), [`elevate-cursor-alignment.md`](elevate-cursor-alignment.md) (Cursor marketing → tokens).
 
 ## Incremental refactor playbook
 
