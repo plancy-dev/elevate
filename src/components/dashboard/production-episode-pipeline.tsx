@@ -27,6 +27,7 @@ import {
   OPENAI_DRAFT_MODEL_OPTIONS,
   ANTHROPIC_DRAFT_MODEL_OPTIONS,
   DEFAULT_PACKAGING_DRAFT_MODEL_ID,
+  TIMED_SCRIPT_HEURISTIC_MODEL_ID,
 } from "@/lib/studio-productions/episode-llm-models";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
@@ -126,6 +127,16 @@ export function ProductionEpisodePipeline({
     ],
     [],
   );
+
+  const timedModelOptions = useMemo(() => {
+    const heuristic = [
+      {
+        id: TIMED_SCRIPT_HEURISTIC_MODEL_ID,
+        label: t("pipelineTimedModelHeuristic"),
+      },
+    ];
+    return [...heuristic, ...packagingModelOptions];
+  }, [t, packagingModelOptions]);
 
   const hasDraftScript = artifacts.some(
     (a) => a.artifact_role === "script_draft" || a.artifact_role === "script",
@@ -338,7 +349,7 @@ export function ProductionEpisodePipeline({
         />
 
         <PreprodPipelineStep
-          key={`preprod-s1-${episodeId}`}
+          key={`preprod-s1-${episodeId}-${TIMED_SCRIPT_HEURISTIC_MODEL_ID}`}
           step={1}
           label={t("draftPreprodTimedStep")}
           done={hasTimedScript}
@@ -352,6 +363,9 @@ export function ProductionEpisodePipeline({
           viewLabel={t("pipelineStepView")}
           showView={hasTimedScript && Boolean(timedArtifact?.content_text?.trim())}
           onView={() => setViewOpen("timed")}
+          modelOptions={timedModelOptions}
+          defaultModel={TIMED_SCRIPT_HEURISTIC_MODEL_ID}
+          showCustomInstructions
         />
 
         <PreprodPipelineStep

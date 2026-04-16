@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildTimedScriptFromPlainScript,
+  parseTimedScriptLlmJson,
   splitScriptIntoTimedBlocks,
 } from "@/lib/studio-productions/timed-script";
 
@@ -40,5 +41,23 @@ describe("buildTimedScriptFromPlainScript", () => {
     const script = "First. Second! Third?";
     const out = buildTimedScriptFromPlainScript(script);
     expect(out.split("\n\n")).toHaveLength(3);
+  });
+});
+
+describe("parseTimedScriptLlmJson", () => {
+  it("parses segments JSON into [mm:ss] blocks", () => {
+    const raw = JSON.stringify({
+      segments: [
+        { start_sec: 0, text: "Hello" },
+        { start_sec: 15, text: "World" },
+      ],
+    });
+    const out = parseTimedScriptLlmJson(raw);
+    expect(out).toContain("[00:00] Hello");
+    expect(out).toContain("[00:15] World");
+  });
+
+  it("returns null for invalid JSON", () => {
+    expect(parseTimedScriptLlmJson("not json")).toBeNull();
   });
 });

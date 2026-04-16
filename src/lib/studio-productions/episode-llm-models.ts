@@ -56,6 +56,12 @@ export const OPENAI_DRAFT_MODEL_OPTIONS = [
 /** Default LLM for packaging draft (title, description, thumbnail prompt) in the production pipeline. */
 export const DEFAULT_PACKAGING_DRAFT_MODEL_ID = "claude-opus-4-6";
 
+/**
+ * Local heuristic timed script (no LLM). Pipeline default for the timed-script step.
+ * @see buildTimedScriptFromPlainScript
+ */
+export const TIMED_SCRIPT_HEURISTIC_MODEL_ID = "heuristic";
+
 export const ANTHROPIC_DRAFT_MODEL_OPTIONS = [
   {
     id: "claude-haiku-4-5-20251001",

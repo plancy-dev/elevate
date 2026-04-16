@@ -76,3 +76,66 @@ export function buildTimedScriptFromPlainScript(scriptText: string): string {
 
   return lines.join("\n\n");
 }
+
+/** One segment from LLM JSON (`start_sec` = seconds from t=0). */
+export type TimedScriptLlmSegment = {
+  readonly start_sec: number;
+  readonly text: string;
+};
+
+/**
+ * Turn LLM segments into the same `[mm:ss] text` format as {@link buildTimedScriptFromPlainScript}.
+ */
+export function formatTimedScriptFromLlmSegments(
+  segments: readonly TimedScriptLlmSegment[],
+): string {
+  const sorted = [...segments].sort((a, b) => a.start_sec - b.start_sec);
+  const lines: string[] = [];
+  for (const s of sorted) {
+    const t = Math.max(0, Math.floor(Number(s.start_sec)));
+    const text = String(s.text ?? "").trim();
+    if (!text) continue;
+    const mm = Math.floor(t / 60);
+    const ss = t % 60;
+    const stamp = `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
+    lines.push(`[${stamp}] ${text}`);
+  }
+  return lines.join("\n\n");
+}
+
+/**
+ * Parse LLM output JSON: `{"segments":[{"start_sec":0,"text":"..."}]}`.
+ * Accepts optional ```json fences. Returns formatted timed script or null.
+ */
+export function parseTimedScriptLlmJson(raw: string): string | null {
+  let obj: unknown;
+  try {
+    const trimmed = raw.trim();
+    const jsonStr = trimmed.startsWith("```")
+      ? trimmed
+          .replace(/^```(?:json)?\s*/i, "")
+          .replace(/\s*```\s*$/u, "")
+          .trim()
+      : trimmed;
+    obj = JSON.parse(jsonStr);
+  } catch {
+    return null;
+  }
+  if (!obj || typeof obj !== "object") return null;
+  const segments = (obj as { segments?: unknown }).segments;
+  if (!Array.isArray(segments) || segments.length === 0) return null;
+
+  const out: TimedScriptLlmSegment[] = [];
+  for (const item of segments) {
+    if (!item || typeof item !== "object") continue;
+    const startRaw = (item as { start_sec?: unknown }).start_sec;
+    const textRaw = (item as { text?: unknown }).text;
+    const start_sec = Number(startRaw);
+    const text = String(textRaw ?? "").trim();
+    if (!Number.isFinite(start_sec) || !text) continue;
+    out.push({ start_sec: Math.max(0, Math.floor(start_sec)), text });
+  }
+  if (out.length === 0) return null;
+
+  return formatTimedScriptFromLlmSegments(out);
+}

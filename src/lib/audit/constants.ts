@@ -23,6 +23,7 @@ export const AuditAction = {
   PAYMENT_WEBHOOK: "payment.webhook_status",
   CONTENT_ENTITLEMENT_GRANT: "content.entitlement_grant",
   STUDIO_PACKAGING_GENERATE: "studio.packaging.generate",
+  STUDIO_TIMED_SCRIPT_GENERATE: "studio.timed_script.generate",
   STUDIO_THUMBNAIL_GENERATE: "studio.thumbnail.generate",
   STUDIO_TTS_GENERATE: "studio.tts.generate",
   STUDIO_SUBTITLE_GENERATE: "studio.subtitle.generate",

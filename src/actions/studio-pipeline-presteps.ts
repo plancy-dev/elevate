@@ -14,12 +14,16 @@ import {
 } from "@/lib/studio-productions/episode-llm";
 import {
   DEFAULT_PACKAGING_DRAFT_MODEL_ID,
+  TIMED_SCRIPT_HEURISTIC_MODEL_ID,
   isAllowedDraftModel,
   resolveDraftModel,
 } from "@/lib/studio-productions/episode-llm-models";
 import { parsePackagingDraftContent } from "@/lib/studio-productions/packaging-draft";
 import { draftTripleFromArtifactTimestamps } from "@/lib/studio-productions/resolve-episode-draft-artifacts";
-import { buildTimedScriptFromPlainScript } from "@/lib/studio-productions/timed-script";
+import {
+  buildTimedScriptFromPlainScript,
+  parseTimedScriptLlmJson,
+} from "@/lib/studio-productions/timed-script";
 import { resolveEpisodeFormat } from "@/lib/studio-productions/episode-format";
 import { logAudit } from "@/lib/audit/log";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
@@ -81,7 +85,80 @@ async function upsertLatestArtifact(
 }
 
 /**
- * Build a [mm:ss] segmented script from the episode script_draft artifact (heuristic).
+ * Resolve OpenAI or Anthropic credentials for an allowlisted draft/chat model id
+ * (same selection rules as packaging draft).
+ */
+async function resolveOrgLlmCredentialForDraftModel(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  organizationId: string,
+  requestedModel: string,
+): Promise<
+  | { ok: true; cred: OrgLlmCredential; model: string }
+  | { ok: false }
+> {
+  const availability = await getOrgLlmProviderAvailability(
+    supabase,
+    organizationId,
+  );
+
+  if (isAllowedDraftModel("anthropic", requestedModel) && availability.anthropic) {
+    const cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      organizationId,
+      "anthropic",
+    );
+    if (!cred) return { ok: false };
+    return {
+      ok: true,
+      cred,
+      model: resolveDraftModel("anthropic", requestedModel),
+    };
+  }
+  if (isAllowedDraftModel("openai", requestedModel) && availability.openai) {
+    const cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      organizationId,
+      "openai",
+    );
+    if (!cred) return { ok: false };
+    return {
+      ok: true,
+      cred,
+      model: resolveDraftModel("openai", requestedModel),
+    };
+  }
+  if (availability.anthropic) {
+    const cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      organizationId,
+      "anthropic",
+    );
+    if (!cred) return { ok: false };
+    return {
+      ok: true,
+      cred,
+      model: resolveDraftModel("anthropic", requestedModel),
+    };
+  }
+  if (availability.openai) {
+    const cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      organizationId,
+      "openai",
+    );
+    if (!cred) return { ok: false };
+    return {
+      ok: true,
+      cred,
+      model: resolveDraftModel("openai", requestedModel),
+    };
+  }
+  return { ok: false };
+}
+
+/**
+ * Build a [mm:ss] segmented script from the episode script draft.
+ * Default model `heuristic` uses local splitting; any allowlisted chat model uses the LLM + JSON segments.
  */
 export async function generateTimedScriptFromEpisode(
   _prev: StudioPipelinePrestepState,
@@ -129,12 +206,137 @@ export async function generateTimedScriptFromEpisode(
   const scriptText = fromTriple || fromScriptRole;
   if (!scriptText) return { error: ActionErrorCode.studioPipelineNeedScript };
 
-  const timed = buildTimedScriptFromPlainScript(scriptText);
-  if (!timed) return { error: ActionErrorCode.studioPipelineNeedScript };
+  const customInstructions = String(formData.get("custom_instructions") ?? "").trim();
+  const modelRaw = String(formData.get("model") ?? "").trim();
+  const useHeuristic =
+    !modelRaw || modelRaw === TIMED_SCRIPT_HEURISTIC_MODEL_ID;
+
+  if (useHeuristic) {
+    const timed = buildTimedScriptFromPlainScript(scriptText);
+    if (!timed) return { error: ActionErrorCode.studioPipelineNeedScript };
+
+    const meta: Record<string, Json> = {
+      source: "heuristic_timestamps",
+      mode: "heuristic",
+      generated_at: new Date().toISOString(),
+    };
+
+    const up = await upsertLatestArtifact(
+      supabase,
+      auth.ctx.organizationId,
+      episodeId,
+      "timed_script",
+      timed,
+      "elevate",
+      meta,
+    );
+    if (!up.ok) return { error: ActionErrorCode.dbError };
+
+    void logAudit({
+      organizationId: auth.ctx.organizationId,
+      actorId: auth.ctx.userId,
+      action: AuditAction.STUDIO_TIMED_SCRIPT_GENERATE,
+      entityType: AuditEntityType.STUDIO_EPISODE,
+      entityId: episodeId,
+      metadata: { mode: "heuristic" },
+    });
+
+    revalidatePath(`/dashboard/productions/${episodeId}`);
+    return { ok: true };
+  }
+
+  const resolved = await resolveOrgLlmCredentialForDraftModel(
+    supabase,
+    auth.ctx.organizationId,
+    modelRaw,
+  );
+  if (!resolved.ok) return { error: ActionErrorCode.studioLlmNoProvider };
+  const { cred, model } = resolved;
+
+  const format = resolveEpisodeFormat(episode);
+  const formatLabel =
+    format === "shorts" ? "short-form vertical" : "long-form horizontal";
+
+  const userMsg = [
+    `Split the following ${formatLabel} narration script into timed on-screen segments.`,
+    "Output valid JSON only with this exact shape:",
+    '{"segments":[{"start_sec":0,"text":"first spoken block"},{"start_sec":12,"text":"next block"}]}',
+    "",
+    "Rules:",
+    "- start_sec: integer seconds from video start (0, 5, 15, …). Values must be in non-decreasing order.",
+    "- text: one continuous narration block; keep the script language. Do not put [mm:ss] timestamps inside text.",
+    "- Preserve facts and wording where possible; split or merge for pacing (~5–45s of speech per segment when read aloud).",
+    "- Cover the full script across segments.",
+    ...(customInstructions
+      ? ["", "## Additional user instructions", customInstructions]
+      : []),
+    "",
+    "## Script",
+    scriptText.slice(0, 12000),
+  ].join("\n");
+
+  const system = [
+    "You are a video script timing assistant. Output valid JSON only.",
+    'The JSON must include key "segments" with at least one object.',
+  ].join(" ");
+
+  let rawText = "";
+
+  if (cred.provider === "openai") {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${cred.apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        temperature: 0.3,
+        max_tokens: 4096,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: userMsg },
+        ],
+      }),
+    });
+    if (!res.ok) return { error: ActionErrorCode.studioLlmRequestFailed };
+    const body = (await res.json()) as {
+      choices?: Array<{ message?: { content?: string } }>;
+    };
+    rawText = body.choices?.[0]?.message?.content ?? "";
+  } else {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": cred.apiKey,
+        "anthropic-version": "2023-06-01",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        max_tokens: 8192,
+        system,
+        messages: [{ role: "user", content: userMsg }],
+      }),
+    });
+    if (!res.ok) return { error: ActionErrorCode.studioLlmRequestFailed };
+    const body = (await res.json()) as {
+      content?: Array<{ type: string; text?: string }>;
+    };
+    rawText = body.content?.find((c) => c.type === "text")?.text ?? "";
+  }
+
+  const timed = parseTimedScriptLlmJson(rawText);
+  if (!timed) return { error: ActionErrorCode.studioLlmBadResponse };
 
   const meta: Record<string, Json> = {
-    source: "heuristic_timestamps",
+    source: "llm_timed_script",
+    mode: "llm",
+    model,
+    provider: cred.provider,
     generated_at: new Date().toISOString(),
+    ...(customInstructions ? { custom_instructions: customInstructions } : {}),
   };
 
   const up = await upsertLatestArtifact(
@@ -143,10 +345,19 @@ export async function generateTimedScriptFromEpisode(
     episodeId,
     "timed_script",
     timed,
-    "elevate",
+    cred.provider,
     meta,
   );
   if (!up.ok) return { error: ActionErrorCode.dbError };
+
+  void logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.STUDIO_TIMED_SCRIPT_GENERATE,
+    entityType: AuditEntityType.STUDIO_EPISODE,
+    entityId: episodeId,
+    metadata: { mode: "llm", model, provider: cred.provider },
+  });
 
   revalidatePath(`/dashboard/productions/${episodeId}`);
   return { ok: true };
@@ -204,49 +415,14 @@ export async function generatePackagingDraftFromEpisode(
   const modelOverrideRaw = String(formData.get("model") ?? "").trim();
   const modelOverride = modelOverrideRaw || null;
 
-  const availability = await getOrgLlmProviderAvailability(
+  const requestedModel = modelOverride ?? DEFAULT_PACKAGING_DRAFT_MODEL_ID;
+  const resolvedPackaging = await resolveOrgLlmCredentialForDraftModel(
     supabase,
     auth.ctx.organizationId,
+    requestedModel,
   );
-
-  const requestedModel = modelOverride ?? DEFAULT_PACKAGING_DRAFT_MODEL_ID;
-
-  let cred: OrgLlmCredential | null = null;
-  let model: string;
-
-  if (isAllowedDraftModel("anthropic", requestedModel) && availability.anthropic) {
-    cred = await getOrgLlmCredentialForProvider(
-      supabase,
-      auth.ctx.organizationId,
-      "anthropic",
-    );
-    model = resolveDraftModel("anthropic", requestedModel);
-  } else if (isAllowedDraftModel("openai", requestedModel) && availability.openai) {
-    cred = await getOrgLlmCredentialForProvider(
-      supabase,
-      auth.ctx.organizationId,
-      "openai",
-    );
-    model = resolveDraftModel("openai", requestedModel);
-  } else if (availability.anthropic) {
-    cred = await getOrgLlmCredentialForProvider(
-      supabase,
-      auth.ctx.organizationId,
-      "anthropic",
-    );
-    model = resolveDraftModel("anthropic", requestedModel);
-  } else if (availability.openai) {
-    cred = await getOrgLlmCredentialForProvider(
-      supabase,
-      auth.ctx.organizationId,
-      "openai",
-    );
-    model = resolveDraftModel("openai", requestedModel);
-  } else {
-    return { error: ActionErrorCode.studioLlmNoProvider };
-  }
-
-  if (!cred) return { error: ActionErrorCode.studioLlmNoProvider };
+  if (!resolvedPackaging.ok) return { error: ActionErrorCode.studioLlmNoProvider };
+  const { cred, model } = resolvedPackaging;
 
   const format = resolveEpisodeFormat(episode);
   const formatLabel = format === "shorts" ? "short-form vertical" : "long-form horizontal";
