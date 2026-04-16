@@ -13,6 +13,7 @@ export {
 export {
   getStudioProviderAdapter,
   runwayAdapter,
+  elevenlabsAdapter,
 } from "./providers";
 export type {
   ProviderAdapterHealthResult,

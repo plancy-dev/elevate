@@ -94,6 +94,8 @@ export function buildDraftPrompt(context: {
   channelPlatform: string | null;
   channelMetadata: Json;
   distributionLabel: string;
+  /** Project-level brand guide injected as RAG context (tone, persona, restrictions). */
+  brandGuide?: string;
   /** Optional user instructions (tone, audience, channel angle, references). */
   userBriefing?: string;
   /**
@@ -117,6 +119,7 @@ export function buildDraftPrompt(context: {
       : "{}";
   const briefing = (context.userBriefing ?? "").trim();
   const templateBias = (context.templateBias ?? "").trim();
+  const brandGuide = (context.brandGuide ?? "").trim();
   const mode = context.generateMode ?? "develop";
   const draft = context.currentDraft;
   const hasDraftForDevelop =
@@ -154,6 +157,14 @@ export function buildDraftPrompt(context: {
         title: draft.title,
         script_draft: draft.script_draft,
       }),
+    );
+  }
+
+  if (brandGuide.length > 0) {
+    lines.push(
+      "",
+      "Project brand guide (persona, tone, restrictions — always respect unless user briefing explicitly overrides):",
+      brandGuide,
     );
   }
 

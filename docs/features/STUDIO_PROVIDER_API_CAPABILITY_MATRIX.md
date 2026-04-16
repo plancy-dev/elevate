@@ -20,7 +20,10 @@
 | **OpenAI** | Chat Completions 등 — BYO key | 에피소드 초안 생성·다듬기 (`episode-llm`) | 키 연결 시 사용 가능 |
 | **Anthropic** | Messages API — BYO key | 동일 | 키 연결 시 사용 가능 |
 | **Runway** | Dev API: 조직·태스크 등 ([공식 문서](https://docs.dev.runwayml.com/)) | 키 검증 + **`@runwayml/sdk`** `textToVideo` (gen4.5) → `waitForTaskOutput`; [`runway-adapter`](../../src/lib/studio-integrations/providers/runway/runway-adapter.ts) `runStep`; 에피소드 패널 [`submitRunwayRenderJob`](../../src/actions/studio-episode-llm.ts) | `STUDIO_INTEGRATIONS_ENABLED` + 암호화 + 조직 Runway 키일 때 에피소드에서 **텍스트→비디오** 시작 가능; 결과는 `render_output` 아티팩트 |
-| **YouTube Data API** | 업로드·메타 등 (OAuth 정책 별도) | 미구현 / 스텁 수준 | 미연결 |
+| **ElevenLabs** | TTS API: 70+ 언어, 음성 복제, 감정 제어, WebSocket 스트리밍 | Phase S1 구현 중 | 키 연결 시 스크립트 → 음성 생성 |
+| **Whisper (OpenAI)** | Audio transcription: word-level timestamps | Phase S1 구현 중 | TTS 음성 → SRT 자막 자동 생성 |
+| **YouTube Data API** | 업로드·메타·Analytics (OAuth 2.0, 일일 10K 쿼터) | Phase S4 계획 | OAuth 연결 시 영상 업로드 + 메타데이터 |
+| **YouTube Analytics API** | 채널·영상 성과 지표 (조회수, CTR, 수익) | Phase S5 계획 | 에피소드별 성과 추적 + A/B 분석 |
 | **기타** (Kling, Gemini OAuth, …) | 각 벤더 정책 상이 | 없음 | 문서·아티팩트로 수동 기록 (v1 정합) |
 
 ## Runway (상세)

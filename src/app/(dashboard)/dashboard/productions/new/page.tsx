@@ -25,8 +25,8 @@ export default async function ProductionsNewPage() {
 
   if (!orgId) {
     return (
-      <div className="mx-auto w-full max-w-5xl p-6 lg:p-8">
-        <header className="mb-8 rounded-2xl border border-border-subtle bg-gradient-to-br from-layer-01 via-[#f0f4ff]/40 to-layer-02 px-6 py-6 shadow-sm dark:via-[#0a1628]/60">
+      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+        <header className="mb-8 rounded-xl border border-border-subtle bg-layer-01 px-5 py-5 sm:px-6 sm:py-6">
           <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
             {t("newMetaTitle")}
           </h1>
@@ -37,12 +37,12 @@ export default async function ProductionsNewPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl p-6 lg:p-8">
-      <header className="mb-8 rounded-2xl border border-border-subtle bg-gradient-to-br from-layer-01 via-[#f0f4ff]/40 to-layer-02 px-6 py-6 shadow-sm dark:via-[#0a1628]/60">
+    <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+      <header className="mb-8 rounded-xl border border-border-subtle bg-layer-01 px-5 py-5 sm:px-6 sm:py-6">
         <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
           {t("newMetaTitle")}
         </h1>
-        <p className="mt-2 text-sm text-text-tertiary leading-relaxed max-w-2xl">
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-text-secondary">
           {t("newSubtitle")}
         </p>
       </header>

@@ -1,4 +1,5 @@
 import { verifyAnthropicApiKey } from "@/lib/studio-integrations/anthropic-verify";
+import { verifyElevenLabsApiKey } from "@/lib/studio-integrations/elevenlabs-verify";
 import { verifyGoogleGeminiApiKey } from "@/lib/studio-integrations/gemini-verify";
 import { verifyOpenAiApiKey } from "@/lib/studio-integrations/openai-verify";
 import { verifyRunwayApiKey } from "@/lib/studio-integrations/runway-verify";
@@ -25,6 +26,8 @@ export async function verifyStudioProviderSecret(
       return (await verifyRunwayApiKey(trimmed)).ok;
     case "youtube_data":
       return (await verifyYoutubeDataApiKey(trimmed)).ok;
+    case "elevenlabs":
+      return (await verifyElevenLabsApiKey(trimmed)).ok;
     default:
       return false;
   }

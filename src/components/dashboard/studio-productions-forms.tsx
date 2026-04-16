@@ -124,7 +124,7 @@ export function StudioProductionsNewForm({
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       ) : null}
-      <div className="rounded-2xl border border-border-subtle/90 bg-gradient-to-br from-layer-01 via-layer-02/40 to-layer-01 p-6 shadow-sm">
+      <div className="rounded-xl border border-border-subtle bg-layer-01 p-6">
         <div className="space-y-4">
           <div>
             <label
@@ -254,7 +254,7 @@ export function StudioProductionsEpisodeEditForm({
         className={cn(
           embedded
             ? "grid gap-4 sm:grid-cols-2 sm:gap-5"
-            : "rounded-2xl border border-border-subtle/90 bg-gradient-to-br from-layer-01 via-layer-02/40 to-layer-01 p-6 shadow-sm",
+            : "rounded-xl border border-border-subtle bg-layer-01 p-6",
         )}
       >
         {embedded ? (
@@ -436,7 +436,7 @@ function ArtifactAddForm({
     <form
       key={formKey}
       action={formAction}
-      className="rounded-xl border border-border-subtle/90 bg-gradient-to-b from-layer-02/80 to-layer-01 p-4 space-y-3 shadow-sm dark:border-white/10 dark:from-[#121820]/90 dark:to-[#0a0f14]"
+      className="space-y-3 rounded-xl border border-border-subtle bg-layer-02/30 p-4"
     >
       <input type="hidden" name="episode_id" value={episodeId} />
       <p className="text-sm font-medium text-text-primary">{t("artifactAdd")}</p>

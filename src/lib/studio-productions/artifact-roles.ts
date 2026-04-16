@@ -11,6 +11,13 @@ export const STUDIO_SUGGESTED_ARTIFACT_ROLES = [
   "prompt",
   "settings",
   "render_output",
+  "tts_audio",
+  "subtitle_srt",
+  "scene_clip",
+  "assembled_video",
+  "thumbnail",
+  "reference_source",
+  "title_suggestion",
   "compliance_note",
   "other",
 ] as const;

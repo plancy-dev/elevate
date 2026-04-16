@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Sparkles } from "lucide-react";
+import { LayoutList } from "lucide-react";
 import type { StudioProductionArtifactRow } from "@/lib/data/studio-productions";
 
 function excerpt(text: string, max: number): string {
@@ -28,11 +28,11 @@ export function ProductionEpisodeAtAGlance({
 
   return (
     <section
-      className="mb-10 rounded-2xl border border-primary/15 bg-gradient-to-br from-[#E8F0FF]/90 via-layer-01 to-layer-02/80 p-4 sm:p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] dark:border-primary/25 dark:from-[#0a1528]/95 dark:via-[#0d1829] dark:to-[#080f18] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+      className="mb-10 rounded-xl border border-border-subtle bg-layer-01 p-4 sm:p-5"
       aria-labelledby="at-a-glance-heading"
     >
-      <div className="flex flex-wrap items-center gap-2 mb-4">
-        <Sparkles className="h-4 w-4 text-primary shrink-0" aria-hidden />
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <LayoutList className="h-4 w-4 shrink-0 text-text-tertiary" aria-hidden />
         <h2
           id="at-a-glance-heading"
           className="text-sm font-semibold tracking-tight text-text-primary"
@@ -60,14 +60,10 @@ export function ProductionEpisodeAtAGlance({
         </p>
       ) : (
         <div
-          className="relative rounded-lg bg-zinc-950/[0.03] px-2 py-2 ring-1 ring-zinc-950/10 dark:bg-black/35 dark:ring-white/10"
+          className="rounded-lg border border-border-subtle/80 bg-layer-02/40 px-2 py-2"
           role="list"
         >
-          <div
-            className="pointer-events-none absolute inset-x-2 top-1.5 h-1 rounded-full bg-[repeating-linear-gradient(90deg,transparent,transparent_6px,rgba(0,0,0,0.08)_6px,rgba(0,0,0,0.08)_10px)] dark:bg-[repeating-linear-gradient(90deg,transparent,transparent_6px,rgba(255,255,255,0.06)_6px,rgba(255,255,255,0.06)_10px)]"
-            aria-hidden
-          />
-          <div className="flex gap-2 overflow-x-auto overscroll-x-contain touch-pan-x pb-1 pt-3 snap-x snap-mandatory scroll-pl-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch]">
+          <div className="flex gap-2 overflow-x-auto overscroll-x-contain touch-pan-x pb-1 pt-2 snap-x snap-mandatory scroll-pl-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch]">
             {showNotes ? (
               <div
                 className="film-strip-frame min-w-[220px] max-w-[260px] shrink-0 snap-start"

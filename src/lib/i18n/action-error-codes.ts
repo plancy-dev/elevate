@@ -92,6 +92,21 @@ export const ActionErrorCode = {
   studioRunwayTimeout: "studioRunwayTimeout",
   studioRunwayApiError: "studioRunwayApiError",
   studioYoutubeUploadNotAvailable: "studioYoutubeUploadNotAvailable",
+
+  /** Reference pipeline: OpenAI key missing (YouTube STT) */
+  studioReferenceNoApiKey: "studioReferenceNoApiKey",
+  studioReferenceExtractionFailed: "studioReferenceExtractionFailed",
+  studioReferenceNoSources: "studioReferenceNoSources",
+  studioReferenceLlmFailed: "studioReferenceLlmFailed",
+  studioReferenceLlmParseFailed: "studioReferenceLlmParseFailed",
+  studioReferenceUrlInvalid: "studioReferenceUrlInvalid",
+  studioReferenceUrlBlocked: "studioReferenceUrlBlocked",
+  studioReferenceFetchFailed: "studioReferenceFetchFailed",
+  studioReferenceNoteEmpty: "studioReferenceNoteEmpty",
+  /** Web URL tab: use YouTube tab for video transcript */
+  studioReferenceUseYoutubeTab: "studioReferenceUseYoutubeTab",
+  /** yt-dlp / ffmpeg not on PATH (common on serverless) */
+  studioReferenceYoutubeToolMissing: "studioReferenceYoutubeToolMissing",
 } as const;
 
 export type ActionErrorCode =

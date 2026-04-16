@@ -32,6 +32,8 @@ function tabLabel(
       return t("integrationsProvider.youtube_data.shortTitle");
     case "google_gemini":
       return t("integrationsProvider.google_gemini.shortTitle");
+    case "elevenlabs":
+      return t("integrationsProvider.elevenlabs.shortTitle");
   }
 }
 

@@ -265,6 +265,63 @@
 
 ---
 
+## AI Content Factory — Phase S (YouTube 콘텐츠 파이프라인)
+
+**의사결정 요약 (2026-04):** 4개 AI 영상 자동화 보고서 기반, 에피소드 원장(ADR-003) + 제공자 연동(ADR-006)을 확장하여 **Human-in-the-Loop AI 콘텐츠 팩토리** 구축. 상세: [`PLAN-studio-content-factory.md`](../docs/features/PLAN-studio-content-factory.md) · [`ADR-007`](../docs/adr/ADR-007-youtube-content-factory.md).
+
+| 단계 | 이름 | 목표 | 상태 |
+|------|------|------|------|
+| **S1** | TTS + 자막 | 스크립트 → ElevenLabs 음성 + Whisper SRT | ⏳ |
+| **S2** | 씬 분할 + 영상 | 씬 단위 Runway 병렬 생성 | ⏳ |
+| **S3** | FFmpeg 조립 | 클립+오디오+자막 → 최종 9:16 MP4 | ⏳ |
+| **S4** | YouTube 업로드 | OAuth + videos.insert + 메타데이터 | ⏳ |
+| **S5** | 채널 분석 | YouTube Analytics + A/B 프롬프트 실험 | ⏳ |
+
+### S1 — TTS + 자막 파이프라인
+
+- [ ] 마이그레이션 `030`: `elevenlabs` provider CHECK 추가
+- [ ] ElevenLabs TTS 어댑터 (`src/lib/studio-integrations/providers/elevenlabs/`)
+- [ ] ElevenLabs 키 검증 (`elevenlabs-verify.ts`)
+- [ ] 서버 액션: `generateTtsFromScript`, `generateSubtitlesFromAudio`
+- [ ] 아티팩트 역할: `tts_audio`, `subtitle_srt` 추가
+- [ ] UI: 에피소드 상세 패널에 음성 생성 버튼
+
+### S2 — 씬 분할 + Runway 병렬 생성
+
+- [ ] `buildDraftPrompt` 확장: `scenes[]` JSON 스키마
+- [ ] `scene-splitter.ts`: 스크립트 → 씬 목록
+- [ ] Runway 어댑터: `runBatchScenes` 병렬 호출
+- [ ] 서버 액션: 씬별 잡 제출 + 아티팩트 저장
+
+### S3 — FFmpeg 영상 조립
+
+- [ ] `video-assembly.ts`: FFmpeg 명령어 빌더 (클립 연결, 오디오 더킹, 자막 burn-in)
+- [ ] 서버 액션: `assembleEpisodeVideo`
+- [ ] `assembled_video` 아티팩트 저장
+- [ ] UI: 미리보기 + 승인 버튼
+
+### S4 — YouTube OAuth + 업로드
+
+- [ ] 마이그레이션 `031`: `studio_youtube_channel_tokens`
+- [ ] YouTube OAuth flow (`youtube-oauth.ts`)
+- [ ] 업로드 (`youtube-upload.ts`): resumable upload, AI disclosure
+- [ ] `triggerYoutubeUploadStub` → 실제 업로드로 교체
+
+### S5 — 채널 분석 + 성과 추적
+
+- [ ] YouTube Analytics API 연동
+- [ ] 마이그레이션 `032`: `studio_episode_performance`
+- [ ] UI: `/dashboard/productions/analytics`
+- [ ] 프롬프트 A/B: 스냅샷 메타 + 성과 데이터 연결
+
+### 채널 전략
+
+- **니치:** AI/기술 교육 (한국어 + 영어)
+- **포맷:** Shorts 40-60초, 주 3-5회
+- **월 비용:** ~$82 (Runway $72 + ElevenLabs $9 + OpenAI $1)
+
+---
+
 ## Legacy — 이전 Phase 요약 (완료, MICE)
 
 > 신규 기능은 MICE 모델에 추가하지 않는다.

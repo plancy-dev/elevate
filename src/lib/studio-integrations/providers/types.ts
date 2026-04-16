@@ -14,7 +14,7 @@ export type ProviderRunStepNotImplemented = {
   code: "not_implemented";
 };
 
-/** Runway `runStep` outcomes (other providers may extend later). */
+/** Provider `runStep` outcomes. */
 export type ProviderRunStepResult =
   | ProviderRunStepNotImplemented
   | { ok: true; task_id: string; output_urls: string[] }
@@ -26,7 +26,10 @@ export type ProviderRunStepResult =
         | "runway_empty_prompt"
         | "runway_task_failed"
         | "runway_timeout"
-        | "runway_api_error";
+        | "runway_api_error"
+        | "elevenlabs_empty_text"
+        | "elevenlabs_api_error"
+        | "elevenlabs_timeout";
       message?: string;
       status?: number;
     };

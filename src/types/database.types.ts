@@ -883,6 +883,87 @@ export type Database = {
           },
         ]
       }
+      studio_episode_performance: {
+        Row: {
+          average_view_duration_seconds: number | null
+          average_view_percentage: number | null
+          click_through_rate: number | null
+          comments: number
+          created_at: string
+          episode_id: string
+          estimated_revenue_usd: number | null
+          fetched_at: string
+          id: string
+          impressions: number
+          likes: number
+          metadata: Json | null
+          organization_id: string
+          shares: number
+          snapshot_date: string
+          subscriber_change: number
+          views: number
+          watch_time_minutes: number
+          youtube_video_id: string | null
+        }
+        Insert: {
+          average_view_duration_seconds?: number | null
+          average_view_percentage?: number | null
+          click_through_rate?: number | null
+          comments?: number
+          created_at?: string
+          episode_id: string
+          estimated_revenue_usd?: number | null
+          fetched_at?: string
+          id?: string
+          impressions?: number
+          likes?: number
+          metadata?: Json | null
+          organization_id: string
+          shares?: number
+          snapshot_date?: string
+          subscriber_change?: number
+          views?: number
+          watch_time_minutes?: number
+          youtube_video_id?: string | null
+        }
+        Update: {
+          average_view_duration_seconds?: number | null
+          average_view_percentage?: number | null
+          click_through_rate?: number | null
+          comments?: number
+          created_at?: string
+          episode_id?: string
+          estimated_revenue_usd?: number | null
+          fetched_at?: string
+          id?: string
+          impressions?: number
+          likes?: number
+          metadata?: Json | null
+          organization_id?: string
+          shares?: number
+          snapshot_date?: string
+          subscriber_change?: number
+          views?: number
+          watch_time_minutes?: number
+          youtube_video_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_episode_performance_episode_id_fkey"
+            columns: ["episode_id"]
+            isOneToOne: false
+            referencedRelation: "studio_production_episodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_episode_performance_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       studio_format_packs: {
         Row: {
           created_at: string
@@ -1139,6 +1220,7 @@ export type Database = {
           id: string
           notes: string
           organization_id: string
+          project_id: string | null
           publish_url: string | null
           status: string
           studio_distribution_channel_id: string | null
@@ -1154,6 +1236,7 @@ export type Database = {
           id?: string
           notes?: string
           organization_id: string
+          project_id?: string | null
           publish_url?: string | null
           status: string
           studio_distribution_channel_id?: string | null
@@ -1170,6 +1253,7 @@ export type Database = {
           notes?: string
           organization_id?: string
           publish_url?: string | null
+          project_id?: string | null
           status?: string
           studio_distribution_channel_id?: string | null
           studio_format_template_id?: string | null
@@ -1193,6 +1277,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "studio_production_episodes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "studio_projects"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "studio_production_episodes_studio_distribution_channel_id_fkey"
             columns: ["studio_distribution_channel_id"]
             isOneToOne: false
@@ -1211,6 +1302,113 @@ export type Database = {
             columns: ["studio_niche_id"]
             isOneToOne: false
             referencedRelation: "studio_niches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_projects: {
+        Row: {
+          brand_guide: string
+          created_at: string
+          default_template_key: string | null
+          description: string
+          id: string
+          name: string
+          organization_id: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          brand_guide?: string
+          created_at?: string
+          default_template_key?: string | null
+          description?: string
+          id?: string
+          name: string
+          organization_id: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          brand_guide?: string
+          created_at?: string
+          default_template_key?: string | null
+          description?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_projects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_youtube_channel_tokens: {
+        Row: {
+          access_token_cipher: string
+          channel_id: string
+          channel_title: string | null
+          connected_at: string
+          created_at: string
+          id: string
+          last_used_at: string | null
+          organization_id: string
+          project_id: string | null
+          refresh_token_cipher: string
+          scopes: string
+          token_expiry: string | null
+          updated_at: string
+        }
+        Insert: {
+          access_token_cipher: string
+          channel_id: string
+          channel_title?: string | null
+          connected_at?: string
+          created_at?: string
+          id?: string
+          last_used_at?: string | null
+          organization_id: string
+          project_id?: string | null
+          refresh_token_cipher: string
+          scopes?: string
+          token_expiry?: string | null
+          updated_at?: string
+        }
+        Update: {
+          access_token_cipher?: string
+          channel_id?: string
+          channel_title?: string | null
+          connected_at?: string
+          created_at?: string
+          id?: string
+          last_used_at?: string | null
+          organization_id?: string
+          project_id?: string | null
+          refresh_token_cipher?: string
+          scopes?: string
+          token_expiry?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_youtube_channel_tokens_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_youtube_channel_tokens_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "studio_projects"
             referencedColumns: ["id"]
           },
         ]

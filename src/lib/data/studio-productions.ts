@@ -10,6 +10,7 @@ export type StudioProductionArtifactRow =
 export type StudioEpisodeEmbeddedRelations = {
   studio_niches: { id: string; display_name: string } | null;
   studio_format_templates: { id: string; display_name: string } | null;
+  studio_projects: { id: string; name: string } | null;
   studio_distribution_channels: {
     id: string;
     label: string;
@@ -25,7 +26,12 @@ export type StudioProductionEpisodeRowWithEmbeds = StudioProductionEpisodeRow &
 export async function listStudioEpisodesForOrg(
   supabase: SupabaseClient<Database>,
   organizationId: string,
-  opts?: { distributionChannelId?: string | null },
+  opts?: {
+    distributionChannelId?: string | null;
+    projectId?: string | null;
+    /** Episodes with no project (project_id IS NULL). Mutually exclusive with projectId. */
+    unassignedOnly?: boolean;
+  },
 ): Promise<StudioProductionEpisodeRowWithEmbeds[]> {
   let q = supabase
     .from("studio_production_episodes")
@@ -34,10 +40,17 @@ export async function listStudioEpisodesForOrg(
       *,
       studio_niches ( id, display_name ),
       studio_format_templates ( id, display_name ),
+      studio_projects ( id, name ),
       studio_distribution_channels ( id, label, channel_url, platform, metadata )
     `,
     )
     .eq("organization_id", organizationId);
+
+  if (opts?.unassignedOnly) {
+    q = q.is("project_id", null);
+  } else if (opts?.projectId) {
+    q = q.eq("project_id", opts.projectId);
+  }
 
   if (opts?.distributionChannelId) {
     q = q.eq("studio_distribution_channel_id", opts.distributionChannelId);
@@ -61,6 +74,7 @@ export async function getStudioEpisodeForOrg(
       *,
       studio_niches ( id, display_name ),
       studio_format_templates ( id, display_name ),
+      studio_projects ( id, name ),
       studio_distribution_channels ( id, label, channel_url, platform, metadata )
     `,
     )
@@ -70,6 +84,65 @@ export async function getStudioEpisodeForOrg(
 
   if (error) throw error;
   return data as StudioProductionEpisodeRowWithEmbeds | null;
+}
+
+/** Total episode rows for org with optional channel and/or project filters. */
+export async function countStudioEpisodesForOrg(
+  supabase: SupabaseClient<Database>,
+  organizationId: string,
+  opts?: {
+    distributionChannelId?: string | null;
+    projectId?: string | null;
+    unassignedOnly?: boolean;
+  },
+): Promise<number> {
+  let q = supabase
+    .from("studio_production_episodes")
+    .select("id", { count: "exact", head: true })
+    .eq("organization_id", organizationId);
+
+  if (opts?.unassignedOnly) {
+    q = q.is("project_id", null);
+  } else if (opts?.projectId) {
+    q = q.eq("project_id", opts.projectId);
+  }
+  if (opts?.distributionChannelId) {
+    q = q.eq("studio_distribution_channel_id", opts.distributionChannelId);
+  }
+
+  const { count, error } = await q;
+  if (error) throw error;
+  return count ?? 0;
+}
+
+/**
+ * Episode counts per project id (only rows with non-null project_id).
+ * Optional channel filter matches `listStudioEpisodesForOrg`.
+ */
+export async function countStudioEpisodesByProjectForOrg(
+  supabase: SupabaseClient<Database>,
+  organizationId: string,
+  opts?: { distributionChannelId?: string | null },
+): Promise<Record<string, number>> {
+  let q = supabase
+    .from("studio_production_episodes")
+    .select("project_id")
+    .eq("organization_id", organizationId);
+
+  if (opts?.distributionChannelId) {
+    q = q.eq("studio_distribution_channel_id", opts.distributionChannelId);
+  }
+
+  const { data, error } = await q;
+  if (error) throw error;
+
+  const counts: Record<string, number> = {};
+  for (const row of data ?? []) {
+    const pid = row.project_id;
+    if (!pid) continue;
+    counts[pid] = (counts[pid] ?? 0) + 1;
+  }
+  return counts;
 }
 
 export async function listStudioArtifactsForEpisode(

@@ -10,6 +10,7 @@ export const STUDIO_INTEGRATION_PROVIDER_IDS = [
   "runway",
   "youtube_data",
   "google_gemini",
+  "elevenlabs",
 ] as const;
 
 export type StudioIntegrationProviderId =

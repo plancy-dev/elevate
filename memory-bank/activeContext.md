@@ -2,8 +2,8 @@
 
 ## 현재 페이즈
 
-**AI 피벗 — Phase A/B**  
-North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문서·랜딩(Pretext)·gstack·신규 DB(콘텐츠 카탈로그·엔타이틀먼트)와 대시보드 Library 우선 네비.
+**AI Content Factory — Phase S (YouTube 콘텐츠 파이프라인)**  
+North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 기존 Studio Productions 원장 + Runway 연동을 확장하여 **스크립트 → TTS → 영상 → 조립 → YouTube 업로드** 파이프라인 구축. 상세: [`PLAN-studio-content-factory.md`](../docs/features/PLAN-studio-content-factory.md) · [`ADR-007`](../docs/adr/ADR-007-youtube-content-factory.md).
 
 ### 최근 출시 (앵커)
 
@@ -17,13 +17,23 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 문�
 
 **대시보드 접근 (운영 옵션)** — `DASHBOARD_ACCESS_STRICT=true`일 때 플랫폼/조직 관리자 또는 `waitlist_signups`·`prompt_studio_beta_allowlist`에 없으면 `/access-pending`. 코드: `src/lib/auth/dashboard-access.ts`, `src/app/(auth)/access-pending/page.tsx`.
 
-**다음 (로드맵):** [`tasks.md`](tasks.md) — **Phase G (Creator GTM)** 전자책 1 SKU + Productions 루틴 + Lemon Squeezy 등 글로벌 결제 · Phase M·백로그(블로그·PostHog·전자책 M4) 병행.
+**다음 (로드맵):** [`tasks.md`](tasks.md) — **Phase S (Content Factory)** S1: TTS+자막 → S2: 씬+Runway → S3: FFmpeg 조립 → S4: YouTube 업로드 → S5: 분석. 병행: Phase G (Creator GTM) · Phase M (마케팅).
 
 **INIT (2026-04) — 초안 템플릿·바이어스:** [`tasks.md`](tasks.md) **§ G3.4**. **P1+P2:** 시딩 키 + **조직 커스텀**(`029` `studio_episode_draft_templates`, `custom:<uuid>` · 관리 다이얼로그). **다음:** P3 시스템 프롬프트 변형 등은 우선순위에 따라.
 
 ### 다음 BUILD 앵커 (구현 예정)
 
-**Studio 우선순위 (제품 합의 2026-04):** (1) **Runway Dev API — 잡 제출·폴링 실연동** (`runwayAdapter.runStep`, 아티팩트 반영) — **PLAN:** [`docs/features/PLAN-runway-integration.md`](../docs/features/PLAN-runway-integration.md) (엔드포인트·페이로드·UI 상태머신·BUILD 체크리스트) (2) **에피소드 초안** — 짧은 입력만으로도 채널에 맞는 **구조적 초안**이 나오도록 프롬프트·템플릿 리팩터. SoT: [`docs/features/STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md`](../docs/features/STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md) · [`docs/features/PLAN-studio-provider-integrations.md`](../docs/features/PLAN-studio-provider-integrations.md) Phase 3 · [`src/lib/studio-productions/episode-llm.ts`](../src/lib/studio-productions/episode-llm.ts).
+**멀티채널 AI 콘텐츠 팩토리 (Phase T, 2026-04):** 플랜: [`.cursor/plans/elevate_content_factory_roadmap_*.plan.md`]
+
+| Phase | 상태 | 내용 |
+|-------|------|------|
+| **T1** | **구현됨** | Project(Brand) 계층 — `033_studio_projects.sql`, data/actions/UI, `buildDraftPrompt` brandGuide RAG |
+| **T2** | **구현됨** | 레퍼런스 소스 파이프라인 — YouTube STT(yt-dlp+Whisper), LLM 번역/요약/리믹스 (7개 모드), 책 리뷰, 복수 소스 합성 |
+| **T3** | **구현됨** | 영상 편집 프리셋 — FFmpeg 필터 시스템 (제목 오버레이, 자막 스타일, 워터마크), 3개 기본 프리셋 |
+| **T4** | **구현됨** | 콘텐츠 팩토리 프리셋 — 6개 프리셋 (강연번역, 책리뷰 숏/롱, 뉴스요약, 스토리텔링, 리믹스) |
+| **T5** | 백로그 | 옴니채널 (Instagram/TikTok) + 크로스 채널 분석 + AI 추천 |
+
+**Content Factory Phase S (기존):** S1-S5 파이프라인 코드는 이미 구현됨 (Phase S와 Phase T는 동일 코드 기반 확장)
 
 **상업·운영 병행:** **Phase G2 — Lemon Squeezy 웹훅 → 콘텐츠 엔타이틀먼트**. **G0:** [`PLAN-g0-creator-commerce-decisions.md`](../docs/features/PLAN-g0-creator-commerce-decisions.md) · [`ADR-005`](../docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md). **G1/M4:** [`PLAN-g1-first-ebook-sku-runbook.md`](../docs/features/PLAN-g1-first-ebook-sku-runbook.md). **M5:** [`POSTHOG_DASHBOARD_FIRST_SAVE.md`](../docs/POSTHOG_DASHBOARD_FIRST_SAVE.md). 참조: [`src/lib/payments/content-entitlement.ts`](../src/lib/payments/content-entitlement.ts).
 

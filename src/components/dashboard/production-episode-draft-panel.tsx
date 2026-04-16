@@ -11,7 +11,6 @@ import {
 } from "react";
 import { toast } from "@/lib/ui/app-toast";
 import { useFormatter, useTranslations } from "next-intl";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { PostHogEvent } from "@/lib/analytics/posthog-events";
@@ -20,11 +19,12 @@ import {
   refineStudioEpisodeDraft,
   restoreStudioEpisodeDraftFromSnapshot,
   saveStudioEpisodeDraftManual,
-  submitRunwayRenderJob,
-  triggerYoutubeUploadStub,
 } from "@/actions/studio-episode-llm";
+import { ProductionEpisodePipeline } from "@/components/dashboard/production-episode-pipeline";
+import { ProductionEpisodeReferencePanel } from "@/components/dashboard/production-episode-reference-panel";
 import {
   studioEpisodeLlmInitialState,
+  type StudioEpisodeLlmActionState,
   type StudioEpisodeLlmDraftPayload,
 } from "@/lib/studio-productions/episode-llm-ui";
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
@@ -178,7 +178,8 @@ function ProductionEpisodeDraftPanelEditable({
   const prevSavePending = useRef(false);
   const snapshotBeforeAi = useRef<StudioEpisodeLlmDraftPayload | null>(null);
   const processedAiResultId = useRef<string>("");
-  const processedRunwayTaskId = useRef<string>("");
+  const processedSaveStateRef = useRef<StudioEpisodeLlmActionState>(undefined);
+  const processedRestoreStateRef = useRef<StudioEpisodeLlmActionState>(undefined);
   const revertSaveRequested = useRef(false);
   const applyFromCompareRef = useRef(false);
 
@@ -295,14 +296,6 @@ function ProductionEpisodeDraftPanelEditable({
     saveStudioEpisodeDraftManual,
     studioEpisodeLlmInitialState,
   );
-  const [rwState, rwAction, rwPending] = useActionState(
-    submitRunwayRenderJob,
-    studioEpisodeLlmInitialState,
-  );
-  const [ytState, ytAction, ytPending] = useActionState(
-    triggerYoutubeUploadStub,
-    studioEpisodeLlmInitialState,
-  );
   const [restoreState, restoreAction, restorePending] = useActionState(
     restoreStudioEpisodeDraftFromSnapshot,
     studioEpisodeLlmInitialState,
@@ -312,9 +305,7 @@ function ProductionEpisodeDraftPanelEditable({
     genState?.error ??
     refState?.error ??
     saveState?.error ??
-    restoreState?.error ??
-    rwState?.error ??
-    ytState?.error;
+    restoreState?.error;
 
   function labelForSnapshotSource(source: string) {
     switch (source) {
@@ -367,20 +358,9 @@ function ProductionEpisodeDraftPanelEditable({
   }, [genState, refState, router, episodeId]);
 
   useEffect(() => {
-    if (rwState?.success !== "runwayRenderComplete" || !rwState.runway) return;
-    const tid = rwState.runway.taskId;
-    if (processedRunwayTaskId.current === tid) return;
-    processedRunwayTaskId.current = tid;
-    toast.success(t("draftRunwaySuccess"));
-    posthogRef.current?.capture(PostHogEvent.ELEVATE_STUDIO_EPISODE_RUNWAY_RENDER, {
-      episode_id: episodeId,
-      outcome: "completed",
-    });
-    router.refresh();
-  }, [rwState, episodeId, router, t]);
-
-  useEffect(() => {
     if (saveState?.success !== "draftSaved") return;
+    if (processedSaveStateRef.current === saveState) return;
+    processedSaveStateRef.current = saveState;
 
     if (applyFromCompareRef.current) {
       applyFromCompareRef.current = false;
@@ -433,9 +413,11 @@ function ProductionEpisodeDraftPanelEditable({
 
   useEffect(() => {
     if (restoreState?.success !== "draftSaved") return;
+    if (processedRestoreStateRef.current === restoreState) return;
+    processedRestoreStateRef.current = restoreState;
     toast.success(t("draftSnapshotRestoredToast"));
     router.refresh();
-  }, [restoreState?.success, router, t]);
+  }, [restoreState, router, t]);
 
   return (
     <section
@@ -798,55 +780,16 @@ function ProductionEpisodeDraftPanelEditable({
         </Button>
       </form>
 
-      <div className="flex flex-col gap-2 border-t border-border-subtle pt-4">
-        {!runwayRenderReady ? (
-          <p className="text-[11px] text-text-tertiary max-w-prose leading-relaxed">
-            {t("draftRunwayDisabledHint")}{" "}
-            <Link
-              href="/dashboard/productions/integrations"
-              className="font-medium text-primary hover:underline"
-            >
-              {t("draftRunwayIntegrationsLink")}
-            </Link>
-          </p>
-        ) : null}
-        <div className="flex flex-wrap gap-2">
-          <form
-            action={rwAction}
-            onSubmit={() =>
-              posthog?.capture(PostHogEvent.ELEVATE_STUDIO_EPISODE_RUNWAY_RENDER, {
-                episode_id: episodeId,
-                outcome: "started",
-              })
-            }
-          >
-            <input type="hidden" name="episode_id" value={episodeId} />
-            <input type="hidden" name="runway_duration" value="5" />
-            <Button
-              type="submit"
-              variant="ghost"
-              size="sm"
-              isLoading={rwPending}
-              disabled={!runwayRenderReady}
-            >
-              {t("draftRunwayCta")}
-            </Button>
-          </form>
-          <form
-            action={ytAction}
-            onSubmit={() =>
-              posthog?.capture(PostHogEvent.ELEVATE_STUDIO_EPISODE_YOUTUBE_UPLOAD_STUB_CLICKED, {
-                episode_id: episodeId,
-              })
-            }
-          >
-            <input type="hidden" name="episode_id" value={episodeId} />
-            <Button type="submit" variant="ghost" size="sm" isLoading={ytPending}>
-              {t("draftYoutubeCta")}
-            </Button>
-          </form>
-        </div>
-      </div>
+      <ProductionEpisodeReferencePanel
+        episodeId={episodeId}
+        artifacts={artifacts}
+      />
+
+      <ProductionEpisodePipeline
+        episodeId={episodeId}
+        artifacts={artifacts}
+        runwayRenderReady={runwayRenderReady}
+      />
 
       <div className="border-t border-border-subtle pt-5 space-y-3">
         <div>

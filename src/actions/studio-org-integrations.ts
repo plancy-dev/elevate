@@ -90,6 +90,7 @@ export async function saveStudioProviderSecret(
     };
   }
 
+  revalidatePath("/dashboard/productions");
   revalidatePath("/dashboard/productions/integrations");
   return { success: "saved" };
 }
@@ -115,6 +116,7 @@ export async function deleteStudioProviderConnection(
 
   if (error) return { error: ActionErrorCode.dbError };
 
+  revalidatePath("/dashboard/productions");
   revalidatePath("/dashboard/productions/integrations");
   return { success: "deleted" };
 }
@@ -180,6 +182,7 @@ export async function testStudioProviderIntegration(
 
   if (upErr) return { error: ActionErrorCode.dbError };
 
+  revalidatePath("/dashboard/productions");
   revalidatePath("/dashboard/productions/integrations");
   return { success: "testOk" };
 }

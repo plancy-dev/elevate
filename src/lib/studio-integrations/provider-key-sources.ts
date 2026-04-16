@@ -33,4 +33,8 @@ export const STUDIO_PROVIDER_KEY_SOURCES: Record<
     billing:
       "https://console.cloud.google.com/google/billing",
   },
+  elevenlabs: {
+    primary: "https://elevenlabs.io/app/settings/api-keys",
+    billing: "https://elevenlabs.io/app/subscription",
+  },
 };
