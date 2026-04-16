@@ -153,6 +153,7 @@ function ProductionEpisodeDraftPanelEditable({
   elevenlabsKeyConfigured = false,
   openaiKeyConfigured: openaiKeyConfiguredProp,
   packagingLlmReady: packagingLlmReadyProp,
+  publishUrl,
   className,
   embedded,
   showReferencePanel = true,
@@ -172,6 +173,7 @@ function ProductionEpisodeDraftPanelEditable({
   openaiKeyConfigured?: boolean;
   /** Server override; defaults to OpenAI/Anthropic availability from draftLlmAvailability. */
   packagingLlmReady?: boolean;
+  publishUrl?: string | null;
   className?: string;
   /** When true, omit outer card chrome (parent provides section boundaries). */
   embedded?: boolean;
@@ -817,6 +819,7 @@ function ProductionEpisodeDraftPanelEditable({
           elevenlabsKeyConfigured={elevenlabsKeyConfigured}
           openaiKeyConfigured={openaiKeyConfigured}
           packagingLlmReady={packagingLlmReady}
+          publishUrl={publishUrl}
         />
       ) : null}
 
@@ -879,6 +882,7 @@ export function ProductionEpisodeDraftPanel({
   elevenlabsKeyConfigured = false,
   openaiKeyConfigured,
   packagingLlmReady,
+  publishUrl,
   className,
   embedded = false,
   showReferencePanel = true,
@@ -894,6 +898,8 @@ export function ProductionEpisodeDraftPanel({
   elevenlabsKeyConfigured?: boolean;
   openaiKeyConfigured?: boolean;
   packagingLlmReady?: boolean;
+  /** After YouTube upload; marks pipeline upload step complete. */
+  publishUrl?: string | null;
   className?: string;
   /** Single-column episode workspace: no outer card; section titles match parent rhythm. */
   embedded?: boolean;
@@ -935,6 +941,7 @@ export function ProductionEpisodeDraftPanel({
       elevenlabsKeyConfigured={elevenlabsKeyConfigured}
       openaiKeyConfigured={openaiKeyConfigured}
       packagingLlmReady={packagingLlmReady}
+      publishUrl={publishUrl}
       className={className}
       embedded={embedded}
       showReferencePanel={showReferencePanel}

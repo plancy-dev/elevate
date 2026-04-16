@@ -1,6 +1,13 @@
 "use client";
 
-import { useActionState, useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  useActionState,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -34,6 +41,8 @@ type PipelineProps = {
   packagingLlmReady?: boolean;
   /** OpenAI key saved — required for DALL·E thumbnail image step */
   openaiKeyConfigured?: boolean;
+  /** Episode published URL after YouTube upload (marks upload step complete). */
+  publishUrl?: string | null;
   className?: string;
 };
 
@@ -87,6 +96,7 @@ export function ProductionEpisodePipeline({
   elevenlabsKeyConfigured = false,
   packagingLlmReady = false,
   openaiKeyConfigured = false,
+  publishUrl = null,
   className,
 }: PipelineProps) {
   const t = useTranslations("Dashboard.productions");
@@ -95,11 +105,18 @@ export function ProductionEpisodePipeline({
   const [viewOpen, setViewOpen] = useState<ViewKind>(null);
 
   const packagingModelOptions = useMemo(() => {
-    const all = [
-      ...OPENAI_DRAFT_MODEL_OPTIONS.map((o) => ({ id: o.id, label: `OpenAI · ${o.id} (${o.pricingHint})` })),
-      ...ANTHROPIC_DRAFT_MODEL_OPTIONS.map((o) => ({ id: o.id, label: `Anthropic · ${o.id} (${o.pricingHint})` })),
-    ];
-    return all;
+    const openai = OPENAI_DRAFT_MODEL_OPTIONS.map((o) => ({
+      id: o.id,
+      label: `OpenAI · ${o.id} (${o.pricingHint})`,
+    }));
+    const anthropic = ANTHROPIC_DRAFT_MODEL_OPTIONS.map((o) => ({
+      id: o.id,
+      label: `Anthropic · ${o.id} (${o.pricingHint})`,
+    }));
+    const defaultId = DEFAULT_PACKAGING_DRAFT_MODEL_ID;
+    const head = anthropic.filter((o) => o.id === defaultId);
+    const tailAnth = anthropic.filter((o) => o.id !== defaultId);
+    return [...head, ...tailAnth, ...openai];
   }, []);
 
   const thumbnailModelOptions = useMemo(
@@ -218,18 +235,98 @@ export function ProductionEpisodePipeline({
         ? t("draftThumbnailImageHintNoPrompt")
         : t("draftThumbnailImageHint");
 
+  const hasYoutubePublish = Boolean(publishUrl?.trim());
+
+  const pipelineCompletedCount = useMemo(() => {
+    return [
+      hasTimedScript,
+      hasPackagingDraft,
+      hasThumbnailImage,
+      hasTtsAudio,
+      hasSubtitleSrt,
+      hasSceneClips,
+      hasAssembledVideo,
+      hasYoutubePublish,
+    ].filter(Boolean).length;
+  }, [
+    hasTimedScript,
+    hasPackagingDraft,
+    hasThumbnailImage,
+    hasTtsAudio,
+    hasSubtitleSrt,
+    hasSceneClips,
+    hasAssembledVideo,
+    hasYoutubePublish,
+  ]);
+
+  const pipelineNextLabel = useMemo(() => {
+    if (!hasDraftScript) return t("pipelineNextNeedDraft");
+    if (!hasTimedScript) return t("draftPreprodTimedStep");
+    if (!hasPackagingDraft) return t("draftPreprodPackagingStep");
+    if (!hasThumbnailImage) return t("draftThumbnailImageStep");
+    if (!hasTtsAudio) return t("draftTtsCta");
+    if (!hasSubtitleSrt) return t("draftSubtitleCta");
+    if (!hasSceneClips) return t("draftSceneRenderCta");
+    if (!hasAssembledVideo) return t("draftAssembleCta");
+    if (!hasYoutubePublish) return t("draftYoutubeCta");
+    return null;
+  }, [
+    hasDraftScript,
+    hasTimedScript,
+    hasPackagingDraft,
+    hasThumbnailImage,
+    hasTtsAudio,
+    hasSubtitleSrt,
+    hasSceneClips,
+    hasAssembledVideo,
+    hasYoutubePublish,
+    t,
+  ]);
+
+  const PIPELINE_TOTAL_STEPS = 8;
+
   return (
     <div className={cn("flex flex-col gap-6 border-t border-border-subtle pt-5", className)}>
       <p className="text-sm text-text-secondary leading-relaxed max-w-prose -mt-1">
         {t("producePanelLead")}
       </p>
 
+      <div className="rounded-lg border border-border-subtle bg-layer-02/35 px-3 py-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-2 gap-y-1">
+          <p className="text-[11px] font-medium text-text-primary">
+            {t("pipelineProgressLabel", {
+              completed: pipelineCompletedCount,
+              total: PIPELINE_TOTAL_STEPS,
+            })}
+          </p>
+          <p className="text-[11px] text-text-tertiary">
+            {pipelineNextLabel
+              ? t("pipelineNextUpLabel", { step: pipelineNextLabel })
+              : t("pipelineAllComplete")}
+          </p>
+        </div>
+        <div
+          className="mt-2 h-1.5 overflow-hidden rounded-full bg-layer-03"
+          role="progressbar"
+          aria-valuenow={pipelineCompletedCount}
+          aria-valuemin={0}
+          aria-valuemax={PIPELINE_TOTAL_STEPS}
+        >
+          <div
+            className="h-full bg-primary/85 transition-[width] duration-300 ease-out"
+            style={{
+              width: `${Math.min(100, (pipelineCompletedCount / PIPELINE_TOTAL_STEPS) * 100)}%`,
+            }}
+          />
+        </div>
+      </div>
+
       <div>
         <h3 className="text-sm font-semibold text-text-primary">
-          {t("draftPreprodSectionTitle")}
+          {t("pipelinePhasePrepareTitle")}
         </h3>
         <p className="mt-1 text-xs text-text-tertiary leading-relaxed">
-          {t("draftPreprodSectionSubtitle")}
+          {t("pipelinePhasePrepareSubtitle")}
         </p>
       </div>
 
@@ -241,6 +338,7 @@ export function ProductionEpisodePipeline({
         />
 
         <PreprodPipelineStep
+          key={`preprod-s1-${episodeId}`}
           step={1}
           label={t("draftPreprodTimedStep")}
           done={hasTimedScript}
@@ -257,6 +355,7 @@ export function ProductionEpisodePipeline({
         />
 
         <PreprodPipelineStep
+          key={`preprod-s2-${episodeId}-${DEFAULT_PACKAGING_DRAFT_MODEL_ID}`}
           step={2}
           label={t("draftPreprodPackagingStep")}
           done={hasPackagingDraft}
@@ -277,6 +376,7 @@ export function ProductionEpisodePipeline({
         />
 
         <PreprodPipelineStep
+          key={`preprod-s3-${episodeId}-dall-e-3`}
           step={3}
           label={t("draftThumbnailImageStep")}
           done={hasThumbnailImage}
@@ -386,16 +486,16 @@ export function ProductionEpisodePipeline({
 
       <div>
         <h3 className="text-sm font-semibold text-text-primary">
-          {t("draftPipelineTitle")}
+          {t("pipelinePhaseProduceTitle")}
         </h3>
         <p className="mt-1 text-xs text-text-tertiary leading-relaxed">
-          {t("draftPipelineSubtitle")}
+          {t("pipelinePhaseProduceSubtitle")}
         </p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <PipelineStep
-          step={1}
+          step={4}
           label={t("draftTtsCta")}
           done={hasTtsAudio}
           disabled={ttsDisabled}
@@ -408,7 +508,7 @@ export function ProductionEpisodePipeline({
         />
 
         <PipelineStep
-          step={2}
+          step={5}
           label={t("draftSubtitleCta")}
           done={hasSubtitleSrt}
           disabled={!hasTtsAudio}
@@ -421,7 +521,7 @@ export function ProductionEpisodePipeline({
         />
 
         <PipelineStep
-          step={3}
+          step={6}
           label={t("draftSceneRenderCta")}
           done={hasSceneClips}
           disabled={!hasDraftScript || !runwayRenderReady}
@@ -434,7 +534,7 @@ export function ProductionEpisodePipeline({
         />
 
         <PipelineStep
-          step={4}
+          step={7}
           label={t("draftAssembleCta")}
           done={hasAssembledVideo}
           disabled={!hasSceneClips}
@@ -447,9 +547,9 @@ export function ProductionEpisodePipeline({
         />
 
         <PipelineStep
-          step={5}
+          step={8}
           label={t("draftYoutubeCta")}
-          done={false}
+          done={hasYoutubePublish}
           disabled={!hasAssembledVideo}
           hint={!hasAssembledVideo ? t("draftYoutubeDisabledHint") : undefined}
           pending={ytPending}
@@ -568,6 +668,7 @@ function PreprodPipelineStep({
   const formId = useId();
   const [advOpen, setAdvOpen] = useState(false);
   const hasAdvanced = Boolean(modelOptions?.length || showCustomInstructions);
+  const [selectedModel, setSelectedModel] = useState(defaultModel ?? "");
 
   return (
     <div
@@ -616,9 +717,9 @@ function PreprodPipelineStep({
             {Object.entries(hiddenFields).map(([k, v]) => (
               <input key={k} type="hidden" name={k} value={v} />
             ))}
-            {advOpen && modelOptions?.length ? null : (
-              <input type="hidden" name="model" value={defaultModel ?? ""} />
-            )}
+            {modelOptions?.length && !advOpen ? (
+              <input type="hidden" name="model" value={selectedModel} />
+            ) : null}
             {advOpen ? null : (
               <input type="hidden" name="custom_instructions" value="" />
             )}
@@ -649,7 +750,8 @@ function PreprodPipelineStep({
               <select
                 name="model"
                 form={formId}
-                defaultValue={defaultModel}
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
                 className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
               >
                 {modelOptions.map((o) => (

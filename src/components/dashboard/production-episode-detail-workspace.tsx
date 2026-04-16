@@ -357,6 +357,7 @@ function ProductionEpisodeDetailWorkspaceInner({
             elevenlabsKeyConfigured={elevenlabsKeyConfigured}
             openaiKeyConfigured={openaiKeyConfigured}
             packagingLlmReady={packagingLlmReady}
+            publishUrl={episode.publish_url}
             embedded
             showReferencePanel={false}
             showPipeline={false}
@@ -384,6 +385,7 @@ function ProductionEpisodeDetailWorkspaceInner({
             elevenlabsKeyConfigured={elevenlabsKeyConfigured}
             openaiKeyConfigured={openaiKeyConfigured}
             packagingLlmReady={packagingLlmReady}
+            publishUrl={episode.publish_url}
             className="border-t-0 pt-0"
           />
         </section>
