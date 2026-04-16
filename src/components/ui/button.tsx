@@ -30,7 +30,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     "bg-transparent text-interactive hover:bg-surface-03/80 active:bg-surface-hover dark:active:bg-surface-02",
   danger: "bg-danger text-white hover:bg-[#BA1B23] active:bg-[#750E13]",
   marketing:
-    "rounded-full border-0 bg-marketing-accent text-white hover:bg-marketing-accent-hover active:bg-[#c03d00] focus:outline-marketing-accent",
+    "rounded-full border-0 bg-marketing-accent text-white hover:bg-marketing-accent-hover active:bg-[#c03d00]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -64,7 +64,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           variant !== "marketing" &&
             "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
           variant === "marketing" &&
-            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marketing-accent",
           variantStyles[variant],
           sizeStyles[size],
           className,
@@ -109,7 +109,7 @@ export function buttonLinkClassName(
     "inline-flex items-center justify-center gap-2 font-medium transition-colors duration-100 cursor-pointer",
     variant !== "marketing" && "rounded-lg",
     variant === "marketing"
-      ? "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+      ? "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marketing-accent"
       : "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
     variantStyles[variant],
     sizeStyles[size],
