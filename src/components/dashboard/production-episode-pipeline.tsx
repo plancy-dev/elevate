@@ -19,6 +19,7 @@ import { parsePackagingDraftContent } from "@/lib/studio-productions/packaging-d
 import {
   OPENAI_DRAFT_MODEL_OPTIONS,
   ANTHROPIC_DRAFT_MODEL_OPTIONS,
+  DEFAULT_PACKAGING_DRAFT_MODEL_ID,
 } from "@/lib/studio-productions/episode-llm-models";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
@@ -271,7 +272,7 @@ export function ProductionEpisodePipeline({
           showView={hasPackagingDraft && Boolean(packagingParsed)}
           onView={() => setViewOpen("packaging")}
           modelOptions={packagingModelOptions}
-          defaultModel={OPENAI_DRAFT_MODEL_OPTIONS[0].id}
+          defaultModel={DEFAULT_PACKAGING_DRAFT_MODEL_ID}
           showCustomInstructions
         />
 

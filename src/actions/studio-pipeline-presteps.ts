@@ -8,12 +8,14 @@ import { getStudioEpisodeForOrg } from "@/lib/data/studio-productions";
 import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/feature";
 import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrations/crypto";
 import {
-  getOrgLlmCredential,
   getOrgLlmCredentialForProvider,
+  getOrgLlmProviderAvailability,
+  type OrgLlmCredential,
 } from "@/lib/studio-productions/episode-llm";
 import {
+  DEFAULT_PACKAGING_DRAFT_MODEL_ID,
+  isAllowedDraftModel,
   resolveDraftModel,
-  type StudioDraftLlmProvider,
 } from "@/lib/studio-productions/episode-llm-models";
 import { parsePackagingDraftContent } from "@/lib/studio-productions/packaging-draft";
 import { draftTripleFromArtifactTimestamps } from "@/lib/studio-productions/resolve-episode-draft-artifacts";
@@ -198,11 +200,53 @@ export async function generatePackagingDraftFromEpisode(
   const script = (triple.script_draft.trim() || scriptFromScriptRole).trim();
   if (!script) return { error: ActionErrorCode.studioPipelineNeedScript };
 
-  const cred = await getOrgLlmCredential(supabase, auth.ctx.organizationId);
-  if (!cred) return { error: ActionErrorCode.studioLlmNoProvider };
-
   const customInstructions = String(formData.get("custom_instructions") ?? "").trim();
-  const modelOverride = String(formData.get("model") ?? "").trim() || null;
+  const modelOverrideRaw = String(formData.get("model") ?? "").trim();
+  const modelOverride = modelOverrideRaw || null;
+
+  const availability = await getOrgLlmProviderAvailability(
+    supabase,
+    auth.ctx.organizationId,
+  );
+
+  const requestedModel = modelOverride ?? DEFAULT_PACKAGING_DRAFT_MODEL_ID;
+
+  let cred: OrgLlmCredential | null = null;
+  let model: string;
+
+  if (isAllowedDraftModel("anthropic", requestedModel) && availability.anthropic) {
+    cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      auth.ctx.organizationId,
+      "anthropic",
+    );
+    model = resolveDraftModel("anthropic", requestedModel);
+  } else if (isAllowedDraftModel("openai", requestedModel) && availability.openai) {
+    cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      auth.ctx.organizationId,
+      "openai",
+    );
+    model = resolveDraftModel("openai", requestedModel);
+  } else if (availability.anthropic) {
+    cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      auth.ctx.organizationId,
+      "anthropic",
+    );
+    model = resolveDraftModel("anthropic", requestedModel);
+  } else if (availability.openai) {
+    cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      auth.ctx.organizationId,
+      "openai",
+    );
+    model = resolveDraftModel("openai", requestedModel);
+  } else {
+    return { error: ActionErrorCode.studioLlmNoProvider };
+  }
+
+  if (!cred) return { error: ActionErrorCode.studioLlmNoProvider };
 
   const format = resolveEpisodeFormat(episode);
   const formatLabel = format === "shorts" ? "short-form vertical" : "long-form horizontal";
@@ -247,9 +291,6 @@ export async function generatePackagingDraftFromEpisode(
   ].join(" ");
 
   let rawText = "";
-  const provider: StudioDraftLlmProvider =
-    cred.provider === "openai" ? "openai" : "anthropic";
-  const model = resolveDraftModel(provider, modelOverride);
 
   if (cred.provider === "openai") {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {

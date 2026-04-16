@@ -53,6 +53,9 @@ export const OPENAI_DRAFT_MODEL_OPTIONS = [
   },
 ] as const satisfies readonly DraftModelOption[];
 
+/** Default LLM for packaging draft (title, description, thumbnail prompt) in the production pipeline. */
+export const DEFAULT_PACKAGING_DRAFT_MODEL_ID = "claude-opus-4-6";
+
 export const ANTHROPIC_DRAFT_MODEL_OPTIONS = [
   {
     id: "claude-haiku-4-5-20251001",
