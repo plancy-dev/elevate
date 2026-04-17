@@ -82,7 +82,7 @@
 | [`memory-bank/README.md`](../memory-bank/README.md) | Memory Bank 파일 역할 |
 | [`AI_AGENT_MATURITY_REPORT.md`](./AI_AGENT_MATURITY_REPORT.md) | 성숙도 리포트·벤치마크·점수 |
 | [`design/QUALITY_PIPELINE.md`](./design/QUALITY_PIPELINE.md) | gstack 디자인·엔지 리뷰 순서 + repo 게이트 |
-| [`DEV_PROCESS_GITHUB.md`](./DEV_PROCESS_GITHUB.md) | **GitHub Issues / PR / Figma / gh CLI** — 원격 작업 추적·에픽·`pnpm issues:studio` |
+| [`DEV_PROCESS_GITHUB.md`](./DEV_PROCESS_GITHUB.md) | **GitHub Issues / PR / gh CLI** — 원격 작업 추적·에픽·`pnpm issues:studio` |
 
 ---
 

@@ -1,26 +1,17 @@
 name: Feature / fix (general)
-description: UI or product work with Figma frame link and acceptance criteria when applicable.
+description: Product or UI work with acceptance criteria.
 title: ""
 labels: []
 body:
   - type: markdown
     attributes:
       value: |
-        **Figma:** Share → copy link with **`node-id=`** (frame URL), not file root only.  
         **Acceptance:** one line — “Done means …”. Use “N/A — docs-only” if no product check.
   - type: textarea
     id: summary
     attributes:
       label: Summary
       description: What changes and why.
-    validations:
-      required: true
-  - type: input
-    id: figma
-    attributes:
-      label: Figma frame URL
-      description: Required for UI/layout work; use “N/A” if not applicable.
-      placeholder: https://www.figma.com/design/...?node-id=...
     validations:
       required: true
   - type: textarea

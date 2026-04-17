@@ -47,10 +47,5 @@ jobs:
       - name: Unit tests (Vitest)
         run: pnpm run test
 
-      - name: Figma design file (optional)
-        env:
-          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
-        run: pnpm run figma:verify
-
       - name: Next.js build
         run: pnpm run build

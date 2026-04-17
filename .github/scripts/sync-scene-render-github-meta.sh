@@ -14,7 +14,6 @@ echo "Using repo: $REPO"
 declare -a LABELS=(
   "area/studio|5319E7|Studio / productions / dashboard"
   "type/feature|0E8A16|Implementation work"
-  "type/figma|FBCA04|Design / Figma deliverable"
   "type/docs|0075CA|Documentation only"
   "priority/p0|B60205|P0 — cost visibility"
   "priority/p1|D93F0B|P1 — scene table & estimates"

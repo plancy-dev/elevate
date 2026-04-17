@@ -25,7 +25,7 @@
 | A4 | AI 문서 통합 — gstack ↔ Memory Bank 허브 [`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md), `AI_USAGE`·`GSTACK`·README 정렬 | ✅ |
 | A5 | 세션 자동 부트스트랩 [`ai-session-bootstrap.mdc`](../.cursor/rules/ai-session-bootstrap.mdc) · [`AI_USER_TEMPLATES.md`](../docs/AI_USER_TEMPLATES.md) · [`AI_WORKFLOW_PORTABILITY.md`](../docs/AI_WORKFLOW_PORTABILITY.md) | ✅ |
 | A6 | 킬링 서비스 중심 랜딩·IA — `en.json`·Product 슬러그·Studio 플레이스홀더·[`ADR-002`](../docs/adr/ADR-002-prompt-studio-mvp.md) | ✅ |
-| A7 | 원격 작업 추적 — GitHub Issues/PR/Figma/gh · [`docs/DEV_PROCESS_GITHUB.md`](../docs/DEV_PROCESS_GITHUB.md) · [`.github/DESIGN.md`](../.github/DESIGN.md) · `pnpm issues:studio` | ✅ |
+| A7 | 원격 작업 추적 — GitHub Issues/PR/gh · [`docs/DEV_PROCESS_GITHUB.md`](../docs/DEV_PROCESS_GITHUB.md) · [`.github/DESIGN.md`](../.github/DESIGN.md) · `pnpm issues:studio` | ✅ |
 
 ---
 

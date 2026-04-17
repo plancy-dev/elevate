@@ -195,7 +195,7 @@ export function getDemoEpisodesForOrgSeed(): DemoEpisodeSeed[] {
           artifact_role: "thumbnail",
           tool_platform: "other",
           content_text:
-            "썸네일 카피: 큰 숫자 ‘30초’ + 제품 스크린 작게. Canva/Figma 템플릿 링크는 팀 내부 규칙에 따라 별도.",
+            "썸네일 카피: 큰 숫자 ‘30초’ + 제품 스크린 작게. Canva 등 템플릿 링크는 팀 내부 규칙에 따라 별도.",
           external_url: null,
           metadata: { note: "replace example.com link with real asset host" },
           sort_order: 2,

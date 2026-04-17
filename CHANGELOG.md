@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- Figma REST integration: `scripts/verify-figma-design-files.mjs`, `scripts/figma-list-page-links.mjs`, `pnpm figma:*` scripts, CI step, and `FIGMA_*` env examples — workflow is implementation-first via GitHub only ([`docs/DEV_PROCESS_GITHUB.md`](docs/DEV_PROCESS_GITHUB.md)).
+
 ### Added
 
 - Studio scene render: **preflight dialog** before batched Runway renders (scene count, estimated credits, planned duration, soft/hard duration budget copy aligned with server).
@@ -23,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Docs & templates: GitHub-first Studio workflow — [`docs/DEV_PROCESS_GITHUB.md`](docs/DEV_PROCESS_GITHUB.md), [`.github/DESIGN.md`](.github/DESIGN.md), [`docs/design/SCENE_RENDER_EPIC_STATUS.md`](docs/design/SCENE_RENDER_EPIC_STATUS.md); issue templates no longer require external design links.
 - Library: `getLibraryProductBySlug` loads a single `content_products` row by slug + shared entitlement context (avoids full-catalog query on detail pages); ebook reader no longer shows internal slug under the title.
 - Blog: dedicated editorial hero for the v0.2.0 release post (`public/blog/release-0-2-0/hero.jpg`) — no longer reuses the flagship post image.
 - Blog: v0.2.0 release copy (en/ko) rewritten for **customers only** — removed internal sections (migrations, ADRs, repo paths, roadmap codenames); templates and versioning docs updated so future release posts stay outward-facing.
