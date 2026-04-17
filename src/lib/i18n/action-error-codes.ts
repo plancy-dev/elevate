@@ -99,6 +99,20 @@ export const ActionErrorCode = {
   studioRunwayTaskFailed: "studioRunwayTaskFailed",
   studioRunwayTimeout: "studioRunwayTimeout",
   studioRunwayApiError: "studioRunwayApiError",
+  /** Runway account has insufficient credits / quota for this task */
+  studioRunwayInsufficientCredits: "studioRunwayInsufficientCredits",
+
+  /** Scene render: no Runway key in org integrations */
+  studioSceneRenderNoRunwayKey: "studioSceneRenderNoRunwayKey",
+  studioSceneRenderInvalidJson: "studioSceneRenderInvalidJson",
+  studioSceneRenderScenesInvalid: "studioSceneRenderScenesInvalid",
+  studioSceneRenderNoScript: "studioSceneRenderNoScript",
+  studioSceneRenderNoScenes: "studioSceneRenderNoScenes",
+  /** Sum of scene durations exceeds org safety cap */
+  studioSceneRenderBudgetExceeded: "studioSceneRenderBudgetExceeded",
+
+  /** Episode pipeline_prefs JSON exceeds size cap */
+  studioPipelinePrefsTooLarge: "studioPipelinePrefsTooLarge",
 
   /** ElevenLabs TTS: generic HTTP / validation error from provider */
   studioTtsElevenLabsApiError: "studioTtsElevenLabsApiError",
@@ -118,6 +132,19 @@ export const ActionErrorCode = {
   studioSubtitleWhisperError: "studioSubtitleWhisperError",
 
   studioYoutubeUploadNotAvailable: "studioYoutubeUploadNotAvailable",
+
+  /** FFmpeg assembly: no episode artifacts */
+  studioAssemblyNoArtifacts: "studioAssemblyNoArtifacts",
+  /** FFmpeg assembly: no scene_clip URLs */
+  studioAssemblyNoClips: "studioAssemblyNoClips",
+  /** FFmpeg assembly: DB insert failed */
+  studioAssemblyInsertFailed: "studioAssemblyInsertFailed",
+  /** FFmpeg binary missing or not executable (set FFMPEG_PATH or install ffmpeg) */
+  studioAssemblyFfmpegNotFound: "studioAssemblyFfmpegNotFound",
+  /** FFmpeg runtime error (codec, filter, corrupt input, etc.) */
+  studioAssemblyFfmpegError: "studioAssemblyFfmpegError",
+  /** Clip/audio download failed (network, URL, storage) */
+  studioAssemblyDownloadFailed: "studioAssemblyDownloadFailed",
 
   /** Reference pipeline: OpenAI key missing (YouTube STT) */
   studioReferenceNoApiKey: "studioReferenceNoApiKey",

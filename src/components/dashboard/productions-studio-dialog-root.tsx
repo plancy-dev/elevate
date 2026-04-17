@@ -8,6 +8,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -16,6 +17,7 @@ import { useTranslations } from "next-intl";
 import { FolderKanban, Radio, Settings2, Wrench } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/lib/ui/app-toast";
 import {
   StudioProjectCreateForm,
   StudioProjectEditFormWithDelete,
@@ -37,7 +39,8 @@ export type ProductionsStudioDialogPayload = {
     connections: StudioOrgProviderConnectionMeta[];
     encryptionConfigured: boolean;
     serverCallsEnabled: boolean;
-    uiPreview: boolean;
+    youtubeOAuthEnvConfigured: boolean;
+    youtubeChannelTitle: string | null;
   };
 };
 
@@ -131,23 +134,53 @@ function StudioQueryParamOpener({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations("Dashboard.productions");
+  const youtubeToastDone = useRef(false);
 
   useEffect(() => {
     const studio = searchParams.get("studio");
+    const youtubeConnected = searchParams.get("youtube_connected");
+    const youtubeError = searchParams.get("youtube_error");
+
     if (studio === "projects") {
       setModalKind("projects");
     } else if (studio === "channels") {
       setModalKind("channels");
     } else if (studio === "integrations") {
       setModalKind("integrations");
-    } else {
-      return;
     }
+
+    if (!youtubeToastDone.current) {
+      if (youtubeConnected === "1") {
+        youtubeToastDone.current = true;
+        toast.success(t("integrationsYoutubeToastConnected"));
+      } else if (youtubeError) {
+        youtubeToastDone.current = true;
+        toast.error(
+          t("integrationsYoutubeToastError", { detail: youtubeError }),
+        );
+      }
+    }
+
+    const shouldStrip =
+      studio === "projects" ||
+      studio === "channels" ||
+      studio === "integrations" ||
+      youtubeConnected === "1" ||
+      youtubeError != null;
+
+    if (!shouldStrip) return;
+
     const params = new URLSearchParams(searchParams.toString());
     params.delete("studio");
+    params.delete("youtube_connected");
+    params.delete("youtube_error");
     const qs = params.toString();
-    router.replace(qs ? `/dashboard/productions?${qs}` : "/dashboard/productions", { scroll: false });
-  }, [searchParams, router, setModalKind]);
+    router.replace(
+      qs ? `/dashboard/productions?${qs}` : "/dashboard/productions",
+      { scroll: false },
+    );
+  }, [searchParams, router, setModalKind, t]);
 
   return null;
 }
@@ -205,7 +238,14 @@ function ProductionsStudioModals({
         description={t("channelsPageSubtitle")}
         size="lg"
       >
-        <StudioDistributionChannelsPanel channels={payload.channels} />
+        <StudioDistributionChannelsPanel
+          channels={payload.channels}
+          canEdit={int.canEdit}
+          encryptionConfigured={int.encryptionConfigured}
+          serverCallsEnabled={int.serverCallsEnabled}
+          youtubeOAuthEnvConfigured={int.youtubeOAuthEnvConfigured}
+          youtubeChannelTitle={int.youtubeChannelTitle}
+        />
       </Modal>
 
       <Modal open={modal === "integrations"} onClose={onClose} title={t("integrationsTitle")} size="xl">
@@ -222,25 +262,6 @@ function ProductionsStudioModals({
               encryptionConfigured={int.encryptionConfigured}
               serverCallsEnabled={int.serverCallsEnabled}
             />
-            <section className="rounded-lg border border-border-subtle bg-layer-01 p-4 space-y-3">
-              <h3 className="text-sm font-semibold text-text-primary">{t("integrationsPhase0Title")}</h3>
-              <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-line">
-                {t("integrationsPhase0Body")}
-              </p>
-              <dl className="grid gap-2 text-xs text-text-tertiary sm:grid-cols-2">
-                <div>
-                  <dt className="font-medium text-text-secondary">{t("integrationsFlagUi")}</dt>
-                  <dd>{int.uiPreview ? t("integrationsFlagOn") : t("integrationsFlagOff")}</dd>
-                </div>
-                <div>
-                  <dt className="font-medium text-text-secondary">{t("integrationsFlagServer")}</dt>
-                  <dd>{int.serverCallsEnabled ? t("integrationsFlagOn") : t("integrationsFlagOff")}</dd>
-                </div>
-              </dl>
-              <p className="border-t border-border-subtle pt-3 text-xs text-text-tertiary leading-relaxed">
-                {t("integrationsDocHint")}
-              </p>
-            </section>
           </div>
         )}
       </Modal>

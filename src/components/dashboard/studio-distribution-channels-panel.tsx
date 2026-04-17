@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { ExternalLink } from "lucide-react";
+import { CheckCircle2, ExternalLink } from "lucide-react";
 import {
   createStudioDistributionChannel,
   deleteStudioDistributionChannel,
@@ -11,15 +11,28 @@ import {
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import { toast } from "@/lib/ui/app-toast";
 import type { StudioDistributionChannelRow } from "@/lib/studio-productions/shorts-catalog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonLinkClassName } from "@/components/ui/button";
 import { StudioChannelPlatformSelect } from "@/components/dashboard/studio-episode-shorts-fields";
+import { cn } from "@/lib/utils";
 
 const initialState: StudioChannelActionState = undefined;
 
+const YOUTUBE_OAUTH_START = "/api/integrations/youtube/oauth/start";
+
 export function StudioDistributionChannelsPanel({
   channels,
+  canEdit,
+  encryptionConfigured,
+  serverCallsEnabled,
+  youtubeOAuthEnvConfigured,
+  youtubeChannelTitle,
 }: {
   channels: StudioDistributionChannelRow[];
+  canEdit: boolean;
+  encryptionConfigured: boolean;
+  serverCallsEnabled: boolean;
+  youtubeOAuthEnvConfigured: boolean;
+  youtubeChannelTitle: string | null;
 }) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
@@ -50,6 +63,77 @@ export function StudioDistributionChannelsPanel({
 
   return (
     <div className="space-y-10">
+      <section className="rounded-2xl border border-border-subtle/90 bg-layer-01 p-6 shadow-sm space-y-4">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
+            {t("integrationsYoutubeUploadHeading")}
+          </p>
+          <p className="mt-1 text-xs text-text-tertiary leading-relaxed">
+            {t("channelsYoutubeOAuthIntro")}
+          </p>
+        </div>
+
+        {youtubeChannelTitle ? (
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-xl border border-green-500/25 bg-green-500/[0.06] px-4 py-3">
+            <div className="flex min-w-0 items-start gap-2.5">
+              <CheckCircle2
+                className="mt-0.5 h-4 w-4 shrink-0 text-green-600 dark:text-green-400"
+                aria-hidden
+              />
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-green-700 dark:text-green-400/95">
+                  {t("integrationsYoutubeOAuthStatusBadge")}
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-text-primary truncate">
+                  {youtubeChannelTitle}
+                </p>
+              </div>
+            </div>
+            {canEdit && encryptionConfigured && serverCallsEnabled && youtubeOAuthEnvConfigured ? (
+              <a
+                href={YOUTUBE_OAUTH_START}
+                className={cn(
+                  buttonLinkClassName("secondary", "sm"),
+                  "w-fit shrink-0 self-start sm:self-center",
+                )}
+              >
+                {t("integrationsYoutubeOAuthReconnect")}
+              </a>
+            ) : null}
+          </div>
+        ) : youtubeOAuthEnvConfigured ? (
+          <div className="rounded-xl border border-dashed border-border-subtle bg-layer-02/40 px-4 py-4 space-y-3">
+            <p className="text-sm text-text-secondary leading-relaxed">
+              {t("integrationsYoutubeOAuthDisconnectedLead")}
+            </p>
+            {canEdit && encryptionConfigured && serverCallsEnabled ? (
+              <a
+                href={YOUTUBE_OAUTH_START}
+                className={cn(buttonLinkClassName("primary", "sm"), "w-fit")}
+              >
+                {t("integrationsYoutubeOAuthConnect")}
+              </a>
+            ) : null}
+          </div>
+        ) : null}
+
+        {!youtubeOAuthEnvConfigured ? (
+          <p className="text-xs text-text-tertiary leading-relaxed">
+            {t("integrationsYoutubeOAuthNotConfigured")}
+          </p>
+        ) : null}
+        {canEdit &&
+        youtubeOAuthEnvConfigured &&
+        (!encryptionConfigured || !serverCallsEnabled) ? (
+          <p className="text-xs text-text-tertiary leading-relaxed">
+            {!encryptionConfigured ? t("integrationsEncryptionOff") : t("integrationsServerCallsOff")}
+          </p>
+        ) : null}
+        {!canEdit && youtubeOAuthEnvConfigured ? (
+          <p className="text-xs text-text-tertiary leading-relaxed">{t("integrationsReadOnlyEditors")}</p>
+        ) : null}
+      </section>
+
       <section className="rounded-2xl border border-border-subtle/90 bg-layer-01 p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-text-primary">{t("channelsAddTitle")}</h2>
         <p className="mt-1 text-sm text-text-tertiary">{t("channelsAddSubtitle")}</p>

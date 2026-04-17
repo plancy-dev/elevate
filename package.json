@@ -18,12 +18,15 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test",
     "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
+    "issues:studio": "bash .github/scripts/gh-issue-studio-queue.sh",
+    "figma:verify": "node scripts/verify-figma-design-files.mjs",
     "db:seed-admin": "node scripts/seed-admin.mjs",
     "db:seed-demo-studio": "tsx scripts/seed-demo-studio-productions.ts",
     "generate:brand": "node scripts/generate-brand-assets.mjs",
     "og:default": "node scripts/build-og-default.mjs",
     "og:default:webp": "node scripts/build-og-default.mjs --webp",
     "db:types": "node scripts/gen-db-types.mjs",
+    "worker:assembly": "tsx workers/video-assembly/run.ts",
     "prepare": "husky"
   },
   "dependencies": {

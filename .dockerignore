@@ -1,0 +1,14 @@
+# Fly / Docker build context (worker image)
+.git
+.next
+out
+node_modules
+coverage
+playwright-report
+test-results
+blob-report
+**/.DS_Store
+.env*
+!.env.local.example
+supabase/.temp
+.agents

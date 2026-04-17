@@ -1,7 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getOrgMemberContext } from "@/lib/auth/require-org-editor";
+import {
+  getOrgEditorContext,
+  getOrgMemberContext,
+} from "@/lib/auth/require-org-editor";
 import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import { createClient } from "@/lib/supabase/server";
 import { getStudioEpisodeForOrg } from "@/lib/data/studio-productions";
@@ -9,30 +12,20 @@ import { resolveEpisodeFormat } from "@/lib/studio-productions/episode-format";
 import { logAudit } from "@/lib/audit/log";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/feature";
-import {
-  isStudioIntegrationsEncryptionConfigured,
-  encryptProviderSecret,
-} from "@/lib/studio-integrations/crypto";
-import {
-  exchangeCodeForTokens,
-  type YouTubeOAuthConfig,
-} from "@/lib/studio-integrations/providers/youtube/youtube-oauth";
+import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrations/crypto";
+import { completeYoutubeOAuthConnection } from "@/lib/studio-integrations/providers/youtube/complete-youtube-oauth-connection";
+import { getYoutubeOAuthConfigFromEnv } from "@/lib/studio-integrations/providers/youtube/youtube-oauth-config";
 import {
   getStudioYouTubeChannelToken,
   resolveStudioYouTubeAccessToken,
   touchStudioYouTubeChannelToken,
-  upsertStudioYouTubeChannelToken,
   type UntypedSupabaseClient,
 } from "@/lib/studio-integrations/providers/youtube/youtube-channel-token";
 import { uploadVideoToYouTube } from "@/lib/studio-integrations/providers/youtube/youtube-upload";
-
-function getYouTubeOAuthConfig(): YouTubeOAuthConfig | null {
-  const clientId = process.env.YOUTUBE_OAUTH_CLIENT_ID;
-  const clientSecret = process.env.YOUTUBE_OAUTH_CLIENT_SECRET;
-  const redirectUri = process.env.YOUTUBE_OAUTH_REDIRECT_URI;
-  if (!clientId || !clientSecret || !redirectUri) return null;
-  return { clientId, clientSecret, redirectUri };
-}
+import {
+  createSignedUrlForAssembledVideoPath,
+  resolveAssembledVideoStorageObjectPath,
+} from "@/lib/studio-productions/assembled-artifact-video-url";
 
 export type YouTubeActionState = {
   ok?: boolean;
@@ -57,31 +50,18 @@ export async function connectYoutubeChannel(
   }
 
   const supabase = await createClient();
-  const auth = await getOrgMemberContext(supabase);
+  const auth = await getOrgEditorContext(supabase);
   if (!auth.ok) return { error: auth.error };
-
-  const config = getYouTubeOAuthConfig();
-  if (!config) return { error: "studioYoutubeOAuthNotConfigured" };
 
   const code = String(formData.get("code") ?? "").trim();
   if (!code) return { error: ActionErrorCode.unexpected };
 
-  const tokens = await exchangeCodeForTokens(config, code);
-  if (!tokens) return { error: "studioYoutubeTokenExchangeFailed" };
-
-  const ytTokenClient = supabase as unknown as UntypedSupabaseClient;
-  const upsertOk = await upsertStudioYouTubeChannelToken(ytTokenClient, {
-    organization_id: auth.ctx.organizationId,
-    channel_id: tokens.channelId,
-    channel_title: tokens.channelTitle,
-    access_token_cipher: encryptProviderSecret(tokens.accessToken),
-    refresh_token_cipher: encryptProviderSecret(tokens.refreshToken),
-    scopes: "https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly",
-    token_expiry: tokens.expiresAt.toISOString(),
-    connected_at: new Date().toISOString(),
-  });
-
-  if (!upsertOk) return { error: "studioYoutubeTokenSaveFailed" };
+  const done = await completeYoutubeOAuthConnection(
+    supabase,
+    auth.ctx.organizationId,
+    code,
+  );
+  if (!done.ok) return { error: done.error };
 
   revalidatePath("/dashboard/productions");
   return { ok: true };
@@ -117,7 +97,7 @@ export async function uploadEpisodeToYouTube(
   );
   if (!episode) return { error: ActionErrorCode.studioEpisodeNotFound };
 
-  const config = getYouTubeOAuthConfig();
+  const config = getYoutubeOAuthConfigFromEnv();
   if (!config) return { error: "studioYoutubeOAuthNotConfigured" };
 
   const ytTokenClient = supabase as unknown as UntypedSupabaseClient;
@@ -153,7 +133,16 @@ export async function uploadEpisodeToYouTube(
     if (!base64Part) return { error: "studioYoutubeInvalidVideo" };
     videoBuffer = Buffer.from(base64Part, "base64");
   } else {
-    const res = await fetch(url);
+    let fetchUrl = url;
+    const objectPath = resolveAssembledVideoStorageObjectPath(
+      url,
+      videoArtifact.metadata,
+    );
+    if (objectPath) {
+      const signed = await createSignedUrlForAssembledVideoPath(objectPath, 7200);
+      if (signed) fetchUrl = signed;
+    }
+    const res = await fetch(fetchUrl);
     if (!res.ok) return { error: "studioYoutubeVideoFetchFailed" };
     videoBuffer = Buffer.from(await res.arrayBuffer());
   }

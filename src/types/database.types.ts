@@ -1220,6 +1220,7 @@ export type Database = {
           id: string
           notes: string
           organization_id: string
+          pipeline_prefs: Json
           project_id: string | null
           publish_url: string | null
           status: string
@@ -1236,6 +1237,7 @@ export type Database = {
           id?: string
           notes?: string
           organization_id: string
+          pipeline_prefs?: Json
           project_id?: string | null
           publish_url?: string | null
           status: string
@@ -1252,6 +1254,7 @@ export type Database = {
           id?: string
           notes?: string
           organization_id?: string
+          pipeline_prefs?: Json
           publish_url?: string | null
           project_id?: string | null
           status?: string
@@ -1346,6 +1349,80 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_video_assembly_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          episode_id: string
+          error_message: string | null
+          id: string
+          input: Json
+          organization_id: string
+          output_artifact_id: string | null
+          started_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          episode_id: string
+          error_message?: string | null
+          id?: string
+          input?: Json
+          organization_id: string
+          output_artifact_id?: string | null
+          started_at?: string | null
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          episode_id?: string
+          error_message?: string | null
+          id?: string
+          input?: Json
+          organization_id?: string
+          output_artifact_id?: string | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_video_assembly_jobs_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_video_assembly_jobs_episode_id_fkey"
+            columns: ["episode_id"]
+            isOneToOne: false
+            referencedRelation: "studio_production_episodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_video_assembly_jobs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_video_assembly_jobs_output_artifact_id_fkey"
+            columns: ["output_artifact_id"]
+            isOneToOne: false
+            referencedRelation: "studio_production_artifacts"
             referencedColumns: ["id"]
           },
         ]
@@ -1556,6 +1633,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_studio_video_assembly_job: {
+        Args: Record<PropertyKey, never>
+        Returns: Database["public"]["Tables"]["studio_video_assembly_jobs"]["Row"][]
+      }
       user_organization_id: { Args: never; Returns: string }
       user_role: {
         Args: never

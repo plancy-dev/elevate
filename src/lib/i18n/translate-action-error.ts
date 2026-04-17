@@ -9,6 +9,7 @@ import {
   STUDIO_DRAFT_TEMPLATE_BIAS_MAX,
   STUDIO_DRAFT_TEMPLATE_NAME_MAX,
 } from "@/lib/studio-productions/draft-prompt-templates";
+import { PIPELINE_PREFS_JSON_MAX_BYTES } from "@/lib/studio-productions/episode-pipeline-prefs";
 
 type ActionErrorsTranslate = (
   key: string,
@@ -24,7 +25,12 @@ export function translateActionErrorMessage(
   t: ActionErrorsTranslate,
 ): string {
   if (!code) return "";
-  if (!isActionErrorCode(code)) return code;
+  if (!isActionErrorCode(code)) {
+    if (code.startsWith("runway_")) {
+      return t(ActionErrorCode.studioRunwayApiError);
+    }
+    return code;
+  }
   if (code === ActionErrorCode.settingsTextTooLong) {
     return t("settingsTextTooLong", { max: MAX_SETTINGS_TEXT_LEN });
   }
@@ -33,6 +39,11 @@ export function translateActionErrorMessage(
   }
   if (code === ActionErrorCode.studioMetadataTooLarge) {
     return t("studioMetadataTooLarge", { max: STUDIO_METADATA_JSON_MAX_CHARS });
+  }
+  if (code === ActionErrorCode.studioPipelinePrefsTooLarge) {
+    return t("studioPipelinePrefsTooLarge", {
+      max: Math.floor(PIPELINE_PREFS_JSON_MAX_BYTES / 1024),
+    });
   }
   if (code === ActionErrorCode.studioTopicLineTooLong) {
     return t("studioTopicLineTooLong", { max: STUDIO_TOPIC_LINE_MAX });

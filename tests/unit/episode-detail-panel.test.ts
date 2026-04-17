@@ -17,4 +17,8 @@ describe("parseEpisodeDetailPanelParam", () => {
     expect(parseEpisodeDetailPanelParam("draft ")).toBeNull();
     expect(parseEpisodeDetailPanelParam("artifacts")).toBeNull();
   });
+
+  it("maps legacy draft panel to pipeline", () => {
+    expect(parseEpisodeDetailPanelParam("draft")).toBe("pipeline");
+  });
 });

@@ -16,6 +16,10 @@ Before large feature work, align with **`memory-bank/creative-elevate-ai-pivot.m
 
 **Single hub:** [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) — layers (repo rules → memory-bank → gstack), decision table, and prompt contract. Bug/feature prompts work without manual paste: `.cursor/rules/ai-session-bootstrap.mdc`. Optional user formats: [`docs/AI_USER_TEMPLATES.md`](docs/AI_USER_TEMPLATES.md). Forking the workflow: [`docs/AI_WORKFLOW_PORTABILITY.md`](docs/AI_WORKFLOW_PORTABILITY.md).
 
+## GitHub Issues · Figma · remote task queue
+
+**Process (issues ↔ PR ↔ design ↔ gstack):** [`docs/DEV_PROCESS_GITHUB.md`](docs/DEV_PROCESS_GITHUB.md). **Studio scene render Figma + labels:** [`.github/DESIGN.md`](.github/DESIGN.md). List open Studio-tagged issues locally: `pnpm issues:studio` (requires [GitHub CLI](https://cli.github.com/) `gh auth login`).
+
 ## gstack (optional dev workflow)
 
 This repo can include **[gstack](https://github.com/garrytan/gstack)** under `.agents/skills/gstack` for Claude Code / Cursor skills. **Install:** [`docs/GSTACK.md`](docs/GSTACK.md). **Skill list:** `CLAUDE.md` § gstack.

@@ -10,6 +10,7 @@ import { decryptProviderSecret } from "@/lib/studio-integrations/crypto";
 import type { EpisodeDraftRole } from "@/lib/studio-productions/constants";
 import { EPISODE_DRAFT_ROLES } from "@/lib/studio-productions/constants";
 import {
+  isAllowedDraftModel,
   resolveDraftModel,
   type StudioDraftLlmProvider,
 } from "@/lib/studio-productions/episode-llm-models";
@@ -73,6 +74,78 @@ export async function getOrgLlmCredential(
   );
   if (openai) return openai;
   return getOrgLlmCredentialForProvider(supabase, organizationId, "anthropic");
+}
+
+/**
+ * Picks OpenAI vs Anthropic credentials from the allowlisted model id (same rules as
+ * timed script / packaging presteps). Avoids using OpenAI when the user selected a Claude model.
+ */
+export async function resolveOrgLlmCredentialForDraftModel(
+  supabase: SupabaseClient<Database>,
+  organizationId: string,
+  requestedModel: string,
+): Promise<
+  | { ok: true; cred: OrgLlmCredential; model: string }
+  | { ok: false }
+> {
+  const availability = await getOrgLlmProviderAvailability(
+    supabase,
+    organizationId,
+  );
+
+  if (isAllowedDraftModel("anthropic", requestedModel) && availability.anthropic) {
+    const cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      organizationId,
+      "anthropic",
+    );
+    if (!cred) return { ok: false };
+    return {
+      ok: true,
+      cred,
+      model: resolveDraftModel("anthropic", requestedModel),
+    };
+  }
+  if (isAllowedDraftModel("openai", requestedModel) && availability.openai) {
+    const cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      organizationId,
+      "openai",
+    );
+    if (!cred) return { ok: false };
+    return {
+      ok: true,
+      cred,
+      model: resolveDraftModel("openai", requestedModel),
+    };
+  }
+  if (availability.anthropic) {
+    const cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      organizationId,
+      "anthropic",
+    );
+    if (!cred) return { ok: false };
+    return {
+      ok: true,
+      cred,
+      model: resolveDraftModel("anthropic", requestedModel),
+    };
+  }
+  if (availability.openai) {
+    const cred = await getOrgLlmCredentialForProvider(
+      supabase,
+      organizationId,
+      "openai",
+    );
+    if (!cred) return { ok: false };
+    return {
+      ok: true,
+      cred,
+      model: resolveDraftModel("openai", requestedModel),
+    };
+  }
+  return { ok: false };
 }
 
 /** True if any of hook / title / script_draft has non-whitespace content. */

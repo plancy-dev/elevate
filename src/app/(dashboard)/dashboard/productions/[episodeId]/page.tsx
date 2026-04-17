@@ -12,6 +12,7 @@ import {
   getStudioEpisodeForOrg,
   listStudioArtifactsForEpisode,
 } from "@/lib/data/studio-productions";
+import { getLatestActiveAssemblyJobForEpisode } from "@/lib/data/studio-video-assembly-jobs";
 import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrations/crypto";
 import { getOrgProviderApiKey } from "@/lib/studio-integrations/org-provider-secret";
 import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/feature";
@@ -77,6 +78,12 @@ export default async function ProductionEpisodePage({ params }: Props) {
   const studioProjects = await listStudioProjectsForOrg(supabase, orgId);
 
   const artifacts = await listStudioArtifactsForEpisode(
+    supabase,
+    episodeId,
+    orgId,
+  );
+
+  const activeAssemblyJob = await getLatestActiveAssemblyJobForEpisode(
     supabase,
     episodeId,
     orgId,
@@ -175,6 +182,8 @@ export default async function ProductionEpisodePage({ params }: Props) {
             youtubeChannelTitle={youtubeChannelTitle}
             episodeFormat={episodeFormat}
             distributionChannelLabel={distributionChannelLabel}
+            activeAssemblyJob={activeAssemblyJob}
+            brandGuide={episode.studio_projects?.brand_guide?.trim() ?? null}
             helpSection={
               <section
                 className="rounded-xl border border-dashed border-border-subtle bg-layer-02/30 px-4 py-3"

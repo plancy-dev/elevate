@@ -5,6 +5,8 @@
 **AI Content Factory — Phase S (YouTube 콘텐츠 파이프라인)**  
 North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 기존 Studio Productions 원장 + Runway 연동을 확장하여 **스크립트 → TTS → 영상 → 조립 → YouTube 업로드** 파이프라인 구축. 상세: [`PLAN-studio-content-factory.md`](../docs/features/PLAN-studio-content-factory.md) · [`ADR-007`](../docs/adr/ADR-007-youtube-content-factory.md).
 
+**INIT → … → ARCHIVE (2026-04-17) — 파이프라인 「초안 저장됨」→ 훅·초안 다이얼로그:** SoT: [`tasks.md`](tasks.md) **§ G3.1.2** · 아카이브 허브 [`archive/work-history/archive-pipeline-draft-dialog-2026-04.md`](archive/work-history/archive-pipeline-draft-dialog-2026-04.md) · CREATIVE/REFLECT 동일 폴더. **백로그:** PostHog·포커스 a11y — [`tasks.md`](tasks.md) 백로그 표 P2.
+
 ### 최근 출시 (앵커)
 
 **Library · Billing · Lemon (2026-04)** — 제목 상세·체크아웃 진입, 구매 기록, 빌링 중복 카드 제거 및 사용자용 i18n 정리. 아카이브: [`archive/work-history/archive-dashboard-billing-library-lemon-2026-04.md`](archive/work-history/archive-dashboard-billing-library-lemon-2026-04.md).

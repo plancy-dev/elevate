@@ -143,6 +143,16 @@ export function isAllowedDraftModel(
   return list.some((o) => o.id === model);
 }
 
+/** Infer OpenAI vs Anthropic from a draft model id (pipeline shortcut strip). */
+export function draftModelProviderFromModelId(
+  modelId: string,
+): StudioDraftLlmProvider | null {
+  const m = modelId.trim();
+  if ((OPENAI_DRAFT_MODELS as readonly string[]).includes(m)) return "openai";
+  if ((ANTHROPIC_DRAFT_MODELS as readonly string[]).includes(m)) return "anthropic";
+  return null;
+}
+
 /** Picks allowlisted model or falls back to default for the provider. */
 export function resolveDraftModel(
   provider: StudioDraftLlmProvider,
@@ -178,6 +188,18 @@ export function chooseStudioDraftLlmProvider(
   }
   if (availability.openai && !availability.anthropic) return "openai";
   if (!availability.openai && availability.anthropic) return "anthropic";
-  if (availability.openai && availability.anthropic) return "openai";
+  /** Prefer Anthropic when both keys exist so the default model is latest Claude Opus. */
+  if (availability.openai && availability.anthropic) return "anthropic";
   return null;
+}
+
+/** Default provider for the draft UI when the org has one or both keys configured. */
+export function defaultStudioDraftLlmProvider(availability: {
+  openai: boolean;
+  anthropic: boolean;
+}): StudioDraftLlmProvider {
+  if (availability.openai && !availability.anthropic) return "openai";
+  if (!availability.openai && availability.anthropic) return "anthropic";
+  if (availability.openai && availability.anthropic) return "anthropic";
+  return "openai";
 }

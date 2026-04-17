@@ -7,7 +7,7 @@
 
 **Live capture caveat:** Red **“N · N Issue(s)”** badges are the **Next.js development overlay**, not product chrome. They may obscure corners in screenshots; treat as environment noise unless the same artifact appears in production.
 
-**Dev / hydration (audit tooling):** The Cursor IDE **browser MCP** injects `data-cursor-ref` on nodes for automation. That attribute is **not** rendered by this app (there are **no** `data-cursor-ref` usages in the repository). If the terminal shows *“A tree hydrated but some attributes… didn’t match”* and the diff is only `data-cursor-ref`, treat it as **tooling noise** when reproducing with Cursor’s browser. For a clean hydration check, use a normal browser session or `pnpm build && pnpm start` without DOM instrumentation.
+**Dev / hydration (audit tooling):** The Cursor IDE **browser MCP** injects `data-cursor-ref` on nodes for automation. That attribute is **not** rendered by this app (there are **no** `data-cursor-ref` usages in the repository). If the terminal shows *“A tree hydrated but some attributes… didn’t match”* and the diff is only `data-cursor-ref`, treat it as **tooling noise** when reproducing with Cursor’s browser (the stack may name `ProductionEpisodeWorkbenchInner` even though the mismatch is still injection-only). For a clean hydration check, use a normal browser session or `pnpm build && pnpm start` without DOM instrumentation.
 
 ---
 

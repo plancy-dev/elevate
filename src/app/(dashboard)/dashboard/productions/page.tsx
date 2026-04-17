@@ -17,7 +17,6 @@ import { getStudioIntegrationsPageData } from "@/actions/studio-org-integrations
 import {
   isStudioIntegrationsEncryptionConfigured,
   readStudioIntegrationsServerEnabled,
-  readStudioIntegrationsUiFlag,
 } from "@/lib/studio-integrations";
 import { ProductionsChannelFilter } from "@/components/dashboard/productions-channel-filter";
 import {
@@ -99,7 +98,6 @@ export default async function ProductionsListPage({ searchParams }: PageProps) {
     getStudioIntegrationsPageData(),
   ]);
 
-  const integrationsUiPreview = readStudioIntegrationsUiFlag();
   const integrationsServerCalls = readStudioIntegrationsServerEnabled();
   const integrationsEncryption = isStudioIntegrationsEncryptionConfigured();
 
@@ -167,7 +165,8 @@ export default async function ProductionsListPage({ searchParams }: PageProps) {
       connections: integrationsPage.connections,
       encryptionConfigured: integrationsEncryption,
       serverCallsEnabled: integrationsServerCalls,
-      uiPreview: integrationsUiPreview,
+      youtubeOAuthEnvConfigured: integrationsPage.youtubeOAuthEnvConfigured,
+      youtubeChannelTitle: integrationsPage.youtubeChannelTitle,
     },
   };
 

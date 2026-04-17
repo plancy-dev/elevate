@@ -3,15 +3,16 @@
  * Concatenates scene clips, overlays TTS audio, burns in SRT subtitles.
  * Outputs a 9:16 H.264/AAC MP4.
  *
- * Requires `ffmpeg` binary accessible on the server (Docker, system install, or Edge Function).
+ * Requires `ffmpeg` binary accessible on the process (Next.js server, or the assembly worker).
  */
-import "server-only";
 
 import { execFile } from "node:child_process";
 import { writeFile, unlink, mkdtemp, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { promisify } from "node:util";
+
+import { resolveFfmpegBinary, resolveFfprobeBinary } from "@/lib/studio-productions/ffmpeg-binary";
 
 const execFileAsync = promisify(execFile);
 
@@ -42,7 +43,7 @@ async function downloadToFile(url: string, filePath: string): Promise<void> {
 
 async function ffmpegAvailable(): Promise<boolean> {
   try {
-    await execFileAsync("ffmpeg", ["-version"], { timeout: 5000 });
+    await execFileAsync(resolveFfmpegBinary(), ["-version"], { timeout: 5000 });
     return true;
   } catch {
     return false;
@@ -66,7 +67,14 @@ export async function assembleVideo(
   }
 
   if (!(await ffmpegAvailable())) {
-    return { ok: false, code: "ffmpeg_not_found", message: "ffmpeg binary not found on PATH" };
+    const hint = process.env.FFMPEG_PATH
+      ? `FFMPEG_PATH=${process.env.FFMPEG_PATH}`
+      : "Install ffmpeg (e.g. brew install ffmpeg) or set FFMPEG_PATH to the binary.";
+    return {
+      ok: false,
+      code: "ffmpeg_not_found",
+      message: `ffmpeg not executable (${hint})`,
+    };
   }
 
   const workDir = await mkdtemp(join(tmpdir(), "elevate-assembly-"));
@@ -121,7 +129,7 @@ export async function assembleVideo(
       outputPath,
     });
 
-    await execFileAsync("ffmpeg", ffmpegArgs, {
+    await execFileAsync(resolveFfmpegBinary(), ffmpegArgs, {
       timeout: 300_000,
       maxBuffer: 50 * 1024 * 1024,
     });
@@ -153,6 +161,22 @@ type FfmpegBuildArgs = {
   outputPath: string;
 };
 
+/** libass / fontconfig family name — must exist on the host (install fonts-noto-cjk on Linux workers). */
+function resolvedSubtitleFontName(): string {
+  return process.env.VIDEO_ASSEMBLY_SUBTITLE_FONT?.trim() || "Noto Sans CJK KR";
+}
+
+function buildSubtitlesFilterChainSegment(srtPath: string): string {
+  const escapedPath = srtPath.replace(/'/g, "'\\''").replace(/:/g, "\\:");
+  const font = resolvedSubtitleFontName();
+  const fontsdir = process.env.VIDEO_ASSEMBLY_SUBTITLE_FONTSDIR?.trim();
+  const style = `FontSize=24,Fontname=${font},PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2,Alignment=2,MarginV=80`;
+  const base = `subtitles='${escapedPath}':charenc=UTF-8:force_style='${style}'`;
+  if (!fontsdir) return base;
+  const escDir = fontsdir.replace(/'/g, "'\\''").replace(/:/g, "\\:");
+  return `subtitles='${escapedPath}':fontsdir='${escDir}':charenc=UTF-8:force_style='${style}'`;
+}
+
 function buildFfmpegArgs(opts: FfmpegBuildArgs): string[] {
   const args: string[] = ["-y"];
 
@@ -174,10 +198,7 @@ function buildFfmpegArgs(opts: FfmpegBuildArgs): string[] {
   videoStream = "[vscaled]";
 
   if (opts.srtPath) {
-    const escapedPath = opts.srtPath.replace(/'/g, "'\\''").replace(/:/g, "\\:");
-    filterParts.push(
-      `${videoStream}subtitles='${escapedPath}':force_style='FontSize=24,PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2,Alignment=2,MarginV=80'[vsub]`,
-    );
+    filterParts.push(`${videoStream}${buildSubtitlesFilterChainSegment(opts.srtPath)}[vsub]`);
     videoStream = "[vsub]";
   }
 
@@ -215,7 +236,7 @@ function buildFfmpegArgs(opts: FfmpegBuildArgs): string[] {
 
 async function probeDuration(filePath: string): Promise<number> {
   try {
-    const { stdout } = await execFileAsync("ffprobe", [
+    const { stdout } = await execFileAsync(resolveFfprobeBinary(), [
       "-v", "quiet",
       "-show_entries", "format=duration",
       "-of", "default=noprint_wrappers=1:nokey=1",

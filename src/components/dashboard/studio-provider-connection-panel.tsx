@@ -177,6 +177,12 @@ export function StudioProviderConnectionPanel({
         </p>
       </div>
 
+      {providerId === "youtube_data" ? (
+        <p className="rounded-lg border border-border-subtle/80 bg-layer-02/35 px-4 py-3 text-xs text-text-tertiary leading-relaxed">
+          {t("integrationsYoutubeDataUploadHint")}
+        </p>
+      ) : null}
+
       <div className="rounded-lg border border-border-subtle/80 bg-layer-02/35 px-4 py-3 space-y-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
           {t("integrationsKeySourceHeading")}

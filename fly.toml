@@ -1,0 +1,49 @@
+# Fly.io — Elevate **video assembly worker** (FFmpeg + Supabase job poll).
+# Next.js (Vercel) is deployed separately; this app only runs `workers/video-assembly/run.ts`.
+#
+# First-time: `fly auth login` → `fly apps create elevate-video-assembly` (or change `app` below)
+# → set secrets → `fly deploy`
+#
+# Docs: docs/VIDEO_ASSEMBLY_WORKER.md
+
+app = "elevate-video-assembly"
+# Tokyo (Narita). `icn` (Seoul) often returns "cannot host your machine" for this VM class; `nrt` is a stable Asia option.
+primary_region = "nrt"
+
+kill_signal = "SIGINT"
+# Allow in-flight FFmpeg to finish when replacing a machine (encode can exceed 30s).
+kill_timeout = "5m"
+
+[build]
+  dockerfile = "workers/video-assembly/Dockerfile"
+
+[env]
+  TZ = "Asia/Seoul"
+  NODE_ENV = "production"
+  # Fly sets PORT for the process; matches http_service.internal_port below.
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 4
+    hard_limit = 8
+
+  [[http_service.checks]]
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "20s"
+    method = "GET"
+    path = "/health"
+
+# One machine: one concurrent FFmpeg encode (claim is single-job per process).
+# Raise memory if OOM during long Shorts; scale out with `fly scale count 2` (SKIP_LOCKED).
+[[vm]]
+  memory = "2gb"
+  cpu_kind = "shared"
+  cpus = 2

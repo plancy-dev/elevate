@@ -9,14 +9,11 @@ import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/f
 import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrations/crypto";
 import {
   getOrgLlmCredentialForProvider,
-  getOrgLlmProviderAvailability,
-  type OrgLlmCredential,
+  resolveOrgLlmCredentialForDraftModel,
 } from "@/lib/studio-productions/episode-llm";
 import {
   DEFAULT_PACKAGING_DRAFT_MODEL_ID,
   TIMED_SCRIPT_HEURISTIC_MODEL_ID,
-  isAllowedDraftModel,
-  resolveDraftModel,
 } from "@/lib/studio-productions/episode-llm-models";
 import { parsePackagingDraftContent } from "@/lib/studio-productions/packaging-draft";
 import { draftTripleFromArtifactTimestamps } from "@/lib/studio-productions/resolve-episode-draft-artifacts";
@@ -82,78 +79,6 @@ async function upsertLatestArtifact(
   });
   if (error) return { ok: false };
   return { ok: true };
-}
-
-/**
- * Resolve OpenAI or Anthropic credentials for an allowlisted draft/chat model id
- * (same selection rules as packaging draft).
- */
-async function resolveOrgLlmCredentialForDraftModel(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  organizationId: string,
-  requestedModel: string,
-): Promise<
-  | { ok: true; cred: OrgLlmCredential; model: string }
-  | { ok: false }
-> {
-  const availability = await getOrgLlmProviderAvailability(
-    supabase,
-    organizationId,
-  );
-
-  if (isAllowedDraftModel("anthropic", requestedModel) && availability.anthropic) {
-    const cred = await getOrgLlmCredentialForProvider(
-      supabase,
-      organizationId,
-      "anthropic",
-    );
-    if (!cred) return { ok: false };
-    return {
-      ok: true,
-      cred,
-      model: resolveDraftModel("anthropic", requestedModel),
-    };
-  }
-  if (isAllowedDraftModel("openai", requestedModel) && availability.openai) {
-    const cred = await getOrgLlmCredentialForProvider(
-      supabase,
-      organizationId,
-      "openai",
-    );
-    if (!cred) return { ok: false };
-    return {
-      ok: true,
-      cred,
-      model: resolveDraftModel("openai", requestedModel),
-    };
-  }
-  if (availability.anthropic) {
-    const cred = await getOrgLlmCredentialForProvider(
-      supabase,
-      organizationId,
-      "anthropic",
-    );
-    if (!cred) return { ok: false };
-    return {
-      ok: true,
-      cred,
-      model: resolveDraftModel("anthropic", requestedModel),
-    };
-  }
-  if (availability.openai) {
-    const cred = await getOrgLlmCredentialForProvider(
-      supabase,
-      organizationId,
-      "openai",
-    );
-    if (!cred) return { ok: false };
-    return {
-      ok: true,
-      cred,
-      model: resolveDraftModel("openai", requestedModel),
-    };
-  }
-  return { ok: false };
 }
 
 /**

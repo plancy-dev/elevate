@@ -1,8 +1,10 @@
 "use client";
 
+import { Eye, RotateCw, UploadCloud } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { PipelineStepAdvancedToggle } from "@/components/dashboard/pipeline-step-advanced-toggle";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";
@@ -148,14 +150,10 @@ export function YoutubeUploadPipelineStep({
           </div>
           <div className="flex flex-wrap items-center gap-1.5 shrink-0">
             {!disabled ? (
-              <button
-                type="button"
-                className="text-[10px] text-text-tertiary hover:text-text-secondary px-1"
-                onClick={() => setCardAdvOpen((p) => !p)}
-                aria-expanded={cardAdvOpen}
-              >
-                {cardAdvOpen ? "\u25B2" : "\u2699"}
-              </button>
+              <PipelineStepAdvancedToggle
+                open={cardAdvOpen}
+                onToggle={() => setCardAdvOpen((p) => !p)}
+              />
             ) : null}
             <Button
               type="button"
@@ -163,8 +161,12 @@ export function YoutubeUploadPipelineStep({
               size="sm"
               disabled={disabled}
               onClick={() => openModal("preview")}
+              aria-label={t("pipelineYoutubeButtonView")}
+              title={t("pipelineYoutubeButtonView")}
+              className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
             >
-              {t("pipelineYoutubeButtonView")}
+              <Eye className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
+              <span className="hidden sm:inline">{t("pipelineYoutubeButtonView")}</span>
             </Button>
             <Button
               type="button"
@@ -172,8 +174,28 @@ export function YoutubeUploadPipelineStep({
               size="sm"
               disabled={disabled}
               onClick={() => openModal("upload")}
+              aria-label={
+                hasYoutubePublish
+                  ? t("pipelineYoutubeButtonReupload")
+                  : t("pipelineYoutubeButtonUpload")
+              }
+              title={
+                hasYoutubePublish
+                  ? t("pipelineYoutubeButtonReupload")
+                  : t("pipelineYoutubeButtonUpload")
+              }
+              className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
             >
-              {hasYoutubePublish ? t("pipelineYoutubeButtonReupload") : t("pipelineYoutubeButtonUpload")}
+              {hasYoutubePublish ? (
+                <RotateCw className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
+              ) : (
+                <UploadCloud className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
+              )}
+              <span className="hidden sm:inline">
+                {hasYoutubePublish
+                  ? t("pipelineYoutubeButtonReupload")
+                  : t("pipelineYoutubeButtonUpload")}
+              </span>
             </Button>
           </div>
         </div>
@@ -191,7 +213,7 @@ export function YoutubeUploadPipelineStep({
           <p className="mt-1.5 text-[10px] text-text-tertiary leading-relaxed pl-7">
             {t("pipelineYoutubeNotConnected")}{" "}
             <Link
-              href="/dashboard/productions?studio=integrations"
+              href="/dashboard/productions?studio=channels"
               className="font-medium text-primary hover:underline"
             >
               {t("draftRunwayIntegrationsLink")}

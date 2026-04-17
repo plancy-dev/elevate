@@ -25,6 +25,7 @@
 | A4 | AI 문서 통합 — gstack ↔ Memory Bank 허브 [`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md), `AI_USAGE`·`GSTACK`·README 정렬 | ✅ |
 | A5 | 세션 자동 부트스트랩 [`ai-session-bootstrap.mdc`](../.cursor/rules/ai-session-bootstrap.mdc) · [`AI_USER_TEMPLATES.md`](../docs/AI_USER_TEMPLATES.md) · [`AI_WORKFLOW_PORTABILITY.md`](../docs/AI_WORKFLOW_PORTABILITY.md) | ✅ |
 | A6 | 킬링 서비스 중심 랜딩·IA — `en.json`·Product 슬러그·Studio 플레이스홀더·[`ADR-002`](../docs/adr/ADR-002-prompt-studio-mvp.md) | ✅ |
+| A7 | 원격 작업 추적 — GitHub Issues/PR/Figma/gh · [`docs/DEV_PROCESS_GITHUB.md`](../docs/DEV_PROCESS_GITHUB.md) · [`.github/DESIGN.md`](../.github/DESIGN.md) · `pnpm issues:studio` | ✅ |
 
 ---
 
@@ -135,6 +136,52 @@
 
 - [x] 팀·운영자: 저장소 내 경로 안내 (`docs/RUNWAY_SHORTS_RUNBOOK.md`, `docs/RUNWAY_SCENE_BUILDER_STEP2.md`) — 공개 Notion URL은 필요 시 `NEXT_PUBLIC_*` 등으로 별도 추가 가능  
 - [x] **위치:** `Dashboard.productions.helpRunbook` — 에피소드 상세 도움말 블록 두 번째 문단 (`/dashboard/productions/[episodeId]`)
+
+#### G3.1.2 — 파이프라인 **「초안 저장됨」** → 훅·초안 관리 다이얼로그 (INIT · 2026-04-17)
+
+> **목표:** `tab=episode&episodePanel=pipeline` 제작 파이프라인 1단계에서 **「초안 저장됨」** 카드를 **열고 닫을 수 있는 전용 다이얼로그**로 연결해, 별도 **훅·초안(`episodePanel=draft`)** 탭 이동 없이 초안(훅·제목·스크립트·저장·(선택) LLM 생성·템플릿)을 관리한다.  
+> **비목표 (INIT):** 기존 `production-episode-draft-panel.tsx` UI를 그대로 iframe/복제하는 것 — **디자인 시스템·대시보드 UX 원칙**에 맞춘 **사용자 중심 레이아웃**으로 재구성 (`docs/design/DASHBOARD_UX_PRINCIPLES.md`, `VISUAL_LANGUAGE_V2.md`).  
+> **데이터:** 기존 `saveStudioEpisodeDraftManual` · `studio_production_artifacts`(hook/title/script_draft) · 스냅샷 — **스키마 변경 없이** 1차 구현 가능.
+
+| INIT 앵커 | 파일 / 메모 |
+|-----------|-------------|
+| 파이프라인 카드 | [`production-episode-pipeline.tsx`](../src/components/dashboard/production-episode-pipeline.tsx) `PreprodDraftStepRow` · [`episode-draft-workbench.tsx`](../src/components/dashboard/episode-draft-workbench.tsx) |
+| 초안 패널 (기능 SoT) | [`production-episode-draft-panel.tsx`](../src/components/dashboard/production-episode-draft-panel.tsx) → `EpisodeDraftWorkbench` `variant="panel"` |
+| 서버 액션 | [`src/actions/studio-episode-llm.ts`](../src/actions/studio-episode-llm.ts) `saveStudioEpisodeDraftManual`, `generateStudioEpisodeDraft` 등 |
+| 모달 프리미티브 | [`src/components/ui/modal.tsx`](../src/components/ui/modal.tsx) — 파이프라인은 이미 `Modal`로 View 모달 사용 중; 다이얼로그는 동일 계열 또는 확장 |
+| 서브탭 라우팅 | [`src/lib/studio-productions/episode-detail-panel.ts`](../src/lib/studio-productions/episode-detail-panel.ts) `draft` vs `pipeline` |
+
+**복잡도 초안:** **L3** — 신규/분리 컴포넌트(다이얼로그 본문), 기존 패널과 **로직 공유** 여부(훅·컴포저블 vs 중복 최소화), i18n·접근성(포커스 트랩·닫기), 선택 시 참조 패널 노출 범위.
+
+**권장 워크플로:** **PLAN**(정보 구조·탭 vs 단일 스크롤·다이얼로그에 넣을 기능 범위) → **CREATIVE**(레이아웃 와이어·DS 토큰) → **BUILD** → **REFLECT**.
+
+**PLAN 확정 (2026-04-17)**
+
+| 결정 | 내용 |
+|------|------|
+| **범위 (MVP)** | 다이얼로그 = 파이프라인에서 **초안 작업의 속도 레인**. **기능은 draft 탭의 편집 가능 본문과 동일** — LLM 생성·다듬기·비교(apply/revert)·모델/템플릿 선택·`DraftTemplateManageDialog`·수동 저장·**스냅샷 목록+복원**. **제외:** `ProductionEpisodeReferencePanel` · 중첩 `ProductionEpisodePipeline` (이미 각각 별도 서브탭). |
+| **draft 탭 역할** | 긴 작업·**소스·레퍼런스**·에피소드 카피( `episodePanelLeadDraft` )·한 화면에 파이프라인까지 펼친 **작업대**. 다이얼로그는 **「저장됨」카드에서 바로 이어서 편집**할 때만 쓰고, 필요 시 푸터/보조 링크로 `episodePanel=draft` 이동(선택). |
+| **데이터 스레딩** | [`production-episode-detail-workspace.tsx`](../src/components/dashboard/production-episode-detail-workspace.tsx)에서 이미 갖는 값을 `ProductionEpisodePipeline`에 추가: `canEditDraft`, `customDraftTemplates`, `draftLlmAvailability`, `draftSnapshots`. (서버 액션·RLS 변경 없음.) |
+| **구현 전략** | `ProductionEpisodeDraftPanelEditable`를 그대로 두 번 감싸지 않고, **공유 본문**을 `episode-draft-workbench.tsx`(가칭) 등으로 **추출**해 패널(embedded)과 다이얼로그가 동일 로직을 쓰게 한다. 다이얼로그는 `Modal` `size`를 **`xl` 이상(필요 시 `max-w-*` 한 단계 추가)**으로 하고, 본문은 **단일 스크롤** + 섹션 구분은 `border`/`divide`로 [`DASHBOARD_UX_PRINCIPLES.md`](../docs/design/DASHBOARD_UX_PRINCIPLES.md) 정합. |
+| **마운트** | 다이얼로그 **열릴 때만** 워크벤치를 마운트해, 에피소드 화면에 이미 존재하는 숨김 draft 패널과 **편집기 인스턴스 난립**을 완화. 닫을 때 미저장 편집이 있으면 **닫기 확인**(선택·CREATIVE에서 결정). |
+| **카드 UX** | `PreprodInfoRow`: 완료+편집 가능 시 **클릭 가능**(또는 보조 **「편집」** 텍스트 버튼). 미완료 시 기존 힌트 유지 + 동일 진입으로 **빈 초안 작성**. `canEditDraft === false`면 카드는 비활성 또는 읽기 전용 메시지 + draft 탭 안내(패널과 동일 정책). |
+| **중첩 UI** | `DraftTemplateManageDialog`는 포털 사용 — **z-index**가 파이프라인 `Modal`(z-[80]) 위로 오는지 BUILD에서 확인. |
+| **분석** | PostHog 이벤트(다이얼로그 오픈)는 **선택**·2차. |
+
+**체크리스트 (완료 시 `[x]`)**
+
+- [x] PLAN: 다이얼로그에 포함할 기능(수동 저장만 vs 생성·템플릿·스냅샷 일부)과 **draft 탭과의 역할 분담** 한 문단
+- [x] CREATIVE: [`creative-pipeline-draft-dialog-2026-04.md`](archive/work-history/creative-pipeline-draft-dialog-2026-04.md) — 모달 셸·섹션 순서·카드 진입·미저장 닫기·DS 정렬
+- [x] BUILD: `PreprodDraftStepRow` + `EpisodeDraftWorkbench` 다이얼로그 · 미저장 닫기 확인 · `Modal` `2xl`/`stackClassName` — **✅ 2026-04**
+- [x] i18n: `Dashboard.productions` `pipelineDraft*` 키 (en/ko/ja/zh-CN/zh-TW)
+- [x] REFLECT (2026-04-17): [`reflect-pipeline-draft-dialog-2026-04.md`](archive/work-history/reflect-pipeline-draft-dialog-2026-04.md) — 성공 기준 대조·교훈·선택 후속
+- [x] ARCHIVE (2026-04-17): [`archive-pipeline-draft-dialog-2026-04.md`](archive/work-history/archive-pipeline-draft-dialog-2026-04.md) — 요약·수동 스모크 체크리스트·CREATIVE/REFLECT 아카이브 링크
+
+#### G3.1.3 — 파이프라인에서 **입력 소스**(INIT·레퍼런스) 참조 (BUILD · 2026-04-17)
+
+> **목표:** 소스·레퍼런스 탭에 넣은 링크·텍스트·메모(`artifact_role: reference_source`)를 **제작 파이프라인 탭**에서 끊김 없이 참고한다 (탭 이동 최소화).  
+> **SoT:** [`docs/features/PLAN-pipeline-source-visibility.md`](../docs/features/PLAN-pipeline-source-visibility.md) · [`pipeline-reference-context.ts`](../src/lib/studio-productions/pipeline-reference-context.ts) · UI [`pipeline-reference-sources-strip.tsx`](../src/components/dashboard/pipeline-reference-sources-strip.tsx) (`ProductionEpisodePipeline` 진행률 바 아래).  
+> **관련 UX:** 모델·사전 프롬프트 접기 — [`pipeline-step-advanced-toggle.tsx`](../src/components/dashboard/pipeline-step-advanced-toggle.tsx) (Lucide `SlidersHorizontal` / `ChevronUp`, 파이프라인·YouTube 업로드 카드).
 
 #### 의사결정 가이드 (이 블록만 읽어도 됨)
 
@@ -348,6 +395,7 @@
 | P2 | MICE 스키마 제거 또는 아카이브 | 데이터·고객 영향 검토 후 |
 | P2 | **롱폼·모바일 타이포 리듬** | ✅ Phase A–C [`docs/features/PLAN-responsive-longform-typography.md`](../docs/features/PLAN-responsive-longform-typography.md) — 배포 후 Lighthouse로 CV·LCP만 점검 |
 | P2 | **Studio AI 콘텐츠 OS** — 제공자·에셋·잡 레이어 ([`tasks.md`](tasks.md) § G3.3) | INIT 준비됨 → PLAN 후 단계적 BUILD |
+| P2 | **Studio 파이프라인 초안 다이얼로그** — PostHog `ELEVATE_STUDIO_PIPELINE_DRAFT_DIALOG_OPENED`(이름 합의) · 모달 **포커스 트랩**·오픈 시 **첫 필드/닫기 버튼** 초점(`Modal` / `EpisodeDraftWorkbench`) | G3.1.2 BUILD 완료 · 수동 스모크·CREATIVE §8은 [`archive-pipeline-draft-dialog-2026-04.md`](archive/work-history/archive-pipeline-draft-dialog-2026-04.md) |
 
 ---
 

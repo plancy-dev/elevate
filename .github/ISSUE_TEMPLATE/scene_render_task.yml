@@ -1,0 +1,44 @@
+name: Studio · Scene render task
+description: Track work for Studio scene render (Runway) cost UX and related design.
+title: "[Studio] "
+labels:
+  - area/studio
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use **Milestone** `Scene render · P0`–`P3` and link the **Figma** frame when applicable.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What changes and why.
+    validations:
+      required: true
+  - type: input
+    id: figma
+    attributes:
+      label: Figma frame URL
+      description: Share → copy link with **node-id=** (frame), not file root only. Use “N/A” only if truly no Figma.
+      placeholder: https://www.figma.com/design/...?node-id=...
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: One line — “Done means …”.
+      placeholder: "Done means: …"
+    validations:
+      required: true
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase
+      options:
+        - P0
+        - P1
+        - P2
+        - P3
+    validations:
+      required: true

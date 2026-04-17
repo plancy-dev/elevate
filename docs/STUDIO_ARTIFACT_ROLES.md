@@ -4,6 +4,7 @@ Episodes store **artifacts** (`studio_production_artifacts`) with free-text `art
 
 | Role | Typical content |
 |------|-----------------|
+| `reference_source` | INIT/input sources: URLs, pasted text, manual notes. Metadata: `source_type`, `source_label` (see Reference panel). Pipeline read-only surfacing: [`features/PLAN-pipeline-source-visibility.md`](./features/PLAN-pipeline-source-visibility.md). |
 | `script` | Hook, VO, captions — or a link to the doc |
 | `prompt` | Full text prompt (e.g. Runway Step 1 frame prompt) |
 | `settings` | JSON or prose for tool-specific options (e.g. Runway Step 2 selections); prefer `metadata` jsonb for structured blobs |
