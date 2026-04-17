@@ -18,7 +18,8 @@ Single place for **Figma** links and design↔engineering workflow for the Studi
 - **P3 Format and budget** — 포맷 프리셋, 예산 가드
 - **Explorations** — 실험·대안 레이아웃
 
-> Tip: Link a specific frame in GitHub issues with *Share → Copy link* on the frame (URL will include `node-id=`).
+> Tip: Link a specific frame in GitHub issues with *Share → Copy link* on the frame (URL will include `node-id=`).  
+> **Automation:** with `FIGMA_ACCESS_TOKEN` in `.env.local`, run `pnpm figma:list-links` (Markdown table) or `pnpm figma:list-links --frames` (every frame URL) — no manual `node-id` extraction.
 
 ## Figma backlog (GitHub)
 
@@ -30,8 +31,8 @@ Epic: [#1 — Studio · Scene render · cost & UX](https://github.com/plancy-dev
 | Foundation — pages & cover | [#4](https://github.com/plancy-dev/elevate/issues/4) | [File](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render) · [P0 Cost page](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=0-1) |
 | P0 Cost | [#5](https://github.com/plancy-dev/elevate/issues/5) | [P0 Cost](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=0-1) |
 | P1 Scene table | [#6](https://github.com/plancy-dev/elevate/issues/6) | [P1 Scene table](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=1-2) |
-| P2 Preflight | [#7](https://github.com/plancy-dev/elevate/issues/7) | [File](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render) (no P2 canvas yet — add page **P2 Preflight** in Figma, then replace) |
-| P3 Format & budget | [#8](https://github.com/plancy-dev/elevate/issues/8) | [File](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render) (no P3 canvas yet — add page **P3 Format and budget**, then replace) |
+| P2 Preflight | [#7](https://github.com/plancy-dev/elevate/issues/7) | [P2 Preflight](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=11-2) |
+| P3 Format & budget | [#8](https://github.com/plancy-dev/elevate/issues/8) | [P3 Format and budget](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=11-3) |
 | Explorations | [#9](https://github.com/plancy-dev/elevate/issues/9) | [Explorations](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=1-3) |
 | DESIGN.md ↔ Figma links | [#10](https://github.com/plancy-dev/elevate/issues/10) | This row — closed by PR that syncs the table |
 
