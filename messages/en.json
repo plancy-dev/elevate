@@ -1540,6 +1540,8 @@
       "pipelineScenePlanLlmNeedScript": "Save script text in the Draft step first.",
       "pipelineSceneBudgetSoftWarning": "Planned total duration is {seconds}s (high). Proceed if intentional.",
       "pipelineSceneBrandGuideOn": "Project brand guide will be merged into Runway visual prompts.",
+      "pipelineSceneEstimatedCredits": "Estimated Runway credits (before render): ~{credits}",
+      "pipelineSceneEstimatedCreditsDisclaimer": "Illustrative only — actual usage and billing are shown in your Runway account.",
       "pipelineSceneRunwayVideoModelLabel": "Runway video model",
       "pipelineSceneRunwayVideoModelHint": "Used for each scene clip when you run Scene render. Veo models use HD aspect presets; duration follows your scene plan (Veo 3 / 3.1 use 4, 6, or 8 seconds).",
       "pipelineSceneRunwayModelGen45": "Gen-4.5",

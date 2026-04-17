@@ -1532,6 +1532,8 @@
       "pipelineScenePlanLlmNeedScript": "請先在初稿步驟儲存腳本。",
       "pipelineSceneBudgetSoftWarning": "計畫總長度為 {seconds} 秒（偏高）。請確認後再繼續。",
       "pipelineSceneBrandGuideOn": "專案品牌指南將合併到 Runway 視覺提示詞中。",
+      "pipelineSceneEstimatedCredits": "預估 Runway 點數（算繪前）：約 {credits}",
+      "pipelineSceneEstimatedCreditsDisclaimer": "僅供參考；實際用量與計費以 Runway 帳戶為準。",
       "pipelineSceneRunwayVideoModelLabel": "Runway 影片模型",
       "pipelineSceneRunwayVideoModelHint": "執行場景算繪時用於每個片段。Veo 模型使用 HD 比例預設；長度依場景計畫（Veo 3 / 3.1 為 4、6 或 8 秒）。",
       "pipelineSceneRunwayModelGen45": "Gen-4.5",

@@ -35,6 +35,8 @@ Epic: [#1 — Studio · Scene render · cost & UX](https://github.com/plancy-dev
 | Explorations | [#9](https://github.com/plancy-dev/elevate/issues/9) | TBD (optional) |
 | DESIGN.md ↔ Figma links | [#10](https://github.com/plancy-dev/elevate/issues/10) | Close #10 when the TBD cells above are filled and verified |
 
+**Product (code, separate from Figma frames):** estimated Runway credits before scene render — [#12](https://github.com/plancy-dev/elevate/issues/12).
+
 ## GitHub workflow (this repo)
 
 - **Milestones:** `Scene render · P0` … `Scene render · P3` — group issues by delivery phase.
