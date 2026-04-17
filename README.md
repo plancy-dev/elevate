@@ -25,6 +25,7 @@ Elevate helps teams turn **measurable AI outcomes** into repeatable workflows: p
 | [`docs/design/SYSTEM.md`](docs/design/SYSTEM.md) | Design tokens, marketing vs app shell, component map |
 | [`docs/design/VISUAL_LANGUAGE_V2.md`](docs/design/VISUAL_LANGUAGE_V2.md) | Visual execution contract (accents, radius, rollout) |
 | [`docs/design/DASHBOARD_UX_PRINCIPLES.md`](docs/design/DASHBOARD_UX_PRINCIPLES.md) | Dashboard list/nav patterns (anti-template) |
+| [`.github/DESIGN.md`](.github/DESIGN.md) | Studio scene render — Figma link, GitHub labels/milestones, epic [#1](https://github.com/plancy-dev/elevate/issues/1) |
 | [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) | AI 도구 레이어 (gstack·Memory Bank·규칙) |
 | [`docs/AI_AGENT_MATURITY_REPORT.md`](docs/AI_AGENT_MATURITY_REPORT.md) | AI 에이전트 활용 성숙도·벤치마크·점수 (리포트) |
 | [`docs/MANUAL_OPERATOR_CHECKLIST.md`](docs/MANUAL_OPERATOR_CHECKLIST.md) | Toss / Supabase / PostHog / env 수동 작업 체크리스트 |

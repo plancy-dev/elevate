@@ -2,6 +2,8 @@
 
 <!-- What changed and why (1–3 sentences). -->
 
+**Issues:** `Closes #` / `Refs #` — Studio scene render epic: [`#1`](https://github.com/plancy-dev/elevate/issues/1) (when relevant).
+
 ## Release hygiene (check what applies)
 
 - [ ] **CHANGELOG** — `[Unreleased]` updated if user-visible or notable for operators.
