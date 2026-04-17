@@ -1532,6 +1532,8 @@
       "pipelineScenePlanLlmNeedScript": "先に下書きステップでスクリプトを保存してください。",
       "pipelineSceneBudgetSoftWarning": "計画された合計時間は {seconds} 秒です（高め）。意図的な場合のみ続行してください。",
       "pipelineSceneBrandGuideOn": "プロジェクトのブランドガイドが Runway のビジュアルプロンプトにマージされます。",
+      "pipelineSceneEstimatedCredits": "推定 Runway クレジット（レンダー前）: 約 {credits}",
+      "pipelineSceneEstimatedCreditsDisclaimer": "目安です。実際の利用・請求は Runway アカウントでご確認ください。",
       "pipelineSceneRunwayVideoModelLabel": "Runway 動画モデル",
       "pipelineSceneRunwayVideoModelHint": "シーンレンダー実行時に各クリップで使われます。Veo は HD のアスペクトプリセットを使い、長さはシーン計画に従います（Veo 3 / 3.1 は 4・6・8 秒）。",
       "pipelineSceneRunwayModelGen45": "Gen-4.5",

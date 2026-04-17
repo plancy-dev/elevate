@@ -19,6 +19,8 @@ import {
   parseRunwaySceneModelId,
   type RunwayTextToVideoModelId,
 } from "@/lib/studio-integrations/providers/runway/runway-scene-models";
+import { estimateSceneRenderCredits } from "@/lib/studio-integrations/providers/runway/runway-scene-credits-estimate";
+import { parseSceneRows } from "@/lib/studio-productions/scene-rows-json";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/lib/ui/app-toast";
 import { cn } from "@/lib/utils";
@@ -30,13 +32,6 @@ const RUNWAY_MODEL_LABEL_KEYS: Record<RunwayTextToVideoModelId, string> = {
   "veo3.1": "pipelineSceneRunwayModelVeo31",
   "veo3.1_fast": "pipelineSceneRunwayModelVeo31Fast",
   veo3: "pipelineSceneRunwayModelVeo3",
-};
-
-type SceneRow = {
-  index: number;
-  narration: string;
-  visualPrompt: string;
-  durationSeconds: number;
 };
 
 type PerIndex = Record<number, "queued" | "running" | "ok" | "error">;
@@ -60,38 +55,6 @@ async function mapPool<T, R>(
     }),
   );
   return results;
-}
-
-function parseSceneRows(payload: string): SceneRow[] | null {
-  try {
-    const raw = JSON.parse(payload) as unknown;
-    if (!Array.isArray(raw)) return null;
-    const out: SceneRow[] = [];
-    for (const item of raw) {
-      if (typeof item !== "object" || item === null) return null;
-      const o = item as Record<string, unknown>;
-      const index = typeof o.index === "number" && Number.isFinite(o.index) ? o.index : -1;
-      const narration = typeof o.narration === "string" ? o.narration : "";
-      const visualPrompt =
-        typeof o.visualPrompt === "string"
-          ? o.visualPrompt
-          : typeof o.visual_prompt === "string"
-            ? o.visual_prompt
-            : "";
-      const dur =
-        typeof o.durationSeconds === "number"
-          ? o.durationSeconds
-          : typeof o.duration_seconds === "number"
-            ? o.duration_seconds
-            : 5;
-      if (index < 0 || !narration.trim() || !visualPrompt.trim()) return null;
-      out.push({ index, narration, visualPrompt, durationSeconds: dur });
-    }
-    out.sort((a, b) => a.index - b.index);
-    return out;
-  } catch {
-    return null;
-  }
 }
 
 export function SceneRenderPipelineStep({
@@ -169,6 +132,16 @@ export function SceneRenderPipelineStep({
     () => Object.values(rowStatus).some((s) => s === "error"),
     [rowStatus],
   );
+
+  const parsedSceneRowsForEstimate = useMemo(
+    () => parseSceneRows(scenesJsonControlled),
+    [scenesJsonControlled],
+  );
+
+  const estimatedRunwayCredits = useMemo(() => {
+    if (!parsedSceneRowsForEstimate?.length) return null;
+    return estimateSceneRenderCredits(runwayModel, parsedSceneRowsForEstimate);
+  }, [parsedSceneRowsForEstimate, runwayModel]);
 
   const selectedPlanModelLabel = useMemo(
     () =>
@@ -456,6 +429,16 @@ export function SceneRenderPipelineStep({
         <p className="mt-1.5 text-[10px] text-text-tertiary leading-relaxed pl-7">
           {t("pipelineSceneBrandGuideOn")}
         </p>
+      ) : null}
+      {!disabled && estimatedRunwayCredits != null ? (
+        <div className="mt-1.5 space-y-0.5 pl-7">
+          <p className="text-[11px] font-medium text-text-secondary leading-snug">
+            {t("pipelineSceneEstimatedCredits", { credits: estimatedRunwayCredits })}
+          </p>
+          <p className="text-[10px] text-text-tertiary leading-relaxed">
+            {t("pipelineSceneEstimatedCreditsDisclaimer")}
+          </p>
+        </div>
       ) : null}
 
       {!disabled ? (
