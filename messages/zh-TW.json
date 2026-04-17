@@ -1539,6 +1539,7 @@
       "pipelineSceneColDurationSec": "秒",
       "pipelineSceneColEstCredits": "預估點數",
       "pipelineSceneColVisualPrompt": "畫面",
+      "pipelineSceneColNarration": "旁白",
       "pipelineSceneColStatus": "狀態",
       "pipelineScenePlanTableTotal": "合計（預估）：~{credits}",
       "pipelineSceneRunwayVideoModelLabel": "Runway 影片模型",

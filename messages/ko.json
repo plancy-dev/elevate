@@ -1547,6 +1547,7 @@
       "pipelineSceneColDurationSec": "초",
       "pipelineSceneColEstCredits": "예상 크레딧",
       "pipelineSceneColVisualPrompt": "비주얼",
+      "pipelineSceneColNarration": "나레이션",
       "pipelineSceneColStatus": "상태",
       "pipelineScenePlanTableTotal": "합계(추정): ~{credits}",
       "pipelineSceneRunwayVideoModelLabel": "Runway 비디오 모델",

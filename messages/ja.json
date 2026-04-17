@@ -1539,6 +1539,7 @@
       "pipelineSceneColDurationSec": "秒",
       "pipelineSceneColEstCredits": "推定クレジット",
       "pipelineSceneColVisualPrompt": "ビジュアル",
+      "pipelineSceneColNarration": "ナレーション",
       "pipelineSceneColStatus": "状態",
       "pipelineScenePlanTableTotal": "合計（推定）: ~{credits}",
       "pipelineSceneRunwayVideoModelLabel": "Runway 動画モデル",

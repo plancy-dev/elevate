@@ -1,7 +1,9 @@
 /**
  * Illustrative Runway **credits per second** by text-to-video model for UI estimates only.
  * Runway may change pricing; actual usage appears in the Runway dashboard — do not treat as billing truth.
- * Calibrate against current vendor docs, then update this table; keep UI disclaimer in sync with i18n (`messages/*.json`).
+ * Calibrate against current vendor docs (e.g. Runway API pricing guide:
+ * https://docs.dev.runwayml.com/guides/pricing/ ), then update this table; keep UI
+ * disclaimer in sync with i18n (`messages/*.json`).
  */
 import type { RunwayTextToVideoModelId } from "@/lib/studio-integrations/providers/runway/runway-scene-models";
 import type { SceneRow } from "@/lib/studio-productions/scene-rows-json";

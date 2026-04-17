@@ -1547,6 +1547,7 @@
       "pipelineSceneColDurationSec": "Sec",
       "pipelineSceneColEstCredits": "Est. credits",
       "pipelineSceneColVisualPrompt": "Visual",
+      "pipelineSceneColNarration": "Narration",
       "pipelineSceneColStatus": "Status",
       "pipelineScenePlanTableTotal": "Total (est.): ~{credits}",
       "pipelineSceneRunwayVideoModelLabel": "Runway video model",

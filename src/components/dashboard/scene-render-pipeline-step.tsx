@@ -1,6 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState, useTransition } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { ChevronDown, Eye, Play, RotateCw, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -456,7 +465,7 @@ export function SceneRenderPipelineStep({
       ) : null}
 
       {showPlanTable && estimatedRunwayCredits != null ? (
-        <div className="mt-2 pl-7 space-y-1.5">
+        <div className="mt-2.5 pl-7 space-y-2">
           <p className="text-[10px] font-medium text-text-tertiary">
             {t("pipelineScenePlanTableCaption")}
           </p>
@@ -464,20 +473,29 @@ export function SceneRenderPipelineStep({
             <table className="w-full min-w-[min(100%,22rem)] border-collapse text-left text-[11px] text-text-secondary">
               <thead>
                 <tr className="border-b border-border-subtle/60 text-[10px] font-medium text-text-tertiary">
-                  <th scope="col" className="py-1 pr-2 font-medium">
+                  <th scope="col" className="py-1.5 pr-2 font-medium">
                     {t("pipelineSceneColScene")}
                   </th>
-                  <th scope="col" className="py-1 pr-2 font-medium tabular-nums">
+                  <th scope="col" className="py-1.5 pr-2 font-medium tabular-nums">
                     {t("pipelineSceneColDurationSec")}
                   </th>
-                  <th scope="col" className="py-1 pr-2 font-medium tabular-nums">
+                  <th scope="col" className="py-1.5 pr-2 font-medium tabular-nums">
                     {t("pipelineSceneColEstCredits")}
                   </th>
-                  <th scope="col" className="py-1 pr-2 font-medium min-w-[7rem]">
+                  <th
+                    scope="col"
+                    className="hidden py-1.5 pr-2 font-medium lg:table-cell lg:max-w-[8rem] xl:max-w-[12rem]"
+                  >
+                    {t("pipelineSceneColNarration")}
+                  </th>
+                  <th
+                    scope="col"
+                    className="hidden py-1.5 pr-2 font-medium min-w-[7rem] md:table-cell"
+                  >
                     {t("pipelineSceneColVisualPrompt")}
                   </th>
                   {hasSceneActivity ? (
-                    <th scope="col" className="py-1 pl-1 font-medium text-right">
+                    <th scope="col" className="py-1.5 pl-1 font-medium text-right">
                       {t("pipelineSceneColStatus")}
                     </th>
                   ) : null}
@@ -500,53 +518,86 @@ export function SceneRenderPipelineStep({
                           : st === "queued"
                             ? t("pipelineSceneStatusQueued")
                             : null;
+                  const mobileRowSpan = hasSceneActivity ? 4 : 3;
+                  const narrationPreview = row.narration.trim();
                   return (
-                    <tr
-                      key={row.index}
-                      className="border-b border-border-subtle/35 last:border-b-0"
-                    >
-                      <td className="py-1 pr-2 align-top">
-                        {t("pipelineSceneRowLabel", { index: row.index + 1 })}
-                      </td>
-                      <td className="py-1 pr-2 align-top tabular-nums">{row.durationSeconds}</td>
-                      <td className="py-1 pr-2 align-top tabular-nums">~{perScene}</td>
-                      <td
-                        className="py-1 pr-2 align-top max-w-[10rem] truncate sm:max-w-[14rem]"
-                        title={row.visualPrompt}
-                      >
-                        {row.visualPrompt}
-                      </td>
-                      {hasSceneActivity ? (
-                        <td className="py-1 pl-1 align-top text-right">
-                          {statusLabel ? (
-                            <span
-                              className={cn(
-                                "inline-block rounded px-1.5 py-0.5 text-[10px] font-medium",
-                                st === "ok"
-                                  ? "bg-green-500/15 text-green-700 dark:text-green-400"
-                                  : st === "error"
-                                    ? "bg-danger/15 text-danger"
-                                    : st === "running"
-                                      ? "bg-primary/15 text-primary"
-                                      : "bg-layer-03 text-text-tertiary",
-                              )}
-                            >
-                              {statusLabel}
-                            </span>
-                          ) : (
-                            <span className="text-text-tertiary">—</span>
-                          )}
+                    <Fragment key={row.index}>
+                      <tr className="border-b border-border-subtle/35">
+                        <td className="py-1.5 pr-2 align-top">
+                          {t("pipelineSceneRowLabel", { index: row.index + 1 })}
                         </td>
+                        <td className="py-1.5 pr-2 align-top tabular-nums">{row.durationSeconds}</td>
+                        <td className="py-1.5 pr-2 align-top tabular-nums">~{perScene}</td>
+                        <td
+                          className="hidden max-w-[8rem] truncate align-top lg:table-cell xl:max-w-[12rem]"
+                          title={narrationPreview}
+                        >
+                          {narrationPreview}
+                        </td>
+                        <td
+                          className="hidden py-1.5 pr-2 align-top md:table-cell md:max-w-[10rem] md:truncate lg:max-w-[14rem]"
+                          title={row.visualPrompt}
+                        >
+                          {row.visualPrompt}
+                        </td>
+                        {hasSceneActivity ? (
+                          <td className="py-1.5 pl-1 align-top text-right">
+                            {statusLabel ? (
+                              <span
+                                className={cn(
+                                  "inline-block rounded px-1.5 py-0.5 text-[10px] font-medium",
+                                  st === "ok"
+                                    ? "bg-green-500/15 text-green-700 dark:text-green-400"
+                                    : st === "error"
+                                      ? "bg-danger/15 text-danger"
+                                      : st === "running"
+                                        ? "bg-primary/15 text-primary"
+                                        : "bg-layer-03 text-text-tertiary",
+                                )}
+                              >
+                                {statusLabel}
+                              </span>
+                            ) : (
+                              <span className="text-text-tertiary">—</span>
+                            )}
+                          </td>
+                        ) : null}
+                      </tr>
+                      <tr className="border-b border-border-subtle/35 md:hidden">
+                        <td
+                          colSpan={mobileRowSpan}
+                          className="pb-2 pt-0 text-[10px] leading-snug text-text-secondary"
+                        >
+                          <span className="font-medium text-text-tertiary">
+                            {t("pipelineSceneColVisualPrompt")}
+                            {":"}
+                          </span>{" "}
+                          <span className="line-clamp-2 break-words">{row.visualPrompt}</span>
+                        </td>
+                      </tr>
+                      {narrationPreview ? (
+                        <tr className="border-b border-border-subtle/35 last:border-b-0 lg:hidden">
+                          <td
+                            colSpan={mobileRowSpan}
+                            className="pb-2.5 pt-0 text-[10px] leading-snug text-text-secondary"
+                          >
+                            <span className="font-medium text-text-tertiary">
+                              {t("pipelineSceneColNarration")}
+                              {":"}
+                            </span>{" "}
+                            <span className="line-clamp-3 break-words">{narrationPreview}</span>
+                          </td>
+                        </tr>
                       ) : null}
-                    </tr>
+                    </Fragment>
                   );
                 })}
               </tbody>
               <tfoot>
                 <tr className="border-t border-border-subtle/60">
                   <td
-                    colSpan={hasSceneActivity ? 5 : 4}
-                    className="pt-1.5 text-[10px] text-text-tertiary text-right"
+                    colSpan={hasSceneActivity ? 6 : 5}
+                    className="pt-2 text-[10px] text-text-tertiary text-right"
                   >
                     {t("pipelineScenePlanTableTotal", { credits: estimatedRunwayCredits })}
                   </td>
