@@ -17,6 +17,8 @@
 
 GitHub 웹에서 버튼을 누르는 것은 **필수가 아니다.** `gh`와 Cursor가 대신할 수 있다.
 
+**드라이런 완료 (기록):** Issue [#2](https://github.com/plancy-dev/elevate/issues/2) — 원격 이슈 → 브랜치 → PR (`Closes #2`) → `pnpm verify` 경로를 2026-04-17에 검증함.
+
 ---
 
 ## 1. 레이어 (충돌 시 순서)
