@@ -8,7 +8,7 @@ Single place for **Figma** links and design↔engineering workflow for the Studi
 
 | Resource | Link |
 |----------|------|
-| **File (canonical)** | [Elevate · Studio · Scene render](https://www.figma.com/design/qxCQUDg8XcCBewuR2lmwV/Elevate---Studio---Scene-render) |
+| **File (canonical)** | [Elevate · Studio · Scene render](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render) |
 
 **Pages (recommended structure)**
 
@@ -25,15 +25,15 @@ Single place for **Figma** links and design↔engineering workflow for the Studi
 Epic: [#1 — Studio · Scene render · cost & UX](https://github.com/plancy-dev/elevate/issues/1).  
 아래 이슈에 **문장형 수락 기준**이 있으며, 완료 시 본 표의 **대표 프레임** 열을 프레임 URL(`node-id=` 포함)로 갱신한다. 전체 동기화·검수는 [#10](https://github.com/plancy-dev/elevate/issues/10).
 
-| Phase | GitHub issue | Representative frame (update when issue closes) |
+| Phase | GitHub issue | Representative frame |
 |-------|----------------|--------------------------------------------------|
-| Foundation — pages & cover | [#4](https://github.com/plancy-dev/elevate/issues/4) | TBD |
-| P0 Cost | [#5](https://github.com/plancy-dev/elevate/issues/5) | TBD |
-| P1 Scene table | [#6](https://github.com/plancy-dev/elevate/issues/6) | TBD |
-| P2 Preflight | [#7](https://github.com/plancy-dev/elevate/issues/7) | TBD |
-| P3 Format & budget | [#8](https://github.com/plancy-dev/elevate/issues/8) | TBD |
-| Explorations | [#9](https://github.com/plancy-dev/elevate/issues/9) | TBD (optional) |
-| DESIGN.md ↔ Figma links | [#10](https://github.com/plancy-dev/elevate/issues/10) | Close #10 when the TBD cells above are filled and verified |
+| Foundation — pages & cover | [#4](https://github.com/plancy-dev/elevate/issues/4) | [File](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render) · [P0 Cost page](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=0-1) |
+| P0 Cost | [#5](https://github.com/plancy-dev/elevate/issues/5) | [P0 Cost](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=0-1) |
+| P1 Scene table | [#6](https://github.com/plancy-dev/elevate/issues/6) | [P1 Scene table](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=1-2) |
+| P2 Preflight | [#7](https://github.com/plancy-dev/elevate/issues/7) | [File](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render) (no P2 canvas yet — add page **P2 Preflight** in Figma, then replace) |
+| P3 Format & budget | [#8](https://github.com/plancy-dev/elevate/issues/8) | [File](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render) (no P3 canvas yet — add page **P3 Format and budget**, then replace) |
+| Explorations | [#9](https://github.com/plancy-dev/elevate/issues/9) | [Explorations](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=1-3) |
+| DESIGN.md ↔ Figma links | [#10](https://github.com/plancy-dev/elevate/issues/10) | This row — closed by PR that syncs the table |
 
 **Product (code, separate from Figma frames):** estimated Runway credits before scene render — [#12](https://github.com/plancy-dev/elevate/issues/12).
 

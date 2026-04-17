@@ -14,7 +14,8 @@ import { resolve } from "node:path";
 loadEnv({ path: resolve(process.cwd(), ".env.local") });
 
 const token = process.env.FIGMA_ACCESS_TOKEN?.trim();
-const defaultKey = "qxCQUDg8XcCBewuR2lmwV";
+/** Matches canonical file in `.github/DESIGN.md` when `FIGMA_VERIFY_FILE_KEYS` is unset. */
+const defaultKey = "qxCqUDg8XcC3bEwuR2ImwV";
 const keys = (process.env.FIGMA_VERIFY_FILE_KEYS || defaultKey)
   .split(",")
   .map((k) => k.trim())
