@@ -176,3 +176,23 @@ export function assemblyPrefsFromPipelinePrefs(
     bgMusicVolume: typeof o.bgMusicVolume === "string" ? o.bgMusicVolume : "0.15",
   };
 }
+
+/** Episode-scoped draft workbench UI (`pipeline_prefs.draftWorkbench`). */
+export type DraftWorkbenchPipelinePrefs = {
+  stickyContext: string;
+};
+
+export function draftWorkbenchPrefsFromPipelinePrefs(
+  root: Json | null | undefined,
+): DraftWorkbenchPipelinePrefs {
+  const empty: DraftWorkbenchPipelinePrefs = { stickyContext: "" };
+  if (root === null || root === undefined || typeof root !== "object" || Array.isArray(root)) {
+    return empty;
+  }
+  const dw = (root as Record<string, Json>).draftWorkbench;
+  if (dw === null || typeof dw !== "object" || Array.isArray(dw)) return empty;
+  const o = dw as Record<string, unknown>;
+  return {
+    stickyContext: typeof o.stickyContext === "string" ? o.stickyContext : "",
+  };
+}

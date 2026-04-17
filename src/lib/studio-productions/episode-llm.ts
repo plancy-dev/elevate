@@ -183,6 +183,11 @@ export function buildDraftPrompt(context: {
    * remains highest priority for topic and tone when they conflict.
    */
   templateBias?: string;
+  /**
+   * Episode-persisted context (`pipeline_prefs.draftWorkbench.stickyContext`). Injected after
+   * template bias and before “Additional direction”; user briefing overrides when they conflict.
+   */
+  stickyContext?: string;
 }): string {
   const meta =
     typeof context.channelMetadata === "object" &&
@@ -192,6 +197,7 @@ export function buildDraftPrompt(context: {
       : "{}";
   const briefing = (context.userBriefing ?? "").trim();
   const templateBias = (context.templateBias ?? "").trim();
+  const stickyContext = (context.stickyContext ?? "").trim();
   const brandGuide = (context.brandGuide ?? "").trim();
   const mode = context.generateMode ?? "develop";
   const draft = context.currentDraft;
@@ -246,6 +252,14 @@ export function buildDraftPrompt(context: {
       "",
       "Style and structure bias for this generation (applies unless Additional direction below explicitly overrides it):",
       templateBias,
+    );
+  }
+
+  if (stickyContext.length > 0) {
+    lines.push(
+      "",
+      "Episode-level saved context (kept across generations; applies unless Additional direction below explicitly overrides topic, tone, or subject matter):",
+      stickyContext,
     );
   }
 

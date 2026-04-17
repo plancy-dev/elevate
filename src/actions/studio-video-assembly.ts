@@ -14,7 +14,15 @@ import { resolveEpisodeFormat, FORMAT_SPECS } from "@/lib/studio-productions/epi
 import { readStudioVideoAssemblyMode } from "@/lib/studio-productions/studio-video-assembly-mode";
 import { uploadAssembledMp4ToContentStorage } from "@/lib/studio-productions/assembled-video-storage";
 import { getContentStorageBucket } from "@/lib/env/content-storage";
-import type { VideoAssemblyJobInput } from "@/lib/studio-productions/video-assembly-job-input";
+import {
+  effectiveAssemblyClipCount,
+  type VideoAssemblyJobInput,
+} from "@/lib/studio-productions/video-assembly-job-input";
+import { mergeVideoAssemblyJobInput, scenesJsonFromEpisodePipelinePrefs } from "@/lib/studio-productions/build-video-assembly-input";
+import {
+  assembleVideoPerScene,
+  perSceneJobClipsToSpecs,
+} from "@/lib/studio-productions/assemble-video-per-scene";
 import { logAudit } from "@/lib/audit/log";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import type { Json } from "@/types/database.types";
@@ -90,16 +98,22 @@ export async function assembleEpisodeVideo(
     : undefined;
 
   const episodeFormat = resolveEpisodeFormat(episode);
-  const jobInput: VideoAssemblyJobInput = {
-    clip_urls: clipUrls,
-    audio_url: ttsArtifact?.external_url ?? null,
-    srt_content: srtArtifact?.content_text ?? null,
-    bg_music_url: bgMusicUrl ?? null,
-    bg_music_volume: bgMusicVolume ?? null,
-    episode_format: episodeFormat,
-  };
+  const scenesJson = scenesJsonFromEpisodePipelinePrefs(episode.pipeline_prefs);
+  const jobInput: VideoAssemblyJobInput = mergeVideoAssemblyJobInput(
+    {
+      clip_urls: clipUrls,
+      audio_url: ttsArtifact?.external_url ?? null,
+      srt_content: srtArtifact?.content_text ?? null,
+      bg_music_url: bgMusicUrl ?? null,
+      bg_music_volume: bgMusicVolume ?? null,
+      episode_format: episodeFormat,
+    },
+    scenesJson,
+    artifacts,
+  );
 
   const mode = readStudioVideoAssemblyMode();
+  const assemblyClipCount = effectiveAssemblyClipCount(jobInput);
 
   if (mode === "async") {
     const { data: job, error: jobErr } = await supabase
@@ -122,13 +136,22 @@ export async function assembleEpisodeVideo(
     return { ok: true, jobId: job.id };
   }
 
-  const result = await assembleVideo({
-    clipUrls,
-    audioUrl: ttsArtifact?.external_url ?? undefined,
-    srtContent: srtArtifact?.content_text ?? undefined,
-    bgMusicUrl,
-    bgMusicVolume,
-  });
+  const result =
+    jobInput.per_scene && jobInput.per_scene.length > 0
+      ? await assembleVideoPerScene({
+          scenes: perSceneJobClipsToSpecs(jobInput.per_scene),
+          audioUrl: ttsArtifact?.external_url ?? undefined,
+          srtContent: srtArtifact?.content_text ?? undefined,
+          bgMusicUrl,
+          bgMusicVolume,
+        })
+      : await assembleVideo({
+          clipUrls,
+          audioUrl: ttsArtifact?.external_url ?? undefined,
+          srtContent: srtArtifact?.content_text ?? undefined,
+          bgMusicUrl,
+          bgMusicVolume,
+        });
 
   if (!result.ok) {
     if (result.code === "ffmpeg_not_found") {
@@ -137,11 +160,14 @@ export async function assembleEpisodeVideo(
     if (result.code === "ffmpeg_error") {
       return { error: ActionErrorCode.studioAssemblyFfmpegError };
     }
-    if (result.code === "no_clips") {
+    if (result.code === "no_clips" || result.code === "no_scenes") {
       return { error: ActionErrorCode.studioAssemblyNoClips };
     }
     if (result.code === "download_failed") {
       return { error: ActionErrorCode.studioAssemblyDownloadFailed };
+    }
+    if (result.code === "probe_failed") {
+      return { error: ActionErrorCode.studioAssemblyFfmpegError };
     }
     return { error: ActionErrorCode.unexpected };
   }
@@ -170,7 +196,7 @@ export async function assembleEpisodeVideo(
           content_storage_path: contentStoragePath,
         }
       : {}),
-    clip_count: clipUrls.length,
+    clip_count: assemblyClipCount,
     has_tts: !!ttsArtifact,
     has_subtitles: !!srtArtifact,
     has_bg_music: !!bgMusicUrl,
@@ -188,7 +214,7 @@ export async function assembleEpisodeVideo(
       organization_id: auth.ctx.organizationId,
       artifact_role: "assembled_video",
       tool_platform: "ffmpeg",
-      content_text: `Assembled ${clipUrls.length} clips, ${result.durationSeconds.toFixed(1)}s`,
+      content_text: `Assembled ${assemblyClipCount} clips, ${result.durationSeconds.toFixed(1)}s`,
       external_url: externalUrl,
       metadata,
     })
@@ -205,7 +231,7 @@ export async function assembleEpisodeVideo(
     action: AuditAction.STUDIO_VIDEO_ASSEMBLE,
     entityType: AuditEntityType.STUDIO_EPISODE,
     entityId: episodeId,
-    metadata: { clip_count: clipUrls.length, duration_seconds: result.durationSeconds },
+    metadata: { clip_count: assemblyClipCount, duration_seconds: result.durationSeconds },
   });
 
   revalidatePath(`/dashboard/productions/${episodeId}`);

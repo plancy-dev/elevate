@@ -28,7 +28,7 @@ export type AssemblyResult =
   | { ok: true; outputBuffer: Buffer; durationSeconds: number }
   | { ok: false; code: "no_clips" | "ffmpeg_not_found" | "ffmpeg_error" | "download_failed"; message?: string };
 
-async function downloadToFile(url: string, filePath: string): Promise<void> {
+export async function downloadToFile(url: string, filePath: string): Promise<void> {
   if (url.startsWith("data:")) {
     const base64Part = url.split(",")[1];
     if (!base64Part) throw new Error("Invalid data URI");

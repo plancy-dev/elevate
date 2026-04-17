@@ -13,7 +13,7 @@ Episodes store **artifacts** (`studio_production_artifacts`) with free-text `art
 | `subtitle_srt` | SRT/ASS subtitle file generated via Whisper. Metadata: word_count, language |
 | `assembled_video` | Final assembled MP4 (clips + audio + subtitles). Metadata: resolution, duration, codec |
 | `thumbnail` | Generated or uploaded thumbnail image for YouTube |
-| `scene_clip` | Individual video clip for a single scene. Metadata: scene_index, prompt, duration |
+| `scene_clip` | Individual video clip for a single scene. Metadata: `scene_index`, `source` (`runway` \| `upload`), `target_duration_sec` (seconds; must match scene plan). Runway: `model`, `duration_seconds`, `task_id`, `output_urls`, etc. Upload: optional `trim_start_sec` (default 0), `loop` (default true when source is shorter than target). |
 | `compliance_note` | Platform strikes, takedowns, yellow-card notes, remediation |
 | `other` | Anything that does not fit (avoid abusing) |
 

@@ -37,6 +37,8 @@ type LlmTurn = { role: "user" | "assistant"; content: string; at: string };
 
 /** Max chars from the generate form briefing field (DoS guard). */
 const DRAFT_BRIEFING_MAX_CHARS = 12_000;
+/** Episode-persisted sticky context from the generate form (same cap as briefing). */
+const DRAFT_STICKY_MAX_CHARS = 12_000;
 
 function nowIso() {
   return new Date().toISOString();
@@ -296,6 +298,9 @@ export async function generateStudioEpisodeDraft(
   const briefingRaw = String(formData.get("draft_briefing") ?? "");
   const userBriefing = briefingRaw.trim().slice(0, DRAFT_BRIEFING_MAX_CHARS);
 
+  const stickyRaw = String(formData.get("draft_sticky_context") ?? "");
+  const stickyContext = stickyRaw.trim().slice(0, DRAFT_STICKY_MAX_CHARS);
+
   const modeRaw = String(formData.get("draft_generate_mode") ?? "develop").trim();
   const generateMode: "develop" | "fresh" =
     modeRaw === "fresh" ? "fresh" : "develop";
@@ -313,6 +318,15 @@ export async function generateStudioEpisodeDraft(
     rawTemplateKey,
   );
 
+  const project = episode.studio_projects;
+  const brandGuideText =
+    project &&
+    typeof project === "object" &&
+    !Array.isArray(project) &&
+    "brand_guide" in project
+      ? String((project as { brand_guide?: string | null }).brand_guide ?? "").trim()
+      : "";
+
   const userPrompt = buildDraftPrompt({
     episodeTitle: episode.title,
     notes: episode.notes ?? "",
@@ -322,10 +336,12 @@ export async function generateStudioEpisodeDraft(
     channelPlatform: episode.studio_distribution_channels?.platform ?? null,
     channelMetadata: episode.studio_distribution_channels?.metadata ?? {},
     distributionLabel: episode.distribution_label ?? "",
+    brandGuide: brandGuideText.length > 0 ? brandGuideText : undefined,
     userBriefing,
     generateMode,
     currentDraft: generateMode === "develop" ? priorLive : undefined,
     templateBias: resolvedTemplate.bias,
+    stickyContext: stickyContext.length > 0 ? stickyContext : undefined,
   });
 
   const result = await generateDraftWithLlm(cred, userPrompt, {

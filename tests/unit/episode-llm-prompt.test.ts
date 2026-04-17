@@ -77,6 +77,34 @@ describe("buildDraftPrompt", () => {
     expect(prompt).toContain("Custom bias line for tests.");
   });
 
+  it("includes sticky context after template bias and before additional direction", () => {
+    const prompt = buildDraftPrompt({
+      ...base,
+      templateBias: "Bias first.",
+      stickyContext: "Sticky episode notes.",
+      userBriefing: "One-shot direction.",
+    });
+    const iBias = prompt.indexOf("Bias first.");
+    const iSticky = prompt.indexOf("Episode-level saved context");
+    const iStickyBody = prompt.indexOf("Sticky episode notes.");
+    const iAdd = prompt.indexOf("Additional direction for this generation");
+    const iBrief = prompt.indexOf("One-shot direction.");
+    expect(iBias).toBeGreaterThan(-1);
+    expect(iSticky).toBeGreaterThan(iBias);
+    expect(iStickyBody).toBeGreaterThan(iSticky);
+    expect(iAdd).toBeGreaterThan(iStickyBody);
+    expect(iBrief).toBeGreaterThan(iAdd);
+  });
+
+  it("includes brand guide block when brandGuide is non-empty", () => {
+    const prompt = buildDraftPrompt({
+      ...base,
+      brandGuide: "Never say competitor names.",
+    });
+    expect(prompt).toContain("Project brand guide");
+    expect(prompt).toContain("Never say competitor names.");
+  });
+
   it("fresh mode omits current draft and adds staleness instructions", () => {
     const prompt = buildDraftPrompt({
       ...base,

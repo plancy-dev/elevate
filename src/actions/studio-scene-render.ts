@@ -162,6 +162,7 @@ async function renderOneScene(params: {
     narration: scene.narration.slice(0, 500),
     visual_prompt: promptText.slice(0, 500),
     duration_seconds: scene.durationSeconds,
+    target_duration_sec: scene.durationSeconds,
     task_id: result.task_id,
     output_urls: result.output_urls,
     generated_at: new Date().toISOString(),

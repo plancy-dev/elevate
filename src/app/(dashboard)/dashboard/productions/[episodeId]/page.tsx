@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
+import { ProductionsHubWithDialogs } from "@/components/dashboard/productions-hub-with-dialogs";
 import { ProductionEpisodeAtAGlance } from "@/components/dashboard/production-episode-at-glance";
 import { ProductionEpisodeArtifactsClient } from "@/components/dashboard/production-episode-artifacts-client";
 import { ProductionEpisodeDetailWorkspace } from "@/components/dashboard/production-episode-detail-workspace";
@@ -22,6 +24,7 @@ import { resolveEpisodeFormat } from "@/lib/studio-productions/episode-format";
 import { listDraftTemplatesForOrg } from "@/lib/data/studio-draft-templates";
 import { listDraftSnapshotsForEpisode } from "@/lib/studio-productions/draft-snapshots";
 import { ORG_EDITOR_ROLES } from "@/lib/auth/require-org-editor";
+import { loadProductionsStudioDialogPayload } from "@/lib/studio-productions/load-productions-studio-dialog-payload";
 
 type Props = {
   params: Promise<{ episodeId: string }>;
@@ -143,75 +146,84 @@ export default async function ProductionEpisodePage({ params }: Props) {
     : "";
   const distributionChannelLabel = linkedChannelLabel || presetDistributionLabel || null;
 
-  return (
-    <div className="mx-auto w-full max-w-5xl p-6 lg:p-8">
-      <div className="mb-6">
-        <Link
-          href="/dashboard/productions"
-          className="text-sm font-medium text-interactive hover:underline"
-        >
-          {t("backToList")}
-        </Link>
-      </div>
+  const studioDialogPayload = await loadProductionsStudioDialogPayload(
+    supabase,
+    orgId,
+  );
 
-      <ProductionEpisodeWorkbench
-        episodeId={episode.id}
-        overviewSlot={
-          <ProductionEpisodeAtAGlance
-            notes={episode.notes}
-            publishUrl={episode.publish_url}
-            artifacts={artifacts}
-          />
-        }
-        episodeSlot={
-          <ProductionEpisodeDetailWorkspace
-            episode={episode}
-            studioProjects={studioProjects.map((p) => ({
-              id: p.id,
-              name: p.name,
-            }))}
-            artifacts={artifacts}
-            canEditDraft={canEditDraft}
-            customDraftTemplates={customDraftTemplates}
-            draftLlmAvailability={draftLlmAvailability}
-            draftSnapshots={draftSnapshots}
-            runwayRenderReady={runwayRenderReady}
-            elevenlabsKeyConfigured={elevenlabsKeyConfigured}
-            openaiKeyConfigured={openaiKeyConfigured}
-            packagingLlmReady={packagingLlmReady}
-            youtubeChannelTitle={youtubeChannelTitle}
-            episodeFormat={episodeFormat}
-            distributionChannelLabel={distributionChannelLabel}
-            activeAssemblyJob={activeAssemblyJob}
-            brandGuide={episode.studio_projects?.brand_guide?.trim() ?? null}
-            helpSection={
-              <section
-                className="rounded-xl border border-dashed border-border-subtle bg-layer-02/30 px-4 py-3"
-                aria-labelledby="prod-help-title"
-              >
-                <h2
-                  id="prod-help-title"
-                  className="text-[11px] font-semibold uppercase tracking-wider text-text-tertiary"
-                >
-                  {t("helpTitle")}
-                </h2>
-                <p className="mt-1.5 text-sm text-text-tertiary leading-relaxed">
-                  {t("helpBody")}
-                </p>
-                <p className="mt-2 text-sm text-text-tertiary leading-relaxed">
-                  {t("helpRunbook")}
-                </p>
-              </section>
+  return (
+    <Suspense fallback={null}>
+      <ProductionsHubWithDialogs payload={studioDialogPayload}>
+        <div className="mx-auto w-full max-w-5xl p-6 lg:p-8">
+          <div className="mb-6">
+            <Link
+              href="/dashboard/productions"
+              className="text-sm font-medium text-interactive hover:underline"
+            >
+              {t("backToList")}
+            </Link>
+          </div>
+
+          <ProductionEpisodeWorkbench
+            episodeId={episode.id}
+            overviewSlot={
+              <ProductionEpisodeAtAGlance
+                notes={episode.notes}
+                publishUrl={episode.publish_url}
+                artifacts={artifacts}
+              />
+            }
+            episodeSlot={
+              <ProductionEpisodeDetailWorkspace
+                episode={episode}
+                studioProjects={studioProjects.map((p) => ({
+                  id: p.id,
+                  name: p.name,
+                }))}
+                artifacts={artifacts}
+                canEditDraft={canEditDraft}
+                customDraftTemplates={customDraftTemplates}
+                draftLlmAvailability={draftLlmAvailability}
+                draftSnapshots={draftSnapshots}
+                runwayRenderReady={runwayRenderReady}
+                elevenlabsKeyConfigured={elevenlabsKeyConfigured}
+                openaiKeyConfigured={openaiKeyConfigured}
+                packagingLlmReady={packagingLlmReady}
+                youtubeChannelTitle={youtubeChannelTitle}
+                episodeFormat={episodeFormat}
+                distributionChannelLabel={distributionChannelLabel}
+                activeAssemblyJob={activeAssemblyJob}
+                brandGuide={episode.studio_projects?.brand_guide?.trim() ?? null}
+                helpSection={
+                  <section
+                    className="rounded-xl border border-dashed border-border-subtle bg-layer-02/30 px-4 py-3"
+                    aria-labelledby="prod-help-title"
+                  >
+                    <h2
+                      id="prod-help-title"
+                      className="text-[11px] font-semibold uppercase tracking-wider text-text-tertiary"
+                    >
+                      {t("helpTitle")}
+                    </h2>
+                    <p className="mt-1.5 text-sm text-text-tertiary leading-relaxed">
+                      {t("helpBody")}
+                    </p>
+                    <p className="mt-2 text-sm text-text-tertiary leading-relaxed">
+                      {t("helpRunbook")}
+                    </p>
+                  </section>
+                }
+              />
+            }
+            artifactsSlot={
+              <ProductionEpisodeArtifactsClient
+                episodeId={episode.id}
+                artifacts={artifacts}
+              />
             }
           />
-        }
-        artifactsSlot={
-          <ProductionEpisodeArtifactsClient
-            episodeId={episode.id}
-            artifacts={artifacts}
-          />
-        }
-      />
-    </div>
+        </div>
+      </ProductionsHubWithDialogs>
+    </Suspense>
   );
 }

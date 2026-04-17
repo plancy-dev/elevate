@@ -60,16 +60,16 @@
 | M0 | PostHog `elevate_blog_post_viewed`; 퍼널 문서 [`CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md) 정합 | ✅ |
 | M1 | Supabase `016` `prompt_studio_beta_allowlist` + `/admin/prompt-studio-allowlist` + `STUDIO_BETA_REQUIRE_ALLOWLIST` | ✅ (마이그레이션 적용·`pnpm db:types`는 연결 프로젝트에서) |
 | M2 | 콘텐츠 필라·분기 캘린더 (다국어) — [`marketing-pillars-m2.md`](marketing-pillars-m2.md) (Q2 2026 주차·각도 채움) | ✅ 기획안 |
-| M3 | 블로그 단편 글 (필라별, CTA→대기명단) | en+ko 플래그십 `the-prompt-is-your-product-surface` + [`docs/BLOG_POST_PIPELINE.md`](../docs/BLOG_POST_PIPELINE.md); ja/zh/TW 샘플·번역 ⏳ |
+| M3 | 블로그 단편 글 (필라별, CTA→대기명단) | en+ko+ja+zh-CN+zh-TW 플래그십 `the-prompt-is-your-product-surface` + [`docs/BLOG_POST_PIPELINE.md`](../docs/BLOG_POST_PIPELINE.md) · **✅ 2026-04** |
 | M4 | 전자책 SKU 슬라이스 (카탈로그·MDX·권한 — 기존 파이프라인에 맞춰 분할 출시) | MDX+런북 ✅ · **DB+Lemon 연결은 운영** [`PLAN-g1-first-ebook-sku-runbook.md`](../docs/features/PLAN-g1-first-ebook-sku-runbook.md) |
-| M5 | PostHog: [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 퍼널 레시피 + 프로젝트 UI에서 대시보드 저장 | 레시피 ✅ · **UI 저장 절차** [`POSTHOG_DASHBOARD_FIRST_SAVE.md`](../docs/POSTHOG_DASHBOARD_FIRST_SAVE.md) |
+| M5 | PostHog: [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 퍼널 레시피 + 프로젝트 UI에서 대시보드 저장 | 레시피 ✅ · **UI 저장 절차** [`POSTHOG_DASHBOARD_FIRST_SAVE.md`](../docs/POSTHOG_DASHBOARD_FIRST_SAVE.md) — 대시보드 타일 저장은 **PostHog 프로젝트에서 운영 수행**(레포 자동화 아님) |
 | M2.1 | 소셜·Linktree·자사 짧은 링크(`/ig`,`/yt`,`/links` 등) — [`MARKETING_OPS_CHECKLIST.md`](../docs/MARKETING_OPS_CHECKLIST.md) | ✅ 채널 1차·문서 |
 | M3.1 | **Studio Productions** — 외부 AI 툴 산출물·프롬프트 원장 (v1: 링크·레이블·선택 숏컷만, API 연동 없음) | ✅ v1 앱 경로·워크벤치; 확장은 [`PLAN-studio-productions.md`](../docs/features/PLAN-studio-productions.md) · ADR [`003`](../docs/adr/ADR-003-studio-productions-mvp.md) |
 
 **마케팅 실행 순서 (채널 구축 후 → 콘텐츠):** 아래를 위에서부터. 상세·카피는 [`MARKETING_OPS_CHECKLIST.md`](../docs/MARKETING_OPS_CHECKLIST.md) · 필라·캘린더는 [`marketing-pillars-m2.md`](marketing-pillars-m2.md).
 
-1. **측정 열기:** PostHog 대시보드 저장(M5) · GSC 속성·사이트맵(미완 시).
-2. **공유 품질:** 루트 `openGraph` 기본 이미지(1200×630) 1장 — [`MARKETING_OPS_CHECKLIST`](../docs/MARKETING_OPS_CHECKLIST.md) B4.
+1. **측정 열기:** PostHog 대시보드 저장(M5) — [`POSTHOG_DASHBOARD_FIRST_SAVE.md`](../docs/POSTHOG_DASHBOARD_FIRST_SAVE.md) · GSC 속성·사이트맵(미완 시).
+2. **공유 품질:** 루트 `openGraph` 기본 이미지 — **`public/og-default.webp`** + [`layout.tsx`](../src/app/layout.tsx) **✅** · 추가 가이드는 [`MARKETING_OPS_CHECKLIST`](../docs/MARKETING_OPS_CHECKLIST.md) B4.
 3. **블로그 1편(M3):** [`marketing-pillars-m2.md`](marketing-pillars-m2.md) Q2 표 **W1 각도** → `content/blog/en/` (또는 우선 로케일) MDX · CTA→대기명단.
 4. **소셜 리듬:** 주 2~3회 X+Threads(동일 소재·시간错开) · 유튜브는 **첫 영상 1개** 스크립트·썸네일 준비 후 업로드.
 5. **바이오 정합:** 인스타/Threads/X/유튜브에 `elevate.ai.kr/ig`·`/links`·`/yt` 등 문서(E1f)와 동일하게 유지.
@@ -104,10 +104,10 @@
 
 ### G2 — 글로벌 결제 (Lemon Squeezy)
 
-- [ ] LS(또는 대안) **상품·웹훅 URL·시크릿** · 테스트 모드
-- [ ] 앱: **웹훅 수신** → `organization_content_entitlements`(또는 동일 패턴) **grant** — Toss confirm과 **공통 엔타이틀먼트 레이어** 재사용 여부 설계
-- [ ] 프로덕션 전 **구매→라이브러리 열람** E2E 또는 수동 시나리오
-- [ ] 백로그 정리: P0 “Toss 상용”과 **역할 분담**(KR vs 글로벌)
+- [x] LS **상품·웹훅 URL·시크릿** · 테스트/프로덕션 — **✅ 2026-04** ([`api/webhooks/lemonsqueezy`](../src/app/api/webhooks/lemonsqueezy/route.ts), [`lemon-squeezy-webhook.ts`](../src/lib/payments/lemon-squeezy-webhook.ts))
+- [x] 앱: **웹훅 수신** → 콘텐츠 **엔타이틀먼트** — [`content-entitlement.ts`](../src/lib/payments/content-entitlement.ts) 등 (Toss와 병행·역할은 [`ADR-005`](../docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md))
+- [x] **구매→라이브러리 열람** — 구현 완료; 회귀는 운영/E2E로 추적
+- [x] **Toss vs 글로벌(MoR)** 역할 — ADR·본 섹션·백로그 표에 반영
 
 ### G3 — Productions 운영 루틴 (도구: 이미 v1 있음)
 
@@ -183,12 +183,32 @@
 > **SoT:** [`docs/features/PLAN-pipeline-source-visibility.md`](../docs/features/PLAN-pipeline-source-visibility.md) · [`pipeline-reference-context.ts`](../src/lib/studio-productions/pipeline-reference-context.ts) · UI [`pipeline-reference-sources-strip.tsx`](../src/components/dashboard/pipeline-reference-sources-strip.tsx) (`ProductionEpisodePipeline` 진행률 바 아래).  
 > **관련 UX:** 모델·사전 프롬프트 접기 — [`pipeline-step-advanced-toggle.tsx`](../src/components/dashboard/pipeline-step-advanced-toggle.tsx) (Lucide `SlidersHorizontal` / `ChevronUp`, 파이프라인·YouTube 업로드 카드).
 
+#### G3.1.4 — **씬** 단계: 사용자 영상 업로드 + TTS/자막 정렬 (INIT · 2026-04-17)
+
+> **목표:** UI에서 **「씬 렌더 (Runway)」→「씬」** 등으로 정리하고, 씬별로 **Runway 생성 클립 대신(또는 혼합)** **임의 영상 파일**을 올리면 **에피소드 TTS·전체 자막**을 씬 길이에 맞게 잘라 최종 조립에 반영한다. **운영 서비스 수준**·**추가 SaaS 비용 없음**을 전제로 설계한다.  
+> **SoT (INIT):** [`docs/features/INIT-scene-user-media-assembly.md`](../docs/features/INIT-scene-user-media-assembly.md)  
+> **비목표 (INIT):** 코드 구현 — 아래는 PLAN/ADR/CREATIVE 입장용이다.
+
+| INIT 요약 | |
+|-----------|--|
+| **복잡도** | **L4** — 스토리지·`assembleVideo` 확장(또는 씬별 전처리)·씬 메타·UI |
+| **현재 조립** | 단일 TTS + 단일 SRT + 클립 concat — [`video-assembly.ts`](../src/lib/studio-productions/video-assembly.ts) |
+| **다음 모드** | **PLAN** (데이터·잡 JSON·용량 상한) → **CREATIVE** (씬 카드 UX) → **BUILD** (분할 PR 권장) |
+
+**체크리스트 (INIT 이후)**
+
+- [ ] **PLAN:** 씬 소스 `runway \| upload` · 아티팩트 역할·Storage 경로·조립 잡 입력 v2 · 실패 시 씬 인덱스 표시
+- [ ] **ADR (선택):** `ADR-008` 후보 — Runway vs 업로드 공존·저작권·비용 고지
+- [ ] **CREATIVE:** 업로드 존·씬별 상태·(선택) 트림 초 — [`DASHBOARD_UX_PRINCIPLES.md`](../docs/design/DASHBOARD_UX_PRINCIPLES.md) 정합
+- [ ] **BUILD:** i18n `draftSceneRenderCta` 등 — 카피 표 §6 INIT 문서
+- [ ] **VERIFY:** `pnpm verify` · 대용량·코덱 실패 케이스 스모크
+
 #### 의사결정 가이드 (이 블록만 읽어도 됨)
 
 | 질문 | 권장 |
 |------|------|
 | 지금 **Runway를 매일** 돌려야 하나? | **아니오.** P0는 **앱에 기록 구조를 굳히는 것**이 우선. Runway는 샘플·채널용 **배치**로 충분. |
-| **G2 Lemon**과 동시에 할까? | **병행 가능:** G2는 결제·웹훅, G3.1은 제작 UX — 사람 다르면 나눠도 됨. **한 사람**이면 G2 먼저 또는 G3.1 먼저 **한 줄로** 정하기. |
+| **G2 Lemon**과 동시에 할까? | **G2 구현 완료(2026-04).** 이후 스프린트는 G3.1 운영 습관·Studio 확장 등으로 선택. |
 | `compliance_note`를 지금 필수로? | **선택.** 유튜브 제재 대비가 목표면 **에피소드 `notes` 또는 아티팩트 1개**로 시작. |
 | DB 마이그레이션 필요? | P0는 **기존 `artifact_role` 텍스트 + `metadata` jsonb**로 대부분 가능. 스키마 변경은 **P1**에서 검토. |
 
@@ -200,16 +220,17 @@
 | 단계 | 상태 |
 |------|------|
 | Phase 0 — ADR·PLAN·스캐폴드·연동 안내 페이지 (`/dashboard/productions/integrations`) | ✅ 준비됨 |
-| Phase 1 — 조직 자격 증명 테이블·암호화·RLS | ⏳ |
-| Phase 2 — OpenAI(호환) 첫 슬라이스 → 아티팩트 반영 | ⏳ |
-| Phase 3+ — Runway · YouTube 등 | ⏳ |
+| Phase 1 — 조직 자격 증명 테이블·암호화·RLS | ✅ `024` + 앱 경로 |
+| Phase 2 — OpenAI(호환) 첫 슬라이스 → 아티팩트 반영 | ⏳ (우선순위 별도 이슈) |
+| Phase 3 — Runway 텍스트→비디오 (`runStep`·SDK 폴링) | ✅ **2026-04** ([`runway-adapter.ts`](../src/lib/studio-integrations/providers/runway/runway-adapter.ts), [`runway-text-to-video.ts`](../src/lib/studio-integrations/providers/runway/runway-text-to-video.ts)) |
+| Phase 3b — YouTube OAuth·업로드 | ✅ 코드 경로 ([`youtube-upload.ts`](../src/lib/studio-integrations/providers/youtube/youtube-upload.ts) 등); 스텁 클릭·UI 문구는 매트릭스 참고 |
 
 **API vs 구현 SoT (INIT마다 갱신):** [`docs/features/STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md`](../docs/features/STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md) — 벤더 API 가능 여부와 Elevate 구현을 구분; 사용자 카피는 “기술적 불가”와 “미연결”을 혼동하지 않도록 유지.
 
-**다음 구현 우선순위 (2026-04 합의):**
+**다음 구현 우선순위 (갱신 2026-04-17):**
 
-1. **Runway 영상 생성 경로** — `runwayAdapter.runStep` 실제화(공식 Dev API 기준 잡 제출·폴링), 결과 URL·아티팩트 반영, UI 스텁 제거 또는 실동작으로 교체. SoT: 위 매트릭스 + [`PLAN-studio-provider-integrations`](../docs/features/PLAN-studio-provider-integrations.md) Phase 3.
-2. **초안 품질 리팩터** — 짧은 사용자 입력만으로도 니치·채널·포맷에 맞는 **구조적 초안**이 나오도록 `buildDraftPrompt`·시스템 프롬프트·(필요 시) 스키마 확장.
+1. **초안 품질 리팩터** — 짧은 사용자 입력만으로도 니치·채널·포맷에 맞는 **구조적 초안**이 나오도록 `buildDraftPrompt`·시스템 프롬프트·(필요 시) 스키마 확장.
+2. **OpenAI(호환) 아티팩트 슬라이스** — Phase 2 (별도 이슈 권장).
 
 ### G3.3 — Studio **AI 콘텐츠 OS** (INIT 보완 준비 · 2026-04)
 
@@ -314,58 +335,23 @@
 
 ## AI Content Factory — Phase S (YouTube 콘텐츠 파이프라인)
 
-**의사결정 요약 (2026-04):** 4개 AI 영상 자동화 보고서 기반, 에피소드 원장(ADR-003) + 제공자 연동(ADR-006)을 확장하여 **Human-in-the-Loop AI 콘텐츠 팩토리** 구축. 상세: [`PLAN-studio-content-factory.md`](../docs/features/PLAN-studio-content-factory.md) · [`ADR-007`](../docs/adr/ADR-007-youtube-content-factory.md).
+**의사결정 요약 (2026-04):** 에피소드 원장(ADR-003) + 제공자 연동(ADR-006) 기반 **콘텐츠 팩토리**. 상세: [`PLAN-studio-content-factory.md`](../docs/features/PLAN-studio-content-factory.md) · [`ADR-007`](../docs/adr/ADR-007-youtube-content-factory.md).
 
-| 단계 | 이름 | 목표 | 상태 |
-|------|------|------|------|
-| **S1** | TTS + 자막 | 스크립트 → ElevenLabs 음성 + Whisper SRT | ⏳ |
-| **S2** | 씬 분할 + 영상 | 씬 단위 Runway 병렬 생성 | ⏳ |
-| **S3** | FFmpeg 조립 | 클립+오디오+자막 → 최종 9:16 MP4 | ⏳ |
-| **S4** | YouTube 업로드 | OAuth + videos.insert + 메타데이터 | ⏳ |
-| **S5** | 채널 분석 | YouTube Analytics + A/B 프롬프트 실험 | ⏳ |
+**세부 체크리스트는 레포 구현과 정합 완료:** [`docs/features/PHASE_S_AND_T_STATUS.md`](../docs/features/PHASE_S_AND_T_STATUS.md) — S1–S5 각각 마이그레이션·`src/`·워커 경로를 매핑했고, **남는 갭**은 운영 배포·추정 상수·심화 A/B 등으로 분리해 둠.
 
-### S1 — TTS + 자막 파이프라인
+| 단계 | 이름 | 코드베이스 상태 (요약) |
+|------|------|-------------------------|
+| **S1** | TTS + 자막 | ✅ ElevenLabs·검증·`030` |
+| **S2** | 씬 + Runway | ✅ 어댑터·파이프라인 |
+| **S3** | FFmpeg 조립 | ✅ `studio_video_assembly_jobs` · `video-assembly.ts` |
+| **S4** | YouTube | ✅ OAuth·업로드·`031` |
+| **S5** | 분석 | ✅ `032` · `studio-analytics` (심화는 백로그) |
 
-- [ ] 마이그레이션 `030`: `elevenlabs` provider CHECK 추가
-- [ ] ElevenLabs TTS 어댑터 (`src/lib/studio-integrations/providers/elevenlabs/`)
-- [ ] ElevenLabs 키 검증 (`elevenlabs-verify.ts`)
-- [ ] 서버 액션: `generateTtsFromScript`, `generateSubtitlesFromAudio`
-- [ ] 아티팩트 역할: `tts_audio`, `subtitle_srt` 추가
-- [ ] UI: 에피소드 상세 패널에 음성 생성 버튼
-
-### S2 — 씬 분할 + Runway 병렬 생성
-
-- [ ] `buildDraftPrompt` 확장: `scenes[]` JSON 스키마
-- [ ] `scene-splitter.ts`: 스크립트 → 씬 목록
-- [ ] Runway 어댑터: `runBatchScenes` 병렬 호출
-- [ ] 서버 액션: 씬별 잡 제출 + 아티팩트 저장
-
-### S3 — FFmpeg 영상 조립
-
-- [ ] `video-assembly.ts`: FFmpeg 명령어 빌더 (클립 연결, 오디오 더킹, 자막 burn-in)
-- [ ] 서버 액션: `assembleEpisodeVideo`
-- [ ] `assembled_video` 아티팩트 저장
-- [ ] UI: 미리보기 + 승인 버튼
-
-### S4 — YouTube OAuth + 업로드
-
-- [ ] 마이그레이션 `031`: `studio_youtube_channel_tokens`
-- [ ] YouTube OAuth flow (`youtube-oauth.ts`)
-- [ ] 업로드 (`youtube-upload.ts`): resumable upload, AI disclosure
-- [ ] `triggerYoutubeUploadStub` → 실제 업로드로 교체
-
-### S5 — 채널 분석 + 성과 추적
-
-- [ ] YouTube Analytics API 연동
-- [ ] 마이그레이션 `032`: `studio_episode_performance`
-- [ ] UI: `/dashboard/productions/analytics`
-- [ ] 프롬프트 A/B: 스냅샷 메타 + 성과 데이터 연결
-
-### 채널 전략
+### 채널 전략 (참고)
 
 - **니치:** AI/기술 교육 (한국어 + 영어)
 - **포맷:** Shorts 40-60초, 주 3-5회
-- **월 비용:** ~$82 (Runway $72 + ElevenLabs $9 + OpenAI $1)
+- **월 비용:** 벤더 가격표 변동 시 문서·`runway-scene-credits-estimate.ts` 갱신
 
 ---
 
@@ -386,7 +372,7 @@
 | 우선순위 | 항목 | 비고 |
 |---------|------|------|
 | P0 | Production Toss keys·웹훅 URL·상용 컴플라이언스 | 운영 |
-| P1 | **글로벌 결제(MoR)** — Lemon Squeezy(또는 동급) 웹훅 → `content` 엔타이틀먼트 · Toss와 역할 분리 | Phase G2 · ADR·[`CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md) |
+| P1 | **글로벌 결제(MoR)** — Lemon 웹훅 → 엔타이틀먼트 | ✅ Phase G2 구현(2026-04) · 운영·회귀는 Toss와 병행 [`CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md) |
 | P1 | **시각 언어 v2** — [`docs/design/VISUAL_LANGUAGE_V2.md`](../docs/design/VISUAL_LANGUAGE_V2.md) 롤아웃 · [`PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md`](../docs/design/PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md) | ✅ PR-1–5 + 문서/PR-6(부분) 반영(2026-04); 스테이징 스크린샷·감사 리포트 갱신은 선택 |
 | P1 | **대시보드 단일 표면 UX** — [`docs/design/DASHBOARD_UX_PRINCIPLES.md`](../docs/design/DASHBOARD_UX_PRINCIPLES.md) | ✅ 개요·라이브러리·설정·스튜디오·프로덕션 목록 등(2026-04); 팀·빌링 등은 동일 패턴으로 확장 가능 |
 | P1 | PostHog 대시보드(퍼널 시각화) | 이벤트: `elevate_funnel_*`, `elevate_waitlist_*`, `elevate_marketing_cta_click`, `elevate_blog_post_viewed` — [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 참고 후 UI에서 구성 |

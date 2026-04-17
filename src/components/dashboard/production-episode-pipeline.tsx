@@ -806,6 +806,8 @@ export function ProductionEpisodePipeline({
             customDraftTemplates={customDraftTemplates}
             draftLlmAvailability={draftLlmAvailability}
             draftSnapshots={draftSnapshots}
+            pipelinePrefs={pipelinePrefs}
+            brandGuide={brandGuide}
             scriptTextareaRows={10}
             onDirtyChange={setDraftDirty}
             pipelineShortcutPrefill={draftPipelinePrefill}
@@ -1291,9 +1293,6 @@ export function ProductionEpisodePipeline({
           packagingModelOptions={packagingModelOptions}
           defaultScenePlanModel={DEFAULT_PACKAGING_DRAFT_MODEL_ID}
           hasSceneClips={hasSceneClips}
-          brandGuide={brandGuide}
-          episodeFormat={episodeFormat}
-          distributionChannelLabel={distributionChannelLabel}
           showView={hasSceneClips && sceneClips.length > 0}
           onView={() => setViewOpen("scene")}
           persistPlanModelId={scenePersist.planModelId}

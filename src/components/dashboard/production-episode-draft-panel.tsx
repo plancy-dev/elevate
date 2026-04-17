@@ -5,6 +5,7 @@ import { ProductionEpisodeReferencePanel } from "@/components/dashboard/producti
 import { EpisodeDraftWorkbench } from "@/components/dashboard/episode-draft-workbench";
 import type { StudioEpisodeDraftTemplateRow } from "@/lib/data/studio-draft-templates";
 import type { StudioProductionArtifactRow } from "@/lib/data/studio-productions";
+import type { Json } from "@/types/database.types";
 import type { StudioEpisodeDraftSnapshotRow } from "@/lib/studio-productions/draft-snapshots";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,8 @@ function ProductionEpisodeDraftPanelEditable({
   customDraftTemplates,
   draftLlmAvailability,
   draftSnapshots,
+  pipelinePrefs,
+  brandGuide,
   runwayRenderReady = false,
   elevenlabsKeyConfigured = false,
   openaiKeyConfigured,
@@ -32,6 +35,8 @@ function ProductionEpisodeDraftPanelEditable({
   customDraftTemplates: StudioEpisodeDraftTemplateRow[];
   draftLlmAvailability?: { openai: boolean; anthropic: boolean } | null;
   draftSnapshots: StudioEpisodeDraftSnapshotRow[];
+  pipelinePrefs?: Json;
+  brandGuide?: string | null;
   runwayRenderReady?: boolean;
   elevenlabsKeyConfigured?: boolean;
   openaiKeyConfigured?: boolean;
@@ -50,6 +55,8 @@ function ProductionEpisodeDraftPanelEditable({
       customDraftTemplates={customDraftTemplates}
       draftLlmAvailability={draftLlmAvailability}
       draftSnapshots={draftSnapshots}
+      pipelinePrefs={pipelinePrefs}
+      brandGuide={brandGuide}
       className={className}
       embedded={embedded}
       scriptTextareaRows={8}
@@ -86,6 +93,8 @@ export function ProductionEpisodeDraftPanel({
   customDraftTemplates = [],
   draftLlmAvailability,
   draftSnapshots = [],
+  pipelinePrefs,
+  brandGuide,
   runwayRenderReady = false,
   elevenlabsKeyConfigured = false,
   openaiKeyConfigured,
@@ -102,6 +111,8 @@ export function ProductionEpisodeDraftPanel({
   customDraftTemplates?: StudioEpisodeDraftTemplateRow[];
   draftLlmAvailability?: { openai: boolean; anthropic: boolean } | null;
   draftSnapshots?: StudioEpisodeDraftSnapshotRow[];
+  pipelinePrefs?: Json;
+  brandGuide?: string | null;
   runwayRenderReady?: boolean;
   elevenlabsKeyConfigured?: boolean;
   openaiKeyConfigured?: boolean;
@@ -144,6 +155,8 @@ export function ProductionEpisodeDraftPanel({
       customDraftTemplates={customDraftTemplates}
       draftLlmAvailability={draftLlmAvailability}
       draftSnapshots={draftSnapshots}
+      pipelinePrefs={pipelinePrefs}
+      brandGuide={brandGuide}
       runwayRenderReady={runwayRenderReady}
       elevenlabsKeyConfigured={elevenlabsKeyConfigured}
       openaiKeyConfigured={openaiKeyConfigured}

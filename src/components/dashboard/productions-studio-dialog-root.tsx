@@ -64,6 +64,11 @@ export function useProductionsStudioDialogs(): Ctx {
   return ctx;
 }
 
+/** Use when the workbench may render outside `ProductionsStudioDialogProvider` (e.g. tests). */
+export function useProductionsStudioDialogsOptional(): Ctx | null {
+  return useContext(ProductionsStudioDialogContext);
+}
+
 export function ProductionsStudioDialogProvider({
   children,
   payload,

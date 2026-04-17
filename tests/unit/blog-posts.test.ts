@@ -5,18 +5,18 @@ vi.mock("server-only", () => ({}));
 import { routing } from "@/i18n/routing";
 import { getAllPostMetaForLocale, getPostBySlug } from "@/lib/blog/posts";
 
-/** Locales with en+ko-first flagship blog; others keep legacy sample slugs until localized. */
-const FLAGSHIP_LOCALES = new Set(["en", "ko"]);
+/** en+ko: release note + flagship. ja/zh: flagship translation + legacy samples (no release MDX yet). */
+const EN_KO_SLUGS = ["release-0-2-0", "the-prompt-is-your-product-surface"].sort();
+const JA_ZH_SLUGS = ["seo-and-waitlist", "the-prompt-is-your-product-surface", "welcome"].sort();
 
 describe("blog posts (locale MDX)", () => {
-  it("lists expected slugs per locale (en+ko flagship vs legacy samples)", () => {
-    const flagship = ["release-0-2-0", "the-prompt-is-your-product-surface"].sort();
-    const legacy = ["seo-and-waitlist", "welcome"].sort();
+  it("lists expected slugs per locale (en+ko flagship vs ja/zh flagship + samples)", () => {
     for (const locale of routing.locales) {
       const slugs = getAllPostMetaForLocale(locale)
         .map((p) => p.slug)
         .sort();
-      expect(slugs).toEqual(FLAGSHIP_LOCALES.has(locale) ? flagship : legacy);
+      const expected = locale === "en" || locale === "ko" ? EN_KO_SLUGS : JA_ZH_SLUGS;
+      expect(slugs).toEqual(expected);
     }
   });
 

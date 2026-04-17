@@ -146,6 +146,15 @@ export const ActionErrorCode = {
   /** Clip/audio download failed (network, URL, storage) */
   studioAssemblyDownloadFailed: "studioAssemblyDownloadFailed",
 
+  /** User scene clip upload: file too large */
+  studioSceneUploadTooLarge: "studioSceneUploadTooLarge",
+  /** User scene clip upload: MIME not allowed */
+  studioSceneUploadInvalidType: "studioSceneUploadInvalidType",
+  /** User scene clip upload: no scene plan JSON for duration */
+  studioScenePlanMissing: "studioScenePlanMissing",
+  /** User scene clip upload: DB insert failed */
+  studioSceneUploadInsertFailed: "studioSceneUploadInsertFailed",
+
   /** Reference pipeline: OpenAI key missing (YouTube STT) */
   studioReferenceNoApiKey: "studioReferenceNoApiKey",
   studioReferenceExtractionFailed: "studioReferenceExtractionFailed",

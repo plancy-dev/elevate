@@ -1,9 +1,14 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { assembleVideo } from "@/lib/studio-productions/video-assembly";
+import {
+  assembleVideoPerScene,
+  perSceneJobClipsToSpecs,
+} from "@/lib/studio-productions/assemble-video-per-scene";
 import { uploadAssembledMp4ToContentStorage } from "@/lib/studio-productions/assembled-video-storage";
 import { FORMAT_SPECS } from "@/lib/studio-productions/episode-format";
 import {
+  effectiveAssemblyClipCount,
   isVideoAssemblyJobInput,
   type VideoAssemblyJobInput,
 } from "@/lib/studio-productions/video-assembly-job-input";
@@ -43,14 +48,24 @@ export async function processVideoAssemblyJob(
     return;
   }
   const input: VideoAssemblyJobInput = raw;
+  const clipCount = effectiveAssemblyClipCount(input);
 
-  const result = await assembleVideo({
-    clipUrls: input.clip_urls,
-    audioUrl: input.audio_url ?? undefined,
-    srtContent: input.srt_content ?? undefined,
-    bgMusicUrl: input.bg_music_url ?? undefined,
-    bgMusicVolume: input.bg_music_volume ?? undefined,
-  });
+  const result =
+    input.per_scene && input.per_scene.length > 0
+      ? await assembleVideoPerScene({
+          scenes: perSceneJobClipsToSpecs(input.per_scene),
+          audioUrl: input.audio_url ?? undefined,
+          srtContent: input.srt_content ?? undefined,
+          bgMusicUrl: input.bg_music_url ?? undefined,
+          bgMusicVolume: input.bg_music_volume ?? undefined,
+        })
+      : await assembleVideo({
+          clipUrls: input.clip_urls,
+          audioUrl: input.audio_url ?? undefined,
+          srtContent: input.srt_content ?? undefined,
+          bgMusicUrl: input.bg_music_url ?? undefined,
+          bgMusicVolume: input.bg_music_volume ?? undefined,
+        });
 
   if (!result.ok) {
     const detail = result.message ? `: ${result.message}` : "";
@@ -83,7 +98,7 @@ export async function processVideoAssemblyJob(
     source: "ffmpeg_assembly",
     content_storage_bucket: getContentStorageBucket(),
     content_storage_path: storagePathForMeta,
-    clip_count: input.clip_urls.length,
+    clip_count: clipCount,
     has_tts: hasTts,
     has_subtitles: hasSub,
     has_bg_music: hasBg,
@@ -103,7 +118,7 @@ export async function processVideoAssemblyJob(
       organization_id: job.organization_id,
       artifact_role: "assembled_video",
       tool_platform: "ffmpeg",
-      content_text: `Assembled ${input.clip_urls.length} clips, ${result.durationSeconds.toFixed(1)}s`,
+      content_text: `Assembled ${clipCount} clips, ${result.durationSeconds.toFixed(1)}s`,
       external_url: publicUrl,
       metadata,
     })
@@ -137,7 +152,7 @@ export async function processVideoAssemblyJob(
       entity_type: AuditEntityType.STUDIO_EPISODE,
       entity_id: job.episode_id,
       metadata: {
-        clip_count: input.clip_urls.length,
+        clip_count: clipCount,
         duration_seconds: result.durationSeconds,
         job_id: job.id,
       } as Json,

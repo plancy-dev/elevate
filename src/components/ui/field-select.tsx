@@ -10,7 +10,10 @@ export type FieldSelectProps = Omit<
   SelectHTMLAttributes<HTMLSelectElement>,
   "children"
 > & {
-  options: Option[];
+  /** Flat list (default). Ignored when `optionGroups` is non-empty. */
+  options?: Option[];
+  /** Grouped `<optgroup>` rows — use for long model lists (tier, locale, etc.). */
+  optionGroups?: { label: string; options: Option[] }[];
   /** Visually match dashboard text inputs (h-10, text-sm). */
   controlSize?: "md" | "sm";
 };
@@ -21,12 +24,14 @@ export type FieldSelectProps = Omit<
  */
 export function FieldSelect({
   className,
-  options,
+  options = [],
+  optionGroups,
   controlSize = "md",
   id,
   ...props
 }: FieldSelectProps) {
   const height = controlSize === "sm" ? "h-9" : "h-10";
+  const grouped = optionGroups != null && optionGroups.length > 0;
 
   return (
     <div className={cn("relative w-full min-w-0")}>
@@ -45,11 +50,21 @@ export function FieldSelect({
         )}
         {...props}
       >
-        {options.map((o) => (
-          <option key={o.value} value={o.value} disabled={o.disabled}>
-            {o.label}
-          </option>
-        ))}
+        {grouped
+          ? optionGroups!.map((g) => (
+              <optgroup key={g.label} label={g.label}>
+                {g.options.map((o) => (
+                  <option key={o.value} value={o.value} disabled={o.disabled}>
+                    {o.label}
+                  </option>
+                ))}
+              </optgroup>
+            ))
+          : options.map((o) => (
+              <option key={o.value} value={o.value} disabled={o.disabled}>
+                {o.label}
+              </option>
+            ))}
       </select>
       <span
         className="pointer-events-none absolute right-3 top-1/2 z-[1] -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-md bg-field/90 text-text-tertiary"

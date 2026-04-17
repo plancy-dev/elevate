@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  draftWorkbenchPrefsFromPipelinePrefs,
   mergePipelinePrefsPatch,
   sceneRenderPrefsFromPipelinePrefs,
   ttsPrefsFromPipelinePrefs,
@@ -41,6 +42,21 @@ describe("sceneRenderPrefsFromPipelinePrefs", () => {
       runwayModelId: "",
       visualPromptSuffix: "",
     });
+  });
+});
+
+describe("draftWorkbenchPrefsFromPipelinePrefs", () => {
+  it("parses draftWorkbench.stickyContext", () => {
+    expect(
+      draftWorkbenchPrefsFromPipelinePrefs({
+        draftWorkbench: { stickyContext: "  hello  " },
+      }),
+    ).toEqual({ stickyContext: "  hello  " });
+  });
+
+  it("returns empty sticky when missing", () => {
+    expect(draftWorkbenchPrefsFromPipelinePrefs({})).toEqual({ stickyContext: "" });
+    expect(draftWorkbenchPrefsFromPipelinePrefs(null)).toEqual({ stickyContext: "" });
   });
 });
 

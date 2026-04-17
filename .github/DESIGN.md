@@ -4,7 +4,7 @@ Implementation-first workflow: **no Figma or external design-tool sync** in this
 
 | Resource | Link |
 |----------|------|
-| **Epic** | [#1 — Studio · Scene render · cost & UX](https://github.com/plancy-dev/elevate/issues/1) |
+| **Epic (closed 2026-04)** | [#1 — Studio · Scene render](https://github.com/plancy-dev/elevate/issues/1) — 히스토리·마일스톤 참고 |
 | **Status snapshot** | [`docs/design/SCENE_RENDER_EPIC_STATUS.md`](../docs/design/SCENE_RENDER_EPIC_STATUS.md) |
 | **Process (issues, PR, gh)** | [`docs/DEV_PROCESS_GITHUB.md`](../docs/DEV_PROCESS_GITHUB.md) |
 

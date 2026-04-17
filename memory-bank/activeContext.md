@@ -2,6 +2,15 @@
 
 ## 현재 페이즈
 
+**INIT (2026-04-17) — 씬 단계: 사용자 영상 + TTS/자막 정렬 (운영 수준 설계)**  
+**SoT:** [`docs/features/INIT-scene-user-media-assembly.md`](../docs/features/INIT-scene-user-media-assembly.md) · **tasks:** [`tasks.md`](tasks.md) **§ G3.1.4**  
+**다음:** **PLAN** — 스키마·조립 잡 JSON·Storage·용량 상한 확정 → CREATIVE(씬 카드 UX) → BUILD.
+
+---
+
+**INIT (2026-04) — Runway 이전 단계 품질** — 1차 **완료:** 에피소드 맥락(`pipeline_prefs.draftWorkbench.stickyContext`) + 생성 시 `brandGuide` 주입 + UI. SoT: [`INIT-pipeline-quality-upstream-of-runway.md`](../docs/features/INIT-pipeline-quality-upstream-of-runway.md) · REFLECT: [`archive/work-history/reflect-init-upstream-draft-quality-2026-04.md`](archive/work-history/reflect-init-upstream-draft-quality-2026-04.md). **다음(선택):** 다른 파이프라인 모달에 동일 패턴 — INIT §2.2.  
+**“그 밖의 백로그” 조회만:** [`docs/internal/BACKLOG_INDEX.md`](../docs/internal/BACKLOG_INDEX.md) — **우선순위 추천 없음** (담당자 지시 전까지).
+
 **AI Content Factory — Phase S (YouTube 콘텐츠 파이프라인)**  
 North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 기존 Studio Productions 원장 + Runway 연동을 확장하여 **스크립트 → TTS → 영상 → 조립 → YouTube 업로드** 파이프라인 구축. 상세: [`PLAN-studio-content-factory.md`](../docs/features/PLAN-studio-content-factory.md) · [`ADR-007`](../docs/adr/ADR-007-youtube-content-factory.md).
 
@@ -19,7 +28,7 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 기�
 
 **대시보드 접근 (운영 옵션)** — `DASHBOARD_ACCESS_STRICT=true`일 때 플랫폼/조직 관리자 또는 `waitlist_signups`·`prompt_studio_beta_allowlist`에 없으면 `/access-pending`. 코드: `src/lib/auth/dashboard-access.ts`, `src/app/(auth)/access-pending/page.tsx`.
 
-**다음 (로드맵):** [`tasks.md`](tasks.md) — **Phase S (Content Factory)** S1: TTS+자막 → S2: 씬+Runway → S3: FFmpeg 조립 → S4: YouTube 업로드 → S5: 분석. 병행: Phase G (Creator GTM) · Phase M (마케팅).
+**다음 (로드맵):** [`tasks.md`](tasks.md) — Phase S 파이프라인은 코드·스키마 기준 **정합 완료** ([`docs/features/PHASE_S_AND_T_STATUS.md`](../docs/features/PHASE_S_AND_T_STATUS.md)). 병행: Phase G 잔여(G1 운영 SKU 등) · Phase M · Phase T5 백로그.
 
 **INIT (2026-04) — 초안 템플릿·바이어스:** [`tasks.md`](tasks.md) **§ G3.4**. **P1+P2:** 시딩 키 + **조직 커스텀**(`029` `studio_episode_draft_templates`, `custom:<uuid>` · 관리 다이얼로그). **다음:** P3 시스템 프롬프트 변형 등은 우선순위에 따라.
 
@@ -35,23 +44,23 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 기�
 | **T4** | **구현됨** | 콘텐츠 팩토리 프리셋 — 6개 프리셋 (강연번역, 책리뷰 숏/롱, 뉴스요약, 스토리텔링, 리믹스) |
 | **T5** | 백로그 | 옴니채널 (Instagram/TikTok) + 크로스 채널 분석 + AI 추천 |
 
-**Content Factory Phase S (기존):** S1-S5 파이프라인 코드는 이미 구현됨 (Phase S와 Phase T는 동일 코드 기반 확장)
+**Content Factory Phase S:** [`PHASE_S_AND_T_STATUS.md`](../docs/features/PHASE_S_AND_T_STATUS.md) — `tasks.md` 구식 `[ ]` 제거·코드 매핑 완료.
 
-**상업·운영 병행:** **Phase G2 — Lemon Squeezy 웹훅 → 콘텐츠 엔타이틀먼트**. **G0:** [`PLAN-g0-creator-commerce-decisions.md`](../docs/features/PLAN-g0-creator-commerce-decisions.md) · [`ADR-005`](../docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md). **G1/M4:** [`PLAN-g1-first-ebook-sku-runbook.md`](../docs/features/PLAN-g1-first-ebook-sku-runbook.md). **M5:** [`POSTHOG_DASHBOARD_FIRST_SAVE.md`](../docs/POSTHOG_DASHBOARD_FIRST_SAVE.md). 참조: [`src/lib/payments/content-entitlement.ts`](../src/lib/payments/content-entitlement.ts).
+**상업·운영:** **G2 Lemon 웹훅 → 엔타이틀먼트 ✅ (2026-04).** **G0:** [`PLAN-g0-creator-commerce-decisions.md`](../docs/features/PLAN-g0-creator-commerce-decisions.md) · [`ADR-005`](../docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md). **G1/M4:** [`PLAN-g1-first-ebook-sku-runbook.md`](../docs/features/PLAN-g1-first-ebook-sku-runbook.md). **M5:** [`POSTHOG_DASHBOARD_FIRST_SAVE.md`](../docs/POSTHOG_DASHBOARD_FIRST_SAVE.md) (대시보드 저장은 PostHog UI). 참조: [`content-entitlement.ts`](../src/lib/payments/content-entitlement.ts).
 
 **Productions P0:** [`tasks.md`](tasks.md) **§ G3.1** — P0-1·P0-2·P0-3 구현됨; 남은 것은 팀 습관 체크리스트.
 
-**INIT → 다음:** Studio 스프린트면 **PLAN**(Runway 잡·ToS·멱등) 후 **BUILD**; 결제 스프린트면 G2 **PLAN** 후 **BUILD**.
+**INIT → 다음:** [`tasks.md`](tasks.md) **§ G3.2** — Runway·YouTube 경로 **구현됨**; 남은 우선순위는 **초안 품질**·OpenAI(호환) Phase 2 등.
 
-**INIT (2026-04) — Studio AI 콘텐츠 OS 보완:** SoT: [`tasks.md`](tasks.md) **§ G3.3**. **완료:** Anthropic 연동 + Runway **스텁** (`healthCheck` + `runStep` → `not_implemented`). **다음:** 위 Studio 우선순위 + 매트릭스 문서로 API/구현 상태 고정.
+**INIT (2026-04) — Studio AI 콘텐츠 OS 보완:** SoT: [`tasks.md`](tasks.md) **§ G3.3**. **완료:** Anthropic 연동 · Runway `runStep` 텍스트→비디오(SDK) · YouTube 업로드 경로(코드). **다음:** G3.3 문서·OpenAI 슬라이스 — [`STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md`](../docs/features/STUDIO_PROVIDER_API_CAPABILITY_MATRIX.md).
 
 ### 의사결정 (Productions P0 vs 결제)
 
 | 상황 | 추천 |
 |------|------|
-| 수익·글로벌 결제가 급함 | **G2 우선**, G3.1은 다음 스프린트 |
-| 숏·도구 실험 기록이 제품 스토리의 중심 | **G3.1 먼저** 0.5~1스프린트, G2는 병행 또는 직후 |
-| 한 명만 개발 | **한 줄로만** 정함: “이번 주는 G2” 또는 “이번 주는 G3.1” |
+| 수익·운영 SKU | **G1** 런북(`content_products` 행·CTA) · Lemon은 **이미 연결됨** |
+| 숏·도구 실험 기록이 제품 스토리의 중심 | **G3.1** 운영 습관·에피소드 루틴 |
+| 한 명만 개발 | **한 줄로만** 정함: “이번 주는 G1” 또는 “G3.3 문서” 등 |
 
 ## 최근 확정 결정
 
@@ -85,7 +94,7 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 기�
 | M2 캘린더 | [`marketing-pillars-m2.md`](marketing-pillars-m2.md) § Q2 2026 — M3 MDX로 승격 시 front matter 일정 확정 |
 | Prompt Studio 베타 허용 | 마이그레이션 `016` `prompt_studio_beta_allowlist` · `/admin/prompt-studio-allowlist` · env `STUDIO_BETA_REQUIRE_ALLOWLIST` (스튜디오 라우트); **대시보드 전체 게이트**는 별도로 `DASHBOARD_ACCESS_STRICT` + [`dashboard-access.ts`](../src/lib/auth/dashboard-access.ts) |
 | 블로그 조회 이벤트 | PostHog `elevate_blog_post_viewed` — `src/components/blog/blog-post-viewed-capture.tsx` |
-| **M3 (en+ko 플래그십)** | 슬러그 `the-prompt-is-your-product-surface` — [`en`](../content/blog/en/the-prompt-is-your-product-surface.mdx) · [`ko`](../content/blog/ko/the-prompt-is-your-product-surface.mdx) · 파이프라인 [`docs/BLOG_POST_PIPELINE.md`](../docs/BLOG_POST_PIPELINE.md) · ja/zh는 샘플 유지 → 번역 시 결정 |
+| **M3 (플래그십)** | 슬러그 `the-prompt-is-your-product-surface` — en · ko · ja · zh-CN · zh-TW (`content/blog/<locale>/`) · [`BLOG_POST_PIPELINE.md`](../docs/BLOG_POST_PIPELINE.md) |
 
 ## AI / Cursor
 

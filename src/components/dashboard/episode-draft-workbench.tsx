@@ -3,18 +3,24 @@
 import {
   startTransition,
   useActionState,
+  useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
+import Link from "next/link";
 import { toast } from "@/lib/ui/app-toast";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { PostHogEvent } from "@/lib/analytics/posthog-events";
+import { saveEpisodePipelinePrefs } from "@/actions/studio-episode-pipeline-prefs";
 import {
   generateStudioEpisodeDraft,
   refineStudioEpisodeDraft,
@@ -32,7 +38,7 @@ import {
   draftArtifactSyncKey,
   draftTripleFromArtifacts,
 } from "@/lib/studio-productions/resolve-episode-draft-artifacts";
-import { PenLine, Sparkles, Wand2 } from "lucide-react";
+import { CircleHelp, Layers, PenLine, Sparkles, Wand2 } from "lucide-react";
 import {
   ANTHROPIC_DRAFT_MODEL_OPTIONS,
   OPENAI_DRAFT_MODEL_OPTIONS,
@@ -41,6 +47,7 @@ import {
   draftModelProviderFromModelId,
   resolveDraftModel,
   type DraftModelCostTier,
+  type DraftModelOption,
   type StudioDraftLlmProvider,
 } from "@/lib/studio-productions/episode-llm-models";
 import type { StudioEpisodeDraftSnapshotRow } from "@/lib/studio-productions/draft-snapshots";
@@ -51,10 +58,15 @@ import {
   type DraftTemplateKey,
 } from "@/lib/studio-productions/draft-prompt-templates";
 import type { StudioEpisodeDraftTemplateRow } from "@/lib/data/studio-draft-templates";
+import { draftWorkbenchPrefsFromPipelinePrefs } from "@/lib/studio-productions/episode-pipeline-prefs";
+import type { Json } from "@/types/database.types";
 import { DraftTemplateManageDialog } from "@/components/dashboard/draft-template-manage-dialog";
+import { useProductionsStudioDialogsOptional } from "@/components/dashboard/productions-studio-dialog-root";
 import { Button } from "@/components/ui/button";
 import { FieldSelect } from "@/components/ui/field-select";
 import { cn } from "@/lib/utils";
+
+const DRAFT_STICKY_MAX_CHARS = 12_000;
 
 /** Used when the parent omits availability so hooks never run fewer times than on the next render. */
 const DEFAULT_DRAFT_LLM_AVAILABILITY = {
@@ -63,6 +75,189 @@ const DEFAULT_DRAFT_LLM_AVAILABILITY = {
 } as const;
 
 type DialogWorkbenchTab = "generate" | "refine" | "editor";
+
+const FIELD_HINT_LEAVE_MS = 120;
+
+type FieldHintCoords = { top: number; left: number; width: number };
+
+function computeFieldHintPosition(
+  anchor: DOMRect,
+  tooltipHeight: number,
+  maxWidth: number,
+): FieldHintCoords {
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1024;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 768;
+  const margin = 10;
+  const gap = 8;
+  const w = Math.min(maxWidth, vw - margin * 2);
+
+  let left = anchor.left + anchor.width / 2 - w / 2;
+  left = Math.max(margin, Math.min(left, vw - w - margin));
+
+  const spaceBelow = vh - anchor.bottom - margin;
+  const spaceAbove = anchor.top - margin;
+  const preferBelow =
+    spaceBelow >= Math.min(tooltipHeight, 220) || spaceBelow >= spaceAbove;
+  let top: number;
+  if (preferBelow) {
+    top = anchor.bottom + gap;
+    if (top + tooltipHeight > vh - margin) {
+      top = Math.max(margin, vh - margin - tooltipHeight);
+    }
+  } else {
+    top = anchor.top - gap - tooltipHeight;
+    if (top < margin) top = margin;
+  }
+
+  return { top, left, width: w };
+}
+
+/** Help in a fixed portal tooltip (avoids modal overflow clipping); hover / focus / tap pin. */
+function FieldHintBlock({
+  titleRow,
+  belowTitle,
+  hint,
+}: {
+  titleRow: ReactNode;
+  belowTitle?: ReactNode;
+  hint: ReactNode;
+}) {
+  const t = useTranslations("Dashboard.productions");
+  const tooltipId = useId();
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const tooltipPanelRef = useRef<HTMLDivElement>(null);
+  const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [pinned, setPinned] = useState(false);
+  const [hover, setHover] = useState(false);
+  const [focusOpen, setFocusOpen] = useState(false);
+  const [coords, setCoords] = useState<FieldHintCoords | null>(null);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+  const open = pinned || hover || focusOpen;
+
+  const clearLeaveTimer = useCallback(() => {
+    if (leaveTimerRef.current != null) {
+      clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = null;
+    }
+  }, []);
+
+  const scheduleHoverLeave = useCallback(() => {
+    clearLeaveTimer();
+    leaveTimerRef.current = setTimeout(() => setHover(false), FIELD_HINT_LEAVE_MS);
+  }, [clearLeaveTimer]);
+
+  const updateCoords = useCallback(() => {
+    const anchor = wrapRef.current?.getBoundingClientRect();
+    if (!anchor) return;
+    const maxW = 320;
+    const th = tooltipPanelRef.current?.offsetHeight ?? 180;
+    setCoords(computeFieldHintPosition(anchor, th, maxW));
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open || !mounted) {
+      return;
+    }
+    let cancelled = false;
+    const runPosition = () => {
+      if (cancelled) return;
+      updateCoords();
+    };
+    queueMicrotask(() => {
+      runPosition();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(runPosition);
+      });
+    });
+    const ro = () => runPosition();
+    window.addEventListener("resize", ro);
+    window.addEventListener("scroll", ro, true);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("resize", ro);
+      window.removeEventListener("scroll", ro, true);
+    };
+  }, [open, mounted, updateCoords]);
+
+  useEffect(() => {
+    if (!pinned) return;
+    const onDoc = (e: MouseEvent) => {
+      const node = e.target as Node;
+      if (wrapRef.current?.contains(node)) return;
+      if (tooltipPanelRef.current?.contains(node)) return;
+      setPinned(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPinned(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [pinned]);
+
+  const tooltipNode =
+    open && coords && mounted ? (
+      <div
+        ref={tooltipPanelRef}
+        id={tooltipId}
+        role="tooltip"
+        style={{
+          position: "fixed",
+          top: coords.top,
+          left: coords.left,
+          width: coords.width,
+          zIndex: 300,
+        }}
+        className="max-h-[min(42vh,18rem)] overflow-y-auto rounded-lg border border-border-subtle/90 bg-layer-01 px-3 py-2 text-left text-[11px] leading-relaxed text-text-secondary shadow-xl dark:bg-layer-02"
+        onMouseEnter={() => {
+          clearLeaveTimer();
+          setHover(true);
+        }}
+        onMouseLeave={() => scheduleHoverLeave()}
+      >
+        {hint}
+      </div>
+    ) : null;
+
+  return (
+    <div>
+      <div className="flex items-start gap-1.5">
+        <div className="min-w-0 flex-1">{titleRow}</div>
+        <div
+          ref={wrapRef}
+          className="relative shrink-0"
+          onMouseEnter={() => {
+            clearLeaveTimer();
+            setHover(true);
+          }}
+          onMouseLeave={() => scheduleHoverLeave()}
+        >
+          <button
+            type="button"
+            className="mt-0.5 inline-flex rounded-md p-0.5 text-text-tertiary outline-none transition-colors hover:bg-layer-02 hover:text-text-secondary focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 focus-visible:ring-offset-layer-01"
+            aria-describedby={open ? tooltipId : undefined}
+            aria-expanded={pinned}
+            aria-label={t("draftFieldHelpAria")}
+            onFocus={() => setFocusOpen(true)}
+            onBlur={() => setFocusOpen(false)}
+            onClick={() => setPinned((p) => !p)}
+          >
+            <CircleHelp className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
+          </button>
+        </div>
+      </div>
+      {belowTitle}
+      {mounted && tooltipNode ? createPortal(tooltipNode, document.body) : null}
+    </div>
+  );
+}
 
 const DRAFT_TEMPLATE_LABEL_KEYS: Record<
   DraftTemplateKey,
@@ -88,6 +283,32 @@ function draftLlmTierLabelKey(
     case "high":
       return "draftLlmTierHigh";
   }
+}
+
+function draftLlmTierBadgeClass(tier: DraftModelCostTier): string {
+  switch (tier) {
+    case "high":
+      return "border-amber-500/40 bg-amber-500/[0.08] text-amber-950 dark:border-amber-500/35 dark:bg-amber-500/10 dark:text-amber-100";
+    case "medium":
+      return "border-border-subtle/90 bg-layer-02/90 text-text-secondary";
+    case "low":
+      return "border-emerald-500/35 bg-emerald-500/[0.07] text-emerald-950 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100";
+  }
+}
+
+function buildDraftModelOptionGroups(
+  opts: readonly DraftModelOption[],
+  t: (key: string) => string,
+): { label: string; options: { value: string; label: string }[] }[] {
+  const high = opts.filter((o) => o.costTier === "high");
+  const medium = opts.filter((o) => o.costTier === "medium");
+  const low = opts.filter((o) => o.costTier === "low");
+  const toRow = (o: DraftModelOption) => ({ value: o.id, label: o.id });
+  return [
+    { label: t("draftLlmOptgroupHigh"), options: high.map(toRow) },
+    { label: t("draftLlmOptgroupMedium"), options: medium.map(toRow) },
+    { label: t("draftLlmOptgroupLow"), options: low.map(toRow) },
+  ].filter((g) => g.options.length > 0);
 }
 
 function FieldDiffBlock({
@@ -152,6 +373,12 @@ export type EpisodeDraftWorkbenchProps = {
   footerSlot?: ReactNode;
   scriptTextareaRows?: number;
   onDirtyChange?: (dirty: boolean) => void;
+  /** Persisted `studio_production_episodes.pipeline_prefs` (for draft workbench sticky context). */
+  pipelinePrefs?: Json;
+  /** Project brand guide — read-only notice; generation merges server-side. */
+  brandGuide?: string | null;
+  /** Link for “edit brand guide” (Studio projects). */
+  brandGuideEditHref?: string;
   /**
    * Pipeline tab shortcut: when the dialog opens with a non-null prefill, apply model + briefing.
    * Bump `pipelineShortcutNonce` each time so the effect can re-run for a new open.
@@ -173,6 +400,9 @@ export function EpisodeDraftWorkbench({
   footerSlot,
   scriptTextareaRows = 8,
   onDirtyChange,
+  pipelinePrefs = {} as Json,
+  brandGuide = null,
+  brandGuideEditHref = "/dashboard/productions?studio=projects",
   pipelineShortcutPrefill = null,
   pipelineShortcutNonce = 0,
 }: EpisodeDraftWorkbenchProps) {
@@ -181,6 +411,7 @@ export function EpisodeDraftWorkbench({
 
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
+  const studioDialogs = useProductionsStudioDialogsOptional();
   const format = useFormatter();
   const router = useRouter();
   const posthog = usePostHog();
@@ -194,6 +425,8 @@ export function EpisodeDraftWorkbench({
         script: `${p}-script`,
         instr: `${p}-instr`,
         briefing: `${p}-briefing`,
+        sticky: `${p}-sticky`,
+        stickyHint: `${p}-sticky-hint`,
         llmProvider: `${p}-llm-p`,
         llmModel: `${p}-llm-m`,
         template: `${p}-tpl`,
@@ -206,6 +439,8 @@ export function EpisodeDraftWorkbench({
       script: "draft_script",
       instr: "draft_instr",
       briefing: `draft_briefing_${episodeId}`,
+      sticky: `draft_sticky_${episodeId}`,
+      stickyHint: `draft_sticky_hint_${episodeId}`,
       llmProvider: `draft_llm_provider_${episodeId}`,
       llmModel: `draft_llm_model_${episodeId}`,
       template: `draft_template_${episodeId}`,
@@ -232,6 +467,23 @@ export function EpisodeDraftWorkbench({
     DEFAULT_DRAFT_TEMPLATE_KEY,
   );
 
+  const pipelinePrefsSyncKey = useMemo(
+    () => JSON.stringify(pipelinePrefs ?? null),
+    [pipelinePrefs],
+  );
+  const savedStickyContext = useMemo(
+    () => draftWorkbenchPrefsFromPipelinePrefs(pipelinePrefs).stickyContext,
+    [pipelinePrefs],
+  );
+  const [stickyContext, setStickyContext] = useState(() =>
+    draftWorkbenchPrefsFromPipelinePrefs(pipelinePrefs).stickyContext,
+  );
+  const [stickySavePending, setStickySavePending] = useState(false);
+
+  useEffect(() => {
+    setStickyContext(draftWorkbenchPrefsFromPipelinePrefs(pipelinePrefs).stickyContext);
+  }, [pipelinePrefsSyncKey, pipelinePrefs]);
+
   const [compareOpen, setCompareOpen] = useState(false);
   const [comparePrevious, setComparePrevious] =
     useState<StudioEpisodeLlmDraftPayload | null>(null);
@@ -250,13 +502,25 @@ export function EpisodeDraftWorkbench({
   useEffect(() => {
     if (!onDirtyChange) return;
     const synced = draftTripleFromArtifacts(artifacts);
+    const stickyDirty = stickyContext !== savedStickyContext;
     const dirty =
       compareOpen ||
+      stickyDirty ||
       hook !== synced.hook ||
       title !== synced.title ||
       scriptDraft !== synced.script_draft;
     onDirtyChange(dirty);
-  }, [onDirtyChange, compareOpen, hook, title, scriptDraft, artifacts, artifactSyncKey]);
+  }, [
+    onDirtyChange,
+    compareOpen,
+    hook,
+    title,
+    scriptDraft,
+    artifacts,
+    artifactSyncKey,
+    stickyContext,
+    savedStickyContext,
+  ]);
 
 
   useEffect(() => {
@@ -328,16 +592,13 @@ export function EpisodeDraftWorkbench({
     return "openai";
   })();
 
-  const modelOptions = useMemo(() => {
+  const modelOptionGroups = useMemo(() => {
     const opts =
       effectiveProvider === "openai"
         ? OPENAI_DRAFT_MODEL_OPTIONS
         : ANTHROPIC_DRAFT_MODEL_OPTIONS;
-    return opts.map((o) => ({
-      value: o.id,
-      label: o.id,
-    }));
-  }, [effectiveProvider]);
+    return buildDraftModelOptionGroups(opts, t);
+  }, [effectiveProvider, t]);
 
   const draftTemplateOptions = useMemo(() => {
     const seeds = DRAFT_TEMPLATE_KEYS.map((k) => ({
@@ -397,6 +658,25 @@ export function EpisodeDraftWorkbench({
     refState?.error ??
     saveState?.error ??
     restoreState?.error;
+
+  async function saveStickyContextToEpisode() {
+    setStickySavePending(true);
+    try {
+      const result = await saveEpisodePipelinePrefs(episodeId, {
+        draftWorkbench: {
+          stickyContext: stickyContext.slice(0, DRAFT_STICKY_MAX_CHARS),
+        },
+      });
+      if (result && "error" in result && result.error) {
+        toast.error(translateActionErrorMessage(result.error, tAction));
+        return;
+      }
+      toast.success(t("draftStickyContextSavedToast"));
+      router.refresh();
+    } finally {
+      setStickySavePending(false);
+    }
+  }
 
   function labelForSnapshotSource(source: string) {
     switch (source) {
@@ -615,50 +895,125 @@ export function EpisodeDraftWorkbench({
         </div>
       ) : null}
 
-      <div className="rounded-xl border border-border-subtle/80 bg-layer-02/30 px-3 py-2.5">
-        <div
-          className={cn(
-            "grid gap-2.5 items-end",
-            showProviderPicker ? "sm:grid-cols-2" : "sm:grid-cols-1",
-          )}
-        >
-          {showProviderPicker ? (
-            <div className="min-w-0">
-              <label
-                className="block text-[11px] font-medium text-text-tertiary mb-1"
-                htmlFor={fieldIds.llmProvider}
-              >
-                {t("draftLlmProviderLabel")}
-              </label>
-              <FieldSelect
-                id={fieldIds.llmProvider}
-                name="llm_provider_visual"
-                value={llmProvider}
-                onChange={(e) => {
-                  const p = e.target.value as StudioDraftLlmProvider;
-                  setLlmProvider(p);
-                  setLlmModel(defaultDraftModel(p));
-                }}
-                disabled={!llmReady}
-                options={[
-                  {
-                    value: "openai",
-                    label: t("draftLlmProviderOpenai"),
-                    disabled: !draftLlmAvailability.openai,
-                  },
-                  {
-                    value: "anthropic",
-                    label: t("draftLlmProviderAnthropic"),
-                    disabled: !draftLlmAvailability.anthropic,
-                  },
-                ]}
-                controlSize="sm"
-              />
+      <div className="overflow-hidden rounded-xl border border-border-subtle/80 bg-layer-02/25 shadow-sm">
+        <div className="border-b border-border-subtle/70 bg-layer-02/50 px-3 py-2.5 sm:px-3.5">
+          <FieldHintBlock
+            titleRow={
+              <h3 className="text-xs font-semibold tracking-tight text-text-primary">
+                {t("draftLlmSetupTitle")}
+              </h3>
+            }
+            belowTitle={
+              <p className="mt-1 text-[11px] leading-relaxed text-text-tertiary">
+                {t("draftLlmSetupDescription")}
+              </p>
+            }
+            hint={
+              <div className="space-y-2 text-text-tertiary">
+                <p className="font-medium text-text-secondary">
+                  {t("draftLlmPricingDetailsSummary")}
+                </p>
+                <p>{t("draftLlmPricingFootnote")}</p>
+              </div>
+            }
+          />
+        </div>
+        <div className="space-y-3 px-3 py-3 sm:px-3.5">
+          {!llmReady ? (
+            <div className="rounded-lg border border-amber-500/30 bg-amber-500/[0.06] px-3 py-2.5 text-[11px] leading-relaxed text-text-secondary">
+              <p>{t("draftLlmKeysRequiredHint")}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                {studioDialogs ? (
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    onClick={studioDialogs.openIntegrations}
+                    className="shrink-0"
+                  >
+                    {t("draftLlmOpenIntegrationsDialog")}
+                  </Button>
+                ) : (
+                  <Link
+                    href="/dashboard/productions?studio=integrations"
+                    className="inline-flex shrink-0 font-medium text-primary hover:underline"
+                  >
+                    {t("draftLlmOpenIntegrationsLink")}
+                  </Link>
+                )}
+              </div>
             </div>
           ) : null}
-          <div className={cn("min-w-0", !showProviderPicker && "sm:col-span-2")}>
+
+          {llmReady && !showProviderPicker ? (
+            <p className="text-[11px] text-text-tertiary">
+              {t("draftLlmSingleProviderCaption", {
+                provider:
+                  effectiveProvider === "openai"
+                    ? t("draftLlmProviderOpenai")
+                    : t("draftLlmProviderAnthropic"),
+              })}
+            </p>
+          ) : null}
+
+          {showProviderPicker ? (
+            <div>
+              <p
+                id={`${fieldIds.llmProvider}-legend`}
+                className="mb-1.5 text-[11px] font-medium text-text-secondary"
+              >
+                {t("draftLlmProviderLabel")}
+              </p>
+              <div
+                role="radiogroup"
+                aria-labelledby={`${fieldIds.llmProvider}-legend`}
+                className="flex gap-1 rounded-xl border border-border-subtle/70 bg-layer-02/45 p-1"
+              >
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={llmProvider === "openai"}
+                  disabled={!draftLlmAvailability.openai}
+                  onClick={() => {
+                    setLlmProvider("openai");
+                    setLlmModel(defaultDraftModel("openai"));
+                  }}
+                  className={cn(
+                    "min-h-9 flex-1 rounded-lg px-2.5 text-xs font-medium transition-colors",
+                    llmProvider === "openai"
+                      ? "bg-layer-01 text-text-primary shadow-sm ring-1 ring-border-subtle/80"
+                      : "text-text-secondary hover:bg-layer-01/70 hover:text-text-primary",
+                    !draftLlmAvailability.openai && "cursor-not-allowed opacity-45",
+                  )}
+                >
+                  {t("draftLlmProviderOpenai")}
+                </button>
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={llmProvider === "anthropic"}
+                  disabled={!draftLlmAvailability.anthropic}
+                  onClick={() => {
+                    setLlmProvider("anthropic");
+                    setLlmModel(defaultDraftModel("anthropic"));
+                  }}
+                  className={cn(
+                    "min-h-9 flex-1 rounded-lg px-2.5 text-xs font-medium transition-colors",
+                    llmProvider === "anthropic"
+                      ? "bg-layer-01 text-text-primary shadow-sm ring-1 ring-border-subtle/80"
+                      : "text-text-secondary hover:bg-layer-01/70 hover:text-text-primary",
+                    !draftLlmAvailability.anthropic && "cursor-not-allowed opacity-45",
+                  )}
+                >
+                  {t("draftLlmProviderAnthropic")}
+                </button>
+              </div>
+            </div>
+          ) : null}
+
+          <div className="min-w-0">
             <label
-              className="block text-[11px] font-medium text-text-tertiary mb-1"
+              className="mb-1.5 block text-[11px] font-medium text-text-secondary"
               htmlFor={fieldIds.llmModel}
             >
               {t("draftLlmModelLabel")}
@@ -669,23 +1024,24 @@ export function EpisodeDraftWorkbench({
               value={resolvedModel}
               onChange={(e) => setLlmModel(e.target.value)}
               disabled={!llmReady}
-              options={modelOptions}
+              optionGroups={modelOptionGroups}
               controlSize="sm"
             />
             {resolvedModelMeta ? (
-              <p className="mt-1 text-[10px] text-text-tertiary tabular-nums">
-                {t(draftLlmTierLabelKey(resolvedModelMeta.costTier))} ·{" "}
-                {resolvedModelMeta.pricingHint}
-              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
+                <span
+                  className={cn(
+                    "inline-flex max-w-full items-center rounded-md border px-2 py-0.5 text-[10px] font-medium tabular-nums",
+                    draftLlmTierBadgeClass(resolvedModelMeta.costTier),
+                  )}
+                >
+                  {t(draftLlmTierLabelKey(resolvedModelMeta.costTier))}
+                </span>
+                <span className="text-[10px] tabular-nums text-text-tertiary">
+                  {resolvedModelMeta.pricingHint}
+                </span>
+              </div>
             ) : null}
-            <details className="mt-1.5 group">
-              <summary className="cursor-pointer list-none text-[11px] text-text-tertiary underline-offset-2 hover:text-text-secondary hover:underline [&::-webkit-details-marker]:hidden">
-                {t("draftLlmPricingDetailsSummary")}
-              </summary>
-              <p className="mt-1.5 text-[11px] text-text-tertiary leading-relaxed">
-                {t("draftLlmPricingFootnote")}
-              </p>
-            </details>
           </div>
         </div>
       </div>
@@ -740,9 +1096,14 @@ export function EpisodeDraftWorkbench({
           <input type="hidden" name="llm_model" value={resolvedModel} />
           <input type="hidden" name="draft_generate_mode" value={draftGenerateMode} />
           <div className="space-y-2 rounded-lg border border-border-subtle/70 bg-layer-02/20 p-3">
-            <p className="text-[11px] font-medium text-text-secondary">
-              {t("draftGenerateModeLabel")}
-            </p>
+            <FieldHintBlock
+              titleRow={
+                <p className="text-[11px] font-medium text-text-secondary">
+                  {t("draftGenerateModeLabel")}
+                </p>
+              }
+              hint={<p>{t("draftGenerateModeHint")}</p>}
+            />
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
@@ -771,21 +1132,22 @@ export function EpisodeDraftWorkbench({
                 {t("draftGenerateModeFresh")}
               </button>
             </div>
-            <details className="text-[11px] text-text-tertiary">
-              <summary className="cursor-pointer text-text-tertiary hover:text-text-secondary">
-                {t("draftMoreDetails")}
-              </summary>
-              <p className="mt-1.5 leading-relaxed">{t("draftGenerateModeHint")}</p>
-            </details>
           </div>
           <div>
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-              <label
-                className="block text-xs font-medium text-text-secondary"
-                htmlFor={fieldIds.template}
-              >
-                {t("draftTemplateLabel")}
-              </label>
+            <div className="flex flex-wrap items-start justify-between gap-2 mb-1.5">
+              <div className="min-w-0 flex-1">
+                <FieldHintBlock
+                  titleRow={
+                    <label
+                      className="block text-xs font-medium text-text-secondary"
+                      htmlFor={fieldIds.template}
+                    >
+                      {t("draftTemplateLabel")}
+                    </label>
+                  }
+                  hint={<p className="leading-snug">{t("draftTemplateHint")}</p>}
+                />
+              </div>
               <DraftTemplateManageDialog
                 templates={localCustomDraftTemplates}
                 onTemplatesChange={setLocalCustomDraftTemplates}
@@ -800,18 +1162,79 @@ export function EpisodeDraftWorkbench({
               controlSize="sm"
               disabled={!llmReady}
             />
-            <details className="mt-1.5 text-[11px] text-text-tertiary">
-              <summary className="cursor-pointer hover:text-text-secondary">{t("draftMoreDetails")}</summary>
-              <p className="mt-1.5 leading-snug">{t("draftTemplateHint")}</p>
-            </details>
+          </div>
+          {brandGuide?.trim() ? (
+            <div className="rounded-lg border border-border-subtle/60 bg-layer-02/25 px-3 py-2 text-[11px] text-text-secondary leading-relaxed">
+              <p>{t("draftBrandGuideStrip")}</p>
+              <Link
+                href={brandGuideEditHref}
+                className="mt-1 inline-block font-medium text-primary hover:underline"
+              >
+                {t("draftBrandGuideEditLink")}
+              </Link>
+            </div>
+          ) : null}
+          <div className="space-y-2 rounded-lg border border-border-subtle/70 bg-layer-02/20 p-3">
+            <div className="flex items-start gap-2">
+              <Layers className="h-4 w-4 shrink-0 text-text-tertiary mt-0.5" aria-hidden />
+              <div className="min-w-0 flex-1 space-y-1">
+                <FieldHintBlock
+                  titleRow={
+                    <label
+                      className="block text-xs font-medium text-text-secondary"
+                      htmlFor={fieldIds.sticky}
+                    >
+                      {t("draftStickyContextLabel")}
+                    </label>
+                  }
+                  belowTitle={
+                    <p
+                      id={fieldIds.stickyHint}
+                      className="mt-1 text-[11px] text-text-tertiary leading-snug"
+                    >
+                      {t("draftStickyContextDescription")}
+                    </p>
+                  }
+                  hint={<p className="leading-snug">{t("draftStickyContextHint")}</p>}
+                />
+              </div>
+            </div>
+            <textarea
+              id={fieldIds.sticky}
+              name="draft_sticky_context"
+              rows={3}
+              value={stickyContext}
+              onChange={(e) => setStickyContext(e.target.value)}
+              placeholder={t("draftStickyContextPlaceholder")}
+              maxLength={DRAFT_STICKY_MAX_CHARS}
+              aria-describedby={fieldIds.stickyHint}
+              className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm placeholder:text-text-tertiary"
+            />
+            <div className="flex flex-wrap gap-2 pt-0.5">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                isLoading={stickySavePending}
+                disabled={stickyContext === savedStickyContext || stickySavePending}
+                onClick={() => void saveStickyContextToEpisode()}
+              >
+                {t("draftStickyContextSave")}
+              </Button>
+            </div>
           </div>
           <div>
-            <label
-              className="block text-xs font-medium text-text-secondary mb-1.5"
-              htmlFor={fieldIds.briefing}
-            >
-              {t("draftBriefingLabel")}
-            </label>
+            <FieldHintBlock
+              titleRow={
+                <label
+                  className="block text-xs font-medium text-text-secondary"
+                  htmlFor={fieldIds.briefing}
+                >
+                  {t("draftBriefingLabel")}
+                </label>
+              }
+              hint={<p className="leading-snug">{t("draftBriefingHint")}</p>}
+            />
             <textarea
               id={fieldIds.briefing}
               name="draft_briefing"
@@ -821,12 +1244,8 @@ export function EpisodeDraftWorkbench({
               placeholder={t("draftBriefingPlaceholder")}
               disabled={!llmReady}
               maxLength={12000}
-              className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm placeholder:text-text-tertiary disabled:opacity-60"
+              className="mt-1.5 w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm placeholder:text-text-tertiary disabled:opacity-60"
             />
-            <details className="mt-1.5 text-[11px] text-text-tertiary">
-              <summary className="cursor-pointer hover:text-text-secondary">{t("draftMoreDetails")}</summary>
-              <p className="mt-1.5 leading-snug">{t("draftBriefingHint")}</p>
-            </details>
           </div>
           <div className="flex flex-wrap gap-2 pt-0.5">
             <Button
