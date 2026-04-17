@@ -66,6 +66,12 @@ GitHub 웹에서 버튼을 누르는 것은 **필수가 아니다.** `gh`와 Cur
 - **`FIGMA_VERIFY_FILE_KEYS`:** 임의 문자열이 아니라 **파일 URL의 키**다.  
   `https://www.figma.com/design/**여기가_파일_키**/파일이름` — 쉼표로 여러 개. **생략 시** 기본값은 [`.github/DESIGN.md`](../.github/DESIGN.md)에 있는 Studio 파일과 동일(스크립트 기본값). 다른 파일도 검증하려면 키를 추가한다.
 
+### Figma 대표 프레임 — 누가 확정?
+
+- **대표 프레임 URL**(`node-id=` 포함)은 **사람이** 확정한다. Figma에서 **Share → Copy link**로 복사하거나, `pnpm figma:list-links:frames`로 출력된 목록에서 **의도한 프레임**을 골라 [`.github/DESIGN.md`](../.github/DESIGN.md) 표·이슈에 붙인다.
+- `pnpm figma:list-links:md`는 캔버스마다 **첫 FRAME** 기준 **후보 URL**만 만든다. 레이아웃이 여러 개면 반드시 사람이 대표를 지정한다.
+- 초기 세팅·페이지 추가·마일스톤 변경 시에는 에이전트에게 “`DESIGN.md` 표와 이슈 #4–#9 맞춰 갱신해 줘”처럼 요청하면 된다.
+
 ---
 
 ## 3. “다음에 할 작업 목록 보여줘” — 원격 조회 (gh CLI)

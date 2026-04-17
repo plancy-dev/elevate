@@ -24,7 +24,7 @@ Single place for **Figma** links and design↔engineering workflow for the Studi
 ## Figma backlog (GitHub)
 
 Epic: [#1 — Studio · Scene render · cost & UX](https://github.com/plancy-dev/elevate/issues/1).  
-아래 이슈에 **문장형 수락 기준**이 있으며, 완료 시 본 표의 **대표 프레임** 열을 프레임 URL(`node-id=` 포함)로 갱신한다. 전체 동기화·검수는 [#10](https://github.com/plancy-dev/elevate/issues/10).
+아래 이슈에 **문장형 수락 기준**이 있으며, **대표 프레임 URL은 사람이 확정**한다 ([`docs/DEV_PROCESS_GITHUB.md`](../docs/DEV_PROCESS_GITHUB.md) §Figma 대표 프레임). 진행 스냅샷: [`docs/design/SCENE_RENDER_EPIC_STATUS.md`](../docs/design/SCENE_RENDER_EPIC_STATUS.md). DESIGN.md 표 동기화 이슈 [#10](https://github.com/plancy-dev/elevate/issues/10)은 처리 완료(표가 SoT).
 
 | Phase | GitHub issue | Representative frame |
 |-------|----------------|--------------------------------------------------|
@@ -34,7 +34,7 @@ Epic: [#1 — Studio · Scene render · cost & UX](https://github.com/plancy-dev
 | P2 Preflight | [#7](https://github.com/plancy-dev/elevate/issues/7) | [P2 Preflight](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=11-2) |
 | P3 Format & budget | [#8](https://github.com/plancy-dev/elevate/issues/8) | [P3 Format and budget](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=11-3) |
 | Explorations | [#9](https://github.com/plancy-dev/elevate/issues/9) | [Explorations](https://www.figma.com/design/qxCqUDg8XcC3bEwuR2ImwV/Elevate-%C2%B7-Studio-%C2%B7-Scene-render?node-id=1-3) |
-| DESIGN.md ↔ Figma links | [#10](https://github.com/plancy-dev/elevate/issues/10) | This row — closed by PR that syncs the table |
+| DESIGN.md ↔ Figma (메타) | [#10](https://github.com/plancy-dev/elevate/issues/10) (closed) | 표 본문이 최종 SoT — 재동기화 시 PR + 필요 시 이슈 재오픈 |
 
 **Product (code, separate from Figma frames):** estimated Runway credits before scene render — [#12](https://github.com/plancy-dev/elevate/issues/12).
 
