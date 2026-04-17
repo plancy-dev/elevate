@@ -1,8 +1,20 @@
 import { describe, expect, it } from "vitest";
 import {
   estimateSceneRenderCredits,
+  estimateSceneRenderCreditsForDuration,
   RUNWAY_SCENE_CREDITS_PER_SECOND_ESTIMATE,
 } from "@/lib/studio-integrations/providers/runway/runway-scene-credits-estimate";
+
+describe("estimateSceneRenderCreditsForDuration", () => {
+  it("matches ceil(duration * rate) for gen4.5", () => {
+    const rate = RUNWAY_SCENE_CREDITS_PER_SECOND_ESTIMATE["gen4.5"];
+    expect(estimateSceneRenderCreditsForDuration("gen4.5", 4)).toBe(Math.ceil(4 * rate));
+  });
+
+  it("treats invalid duration as 0 credits", () => {
+    expect(estimateSceneRenderCreditsForDuration("veo3.1", NaN)).toBe(0);
+  });
+});
 
 describe("estimateSceneRenderCredits", () => {
   it("sums ceil(duration * rate) per scene for gen4.5", () => {

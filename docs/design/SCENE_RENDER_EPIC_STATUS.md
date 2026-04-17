@@ -11,6 +11,7 @@ SoT 링크: [`.github/DESIGN.md`](../../.github/DESIGN.md) · 프로세스: [`do
 | Item | Issue | Notes |
 |------|--------|--------|
 | 렌더 전 예상 크레딧 UI + 면책 | [#12](https://github.com/plancy-dev/elevate/issues/12) (closed) | 단가는 [`runway-scene-credits-estimate.ts`](../../src/lib/studio-integrations/providers/runway/runway-scene-credits-estimate.ts) — Runway 정책에 맞게 주기적 보정 |
+| P1 씬 테이블(씬별 추정·합계) — 초기 구현 | [#6](https://github.com/plancy-dev/elevate/issues/6) (open) | [`scene-render-pipeline-step.tsx`](../../src/components/dashboard/scene-render-pipeline-step.tsx): 유효한 Scenes JSON일 때 씬·초·추정 크레딧·비주얼(말줄임) 테이블; 렌더 시작 후 상태 컬럼·Figma 시각과 정합은 이슈에서 마무리 |
 
 ---
 

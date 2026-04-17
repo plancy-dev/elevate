@@ -16,17 +16,27 @@ export const RUNWAY_SCENE_CREDITS_PER_SECOND_ESTIMATE: Record<RunwayTextToVideoM
   };
 
 /**
+ * Integer credits for one scene: `ceil(durationSeconds × rate)` (same rule as total estimate).
+ */
+export function estimateSceneRenderCreditsForDuration(
+  modelId: RunwayTextToVideoModelId,
+  durationSeconds: number,
+): number {
+  const rate = RUNWAY_SCENE_CREDITS_PER_SECOND_ESTIMATE[modelId];
+  const sec = Math.max(0, Number(durationSeconds) || 0);
+  return Math.ceil(sec * rate);
+}
+
+/**
  * Sum of (per-second rate × scene duration) for all scenes — integer credits, rounded up per scene.
  */
 export function estimateSceneRenderCredits(
   modelId: RunwayTextToVideoModelId,
   scenes: Pick<SceneRow, "durationSeconds">[],
 ): number {
-  const rate = RUNWAY_SCENE_CREDITS_PER_SECOND_ESTIMATE[modelId];
   let total = 0;
   for (const s of scenes) {
-    const sec = Math.max(0, Number(s.durationSeconds) || 0);
-    total += Math.ceil(sec * rate);
+    total += estimateSceneRenderCreditsForDuration(modelId, s.durationSeconds);
   }
   return total;
 }

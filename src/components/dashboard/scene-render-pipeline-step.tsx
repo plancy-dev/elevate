@@ -19,7 +19,10 @@ import {
   parseRunwaySceneModelId,
   type RunwayTextToVideoModelId,
 } from "@/lib/studio-integrations/providers/runway/runway-scene-models";
-import { estimateSceneRenderCredits } from "@/lib/studio-integrations/providers/runway/runway-scene-credits-estimate";
+import {
+  estimateSceneRenderCredits,
+  estimateSceneRenderCreditsForDuration,
+} from "@/lib/studio-integrations/providers/runway/runway-scene-credits-estimate";
 import { parseSceneRows } from "@/lib/studio-productions/scene-rows-json";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/lib/ui/app-toast";
@@ -128,6 +131,8 @@ export function SceneRenderPipelineStep({
     return keys.sort((a, b) => a - b);
   }, [rowStatus]);
 
+  const showProgress = sceneRowsFromStatus.length > 0;
+
   const hasFailures = useMemo(
     () => Object.values(rowStatus).some((s) => s === "error"),
     [rowStatus],
@@ -142,6 +147,13 @@ export function SceneRenderPipelineStep({
     if (!parsedSceneRowsForEstimate?.length) return null;
     return estimateSceneRenderCredits(runwayModel, parsedSceneRowsForEstimate);
   }, [parsedSceneRowsForEstimate, runwayModel]);
+
+  const showPlanTable =
+    !disabled &&
+    parsedSceneRowsForEstimate != null &&
+    parsedSceneRowsForEstimate.length > 0;
+
+  const hasSceneActivity = Object.keys(rowStatus).length > 0;
 
   const selectedPlanModelLabel = useMemo(
     () =>
@@ -340,8 +352,10 @@ export function SceneRenderPipelineStep({
     });
   }, [episodeId, packagingLlmReady, scriptText, selectedPlanModel, t, tAction]);
 
+  /** When the plan table shows per-row status, skip the legacy bullet list to avoid duplication. */
+  const showLegacyProgressList = showProgress && (!showPlanTable || !hasSceneActivity);
+
   const stepBadge = done ? "\u2713" : step === 0 ? "0" : String(step);
-  const showProgress = sceneRowsFromStatus.length > 0;
 
   return (
     <div
@@ -438,6 +452,108 @@ export function SceneRenderPipelineStep({
           <p className="text-[10px] text-text-tertiary leading-relaxed">
             {t("pipelineSceneEstimatedCreditsDisclaimer")}
           </p>
+        </div>
+      ) : null}
+
+      {showPlanTable && estimatedRunwayCredits != null ? (
+        <div className="mt-2 pl-7 space-y-1.5">
+          <p className="text-[10px] font-medium text-text-tertiary">
+            {t("pipelineScenePlanTableCaption")}
+          </p>
+          <div className="max-w-full overflow-x-auto px-0.5 -mx-0.5">
+            <table className="w-full min-w-[min(100%,22rem)] border-collapse text-left text-[11px] text-text-secondary">
+              <thead>
+                <tr className="border-b border-border-subtle/60 text-[10px] font-medium text-text-tertiary">
+                  <th scope="col" className="py-1 pr-2 font-medium">
+                    {t("pipelineSceneColScene")}
+                  </th>
+                  <th scope="col" className="py-1 pr-2 font-medium tabular-nums">
+                    {t("pipelineSceneColDurationSec")}
+                  </th>
+                  <th scope="col" className="py-1 pr-2 font-medium tabular-nums">
+                    {t("pipelineSceneColEstCredits")}
+                  </th>
+                  <th scope="col" className="py-1 pr-2 font-medium min-w-[7rem]">
+                    {t("pipelineSceneColVisualPrompt")}
+                  </th>
+                  {hasSceneActivity ? (
+                    <th scope="col" className="py-1 pl-1 font-medium text-right">
+                      {t("pipelineSceneColStatus")}
+                    </th>
+                  ) : null}
+                </tr>
+              </thead>
+              <tbody>
+                {parsedSceneRowsForEstimate.map((row) => {
+                  const perScene = estimateSceneRenderCreditsForDuration(
+                    runwayModel,
+                    row.durationSeconds,
+                  );
+                  const st = rowStatus[row.index];
+                  const statusLabel =
+                    st === "running"
+                      ? t("pipelineSceneStatusRunning")
+                      : st === "ok"
+                        ? t("pipelineSceneStatusDone")
+                        : st === "error"
+                          ? t("pipelineSceneStatusError")
+                          : st === "queued"
+                            ? t("pipelineSceneStatusQueued")
+                            : null;
+                  return (
+                    <tr
+                      key={row.index}
+                      className="border-b border-border-subtle/35 last:border-b-0"
+                    >
+                      <td className="py-1 pr-2 align-top">
+                        {t("pipelineSceneRowLabel", { index: row.index + 1 })}
+                      </td>
+                      <td className="py-1 pr-2 align-top tabular-nums">{row.durationSeconds}</td>
+                      <td className="py-1 pr-2 align-top tabular-nums">~{perScene}</td>
+                      <td
+                        className="py-1 pr-2 align-top max-w-[10rem] truncate sm:max-w-[14rem]"
+                        title={row.visualPrompt}
+                      >
+                        {row.visualPrompt}
+                      </td>
+                      {hasSceneActivity ? (
+                        <td className="py-1 pl-1 align-top text-right">
+                          {statusLabel ? (
+                            <span
+                              className={cn(
+                                "inline-block rounded px-1.5 py-0.5 text-[10px] font-medium",
+                                st === "ok"
+                                  ? "bg-green-500/15 text-green-700 dark:text-green-400"
+                                  : st === "error"
+                                    ? "bg-danger/15 text-danger"
+                                    : st === "running"
+                                      ? "bg-primary/15 text-primary"
+                                      : "bg-layer-03 text-text-tertiary",
+                              )}
+                            >
+                              {statusLabel}
+                            </span>
+                          ) : (
+                            <span className="text-text-tertiary">—</span>
+                          )}
+                        </td>
+                      ) : null}
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr className="border-t border-border-subtle/60">
+                  <td
+                    colSpan={hasSceneActivity ? 5 : 4}
+                    className="pt-1.5 text-[10px] text-text-tertiary text-right"
+                  >
+                    {t("pipelineScenePlanTableTotal", { credits: estimatedRunwayCredits })}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </div>
       ) : null}
 
@@ -617,7 +733,7 @@ export function SceneRenderPipelineStep({
         </form>
       ) : null}
 
-      {showProgress ? (
+      {showLegacyProgressList ? (
         <ul className="mt-2 pl-7 space-y-1.5 border-t border-border-subtle/40 pt-2">
           <li className="text-[10px] text-text-tertiary leading-relaxed mb-1.5">
             {t("pipelineSceneRunwayQueueRefreshHint")}
