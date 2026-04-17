@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Studio scene render: **preflight dialog** before batched Runway renders (scene count, estimated credits, planned duration, soft/hard duration budget copy aligned with server).
+- Studio scene render (P3): **episode format** hint (shorts/longform from `FORMAT_SPECS`) + planning channel line; **shared duration budget constants** (`scene-budget-constants.ts`) in Preflight copy — same thresholds as `checkSceneDurationBudget`.
 - Migration `022`: seed catalog row for `prompt-surface-playbook` ebook SKU ([`supabase/migrations/022_content_product_prompt_surface_playbook.sql`](supabase/migrations/022_content_product_prompt_surface_playbook.sql)).
 - G0 creator commerce decisions: [`docs/features/PLAN-g0-creator-commerce-decisions.md`](docs/features/PLAN-g0-creator-commerce-decisions.md).
 - ADR-005: Lemon primary payment rail; Toss deferred for new catalog work ([`docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md`](docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md)).

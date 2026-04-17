@@ -1,12 +1,15 @@
 import "server-only";
 
+import {
+  SCENE_BUDGET_MAX_TOTAL_SECONDS,
+  SCENE_BUDGET_WARN_TOTAL_SECONDS,
+} from "@/lib/studio-productions/scene-budget-constants";
 import type { SceneDefinition } from "@/lib/studio-productions/scene-splitter";
 
-/** Soft warning when total planned Runway seconds exceed this (gen4.5 per-clip cap applies separately). */
-export const SCENE_BUDGET_WARN_TOTAL_SECONDS = 90;
-
-/** Hard error when sum of scene durations exceeds this (abuse / cost guard). */
-export const SCENE_BUDGET_MAX_TOTAL_SECONDS = 180;
+export {
+  SCENE_BUDGET_MAX_TOTAL_SECONDS,
+  SCENE_BUDGET_WARN_TOTAL_SECONDS,
+} from "@/lib/studio-productions/scene-budget-constants";
 
 export function sumSceneDurations(scenes: SceneDefinition[]): number {
   return scenes.reduce((s, x) => s + x.durationSeconds, 0);

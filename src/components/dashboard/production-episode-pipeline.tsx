@@ -1292,6 +1292,8 @@ export function ProductionEpisodePipeline({
           defaultScenePlanModel={DEFAULT_PACKAGING_DRAFT_MODEL_ID}
           hasSceneClips={hasSceneClips}
           brandGuide={brandGuide}
+          episodeFormat={episodeFormat}
+          distributionChannelLabel={distributionChannelLabel}
           showView={hasSceneClips && sceneClips.length > 0}
           onView={() => setViewOpen("scene")}
           persistPlanModelId={scenePersist.planModelId}

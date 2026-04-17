@@ -32,6 +32,11 @@ import {
   estimateSceneRenderCredits,
   estimateSceneRenderCreditsForDuration,
 } from "@/lib/studio-integrations/providers/runway/runway-scene-credits-estimate";
+import { FORMAT_SPECS, type EpisodeFormat } from "@/lib/studio-productions/episode-format";
+import {
+  SCENE_BUDGET_MAX_TOTAL_SECONDS,
+  SCENE_BUDGET_WARN_TOTAL_SECONDS,
+} from "@/lib/studio-productions/scene-budget-constants";
 import { parseSceneRows } from "@/lib/studio-productions/scene-rows-json";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/lib/ui/app-toast";
@@ -97,6 +102,8 @@ export function SceneRenderPipelineStep({
   persistRunwayModelId = "",
   persistVisualPromptSuffix = "",
   canPersistPipelinePrefs = false,
+  episodeFormat = "shorts",
+  distributionChannelLabel = null as string | null,
 }: {
   step: number;
   episodeId: string;
@@ -108,6 +115,10 @@ export function SceneRenderPipelineStep({
   defaultScenePlanModel?: string;
   hasSceneClips: boolean;
   brandGuide?: string | null;
+  /** Resolved from episode distribution / channel — drives Runway ratio & format hint. */
+  episodeFormat?: EpisodeFormat;
+  /** Planning channel label when set (may differ from OAuth upload target). */
+  distributionChannelLabel?: string | null;
   showView: boolean;
   onView: () => void;
   /** Loaded from `studio_production_episodes.pipeline_prefs.sceneRender` */
@@ -477,6 +488,34 @@ export function SceneRenderPipelineStep({
         <p className="mt-1.5 text-[10px] text-text-tertiary leading-relaxed pl-7">
           {t("pipelineSceneBrandGuideOn")}
         </p>
+      ) : null}
+      {!disabled ? (
+        <div className="mt-1.5 space-y-0.5 pl-7">
+          <p className="text-[10px] font-medium text-text-tertiary">{t("pipelineSceneEpisodeFormatTitle")}</p>
+          <p className="text-[10px] text-text-secondary leading-relaxed">
+            {episodeFormat === "shorts"
+              ? t("pipelineSceneFormatShortsDetail", {
+                  aspect: FORMAT_SPECS.shorts.aspectLabel,
+                  ratio: FORMAT_SPECS.shorts.ratio,
+                  resolution: FORMAT_SPECS.shorts.resolution,
+                  maxSeconds: FORMAT_SPECS.shorts.maxSeconds,
+                })
+              : t("pipelineSceneFormatLongformDetail", {
+                  aspect: FORMAT_SPECS.longform.aspectLabel,
+                  ratio: FORMAT_SPECS.longform.ratio,
+                  resolution: FORMAT_SPECS.longform.resolution,
+                })}
+          </p>
+          {distributionChannelLabel?.trim() ? (
+            <p className="text-[10px] text-text-tertiary leading-relaxed">
+              {t("pipelineSceneFormatFromChannel", { channel: distributionChannelLabel.trim() })}
+            </p>
+          ) : (
+            <p className="text-[10px] text-text-tertiary leading-relaxed">
+              {t("pipelineSceneFormatDerivedHint")}
+            </p>
+          )}
+        </div>
       ) : null}
       {!disabled && estimatedRunwayCredits != null ? (
         <div className="mt-1.5 space-y-0.5 pl-7">
@@ -890,6 +929,12 @@ export function SceneRenderPipelineStep({
                   })}
                 </p>
               ) : null}
+              <p className="text-[10px] text-text-tertiary leading-relaxed">
+                {t("pipelineSceneBudgetThresholds", {
+                  warnSeconds: SCENE_BUDGET_WARN_TOTAL_SECONDS,
+                  maxSeconds: SCENE_BUDGET_MAX_TOTAL_SECONDS,
+                })}
+              </p>
               {preflightData.budgetWarning === "overSoftBudget" &&
               preflightData.totalDurationSeconds != null ? (
                 <p className="rounded border border-amber-500/30 bg-amber-500/10 px-2 py-1.5 text-[11px] text-amber-950 dark:text-amber-100">
