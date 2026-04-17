@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getOrgEditorContext } from "@/lib/auth/require-org-editor";
+import { isYoutubeOAuthEnvConfigured } from "@/lib/studio-integrations/providers/youtube/youtube-oauth-config";
 import { listStudioOrgProviderConnectionsMeta } from "@/lib/data/studio-org-integrations";
 import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import { createClient } from "@/lib/supabase/server";
@@ -240,13 +241,21 @@ export async function getStudioIntegrationsPageData(): Promise<{
   connections: Awaited<
     ReturnType<typeof listStudioOrgProviderConnectionsMeta>
   >;
+  youtubeOAuthEnvConfigured: boolean;
+  youtubeChannelTitle: string | null;
 }> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return { organizationId: null, canEdit: false, connections: [] };
+    return {
+      organizationId: null,
+      canEdit: false,
+      connections: [],
+      youtubeOAuthEnvConfigured: isYoutubeOAuthEnvConfigured(),
+      youtubeChannelTitle: null,
+    };
   }
 
   const { data: profile } = await supabase
@@ -257,7 +266,13 @@ export async function getStudioIntegrationsPageData(): Promise<{
 
   const orgId = profile?.organization_id ?? null;
   if (!orgId) {
-    return { organizationId: null, canEdit: false, connections: [] };
+    return {
+      organizationId: null,
+      canEdit: false,
+      connections: [],
+      youtubeOAuthEnvConfigured: isYoutubeOAuthEnvConfigured(),
+      youtubeChannelTitle: null,
+    };
   }
 
   const role = profile?.role ?? "viewer";
@@ -268,5 +283,18 @@ export async function getStudioIntegrationsPageData(): Promise<{
     orgId,
   );
 
-  return { organizationId: orgId, canEdit, connections };
+  const { data: ytRow } = await supabase
+    .from("studio_youtube_channel_tokens")
+    .select("channel_title")
+    .eq("organization_id", orgId)
+    .limit(1)
+    .maybeSingle();
+
+  return {
+    organizationId: orgId,
+    canEdit,
+    connections,
+    youtubeOAuthEnvConfigured: isYoutubeOAuthEnvConfigured(),
+    youtubeChannelTitle: ytRow?.channel_title ?? null,
+  };
 }

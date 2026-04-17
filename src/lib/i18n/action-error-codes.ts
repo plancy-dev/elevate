@@ -99,6 +99,20 @@ export const ActionErrorCode = {
   studioRunwayTaskFailed: "studioRunwayTaskFailed",
   studioRunwayTimeout: "studioRunwayTimeout",
   studioRunwayApiError: "studioRunwayApiError",
+  /** Runway account has insufficient credits / quota for this task */
+  studioRunwayInsufficientCredits: "studioRunwayInsufficientCredits",
+
+  /** Scene render: no Runway key in org integrations */
+  studioSceneRenderNoRunwayKey: "studioSceneRenderNoRunwayKey",
+  studioSceneRenderInvalidJson: "studioSceneRenderInvalidJson",
+  studioSceneRenderScenesInvalid: "studioSceneRenderScenesInvalid",
+  studioSceneRenderNoScript: "studioSceneRenderNoScript",
+  studioSceneRenderNoScenes: "studioSceneRenderNoScenes",
+  /** Sum of scene durations exceeds org safety cap */
+  studioSceneRenderBudgetExceeded: "studioSceneRenderBudgetExceeded",
+
+  /** Episode pipeline_prefs JSON exceeds size cap */
+  studioPipelinePrefsTooLarge: "studioPipelinePrefsTooLarge",
 
   /** ElevenLabs TTS: generic HTTP / validation error from provider */
   studioTtsElevenLabsApiError: "studioTtsElevenLabsApiError",

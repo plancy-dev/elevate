@@ -2,6 +2,8 @@
 
 Single place for **Figma** links and design↔engineering workflow for the Studio scene render (Runway) track.
 
+**Process hub (Issues · PR · gh · gstack):** [`docs/DEV_PROCESS_GITHUB.md`](../docs/DEV_PROCESS_GITHUB.md)
+
 ## Figma file
 
 | Resource | Link |

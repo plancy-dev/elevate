@@ -213,7 +213,7 @@ export function YoutubeUploadPipelineStep({
           <p className="mt-1.5 text-[10px] text-text-tertiary leading-relaxed pl-7">
             {t("pipelineYoutubeNotConnected")}{" "}
             <Link
-              href="/dashboard/productions?studio=integrations"
+              href="/dashboard/productions?studio=channels"
               className="font-medium text-primary hover:underline"
             >
               {t("draftRunwayIntegrationsLink")}

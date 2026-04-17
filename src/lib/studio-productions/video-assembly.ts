@@ -3,9 +3,8 @@
  * Concatenates scene clips, overlays TTS audio, burns in SRT subtitles.
  * Outputs a 9:16 H.264/AAC MP4.
  *
- * Requires `ffmpeg` binary accessible on the server (Docker, system install, or Edge Function).
+ * Requires `ffmpeg` binary accessible on the process (Next.js server, or the assembly worker).
  */
-import "server-only";
 
 import { execFile } from "node:child_process";
 import { writeFile, unlink, mkdtemp, readFile } from "node:fs/promises";
@@ -162,6 +161,22 @@ type FfmpegBuildArgs = {
   outputPath: string;
 };
 
+/** libass / fontconfig family name — must exist on the host (install fonts-noto-cjk on Linux workers). */
+function resolvedSubtitleFontName(): string {
+  return process.env.VIDEO_ASSEMBLY_SUBTITLE_FONT?.trim() || "Noto Sans CJK KR";
+}
+
+function buildSubtitlesFilterChainSegment(srtPath: string): string {
+  const escapedPath = srtPath.replace(/'/g, "'\\''").replace(/:/g, "\\:");
+  const font = resolvedSubtitleFontName();
+  const fontsdir = process.env.VIDEO_ASSEMBLY_SUBTITLE_FONTSDIR?.trim();
+  const style = `FontSize=24,Fontname=${font},PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2,Alignment=2,MarginV=80`;
+  const base = `subtitles='${escapedPath}':charenc=UTF-8:force_style='${style}'`;
+  if (!fontsdir) return base;
+  const escDir = fontsdir.replace(/'/g, "'\\''").replace(/:/g, "\\:");
+  return `subtitles='${escapedPath}':fontsdir='${escDir}':charenc=UTF-8:force_style='${style}'`;
+}
+
 function buildFfmpegArgs(opts: FfmpegBuildArgs): string[] {
   const args: string[] = ["-y"];
 
@@ -183,10 +198,7 @@ function buildFfmpegArgs(opts: FfmpegBuildArgs): string[] {
   videoStream = "[vscaled]";
 
   if (opts.srtPath) {
-    const escapedPath = opts.srtPath.replace(/'/g, "'\\''").replace(/:/g, "\\:");
-    filterParts.push(
-      `${videoStream}subtitles='${escapedPath}':force_style='FontSize=24,PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2,Alignment=2,MarginV=80'[vsub]`,
-    );
+    filterParts.push(`${videoStream}${buildSubtitlesFilterChainSegment(opts.srtPath)}[vsub]`);
     videoStream = "[vsub]";
   }
 

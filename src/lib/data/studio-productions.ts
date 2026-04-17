@@ -10,7 +10,7 @@ export type StudioProductionArtifactRow =
 export type StudioEpisodeEmbeddedRelations = {
   studio_niches: { id: string; display_name: string } | null;
   studio_format_templates: { id: string; display_name: string } | null;
-  studio_projects: { id: string; name: string } | null;
+  studio_projects: { id: string; name: string; brand_guide: string } | null;
   studio_distribution_channels: {
     id: string;
     label: string;
@@ -40,7 +40,7 @@ export async function listStudioEpisodesForOrg(
       *,
       studio_niches ( id, display_name ),
       studio_format_templates ( id, display_name ),
-      studio_projects ( id, name ),
+      studio_projects ( id, name, brand_guide ),
       studio_distribution_channels ( id, label, channel_url, platform, metadata )
     `,
     )
@@ -74,7 +74,7 @@ export async function getStudioEpisodeForOrg(
       *,
       studio_niches ( id, display_name ),
       studio_format_templates ( id, display_name ),
-      studio_projects ( id, name ),
+      studio_projects ( id, name, brand_guide ),
       studio_distribution_channels ( id, label, channel_url, platform, metadata )
     `,
     )

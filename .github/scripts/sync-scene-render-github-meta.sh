@@ -2,7 +2,8 @@
 # Idempotent: creates labels and milestones for Studio scene-render workflow if missing.
 # Requires: gh CLI, auth (`gh auth login`), run from repo root.
 set -euo pipefail
-REPO="${GITHUB_REPOSITORY:-$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || true)}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO="${GITHUB_REPOSITORY:-$("$SCRIPT_DIR/gh-repo.sh" 2>/dev/null || true)}"
 if [[ -z "$REPO" ]]; then
   echo "Could not resolve repo. Run from elevate root with gh authenticated."
   exit 1

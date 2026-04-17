@@ -1,0 +1,47 @@
+# Elevate — FFmpeg video assembly worker (Fly.io)
+#
+# Vercel(Next.js)과 별도 앱입니다. `main`에 푸시하면 원격 빌드 후 Fly에 배포합니다.
+#
+# 필요한 GitHub Secret (Repository → Settings → Secrets and variables → Actions):
+#   FLY_API_TOKEN — Fly deploy 토큰. 로컬에서:
+#     fly auth login
+#     fly tokens create deploy -a elevate-video-assembly
+#   앱이 아직 없으면: fly apps create elevate-video-assembly
+#   Supabase 등 런타임 비밀은 Fly에만 두면 됩니다 (CI에 넣을 필요 없음):
+#     fly secrets set NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... CONTENT_STORAGE_BUCKET=...
+#
+name: Fly — video assembly worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "workers/**"
+      - "fly.toml"
+      - ".dockerignore"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "tsconfig.json"
+      - "src/**"
+      - ".github/workflows/fly-video-assembly.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: fly-video-assembly-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy worker
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io
+        run: flyctl deploy --config fly.toml --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

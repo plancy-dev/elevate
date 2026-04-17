@@ -21,6 +21,10 @@ alwaysApply: true
 
 이미 동일 스레드에서 읽었으면 반복 읽기는 생략한다.
 
+## 2b. GitHub Issues · 원격 작업 큐 (기능·스튜디오 범위일 때)
+
+**`docs/DEV_PROCESS_GITHUB.md`** — 이슈·PR·Figma·`gh issue list`와의 정렬. 사용자가 “다음 할 일”, “이슈 N 구현”, “Studio 작업 목록”을 말하면 **원격 이슈를 조회·참조**할 수 있다 (`pnpm issues:studio` 또는 `gh issue list`). 구현 PR에는 `Closes #` / `Refs #`를 권장한다.
+
 ## 3. 검증·출하
 
 - 이 저장소의 **단일 검증 스크립트**는 **`pnpm verify`** (`package.json` 참고).  

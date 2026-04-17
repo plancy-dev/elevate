@@ -1,5 +1,7 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
+
 import { revalidatePath } from "next/cache";
 import { getOrgMemberContext } from "@/lib/auth/require-org-editor";
 import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
@@ -9,6 +11,10 @@ import { readStudioIntegrationsServerEnabled } from "@/lib/studio-integrations/f
 import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrations/crypto";
 import { assembleVideo } from "@/lib/studio-productions/video-assembly";
 import { resolveEpisodeFormat, FORMAT_SPECS } from "@/lib/studio-productions/episode-format";
+import { readStudioVideoAssemblyMode } from "@/lib/studio-productions/studio-video-assembly-mode";
+import { uploadAssembledMp4ToContentStorage } from "@/lib/studio-productions/assembled-video-storage";
+import { getContentStorageBucket } from "@/lib/env/content-storage";
+import type { VideoAssemblyJobInput } from "@/lib/studio-productions/video-assembly-job-input";
 import { logAudit } from "@/lib/audit/log";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import type { Json } from "@/types/database.types";
@@ -18,10 +24,14 @@ export type VideoAssemblyActionState = {
   error?: string;
   artifactId?: string;
   durationSeconds?: number;
+  /** Set when assembly is async (default): job row for the FFmpeg worker. */
+  jobId?: string;
 };
 
 /**
  * Assemble a final Shorts video from scene clips + TTS audio + SRT subtitles.
+ * Default: enqueues a DB job (`async`) for the worker; set `STUDIO_VIDEO_ASSEMBLY_MODE=sync` to run ffmpeg
+ * inside this Next.js process (local ffmpeg required).
  */
 export async function assembleEpisodeVideo(
   _prev: VideoAssemblyActionState | null,
@@ -79,6 +89,39 @@ export async function assembleEpisodeVideo(
     ? Math.min(0.35, Math.max(0.05, bgVolParsed))
     : undefined;
 
+  const episodeFormat = resolveEpisodeFormat(episode);
+  const jobInput: VideoAssemblyJobInput = {
+    clip_urls: clipUrls,
+    audio_url: ttsArtifact?.external_url ?? null,
+    srt_content: srtArtifact?.content_text ?? null,
+    bg_music_url: bgMusicUrl ?? null,
+    bg_music_volume: bgMusicVolume ?? null,
+    episode_format: episodeFormat,
+  };
+
+  const mode = readStudioVideoAssemblyMode();
+
+  if (mode === "async") {
+    const { data: job, error: jobErr } = await supabase
+      .from("studio_video_assembly_jobs")
+      .insert({
+        episode_id: episodeId,
+        organization_id: auth.ctx.organizationId,
+        status: "pending",
+        input: jobInput as unknown as Json,
+        created_by: auth.ctx.userId,
+      })
+      .select("id")
+      .single();
+
+    if (jobErr || !job) {
+      return { error: ActionErrorCode.studioAssemblyInsertFailed };
+    }
+
+    revalidatePath(`/dashboard/productions/${episodeId}`);
+    return { ok: true, jobId: job.id };
+  }
+
   const result = await assembleVideo({
     clipUrls,
     audioUrl: ttsArtifact?.external_url ?? undefined,
@@ -103,18 +146,37 @@ export async function assembleEpisodeVideo(
     return { error: ActionErrorCode.unexpected };
   }
 
-  const base64Video = result.outputBuffer.toString("base64");
-  const dataUri = `data:video/mp4;base64,${base64Video}`;
+  let externalUrl: string;
+  let contentStoragePath: string | null = null;
+  try {
+    const up = await uploadAssembledMp4ToContentStorage({
+      organizationId: auth.ctx.organizationId,
+      episodeId,
+      jobId: randomUUID(),
+      body: result.outputBuffer,
+    });
+    externalUrl = up.publicUrl;
+    contentStoragePath = up.storagePath;
+  } catch {
+    const base64Video = result.outputBuffer.toString("base64");
+    externalUrl = `data:video/mp4;base64,${base64Video}`;
+  }
 
   const metadata: Record<string, Json> = {
     source: "ffmpeg_assembly",
+    ...(contentStoragePath
+      ? {
+          content_storage_bucket: getContentStorageBucket(),
+          content_storage_path: contentStoragePath,
+        }
+      : {}),
     clip_count: clipUrls.length,
     has_tts: !!ttsArtifact,
     has_subtitles: !!srtArtifact,
     has_bg_music: !!bgMusicUrl,
     ...(bgMusicVolume != null ? { bg_music_volume: bgMusicVolume } : {}),
     duration_seconds: result.durationSeconds,
-    resolution: FORMAT_SPECS[resolveEpisodeFormat(episode)].resolution,
+    resolution: FORMAT_SPECS[episodeFormat].resolution,
     codec: "h264_aac",
     assembled_at: new Date().toISOString(),
   };
@@ -127,7 +189,7 @@ export async function assembleEpisodeVideo(
       artifact_role: "assembled_video",
       tool_platform: "ffmpeg",
       content_text: `Assembled ${clipUrls.length} clips, ${result.durationSeconds.toFixed(1)}s`,
-      external_url: dataUri,
+      external_url: externalUrl,
       metadata,
     })
     .select("id")

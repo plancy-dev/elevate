@@ -4,6 +4,7 @@ import {
   useActionState,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -19,14 +20,20 @@ import {
   generateTimedScriptFromEpisode,
 } from "@/actions/studio-pipeline-presteps";
 import { generateTtsFromScript, generateSubtitlesFromAudio } from "@/actions/studio-tts";
-import { renderEpisodeScenes } from "@/actions/studio-scene-render";
-import { assembleEpisodeVideo } from "@/actions/studio-video-assembly";
+import {
+  assembleEpisodeVideo,
+  type VideoAssemblyActionState,
+} from "@/actions/studio-video-assembly";
+import { getAssembledVideoPlaybackUrl } from "@/actions/studio-assembled-video-playback";
+import { useVideoAssemblyJobTracker } from "@/hooks/use-video-assembly-job-tracker";
+import { saveEpisodePipelinePrefs } from "@/actions/studio-episode-pipeline-prefs";
 import { uploadEpisodeToYouTube } from "@/actions/studio-youtube";
 import { EpisodeDraftWorkbench } from "@/components/dashboard/episode-draft-workbench";
 import { ProductionEpisodeReferencePanel } from "@/components/dashboard/production-episode-reference-panel";
 import { PipelineReferenceSourcesStrip } from "@/components/dashboard/pipeline-reference-sources-strip";
 import { PipelineStepAdvancedToggle } from "@/components/dashboard/pipeline-step-advanced-toggle";
 import { YoutubeUploadPipelineStep } from "@/components/dashboard/youtube-upload-pipeline-step";
+import { SceneRenderPipelineStep } from "@/components/dashboard/scene-render-pipeline-step";
 import type { StudioEpisodeDraftTemplateRow } from "@/lib/data/studio-draft-templates";
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import type { StudioProductionArtifactRow } from "@/lib/data/studio-productions";
@@ -39,7 +46,6 @@ import {
   DEFAULT_PACKAGING_DRAFT_MODEL_ID,
   TIMED_SCRIPT_HEURISTIC_MODEL_ID,
 } from "@/lib/studio-productions/episode-llm-models";
-import { SCENES_JSON_INPUT_PLACEHOLDER } from "@/lib/studio-productions/scenes-json-placeholder";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { toast } from "@/lib/ui/app-toast";
@@ -49,10 +55,19 @@ import {
   ELEVENLABS_LANGUAGE_SELECT_OPTIONS,
   appLocaleToElevenLabsLanguage,
 } from "@/lib/studio-productions/elevenlabs-tts-presets";
+import {
+  assemblyPrefsFromPipelinePrefs,
+  preprodStepPrefsFromPipelinePrefs,
+  sceneRenderPrefsFromPipelinePrefs,
+  ttsPrefsFromPipelinePrefs,
+} from "@/lib/studio-productions/episode-pipeline-prefs";
+import type { Json } from "@/types/database.types";
 
 type PipelineProps = {
   episodeId: string;
   artifacts: StudioProductionArtifactRow[];
+  /** Persisted UI state (`studio_production_episodes.pipeline_prefs`). */
+  pipelinePrefs?: Json;
   runwayRenderReady?: boolean;
   elevenlabsKeyConfigured?: boolean;
   packagingLlmReady?: boolean;
@@ -73,6 +88,10 @@ type PipelineProps = {
   customDraftTemplates?: StudioEpisodeDraftTemplateRow[];
   draftLlmAvailability?: { openai: boolean; anthropic: boolean } | null;
   draftSnapshots?: StudioEpisodeDraftSnapshotRow[];
+  /** Pending/processing async assembly job (if any); used for polling + UI. */
+  activeAssemblyJob?: { id: string; status: string } | null;
+  /** Project brand guide — applied to Runway prompts server-side. */
+  brandGuide?: string | null;
 };
 
 type PipelineStepActionState = {
@@ -151,6 +170,9 @@ export function ProductionEpisodePipeline({
   customDraftTemplates = [],
   draftLlmAvailability = null,
   draftSnapshots = [],
+  activeAssemblyJob = null,
+  brandGuide = null,
+  pipelinePrefs = {} as Json,
 }: PipelineProps) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
@@ -163,7 +185,40 @@ export function ProductionEpisodePipeline({
     () => appLocaleToElevenLabsLanguage(locale),
     [locale],
   );
+  const scenePersist = useMemo(
+    () => sceneRenderPrefsFromPipelinePrefs(pipelinePrefs),
+    [pipelinePrefs],
+  );
+  const preprodDraftPersist = useMemo(
+    () => preprodStepPrefsFromPipelinePrefs(pipelinePrefs, "draft"),
+    [pipelinePrefs],
+  );
+  const preprodTimedPersist = useMemo(
+    () => preprodStepPrefsFromPipelinePrefs(pipelinePrefs, "timed"),
+    [pipelinePrefs],
+  );
+  const preprodPackagingPersist = useMemo(
+    () => preprodStepPrefsFromPipelinePrefs(pipelinePrefs, "packaging"),
+    [pipelinePrefs],
+  );
+  const preprodThumbnailPersist = useMemo(
+    () => preprodStepPrefsFromPipelinePrefs(pipelinePrefs, "thumbnail"),
+    [pipelinePrefs],
+  );
+  const preprodSubtitlePersist = useMemo(
+    () => preprodStepPrefsFromPipelinePrefs(pipelinePrefs, "subtitle"),
+    [pipelinePrefs],
+  );
+  const preprodTtsPersist = useMemo(
+    () => preprodStepPrefsFromPipelinePrefs(pipelinePrefs, "tts"),
+    [pipelinePrefs],
+  );
   const router = useRouter();
+  const handledAssemblyRef = useRef<VideoAssemblyActionState | null>(null);
+  const [assemblyJobTrack, setAssemblyJobTrack] = useState<{
+    id: string;
+    status: string;
+  } | null>(() => activeAssemblyJob ?? null);
   const [viewOpen, setViewOpen] = useState<ViewKind>(null);
   const [draftDialogOpen, setDraftDialogOpen] = useState(false);
   const [draftDirty, setDraftDirty] = useState(false);
@@ -174,9 +229,73 @@ export function ProductionEpisodePipeline({
     briefing: string;
   } | null>(null);
   const [draftPrefillNonce, setDraftPrefillNonce] = useState(0);
-  const [ttsVoicePreset, setTtsVoicePreset] = useState<"female" | "male" | "custom">(
-    "female",
+  const [ttsForm, setTtsForm] = useState(() =>
+    ttsPrefsFromPipelinePrefs(pipelinePrefs, defaultTtsLanguage),
   );
+  const [assemblyForm, setAssemblyForm] = useState(() =>
+    assemblyPrefsFromPipelinePrefs(pipelinePrefs),
+  );
+
+  const skipTtsPersistRef = useRef(true);
+  const skipAsmPersistRef = useRef(true);
+
+  /* Hydrate TTS/assembly when switching episodes only; omit pipelinePrefs from deps to avoid resetting local edits after each save. */
+  useEffect(() => {
+    skipTtsPersistRef.current = true;
+    skipAsmPersistRef.current = true;
+    setTtsForm(ttsPrefsFromPipelinePrefs(pipelinePrefs, defaultTtsLanguage));
+    setAssemblyForm(assemblyPrefsFromPipelinePrefs(pipelinePrefs));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pipelinePrefs intentionally omitted (see comment above)
+  }, [episodeId, defaultTtsLanguage]);
+
+  useEffect(() => {
+    if (!canEditDraft) return;
+    if (skipTtsPersistRef.current) {
+      skipTtsPersistRef.current = false;
+      return;
+    }
+    const timeout = window.setTimeout(() => {
+      void (async () => {
+        const res = await saveEpisodePipelinePrefs(episodeId, {
+          tts: {
+            voicePreset: ttsForm.voicePreset,
+            voiceId: ttsForm.voiceId.trim(),
+            language: ttsForm.language,
+            stability: ttsForm.stability,
+            similarity: ttsForm.similarity,
+            style: ttsForm.style.trim(),
+            speakerBoost: ttsForm.speakerBoost,
+          },
+        });
+        if ("error" in res && res.error) {
+          toast.error(translateActionErrorMessage(res.error, tAction));
+        }
+      })();
+    }, 650);
+    return () => clearTimeout(timeout);
+  }, [canEditDraft, episodeId, ttsForm, tAction]);
+
+  useEffect(() => {
+    if (!canEditDraft) return;
+    if (skipAsmPersistRef.current) {
+      skipAsmPersistRef.current = false;
+      return;
+    }
+    const timeout = window.setTimeout(() => {
+      void (async () => {
+        const res = await saveEpisodePipelinePrefs(episodeId, {
+          assembly: {
+            bgMusicUrl: assemblyForm.bgMusicUrl.trim(),
+            bgMusicVolume: assemblyForm.bgMusicVolume,
+          },
+        });
+        if ("error" in res && res.error) {
+          toast.error(translateActionErrorMessage(res.error, tAction));
+        }
+      })();
+    }, 650);
+    return () => clearTimeout(timeout);
+  }, [canEditDraft, episodeId, assemblyForm, tAction]);
 
   const packagingModelOptions = useMemo(() => {
     const openai = OPENAI_DRAFT_MODEL_OPTIONS.map((o) => ({
@@ -233,6 +352,36 @@ export function ProductionEpisodePipeline({
   const ttsArtifact = useMemo(() => latestArtifact(artifacts, "tts_audio"), [artifacts]);
   const subtitleArtifact = useMemo(() => latestArtifact(artifacts, "subtitle_srt"), [artifacts]);
   const assemblyArtifact = useMemo(() => latestArtifact(artifacts, "assembled_video"), [artifacts]);
+
+  const [assemblyPlaybackUrl, setAssemblyPlaybackUrl] = useState<string | null>(null);
+  const [assemblyPlaybackLoading, setAssemblyPlaybackLoading] = useState(false);
+  const [assemblyPlaybackError, setAssemblyPlaybackError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (viewOpen !== "assembly" || !assemblyArtifact?.id) {
+      setAssemblyPlaybackUrl(null);
+      setAssemblyPlaybackError(null);
+      setAssemblyPlaybackLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setAssemblyPlaybackLoading(true);
+    setAssemblyPlaybackError(null);
+    setAssemblyPlaybackUrl(null);
+    void getAssembledVideoPlaybackUrl(assemblyArtifact.id).then((res) => {
+      if (cancelled) return;
+      setAssemblyPlaybackLoading(false);
+      if (res.ok) {
+        setAssemblyPlaybackUrl(res.playbackUrl);
+      } else {
+        setAssemblyPlaybackError(res.error);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [viewOpen, assemblyArtifact?.id]);
+
   const sceneClips = useMemo(() => {
     return [...artifacts]
       .filter((a) => a.artifact_role === "scene_clip")
@@ -286,14 +435,60 @@ export function ProductionEpisodePipeline({
     generateSubtitlesFromAudio,
     null,
   );
-  const [sceneState, sceneAction, scenePending] = useActionState(
-    renderEpisodeScenes,
-    null,
-  );
   const [assemblyState, assemblyAction, assemblyPending] = useActionState(
     assembleEpisodeVideo,
     null,
   );
+
+  const assemblyJobRunning = Boolean(
+    assemblyJobTrack &&
+      (assemblyJobTrack.status === "pending" ||
+        assemblyJobTrack.status === "processing"),
+  );
+
+  // useLayoutEffect: run before paint so `assemblyJobTrack` is set in the same frame
+  // where `assemblyPending` clears — avoids the redo button spinner briefly stopping then restarting.
+  useLayoutEffect(() => {
+    if (!assemblyState || handledAssemblyRef.current === assemblyState) return;
+    handledAssemblyRef.current = assemblyState;
+
+    if (assemblyState.error) {
+      const msg = translateActionErrorMessage(assemblyState.error, tAction);
+      toast.error(msg);
+      return;
+    }
+    if (assemblyState.ok && assemblyState.jobId) {
+      setAssemblyJobTrack({ id: assemblyState.jobId, status: "pending" });
+      toast.success(t("draftAssembleQueued"));
+      return;
+    }
+    if (assemblyState.ok && assemblyState.artifactId) {
+      toast.success(t("draftAssembleSuccess"));
+      router.refresh();
+    }
+  }, [assemblyState, t, tAction, router]);
+
+  useVideoAssemblyJobTracker({
+    jobId: assemblyJobTrack?.id ?? null,
+    tracking: assemblyJobRunning,
+    onCompleted: () => {
+      setAssemblyJobTrack(null);
+      toast.success(t("draftAssembleSuccess"));
+      router.refresh();
+    },
+    onFailed: (detail) => {
+      setAssemblyJobTrack(null);
+      const trimmed = detail?.trim();
+      toast.error(
+        t("draftAssembleJobFailed"),
+        trimmed ? { description: trimmed } : undefined,
+      );
+      router.refresh();
+    },
+    onProgress: (status) => {
+      setAssemblyJobTrack((prev) => (prev ? { id: prev.id, status } : null));
+    },
+  });
   const [ytState, ytAction, ytPending] = useActionState(
     uploadEpisodeToYouTube,
     null,
@@ -304,8 +499,6 @@ export function ProductionEpisodePipeline({
   usePipelineStepToast(thumbState, "draftThumbnailImageSuccess", t, tAction, router);
   usePipelineStepToast(ttsState, "draftTtsSuccess", t, tAction, router);
   usePipelineStepToast(subState, "draftSubtitleSuccess", t, tAction, router);
-  usePipelineStepToast(sceneState, "draftSceneRenderSuccess", t, tAction, router);
-  usePipelineStepToast(assemblyState, "draftAssembleSuccess", t, tAction, router);
   usePipelineStepToast(ytState, "draftYoutubeSuccess", t, tAction, router);
 
   const ttsDisabled = !hasDraftScript || !elevenlabsKeyConfigured;
@@ -462,9 +655,14 @@ export function ProductionEpisodePipeline({
         </p>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid items-start gap-3 sm:grid-cols-2">
         <PreprodPipelineStep
           key={`preprod-draft-${episodeId}-${DEFAULT_PACKAGING_DRAFT_MODEL_ID}`}
+          episodeId={episodeId}
+          prefsStepKey="draft"
+          persistedModelId={preprodDraftPersist.modelId}
+          persistedCustomInstructions={preprodDraftPersist.customInstructions}
+          canPersistPrefs={canEditDraft}
           step={0}
           label={t("draftPreprodDraftStep")}
           done={hasDraftScript}
@@ -502,6 +700,11 @@ export function ProductionEpisodePipeline({
 
         <PreprodPipelineStep
           key={`preprod-s1-${episodeId}-${TIMED_SCRIPT_HEURISTIC_MODEL_ID}`}
+          episodeId={episodeId}
+          prefsStepKey="timed"
+          persistedModelId={preprodTimedPersist.modelId}
+          persistedCustomInstructions={preprodTimedPersist.customInstructions}
+          canPersistPrefs={canEditDraft}
           step={1}
           label={t("draftPreprodTimedStep")}
           done={hasTimedScript}
@@ -522,6 +725,11 @@ export function ProductionEpisodePipeline({
 
         <PreprodPipelineStep
           key={`preprod-s2-${episodeId}-${DEFAULT_PACKAGING_DRAFT_MODEL_ID}`}
+          episodeId={episodeId}
+          prefsStepKey="packaging"
+          persistedModelId={preprodPackagingPersist.modelId}
+          persistedCustomInstructions={preprodPackagingPersist.customInstructions}
+          canPersistPrefs={canEditDraft}
           step={2}
           label={t("draftPreprodPackagingStep")}
           done={hasPackagingDraft}
@@ -542,6 +750,11 @@ export function ProductionEpisodePipeline({
 
         <PreprodPipelineStep
           key={`preprod-s3-${episodeId}-dall-e-3`}
+          episodeId={episodeId}
+          prefsStepKey="thumbnail"
+          persistedModelId={preprodThumbnailPersist.modelId}
+          persistedCustomInstructions={preprodThumbnailPersist.customInstructions}
+          canPersistPrefs={canEditDraft}
           step={3}
           label={t("draftThumbnailImageStep")}
           done={hasThumbnailImage}
@@ -565,7 +778,7 @@ export function ProductionEpisodePipeline({
         <p className="text-[11px] text-text-tertiary max-w-prose leading-relaxed -mt-2">
           {t("draftPreprodPackagingHintNoLlm")}{" "}
           <Link
-            href="/dashboard/productions?studio=integrations"
+            href="/dashboard/productions?studio=channels"
             className="font-medium text-primary hover:underline"
           >
             {t("draftRunwayIntegrationsLink")}
@@ -826,17 +1039,26 @@ export function ProductionEpisodePipeline({
       >
         {assemblyArtifact?.external_url ? (
           <div className="space-y-3">
-            {assemblyArtifact.external_url.startsWith("data:video") ||
-            assemblyArtifact.external_url.startsWith("http") ? (
+            {assemblyPlaybackLoading ? (
+              <p className="text-sm text-text-secondary">{t("pipelineAssemblyVideoLoading")}</p>
+            ) : assemblyPlaybackError ? (
+              <p className="text-sm text-destructive">
+                {t("pipelineAssemblyVideoError", { detail: assemblyPlaybackError })}
+              </p>
+            ) : assemblyPlaybackUrl &&
+              (assemblyPlaybackUrl.startsWith("data:video") ||
+                assemblyPlaybackUrl.startsWith("http")) ? (
               <video
-                src={assemblyArtifact.external_url}
+                key={assemblyPlaybackUrl}
+                src={assemblyPlaybackUrl}
                 controls
+                playsInline
                 className="w-full max-h-[min(70vh,28rem)] rounded-lg border border-border-subtle bg-black/40"
               >
                 <track kind="captions" />
               </video>
             ) : (
-              <p className="text-xs text-text-tertiary break-all">{assemblyArtifact.external_url}</p>
+              <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
             )}
             {assemblyArtifact.content_text?.trim() ? (
               <p className="text-sm text-text-secondary">{assemblyArtifact.content_text}</p>
@@ -856,9 +1078,14 @@ export function ProductionEpisodePipeline({
         </p>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid items-start gap-3 sm:grid-cols-2">
         <PreprodPipelineStep
           key={`produce-tts-${episodeId}`}
+          episodeId={episodeId}
+          prefsStepKey="tts"
+          persistedModelId={preprodTtsPersist.modelId}
+          persistedCustomInstructions=""
+          canPersistPrefs={canEditDraft}
           step={4}
           label={t("draftTtsCta")}
           done={hasTtsAudio}
@@ -885,9 +1112,12 @@ export function ProductionEpisodePipeline({
                 <select
                   name="voice_preset"
                   form={formId}
-                  value={ttsVoicePreset}
+                  value={ttsForm.voicePreset}
                   onChange={(e) =>
-                    setTtsVoicePreset(e.target.value as "female" | "male" | "custom")
+                    setTtsForm((p) => ({
+                      ...p,
+                      voicePreset: e.target.value as "female" | "male" | "custom",
+                    }))
                   }
                   className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
                 >
@@ -896,7 +1126,7 @@ export function ProductionEpisodePipeline({
                   <option value="custom">{t("pipelineProduceVoicePresetCustom")}</option>
                 </select>
               </div>
-              {ttsVoicePreset === "custom" ? (
+              {ttsForm.voicePreset === "custom" ? (
                 <div>
                   <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
                     {t("pipelineProduceVoiceIdLabel")}
@@ -907,6 +1137,10 @@ export function ProductionEpisodePipeline({
                   <input
                     name="voice_id"
                     form={formId}
+                    value={ttsForm.voiceId}
+                    onChange={(e) =>
+                      setTtsForm((p) => ({ ...p, voiceId: e.target.value }))
+                    }
                     maxLength={64}
                     placeholder="21m00Tcm4TlvDq8ikWAM"
                     className="h-7 w-full max-w-md rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary placeholder:text-text-tertiary"
@@ -923,7 +1157,10 @@ export function ProductionEpisodePipeline({
                 <select
                   name="language"
                   form={formId}
-                  defaultValue={defaultTtsLanguage}
+                  value={ttsForm.language}
+                  onChange={(e) =>
+                    setTtsForm((p) => ({ ...p, language: e.target.value }))
+                  }
                   className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
                 >
                   {ELEVENLABS_LANGUAGE_SELECT_OPTIONS.map((o) => (
@@ -945,7 +1182,10 @@ export function ProductionEpisodePipeline({
                     min={0}
                     max={1}
                     step={0.05}
-                    defaultValue={0.5}
+                    value={ttsForm.stability}
+                    onChange={(e) =>
+                      setTtsForm((p) => ({ ...p, stability: e.target.value }))
+                    }
                     className="h-7 w-full rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
                   />
                 </div>
@@ -960,7 +1200,10 @@ export function ProductionEpisodePipeline({
                     min={0}
                     max={1}
                     step={0.05}
-                    defaultValue={0.75}
+                    value={ttsForm.similarity}
+                    onChange={(e) =>
+                      setTtsForm((p) => ({ ...p, similarity: e.target.value }))
+                    }
                     className="h-7 w-full rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
                   />
                 </div>
@@ -979,6 +1222,10 @@ export function ProductionEpisodePipeline({
                   min={0}
                   max={1}
                   step={0.05}
+                  value={ttsForm.style}
+                  onChange={(e) =>
+                    setTtsForm((p) => ({ ...p, style: e.target.value }))
+                  }
                   placeholder={t("pipelineProduceTtsStylePlaceholder")}
                   className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary placeholder:text-text-tertiary"
                 />
@@ -990,7 +1237,10 @@ export function ProductionEpisodePipeline({
                 <select
                   name="tts_speaker_boost"
                   form={formId}
-                  defaultValue=""
+                  value={ttsForm.speakerBoost}
+                  onChange={(e) =>
+                    setTtsForm((p) => ({ ...p, speakerBoost: e.target.value }))
+                  }
                   className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
                 >
                   <option value="">{t("pipelineProduceTtsSpeakerBoostDefault")}</option>
@@ -1004,6 +1254,11 @@ export function ProductionEpisodePipeline({
 
         <PreprodPipelineStep
           key={`produce-sub-${episodeId}`}
+          episodeId={episodeId}
+          prefsStepKey="subtitle"
+          persistedModelId={preprodSubtitlePersist.modelId}
+          persistedCustomInstructions={preprodSubtitlePersist.customInstructions}
+          canPersistPrefs={canEditDraft}
           step={5}
           label={t("draftSubtitleCta")}
           done={hasSubtitleSrt}
@@ -1025,74 +1280,43 @@ export function ProductionEpisodePipeline({
           )}
         />
 
-        <PreprodPipelineStep
-          key={`produce-scene-${episodeId}`}
+        <SceneRenderPipelineStep
+          key={`produce-scene-${episodeId}-${DEFAULT_PACKAGING_DRAFT_MODEL_ID}`}
           step={6}
-          label={t("draftSceneRenderCta")}
-          done={hasSceneClips}
-          disabled={!hasDraftScript || !runwayRenderReady}
-          hint={!runwayRenderReady ? t("draftRunwayDisabledHint") : undefined}
-          pending={scenePending}
-          formAction={sceneAction}
-          hiddenFields={{ episode_id: episodeId, script_text: scriptText }}
-          runLabel={t("pipelineStepRun")}
-          redoLabel={t("pipelineStepRedo")}
-          viewLabel={t("pipelineStepView")}
+          episodeId={episodeId}
+          scriptText={scriptText}
+          hasDraftScript={hasDraftScript}
+          runwayRenderReady={runwayRenderReady}
+          packagingLlmReady={Boolean(packagingLlmReady)}
+          packagingModelOptions={packagingModelOptions}
+          defaultScenePlanModel={DEFAULT_PACKAGING_DRAFT_MODEL_ID}
+          hasSceneClips={hasSceneClips}
+          brandGuide={brandGuide}
           showView={hasSceneClips && sceneClips.length > 0}
           onView={() => setViewOpen("scene")}
-          showCustomInstructions={false}
-          renderAdvancedExtra={(formId) => (
-            <div className="space-y-2">
-              <div>
-                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
-                  {t("pipelineProduceTargetSceneCountLabel")}
-                </label>
-                <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
-                  {t("pipelineProduceTargetSceneCountHint")}
-                </p>
-                <select
-                  name="target_scene_count"
-                  form={formId}
-                  defaultValue=""
-                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
-                >
-                  <option value="">{t("pipelineProduceTargetSceneCountAuto")}</option>
-                  {[4, 5, 6, 7, 8].map((n) => (
-                    <option key={n} value={String(n)}>
-                      {t("pipelineProduceTargetSceneCountN", { n })}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
-                  {t("pipelineProduceScenesJsonLabel")}
-                </label>
-                <p className="text-[10px] text-text-tertiary mb-1.5 leading-relaxed">
-                  {t("pipelineProduceScenesJsonHint")}
-                </p>
-                <textarea
-                  name="scenes_json"
-                  form={formId}
-                  rows={4}
-                  maxLength={50_000}
-                  placeholder={SCENES_JSON_INPUT_PLACEHOLDER}
-                  title={t("pipelineProduceScenesJsonPlaceholder")}
-                  className="w-full rounded border border-border-subtle bg-field px-2 py-1.5 text-[11px] text-text-primary placeholder:text-text-tertiary font-mono"
-                />
-              </div>
-            </div>
-          )}
+          persistPlanModelId={scenePersist.planModelId}
+          persistScenesJson={scenePersist.scenesJson}
+          persistTargetSceneCount={scenePersist.targetSceneCount}
+          persistRunwayModelId={scenePersist.runwayModelId}
+          persistVisualPromptSuffix={scenePersist.visualPromptSuffix}
+          canPersistPipelinePrefs={canEditDraft}
         />
 
         <PreprodPipelineStep
           key={`produce-asm-${episodeId}`}
+          episodeId={episodeId}
           step={7}
           label={t("draftAssembleCta")}
           done={hasAssembledVideo}
           disabled={!hasSceneClips}
-          hint={!hasSceneClips ? t("draftAssembleDisabledHint") : undefined}
-          pending={assemblyPending}
+          hint={
+            !hasSceneClips
+              ? t("draftAssembleDisabledHint")
+              : assemblyJobRunning
+                ? t("draftAssembleProcessingHint")
+                : undefined
+          }
+          pending={assemblyPending || assemblyJobRunning}
           formAction={assemblyAction}
           hiddenFields={{ episode_id: episodeId }}
           runLabel={t("pipelineStepRun")}
@@ -1112,6 +1336,10 @@ export function ProductionEpisodePipeline({
                   form={formId}
                   type="url"
                   maxLength={2000}
+                  value={assemblyForm.bgMusicUrl}
+                  onChange={(e) =>
+                    setAssemblyForm((p) => ({ ...p, bgMusicUrl: e.target.value }))
+                  }
                   placeholder={t("pipelineProduceBgMusicPlaceholder")}
                   className="h-7 w-full rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary placeholder:text-text-tertiary"
                 />
@@ -1126,7 +1354,10 @@ export function ProductionEpisodePipeline({
                 <select
                   name="bg_music_volume"
                   form={formId}
-                  defaultValue="0.15"
+                  value={assemblyForm.bgMusicVolume}
+                  onChange={(e) =>
+                    setAssemblyForm((p) => ({ ...p, bgMusicVolume: e.target.value }))
+                  }
                   className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
                 >
                   {[0.05, 0.1, 0.15, 0.2, 0.25].map((v) => (
@@ -1163,7 +1394,7 @@ export function ProductionEpisodePipeline({
         <p className="text-[11px] text-text-tertiary max-w-prose leading-relaxed">
           {t("draftTtsDisabledHint")}{" "}
           <Link
-            href="/dashboard/productions?studio=integrations"
+            href="/dashboard/productions?studio=channels"
             className="font-medium text-primary hover:underline"
           >
             {t("draftRunwayIntegrationsLink")}
@@ -1175,7 +1406,7 @@ export function ProductionEpisodePipeline({
         <p className="text-[11px] text-text-tertiary max-w-prose leading-relaxed">
           {t("draftRunwayDisabledHint")}{" "}
           <Link
-            href="/dashboard/productions?studio=integrations"
+            href="/dashboard/productions?studio=channels"
             className="font-medium text-primary hover:underline"
           >
             {t("draftRunwayIntegrationsLink")}
@@ -1187,6 +1418,11 @@ export function ProductionEpisodePipeline({
 }
 
 function PreprodPipelineStep({
+  episodeId,
+  prefsStepKey,
+  persistedModelId = "",
+  persistedCustomInstructions = "",
+  canPersistPrefs = false,
   step,
   label,
   done,
@@ -1207,6 +1443,12 @@ function PreprodPipelineStep({
   renderAdvancedExtra,
   draftInteractive,
 }: {
+  episodeId: string;
+  /** When set, model + optional custom instructions are merged into `pipeline_prefs.preprodSteps[key]`. */
+  prefsStepKey?: string;
+  persistedModelId?: string;
+  persistedCustomInstructions?: string;
+  canPersistPrefs?: boolean;
   step: number;
   label: string;
   done: boolean;
@@ -1235,14 +1477,59 @@ function PreprodPipelineStep({
   };
 }) {
   const tStep = useTranslations("Dashboard.productions");
+  const tAct = useTranslations("Dashboard.actionErrors");
   const formId = useId();
   const [advOpen, setAdvOpen] = useState(false);
   const isDraft = Boolean(draftInteractive);
   const hasAdvanced = Boolean(
     modelOptions?.length || showCustomInstructions || renderAdvancedExtra,
   );
-  const [selectedModel, setSelectedModel] = useState(defaultModel ?? "");
-  const [shortcutInstr, setShortcutInstr] = useState("");
+  const [selectedModel, setSelectedModel] = useState(
+    () => persistedModelId.trim() || defaultModel || "",
+  );
+  const [shortcutInstr, setShortcutInstr] = useState(() => persistedCustomInstructions);
+  const skipPreprodPrefsRef = useRef(true);
+
+  /* Hydrate preprod when episode/step changes; omit persisted* from deps to avoid reset loops after save. */
+  useEffect(() => {
+    if (!prefsStepKey) return;
+    skipPreprodPrefsRef.current = true;
+    setSelectedModel(persistedModelId.trim() || defaultModel || "");
+    setShortcutInstr(persistedCustomInstructions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- persisted* intentionally omitted (see comment above)
+  }, [episodeId, prefsStepKey, defaultModel]);
+
+  useEffect(() => {
+    if (!prefsStepKey || !canPersistPrefs) return;
+    if (skipPreprodPrefsRef.current) {
+      skipPreprodPrefsRef.current = false;
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      void (async () => {
+        const res = await saveEpisodePipelinePrefs(episodeId, {
+          preprodSteps: {
+            [prefsStepKey]: {
+              modelId: selectedModel,
+              customInstructions: showCustomInstructions ? shortcutInstr : "",
+            },
+          },
+        });
+        if ("error" in res && res.error) {
+          toast.error(translateActionErrorMessage(res.error, tAct));
+        }
+      })();
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [
+    prefsStepKey,
+    canPersistPrefs,
+    episodeId,
+    selectedModel,
+    shortcutInstr,
+    showCustomInstructions,
+    tAct,
+  ]);
 
   const stepBadge =
     done ? "\u2713" : step === 0 ? "0" : String(step);
@@ -1256,7 +1543,7 @@ function PreprodPipelineStep({
   return (
     <div
       className={cn(
-        "flex h-full flex-col rounded-xl border px-3 py-3 shadow-sm transition-shadow",
+        "flex flex-col rounded-xl border px-3 py-3 shadow-sm transition-shadow",
         done
           ? "border-green-500/35 bg-green-500/[0.07] ring-1 ring-green-500/15"
           : disabled

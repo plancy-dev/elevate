@@ -124,6 +124,8 @@ function ProductionEpisodeDetailWorkspaceInner({
   youtubeChannelTitle,
   episodeFormat,
   distributionChannelLabel,
+  activeAssemblyJob,
+  brandGuide,
 }: {
   episode: StudioProductionEpisodeRowWithEmbeds;
   studioProjects: ProjectOpt[];
@@ -141,6 +143,8 @@ function ProductionEpisodeDetailWorkspaceInner({
   youtubeChannelTitle: string | null;
   episodeFormat: EpisodeFormat;
   distributionChannelLabel: string | null;
+  activeAssemblyJob?: { id: string; status: string } | null;
+  brandGuide?: string | null;
 }) {
   const t = useTranslations("Dashboard.productions");
   const baseId = useId();
@@ -345,6 +349,7 @@ function ProductionEpisodeDetailWorkspaceInner({
           />
           <ProductionEpisodePipeline
             episodeId={episode.id}
+            pipelinePrefs={episode.pipeline_prefs ?? {}}
             artifacts={artifacts}
             runwayRenderReady={runwayRenderReady}
             elevenlabsKeyConfigured={elevenlabsKeyConfigured}
@@ -359,6 +364,8 @@ function ProductionEpisodeDetailWorkspaceInner({
             customDraftTemplates={customDraftTemplates}
             draftLlmAvailability={draftLlmAvailability}
             draftSnapshots={draftSnapshots}
+            activeAssemblyJob={activeAssemblyJob ?? null}
+            brandGuide={brandGuide}
             className="border-t-0 pt-0"
           />
         </section>
