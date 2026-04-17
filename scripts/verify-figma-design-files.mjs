@@ -5,7 +5,13 @@
  *
  * FIGMA_ACCESS_TOKEN unset → exit 0 (skip; safe for CI without secrets).
  * FIGMA_VERIFY_FILE_KEYS — comma-separated keys; default matches .github/DESIGN.md Studio file.
+ * Loads `.env.local` when present (same as other repo scripts) so local `pnpm figma:verify` picks up tokens.
  */
+
+import { config as loadEnv } from "dotenv";
+import { resolve } from "node:path";
+
+loadEnv({ path: resolve(process.cwd(), ".env.local") });
 
 const token = process.env.FIGMA_ACCESS_TOKEN?.trim();
 const defaultKey = "qxCQUDg8XcCBewuR2lmwV";
@@ -28,6 +34,13 @@ for (const key of keys) {
   });
   if (!res.ok) {
     const body = await res.text();
+    if (res.status === 401 || res.status === 403) {
+      console.error(
+        "[figma:verify] Figma rejected the token (401/403). Renew FIGMA_ACCESS_TOKEN " +
+          "(90-day tokens expire; create a new personal access token in Figma account settings) " +
+          "and update .env.local / GitHub Actions secret FIGMA_ACCESS_TOKEN.",
+      );
+    }
     console.error(
       `[figma:verify] ${key} → HTTP ${res.status}${body ? `: ${body.slice(0, 200)}` : ""}`,
     );
