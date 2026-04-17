@@ -10,7 +10,7 @@ import {
   useState,
   useTransition,
 } from "react";
-import { ChevronDown, Eye, Play, RotateCw, Sparkles } from "lucide-react";
+import { ChevronDown, Eye, Play, RotateCw, Sparkles, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { saveEpisodePipelinePrefs } from "@/actions/studio-episode-pipeline-prefs";
@@ -47,6 +47,15 @@ const RUNWAY_MODEL_LABEL_KEYS: Record<RunwayTextToVideoModelId, string> = {
 };
 
 type PerIndex = Record<number, "queued" | "running" | "ok" | "error">;
+
+type SceneRenderPreflight = {
+  payload: string;
+  indices: number[];
+  sceneCount: number;
+  estimatedCredits: number;
+  totalDurationSeconds?: number;
+  budgetWarning?: "overSoftBudget";
+};
 
 async function mapPool<T, R>(
   items: T[],
@@ -130,6 +139,9 @@ export function SceneRenderPipelineStep({
   const [orchestrating, startOrchestrate] = useTransition();
   const [llmPending, startLlm] = useTransition();
   const [prefsSavePending, startPrefsSave] = useTransition();
+  const preflightRef = useRef<HTMLDialogElement>(null);
+  const [preflightData, setPreflightData] = useState<SceneRenderPreflight | null>(null);
+  const preflightTitleId = useId();
 
   const disabled = !hasDraftScript || !runwayRenderReady;
   const done = hasSceneClips;
@@ -302,11 +314,6 @@ export function SceneRenderPipelineStep({
         toast.error(translateActionErrorMessage(prep.error, tAction));
         return;
       }
-      if (prep.budgetWarning === "overSoftBudget" && prep.totalDurationSeconds != null) {
-        toast(t("pipelineSceneBudgetSoftWarning", { seconds: prep.totalDurationSeconds }), {
-          duration: 8000,
-        });
-      }
       const payload = prep.scenesPayload;
       if (!payload) {
         toast.error(translateActionErrorMessage("unexpected", tAction));
@@ -317,9 +324,27 @@ export function SceneRenderPipelineStep({
         toast.error(translateActionErrorMessage("studioSceneRenderInvalidJson", tAction));
         return;
       }
-      await renderIndices(rows.map((r) => r.index), payload, "full");
+      const estimatedCredits = estimateSceneRenderCredits(runwayModel, rows);
+      setPreflightData({
+        payload,
+        indices: rows.map((r) => r.index),
+        sceneCount: rows.length,
+        estimatedCredits,
+        totalDurationSeconds: prep.totalDurationSeconds,
+        budgetWarning: prep.budgetWarning,
+      });
+      queueMicrotask(() => preflightRef.current?.showModal());
     });
-  }, [readAdvancedForm, renderIndices, tAction, t]);
+  }, [readAdvancedForm, runwayModel, tAction]);
+
+  const onPreflightConfirm = useCallback(() => {
+    const d = preflightData;
+    if (!d) return;
+    preflightRef.current?.close();
+    startOrchestrate(async () => {
+      await renderIndices(d.indices, d.payload, "full");
+    });
+  }, [preflightData, renderIndices, startOrchestrate]);
 
   const onRetryFailed = useCallback(() => {
     startOrchestrate(async () => {
@@ -829,6 +854,76 @@ export function SceneRenderPipelineStep({
           })}
         </ul>
       ) : null}
+
+      <dialog
+        ref={preflightRef}
+        className="fixed left-1/2 top-1/2 z-50 w-[min(100vw-2rem,22rem)] max-h-[min(90vh,32rem)] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border-subtle bg-layer-01 p-0 text-text-primary shadow-2xl [&::backdrop]:bg-black/50"
+        aria-labelledby={preflightTitleId}
+        onClose={() => setPreflightData(null)}
+      >
+        {preflightData ? (
+          <div className="flex max-h-[min(90vh,32rem)] flex-col">
+            <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
+              <h2 id={preflightTitleId} className="text-sm font-semibold text-text-primary">
+                {t("pipelineScenePreflightTitle")}
+              </h2>
+              <button
+                type="button"
+                onClick={() => preflightRef.current?.close()}
+                className="rounded-md p-1.5 text-text-secondary hover:bg-layer-02 hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                aria-label={t("pipelineScenePreflightCloseLabel")}
+              >
+                <X className="h-5 w-5" aria-hidden />
+              </button>
+            </div>
+            <div className="space-y-2 overflow-y-auto px-4 pb-3 pt-3 text-xs">
+              <p className="text-text-secondary leading-snug">
+                {t("pipelineScenePreflightSummary", {
+                  count: preflightData.sceneCount,
+                  credits: preflightData.estimatedCredits,
+                })}
+              </p>
+              {preflightData.totalDurationSeconds != null ? (
+                <p className="text-text-tertiary">
+                  {t("pipelineScenePreflightDuration", {
+                    seconds: preflightData.totalDurationSeconds,
+                  })}
+                </p>
+              ) : null}
+              {preflightData.budgetWarning === "overSoftBudget" &&
+              preflightData.totalDurationSeconds != null ? (
+                <p className="rounded border border-amber-500/30 bg-amber-500/10 px-2 py-1.5 text-[11px] text-amber-950 dark:text-amber-100">
+                  {t("pipelineSceneBudgetSoftWarning", {
+                    seconds: preflightData.totalDurationSeconds,
+                  })}
+                </p>
+              ) : null}
+              <p className="text-[10px] text-text-tertiary leading-relaxed">
+                {t("pipelineSceneEstimatedCreditsDisclaimer")}
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-end gap-2 border-t border-border-subtle px-4 py-3">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => preflightRef.current?.close()}
+              >
+                {t("pipelineScenePreflightCancel")}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                disabled={orchestrating}
+                isLoading={orchestrating}
+                onClick={onPreflightConfirm}
+              >
+                {t("pipelineScenePreflightProceed")}
+              </Button>
+            </div>
+          </div>
+        ) : null}
+      </dialog>
     </div>
   );
 }

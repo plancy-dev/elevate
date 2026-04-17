@@ -4,6 +4,7 @@
  * Calibrate against current vendor docs (e.g. Runway API pricing guide:
  * https://docs.dev.runwayml.com/guides/pricing/ ), then update this table; keep UI
  * disclaimer in sync with i18n (`messages/*.json`).
+ * **Numeric swap with live pricing is deferred** until product + legal sign-off (no standing task).
  */
 import type { RunwayTextToVideoModelId } from "@/lib/studio-integrations/providers/runway/runway-scene-models";
 import type { SceneRow } from "@/lib/studio-productions/scene-rows-json";
