@@ -18,9 +18,19 @@ body:
   - type: input
     id: figma
     attributes:
-      label: Figma link (optional)
-      description: Frame or file URL
-      placeholder: https://www.figma.com/design/...
+      label: Figma frame URL
+      description: Share → copy link with **node-id=** (frame), not file root only. Use “N/A” only if truly no Figma.
+      placeholder: https://www.figma.com/design/...?node-id=...
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: One line — “Done means …”.
+      placeholder: "Done means: …"
+    validations:
+      required: true
   - type: dropdown
     id: phase
     attributes:

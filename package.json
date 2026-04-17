@@ -19,6 +19,7 @@
     "test:e2e": "playwright test",
     "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
     "issues:studio": "bash .github/scripts/gh-issue-studio-queue.sh",
+    "figma:verify": "node scripts/verify-figma-design-files.mjs",
     "db:seed-admin": "node scripts/seed-admin.mjs",
     "db:seed-demo-studio": "tsx scripts/seed-demo-studio-productions.ts",
     "generate:brand": "node scripts/generate-brand-assets.mjs",

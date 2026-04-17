@@ -22,12 +22,26 @@
 
 ## 2. “이 기능 구현해줘” — 권장 프로세스
 
-1. **이슈** — 없으면 생성(GitHub **New issue** 또는 템플릿). Studio 씬 렌더 트랙은 [`.github/ISSUE_TEMPLATE/scene_render_task.yml`](../.github/ISSUE_TEMPLATE/scene_render_task.yml) 사용 가능.
+1. **이슈** — 없으면 생성(GitHub **New issue** 또는 템플릿). 범용은 [`.github/ISSUE_TEMPLATE/feature_task.yml`](../.github/ISSUE_TEMPLATE/feature_task.yml); Studio 씬 렌더는 [`.github/ISSUE_TEMPLATE/scene_render_task.yml`](../.github/ISSUE_TEMPLATE/scene_render_task.yml).
 2. **에픽·마일스톤** — 해당 시 [Epic #1](https://github.com/plancy-dev/elevate/issues/1) 또는 마일스톤 `Scene render · P0`–`P3`에 연결.
 3. **Figma** — 해당 프레임 **Share → Copy link** 후 이슈 본문에 붙인다. 파일 루트: [`.github/DESIGN.md`](../.github/DESIGN.md).
 4. **gstack / 품질 파이프라인** — UI·제품 성격이면 [`docs/design/QUALITY_PIPELINE.md`](./design/QUALITY_PIPELINE.md) 순서(디자인 플랜 → 엔지 플랜 → 빌드 → verify).
 5. **구현** — 브랜치 `issue-N-short-name`; PR 본문에 `Closes #N` 또는 `Refs #N`.
 6. **검증** — 이 저장소는 **`pnpm verify`** 가 단일 게이트 (`package.json`).
+
+### 2b. P0–P4 권장 게이트 (사람 · 에이전트 · 툴)
+
+품질 파이프라인 상세는 [`docs/design/QUALITY_PIPELINE.md`](./design/QUALITY_PIPELINE.md). 여기서는 **역할**만 고정한다.
+
+| 단계 | 누가 | 무엇 | 비고 |
+|------|------|------|------|
+| **P0** | 사람 | 이슈에 **프레임 단위 Figma URL** + **수락 기준 한 줄** + (선택) 비범위 | 템플릿: [scene_render_task](../.github/ISSUE_TEMPLATE/scene_render_task.yml), [feature_task](../.github/ISSUE_TEMPLATE/feature_task.yml) |
+| **P1** | 에이전트 | 구현 전 **`gh issue view N`** 로 범위·링크 확인 | 추측 구현 방지 |
+| **P2** | 에이전트 | UI·레이아웃 변경 시 gstack **`/plan-design-review`** 또는 디자인 점검 스킬 (설치 시) | [`QUALITY_PIPELINE`](./design/QUALITY_PIPELINE.md) |
+| **P3** | 에이전트 | PR 전 gstack **`/review`** (설치 시) — **권장** (필수 아님; 팀 속도와 트레이드오프) | 저장소 `pnpm verify`는 **항상** 유지 |
+| **P4** | 툴 | (선택) **`pnpm figma:verify`** — Figma REST API로 파일 키 존재 확인 ([API](https://developers.figma.com/docs/rest-api/)); 토큰 없으면 스킵 | 로컬 또는 CI Secrets `FIGMA_ACCESS_TOKEN` |
+
+**기본 정책 (플랜 확정):** Figma 검증은 **로컬·CI 모두 토큰 없으면 조용히 스킵**한다. CI에서 강제하려면 저장소에 `FIGMA_ACCESS_TOKEN` Secret을 등록한다.
 
 ---
 
