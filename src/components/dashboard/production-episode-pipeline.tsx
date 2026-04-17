@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { Eye, ListChecks, Play, RotateCw } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,9 +22,15 @@ import { generateTtsFromScript, generateSubtitlesFromAudio } from "@/actions/stu
 import { renderEpisodeScenes } from "@/actions/studio-scene-render";
 import { assembleEpisodeVideo } from "@/actions/studio-video-assembly";
 import { uploadEpisodeToYouTube } from "@/actions/studio-youtube";
+import { EpisodeDraftWorkbench } from "@/components/dashboard/episode-draft-workbench";
+import { ProductionEpisodeReferencePanel } from "@/components/dashboard/production-episode-reference-panel";
+import { PipelineReferenceSourcesStrip } from "@/components/dashboard/pipeline-reference-sources-strip";
+import { PipelineStepAdvancedToggle } from "@/components/dashboard/pipeline-step-advanced-toggle";
 import { YoutubeUploadPipelineStep } from "@/components/dashboard/youtube-upload-pipeline-step";
+import type { StudioEpisodeDraftTemplateRow } from "@/lib/data/studio-draft-templates";
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import type { StudioProductionArtifactRow } from "@/lib/data/studio-productions";
+import type { StudioEpisodeDraftSnapshotRow } from "@/lib/studio-productions/draft-snapshots";
 import { parsePackagingDraftContent } from "@/lib/studio-productions/packaging-draft";
 import type { EpisodeFormat } from "@/lib/studio-productions/episode-format";
 import {
@@ -32,14 +39,12 @@ import {
   DEFAULT_PACKAGING_DRAFT_MODEL_ID,
   TIMED_SCRIPT_HEURISTIC_MODEL_ID,
 } from "@/lib/studio-productions/episode-llm-models";
+import { SCENES_JSON_INPUT_PLACEHOLDER } from "@/lib/studio-productions/scenes-json-placeholder";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { toast } from "@/lib/ui/app-toast";
 import { cn } from "@/lib/utils";
 
-/** Not from messages — curly braces are parsed as ICU placeholders in next-intl. */
-const SCENES_JSON_PLACEHOLDER_EXAMPLE =
-  '[{"narration":"…","visual_prompt":"…","duration_seconds":5}]';
 import {
   ELEVENLABS_LANGUAGE_SELECT_OPTIONS,
   appLocaleToElevenLabsLanguage,
@@ -63,6 +68,11 @@ type PipelineProps = {
   /** Planning / linked channel label (may differ from OAuth upload target). */
   distributionChannelLabel?: string | null;
   className?: string;
+  /** Draft dialog + pipeline step edit (default true). */
+  canEditDraft?: boolean;
+  customDraftTemplates?: StudioEpisodeDraftTemplateRow[];
+  draftLlmAvailability?: { openai: boolean; anthropic: boolean } | null;
+  draftSnapshots?: StudioEpisodeDraftSnapshotRow[];
 };
 
 type PipelineStepActionState = {
@@ -137,16 +147,33 @@ export function ProductionEpisodePipeline({
   episodeFormat = "shorts",
   distributionChannelLabel = null,
   className,
+  canEditDraft = true,
+  customDraftTemplates = [],
+  draftLlmAvailability = null,
+  draftSnapshots = [],
 }: PipelineProps) {
   const t = useTranslations("Dashboard.productions");
   const tAction = useTranslations("Dashboard.actionErrors");
   const locale = useLocale();
+  const draftModalTitleId = useId();
+  const draftCloseConfirmTitleId = useId();
+  const pipelineProgressTitleId = useId();
+  const referencesModalTitleId = useId();
   const defaultTtsLanguage = useMemo(
     () => appLocaleToElevenLabsLanguage(locale),
     [locale],
   );
   const router = useRouter();
   const [viewOpen, setViewOpen] = useState<ViewKind>(null);
+  const [draftDialogOpen, setDraftDialogOpen] = useState(false);
+  const [draftDirty, setDraftDirty] = useState(false);
+  const [draftCloseConfirmOpen, setDraftCloseConfirmOpen] = useState(false);
+  const [referencesDialogOpen, setReferencesDialogOpen] = useState(false);
+  const [draftPipelinePrefill, setDraftPipelinePrefill] = useState<{
+    modelId: string;
+    briefing: string;
+  } | null>(null);
+  const [draftPrefillNonce, setDraftPrefillNonce] = useState(0);
   const [ttsVoicePreset, setTtsVoicePreset] = useState<"female" | "male" | "custom">(
     "female",
   );
@@ -366,50 +393,111 @@ export function ProductionEpisodePipeline({
         {t("producePanelLead")}
       </p>
 
-      <div className="rounded-lg border border-border-subtle bg-layer-02/35 px-3 py-2.5">
-        <div className="flex flex-wrap items-center justify-between gap-2 gap-y-1">
-          <p className="text-[11px] font-medium text-text-primary">
-            {t("pipelineProgressLabel", {
-              completed: pipelineCompletedCount,
-              total: PIPELINE_TOTAL_STEPS,
-            })}
-          </p>
-          <p className="text-[11px] text-text-tertiary">
-            {pipelineNextLabel
-              ? t("pipelineNextUpLabel", { step: pipelineNextLabel })
-              : t("pipelineAllComplete")}
-          </p>
-        </div>
-        <div
-          className="mt-2 h-1.5 overflow-hidden rounded-full bg-layer-03"
-          role="progressbar"
-          aria-valuenow={pipelineCompletedCount}
-          aria-valuemin={0}
-          aria-valuemax={PIPELINE_TOTAL_STEPS}
-        >
+      <section
+        className="rounded-xl border border-border-subtle/90 bg-gradient-to-b from-layer-02/55 to-layer-02/30 px-3 py-3 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.04]"
+        aria-labelledby={pipelineProgressTitleId}
+      >
+        <div className="flex items-start gap-3">
           <div
-            className="h-full bg-primary/85 transition-[width] duration-300 ease-out"
-            style={{
-              width: `${Math.min(100, (pipelineCompletedCount / PIPELINE_TOTAL_STEPS) * 100)}%`,
-            }}
-          />
+            className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary"
+            aria-hidden
+          >
+            <ListChecks className="h-4 w-4" strokeWidth={2} />
+          </div>
+          <div className="min-w-0 flex-1 space-y-2">
+            <div className="flex flex-wrap items-center justify-between gap-2 gap-y-1">
+              <p
+                id={pipelineProgressTitleId}
+                className="text-xs font-semibold text-text-primary"
+              >
+                {t("draftPipelineTitle")}
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-2 gap-y-1">
+              <p className="text-[11px] font-medium text-text-primary">
+                {t("pipelineProgressLabel", {
+                  completed: pipelineCompletedCount,
+                  total: PIPELINE_TOTAL_STEPS,
+                })}
+              </p>
+              <p className="text-[11px] text-text-tertiary">
+                {pipelineNextLabel
+                  ? t("pipelineNextUpLabel", { step: pipelineNextLabel })
+                  : t("pipelineAllComplete")}
+              </p>
+            </div>
+            <div
+              className="h-1.5 overflow-hidden rounded-full bg-layer-03"
+              role="progressbar"
+              aria-valuenow={pipelineCompletedCount}
+              aria-valuemin={0}
+              aria-valuemax={PIPELINE_TOTAL_STEPS}
+              aria-label={t("pipelineProgressLabel", {
+                completed: pipelineCompletedCount,
+                total: PIPELINE_TOTAL_STEPS,
+              })}
+            >
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-primary/90 to-primary/75 transition-[width] duration-300 ease-out"
+                style={{
+                  width: `${Math.min(100, (pipelineCompletedCount / PIPELINE_TOTAL_STEPS) * 100)}%`,
+                }}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div>
-        <h3 className="text-sm font-semibold text-text-primary">
+      <PipelineReferenceSourcesStrip
+        artifacts={artifacts}
+        onOpenReferences={() => setReferencesDialogOpen(true)}
+      />
+
+      <div className="border-l-2 border-primary/45 pl-3">
+        <h3 className="text-sm font-semibold tracking-tight text-text-primary">
           {t("pipelinePhasePrepareTitle")}
         </h3>
-        <p className="mt-1 text-xs text-text-tertiary leading-relaxed">
+        <p className="mt-1 text-xs text-text-secondary leading-relaxed">
           {t("pipelinePhasePrepareSubtitle")}
         </p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <PreprodInfoRow
+        <PreprodPipelineStep
+          key={`preprod-draft-${episodeId}-${DEFAULT_PACKAGING_DRAFT_MODEL_ID}`}
+          step={0}
           label={t("draftPreprodDraftStep")}
           done={hasDraftScript}
+          disabled={!canEditDraft}
           hint={!hasDraftScript ? t("draftPreprodDraftHint") : undefined}
+          pending={false}
+          formAction={async () => {}}
+          hiddenFields={{}}
+          runLabel={t("pipelineStepRun")}
+          redoLabel={t("pipelineStepRedo")}
+          viewLabel={t("pipelineStepView")}
+          modelOptions={packagingModelOptions}
+          defaultModel={DEFAULT_PACKAGING_DRAFT_MODEL_ID}
+          showCustomInstructions
+          draftInteractive={{
+            canUse: canEditDraft,
+            showView: hasDraftScript,
+            onPrimary: ({ modelId, customInstructions }) => {
+              setDraftPipelinePrefill({
+                modelId,
+                briefing: customInstructions,
+              });
+              setDraftPrefillNonce((n) => n + 1);
+              setDraftDirty(false);
+              setDraftDialogOpen(true);
+            },
+            onView: () => {
+              setDraftPipelinePrefill(null);
+              setDraftPrefillNonce((n) => n + 1);
+              setDraftDirty(false);
+              setDraftDialogOpen(true);
+            },
+          }}
         />
 
         <PreprodPipelineStep
@@ -442,7 +530,6 @@ export function ProductionEpisodePipeline({
           pending={packPending}
           formAction={packAction}
           hiddenFields={{ episode_id: episodeId }}
-          fullWidth
           runLabel={t("pipelineStepRun")}
           redoLabel={t("pipelineStepRedo")}
           viewLabel={t("pipelineStepView")}
@@ -463,7 +550,6 @@ export function ProductionEpisodePipeline({
           pending={thumbPending}
           formAction={thumbAction}
           hiddenFields={{ episode_id: episodeId }}
-          fullWidth
           runLabel={t("pipelineStepRun")}
           redoLabel={t("pipelineStepRedo")}
           viewLabel={t("pipelineStepView")}
@@ -486,6 +572,92 @@ export function ProductionEpisodePipeline({
           </Link>
         </p>
       )}
+
+      <Modal
+        open={draftDialogOpen && canEditDraft}
+        onClose={() => {
+          if (draftCloseConfirmOpen) return;
+          if (draftDirty) setDraftCloseConfirmOpen(true);
+          else setDraftDialogOpen(false);
+        }}
+        title={t("pipelineDraftDialogTitle")}
+        description={t("pipelineDraftDialogDescription")}
+        size="2xl"
+        titleId={draftModalTitleId}
+      >
+        {draftDialogOpen && canEditDraft ? (
+          <EpisodeDraftWorkbench
+            variant="dialog"
+            episodeId={episodeId}
+            artifacts={artifacts}
+            customDraftTemplates={customDraftTemplates}
+            draftLlmAvailability={draftLlmAvailability}
+            draftSnapshots={draftSnapshots}
+            scriptTextareaRows={10}
+            onDirtyChange={setDraftDirty}
+            pipelineShortcutPrefill={draftPipelinePrefill}
+            pipelineShortcutNonce={draftPrefillNonce}
+            footerSlot={
+              <p className="pt-3 text-xs text-text-tertiary border-t border-border-subtle">
+                <button
+                  type="button"
+                  className="font-medium text-primary hover:underline"
+                  onClick={() => {
+                    setDraftDialogOpen(false);
+                    setReferencesDialogOpen(true);
+                  }}
+                >
+                  {t("pipelineDraftDialogFullWorkbenchLink")}
+                </button>
+              </p>
+            }
+          />
+        ) : null}
+      </Modal>
+
+      <Modal
+        open={draftCloseConfirmOpen}
+        onClose={() => setDraftCloseConfirmOpen(false)}
+        title={t("pipelineDraftCloseConfirmTitle")}
+        description={t("pipelineDraftCloseConfirmDescription")}
+        size="md"
+        stackClassName="z-[90]"
+        titleId={draftCloseConfirmTitleId}
+      >
+        <div className="flex flex-wrap justify-end gap-2 pt-1">
+          <Button type="button" variant="secondary" size="sm" onClick={() => setDraftCloseConfirmOpen(false)}>
+            {t("pipelineDraftCloseConfirmCancel")}
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={() => {
+              setDraftCloseConfirmOpen(false);
+              setDraftDialogOpen(false);
+            }}
+          >
+            {t("pipelineDraftCloseConfirmDiscard")}
+          </Button>
+        </div>
+      </Modal>
+
+      <Modal
+        open={referencesDialogOpen}
+        onClose={() => setReferencesDialogOpen(false)}
+        title={t("episodePanelHeadReferences")}
+        description={t("episodePanelBodyReferences")}
+        size="2xl"
+        titleId={referencesModalTitleId}
+        stackClassName="z-[82]"
+      >
+        <ProductionEpisodeReferencePanel
+          episodeId={episodeId}
+          artifacts={artifacts}
+          omitSectionHeader
+          className="border-0 pt-0"
+        />
+      </Modal>
 
       <Modal
         open={viewOpen === "timed"}
@@ -675,11 +847,11 @@ export function ProductionEpisodePipeline({
         )}
       </Modal>
 
-      <div>
-        <h3 className="text-sm font-semibold text-text-primary">
+      <div className="border-l-2 border-primary/45 pl-3">
+        <h3 className="text-sm font-semibold tracking-tight text-text-primary">
           {t("pipelinePhaseProduceTitle")}
         </h3>
-        <p className="mt-1 text-xs text-text-tertiary leading-relaxed">
+        <p className="mt-1 text-xs text-text-secondary leading-relaxed">
           {t("pipelinePhaseProduceSubtitle")}
         </p>
       </div>
@@ -904,7 +1076,8 @@ export function ProductionEpisodePipeline({
                   form={formId}
                   rows={4}
                   maxLength={50_000}
-                  placeholder={SCENES_JSON_PLACEHOLDER_EXAMPLE}
+                  placeholder={SCENES_JSON_INPUT_PLACEHOLDER}
+                  title={t("pipelineProduceScenesJsonPlaceholder")}
                   className="w-full rounded border border-border-subtle bg-field px-2 py-1.5 text-[11px] text-text-primary placeholder:text-text-tertiary font-mono"
                 />
               </div>
@@ -1013,46 +1186,6 @@ export function ProductionEpisodePipeline({
   );
 }
 
-function PreprodInfoRow({
-  label,
-  done,
-  hint,
-}: {
-  label: string;
-  done: boolean;
-  hint?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-lg border px-3 py-3 sm:col-span-2",
-        done
-          ? "border-green-500/30 bg-green-500/5"
-          : "border-border-subtle/50 bg-layer-02/20 opacity-80",
-      )}
-    >
-      <div className="flex items-center gap-2 min-w-0">
-        <span
-          className={cn(
-            "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
-            done
-              ? "bg-green-500/20 text-green-600 dark:text-green-400"
-              : "bg-layer-03 text-text-tertiary",
-          )}
-        >
-          {done ? "\u2713" : "\u2022"}
-        </span>
-        <span className="text-xs font-medium text-text-primary truncate">{label}</span>
-      </div>
-      {hint && !done && (
-        <p className="mt-1.5 text-[10px] text-text-tertiary leading-relaxed pl-7">
-          {hint}
-        </p>
-      )}
-    </div>
-  );
-}
-
 function PreprodPipelineStep({
   step,
   label,
@@ -1062,7 +1195,6 @@ function PreprodPipelineStep({
   pending,
   formAction,
   hiddenFields,
-  fullWidth,
   runLabel,
   redoLabel,
   viewLabel,
@@ -1073,6 +1205,7 @@ function PreprodPipelineStep({
   modelFieldName = "model",
   showCustomInstructions = true,
   renderAdvancedExtra,
+  draftInteractive,
 }: {
   step: number;
   label: string;
@@ -1082,7 +1215,6 @@ function PreprodPipelineStep({
   pending: boolean;
   formAction: (payload: FormData) => void;
   hiddenFields: Record<string, string>;
-  fullWidth?: boolean;
   runLabel: string;
   redoLabel: string;
   viewLabel: string;
@@ -1094,24 +1226,42 @@ function PreprodPipelineStep({
   modelFieldName?: string;
   showCustomInstructions?: boolean;
   renderAdvancedExtra?: (formId: string) => ReactNode;
+  /** Draft shortcut card: Run/Redo/View open the dialog instead of posting a server action. */
+  draftInteractive?: {
+    canUse: boolean;
+    showView: boolean;
+    onPrimary: (p: { modelId: string; customInstructions: string }) => void;
+    onView: () => void;
+  };
 }) {
+  const tStep = useTranslations("Dashboard.productions");
   const formId = useId();
   const [advOpen, setAdvOpen] = useState(false);
+  const isDraft = Boolean(draftInteractive);
   const hasAdvanced = Boolean(
     modelOptions?.length || showCustomInstructions || renderAdvancedExtra,
   );
   const [selectedModel, setSelectedModel] = useState(defaultModel ?? "");
+  const [shortcutInstr, setShortcutInstr] = useState("");
+
+  const stepBadge =
+    done ? "\u2713" : step === 0 ? "0" : String(step);
+
+  const showViewBtn = isDraft
+    ? draftInteractive?.showView && draftInteractive.canUse
+    : showView && onView;
+
+  const onViewClick = isDraft ? draftInteractive?.onView : onView;
 
   return (
     <div
       className={cn(
-        "rounded-lg border px-3 py-3",
+        "flex h-full flex-col rounded-xl border px-3 py-3 shadow-sm transition-shadow",
         done
-          ? "border-green-500/30 bg-green-500/5"
+          ? "border-green-500/35 bg-green-500/[0.07] ring-1 ring-green-500/15"
           : disabled
             ? "border-border-subtle/50 bg-layer-02/20 opacity-60"
-            : "border-border-subtle bg-layer-02/40",
-        fullWidth && "sm:col-span-2",
+            : "border-border-subtle/90 bg-layer-02/45 ring-1 ring-black/[0.03] dark:ring-white/[0.04]",
       )}
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -1124,7 +1274,7 @@ function PreprodPipelineStep({
                 : "bg-layer-03 text-text-tertiary",
             )}
           >
-            {done ? "\u2713" : step}
+            {stepBadge}
           </span>
           <span className="text-xs font-medium text-text-primary truncate">
             {label}
@@ -1132,36 +1282,76 @@ function PreprodPipelineStep({
         </div>
         <div className="flex flex-wrap items-center gap-1.5 shrink-0">
           {hasAdvanced && !disabled ? (
-            <button
-              type="button"
-              className="text-[10px] text-text-tertiary hover:text-text-secondary px-1"
-              onClick={() => setAdvOpen((p) => !p)}
-            >
-              {advOpen ? "\u25B2" : "\u2699"}
-            </button>
+            <PipelineStepAdvancedToggle
+              open={advOpen}
+              onToggle={() => setAdvOpen((p) => !p)}
+            />
           ) : null}
-          {showView && onView ? (
-            <Button type="button" variant="secondary" size="sm" onClick={onView}>
-              {viewLabel}
+          {showViewBtn && onViewClick ? (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={onViewClick}
+              aria-label={viewLabel}
+              title={viewLabel}
+              className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
+            >
+              <Eye className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
+              <span className="hidden sm:inline">{viewLabel}</span>
             </Button>
           ) : null}
-          <form action={formAction} className="inline" id={formId}>
-            {Object.entries(hiddenFields).map(([k, v]) => (
-              <input key={k} type="hidden" name={k} value={v} />
-            ))}
-            {advOpen ? null : showCustomInstructions ? (
-              <input type="hidden" name="custom_instructions" value="" />
-            ) : null}
+          {isDraft && draftInteractive ? (
             <Button
-              type="submit"
+              type="button"
               variant={done ? "secondary" : "ghost"}
               size="sm"
-              isLoading={pending}
-              disabled={disabled}
+              disabled={disabled || !draftInteractive.canUse}
+              onClick={() =>
+                draftInteractive.onPrimary({
+                  modelId: selectedModel,
+                  customInstructions: shortcutInstr,
+                })
+              }
+              aria-label={done ? redoLabel : runLabel}
+              title={done ? redoLabel : runLabel}
+              className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
             >
-              {done ? redoLabel : runLabel}
+              {done ? (
+                <RotateCw className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
+              ) : (
+                <Play className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
+              )}
+              <span className="hidden sm:inline">{done ? redoLabel : runLabel}</span>
             </Button>
-          </form>
+          ) : (
+            <form action={formAction} className="inline" id={formId}>
+              {Object.entries(hiddenFields).map(([k, v]) => (
+                <input key={k} type="hidden" name={k} value={v} />
+              ))}
+              {advOpen ? null : showCustomInstructions ? (
+                <input type="hidden" name="custom_instructions" value="" />
+              ) : null}
+              <Button
+                type="submit"
+                variant={done ? "secondary" : "ghost"}
+                size="sm"
+                isLoading={pending}
+                disabled={disabled}
+                aria-label={done ? redoLabel : runLabel}
+                title={done ? redoLabel : runLabel}
+                className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
+              >
+                {!pending &&
+                  (done ? (
+                    <RotateCw className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
+                  ) : (
+                    <Play className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
+                  ))}
+                <span className="hidden sm:inline">{done ? redoLabel : runLabel}</span>
+              </Button>
+            </form>
+          )}
         </div>
       </div>
       {hint && !done && (
@@ -1179,14 +1369,14 @@ function PreprodPipelineStep({
           {modelOptions?.length ? (
             <div>
               <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
-                Model
+                {tStep("pipelineStepModelLabel")}
               </label>
               <select
-                name={modelFieldName}
-                form={formId}
+                name={isDraft ? undefined : modelFieldName}
+                form={isDraft ? undefined : formId}
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
-                className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                className="h-8 w-full max-w-xs rounded-md border border-border-subtle bg-field px-2 text-[11px] text-text-primary shadow-inner"
               >
                 {modelOptions.map((o) => (
                   <option key={o.id} value={o.id}>
@@ -1199,15 +1389,25 @@ function PreprodPipelineStep({
           {showCustomInstructions ? (
             <div>
               <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
-                Custom instructions
+                {tStep("pipelineStepCustomInstructionsLabel")}
               </label>
-              <input
-                name="custom_instructions"
-                form={formId}
-                maxLength={500}
-                placeholder="e.g. Use a warmer tone, focus on curiosity..."
-                className="h-7 w-full rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary placeholder:text-text-tertiary"
-              />
+              {isDraft ? (
+                <input
+                  value={shortcutInstr}
+                  onChange={(e) => setShortcutInstr(e.target.value)}
+                  maxLength={500}
+                  placeholder={tStep("pipelineStepCustomInstructionsPlaceholder")}
+                  className="h-8 w-full rounded-md border border-border-subtle bg-field px-2 text-[11px] text-text-primary shadow-inner placeholder:text-text-tertiary"
+                />
+              ) : (
+                <input
+                  name="custom_instructions"
+                  form={formId}
+                  maxLength={500}
+                  placeholder={tStep("pipelineStepCustomInstructionsPlaceholder")}
+                  className="h-8 w-full rounded-md border border-border-subtle bg-field px-2 text-[11px] text-text-primary shadow-inner placeholder:text-text-tertiary"
+                />
+              )}
             </div>
           ) : null}
           {renderAdvancedExtra ? renderAdvancedExtra(formId) : null}

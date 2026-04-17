@@ -93,7 +93,8 @@ export function splitScriptToScenes(
   };
 }
 
-function buildVisualPromptFromNarration(narration: string, index: number): string {
+/** Exported for Runway scenes derived from TTS segment timings. */
+export function buildVisualPromptFromNarration(narration: string, index: number): string {
   const prefix = index === 0
     ? "Opening shot, cinematic, vertical 9:16 format. "
     : `Scene ${index + 1}, cinematic continuation, vertical 9:16 format. `;

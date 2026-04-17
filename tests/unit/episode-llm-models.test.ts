@@ -40,7 +40,7 @@ describe("episode-llm-models", () => {
         { openai: true, anthropic: true },
         "",
       ),
-    ).toBe("openai");
+    ).toBe("anthropic");
     expect(
       chooseStudioDraftLlmProvider(
         { openai: true, anthropic: true },

@@ -13,6 +13,8 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { promisify } from "node:util";
 
+import { resolveFfmpegBinary, resolveFfprobeBinary } from "@/lib/studio-productions/ffmpeg-binary";
+
 const execFileAsync = promisify(execFile);
 
 export type AssemblyInput = {
@@ -42,7 +44,7 @@ async function downloadToFile(url: string, filePath: string): Promise<void> {
 
 async function ffmpegAvailable(): Promise<boolean> {
   try {
-    await execFileAsync("ffmpeg", ["-version"], { timeout: 5000 });
+    await execFileAsync(resolveFfmpegBinary(), ["-version"], { timeout: 5000 });
     return true;
   } catch {
     return false;
@@ -66,7 +68,14 @@ export async function assembleVideo(
   }
 
   if (!(await ffmpegAvailable())) {
-    return { ok: false, code: "ffmpeg_not_found", message: "ffmpeg binary not found on PATH" };
+    const hint = process.env.FFMPEG_PATH
+      ? `FFMPEG_PATH=${process.env.FFMPEG_PATH}`
+      : "Install ffmpeg (e.g. brew install ffmpeg) or set FFMPEG_PATH to the binary.";
+    return {
+      ok: false,
+      code: "ffmpeg_not_found",
+      message: `ffmpeg not executable (${hint})`,
+    };
   }
 
   const workDir = await mkdtemp(join(tmpdir(), "elevate-assembly-"));
@@ -121,7 +130,7 @@ export async function assembleVideo(
       outputPath,
     });
 
-    await execFileAsync("ffmpeg", ffmpegArgs, {
+    await execFileAsync(resolveFfmpegBinary(), ffmpegArgs, {
       timeout: 300_000,
       maxBuffer: 50 * 1024 * 1024,
     });
@@ -215,7 +224,7 @@ function buildFfmpegArgs(opts: FfmpegBuildArgs): string[] {
 
 async function probeDuration(filePath: string): Promise<number> {
   try {
-    const { stdout } = await execFileAsync("ffprobe", [
+    const { stdout } = await execFileAsync(resolveFfprobeBinary(), [
       "-v", "quiet",
       "-show_entries", "format=duration",
       "-of", "default=noprint_wrappers=1:nokey=1",

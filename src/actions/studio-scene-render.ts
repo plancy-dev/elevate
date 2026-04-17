@@ -14,6 +14,10 @@ import {
   parseLlmScenes,
   type SceneDefinition,
 } from "@/lib/studio-productions/scene-splitter";
+import {
+  buildScenesFromTtsTimings,
+  parseTtsSegmentTimings,
+} from "@/lib/studio-productions/scenes-from-tts";
 import { resolveEpisodeFormat, FORMAT_SPECS } from "@/lib/studio-productions/episode-format";
 import { logAudit } from "@/lib/audit/log";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
@@ -78,6 +82,21 @@ export async function renderEpisodeScenes(
 
   let scenes: SceneDefinition[];
 
+  const { data: ttsRows } = await supabase
+    .from("studio_production_artifacts")
+    .select("metadata")
+    .eq("episode_id", episodeId)
+    .eq("organization_id", auth.ctx.organizationId)
+    .eq("artifact_role", "tts_audio")
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  const ttsTimings = parseTtsSegmentTimings(ttsRows?.[0]?.metadata);
+  const scenesFromTts =
+    scriptText && ttsTimings
+      ? buildScenesFromTtsTimings(scriptText, ttsTimings)
+      : null;
+
   if (scenesJsonRaw) {
     try {
       const parsed = JSON.parse(scenesJsonRaw);
@@ -89,6 +108,8 @@ export async function renderEpisodeScenes(
     } catch {
       return { error: "studioSceneRenderInvalidJson" };
     }
+  } else if (scenesFromTts) {
+    scenes = scenesFromTts;
   } else if (scriptText) {
     scenes = splitScriptToScenes(scriptText, targetSceneCount).scenes;
   } else {

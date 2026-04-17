@@ -5,7 +5,6 @@ import {
   Clapperboard,
   ClipboardList,
   ExternalLink,
-  FileEdit,
   type LucideIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -24,7 +23,6 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
-import { ProductionEpisodeDraftPanel } from "@/components/dashboard/production-episode-draft-panel";
 import { ProductionEpisodePipeline } from "@/components/dashboard/production-episode-pipeline";
 import { ProductionEpisodeReferencePanel } from "@/components/dashboard/production-episode-reference-panel";
 import {
@@ -63,26 +61,21 @@ const STATUS_I18N: Record<
 
 const TAB_ICONS: Record<EpisodeDetailPanelId, LucideIcon> = {
   references: BookMarked,
-  draft: FileEdit,
   pipeline: Clapperboard,
   detail: ClipboardList,
 };
 
 const TAB_LABEL_KEYS: Record<
   EpisodeDetailPanelId,
-  | "episodeSubtabReferences"
-  | "episodeSubtabDraft"
-  | "episodeSubtabPipeline"
-  | "episodeSubtabDetail"
+  "episodeSubtabReferences" | "episodeSubtabPipeline" | "episodeSubtabDetail"
 > = {
   references: "episodeSubtabReferences",
-  draft: "episodeSubtabDraft",
   pipeline: "episodeSubtabPipeline",
   detail: "episodeSubtabDetail",
 };
 
-/** Vertical rule after these tabs: Plan & write | Produce | Admin */
-const TAB_DIVIDER_AFTER: EpisodeDetailPanelId[] = ["draft", "pipeline"];
+/** Vertical rule after these tabs: Plan | Produce | Admin */
+const TAB_DIVIDER_AFTER: EpisodeDetailPanelId[] = ["references", "pipeline"];
 
 type ProjectOpt = { id: string; name: string };
 
@@ -338,41 +331,6 @@ function ProductionEpisodeDetailWorkspaceInner({
       </div>
 
       <div
-        id={`${baseId}-panel-draft`}
-        role="tabpanel"
-        aria-labelledby={`${baseId}-ep-sub-draft`}
-        hidden={panel !== "draft"}
-        className={panel !== "draft" ? "hidden" : undefined}
-      >
-        <section className="px-5 py-6 sm:px-6">
-          <div className="mb-5 max-w-prose">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
-              {t("episodePhasePlan")}
-            </p>
-            <p className="mt-1.5 text-sm text-text-secondary leading-relaxed">
-              {t("episodePanelLeadDraft")}
-            </p>
-          </div>
-          <ProductionEpisodeDraftPanel
-            episodeId={episode.id}
-            artifacts={artifacts}
-            canEdit={canEditDraft}
-            customDraftTemplates={customDraftTemplates}
-            draftLlmAvailability={draftLlmAvailability}
-            draftSnapshots={draftSnapshots}
-            runwayRenderReady={runwayRenderReady}
-            elevenlabsKeyConfigured={elevenlabsKeyConfigured}
-            openaiKeyConfigured={openaiKeyConfigured}
-            packagingLlmReady={packagingLlmReady}
-            publishUrl={episode.publish_url}
-            embedded
-            showReferencePanel={false}
-            showPipeline={false}
-          />
-        </section>
-      </div>
-
-      <div
         id={`${baseId}-panel-pipeline`}
         role="tabpanel"
         aria-labelledby={`${baseId}-ep-sub-pipeline`}
@@ -397,6 +355,10 @@ function ProductionEpisodeDetailWorkspaceInner({
             youtubeChannelTitle={youtubeChannelTitle}
             episodeFormat={episodeFormat}
             distributionChannelLabel={distributionChannelLabel}
+            canEditDraft={canEditDraft}
+            customDraftTemplates={customDraftTemplates}
+            draftLlmAvailability={draftLlmAvailability}
+            draftSnapshots={draftSnapshots}
             className="border-t-0 pt-0"
           />
         </section>

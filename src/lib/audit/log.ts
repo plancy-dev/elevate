@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Json } from "@/types/database.types";
@@ -33,7 +34,10 @@ export async function logAudit(params: LogParams): Promise<void> {
       }
       return;
     }
-    revalidatePath("/dashboard/organization/audit");
+    // Revalidate outside the current render — logAudit may run during RSC render.
+    after(() => {
+      revalidatePath("/dashboard/organization/audit");
+    });
   } catch (e) {
     if (process.env.NODE_ENV === "development") {
       const msg = e instanceof Error ? e.message : String(e);

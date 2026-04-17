@@ -12,19 +12,36 @@ type Props = {
   children: ReactNode;
   className?: string;
   /** Panel width: default large form; integrations uses max-w-3xl. */
-  size?: "md" | "lg" | "xl";
+  size?: "md" | "lg" | "xl" | "2xl";
+  /** Stacking when multiple modals (e.g. confirm over editor). */
+  stackClassName?: string;
+  /** Override `aria-labelledby` id (default `modal-title`). */
+  titleId?: string;
 };
 
 const sizeClass: Record<NonNullable<Props["size"]>, string> = {
   md: "max-w-md",
   lg: "max-w-lg",
   xl: "max-w-3xl",
+  "2xl": "max-w-4xl",
 };
 
 /**
  * App-modal pattern (matches admin dialogs): overlay + scroll body, Esc + backdrop close.
  */
-export function Modal({ open, onClose, title, description, children, className, size = "lg" }: Props) {
+export function Modal({
+  open,
+  onClose,
+  title,
+  description,
+  children,
+  className,
+  size = "lg",
+  stackClassName,
+  titleId: titleIdProp,
+}: Props) {
+  const titleId = titleIdProp ?? "modal-title";
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -38,10 +55,13 @@ export function Modal({ open, onClose, title, description, children, className, 
 
   return (
     <div
-      className="fixed inset-0 z-[80] flex items-center justify-center bg-black/50 p-4"
+      className={cn(
+        "fixed inset-0 flex items-center justify-center bg-black/50 p-4",
+        stackClassName ?? "z-80",
+      )}
       role="dialog"
       aria-modal="true"
-      aria-labelledby="modal-title"
+      aria-labelledby={titleId}
       aria-describedby={description ? "modal-desc" : undefined}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -57,7 +77,7 @@ export function Modal({ open, onClose, title, description, children, className, 
       >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 id="modal-title" className="text-base font-semibold text-text-primary">
+            <h2 id={titleId} className="text-base font-semibold text-text-primary">
               {title}
             </h2>
             {description ? (

@@ -119,6 +119,19 @@ export const ActionErrorCode = {
 
   studioYoutubeUploadNotAvailable: "studioYoutubeUploadNotAvailable",
 
+  /** FFmpeg assembly: no episode artifacts */
+  studioAssemblyNoArtifacts: "studioAssemblyNoArtifacts",
+  /** FFmpeg assembly: no scene_clip URLs */
+  studioAssemblyNoClips: "studioAssemblyNoClips",
+  /** FFmpeg assembly: DB insert failed */
+  studioAssemblyInsertFailed: "studioAssemblyInsertFailed",
+  /** FFmpeg binary missing or not executable (set FFMPEG_PATH or install ffmpeg) */
+  studioAssemblyFfmpegNotFound: "studioAssemblyFfmpegNotFound",
+  /** FFmpeg runtime error (codec, filter, corrupt input, etc.) */
+  studioAssemblyFfmpegError: "studioAssemblyFfmpegError",
+  /** Clip/audio download failed (network, URL, storage) */
+  studioAssemblyDownloadFailed: "studioAssemblyDownloadFailed",
+
   /** Reference pipeline: OpenAI key missing (YouTube STT) */
   studioReferenceNoApiKey: "studioReferenceNoApiKey",
   studioReferenceExtractionFailed: "studioReferenceExtractionFailed",

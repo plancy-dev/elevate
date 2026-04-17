@@ -56,14 +56,14 @@ export async function assembleEpisodeVideo(
     .order("created_at", { ascending: true });
 
   if (!artifacts || artifacts.length === 0) {
-    return { error: "studioAssemblyNoArtifacts" };
+    return { error: ActionErrorCode.studioAssemblyNoArtifacts };
   }
 
   const clipUrls = artifacts
     .filter((a) => a.artifact_role === "scene_clip" && a.external_url)
     .map((a) => a.external_url!);
 
-  if (clipUrls.length === 0) return { error: "studioAssemblyNoClips" };
+  if (clipUrls.length === 0) return { error: ActionErrorCode.studioAssemblyNoClips };
 
   const ttsArtifact = artifacts.find(
     (a) => a.artifact_role === "tts_audio" && a.external_url,
@@ -87,7 +87,21 @@ export async function assembleEpisodeVideo(
     bgMusicVolume,
   });
 
-  if (!result.ok) return { error: result.code };
+  if (!result.ok) {
+    if (result.code === "ffmpeg_not_found") {
+      return { error: ActionErrorCode.studioAssemblyFfmpegNotFound };
+    }
+    if (result.code === "ffmpeg_error") {
+      return { error: ActionErrorCode.studioAssemblyFfmpegError };
+    }
+    if (result.code === "no_clips") {
+      return { error: ActionErrorCode.studioAssemblyNoClips };
+    }
+    if (result.code === "download_failed") {
+      return { error: ActionErrorCode.studioAssemblyDownloadFailed };
+    }
+    return { error: ActionErrorCode.unexpected };
+  }
 
   const base64Video = result.outputBuffer.toString("base64");
   const dataUri = `data:video/mp4;base64,${base64Video}`;
@@ -119,7 +133,9 @@ export async function assembleEpisodeVideo(
     .select("id")
     .single();
 
-  if (insertErr || !artifact) return { error: "studioAssemblyInsertFailed" };
+  if (insertErr || !artifact) {
+    return { error: ActionErrorCode.studioAssemblyInsertFailed };
+  }
 
   void logAudit({
     organizationId: auth.ctx.organizationId,
