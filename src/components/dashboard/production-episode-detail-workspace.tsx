@@ -25,6 +25,7 @@ import {
 } from "react";
 import { ProductionEpisodePipeline } from "@/components/dashboard/production-episode-pipeline";
 import { ProductionEpisodeReferencePanel } from "@/components/dashboard/production-episode-reference-panel";
+import { ProductionEpisodeScenesOverview } from "@/components/dashboard/production-episode-scenes-overview";
 import {
   StudioProductionsDeleteEpisodeForm,
   StudioProductionsEpisodeEditForm,
@@ -35,6 +36,7 @@ import type {
   StudioProductionEpisodeRowWithEmbeds,
 } from "@/lib/data/studio-productions";
 import type { StudioEpisodeDraftSnapshotRow } from "@/lib/studio-productions/draft-snapshots";
+import type { EpisodeScenePlanRow } from "@/lib/studio-productions/episode-scene-plan-dto";
 import {
   DEFAULT_EPISODE_DETAIL_PANEL,
   EPISODE_DETAIL_PANEL_IDS,
@@ -126,6 +128,7 @@ function ProductionEpisodeDetailWorkspaceInner({
   distributionChannelLabel,
   activeAssemblyJob,
   brandGuide,
+  scenePlanRows,
 }: {
   episode: StudioProductionEpisodeRowWithEmbeds;
   studioProjects: ProjectOpt[];
@@ -145,6 +148,8 @@ function ProductionEpisodeDetailWorkspaceInner({
   distributionChannelLabel: string | null;
   activeAssemblyJob?: { id: string; status: string } | null;
   brandGuide?: string | null;
+  /** Parsed `pipeline_prefs.sceneRender.scenesJson` (null if empty/invalid). */
+  scenePlanRows: EpisodeScenePlanRow[] | null;
 }) {
   const t = useTranslations("Dashboard.productions");
   const baseId = useId();
@@ -346,6 +351,10 @@ function ProductionEpisodeDetailWorkspaceInner({
             phaseKey="episodePhaseProduce"
             titleKey="episodePanelHeadProduce"
             bodyKey="episodePanelBodyProduce"
+          />
+          <ProductionEpisodeScenesOverview
+            scenePlanRows={scenePlanRows}
+            artifacts={artifacts}
           />
           <ProductionEpisodePipeline
             episodeId={episode.id}

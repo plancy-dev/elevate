@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/types/database.types";
+import { isMissingSchemaRelationError } from "@/lib/supabase/postgrest-relation-missing";
 
 export type StudioProductionEpisodeRow =
   Database["public"]["Tables"]["studio_production_episodes"]["Row"];
@@ -134,7 +135,10 @@ export async function countStudioEpisodesByProjectForOrg(
   }
 
   const { data, error } = await q;
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaRelationError(error)) return {};
+    throw error;
+  }
 
   const counts: Record<string, number> = {};
   for (const row of data ?? []) {
@@ -158,6 +162,9 @@ export async function listStudioArtifactsForEpisode(
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
 
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaRelationError(error)) return [];
+    throw error;
+  }
   return (data ?? []) as StudioProductionArtifactRow[];
 }

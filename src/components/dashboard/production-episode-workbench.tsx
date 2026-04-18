@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutList, Layers, Package, type LucideIcon } from "lucide-react";
+import { LayoutList, Layers, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
@@ -16,9 +16,11 @@ import {
 } from "react";
 import { hasPendingHandoffForEpisode } from "@/lib/studio-productions/studio-to-production-handoff";
 import {
+  LEGACY_WORKBENCH_TAB_QUERY,
   WORKBENCH_TAB_IDS,
   type WorkbenchTabId,
   parseWorkbenchTabParam,
+  resolveWorkbenchTabFromSearchParam,
 } from "@/lib/studio-productions/workbench-tab";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +29,6 @@ type TabId = WorkbenchTabId;
 const TAB_ICONS: Record<TabId, LucideIcon> = {
   overview: LayoutList,
   episode: Layers,
-  artifacts: Package,
 };
 
 /** Primary workbench navigation — divider after glance (summary vs work). */
@@ -37,21 +38,21 @@ function ProductionEpisodeWorkbenchInner({
   episodeId,
   overviewSlot,
   episodeSlot,
-  artifactsSlot,
 }: {
   episodeId: string;
   overviewSlot: ReactNode;
   episodeSlot: ReactNode;
-  artifactsSlot: ReactNode;
 }) {
   const t = useTranslations("Dashboard.productions");
   const baseId = useId();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  /** Primitives for hooks — `ReadonlyURLSearchParams` identity can change every render. */
+  const searchQueryString = searchParams.toString();
+  const workbenchTabParam = searchParams.get("tab");
   /** Single source of truth: avoids double setState + URL sync jank on rapid tab clicks. */
-  const tab: TabId =
-    parseWorkbenchTabParam(searchParams.get("tab")) ?? "overview";
+  const tab: TabId = resolveWorkbenchTabFromSearchParam(workbenchTabParam);
   const tabButtonRefs = useRef<Partial<Record<TabId, HTMLButtonElement | null>>>(
     {},
   );
@@ -59,7 +60,7 @@ function ProductionEpisodeWorkbenchInner({
 
   const setTabAndUrl = useCallback(
     (next: TabId) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchQueryString);
       if (parseWorkbenchTabParam(params.get("tab")) === next) return;
       params.set("tab", next);
       const href = `${pathname}?${params.toString()}`;
@@ -67,16 +68,26 @@ function ProductionEpisodeWorkbenchInner({
         router.replace(href, { scroll: false });
       });
     },
-    [pathname, router, searchParams],
+    [pathname, router, searchQueryString],
   );
 
-  /** Prompt Studio handoff: jump to Artifacts when pending (URL-only; no duplicate local state). */
+  /** Normalize legacy `?tab=artifacts` bookmarks to Episode (artifact list moved there). */
+  useEffect(() => {
+    if (workbenchTabParam !== LEGACY_WORKBENCH_TAB_QUERY) return;
+    const params = new URLSearchParams(searchQueryString);
+    params.set("tab", "episode");
+    const href = `${pathname}?${params.toString()}`;
+    startTabUrlTransition(() => {
+      router.replace(href, { scroll: false });
+    });
+  }, [workbenchTabParam, searchQueryString, pathname, router, startTabUrlTransition]);
+
+  /** Prompt Studio handoff: open Episode tab (artifact list + anchor scroll lives there). */
   useEffect(() => {
     if (!hasPendingHandoffForEpisode(episodeId)) return;
-    const params = new URLSearchParams(searchParams.toString());
-    if (parseWorkbenchTabParam(params.get("tab")) === "artifacts") return;
-    setTabAndUrl("artifacts");
-  }, [episodeId, searchParams, setTabAndUrl]);
+    if (parseWorkbenchTabParam(workbenchTabParam) === "episode") return;
+    setTabAndUrl("episode");
+  }, [episodeId, workbenchTabParam, setTabAndUrl]);
 
   const onTabListKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
@@ -113,7 +124,6 @@ function ProductionEpisodeWorkbenchInner({
   const tabLabels: Record<TabId, string> = {
     overview: t("workbenchTabOverview"),
     episode: t("workbenchTabEpisode"),
-    artifacts: t("workbenchTabArtifacts"),
   };
 
   return (
@@ -188,15 +198,6 @@ function ProductionEpisodeWorkbenchInner({
         className={tab !== "episode" ? "hidden" : undefined}
       >
         {episodeSlot}
-      </div>
-      <div
-        id={`${baseId}-panel-artifacts`}
-        role="tabpanel"
-        aria-labelledby={`${baseId}-tab-artifacts`}
-        hidden={tab !== "artifacts"}
-        className={tab !== "artifacts" ? "hidden" : undefined}
-      >
-        {artifactsSlot}
       </div>
     </div>
   );

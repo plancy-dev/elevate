@@ -22,3 +22,7 @@ Episodes store **artifacts** (`studio_production_artifacts`) with free-text `art
 **Related runbooks:** [`RUNWAY_SHORTS_RUNBOOK.md`](./RUNWAY_SHORTS_RUNBOOK.md), [`RUNWAY_SCENE_BUILDER_STEP2.md`](./RUNWAY_SCENE_BUILDER_STEP2.md).
 
 **ADR:** [`adr/ADR-003-studio-productions-mvp.md`](./adr/ADR-003-studio-productions-mvp.md) · [`adr/ADR-007-youtube-content-factory.md`](./adr/ADR-007-youtube-content-factory.md).
+
+## Scenes vs artifacts (UI model)
+
+**Scenes** in the dashboard are a **derived view** over the scene plan JSON (`pipeline_prefs.sceneRender.scenesJson`) plus `scene_clip` artifacts linked by `metadata.scene_index`. They **do not replace** the artifacts table—clips and other outputs remain rows in `studio_production_artifacts`. See **[`STUDIO_SCENES_AND_ARTIFACTS.md`](./STUDIO_SCENES_AND_ARTIFACTS.md)** for resolution order, assembly matching, and deferred normalization.

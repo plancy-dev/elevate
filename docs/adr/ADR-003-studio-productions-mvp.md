@@ -131,6 +131,10 @@ Alternatively, enforce org match only in application layer **if** you add tests;
 
 Optional **org-scoped credentials and server adapters** (OpenAI, Runway, YouTube Data API, etc.) are specified in **[`ADR-006`](ADR-006-studio-provider-integrations-v2.md)**. They **do not** change v1 guarantees when feature flags are off; v1 remains paste-only.
 
+## Appendix: Scenes as a derived view (post-MVP UI)
+
+The **Scenes** overview in the episode Pipeline tab is not a new persistence layer: it reads **`pipeline_prefs.sceneRender.scenesJson`** and joins **`scene_clip`** artifacts via **`metadata.scene_index`**. Full diagram and `resolveEpisodeScenes` priority are documented in **[`docs/STUDIO_SCENES_AND_ARTIFACTS.md`](../STUDIO_SCENES_AND_ARTIFACTS.md)**. A future **`studio_production_scenes`** table remains optional until per-scene DB state or audit requirements justify migration.
+
 ## Related
 
 - [`ADR-002`](ADR-002-prompt-studio-mvp.md) Prompt Studio MVP

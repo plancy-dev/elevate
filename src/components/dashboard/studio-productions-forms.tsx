@@ -836,10 +836,24 @@ export function StudioProductionsArtifactsSection({
   } | null;
 }) {
   const t = useTranslations("Dashboard.productions");
+  const [showSceneClips, setShowSceneClips] = useState(false);
   const [editing, setEditing] = useState<StudioProductionArtifactRow | null>(
     null,
   );
   const dialogRef = useRef<HTMLDialogElement>(null);
+
+  const sceneClipCount = useMemo(
+    () => artifacts.filter((a) => a.artifact_role === "scene_clip").length,
+    [artifacts],
+  );
+
+  const listedArtifacts = useMemo(
+    () =>
+      showSceneClips
+        ? artifacts
+        : artifacts.filter((a) => a.artifact_role !== "scene_clip"),
+    [artifacts, showSceneClips],
+  );
 
   const closeArtifactDialog = useCallback(() => {
     dialogRef.current?.close();
@@ -874,12 +888,34 @@ export function StudioProductionsArtifactsSection({
       </div>
       <ArtifactRoleDatalist />
       <ArtifactAddForm episodeId={episodeId} prefill={artifactAddPrefill} />
-      {artifacts.length > 0 ? (
+      {sceneClipCount > 0 ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            variant="tertiary"
+            size="sm"
+            onClick={() => setShowSceneClips((v) => !v)}
+            aria-pressed={showSceneClips}
+            className="text-xs"
+          >
+            {showSceneClips ? t("artifactsHideSceneClips") : t("artifactsShowSceneClips")}
+            <span className="ml-1.5 tabular-nums text-text-tertiary">
+              ({sceneClipCount})
+            </span>
+          </Button>
+          {!showSceneClips ? (
+            <span className="text-xs text-text-tertiary max-w-md leading-snug">
+              {t("artifactsSceneClipsHiddenHint")}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+      {listedArtifacts.length > 0 ? (
         <ul
           className="list-none rounded-xl border border-border-subtle bg-layer-02/30 p-0 m-0 divide-y divide-border-subtle dark:border-border-subtle dark:bg-layer-02/40"
           aria-label={t("artifactsHeading")}
         >
-          {artifacts.map((a, idx) => (
+          {listedArtifacts.map((a, idx) => (
             <li key={a.id}>
               <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-start sm:gap-5 sm:py-5">
                 <div
@@ -937,6 +973,10 @@ export function StudioProductionsArtifactsSection({
             </li>
           ))}
         </ul>
+      ) : artifacts.length > 0 ? (
+        <p className="text-sm text-text-tertiary leading-relaxed">
+          {t("artifactsSceneClipsHiddenOnlyHint")}
+        </p>
       ) : null}
 
       <dialog

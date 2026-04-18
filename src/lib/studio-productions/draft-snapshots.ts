@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/types/database.types";
+import { isMissingSchemaRelationError } from "@/lib/supabase/postgrest-relation-missing";
 import { EPISODE_DRAFT_ROLES } from "@/lib/studio-productions/constants";
 import { draftArtifactMetadata } from "@/lib/studio-productions/episode-llm";
 
@@ -166,7 +167,10 @@ export async function listDraftSnapshotsForEpisode(
     .order("id", { ascending: false })
     .limit(limit);
 
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaRelationError(error)) return [];
+    throw error;
+  }
   return data ?? [];
 }
 

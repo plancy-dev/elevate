@@ -526,8 +526,9 @@ export function SceneRenderPipelineStep({
   return (
     <>
     <div
+      id="scene-render-pipeline"
       className={cn(
-        "flex flex-col rounded-xl border px-3 py-3 shadow-sm transition-shadow sm:px-3.5",
+        "flex flex-col rounded-xl border px-3 py-3 shadow-sm transition-shadow sm:px-3.5 scroll-mt-24",
         done
           ? "border-green-500/35 bg-green-500/[0.07] ring-1 ring-green-500/15"
           : disabled

@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database.types";
+import { isMissingSchemaRelationError } from "@/lib/supabase/postgrest-relation-missing";
 
 export type StudioNicheRow = Database["public"]["Tables"]["studio_niches"]["Row"];
 export type StudioDistributionChannelRow =
@@ -56,7 +57,10 @@ export async function listStudioDistributionChannelsForOrg(
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
 
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaRelationError(error)) return [];
+    throw error;
+  }
   return (data ?? []) as StudioDistributionChannelRow[];
 }
 

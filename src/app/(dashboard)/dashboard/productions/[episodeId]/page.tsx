@@ -25,6 +25,7 @@ import { listDraftTemplatesForOrg } from "@/lib/data/studio-draft-templates";
 import { listDraftSnapshotsForEpisode } from "@/lib/studio-productions/draft-snapshots";
 import { ORG_EDITOR_ROLES } from "@/lib/auth/require-org-editor";
 import { loadProductionsStudioDialogPayload } from "@/lib/studio-productions/load-productions-studio-dialog-payload";
+import { scenePlanRowsFromPipelinePrefs } from "@/lib/studio-productions/episode-scene-plan-dto";
 
 type Props = {
   params: Promise<{ episodeId: string }>;
@@ -151,6 +152,10 @@ export default async function ProductionEpisodePage({ params }: Props) {
     orgId,
   );
 
+  const scenePlanRows = scenePlanRowsFromPipelinePrefs(
+    episode.pipeline_prefs ?? null,
+  );
+
   return (
     <Suspense fallback={null}>
       <ProductionsHubWithDialogs payload={studioDialogPayload}>
@@ -174,52 +179,53 @@ export default async function ProductionEpisodePage({ params }: Props) {
               />
             }
             episodeSlot={
-              <ProductionEpisodeDetailWorkspace
-                episode={episode}
-                studioProjects={studioProjects.map((p) => ({
-                  id: p.id,
-                  name: p.name,
-                }))}
-                artifacts={artifacts}
-                canEditDraft={canEditDraft}
-                customDraftTemplates={customDraftTemplates}
-                draftLlmAvailability={draftLlmAvailability}
-                draftSnapshots={draftSnapshots}
-                runwayRenderReady={runwayRenderReady}
-                elevenlabsKeyConfigured={elevenlabsKeyConfigured}
-                openaiKeyConfigured={openaiKeyConfigured}
-                packagingLlmReady={packagingLlmReady}
-                youtubeChannelTitle={youtubeChannelTitle}
-                episodeFormat={episodeFormat}
-                distributionChannelLabel={distributionChannelLabel}
-                activeAssemblyJob={activeAssemblyJob}
-                brandGuide={episode.studio_projects?.brand_guide?.trim() ?? null}
-                helpSection={
-                  <section
-                    className="rounded-xl border border-dashed border-border-subtle bg-layer-02/30 px-4 py-3"
-                    aria-labelledby="prod-help-title"
-                  >
-                    <h2
-                      id="prod-help-title"
-                      className="text-[11px] font-semibold uppercase tracking-wider text-text-tertiary"
+              <>
+                <ProductionEpisodeDetailWorkspace
+                  episode={episode}
+                  studioProjects={studioProjects.map((p) => ({
+                    id: p.id,
+                    name: p.name,
+                  }))}
+                  artifacts={artifacts}
+                  canEditDraft={canEditDraft}
+                  customDraftTemplates={customDraftTemplates}
+                  draftLlmAvailability={draftLlmAvailability}
+                  draftSnapshots={draftSnapshots}
+                  runwayRenderReady={runwayRenderReady}
+                  elevenlabsKeyConfigured={elevenlabsKeyConfigured}
+                  openaiKeyConfigured={openaiKeyConfigured}
+                  packagingLlmReady={packagingLlmReady}
+                  youtubeChannelTitle={youtubeChannelTitle}
+                  episodeFormat={episodeFormat}
+                  distributionChannelLabel={distributionChannelLabel}
+                  activeAssemblyJob={activeAssemblyJob}
+                  brandGuide={episode.studio_projects?.brand_guide?.trim() ?? null}
+                  scenePlanRows={scenePlanRows}
+                  helpSection={
+                    <section
+                      className="rounded-xl border border-dashed border-border-subtle bg-layer-02/30 px-4 py-3"
+                      aria-labelledby="prod-help-title"
                     >
-                      {t("helpTitle")}
-                    </h2>
-                    <p className="mt-1.5 text-sm text-text-tertiary leading-relaxed">
-                      {t("helpBody")}
-                    </p>
-                    <p className="mt-2 text-sm text-text-tertiary leading-relaxed">
-                      {t("helpRunbook")}
-                    </p>
-                  </section>
-                }
-              />
-            }
-            artifactsSlot={
-              <ProductionEpisodeArtifactsClient
-                episodeId={episode.id}
-                artifacts={artifacts}
-              />
+                      <h2
+                        id="prod-help-title"
+                        className="text-[11px] font-semibold uppercase tracking-wider text-text-tertiary"
+                      >
+                        {t("helpTitle")}
+                      </h2>
+                      <p className="mt-1.5 text-sm text-text-tertiary leading-relaxed">
+                        {t("helpBody")}
+                      </p>
+                      <p className="mt-2 text-sm text-text-tertiary leading-relaxed">
+                        {t("helpRunbook")}
+                      </p>
+                    </section>
+                  }
+                />
+                <ProductionEpisodeArtifactsClient
+                  episodeId={episode.id}
+                  artifacts={artifacts}
+                />
+              </>
             }
           />
         </div>
