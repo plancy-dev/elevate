@@ -4,7 +4,7 @@ import {
   buttonLinkClassName,
   type ButtonSize,
   type ButtonVariant,
-} from "@/components/ui/button";
+} from "@/components/ui/button-styles";
 
 type Props = {
   href: string;

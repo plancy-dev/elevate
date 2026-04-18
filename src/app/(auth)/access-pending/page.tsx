@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
 import { SignOutButton } from "@/components/auth/sign-out-button";
-import { buttonLinkClassName } from "@/components/ui/button";
+import { buttonLinkClassName } from "@/components/ui/button-styles";
 import { Link as LocaleLink } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { canUseDashboard } from "@/lib/auth/dashboard-access";

@@ -4,7 +4,7 @@ import NextLink from "next/link";
 import type { User } from "@supabase/supabase-js";
 import { useTranslations } from "next-intl";
 import { getInitialsFromDisplayName } from "@/lib/user-display";
-import { buttonLinkClassName } from "@/components/ui/button";
+import { buttonLinkClassName } from "@/components/ui/button-styles";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { cn } from "@/lib/utils";
 

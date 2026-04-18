@@ -11,7 +11,8 @@ import {
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import { toast } from "@/lib/ui/app-toast";
 import type { StudioDistributionChannelRow } from "@/lib/studio-productions/shorts-catalog";
-import { Button, buttonLinkClassName } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { buttonLinkClassName } from "@/components/ui/button-styles";
 import { StudioChannelPlatformSelect } from "@/components/dashboard/studio-episode-shorts-fields";
 import { cn } from "@/lib/utils";
 
