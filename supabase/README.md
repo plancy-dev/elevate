@@ -19,8 +19,10 @@
    - `migrations/014_catalog_purchase_allowlist.sql` — optional catalog checkout email gate
    - `migrations/015_platform_email_settings.sql` — singleton row for waitlist BCC etc.
    - `migrations/016_prompt_studio_beta_allowlist.sql` — optional Prompt Studio beta email gate (`STUDIO_BETA_REQUIRE_ALLOWLIST`; manage `/admin/prompt-studio-allowlist`)
+   - … (see `supabase/migrations/` for `017`–`036` studio / content / video jobs migrations)
+   - `migrations/037_profiles_dashboard_access.sql` — **`profiles.dashboard_access`** boolean; required for `/dashboard` gate in the app
 
-The **`waitlist_signups`** and **`prompt_studio_beta_allowlist`** tables are also used when **`DASHBOARD_ACCESS_STRICT=true`** to decide who may open **`/dashboard`** (see `src/lib/auth/dashboard-access.ts` and [`docs/DEVELOPMENT.md`](../docs/DEVELOPMENT.md) § Dashboard access).
+Who may open **`/dashboard`** is decided by **`profiles.dashboard_access`** (see `src/lib/auth/dashboard-access.ts` and [`docs/DEVELOPMENT.md`](../docs/DEVELOPMENT.md) § Dashboard access). The **`waitlist_signups`** and **`prompt_studio_beta_allowlist`** tables are used for other product gates (e.g. marketing / Prompt Studio beta), not for the dashboard shell.
 
 After applying new migrations, regenerate types: **`pnpm db:types`** (requires `NEXT_PUBLIC_PROJECT_ID` or parseable `NEXT_PUBLIC_SUPABASE_URL` in `.env.local` — see `scripts/gen-db-types.mjs`).
 
@@ -90,9 +92,11 @@ Docs: [Auth rate limits](https://supabase.com/docs/guides/auth/rate-limits).
 
 On the **first successful login**, when the profile has no organization yet, the app’s onboarding (`ensureDefaultOrganization` in `src/actions/onboarding.ts`) creates a default organization and sets **`role` to `admin`** for that user. You do **not** need to run SQL or `pnpm db:seed-admin` for that flow.
 
+**`/dashboard` access** is controlled separately by **`profiles.dashboard_access`** (migration `037`). New profiles default to `false`; set `true` in SQL (or use `pnpm db:seed-admin`) for operators who should use the app shell.
+
 ### Optional: `pnpm db:seed-admin`
 
-Use `scripts/seed-admin.mjs` only if you want to **create or reset a user from the CLI** (requires `SUPABASE_SERVICE_ROLE_KEY`). If the email already exists, the script resets the password and sets `role = admin` on `profiles`. This is a convenience for automation—not a requirement when the user already exists in the Dashboard.
+Use `scripts/seed-admin.mjs` only if you want to **create or reset a user from the CLI** (requires `SUPABASE_SERVICE_ROLE_KEY`). If the email already exists, the script resets the password and sets `role = admin` and **`dashboard_access = true`** on `profiles`. This is a convenience for automation—not a requirement when the user already exists in the Dashboard.
 
 ### Password login fails after reset (“Invalid login credentials”)
 

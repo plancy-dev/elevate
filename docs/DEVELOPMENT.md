@@ -31,15 +31,14 @@ Production hostname (e.g. **`https://elevate.ai.kr`**) must be consistent across
 
 After changing Site URL or redirects, smoke-test: sign-in, sign-up, password recovery, and (if enabled) checkout return URLs.
 
-## Dashboard access (optional production gate)
+## Dashboard access (`profiles.dashboard_access`)
 
-When **`DASHBOARD_ACCESS_STRICT=true`**, signed-in users must be **platform admins**, **org admins** (unless `DASHBOARD_ALLOW_ORG_ADMIN=false`), or listed in **`waitlist_signups`** / **`prompt_studio_beta_allowlist`** (email normalized like the purchase allowlist) to use **`/dashboard`**. Others are redirected to **`/access-pending`**.
+**`/dashboard`** is allowed only when **`profiles.dashboard_access`** is **`true`** for the signed-in user. This is independent of **`profiles.role`** (organization role such as `admin` / `viewer`).
 
-- **Server:** `SUPABASE_SERVICE_ROLE_KEY` is required for allowlist checks (same as other admin paths).
+- **Migration:** `supabase/migrations/037_profiles_dashboard_access.sql` adds the column (default `false`).
+- **Server:** `SUPABASE_SERVICE_ROLE_KEY` is required so `canUseDashboard` can read `profiles` without RLS blocking the check. If the key is missing or the query fails, access is **denied** (fail closed).
+- **Grant access:** e.g. `update public.profiles set dashboard_access = true where email = 'you@example.com';` or run **`pnpm db:seed-admin`** (sets `dashboard_access` for `ADMIN_EMAIL`).
 - **Code:** `src/lib/auth/dashboard-access.ts`, gate in `src/app/(dashboard)/layout.tsx`, page `src/app/(auth)/access-pending/page.tsx`, proxy skip in `src/proxy.ts`.
-- **Env:** see `.env.local.example` (`DASHBOARD_ACCESS_STRICT`, `DASHBOARD_ALLOW_ORG_ADMIN`).
-
-Local dev usually leaves strict mode **off** so all logged-in users can open the dashboard.
 
 ## Waitlist `source` field
 

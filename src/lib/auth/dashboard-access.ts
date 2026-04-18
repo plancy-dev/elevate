@@ -1,68 +1,43 @@
-import { canAccessElevateServiceAdmin } from "@/lib/auth/platform-admin";
-import { normalizePurchaseAllowlistEmail } from "@/lib/payments/purchase-allowlist";
-import { isEmailOnPromptStudioBetaAllowlist } from "@/lib/prompt-studio/studio-beta-allowlist";
-import { isOrganizationAdmin } from "@/lib/user-roles";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 type AdminClient = ReturnType<typeof createAdminClient>;
 
-/**
- * When `DASHBOARD_ACCESS_STRICT=true`, dashboard is limited to:
- * - Elevate service admins (`PLATFORM_ADMIN_EMAILS` / `ADMIN_EMAIL`),
- * - Organization admins (`profiles.role === "admin"`) unless `DASHBOARD_ALLOW_ORG_ADMIN=false`,
- * - Emails present in `waitlist_signups` (same address as auth, normalized), or
- * - Emails in `prompt_studio_beta_allowlist`.
- *
- * When unset/false, all signed-in users keep previous behavior (open access).
- */
-export function isDashboardAccessStrictMode(): boolean {
-  return process.env.DASHBOARD_ACCESS_STRICT === "true";
-}
-
-function allowOrganizationAdminsInStrictMode(): boolean {
-  return process.env.DASHBOARD_ALLOW_ORG_ADMIN !== "false";
-}
-
-async function isEmailOnMarketingWaitlist(
+async function profileDashboardAccessGranted(
   admin: AdminClient,
-  emailNormalized: string,
+  userId: string,
 ): Promise<boolean> {
   const { data, error } = await admin
-    .from("waitlist_signups")
-    .select("id")
-    .eq("email", emailNormalized)
+    .from("profiles")
+    .select("dashboard_access")
+    .eq("id", userId)
     .maybeSingle();
 
   if (error) throw error;
-  return data != null;
+  return data?.dashboard_access === true;
 }
 
 /**
- * Server-only. Uses service role for allowlist / waitlist tables (no public RLS).
+ * Server-only. `/dashboard` is allowed only when **`profiles.dashboard_access`** is `true`
+ * for the signed-in user (read with the service role — not `profiles.role`, which is org-scoped).
+ *
+ * - No feature env flags: behavior is always this check.
+ * - Missing **`SUPABASE_SERVICE_ROLE_KEY`**, missing `userId`, missing profile row, DB/column errors,
+ *   or `dashboard_access === false` → **denied** (fail closed).
+ *
+ * `email` / `orgRole` are ignored but kept so call sites stay stable.
  */
 export async function canUseDashboard(
-  email: string | undefined,
-  orgRole: string | undefined,
+  _email: string | undefined,
+  _orgRole: string | undefined,
+  userId?: string,
 ): Promise<boolean> {
-  if (!isDashboardAccessStrictMode()) {
-    return true;
-  }
-  if (!email?.trim()) {
+  if (!userId?.trim()) {
     return false;
   }
-  if (canAccessElevateServiceAdmin(email)) {
-    return true;
+  try {
+    const admin = createAdminClient();
+    return await profileDashboardAccessGranted(admin, userId);
+  } catch {
+    return false;
   }
-  if (allowOrganizationAdminsInStrictMode() && isOrganizationAdmin(orgRole)) {
-    return true;
-  }
-
-  const normalized = normalizePurchaseAllowlistEmail(email);
-  const admin = createAdminClient();
-  const [onWaitlist, onBetaAllowlist] = await Promise.all([
-    isEmailOnMarketingWaitlist(admin, normalized),
-    isEmailOnPromptStudioBetaAllowlist(admin, normalized),
-  ]);
-
-  return onWaitlist || onBetaAllowlist;
 }

@@ -36,6 +36,7 @@ export default async function DashboardLayout({
   const dashboardAllowed = await canUseDashboard(
     user.email ?? undefined,
     prof?.role,
+    user.id,
   );
   if (!dashboardAllowed) {
     redirect("/access-pending");

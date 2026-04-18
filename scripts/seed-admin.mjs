@@ -8,7 +8,7 @@
  *
  * Requires: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
  *
- * If the user already exists, this script resets their password and sets role=admin (dev convenience).
+ * If the user already exists, this script resets their password and sets role=admin and dashboard_access=true.
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -113,7 +113,7 @@ if (!userId) {
 
 const { error: profileErr } = await supabase
   .from("profiles")
-  .update({ role: "admin" })
+  .update({ role: "admin", dashboard_access: true })
   .eq("id", userId);
 
 if (profileErr) {

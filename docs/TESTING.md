@@ -29,7 +29,7 @@ Covers:
 - Public env helpers: `getPublicSupabaseEnv`, `assertPublicSupabaseEnv`
 - **`loadSidebarUser`** — chainable Supabase mock (profile + org)
 - **`POST /api/waitlist`** — mocked Supabase admin insert (honeypot, validation, duplicate)
-- **`dashboard-access`** — `canUseDashboard` / strict mode / org-admin flag / waitlist & beta allowlist (mocked service client)
+- **`dashboard-access`** — `canUseDashboard` / `profiles.dashboard_access` via mocked service client
 
 ## Integration tests (`pnpm test:integration`)
 
@@ -68,6 +68,8 @@ CI does **not** run integration tests unless you add secrets and env to the work
    ```
 
    `playwright.config.ts` loads `.env.local` so these are available to tests. Without them, `auth-dashboard.spec.ts` is **skipped**; the public `smoke.spec.ts` still runs.
+
+   The E2E user’s **`profiles.dashboard_access`** must be **`true`** (and **`SUPABASE_SERVICE_ROLE_KEY`** must be set for the app) or sign-in will land on **`/access-pending`** instead of **`/dashboard`**.
 
 3. Start the app, then run tests:
 

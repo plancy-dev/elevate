@@ -15,6 +15,10 @@ import {
 } from "@/lib/auth-redirect-urls";
 import { setRecoveryPendingClient } from "@/lib/auth-recovery-cookie";
 import { resolvePostPkceRedirect } from "@/lib/auth-recovery-redirect";
+import {
+  isPkceVerifierMissingError,
+  shouldAllowPkceErrorSessionRecovery,
+} from "@/lib/auth/pkce-session-recovery";
 
 /** Dedup PKCE exchange: React Strict Mode or remounts must not call `exchangeCodeForSession` twice with the same code. */
 const pkceExchangeInflight = new Map<
@@ -107,37 +111,53 @@ function AuthCallbackInner() {
             logAuthFlow("auth.callback.pkce_error", {
               message: err.message.slice(0, 300),
             });
-            const {
-              data: { session },
-            } = await supabase.auth.getSession();
-            if (session?.user) {
-              logAuthFlow("auth.callback.pkce_error_recovered_session", {
-                message: err.message.slice(0, 200),
+            /**
+             * Do not treat an unrelated existing session as "signed in" for this OAuth
+             * redirect — especially `code verifier not found` (wrong browser / cleared storage).
+             */
+            if (isPkceVerifierMissingError(err.message)) {
+              logAuthFlow("auth.callback.pkce_error_no_recovery", {
+                reason: "verifier_missing_sign_out_stale",
               });
-              const redirectType =
-                data &&
-                typeof data === "object" &&
-                "redirectType" in data &&
-                typeof (data as { redirectType?: unknown }).redirectType ===
-                  "string"
-                  ? (data as { redirectType: string }).redirectType
-                  : null;
-              const destination = resolvePostPkceRedirect(
-                nextFallback,
-                { session, redirectType },
-                searchParams,
-              );
-              if (
-                redirectType === "recovery" ||
-                destination === AUTH_UPDATE_PASSWORD_PATH
-              ) {
-                setRecoveryPendingClient();
-              }
-              router.replace(destination);
+              await supabase.auth.signOut();
+              router.replace("/auth/auth-code-error");
               router.refresh();
               return;
             }
+            if (shouldAllowPkceErrorSessionRecovery(err.message)) {
+              const {
+                data: { session },
+              } = await supabase.auth.getSession();
+              if (session?.user) {
+                logAuthFlow("auth.callback.pkce_error_recovered_session", {
+                  message: err.message.slice(0, 200),
+                });
+                const redirectType =
+                  data &&
+                  typeof data === "object" &&
+                  "redirectType" in data &&
+                  typeof (data as { redirectType?: unknown }).redirectType ===
+                    "string"
+                    ? (data as { redirectType: string }).redirectType
+                    : null;
+                const destination = resolvePostPkceRedirect(
+                  nextFallback,
+                  { session, redirectType },
+                  searchParams,
+                );
+                if (
+                  redirectType === "recovery" ||
+                  destination === AUTH_UPDATE_PASSWORD_PATH
+                ) {
+                  setRecoveryPendingClient();
+                }
+                router.replace(destination);
+                router.refresh();
+                return;
+              }
+            }
             router.replace("/auth/auth-code-error");
+            router.refresh();
             return;
           }
           const destination = resolvePostPkceRedirect(nextFallback, data, searchParams);
@@ -171,21 +191,33 @@ function AuthCallbackInner() {
               ? (reason as { message: string }).message.slice(0, 300)
               : String(reason).slice(0, 300);
           logAuthFlow("auth.callback.pkce_reject", { message });
-          const {
-            data: { session },
-          } = await supabase.auth.getSession();
-          if (session?.user) {
-            logAuthFlow("auth.callback.pkce_reject_recovered_session", {});
-            const destination = resolvePostPkceRedirect(
-              nextFallback,
-              { session },
-              searchParams,
-            );
-            router.replace(destination);
+          if (isPkceVerifierMissingError(message)) {
+            logAuthFlow("auth.callback.pkce_reject_no_recovery", {
+              reason: "verifier_missing_sign_out_stale",
+            });
+            await supabase.auth.signOut();
+            router.replace("/auth/auth-code-error");
             router.refresh();
             return;
           }
+          if (shouldAllowPkceErrorSessionRecovery(message)) {
+            const {
+              data: { session },
+            } = await supabase.auth.getSession();
+            if (session?.user) {
+              logAuthFlow("auth.callback.pkce_reject_recovered_session", {});
+              const destination = resolvePostPkceRedirect(
+                nextFallback,
+                { session },
+                searchParams,
+              );
+              router.replace(destination);
+              router.refresh();
+              return;
+            }
+          }
           router.replace("/auth/auth-code-error");
+          router.refresh();
         });
       return;
     }

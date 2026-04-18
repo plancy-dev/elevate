@@ -8,7 +8,7 @@
 
 - **Marketing** (`[locale]/(marketing)/`): shared **`elevate-marketing-chrome`** shell, Pretext hero, catalog/pricing/contact/blog, etc. Tokens and rollout: [`docs/design/VISUAL_LANGUAGE_V2.md`](../docs/design/VISUAL_LANGUAGE_V2.md), [`docs/design/SYSTEM.md`](../docs/design/SYSTEM.md).
 - **App** (`(dashboard)/`): IBM-style blue primary, sidebar, Library · Prompt Studio · Studio Productions · Billing · Team · Settings. List/overview patterns: [`docs/design/DASHBOARD_UX_PRINCIPLES.md`](../docs/design/DASHBOARD_UX_PRINCIPLES.md).
-- **Access control**: Optional strict dashboard gate (`DASHBOARD_ACCESS_STRICT`) — platform/org admins or emails on `waitlist_signups` / `prompt_studio_beta_allowlist`; otherwise `/access-pending`. Implementation: `src/lib/auth/dashboard-access.ts`, `src/app/(auth)/access-pending/page.tsx`.
+- **Access control**: `/dashboard` requires **`profiles.dashboard_access`** (service role in `canUseDashboard`); otherwise `/access-pending`. REFLECT: [`archive/work-history/reflect-dashboard-access-pkce-2026-04.md`](archive/work-history/reflect-dashboard-access-pkce-2026-04.md).
 - **Legacy MICE** (events/venues/attendees): schema retained; several `/dashboard/events|venues|…` paths redirect to `/dashboard` per `next.config.ts`. No new features here.
 
 ---

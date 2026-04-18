@@ -15,8 +15,7 @@ export async function generateMetadata() {
 }
 
 /**
- * Shown when `DASHBOARD_ACCESS_STRICT=true` and the signed-in user is not on the
- * allowlist / waitlist (and is not an org or platform admin).
+ * Shown when the signed-in user does not have `profiles.dashboard_access` (see `canUseDashboard`).
  */
 export default async function AccessPendingPage() {
   const supabase = await createClient();
@@ -34,7 +33,11 @@ export default async function AccessPendingPage() {
     .eq("id", user.id)
     .maybeSingle();
 
-  const allowed = await canUseDashboard(user.email ?? undefined, prof?.role);
+  const allowed = await canUseDashboard(
+    user.email ?? undefined,
+    prof?.role,
+    user.id,
+  );
   if (allowed) {
     redirect("/dashboard");
   }

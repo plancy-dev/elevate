@@ -4,22 +4,20 @@ vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: vi.fn(),
 }));
 
-vi.mock("@/lib/prompt-studio/studio-beta-allowlist", () => ({
-  isEmailOnPromptStudioBetaAllowlist: vi.fn(),
-}));
-
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isEmailOnPromptStudioBetaAllowlist } from "@/lib/prompt-studio/studio-beta-allowlist";
-import {
-  canUseDashboard,
-  isDashboardAccessStrictMode,
-} from "@/lib/auth/dashboard-access";
+import { canUseDashboard } from "@/lib/auth/dashboard-access";
 
-function waitlistChain(row: { id: string } | null) {
+function profileChain(dashboardAccess: boolean | null) {
   return {
     select: () => ({
       eq: () => ({
-        maybeSingle: async () => ({ data: row, error: null }),
+        maybeSingle: async () => ({
+          data:
+            dashboardAccess === null
+              ? null
+              : { dashboard_access: dashboardAccess },
+          error: null,
+        }),
       }),
     }),
   };
@@ -27,104 +25,54 @@ function waitlistChain(row: { id: string } | null) {
 
 describe("dashboard-access", () => {
   afterEach(() => {
-    vi.unstubAllEnvs();
     vi.mocked(createAdminClient).mockReset();
-    vi.mocked(isEmailOnPromptStudioBetaAllowlist).mockReset();
   });
 
-  it("isDashboardAccessStrictMode is true only when DASHBOARD_ACCESS_STRICT=true", () => {
-    vi.stubEnv("DASHBOARD_ACCESS_STRICT", "true");
-    expect(isDashboardAccessStrictMode()).toBe(true);
-    vi.stubEnv("DASHBOARD_ACCESS_STRICT", "false");
-    expect(isDashboardAccessStrictMode()).toBe(false);
-  });
-
-  it("when strict mode off, canUseDashboard allows any signed-in user without calling service role", async () => {
-    vi.stubEnv("DASHBOARD_ACCESS_STRICT", "false");
-    await expect(canUseDashboard("any@x.com", "viewer")).resolves.toBe(true);
+  it("denies when user id is missing", async () => {
+    await expect(canUseDashboard("a@b.com", "admin")).resolves.toBe(false);
+    await expect(canUseDashboard("a@b.com", "admin", "")).resolves.toBe(false);
     expect(createAdminClient).not.toHaveBeenCalled();
   });
 
-  it("strict mode: missing email is denied", async () => {
-    vi.stubEnv("DASHBOARD_ACCESS_STRICT", "true");
-    await expect(canUseDashboard("", "admin")).resolves.toBe(false);
-    await expect(canUseDashboard(undefined, "admin")).resolves.toBe(false);
-  });
-
-  it("strict mode: Elevate service admin email is allowed without list lookup", async () => {
-    vi.stubEnv("DASHBOARD_ACCESS_STRICT", "true");
-    vi.stubEnv("ADMIN_EMAIL", "ops@co.com");
-    vi.stubEnv("PLATFORM_ADMIN_EMAILS", "");
-    await expect(canUseDashboard("Ops@co.com", "viewer")).resolves.toBe(true);
-    expect(createAdminClient).not.toHaveBeenCalled();
-  });
-
-  it("strict mode: organization admin is allowed by default", async () => {
-    vi.stubEnv("DASHBOARD_ACCESS_STRICT", "true");
-    vi.stubEnv("ADMIN_EMAIL", "");
-    vi.stubEnv("PLATFORM_ADMIN_EMAILS", "");
-    await expect(canUseDashboard("u@co.com", "admin")).resolves.toBe(true);
-    expect(createAdminClient).not.toHaveBeenCalled();
-  });
-
-  it("strict mode: org admin denied when DASHBOARD_ALLOW_ORG_ADMIN=false and not on lists", async () => {
-    vi.stubEnv("DASHBOARD_ACCESS_STRICT", "true");
-    vi.stubEnv("DASHBOARD_ALLOW_ORG_ADMIN", "false");
-    vi.stubEnv("ADMIN_EMAIL", "");
-    vi.stubEnv("PLATFORM_ADMIN_EMAILS", "");
-    vi.mocked(isEmailOnPromptStudioBetaAllowlist).mockResolvedValue(false);
+  it("allows when profiles.dashboard_access is true", async () => {
     vi.mocked(createAdminClient).mockReturnValue({
       from: (table: string) => {
-        expect(table).toBe("waitlist_signups");
-        return waitlistChain(null);
+        expect(table).toBe("profiles");
+        return profileChain(true);
       },
     } as unknown as ReturnType<typeof createAdminClient>);
 
-    await expect(canUseDashboard("u@co.com", "admin")).resolves.toBe(false);
+    await expect(
+      canUseDashboard("u@co.com", "viewer", "00000000-0000-4000-8000-000000000001"),
+    ).resolves.toBe(true);
   });
 
-  it("strict mode: viewer allowed when email is on marketing waitlist", async () => {
-    vi.stubEnv("DASHBOARD_ACCESS_STRICT", "true");
-    vi.stubEnv("ADMIN_EMAIL", "");
-    vi.stubEnv("PLATFORM_ADMIN_EMAILS", "");
-    vi.mocked(isEmailOnPromptStudioBetaAllowlist).mockResolvedValue(false);
+  it("denies when profiles.dashboard_access is false", async () => {
     vi.mocked(createAdminClient).mockReturnValue({
-      from: (table: string) => {
-        expect(table).toBe("waitlist_signups");
-        return waitlistChain({ id: "w1" });
-      },
+      from: () => profileChain(false),
     } as unknown as ReturnType<typeof createAdminClient>);
 
-    await expect(canUseDashboard("listed@co.com", "viewer")).resolves.toBe(true);
+    await expect(
+      canUseDashboard("u@co.com", "admin", "00000000-0000-4000-8000-000000000001"),
+    ).resolves.toBe(false);
   });
 
-  it("strict mode: viewer allowed when email is on studio beta allowlist", async () => {
-    vi.stubEnv("DASHBOARD_ACCESS_STRICT", "true");
-    vi.stubEnv("ADMIN_EMAIL", "");
-    vi.stubEnv("PLATFORM_ADMIN_EMAILS", "");
-    vi.mocked(isEmailOnPromptStudioBetaAllowlist).mockResolvedValue(true);
+  it("denies when profile row is missing", async () => {
     vi.mocked(createAdminClient).mockReturnValue({
-      from: (table: string) => {
-        expect(table).toBe("waitlist_signups");
-        return waitlistChain(null);
-      },
+      from: () => profileChain(null),
     } as unknown as ReturnType<typeof createAdminClient>);
 
-    await expect(canUseDashboard("beta@co.com", "viewer")).resolves.toBe(true);
+    await expect(
+      canUseDashboard("u@co.com", "admin", "00000000-0000-4000-8000-000000000001"),
+    ).resolves.toBe(false);
   });
 
-  it("strict mode: viewer denied when not on waitlist or beta allowlist", async () => {
-    vi.stubEnv("DASHBOARD_ACCESS_STRICT", "true");
-    vi.stubEnv("ADMIN_EMAIL", "");
-    vi.stubEnv("PLATFORM_ADMIN_EMAILS", "");
-    vi.mocked(isEmailOnPromptStudioBetaAllowlist).mockResolvedValue(false);
-    vi.mocked(createAdminClient).mockReturnValue({
-      from: (table: string) => {
-        expect(table).toBe("waitlist_signups");
-        return waitlistChain(null);
-      },
-    } as unknown as ReturnType<typeof createAdminClient>);
-
-    await expect(canUseDashboard("nope@co.com", "viewer")).resolves.toBe(false);
+  it("denies when service role client cannot be created", async () => {
+    vi.mocked(createAdminClient).mockImplementation(() => {
+      throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY");
+    });
+    await expect(
+      canUseDashboard("u@co.com", "admin", "00000000-0000-4000-8000-000000000001"),
+    ).resolves.toBe(false);
   });
 });

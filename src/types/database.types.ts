@@ -539,6 +539,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          dashboard_access: boolean
           display_name: string
           email: string
           email_milestone_digest: boolean
@@ -551,6 +552,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          dashboard_access?: boolean
           display_name?: string
           email: string
           email_milestone_digest?: boolean
@@ -563,6 +565,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
+          dashboard_access?: boolean
           display_name?: string
           email?: string
           email_milestone_digest?: boolean

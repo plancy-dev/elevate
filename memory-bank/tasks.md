@@ -377,7 +377,7 @@
 | P1 | **대시보드 단일 표면 UX** — [`docs/design/DASHBOARD_UX_PRINCIPLES.md`](../docs/design/DASHBOARD_UX_PRINCIPLES.md) | ✅ 개요·라이브러리·설정·스튜디오·프로덕션 목록 등(2026-04); 팀·빌링 등은 동일 패턴으로 확장 가능 |
 | P1 | PostHog 대시보드(퍼널 시각화) | 이벤트: `elevate_funnel_*`, `elevate_waitlist_*`, `elevate_marketing_cta_click`, `elevate_blog_post_viewed` — [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 참고 후 UI에서 구성 |
 | P1 | E2E CI — PR에 `run-e2e` 라벨 또는 수동 workflow | `e2e.yml` |
-| P2 | **대시보드 접근 게이트 (운영)** — `DASHBOARD_ACCESS_STRICT` · [`src/lib/auth/dashboard-access.ts`](../src/lib/auth/dashboard-access.ts) · `/access-pending` | ✅ 코드 반영; 프로덕션 켤 때 Vercel에 `SUPABASE_SERVICE_ROLE_KEY` + 플래그 |
+| P2 | **대시보드 접근 게이트** — `profiles.dashboard_access` · [`src/lib/auth/dashboard-access.ts`](../src/lib/auth/dashboard-access.ts) · `/access-pending` · PKCE 콜백 정리 | ✅ (2026-04) 마이그레이션 `037` + 서버 `SUPABASE_SERVICE_ROLE_KEY`; REFLECT [`archive/work-history/reflect-dashboard-access-pkce-2026-04.md`](archive/work-history/reflect-dashboard-access-pkce-2026-04.md) |
 | P2 | MICE 스키마 제거 또는 아카이브 | 데이터·고객 영향 검토 후 |
 | P2 | **롱폼·모바일 타이포 리듬** | ✅ Phase A–C [`docs/features/PLAN-responsive-longform-typography.md`](../docs/features/PLAN-responsive-longform-typography.md) — 배포 후 Lighthouse로 CV·LCP만 점검 |
 | P2 | **Studio AI 콘텐츠 OS** — 제공자·에셋·잡 레이어 ([`tasks.md`](tasks.md) § G3.3) | INIT 준비됨 → PLAN 후 단계적 BUILD |

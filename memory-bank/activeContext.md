@@ -26,7 +26,7 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 기�
 - PLAN·리뷰: [`docs/features/PLAN-studio-productions.md`](../docs/features/PLAN-studio-productions.md) · [`docs/features/GSTACK_REVIEW-production-workbench.md`](../docs/features/GSTACK_REVIEW-production-workbench.md)  
 - **v2 연동(스캐폴딩):** [`docs/adr/ADR-006-studio-provider-integrations-v2.md`](../docs/adr/ADR-006-studio-provider-integrations-v2.md) · [`docs/features/PLAN-studio-provider-integrations.md`](../docs/features/PLAN-studio-provider-integrations.md) · 라우트 `/dashboard/productions/integrations` · `src/lib/studio-integrations/` — 플래그 꺼짐 시에도 문서·상태 표시만.
 
-**대시보드 접근 (운영 옵션)** — `DASHBOARD_ACCESS_STRICT=true`일 때 플랫폼/조직 관리자 또는 `waitlist_signups`·`prompt_studio_beta_allowlist`에 없으면 `/access-pending`. 코드: `src/lib/auth/dashboard-access.ts`, `src/app/(auth)/access-pending/page.tsx`.
+**대시보드 접근** — 항상 **`profiles.dashboard_access`** (마이그레이션 `037`); 서버에서 서비스 롤로 조회. 아니면 `/access-pending`. REFLECT: [`archive/work-history/reflect-dashboard-access-pkce-2026-04.md`](archive/work-history/reflect-dashboard-access-pkce-2026-04.md).
 
 **다음 (로드맵):** [`tasks.md`](tasks.md) — Phase S 파이프라인은 코드·스키마 기준 **정합 완료** ([`docs/features/PHASE_S_AND_T_STATUS.md`](../docs/features/PHASE_S_AND_T_STATUS.md)). 병행: Phase G 잔여(G1 운영 SKU 등) · Phase M · Phase T5 백로그.
 
@@ -92,7 +92,7 @@ North Star: [`creative-elevate-ai-pivot.md`](creative-elevate-ai-pivot.md). 기�
 | PLG·블로그·전자책 로드맵 | [`marketing-content-pipeline.md`](marketing-content-pipeline.md) · [`marketing-pillars-m2.md`](marketing-pillars-m2.md) · `tasks.md` Phase M |
 | PostHog 퍼널 레시피 | [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) — 저장 인사이트 이름·UI 체크리스트 포함; 대시보드는 PostHog 프로젝트에서 수동 저장 |
 | M2 캘린더 | [`marketing-pillars-m2.md`](marketing-pillars-m2.md) § Q2 2026 — M3 MDX로 승격 시 front matter 일정 확정 |
-| Prompt Studio 베타 허용 | 마이그레이션 `016` `prompt_studio_beta_allowlist` · `/admin/prompt-studio-allowlist` · env `STUDIO_BETA_REQUIRE_ALLOWLIST` (스튜디오 라우트); **대시보드 전체 게이트**는 별도로 `DASHBOARD_ACCESS_STRICT` + [`dashboard-access.ts`](../src/lib/auth/dashboard-access.ts) |
+| Prompt Studio 베타 허용 | 마이그레이션 `016` `prompt_studio_beta_allowlist` · `/admin/prompt-studio-allowlist` · env `STUDIO_BETA_REQUIRE_ALLOWLIST` (스튜디오 라우트); **`/dashboard` 셸**은 `profiles.dashboard_access` + [`dashboard-access.ts`](../src/lib/auth/dashboard-access.ts) |
 | 블로그 조회 이벤트 | PostHog `elevate_blog_post_viewed` — `src/components/blog/blog-post-viewed-capture.tsx` |
 | **M3 (플래그십)** | 슬러그 `the-prompt-is-your-product-surface` — en · ko · ja · zh-CN · zh-TW (`content/blog/<locale>/`) · [`BLOG_POST_PIPELINE.md`](../docs/BLOG_POST_PIPELINE.md) |
 
