@@ -31,13 +31,13 @@ Production hostname (e.g. **`https://elevate.ai.kr`**) must be consistent across
 
 After changing Site URL or redirects, smoke-test: sign-in, sign-up, password recovery, and (if enabled) checkout return URLs.
 
-## Dashboard access (`profiles.dashboard_access`)
+## Dashboard access (`profiles.dashboard_access` + `profiles.role`)
 
-**`/dashboard`** is allowed only when **`profiles.dashboard_access`** is **`true`** for the signed-in user. This is independent of **`profiles.role`** (organization role such as `admin` / `viewer`).
+**`/dashboard`** is allowed when **`profiles.dashboard_access`** is **`true`** *or* **`profiles.role`** is **`admin`** (one service-role read of both columns). Use the allowlist for operators without org `admin` role; platform admins from **`pnpm db:seed-admin`** get both flags.
 
-- **Migration:** `supabase/migrations/037_profiles_dashboard_access.sql` adds the column (default `false`).
+- **Migration:** `supabase/migrations/037_profiles_dashboard_access.sql` adds `dashboard_access` (default `false`).
 - **Server:** `SUPABASE_SERVICE_ROLE_KEY` is required so `canUseDashboard` can read `profiles` without RLS blocking the check. If the key is missing or the query fails, access is **denied** (fail closed).
-- **Grant access:** e.g. `update public.profiles set dashboard_access = true where email = 'you@example.com';` or run **`pnpm db:seed-admin`** (sets `dashboard_access` for `ADMIN_EMAIL`).
+- **Grant access:** e.g. `update public.profiles set dashboard_access = true where email = 'you@example.com';` or run **`pnpm db:seed-admin`** (sets `role = admin` and `dashboard_access = true` for `ADMIN_EMAIL`).
 - **Code:** `src/lib/auth/dashboard-access.ts`, gate in `src/app/(dashboard)/layout.tsx`, page `src/app/(auth)/access-pending/page.tsx`, proxy skip in `src/proxy.ts`.
 
 ## Waitlist `source` field

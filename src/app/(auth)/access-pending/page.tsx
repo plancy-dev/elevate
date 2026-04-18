@@ -1,23 +1,27 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
+import { AccessPendingSignOut } from "@/components/auth/access-pending-sign-out";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
-import { SignOutButton } from "@/components/auth/sign-out-button";
 import { buttonLinkClassName } from "@/components/ui/button-styles";
-import { Link as LocaleLink } from "@/i18n/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { canUseDashboard } from "@/lib/auth/dashboard-access";
 import { getAppLocale } from "@/lib/i18n/app-locale";
+import {
+  marketingContactPath,
+  marketingHomePath,
+  marketingWaitlistHref,
+} from "@/lib/i18n/marketing-paths";
+import { createClient } from "@/lib/supabase/server";
 
 export async function generateMetadata() {
   const locale = await getAppLocale();
-  /** Same as dashboard / `[locale]` layouts — avoids `LocaleLink` → `headers()` DYNAMIC_SERVER_USAGE. */
-  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "AccessPending" });
   return { title: t("metaTitle") };
 }
 
 /**
- * Shown when the signed-in user does not have `profiles.dashboard_access` (see `canUseDashboard`).
+ * Signed-in users without dashboard access (`profiles.dashboard_access` and not `role: admin`).
+ * Uses `next/link` only — no `next-intl` navigation here (avoids `headers()` / provider issues on auth routes).
  */
 export default async function AccessPendingPage() {
   const supabase = await createClient();
@@ -45,14 +49,17 @@ export default async function AccessPendingPage() {
   }
 
   const locale = await getAppLocale();
-  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "AccessPending" });
+
+  const home = marketingHomePath(locale);
+  const contact = marketingContactPath(locale);
+  const waitlist = marketingWaitlistHref(locale);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-12">
-      <LocaleLink href="/" className="mb-10 inline-block">
+      <Link href={home} className="mb-10 inline-block">
         <ElevateLogo size="md" />
-      </LocaleLink>
+      </Link>
       <div className="w-full max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-text-primary">
           {t("title")}
@@ -66,27 +73,27 @@ export default async function AccessPendingPage() {
           </p>
         ) : null}
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <LocaleLink
-            href="/#waitlist"
+          <Link
+            href={waitlist}
             className={buttonLinkClassName("primary", "md", "text-center")}
           >
             {t("joinWaitlist")}
-          </LocaleLink>
-          <LocaleLink
-            href="/contact"
+          </Link>
+          <Link
+            href={contact}
             className={buttonLinkClassName("tertiary", "md", "text-center")}
           >
             {t("contact")}
-          </LocaleLink>
+          </Link>
         </div>
         <div className="mt-10 flex flex-col items-center gap-4 border-t border-border-subtle pt-8">
-          <SignOutButton />
-          <LocaleLink
-            href="/"
+          <AccessPendingSignOut label={t("signOut")} />
+          <Link
+            href={home}
             className="text-sm text-interactive transition-colors hover:text-primary"
           >
             {t("backHome")}
-          </LocaleLink>
+          </Link>
         </div>
       </div>
     </div>

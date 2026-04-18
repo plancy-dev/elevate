@@ -2,27 +2,32 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 type AdminClient = ReturnType<typeof createAdminClient>;
 
-async function profileDashboardAccessGranted(
+async function dashboardGateForProfile(
   admin: AdminClient,
   userId: string,
 ): Promise<boolean> {
   const { data, error } = await admin
     .from("profiles")
-    .select("dashboard_access")
+    .select("dashboard_access, role")
     .eq("id", userId)
     .maybeSingle();
 
   if (error) throw error;
-  return data?.dashboard_access === true;
+  if (!data) return false;
+  if (data.dashboard_access === true) return true;
+  /** Platform operators seeded via `scripts/seed-admin.mjs` (`role: admin`). */
+  if (data.role === "admin") return true;
+  return false;
 }
 
 /**
- * Server-only. `/dashboard` is allowed only when **`profiles.dashboard_access`** is `true`
- * for the signed-in user (read with the service role — not `profiles.role`, which is org-scoped).
+ * Server-only gate for `/dashboard` (and `/access-pending` bounce).
  *
- * - No feature env flags: behavior is always this check.
- * - Missing **`SUPABASE_SERVICE_ROLE_KEY`**, missing `userId`, missing profile row, DB/column errors,
- *   or `dashboard_access === false` → **denied** (fail closed).
+ * Allowed when **`profiles.dashboard_access`** is true **or** **`profiles.role` is `admin`**
+ * (single service-role read — not the anon session’s `profiles` row alone).
+ *
+ * Missing **`SUPABASE_SERVICE_ROLE_KEY`**, missing `userId`, missing profile row, or DB
+ * errors → **denied** (fail closed).
  *
  * `email` / `orgRole` are ignored but kept so call sites stay stable.
  */
@@ -36,7 +41,7 @@ export async function canUseDashboard(
   }
   try {
     const admin = createAdminClient();
-    return await profileDashboardAccessGranted(admin, userId);
+    return await dashboardGateForProfile(admin, userId);
   } catch {
     return false;
   }

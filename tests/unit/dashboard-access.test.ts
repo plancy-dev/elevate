@@ -7,15 +7,21 @@ vi.mock("@/lib/supabase/admin", () => ({
 import { createAdminClient } from "@/lib/supabase/admin";
 import { canUseDashboard } from "@/lib/auth/dashboard-access";
 
-function profileChain(dashboardAccess: boolean | null) {
+function profileChain(row: {
+  dashboard_access: boolean | null;
+  role: string | null;
+} | null) {
   return {
     select: () => ({
       eq: () => ({
         maybeSingle: async () => ({
           data:
-            dashboardAccess === null
+            row === null
               ? null
-              : { dashboard_access: dashboardAccess },
+              : {
+                  dashboard_access: row.dashboard_access,
+                  role: row.role,
+                },
           error: null,
         }),
       }),
@@ -38,7 +44,7 @@ describe("dashboard-access", () => {
     vi.mocked(createAdminClient).mockReturnValue({
       from: (table: string) => {
         expect(table).toBe("profiles");
-        return profileChain(true);
+        return profileChain({ dashboard_access: true, role: "viewer" });
       },
     } as unknown as ReturnType<typeof createAdminClient>);
 
@@ -47,13 +53,23 @@ describe("dashboard-access", () => {
     ).resolves.toBe(true);
   });
 
-  it("denies when profiles.dashboard_access is false", async () => {
+  it("allows when profiles.role is admin even if dashboard_access is false", async () => {
     vi.mocked(createAdminClient).mockReturnValue({
-      from: () => profileChain(false),
+      from: () => profileChain({ dashboard_access: false, role: "admin" }),
     } as unknown as ReturnType<typeof createAdminClient>);
 
     await expect(
       canUseDashboard("u@co.com", "admin", "00000000-0000-4000-8000-000000000001"),
+    ).resolves.toBe(true);
+  });
+
+  it("denies when dashboard_access is false and role is not admin", async () => {
+    vi.mocked(createAdminClient).mockReturnValue({
+      from: () => profileChain({ dashboard_access: false, role: "viewer" }),
+    } as unknown as ReturnType<typeof createAdminClient>);
+
+    await expect(
+      canUseDashboard("u@co.com", "viewer", "00000000-0000-4000-8000-000000000001"),
     ).resolves.toBe(false);
   });
 
