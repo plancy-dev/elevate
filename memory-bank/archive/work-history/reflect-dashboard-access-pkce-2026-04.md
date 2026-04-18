@@ -19,6 +19,10 @@
 - **Memory bank / tasks** — Updated in same commit to remove stale `DASHBOARD_*` gate descriptions.
 - Optional: cookie-based PKCE storage across subdomains if cross-origin starts become common (Supabase SSR guidance).
 
+## Follow-up (middleware + PKCE)
+
+`updateSession` must **not** call `getUser` / `getSession` on **`/auth/callback`**: the server client’s cookie `setAll` can refresh session cookies and **drop the PKCE code-verifier chunks** before the client runs `exchangeCodeForSession` (production symptom: verifier not found on same origin).
+
 ## Verification
 
 - `pnpm lint`, `pnpm typecheck`, `pnpm test` (unit), `pnpm build` before commit.

@@ -1,6 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { AUTH_UPDATE_PASSWORD_PATH } from "@/lib/auth-redirect-urls";
+import {
+  AUTH_CALLBACK_PATH,
+  AUTH_UPDATE_PASSWORD_PATH,
+} from "@/lib/auth-redirect-urls";
 import { hasRecoveryPendingCookie } from "@/lib/auth-recovery-cookie";
 import { jwtIndicatesPasswordRecovery } from "@/lib/auth-recovery-redirect";
 import { logAuthFlow } from "@/lib/auth-flow-log";
@@ -17,6 +20,19 @@ export async function updateSession(
 ) {
   const env = getPublicSupabaseEnv();
   if (!env) {
+    return response ?? NextResponse.next({ request });
+  }
+
+  const pathname = request.nextUrl.pathname;
+  /**
+   * OAuth PKCE: the code verifier lives in chunked cookies set by the browser client
+   * on `signInWithOAuth`. Running `getSession()` here can refresh auth cookies via
+   * `setAll` and drop the verifier before `exchangeCodeForSession` runs on the client.
+   */
+  if (
+    pathname === AUTH_CALLBACK_PATH ||
+    pathname.startsWith(`${AUTH_CALLBACK_PATH}/`)
+  ) {
     return response ?? NextResponse.next({ request });
   }
 
@@ -53,7 +69,7 @@ export async function updateSession(
   /** JWT `amr` recovery OR client-set hint (survives token refresh in Edge). */
   const isRecoveryHint = jwtRecovery || recoveryCookie;
 
-  const path = request.nextUrl.pathname;
+  const path = pathname;
 
   /**
    * Password-reset emails establish a recovery session before the user sets a new password.
