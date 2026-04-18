@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 type Props = {
   /** From `useAuthUser()` in the parent header — single Supabase subscription. */
   user: User | null | undefined;
+  /** From `useDashboardEntitlement` — only then show the Dashboard CTA. */
+  showDashboardLink?: boolean;
   /** `sm` for desktop header, `md` for mobile sheet */
   size?: "sm" | "md";
   className?: string;
@@ -27,6 +29,7 @@ function displayLabel(user: User): string {
 
 export function HeaderAuthCluster({
   user,
+  showDashboardLink = false,
   size = "sm",
   className,
   onNavigate,
@@ -118,17 +121,19 @@ export function HeaderAuthCluster({
           size === "md" && "w-full flex-col",
         )}
       >
-        <NextLink
-          href="/dashboard"
-          className={buttonLinkClassName(
-            "primary",
-            btnSize,
-            size === "md" ? "w-full" : undefined,
-          )}
-          onClick={() => onNavigate?.()}
-        >
-          {t("openDashboard")}
-        </NextLink>
+        {showDashboardLink ? (
+          <NextLink
+            href="/dashboard"
+            className={buttonLinkClassName(
+              "primary",
+              btnSize,
+              size === "md" ? "w-full" : undefined,
+            )}
+            onClick={() => onNavigate?.()}
+          >
+            {t("openDashboard")}
+          </NextLink>
+        ) : null}
         <SignOutButton
           variant="marketing"
           redirectTo="/"

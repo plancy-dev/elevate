@@ -11,6 +11,7 @@ import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { MarketingNavDropdown } from "@/components/layout/marketing-nav-dropdown";
 import { useAuthUser } from "@/hooks/use-auth-user";
+import { useDashboardEntitlement } from "@/hooks/use-dashboard-entitlement";
 import { cn } from "@/lib/utils";
 
 type NavDropdownDef = {
@@ -31,6 +32,7 @@ export function Header() {
   const t = useTranslations("Nav");
   const [mobileOpen, setMobileOpen] = useState(false);
   const authUser = useAuthUser();
+  const showDashboardLink = useDashboardEntitlement(authUser) === true;
   const showLeadGen = authUser === null;
 
   const navEntries: NavEntry[] = [
@@ -88,7 +90,10 @@ export function Header() {
           <IntlButtonLink href="/contact" variant="ghost" size="sm">
             {t("contactSales")}
           </IntlButtonLink>
-          <HeaderAuthCluster user={authUser} />
+          <HeaderAuthCluster
+            user={authUser}
+            showDashboardLink={showDashboardLink}
+          />
         </div>
 
         <button
@@ -166,6 +171,7 @@ export function Header() {
               </IntlButtonLink>
               <HeaderAuthCluster
                 user={authUser}
+                showDashboardLink={showDashboardLink}
                 size="md"
                 onNavigate={() => setMobileOpen(false)}
               />
