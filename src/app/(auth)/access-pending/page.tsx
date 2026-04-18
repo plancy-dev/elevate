@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { buttonLinkClassName } from "@/components/ui/button-styles";
@@ -10,6 +10,8 @@ import { getAppLocale } from "@/lib/i18n/app-locale";
 
 export async function generateMetadata() {
   const locale = await getAppLocale();
+  /** Same as dashboard / `[locale]` layouts — avoids `LocaleLink` → `headers()` DYNAMIC_SERVER_USAGE. */
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "AccessPending" });
   return { title: t("metaTitle") };
 }
@@ -43,6 +45,7 @@ export default async function AccessPendingPage() {
   }
 
   const locale = await getAppLocale();
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "AccessPending" });
 
   return (
