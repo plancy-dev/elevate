@@ -91,4 +91,43 @@ describe("dashboard-access", () => {
       canUseDashboard("u@co.com", "admin", "00000000-0000-4000-8000-000000000001"),
     ).resolves.toBe(false);
   });
+
+  it("allows admin when dashboard_access column is missing (fallback role-only select)", async () => {
+    let maybeSingleCalls = 0;
+    vi.mocked(createAdminClient).mockReturnValue({
+      from: () => ({
+        select: (cols: string) => {
+          if (cols.includes("dashboard_access")) {
+            return {
+              eq: () => ({
+                maybeSingle: async () => {
+                  maybeSingleCalls += 1;
+                  return {
+                    data: null,
+                    error: {
+                      message:
+                        "column profiles.dashboard_access does not exist in schema cache",
+                    },
+                  };
+                },
+              }),
+            };
+          }
+          return {
+            eq: () => ({
+              maybeSingle: async () => {
+                maybeSingleCalls += 1;
+                return { data: { role: "admin" }, error: null };
+              },
+            }),
+          };
+        },
+      }),
+    } as unknown as ReturnType<typeof createAdminClient>);
+
+    await expect(
+      canUseDashboard("u@co.com", "admin", "00000000-0000-4000-8000-000000000001"),
+    ).resolves.toBe(true);
+    expect(maybeSingleCalls).toBe(2);
+  });
 });

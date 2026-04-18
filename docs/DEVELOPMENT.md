@@ -36,7 +36,7 @@ After changing Site URL or redirects, smoke-test: sign-in, sign-up, password rec
 **`/dashboard`** is allowed when **`profiles.dashboard_access`** is **`true`** *or* **`profiles.role`** is **`admin`** (one service-role read of both columns). Use the allowlist for operators without org `admin` role; platform admins from **`pnpm db:seed-admin`** get both flags.
 
 - **Migration:** `supabase/migrations/037_profiles_dashboard_access.sql` adds `dashboard_access` (default `false`).
-- **Server:** `SUPABASE_SERVICE_ROLE_KEY` is required so `canUseDashboard` can read `profiles` without RLS blocking the check. If the key is missing or the query fails, access is **denied** (fail closed).
+- **Server:** `SUPABASE_SERVICE_ROLE_KEY` is required so `canUseDashboard` can read `profiles` without RLS blocking the check. If the key is missing or the query fails, access is **denied** (fail closed). On Vercel, confirm this env var is set for **Production** (not only Preview); server logs show `[elevate-auth] canUseDashboard failed` when the check throws.
 - **Grant access:** e.g. `update public.profiles set dashboard_access = true where email = 'you@example.com';` or run **`pnpm db:seed-admin`** (sets `role = admin` and `dashboard_access = true` for `ADMIN_EMAIL`).
 - **Code:** `src/lib/auth/dashboard-access.ts`, gate in `src/app/(dashboard)/layout.tsx`, page `src/app/(auth)/access-pending/page.tsx`, proxy skip in `src/proxy.ts`.
 
