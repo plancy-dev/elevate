@@ -27,7 +27,7 @@ You can also use Supabase wildcards such as `http://localhost:3000/**` if your p
 
 This almost always means the **browser finished OAuth on a different origin** than where sign-in started (e.g. flow started on `localhost`, callback opened on production). Supabase stores the PKCE verifier in **this app’s** storage for the origin that called `signInWithOAuth`. If **`redirectTo`** is not allowed, GoTrue may fall back to **Site URL**, so Google returns you to `https://elevate.ai.kr/auth/callback` while the verifier stayed on `http://localhost:3000` → exchange fails.
 
-**Same-origin but still failing?** The app proxy (`src/proxy.ts` → `updateSession`) **does not** run `getUser` / `getSession` on **`/auth/callback`** so middleware cannot refresh auth cookies and accidentally clear the verifier chunks before the client runs `exchangeCodeForSession`.
+**Same-origin but still failing?** (1) The app proxy (`src/proxy.ts` → `updateSession`) **does not** run `getUser` / `getSession` on **`/auth/callback`**, so middleware cannot refresh auth cookies and accidentally clear the verifier chunks. (2) PKCE **`exchangeCodeForSession`** runs in **`src/app/auth/callback/route.ts`** (Route Handler) on the **same HTTP GET** as the OAuth return, so the `code` query and verifier cookies arrive together—no client hydration race.
 
 **Fix:** Add every dev origin you use (full `/auth/callback` URLs above) to **Redirect URLs**, save, then sign in again from the same origin (and prefer either `localhost` or `127.0.0.1` consistently).
 
