@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html><head>
+<style>
+@font-face { font-family: 'Geist Mono'; src: url('../fonts/GeistMono-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geist'; src: url('../fonts/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: #f2f1ed; font-family: var(--font-sans); }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .chip { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; background: rgba(38,37,30,0.06); }
+  .chip-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .chip-label { font-size: 11px; color: #3f3e38; }
+  .chip-val { font-size: 9px; font-family: var(--font-mono); color: #6f6d63; }
+  .section-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #6f6d63; margin: 12px 0 6px; }
+  .hero { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; background: rgba(245,78,0,0.10); border: 1px solid rgba(245,78,0,0.2); margin-bottom: 12px; }
+  .hero-dot { width: 28px; height: 28px; border-radius: 50%; background: #f54e00; flex-shrink: 0; }
+  .hero-label { font-size: 13px; font-weight: 600; color: #26251e; }
+  .hero-val { font-size: 10px; font-family: var(--font-mono); color: #6f6d63; }
+</style>
+</head><body>
+<div class="hero">
+  <div class="hero-dot"></div>
+  <div>
+    <div class="hero-label">Marketing Accent — Cursor Orange</div>
+    <div class="hero-val">#f54e00 — primary CTA under .elevate-marketing-chrome only</div>
+  </div>
+</div>
+
+<div class="section-title">Canvas & Ink</div>
+<div class="row">
+  <div class="chip"><div class="chip-dot" style="background:#f2f1ed;border:1px solid rgba(38,37,30,0.15)"></div><span class="chip-label">Canvas</span><span class="chip-val">#f2f1ed</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#26251e"></div><span class="chip-label">Ink</span><span class="chip-val">#26251e</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#3f3e38"></div><span class="chip-label">Ink Secondary</span><span class="chip-val">#3f3e38</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#6f6d63"></div><span class="chip-label">Ink Tertiary</span><span class="chip-val">#6f6d63</span></div>
+</div>
+
+<div class="section-title">Accent Scale</div>
+<div class="row">
+  <div class="chip"><div class="chip-dot" style="background:#f54e00"></div><span class="chip-label">Accent</span><span class="chip-val">#f54e00</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#e04400"></div><span class="chip-label">Hover</span><span class="chip-val">#e04400</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#c03d00"></div><span class="chip-label">Active</span><span class="chip-val">#c03d00</span></div>
+  <div class="chip"><div class="chip-dot" style="background:rgba(245,78,0,0.12);border:1px solid rgba(245,78,0,0.2)"></div><span class="chip-label">Glow</span><span class="chip-val">12%</span></div>
+</div>
+
+<div class="section-title">Border</div>
+<div class="row">
+  <div class="chip"><div class="chip-dot" style="background:rgba(38,37,30,0.1);border:1px solid rgba(38,37,30,0.15)"></div><span class="chip-label">Border Subtle</span><span class="chip-val">rgba(38,37,30,0.1)</span></div>
+</div>
+
+<div class="section-title">Dark Mode Canvas</div>
+<div class="row">
+  <div class="chip"><div class="chip-dot" style="background:#141413;border:1px solid rgba(255,255,255,0.1)"></div><span class="chip-label">Canvas Dark</span><span class="chip-val">#141413</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#f2f1ed"></div><span class="chip-label">Ink Dark</span><span class="chip-val">#f2f1ed</span></div>
+</div>
+</body></html>

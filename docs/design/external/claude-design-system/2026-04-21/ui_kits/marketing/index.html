@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elevate — Marketing UI Kit</title>
+<style>
+  @font-face { font-family: 'Geist'; src: url('../../fonts/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<style>
+@font-face { font-family: 'Geist Mono'; src: url('../../fonts/GeistMono-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body,#root{min-height:100%}
+  body{font-family:'Geist',system-ui,sans-serif;background:#f2f1ed;color:#26251e;-webkit-font-smoothing:antialiased}
+  ::-webkit-scrollbar{width:4px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:rgba(38,37,30,0.2);border-radius:2px}
+  ::selection{background:rgba(245,78,0,0.25);color:#26251e}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+// ── Tokens (marketing chrome) ────────────────────────────────────────────────
+const M = {
+  canvas: '#f2f1ed',
+  ink: '#26251e',
+  inkSecondary: '#3f3e38',
+  inkTertiary: '#6f6d63',
+  accent: '#f54e00',
+  accentHover: '#e04400',
+  glow: 'rgba(245,78,0,0.12)',
+  border: 'rgba(38,37,30,0.10)',
+  layer01: '#ffffff',
+  layer02: '#f4f4f4',
+  primary: '#0f62fe',   // stays blue for interactive/charts
+  interactive: '#f54e00',
+  textPrimary: '#26251e',
+  textSecondary: '#3f3e38',
+  textTertiary: '#6f6d63',
+  shadowCard: '0 1px 5px -4px rgba(19,19,22,0.12),0 0 0 1px rgba(34,42,53,0.06),0 4px 14px rgba(34,42,53,0.06)',
+};
+
+// ── Page router ───────────────────────────────────────────────────────────────
+const pages = ['home', 'blog', 'product', 'pricing'];
+
+// ── Header ────────────────────────────────────────────────────────────────────
+const Header = ({ currentPage, onNav }) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const navItems = [
+    { id: 'product', label: 'Product' },
+    { id: 'blog', label: 'Blog' },
+    { id: 'pricing', label: 'Pricing' },
+  ];
+  return (
+    <header style={{ position:'sticky', top:0, zIndex:50, borderBottom:`1px solid ${M.border}`, background:`rgba(242,241,237,0.9)`, backdropFilter:'blur(12px)' }}>
+      <div style={{ maxWidth:1200, margin:'0 auto', display:'flex', height:48, alignItems:'center', justifyContent:'space-between', padding:'0 32px' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:32 }}>
+          <button onClick={() => onNav('home')} style={{ display:'flex', alignItems:'center', gap:9, background:'none', border:'none', cursor:'pointer', padding:0 }}>
+            <img src="../../assets/elevate-mark-192.png" style={{ width:26, height:26, borderRadius:'50%', objectFit:'cover', border:'1px solid rgba(38,37,30,0.1)' }} alt="" />
+            <span style={{ fontSize:14, fontWeight:600, letterSpacing:'-0.02em', color:M.ink }}>Elevate</span>
+          </button>
+          <nav style={{ display:'flex' }}>
+            {navItems.map(item => (
+              <button key={item.id} onClick={() => onNav(item.id)} style={{ display:'flex', alignItems:'center', height:48, padding:'0 16px', fontSize:13, color: currentPage === item.id ? M.ink : M.inkTertiary, background:'none', border:'none', cursor:'pointer', fontFamily:'inherit', transition:'color 100ms' }}>
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+        <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+          <button style={{ height:34, padding:'0 14px', fontSize:13, fontWeight:500, background:'transparent', border:'none', cursor:'pointer', color:M.inkSecondary, fontFamily:'inherit' }}>Contact sales</button>
+          <button onClick={() => onNav('home')} style={{ height:34, padding:'0 16px', fontSize:13, fontWeight:600, background:M.accent, color:'#fff', border:'none', borderRadius:9999, cursor:'pointer', fontFamily:'inherit', transition:'background 100ms' }} onMouseEnter={e=>e.target.style.background=M.accentHover} onMouseLeave={e=>e.target.style.background=M.accent}>
+            Join waitlist
+          </button>
+          <button style={{ height:34, padding:'0 14px', fontSize:13, fontWeight:500, background:M.layer01, color:'#161616', border:'1px solid rgba(38,37,30,0.15)', borderRadius:10, cursor:'pointer', fontFamily:'inherit' }}>Log in</button>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+// ── KPI Preview ───────────────────────────────────────────────────────────────
+const KPIPreview = () => {
+  const bars = [40, 55, 48, 70, 62, 85, 78];
+  return (
+    <div style={{ borderRadius:12, border:`1px solid rgba(38,37,30,0.1)`, background:M.layer01, boxShadow:M.shadowCard, overflow:'hidden' }}>
+      <div style={{ padding:'14px 18px 10px', borderBottom:`1px solid rgba(38,37,30,0.08)` }}>
+        <div style={{ fontSize:10, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em', color:'#6f6f6f', marginBottom:4 }}>Product UI preview</div>
+        <div style={{ fontSize:13, fontWeight:600, color:'#161616' }}>AI adoption metrics</div>
+      </div>
+      <div style={{ padding:'12px 18px', display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:1, background:'#e0e0e0' }}>
+        {[['Workflows', '47', '+12%'], ['Team adoption', '89%', '+8pp'], ['Prompts run', '2.4k', '+31%']].map(([l,v,c]) => (
+          <div key={l} style={{ background:'#fff', padding:'10px 12px' }}>
+            <div style={{ fontSize:10, color:'#6f6f6f' }}>{l}</div>
+            <div style={{ fontSize:20, fontWeight:600, letterSpacing:'-0.02em', color:'#161616', marginTop:2 }}>{v}</div>
+            <div style={{ fontSize:10, color:'#198038', marginTop:2 }}>{c}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ padding:'12px 18px' }}>
+        <div style={{ fontSize:10, color:'#6f6f6f', marginBottom:6 }}>Weekly workflow completions</div>
+        <div style={{ display:'flex', alignItems:'flex-end', gap:4, height:48 }}>
+          {bars.map((h, i) => (
+            <div key={i} style={{ flex:1, height:`${h}%`, background: i === 5 ? '#0f62fe' : '#e0e0e0', borderRadius:'2px 2px 0 0', transition:'background 200ms' }} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── Badge ─────────────────────────────────────────────────────────────────────
+const MktBadge = ({ children, variant = 'blue' }) => {
+  const styles = {
+    blue: { background:'rgba(15,98,254,0.1)', color:'#0f62fe' },
+    green: { background:'rgba(25,128,56,0.1)', color:'#198038' },
+  };
+  return <span style={{ display:'inline-flex', alignItems:'center', padding:'3px 10px', fontSize:11, fontWeight:600, borderRadius:9999, ...styles[variant] }}>{children}</span>;
+};
+
+// ── Home Page ─────────────────────────────────────────────────────────────────
+const capabilities = [
+  { icon: 'W', title: 'Workflow orchestration', desc: 'Design and deploy repeatable AI workflows across your entire organization.' },
+  { icon: 'B', title: 'Built-in AI integration', desc: 'Connect leading AI models to your existing tools and knowledge bases.' },
+  { icon: 'R', title: 'Review & governance', desc: 'Structured review processes ensure AI outputs meet your quality standards.' },
+  { icon: 'A', title: 'Analytics & tracking', desc: 'Measure AI adoption and impact with built-in KPI dashboards.' },
+  { icon: 'G', title: 'Global teams', desc: 'Full i18n support for Korean and English, with more languages on the roadmap.' },
+  { icon: 'S', title: 'Security-first', desc: 'SOC 2 Type II, GDPR compliant. Data stays in your region.' },
+];
+
+const pillars = [
+  { title: 'Measurable outcomes', sub: 'Every workflow tied to a KPI.' },
+  { title: 'Org-scoped access', sub: 'Teams, entitlements, and roles.' },
+  { title: 'Content library', sub: 'Ebooks, guides, templates.' },
+  { title: 'Production-ready', sub: 'Studio and agent workspaces.' },
+];
+
+const HomePage = ({ onNav }) => {
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  return (
+    <main>
+      {/* Hero */}
+      <section style={{ borderBottom:`1px solid ${M.border}`, position:'relative', overflow:'hidden' }}>
+        <div style={{ pointerEvents:'none', position:'absolute', inset:0, background:`radial-gradient(ellipse at top right, ${M.glow}, transparent 58%)` }} />
+        <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 32px' }}>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:48, padding:'64px 0', alignItems:'center' }}>
+            <div>
+              <MktBadge variant="blue">AI Adoption Platform</MktBadge>
+              <h1 style={{ fontSize:'clamp(2rem,1.2rem + 3.2vw,3.5rem)', fontWeight:600, letterSpacing:'-0.02em', lineHeight:1.12, color:M.ink, marginTop:20 }}>
+                AI adoption &<br />
+                <span style={{ color:M.inkTertiary }}>workflow platform.</span>
+              </h1>
+              <p style={{ fontSize:'clamp(1rem,0.94rem + 0.22vw,1.125rem)', lineHeight:1.65, color:M.inkSecondary, marginTop:20, maxWidth:'42ch' }}>
+                We turn measurable AI outcomes into repeatable workflows — sold as organization-scoped subscriptions.
+              </p>
+              {/* Pretext statement */}
+              <div style={{ marginTop:24, padding:'14px 0', borderTop:`1px solid ${M.border}`, borderBottom:`1px solid ${M.border}` }}>
+                <div style={{ fontSize:'clamp(1.375rem,1.05rem + 1.35vw,1.875rem)', fontWeight:600, letterSpacing:'-0.02em', color:M.ink, lineHeight:1.2 }}>47 AI workflows</div>
+                <div style={{ fontSize:'clamp(1.375rem,1.05rem + 1.35vw,1.875rem)', fontWeight:600, letterSpacing:'-0.02em', color:M.ink, lineHeight:1.2 }}>deployed this quarter.</div>
+                <div style={{ fontSize:13, color:M.inkTertiary, marginTop:6 }}>Average for Elevate teams after 90 days.</div>
+              </div>
+              <div style={{ display:'flex', gap:10, marginTop:24, flexWrap:'wrap' }}>
+                <button style={{ height:48, padding:'0 24px', fontSize:14, fontWeight:600, background:M.accent, color:'#fff', border:'none', borderRadius:9999, cursor:'pointer', fontFamily:'inherit', display:'flex', alignItems:'center', gap:6 }} onMouseEnter={e=>e.currentTarget.style.background=M.accentHover} onMouseLeave={e=>e.currentTarget.style.background=M.accent}>
+                  Join the waitlist
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                </button>
+                <button onClick={() => onNav('product')} style={{ height:48, padding:'0 20px', fontSize:14, fontWeight:500, background:'transparent', color:M.inkSecondary, border:`1px solid ${M.border}`, borderRadius:9999, cursor:'pointer', fontFamily:'inherit' }}>
+                  Prompt Studio
+                </button>
+                <button style={{ height:48, padding:'0 20px', fontSize:14, fontWeight:500, background:'transparent', color:M.inkSecondary, border:`1px solid ${M.border}`, borderRadius:9999, cursor:'pointer', fontFamily:'inherit' }}>
+                  Ebooks &amp; guides
+                </button>
+              </div>
+              <p style={{ fontSize:13, color:M.inkTertiary, marginTop:10 }}>
+                No account yet?{' '}
+                <button style={{ background:'none', border:'none', color:M.accent, cursor:'pointer', fontFamily:'inherit', fontSize:13, fontWeight:500 }}>Sign up free</button>
+              </p>
+            </div>
+            <div>
+              <KPIPreview />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pillars */}
+      <section style={{ borderBottom:`1px solid ${M.border}`, background:M.layer01 }}>
+        <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 32px' }}>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)' }}>
+            {pillars.map((p, i) => (
+              <div key={p.title} style={{ padding:'28px 20px', borderRight: i < 3 ? `1px solid ${M.border}` : 'none' }}>
+                <div style={{ fontSize:14, fontWeight:500, color:'#161616', lineHeight:1.3 }}>{p.title}</div>
+                <div style={{ fontSize:13, color:'#6f6f6f', marginTop:6, lineHeight:1.5 }}>{p.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Capabilities */}
+      <section style={{ borderBottom:`1px solid ${M.border}` }}>
+        <div style={{ maxWidth:1200, margin:'0 auto', padding:'56px 32px' }}>
+          <div style={{ marginBottom:36, maxWidth:'40ch' }}>
+            <h2 style={{ fontSize:'clamp(1.375rem,1.12rem + 1.05vw,1.875rem)', fontWeight:600, letterSpacing:'-0.02em', color:M.ink }}>Everything your team needs to scale AI adoption</h2>
+            <p style={{ fontSize:15, color:M.inkSecondary, marginTop:10, lineHeight:1.6 }}>One platform for ebooks, workflows, and production-grade AI tooling.</p>
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:1, border:`1px solid ${M.border}`, background:M.border }}>
+            {capabilities.map(cap => (
+              <div key={cap.title} style={{ background:M.layer01, padding:'20px 24px', transition:'background 150ms', cursor:'default' }} onMouseEnter={e=>e.currentTarget.style.background=M.layer02} onMouseLeave={e=>e.currentTarget.style.background=M.layer01}>
+                <div style={{ width:36, height:36, display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(15,98,254,0.1)', color:'#0f62fe', fontWeight:700, fontSize:13, marginBottom:14, borderRadius:0 }}>{cap.icon}</div>
+                <h3 style={{ fontSize:15, fontWeight:600, color:'#161616', marginBottom:6 }}>{cap.title}</h3>
+                <p style={{ fontSize:13, color:'#6f6f6f', lineHeight:1.6 }}>{cap.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Waitlist section */}
+      <section id="waitlist" style={{ borderBottom:`1px solid ${M.border}`, background:M.layer01 }}>
+        <div style={{ maxWidth:1200, margin:'0 auto', padding:'56px 32px' }}>
+          <div style={{ maxWidth:440 }}>
+            <h2 style={{ fontSize:'clamp(1.375rem,1.12rem + 1.05vw,1.875rem)', fontWeight:600, letterSpacing:'-0.02em', color:M.ink }}>Get early access</h2>
+            <p style={{ fontSize:15, color:M.inkSecondary, marginTop:10, lineHeight:1.6 }}>Join the waitlist and be the first to access the platform when we open to new organizations.</p>
+            {submitted ? (
+              <div style={{ marginTop:24, padding:'14px 18px', border:`1px solid rgba(25,128,56,0.3)`, background:'rgba(25,128,56,0.07)', borderRadius:10, fontSize:13, color:'#166a32' }}>
+                You're on the list. We'll be in touch soon.
+              </div>
+            ) : (
+              <div style={{ marginTop:24, display:'flex', gap:8 }}>
+                <input value={email} onChange={e=>setEmail(e.target.value)} type="email" placeholder="you@company.com" style={{ flex:1, height:44, borderRadius:10, border:`1px solid rgba(38,37,30,0.2)`, background:'#fff', padding:'0 14px', fontSize:14, fontFamily:'inherit', outline:'none', color:'#161616' }} />
+                <button onClick={() => { if(email) setSubmitted(true); }} style={{ height:44, padding:'0 20px', fontSize:14, fontWeight:600, background:M.accent, color:'#fff', border:'none', borderRadius:9999, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap' }}>
+                  Join waitlist
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Resources */}
+      <section style={{ borderBottom:`1px solid ${M.border}`, background:M.layer01 }}>
+        <div style={{ maxWidth:1200, margin:'0 auto', padding:'56px 32px' }}>
+          <div style={{ maxWidth:440 }}>
+            <MktBadge variant="green">Resources</MktBadge>
+            <h2 style={{ fontSize:'clamp(1.375rem,1.12rem + 1.05vw,1.875rem)', fontWeight:600, letterSpacing:'-0.02em', color:M.ink, marginTop:12 }}>Learn from practitioners</h2>
+            <p style={{ fontSize:14, color:M.inkTertiary, marginTop:10, lineHeight:1.6 }}>In-depth ebooks, guides, and case studies from teams that have deployed AI at scale.</p>
+            <button onClick={() => onNav('blog')} style={{ display:'inline-flex', alignItems:'center', gap:4, marginTop:20, fontSize:14, fontWeight:500, color:M.accent, background:'none', border:'none', cursor:'pointer', fontFamily:'inherit' }}>
+              Browse the blog <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA band */}
+      <section style={{ background:'#0f62fe' }}>
+        <div style={{ maxWidth:1200, margin:'0 auto', padding:'56px 32px' }}>
+          <div style={{ maxWidth:540 }}>
+            <h2 style={{ fontSize:'clamp(1.375rem,1.12rem + 1.05vw,1.875rem)', fontWeight:600, letterSpacing:'-0.02em', color:'#fff' }}>Ready to scale AI across your org?</h2>
+            <p style={{ fontSize:15, color:'rgba(255,255,255,0.8)', marginTop:8, lineHeight:1.6 }}>Join organizations already using Elevate to deploy measurable AI workflows.</p>
+            <div style={{ marginTop:24, display:'flex', gap:8 }}>
+              <input type="email" placeholder="your@company.com" style={{ flex:1, maxWidth:280, height:44, borderRadius:10, border:'none', background:'rgba(255,255,255,0.15)', padding:'0 14px', fontSize:14, fontFamily:'inherit', outline:'none', color:'#fff' }} />
+              <button style={{ height:44, padding:'0 20px', fontSize:14, fontWeight:600, background:'#fff', color:'#0f62fe', border:'none', borderRadius:10, cursor:'pointer', fontFamily:'inherit' }}>
+                Get started
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+// ── Blog Page ─────────────────────────────────────────────────────────────────
+const posts = [
+  { slug:'ai-workflow-automation', title:'How to build repeatable AI workflows for your entire team', excerpt:'A practical framework for moving from ad-hoc AI use to scalable, measurable workflows.', date:'Apr 18, 2026', kind:'Guide', readTime:'8 min' },
+  { slug:'prompt-engineering-teams', title:'Prompt engineering at scale: governance, versioning, and team collaboration', excerpt:'Most prompt engineering advice is written for solo developers. Here\'s what changes when you\'re managing prompts across 50+ people.', date:'Apr 12, 2026', kind:'Deep dive', readTime:'12 min' },
+  { slug:'ai-adoption-metrics', title:'The 5 metrics that actually measure AI adoption in the enterprise', excerpt:'Vanity metrics won\'t cut it. Here\'s how to tie AI adoption to business outcomes.', date:'Apr 4, 2026', kind:'Analysis', readTime:'6 min' },
+  { slug:'org-scoped-subscriptions', title:'Why AI tools should be org-scoped by default', excerpt:'Individual licenses create silos. Here\'s the case for organization-first AI tooling.', date:'Mar 29, 2026', kind:'Opinion', readTime:'5 min' },
+];
+
+const BlogPage = () => (
+  <main>
+    <div style={{ maxWidth:1200, margin:'0 auto', padding:'48px 32px' }}>
+      <div style={{ marginBottom:36 }}>
+        <h1 style={{ fontSize:'clamp(1.75rem,1.4rem + 1.2vw,2.25rem)', fontWeight:600, letterSpacing:'-0.02em', color:M.ink }}>Blog</h1>
+        <p style={{ fontSize:15, color:M.inkTertiary, marginTop:8 }}>Insights on AI adoption, workflows, and team productivity.</p>
+      </div>
+      <div style={{ display:'flex', flexDirection:'column', gap:0, borderTop:`1px solid ${M.border}` }}>
+        {posts.map(post => (
+          <div key={post.slug} style={{ padding:'24px 0', borderBottom:`1px solid ${M.border}`, display:'grid', gridTemplateColumns:'1fr auto', gap:20, cursor:'pointer', transition:'opacity 150ms' }} onMouseEnter={e=>e.currentTarget.style.opacity='0.75'} onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
+            <div>
+              <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
+                <span style={{ fontSize:11, fontWeight:500, color:M.inkTertiary, textTransform:'uppercase', letterSpacing:'0.06em' }}>{post.kind}</span>
+                <span style={{ fontSize:11, color:M.inkTertiary }}>·</span>
+                <span style={{ fontSize:11, color:M.inkTertiary }}>{post.readTime} read</span>
+              </div>
+              <h2 style={{ fontSize:'clamp(1.0625rem,0.96rem + 0.45vw,1.25rem)', fontWeight:600, color:M.ink, lineHeight:1.3, letterSpacing:'-0.01em' }}>{post.title}</h2>
+              <p style={{ fontSize:13, color:M.inkTertiary, marginTop:6, lineHeight:1.6, maxWidth:'60ch' }}>{post.excerpt}</p>
+            </div>
+            <div style={{ fontSize:12, color:M.inkTertiary, whiteSpace:'nowrap', paddingTop:4 }}>{post.date}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </main>
+);
+
+// ── Product Page ──────────────────────────────────────────────────────────────
+const ProductPage = ({ onNav }) => (
+  <main>
+    <div style={{ maxWidth:1200, margin:'0 auto', padding:'64px 32px' }}>
+      <div style={{ maxWidth:640 }}>
+        <MktBadge variant="blue">Product</MktBadge>
+        <h1 style={{ fontSize:'clamp(1.75rem,1.4rem + 1.2vw,2.25rem)', fontWeight:600, letterSpacing:'-0.02em', color:M.ink, marginTop:16, lineHeight:1.15 }}>Prompt Studio</h1>
+        <p style={{ fontSize:16, color:M.inkSecondary, marginTop:14, lineHeight:1.65 }}>Run, test, and improve AI prompts across your organization's entire workflow catalog. Version-controlled, team-native, and tied to real outcomes.</p>
+        <div style={{ display:'flex', gap:10, marginTop:28 }}>
+          <button onClick={() => onNav('home')} style={{ height:46, padding:'0 22px', fontSize:14, fontWeight:600, background:M.accent, color:'#fff', border:'none', borderRadius:9999, cursor:'pointer', fontFamily:'inherit' }}>Join waitlist</button>
+          <button style={{ height:46, padding:'0 18px', fontSize:14, fontWeight:500, background:'transparent', border:`1px solid ${M.border}`, borderRadius:9999, cursor:'pointer', color:M.inkSecondary, fontFamily:'inherit' }}>Watch demo</button>
+        </div>
+      </div>
+
+      <div style={{ marginTop:56, display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:1, border:`1px solid ${M.border}`, background:M.border }}>
+        {[
+          ['Prompt versioning', 'Track every change to every prompt. Roll back to any version instantly.'],
+          ['Team collaboration', 'Shared prompt libraries with role-based editing and review workflows.'],
+          ['Production integration', 'Push approved prompts directly to your production AI workflows.'],
+        ].map(([title, desc]) => (
+          <div key={title} style={{ background:M.layer01, padding:'28px 24px' }}>
+            <h3 style={{ fontSize:15, fontWeight:600, color:'#161616' }}>{title}</h3>
+            <p style={{ fontSize:13, color:'#6f6f6f', marginTop:8, lineHeight:1.6 }}>{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </main>
+);
+
+// ── Pricing Page ──────────────────────────────────────────────────────────────
+const PricingPage = ({ onNav }) => (
+  <main>
+    <div style={{ maxWidth:1200, margin:'0 auto', padding:'64px 32px' }}>
+      <div style={{ textAlign:'center', marginBottom:48 }}>
+        <h1 style={{ fontSize:'clamp(1.75rem,1.4rem + 1.2vw,2.25rem)', fontWeight:600, letterSpacing:'-0.02em', color:M.ink }}>Simple, org-scoped pricing</h1>
+        <p style={{ fontSize:15, color:M.inkTertiary, marginTop:10 }}>One subscription covers your entire organization.</p>
+      </div>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:1, border:`1px solid ${M.border}`, background:M.border, maxWidth:860, margin:'0 auto' }}>
+        {[
+          { name:'Starter', price:'₩199,000', per:'/mo', features:['Up to 10 members', '3 ebook entitlements', 'Library access', 'Email support'], cta:'Join waitlist', highlight:false },
+          { name:'Professional', price:'₩499,000', per:'/mo', features:['Up to 50 members', 'Unlimited entitlements', 'Prompt Studio (beta)', 'Priority support'], cta:'Join waitlist', highlight:true },
+          { name:'Enterprise', price:'Custom', per:'', features:['Unlimited members', 'Custom integrations', 'Dedicated CSM', 'SLA + compliance'], cta:'Contact sales', highlight:false },
+        ].map(plan => (
+          <div key={plan.name} style={{ background:plan.highlight ? '#fff' : M.layer01, padding:'28px 24px', position:'relative' }}>
+            {plan.highlight && <div style={{ position:'absolute', top:0, left:0, right:0, height:2, background:M.primary }} />}
+            <div style={{ fontSize:13, fontWeight:600, color: plan.highlight ? M.primary : M.inkTertiary, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8 }}>{plan.name}</div>
+            <div style={{ fontSize:28, fontWeight:700, color:M.ink, letterSpacing:'-0.02em' }}>{plan.price}<span style={{ fontSize:13, fontWeight:400, color:M.inkTertiary }}>{plan.per}</span></div>
+            <ul style={{ listStyle:'none', marginTop:20, marginBottom:24, display:'flex', flexDirection:'column', gap:8 }}>
+              {plan.features.map(f => (
+                <li key={f} style={{ fontSize:13, color:M.inkSecondary, display:'flex', alignItems:'center', gap:6 }}>
+                  <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke={M.accent} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <button onClick={() => onNav('home')} style={{ width:'100%', height:40, fontSize:13, fontWeight:600, background: plan.highlight ? M.primary : 'transparent', color: plan.highlight ? '#fff' : M.inkSecondary, border: plan.highlight ? 'none' : `1px solid ${M.border}`, borderRadius:10, cursor:'pointer', fontFamily:'inherit' }}>
+              {plan.cta}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  </main>
+);
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+const Footer = ({ onNav }) => (
+  <footer style={{ borderTop:`1px solid ${M.border}`, background:M.canvas }}>
+    <div style={{ maxWidth:1200, margin:'0 auto', padding:'36px 32px' }}>
+      <div style={{ display:'grid', gridTemplateColumns:'1.5fr 1fr 1fr 1fr', gap:32 }}>
+        <div>
+          <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:14 }}>
+            <img src="../../assets/elevate-mark-192.png" style={{ width:22, height:22, borderRadius:'50%', objectFit:'cover' }} alt="" />
+            <span style={{ fontSize:13, fontWeight:600, letterSpacing:'-0.02em', color:M.ink }}>Elevate</span>
+          </div>
+          <p style={{ fontSize:12, color:M.inkTertiary, lineHeight:1.6, maxWidth:'22ch' }}>AI adoption & workflow platform for teams.</p>
+        </div>
+        {[
+          { title:'Product', links:[['Prompt Studio','product'],['Ebooks & Guides','blog'],['Pricing','pricing']] },
+          { title:'Company', links:[['Blog','blog'],['Waitlist','home'],['Contact','home']] },
+          { title:'Legal', links:[['Terms','home'],['Privacy','home'],['Security','home']] },
+        ].map(col => (
+          <div key={col.title}>
+            <div style={{ fontSize:10, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em', color:M.inkTertiary, marginBottom:10 }}>{col.title}</div>
+            <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+              {col.links.map(([label, page]) => (
+                <button key={label} onClick={() => onNav(page)} style={{ fontSize:12, color:M.inkTertiary, background:'none', border:'none', cursor:'pointer', fontFamily:'inherit', textAlign:'left', padding:0, transition:'color 100ms' }} onMouseEnter={e=>e.target.style.color=M.ink} onMouseLeave={e=>e.target.style.color=M.inkTertiary}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ borderTop:`1px solid ${M.border}`, marginTop:28, paddingTop:16, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+        <span style={{ fontSize:11, color:M.inkTertiary }}>© 2026 Elevate. All rights reserved.</span>
+        <div style={{ display:'flex', gap:16 }}>
+          {['SOC 2 Type II', 'GDPR', 'ISO 27001'].map(b => <span key={b} style={{ fontSize:11, color:M.inkTertiary }}>{b}</span>)}
+        </div>
+      </div>
+    </div>
+  </footer>
+);
+
+// ── App ───────────────────────────────────────────────────────────────────────
+const PAGE_COMPONENTS = { home: HomePage, blog: BlogPage, product: ProductPage, pricing: PricingPage };
+
+function App() {
+  const [page, setPage] = React.useState(() => localStorage.getItem('ds-mkt-page') || 'home');
+  React.useEffect(() => { localStorage.setItem('ds-mkt-page', page); window.scrollTo(0,0); }, [page]);
+  const Page = PAGE_COMPONENTS[page] || HomePage;
+  return (
+    <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column' }}>
+      <Header currentPage={page} onNav={setPage} />
+      <div style={{ flex:1 }}>
+        <Page onNav={setPage} />
+      </div>
+      <Footer onNav={setPage} />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

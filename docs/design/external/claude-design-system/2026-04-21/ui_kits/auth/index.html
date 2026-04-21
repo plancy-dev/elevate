@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elevate — Auth Flows UI Kit</title>
+<style>
+  @font-face { font-family: 'Geist'; src: url('../../fonts/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<style>
+@font-face { font-family: 'Geist Mono'; src: url('../../fonts/GeistMono-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body,#root{height:100%}
+  body{font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  input{font-family:'DM Sans',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// ── Tokens ────────────────────────────────────────────────────────────────────
+const T = {
+  bg: '#fafafa', surface: '#fff',
+  layer01: '#fff', layer02: '#f4f4f4', layer03: '#e8e8e8',
+  field: '#f4f4f4', fieldHover: '#e8e8e8',
+  border: '#c6c6c6', borderSubtle: '#e0e0e0',
+  textPrimary: '#161616', textSecondary: '#393939', textTertiary: '#6f6f6f',
+  primary: '#0f62fe', primaryHover: '#0353e9', interactive: '#0f62fe',
+  danger: '#da1e28', accent: '#198038',
+  marketingCanvas: '#f2f1ed', marketingInk: '#26251e', marketingInkTertiary: '#6f6d63',
+  marketingBorder: 'rgba(38,37,30,0.1)',
+};
+
+// ── Shared components ─────────────────────────────────────────────────────────
+const Logo = () => (
+  <div style={{ display:'flex', alignItems:'center', gap:9 }}>
+    <img src="../../assets/elevate-mark-192.png" style={{ width:28, height:28, borderRadius:'50%', objectFit:'cover', border:'1px solid rgba(0,0,0,0.1)' }} alt="" />
+    <span style={{ fontSize:15, fontWeight:600, letterSpacing:'-0.02em', color:T.textPrimary }}>Elevate</span>
+  </div>
+);
+
+const Field = ({ label, type = 'text', placeholder, hint, error, autoFocus }) => {
+  const [focused, setFocused] = useState(false);
+  return (
+    <div style={{ marginBottom:16 }}>
+      <label style={{ display:'block', fontSize:13, fontWeight:500, color:T.textSecondary, marginBottom:6 }}>{label}</label>
+      <input
+        type={type}
+        placeholder={placeholder}
+        autoFocus={autoFocus}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        style={{ display:'block', width:'100%', height:40, borderRadius:10, border:`1px solid ${error ? T.danger : focused ? T.primary : T.borderSubtle}`, background: T.field, padding:'0 12px', fontSize:14, color:T.textPrimary, outline:'none', boxShadow: focused ? `0 0 0 3px ${error ? 'rgba(218,30,40,0.15)' : 'rgba(15,98,254,0.15)'}` : 'none', transition:'border-color 100ms, box-shadow 100ms' }}
+      />
+      {hint && !error && <p style={{ fontSize:12, color:T.textTertiary, marginTop:5 }}>{hint}</p>}
+      {error && <p style={{ fontSize:12, color:T.danger, marginTop:5 }}>{error}</p>}
+    </div>
+  );
+};
+
+const PrimaryBtn = ({ children, onClick, style, isLoading }) => (
+  <button onClick={onClick} style={{ width:'100%', height:42, borderRadius:10, border:'none', background:T.primary, color:'#fff', fontSize:14, fontWeight:600, fontFamily:'inherit', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:6, transition:'background 100ms', ...style }} onMouseEnter={e=>!isLoading && (e.currentTarget.style.background=T.primaryHover)} onMouseLeave={e=>e.currentTarget.style.background=T.primary}>
+    {isLoading && <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" style={{ animation:'spin 1s linear infinite' }}><circle cx={12} cy={12} r={10} opacity={0.25}/><path d="M4 12a8 8 0 018-8" opacity={0.75}/></svg>}
+    {children}
+  </button>
+);
+
+const Divider = ({ label }) => (
+  <div style={{ display:'flex', alignItems:'center', gap:10, margin:'18px 0' }}>
+    <div style={{ flex:1, height:1, background:T.borderSubtle }} />
+    <span style={{ fontSize:12, color:T.textTertiary }}>{label}</span>
+    <div style={{ flex:1, height:1, background:T.borderSubtle }} />
+  </div>
+);
+
+// ── Left panel (split layout) ─────────────────────────────────────────────────
+const LeftPanel = ({ headline, sub, footer }) => (
+  <div style={{ width:440, flexShrink:0, display:'flex', flexDirection:'column', justifyContent:'space-between', background:T.marketingCanvas, borderRight:`1px solid ${T.marketingBorder}`, padding:40 }}>
+    <Logo />
+    <div>
+      <h1 style={{ fontSize:28, fontWeight:600, letterSpacing:'-0.02em', lineHeight:1.2, color:T.marketingInk }}>{headline}</h1>
+      <p style={{ fontSize:13, color:T.marketingInkTertiary, marginTop:12, lineHeight:1.6, maxWidth:'30ch' }}>{sub}</p>
+    </div>
+    <p style={{ fontSize:11, color:T.marketingInkTertiary, lineHeight:1.5 }}>{footer}</p>
+  </div>
+);
+
+// ── Page: Tab bar nav ─────────────────────────────────────────────────────────
+const tabs = [
+  { id:'login', label:'Log in' },
+  { id:'signup', label:'Sign up' },
+  { id:'forgot', label:'Forgot password' },
+  { id:'pending', label:'Access pending' },
+];
+
+// ── Login ─────────────────────────────────────────────────────────────────────
+const LoginPage = ({ onNav }) => {
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setTimeout(() => { setLoading(false); onNav('dashboard'); }, 1200);
+  };
+  return (
+    <div style={{ display:'flex', height:'100vh' }}>
+      <LeftPanel
+        headline={"E-books, Library,\nand your org workspace."}
+        sub="Sign in to access purchases, downloads, and organization tools — not a mandatory product tour."
+        footer="Enterprise security and compliance posture depend on your deployment and configuration."
+      />
+      <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:24, background:T.bg }}>
+        <div style={{ width:'100%', maxWidth:380 }}>
+          <h2 style={{ fontSize:22, fontWeight:600, letterSpacing:'-0.02em', color:T.textPrimary }}>Log in to Elevate</h2>
+          <p style={{ fontSize:13, color:T.textTertiary, marginTop:6 }}>
+            Need an account?{' '}
+            <button onClick={() => onNav('signup')} style={{ background:'none', border:'none', color:T.interactive, cursor:'pointer', fontFamily:'inherit', fontSize:13, fontWeight:500 }}>Create one</button>
+          </p>
+          <form onSubmit={handleSubmit} style={{ marginTop:28 }}>
+            <Field label="Email address" type="email" placeholder="you@company.com" autoFocus />
+            <Field label="Password" type="password" placeholder="••••••••"
+              hint={<span><button type="button" onClick={() => onNav('forgot')} style={{ background:'none', border:'none', color:T.interactive, cursor:'pointer', fontFamily:'inherit', fontSize:12 }}>Forgot password?</button></span>}
+            />
+            <PrimaryBtn isLoading={loading}>{loading ? 'Signing in…' : 'Sign in'}</PrimaryBtn>
+          </form>
+          <Divider label="or continue with" />
+          <button style={{ width:'100%', height:42, borderRadius:10, border:`1px solid ${T.borderSubtle}`, background:T.layer01, color:T.textPrimary, fontSize:14, fontWeight:500, fontFamily:'inherit', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
+            <svg width={16} height={16} viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Continue with Google
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── Signup ────────────────────────────────────────────────────────────────────
+const SignupPage = ({ onNav }) => {
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const handleNext = (e) => {
+    e.preventDefault();
+    if (step === 1) { setStep(2); return; }
+    setLoading(true);
+    setTimeout(() => { setLoading(false); onNav('pending'); }, 1200);
+  };
+  return (
+    <div style={{ display:'flex', height:'100vh' }}>
+      <div style={{ display:'flex', flex:1, alignItems:'center', justifyContent:'center', background:T.bg }}>
+        <div style={{ width:'100%', maxWidth:380, padding:24 }}>
+          <Logo />
+          <div style={{ marginTop:28 }}>
+            <div style={{ display:'flex', gap:6, marginBottom:20 }}>
+              {[1,2].map(n => (
+                <div key={n} style={{ flex:1, height:3, borderRadius:9999, background: n <= step ? T.primary : T.borderSubtle, transition:'background 300ms' }} />
+              ))}
+            </div>
+            <h2 style={{ fontSize:22, fontWeight:600, letterSpacing:'-0.02em', color:T.textPrimary }}>
+              {step === 1 ? 'Create your account' : 'About your organization'}
+            </h2>
+            <p style={{ fontSize:13, color:T.textTertiary, marginTop:6 }}>
+              {step === 1 ? <>Already have an account? <button onClick={() => onNav('login')} style={{ background:'none', border:'none', color:T.interactive, cursor:'pointer', fontFamily:'inherit', fontSize:13, fontWeight:500 }}>Log in</button></> : 'Help us set up your organization workspace.'}
+            </p>
+          </div>
+          <form onSubmit={handleNext} style={{ marginTop:24 }}>
+            {step === 1 ? (
+              <>
+                <Field label="Work email" type="email" placeholder="you@company.com" autoFocus />
+                <Field label="Password" type="password" placeholder="8+ characters" hint="Use a strong, unique password." />
+                <PrimaryBtn>Continue</PrimaryBtn>
+              </>
+            ) : (
+              <>
+                <Field label="Full name" placeholder="Jane Doe" autoFocus />
+                <Field label="Organization name" placeholder="Acme Corp" />
+                <Field label="Team size" placeholder="e.g. 20–50 people" />
+                <PrimaryBtn isLoading={loading}>{loading ? 'Creating account…' : 'Create account'}</PrimaryBtn>
+                <p style={{ fontSize:12, color:T.textTertiary, marginTop:12, lineHeight:1.5 }}>
+                  By creating an account you agree to our <span style={{ color:T.interactive, cursor:'pointer' }}>Terms of Service</span> and <span style={{ color:T.interactive, cursor:'pointer' }}>Privacy Policy</span>.
+                </p>
+              </>
+            )}
+          </form>
+          {step === 1 && (
+            <>
+              <Divider label="or" />
+              <button style={{ width:'100%', height:42, borderRadius:10, border:`1px solid ${T.borderSubtle}`, background:T.layer01, color:T.textPrimary, fontSize:14, fontWeight:500, fontFamily:'inherit', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
+                <svg width={16} height={16} viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Continue with Google
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── Forgot password ────────────────────────────────────────────────────────────
+const ForgotPage = ({ onNav }) => {
+  const [sent, setSent] = useState(false);
+  return (
+    <div style={{ minHeight:'100vh', background:T.bg, display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+      <div style={{ width:'100%', maxWidth:380 }}>
+        <button onClick={() => onNav('login')} style={{ display:'flex', alignItems:'center', gap:6, fontSize:13, color:T.textTertiary, background:'none', border:'none', cursor:'pointer', fontFamily:'inherit', marginBottom:28 }}>
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+          Back to log in
+        </button>
+        <Logo />
+        <h2 style={{ fontSize:22, fontWeight:600, letterSpacing:'-0.02em', color:T.textPrimary, marginTop:24 }}>Reset your password</h2>
+        <p style={{ fontSize:13, color:T.textTertiary, marginTop:6 }}>We'll send a reset link to your email address.</p>
+        {sent ? (
+          <div style={{ marginTop:24, padding:'14px 16px', borderRadius:10, border:`1px solid rgba(25,128,56,0.3)`, background:'rgba(25,128,56,0.07)', fontSize:13, color:'#166a32', lineHeight:1.5 }}>
+            Check your inbox — a reset link is on its way. If you don't see it, check your spam folder.
+          </div>
+        ) : (
+          <form onSubmit={e => { e.preventDefault(); setSent(true); }} style={{ marginTop:24 }}>
+            <Field label="Email address" type="email" placeholder="you@company.com" autoFocus />
+            <PrimaryBtn>Send reset link</PrimaryBtn>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ── Access pending ─────────────────────────────────────────────────────────────
+const PendingPage = ({ onNav }) => (
+  <div style={{ minHeight:'100vh', background:T.bg, display:'flex', alignItems:'stretch' }}>
+    <div style={{ width:380, background:T.marketingCanvas, borderRight:`1px solid ${T.marketingBorder}`, padding:40, display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
+      <Logo />
+      <div>
+        <div style={{ width:48, height:48, borderRadius:12, background:'rgba(15,98,254,0.1)', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:16 }}>
+          <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="#0f62fe" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h2 style={{ fontSize:24, fontWeight:600, letterSpacing:'-0.02em', lineHeight:1.2, color:T.marketingInk }}>Your account is under review</h2>
+        <p style={{ fontSize:13, color:T.marketingInkTertiary, marginTop:10, lineHeight:1.6 }}>We review all new organization accounts to ensure quality and security. This usually takes less than one business day.</p>
+      </div>
+      <p style={{ fontSize:11, color:T.marketingInkTertiary }}>Questions? Reach us at support@elevate.ai</p>
+    </div>
+    <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:40 }}>
+      <div style={{ maxWidth:400 }}>
+        <div style={{ marginBottom:28 }}>
+          <div style={{ fontSize:11, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em', color:T.textTertiary, marginBottom:8 }}>What happens next</div>
+          {[
+            ['Account review', "We'll verify your organization details. Usually completed within 1 business day.", true],
+            ['Email confirmation', "You'll receive an email when your account is approved and ready to use.", false],
+            ['Onboarding', "Access your Library, Prompt Studio, and organization workspace.", false],
+          ].map(([title, desc, done], i) => (
+            <div key={title} style={{ display:'flex', gap:12, marginBottom:16 }}>
+              <div style={{ width:24, height:24, borderRadius:'50%', background: done ? T.accent : T.layer03, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:2 }}>
+                {done ? (
+                  <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                ) : (
+                  <span style={{ fontSize:11, fontWeight:600, color:T.textTertiary }}>{i+1}</span>
+                )}
+              </div>
+              <div>
+                <div style={{ fontSize:13, fontWeight:600, color:T.textPrimary }}>{title}</div>
+                <div style={{ fontSize:12, color:T.textTertiary, marginTop:3, lineHeight:1.5 }}>{desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display:'flex', gap:8 }}>
+          <button onClick={() => onNav('login')} style={{ flex:1, height:40, borderRadius:10, border:`1px solid ${T.borderSubtle}`, background:T.layer01, color:T.textPrimary, fontSize:13, fontWeight:500, fontFamily:'inherit', cursor:'pointer' }}>Back to log in</button>
+          <button style={{ flex:1, height:40, borderRadius:10, border:'none', background:T.primary, color:'#fff', fontSize:13, fontWeight:600, fontFamily:'inherit', cursor:'pointer' }}>Contact support</button>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// ── Tab navigator (top switcher) ───────────────────────────────────────────────
+const PAGES = { login: LoginPage, signup: SignupPage, forgot: ForgotPage, pending: PendingPage };
+
+function App() {
+  const [page, setPage] = useState(() => localStorage.getItem('ds-auth-page') || 'login');
+  useEffect(() => { localStorage.setItem('ds-auth-page', page); }, [page]);
+
+  const handleNav = (target) => {
+    if (target === 'dashboard') { window.open('../dashboard/index.html', '_blank'); return; }
+    setPage(target);
+  };
+
+  const Page = PAGES[page] || LoginPage;
+  return (
+    <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column' }}>
+      {/* Dev navigation strip */}
+      <div style={{ position:'fixed', bottom:16, left:'50%', transform:'translateX(-50%)', zIndex:100, display:'flex', gap:4, background:'rgba(22,22,22,0.9)', borderRadius:9999, padding:'5px 8px', backdropFilter:'blur(8px)' }}>
+        {tabs.map(tab => (
+          <button key={tab.id} onClick={() => handleNav(tab.id)} style={{ height:28, padding:'0 12px', borderRadius:9999, border:'none', background: page === tab.id ? '#fff' : 'transparent', color: page === tab.id ? '#161616' : 'rgba(255,255,255,0.6)', fontSize:12, fontWeight: page === tab.id ? 600 : 400, fontFamily:'inherit', cursor:'pointer', transition:'all 150ms' }}>
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      <Page onNav={handleNav} />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</body>
+</html>

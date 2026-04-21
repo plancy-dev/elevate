@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html><head>
+<style>
+@font-face { font-family: 'Geist Mono'; src: url('../fonts/GeistMono-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geist'; src: url('../fonts/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: var(--background); font-family: var(--font-sans); }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th { text-align: left; padding: 4px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); border-bottom: 1px solid var(--border-subtle); }
+  td { padding: 5px 8px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); vertical-align: middle; }
+  td:first-child { font-weight: 600; color: var(--text-primary); font-family: var(--font-mono); font-size: 10px; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; border: 1px solid var(--border-subtle); }
+  .role { font-size: 10px; color: var(--text-tertiary); }
+</style>
+</head><body>
+<table>
+  <thead><tr><th>Token</th><th>Value</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td>--background</td><td><span class="dot" style="background:#fafafa"></span>#fafafa</td><td class="role">Full-bleed page bg</td></tr>
+    <tr><td>--layer-01 / --surface</td><td><span class="dot" style="background:#ffffff"></span>#ffffff</td><td class="role">Cards, modals, elevated panels (aliases)</td></tr>
+    <tr><td>--layer-02 / --field</td><td><span class="dot" style="background:#f4f4f4"></span>#f4f4f4</td><td class="role">Inset areas, sidebar, hover; form inputs (aliases)</td></tr>
+    <tr><td>--layer-03 / --surface-03</td><td><span class="dot" style="background:#e8e8e8"></span>#e8e8e8</td><td class="role">Deep inset, dense surfaces (aliases)</td></tr>
+    <tr><td>--field-hover</td><td><span class="dot" style="background:#e8e8e8"></span>#e8e8e8</td><td class="role">Input/Select hover bg</td></tr>
+    <tr><td>--text-primary</td><td><span class="dot" style="background:#161616"></span>#161616</td><td class="role">Headlines, strong body</td></tr>
+    <tr><td>--text-secondary</td><td><span class="dot" style="background:#393939"></span>#393939</td><td class="role">Body copy, descriptions</td></tr>
+    <tr><td>--text-tertiary</td><td><span class="dot" style="background:#6f6f6f"></span>#6f6f6f</td><td class="role">Metadata, hints, labels</td></tr>
+    <tr><td>--primary</td><td><span class="dot" style="background:#0f62fe"></span>#0f62fe</td><td class="role">Buttons, interactive affordances</td></tr>
+    <tr><td>--interactive</td><td><span class="dot" style="background:#0f62fe"></span>#0f62fe</td><td class="role">Links, icon fills — alias of --primary; diverges independently</td></tr>
+    <tr><td>--focus</td><td><span class="dot" style="background:#0f62fe"></span>#0f62fe</td><td class="role">Focus rings, keyboard nav — alias of --primary; diverges independently</td></tr>
+    <tr><td colspan="3" style="padding:6px 8px;background:#f4f4f4;font-size:10px;color:#6f6f6f;font-family:inherit;font-weight:400">
+      ⓘ <strong style="color:#393939">--primary, --interactive, --focus</strong> share the value <code style="font-family:'Geist Mono',monospace">#0f62fe</code> today. They are kept as separate tokens so focus rings, link colors, and button fills can diverge (e.g. teal focus ring for accessibility) without a breaking rename across the codebase.
+    </td></tr>
+    <tr><td>--accent</td><td><span class="dot" style="background:#198038"></span>#198038</td><td class="role">Positive badges, success</td></tr>
+    <tr><td>--accent-hover</td><td><span class="dot" style="background:#166a32"></span>#166a32</td><td class="role">Success CTA hover state</td></tr>
+    <tr><td>--danger</td><td><span class="dot" style="background:#da1e28"></span>#da1e28</td><td class="role">Destructive actions, errors</td></tr>
+    <tr><td>--warning</td><td><span class="dot" style="background:#f1c21b"></span>#f1c21b</td><td class="role">Caution states</td></tr>
+    <tr><td>--marketing-accent</td><td><span class="dot" style="background:#f54e00"></span>#f54e00</td><td class="role">Marketing CTA only</td></tr>
+    <tr><td>--border-subtle</td><td><span class="dot" style="background:#e0e0e0"></span>#e0e0e0</td><td class="role">Default dividers, card outline</td></tr>
+  </tbody>
+</table>
+</body></html>

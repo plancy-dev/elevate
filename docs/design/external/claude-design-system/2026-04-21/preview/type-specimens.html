@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head>
+<style>
+@font-face { font-family: 'Geist Mono'; src: url('../fonts/GeistMono-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geist'; src: url('../fonts/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: var(--background); font-family: var(--font-sans); }
+  .block { margin-bottom: 14px; }
+  .label { font-size: 9px; font-family: var(--font-mono); color: var(--text-tertiary); margin-bottom: 3px; }
+  .font-sans-sample { font-family: var(--font-sans); }
+  .font-mono-sample { font-family: var(--font-mono); }
+  .weights { display: flex; gap: 16px; flex-wrap: wrap; }
+  .w { }
+  .w-label { font-size: 9px; color: var(--text-tertiary); text-align: center; margin-top: 2px; }
+</style>
+</head><body>
+<div class="block">
+  <div class="label">Geist Variable — official brand font</div>
+  <div class="font-sans-sample" style="font-size:28px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary)">AaBbCcDdEeFf</div>
+  <div class="font-sans-sample" style="font-size:14px;color:var(--text-secondary);margin-top:4px">The quick brown fox jumps over the lazy dog. 0123456789</div>
+  <div class="weights" style="margin-top:8px">
+    <div class="w"><div class="font-sans-sample" style="font-size:18px;font-weight:400">Aa</div><div class="w-label">400</div></div>
+    <div class="w"><div class="font-sans-sample" style="font-size:18px;font-weight:500">Aa</div><div class="w-label">500</div></div>
+    <div class="w"><div class="font-sans-sample" style="font-size:18px;font-weight:600">Aa</div><div class="w-label">600</div></div>
+    <div class="w"><div class="font-sans-sample" style="font-size:18px;font-weight:700">Aa</div><div class="w-label">700</div></div>
+  </div>
+</div>
+<div style="border-top:1px solid var(--border-subtle);padding-top:12px">
+  <div class="label">Geist Mono Variable — official brand mono font</div>
+  <div class="font-mono-sample" style="font-size:20px;font-weight:500;color:var(--text-primary)">AaBb 0123</div>
+  <div class="font-mono-sample" style="font-size:13px;color:var(--text-tertiary);margin-top:4px">ai-workflow-automation · const prompt = 'elevate'</div>
+</div>
+</body></html>

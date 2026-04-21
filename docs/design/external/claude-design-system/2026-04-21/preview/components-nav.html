@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html><head>
+<style>
+@font-face { font-family: 'Geist Mono'; src: url('../fonts/GeistMono-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geist'; src: url('../fonts/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 0; background: var(--background); font-family: var(--font-sans); display: flex; gap: 0; height: 150px; overflow: hidden; }
+  .sidebar { width: 200px; background: var(--background); border-right: 1px solid var(--border-subtle); padding: 8px; flex-shrink: 0; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer; position: relative; transition: background 100ms; }
+  .nav-item:hover { background: var(--layer-02); }
+  .nav-item.active { background: var(--layer-02); color: var(--text-primary); font-weight: 500; }
+  .nav-marker { position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 18px; border-radius: 9999px; background: var(--primary); }
+  .nav-icon { width: 16px; height: 16px; opacity: 0.6; flex-shrink: 0; }
+  .nav-item.active .nav-icon { opacity: 1; color: var(--primary); }
+  .main { flex: 1; overflow: hidden; }
+  .topbar { height: 48px; border-bottom: 1px solid var(--border-subtle); background: var(--background); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-shadow: 0 0 16px rgba(0,0,0,0.02),0 0 8px rgba(0,0,0,0.008); }
+  .topbar-title { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+  .topbar-actions { display: flex; gap: 6px; }
+  .btn-sm { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 10px; font-size: 12px; font-weight: 500; border: none; cursor: pointer; gap: 4px; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-tertiary { background: transparent; color: var(--interactive); border: 1px solid var(--interactive); }
+  .content { padding: 16px 20px; }
+  .section-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin-bottom: 8px; }
+</style>
+</head><body>
+<div class="sidebar">
+  <div style="padding: 6px 8px 10px; margin-bottom: 4px; display:flex;align-items:center;gap:8px">
+    <img src="../assets/elevate-mark-192.png" style="width:22px;height:22px;border-radius:50%;object-fit:cover">
+    <span style="font-size:13px;font-weight:600;color:var(--text-primary);letter-spacing:-0.01em">Elevate</span>
+  </div>
+  <div class="nav-item active">
+    <div class="nav-marker"></div>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Overview
+  </div>
+  <div class="nav-item">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    Library
+  </div>
+  <div class="nav-item">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Productions
+  </div>
+</div>
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title">Overview</span>
+    <div class="topbar-actions">
+      <button class="btn-sm btn-tertiary">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        Library
+      </button>
+      <button class="btn-sm btn-primary">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg>
+        Studio
+      </button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="section-label">Prompt Studio</div>
+    <div style="font-size:16px;font-weight:600;color:var(--text-primary)">AI adoption & workflow platform</div>
+  </div>
+</div>
+</body></html>

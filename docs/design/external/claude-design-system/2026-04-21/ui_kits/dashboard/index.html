@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elevate — Dashboard UI Kit</title>
+<style>
+  @font-face { font-family: 'Geist'; src: url('../../fonts/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<style>
+@font-face { font-family: 'Geist Mono'; src: url('../../fonts/GeistMono-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body,#root{height:100%}
+  body{font-family:'Geist',system-ui,sans-serif;background:#fafafa;color:#161616;-webkit-font-smoothing:antialiased}
+  ::-webkit-scrollbar{width:4px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:#c6c6c6;border-radius:2px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// ── Tokens ──────────────────────────────────────────────────────────────────
+const T = {
+  bg: '#fafafa', surface: '#fff', layer01: '#fff', layer02: '#f4f4f4', layer03: '#e8e8e8',
+  border: '#c6c6c6', borderSubtle: '#e0e0e0',
+  textPrimary: '#161616', textSecondary: '#393939', textTertiary: '#6f6f6f',
+  primary: '#0f62fe', primaryHover: '#0353e9', interactive: '#0f62fe',
+  accent: '#198038', danger: '#da1e28', info: '#4589ff',
+  highlight: 'rgba(15,98,254,0.12)',
+  shadowCard: '0 1px 5px -4px rgba(19,19,22,0.12),0 0 0 1px rgba(34,42,53,0.06),0 4px 14px rgba(34,42,53,0.06)',
+  shadowAmbient: '0 0 16px rgba(0,0,0,0.02),0 0 8px rgba(0,0,0,0.008)',
+};
+
+// ── Icons (inline SVG) ───────────────────────────────────────────────────────
+const Icon = ({ d, paths, size = 16, color = 'currentColor', strokeWidth = 1.5 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    {d && <path d={d} />}
+    {paths && paths.map((p, i) => <path key={i} d={p} />)}
+  </svg>
+);
+
+const icons = {
+  overview: ['M3 3h7v7H3z', 'M14 3h7v7h-7z', 'M3 14h7v7H3z', 'M14 14h7v7h-7z'],
+  library: ['M4 19.5A2.5 2.5 0 016.5 17H20', 'M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z'],
+  studio: ['M9.937 15.5A2 2 0 008.5 14.063l-6.135-1.582a.5.5 0 010-.962L8.5 9.936A2 2 0 009.937 8.5l1.582-6.135a.5.5 0 01.963 0L14.063 8.5A2 2 0 0015.5 9.937l6.135 1.581a.5.5 0 010 .964L15.5 14.063a2 2 0 00-1.437 1.437l-1.582 6.135a.5.5 0 01-.963 0z'],
+  productions: ['M7 2h10', 'M5 6h14', 'M3 10h18a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V11a1 1 0 011-1z', 'M10 15l5-2.5-5-2.5v5z'],
+  settings: ['M12 15a3 3 0 100-6 3 3 0 000 6z', 'M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z'],
+  arrow: ['M5 12h14', 'M12 5l7 7-7 7'],
+  sparkles: ['M9.937 15.5A2 2 0 008.5 14.063l-6.135-1.582a.5.5 0 010-.962L8.5 9.936A2 2 0 009.937 8.5l1.582-6.135a.5.5 0 01.963 0L14.063 8.5A2 2 0 0015.5 9.937l6.135 1.581a.5.5 0 010 .964L15.5 14.063a2 2 0 00-1.437 1.437l-1.582 6.135a.5.5 0 01-.963 0z'],
+  users: ['M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2', 'M23 21v-2a4 4 0 00-3-3.87', 'M16 3.13a4 4 0 010 7.75'],
+  circle9: ['cx="9" cy="7" r="4"'],
+  package: ['M16.5 9.4l-9-5.19', 'M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z', 'M3.27 6.96L12 12.01l8.73-5.05', 'M12 22.08V12'],
+  trending: ['M22 7L13.5 15.5 8.5 10.5 2 17', 'M16 7h6v6'],
+  film: ['M7 2h10', 'M5 6h14', 'M3 10h18a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V11a1 1 0 011-1z'],
+  external: ['M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6', 'M15 3h6v6', 'M10 14L21 3'],
+  trash: ['M3 6h18', 'M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2'],
+};
+
+// ── Badge ────────────────────────────────────────────────────────────────────
+const badgeVariantStyles = {
+  default: { background: '#e8e8e8', color: T.textSecondary },
+  blue: { background: 'rgba(0,67,206,0.18)', color: T.info },
+  green: { background: 'rgba(25,128,56,0.18)', color: T.accent },
+  red: { background: 'rgba(218,30,40,0.18)', color: T.danger },
+  warm: { background: '#393939', color: '#fff' },
+};
+const Badge = ({ children, variant = 'default' }) => (
+  <span style={{ display:'inline-flex', alignItems:'center', padding:'2px 8px', fontSize:11, fontWeight:500, ...badgeVariantStyles[variant] }}>
+    {children}
+  </span>
+);
+
+// ── Button ───────────────────────────────────────────────────────────────────
+const btnStyles = {
+  primary: { background: T.primary, color: '#fff', border: 'none' },
+  secondary: { background: T.layer03, color: T.textPrimary, border: '1px solid transparent' },
+  tertiary: { background: 'transparent', color: T.interactive, border: `1px solid ${T.interactive}` },
+  ghost: { background: 'transparent', color: T.interactive, border: 'none' },
+  danger: { background: T.danger, color: '#fff', border: 'none' },
+};
+const Btn = ({ children, variant = 'primary', size = 'md', onClick, style }) => {
+  const heights = { sm: 32, md: 40, lg: 48 };
+  const fontSizes = { sm: 12, md: 14, lg: 14 };
+  return (
+    <button onClick={onClick} style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', gap:6, height:heights[size], padding:'0 16px', fontSize:fontSizes[size], fontWeight:500, fontFamily:'inherit', borderRadius:10, cursor:'pointer', transition:'background 100ms', ...btnStyles[variant], ...style }}>
+      {children}
+    </button>
+  );
+};
+
+// ── Sidebar ──────────────────────────────────────────────────────────────────
+const navItems = [
+  { id: 'overview', label: 'Overview', paths: icons.overview },
+  { id: 'library', label: 'Library', paths: icons.library },
+  { id: 'studio', label: 'Prompt Studio', paths: icons.studio },
+  { id: 'productions', label: 'Productions', paths: icons.productions },
+  { id: 'settings', label: 'Settings', paths: icons.settings },
+];
+
+const Sidebar = ({ active, onNav }) => (
+  <aside style={{ width: 220, background: T.bg, borderRight: `1px solid ${T.borderSubtle}`, display:'flex', flexDirection:'column', flexShrink: 0, height: '100%' }}>
+    <div style={{ padding:'14px 12px 10px', display:'flex', alignItems:'center', gap:8, borderBottom:`1px solid ${T.borderSubtle}` }}>
+      <img src="../../assets/elevate-mark-192.png" style={{ width:26, height:26, borderRadius:'50%', objectFit:'cover', border:`1px solid rgba(0,0,0,0.1)` }} alt="" />
+      <span style={{ fontSize:14, fontWeight:600, letterSpacing:'-0.02em', color: T.textPrimary }}>Elevate</span>
+    </div>
+    <nav style={{ flex:1, padding:'8px 8px' }}>
+      {navItems.map(item => {
+        const isActive = item.id === active;
+        return (
+          <button key={item.id} onClick={() => onNav(item.id)} style={{ display:'flex', alignItems:'center', gap:8, width:'100%', padding:'6px 8px', borderRadius:8, border:'none', background: isActive ? T.layer02 : 'transparent', color: isActive ? T.textPrimary : T.textSecondary, fontFamily:'inherit', fontSize:13, fontWeight: isActive ? 500 : 400, cursor:'pointer', position:'relative', textAlign:'left', transition:'background 100ms', marginBottom:1 }}>
+            {isActive && <div style={{ position:'absolute', left:0, top:'50%', transform:'translateY(-50%)', width:3, height:18, borderRadius:9999, background:T.primary }} />}
+            <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke={isActive ? T.primary : T.textTertiary} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              {item.paths.map((d, i) => <path key={i} d={d} />)}
+            </svg>
+            {item.label}
+          </button>
+        );
+      })}
+    </nav>
+    <div style={{ padding:'10px 12px', borderTop:`1px solid ${T.borderSubtle}` }}>
+      <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+        <div style={{ width:26, height:26, borderRadius:'50%', background:T.primary, display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:11, fontWeight:600 }}>JD</div>
+        <div>
+          <div style={{ fontSize:12, fontWeight:500, color:T.textPrimary }}>Jane Doe</div>
+          <div style={{ fontSize:11, color:T.textTertiary }}>Acme Corp</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+);
+
+// ── TopBar ───────────────────────────────────────────────────────────────────
+const TopBar = ({ title, actions }) => (
+  <div style={{ height:48, display:'flex', alignItems:'center', justifyContent:'space-between', borderBottom:`1px solid ${T.borderSubtle}`, padding:'0 24px', background:T.bg, boxShadow:T.shadowAmbient, flexShrink:0, zIndex:10, position:'sticky', top:0 }}>
+    <span style={{ fontSize:14, fontWeight:500, color:T.textPrimary }}>{title}</span>
+    <div style={{ display:'flex', gap:8 }}>{actions}</div>
+  </div>
+);
+
+// ── Overview Page ────────────────────────────────────────────────────────────
+const OverviewPage = ({ onNav }) => {
+  const kpis = [
+    { label:'Prompt Studio', value:'Ready', sub:'Improve prompts', Icon: () => <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={T.textTertiary} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><path d="M9.937 15.5A2 2 0 008.5 14.063l-6.135-1.582a.5.5 0 010-.962L8.5 9.936A2 2 0 009.937 8.5l1.582-6.135a.5.5 0 01.963 0L14.063 8.5A2 2 0 0015.5 9.937l6.135 1.581a.5.5 0 010 .964L15.5 14.063a2 2 0 00-1.437 1.437l-1.582 6.135a.5.5 0 01-.963 0z"/></svg> },
+    { label:'Library Entitlements', value:'4', sub:'Titles you can use', Icon: () => <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={T.textTertiary} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">{icons.library.map((d,i)=><path key={i} d={d}/>)}</svg> },
+    { label:'Catalog SKUs', value:'18', sub:'Active products', Icon: () => <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={T.textTertiary} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">{icons.package.map((d,i)=><path key={i} d={d}/>)}</svg> },
+    { label:'Team Members', value:'12', sub:'In your org', Icon: () => <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={T.textTertiary} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg> },
+  ];
+  const quickLinks = [
+    { id:'studio', label:'Prompt Studio', badge:'PROMPT STUDIO', desc:'Run prompts against your library content and improve AI workflows for your entire team.', icon: icons.studio },
+    { id:'library', label:'Library', badge:'LIBRARY', desc:'4 titles in your current subscription. Download or read online at any time.', icon: icons.library },
+  ];
+  return (
+    <div style={{ flex:1, overflow:'auto' }}>
+      <TopBar title="Overview" actions={[
+        <Btn key="lib" variant="tertiary" size="sm" onClick={() => onNav('library')} style={{ display:'inline-flex', gap:4, alignItems:'center' }}>
+          <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">{icons.library.map((d,i)=><path key={i} d={d}/>)}</svg>
+          Library
+        </Btn>,
+        <Btn key="st" variant="primary" size="sm" onClick={() => onNav('studio')} style={{ display:'inline-flex', gap:4, alignItems:'center' }}>
+          <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">{icons.studio.map((d,i)=><path key={i} d={d}/>)}</svg>
+          Prompt Studio
+        </Btn>,
+      ]} />
+      <div style={{ padding:24, display:'flex', flexDirection:'column', gap:20 }}>
+        {/* Quick links */}
+        <div style={{ borderRadius:12, border:`1px solid ${T.borderSubtle}`, background:T.layer01, boxShadow:T.shadowCard, overflow:'hidden' }}>
+          {quickLinks.map((link, i) => (
+            <button key={link.id} onClick={() => onNav(link.id)} style={{ display:'flex', alignItems:'start', justifyContent:'space-between', gap:12, padding:'20px 24px', background:'transparent', border:'none', borderBottom: i < quickLinks.length-1 ? `1px solid ${T.borderSubtle}` : 'none', width:'100%', textAlign:'left', cursor:'pointer', transition:'background 150ms', fontFamily:'inherit' }} onMouseEnter={e=>e.currentTarget.style.background=T.layer02} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+              <div>
+                <div style={{ display:'flex', alignItems:'center', gap:6, color:T.primary, marginBottom:6 }}>
+                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">{link.icon.map((d,i)=><path key={i} d={d}/>)}</svg>
+                  <span style={{ fontSize:10, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em' }}>{link.badge}</span>
+                </div>
+                <div style={{ fontSize:16, fontWeight:600, color:T.textPrimary, marginBottom:6 }}>{link.label === 'Prompt Studio' ? 'AI-powered prompt improvements for your team' : '4 titles ready for download or reading online'}</div>
+                <p style={{ fontSize:13, color:T.textSecondary, lineHeight:1.5 }}>{link.desc}</p>
+              </div>
+              <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={T.textTertiary} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </button>
+          ))}
+        </div>
+
+        {/* KPI Grid */}
+        <div style={{ borderRadius:12, overflow:'hidden', display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:1, background:T.borderSubtle, boxShadow:T.shadowCard }}>
+          {kpis.map(k => (
+            <div key={k.label} style={{ background:T.layer01, padding:'18px 20px' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:8 }}>
+                <k.Icon />
+                <span style={{ fontSize:11, color:T.textTertiary }}>{k.label}</span>
+              </div>
+              <div style={{ fontSize:28, fontWeight:600, letterSpacing:'-0.02em', color:T.textPrimary }}>{k.value}</div>
+              <div style={{ fontSize:11, color:T.textTertiary, marginTop:6 }}>{k.sub}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Getting started + recent activity */}
+        <div style={{ borderRadius:12, border:`1px solid ${T.borderSubtle}`, background:T.layer01, boxShadow:T.shadowCard, overflow:'hidden', display:'grid', gridTemplateColumns:'2fr 1fr' }}>
+          <div style={{ borderRight:`1px solid ${T.borderSubtle}` }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'18px 20px 12px', borderBottom:`1px solid ${T.borderSubtle}` }}>
+              <div>
+                <div style={{ fontSize:13, fontWeight:500, color:T.textPrimary }}>Getting started</div>
+                <div style={{ fontSize:11, color:T.textTertiary, marginTop:2 }}>Set up your workspace and start using AI workflows</div>
+              </div>
+              <button onClick={() => onNav('studio')} style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, color:T.interactive, background:'none', border:'none', cursor:'pointer', fontFamily:'inherit' }}>Open Studio <svg width={10} height={10} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button>
+            </div>
+            <div style={{ padding:'24px 20px', fontSize:13, color:T.textSecondary, lineHeight:1.6 }}>
+              Welcome to Elevate. Browse your <button onClick={() => onNav('library')} style={{ background:'none', border:'none', color:T.interactive, fontFamily:'inherit', fontSize:13, cursor:'pointer', fontWeight:500 }}>Library</button> to access purchased ebooks and guides, or visit <button onClick={() => onNav('studio')} style={{ background:'none', border:'none', color:T.interactive, fontFamily:'inherit', fontSize:13, cursor:'pointer', fontWeight:500 }}>Prompt Studio</button> to start improving AI workflows for your team.
+            </div>
+          </div>
+          <div>
+            <div style={{ padding:'18px 20px 12px', borderBottom:`1px solid ${T.borderSubtle}` }}>
+              <div style={{ fontSize:13, fontWeight:500, color:T.textPrimary }}>Recent activity</div>
+            </div>
+            <div style={{ padding:'24px 20px', fontSize:12, color:T.textTertiary }}>No recent activity yet.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── Library Page ─────────────────────────────────────────────────────────────
+const products = [
+  { id:1, kind:'Ebook', title:'AI Workflow Automation Guide', desc:'Practical frameworks for turning AI outcomes into repeatable workflows.', price:'₩49,000', slug:'ai-workflow-automation', included:true },
+  { id:2, kind:'Guide', title:'Prompt Engineering for Teams', desc:'A structured guide for enterprise-scale prompt design and governance.', price:'₩29,000', slug:'prompt-engineering-teams', included:true },
+  { id:3, kind:'Template', title:'AI Adoption Scorecard', desc:'Measure and track AI adoption across your organization.', price:'₩19,000', slug:'ai-adoption-scorecard', included:true },
+  { id:4, kind:'Bundle', title:'Enterprise AI Starter Pack', desc:'Complete bundle of ebooks, guides, and templates for AI-first teams.', price:'₩89,000', slug:'enterprise-ai-starter', included:false },
+];
+
+const LibraryPage = () => (
+  <div style={{ flex:1, overflow:'auto' }}>
+    <TopBar title="Library" actions={[]} />
+    <div style={{ padding:24, maxWidth:900 }}>
+      <div style={{ marginBottom:24 }}>
+        <h1 style={{ fontSize:22, fontWeight:600, letterSpacing:'-0.02em', color:T.textPrimary }}>Library</h1>
+        <p style={{ fontSize:13, color:T.textTertiary, marginTop:6, lineHeight:1.5 }}>Your organization's purchased ebooks, guides, and templates.</p>
+      </div>
+      <div style={{ borderRadius:12, border:`1px solid ${T.borderSubtle}`, background:T.layer01, boxShadow:T.shadowCard, overflow:'hidden' }}>
+        <ul style={{ listStyle:'none', padding:0, margin:0 }}>
+          {products.map((p, i) => (
+            <li key={p.id} style={{ borderBottom: i < products.length-1 ? `1px solid ${T.borderSubtle}` : 'none' }}>
+              <div style={{ display:'flex', gap:16, padding:'14px 20px', alignItems:'start', justifyContent:'space-between', transition:'background 150ms', cursor:'pointer' }} onMouseEnter={e=>e.currentTarget.style.background=T.layer02} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                <div style={{ minWidth:0 }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap', marginBottom:6 }}>
+                    <Badge variant="blue">{p.kind}</Badge>
+                    <span style={{ fontSize:14, fontWeight:600, color:T.textPrimary }}>{p.title}</span>
+                    <Badge variant={p.included ? 'green' : 'default'}>{p.included ? 'Included' : 'Not included'}</Badge>
+                  </div>
+                  {p.desc && <p style={{ fontSize:12, color:T.textTertiary, lineHeight:1.5 }}>{p.desc}</p>}
+                  <p style={{ fontSize:11, fontFamily:'Geist Mono, monospace', color:T.textTertiary, marginTop:4 }}>{p.slug}</p>
+                </div>
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:6, flexShrink:0 }}>
+                  <span style={{ fontSize:13, fontWeight:500, color:T.textPrimary, whiteSpace:'nowrap' }}>{p.price}</span>
+                  {p.included ? (
+                    <button style={{ fontSize:12, fontWeight:500, color:T.primary, background:'none', border:'none', cursor:'pointer', fontFamily:'inherit' }}>Download PDF</button>
+                  ) : (
+                    <button style={{ fontSize:12, fontWeight:500, color:T.primary, background:'none', border:'none', cursor:'pointer', fontFamily:'inherit' }}>Purchase</button>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+);
+
+// ── Studio Page ───────────────────────────────────────────────────────────────
+const StudioPage = ({ onNav }) => (
+  <div style={{ flex:1, overflow:'auto' }}>
+    <TopBar title="Prompt Studio" actions={[]} />
+    <div style={{ padding:24, maxWidth:760 }}>
+      <div style={{ marginBottom:24 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:6 }}>
+          <h1 style={{ fontSize:22, fontWeight:600, letterSpacing:'-0.02em', color:T.textPrimary }}>Prompt Studio</h1>
+          <Badge variant="warm">Beta</Badge>
+        </div>
+        <p style={{ fontSize:13, color:T.textTertiary, lineHeight:1.5 }}>Run, test, and improve AI prompts across your organization's workflows.</p>
+        <ul style={{ marginTop:12, paddingLeft:20, display:'flex', flexDirection:'column', gap:6 }}>
+          {['Upload and annotate prompt outputs', 'Compare prompt versions across your team', 'Export improved prompts to productions'].map(b => (
+            <li key={b} style={{ fontSize:13, color:T.textSecondary }}>{b}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div style={{ borderRadius:12, border:`1px solid ${T.borderSubtle}`, background:T.layer01, boxShadow:T.shadowCard, overflow:'hidden', marginBottom:20 }}>
+        <div style={{ padding:'18px 20px', borderBottom:`1px solid ${T.borderSubtle}` }}>
+          <div style={{ fontSize:13, fontWeight:500, color:T.textPrimary, marginBottom:10 }}>Send to Productions</div>
+          <div style={{ display:'flex', gap:8 }}>
+            <select style={{ flex:1, height:36, borderRadius:10, border:`1px solid ${T.borderSubtle}`, background:T.field, padding:'0 12px', fontSize:13, color:T.textPrimary, fontFamily:'inherit', cursor:'pointer' }}>
+              <option>Select an episode…</option>
+              <option>AI Workflow Episode 01</option>
+              <option>Prompt Engineering Series</option>
+            </select>
+            <Btn variant="primary" size="sm">Send</Btn>
+          </div>
+        </div>
+        <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:160, background:`${T.layer02}40`, padding:'32px 20px', textAlign:'center' }}>
+          <svg width={36} height={36} viewBox="0 0 24 24" fill="none" stroke={T.primary} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom:14 }}><path d="M9.937 15.5A2 2 0 008.5 14.063l-6.135-1.582a.5.5 0 010-.962L8.5 9.936A2 2 0 009.937 8.5l1.582-6.135a.5.5 0 01.963 0L14.063 8.5A2 2 0 0015.5 9.937l6.135 1.581a.5.5 0 010 .964L15.5 14.063a2 2 0 00-1.437 1.437l-1.582 6.135a.5.5 0 01-.963 0z"/></svg>
+          <div style={{ fontSize:13, fontWeight:500, color:T.textPrimary }}>Prompt Studio is being built</div>
+          <p style={{ fontSize:12, color:T.textTertiary, marginTop:6, maxWidth:380, lineHeight:1.5 }}>Full prompt editing, version history, and team collaboration features are coming soon.</p>
+        </div>
+      </div>
+
+      <div style={{ display:'flex', gap:10 }}>
+        <Btn variant="primary" size="lg" onClick={() => onNav('library')}>
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">{icons.library.map((d,i)=><path key={i} d={d}/>)}</svg>
+          Open Library
+        </Btn>
+        <Btn variant="secondary" size="lg" onClick={() => onNav('productions')}>
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">{icons.film.map((d,i)=><path key={i} d={d}/>)}</svg>
+          Productions
+        </Btn>
+      </div>
+    </div>
+  </div>
+);
+
+// ── Productions Page ──────────────────────────────────────────────────────────
+const episodes = [
+  { id:1, title:'AI Workflow Automation Series — EP01', status:'published', project:'AI Series', updated:'Apr 20, 2026, 2:34 PM' },
+  { id:2, title:'Prompt Engineering Deep Dive', status:'ready', project:'Prompt Series', updated:'Apr 19, 2026, 10:12 AM' },
+  { id:3, title:'Team AI Adoption Kickoff', status:'draft', project:null, updated:'Apr 15, 2026, 4:58 PM' },
+  { id:4, title:'Enterprise Rollout Planning', status:'draft', project:'AI Series', updated:'Apr 12, 2026, 9:00 AM' },
+];
+
+const ProductionsPage = () => (
+  <div style={{ flex:1, overflow:'auto' }}>
+    <TopBar title="Productions" actions={[
+      <Btn key="new" variant="primary" size="sm">+ New episode</Btn>
+    ]} />
+    <div style={{ padding:24, maxWidth:900 }}>
+      <div style={{ borderRadius:12, border:`1px solid ${T.borderSubtle}`, background:T.layer01, boxShadow:T.shadowCard, overflow:'hidden', marginBottom:20 }}>
+        <div style={{ padding:'18px 20px 14px', borderBottom:`1px solid ${T.borderSubtle}` }}>
+          <h1 style={{ fontSize:20, fontWeight:600, letterSpacing:'-0.02em', color:T.textPrimary }}>Productions</h1>
+          <p style={{ fontSize:13, color:T.textSecondary, marginTop:6, lineHeight:1.5 }}>Manage and publish AI workflow episodes for your organization.</p>
+        </div>
+        <div style={{ padding:'14px 20px', background:`${T.layer02}30`, borderBottom:`1px solid ${T.borderSubtle}`, display:'flex', gap:10, alignItems:'center' }}>
+          <select style={{ height:34, borderRadius:10, border:`1px solid ${T.borderSubtle}`, background:T.field, padding:'0 10px', fontSize:12, color:T.textPrimary, fontFamily:'inherit', cursor:'pointer' }}>
+            <option>All Projects</option>
+            <option>AI Series</option>
+            <option>Prompt Series</option>
+          </select>
+          <select style={{ height:34, borderRadius:10, border:`1px solid ${T.borderSubtle}`, background:T.field, padding:'0 10px', fontSize:12, color:T.textPrimary, fontFamily:'inherit', cursor:'pointer' }}>
+            <option>All Channels</option>
+            <option>YouTube</option>
+          </select>
+        </div>
+      </div>
+
+      <div style={{ marginBottom:12, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ fontSize:13, fontWeight:500, color:T.textPrimary }}>Episode Queue <span style={{ color:T.textTertiary, fontWeight:400, marginLeft:4 }}>({episodes.length})</span></div>
+      </div>
+
+      <div style={{ borderRadius:12, border:`1px solid ${T.borderSubtle}`, background:T.layer01, boxShadow:T.shadowCard, overflow:'hidden' }}>
+        <ul style={{ listStyle:'none', padding:0, margin:0 }}>
+          {episodes.map((ep, i) => (
+            <li key={ep.id} style={{ borderBottom: i < episodes.length-1 ? `1px solid ${T.borderSubtle}` : 'none' }}>
+              <div style={{ display:'flex', gap:14, padding:'14px 18px', alignItems:'start', justifyContent:'space-between', transition:'background 150ms', cursor:'pointer' }} onMouseEnter={e=>e.currentTarget.style.background=T.layer02} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                <div style={{ display:'flex', gap:12, flex:1, minWidth:0 }}>
+                  <div style={{ width:40, height:40, borderRadius:8, border:`1px solid ${T.borderSubtle}`, background:T.layer02, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:2 }}>
+                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={T.textTertiary} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">{icons.film.map((d,i)=><path key={i} d={d}/>)}</svg>
+                  </div>
+                  <div style={{ minWidth:0 }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap', marginBottom:4 }}>
+                      <Badge variant="blue">{ep.status.charAt(0).toUpperCase()+ep.status.slice(1)}</Badge>
+                      <span style={{ fontSize:14, fontWeight:600, color:T.textPrimary }}>{ep.title}</span>
+                    </div>
+                    <div style={{ display:'flex', gap:6, flexWrap:'wrap', alignItems:'center' }}>
+                      {ep.project ? (
+                        <span style={{ fontSize:11, borderRadius:6, border:`1px solid ${T.borderSubtle}`, background:T.layer02, padding:'1px 6px', fontWeight:500, color:T.textSecondary }}>{ep.project}</span>
+                      ) : (
+                        <span style={{ fontSize:11, color:T.textTertiary }}>No project</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:6, flexShrink:0 }}>
+                  <span style={{ fontSize:11, color:T.textTertiary }}>{ep.updated}</span>
+                  <button style={{ fontSize:11, fontWeight:500, color:T.danger, background:'none', border:'none', cursor:'pointer', fontFamily:'inherit' }}>Delete</button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+);
+
+// ── Settings Page ─────────────────────────────────────────────────────────────
+const SettingsPage = () => (
+  <div style={{ flex:1, overflow:'auto' }}>
+    <TopBar title="Settings" actions={[]} />
+    <div style={{ padding:24, maxWidth:640 }}>
+      <h1 style={{ fontSize:22, fontWeight:600, letterSpacing:'-0.02em', color:T.textPrimary, marginBottom:20 }}>Settings</h1>
+      {[['Organization', 'Acme Corp'], ['Billing plan', 'Starter'], ['Members', '12 active'], ['Language', 'English (en)']].map(([label, value]) => (
+        <div key={label} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 0', borderBottom:`1px solid ${T.borderSubtle}` }}>
+          <div style={{ fontSize:13, color:T.textPrimary, fontWeight:500 }}>{label}</div>
+          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <span style={{ fontSize:13, color:T.textTertiary }}>{value}</span>
+            <button style={{ fontSize:12, color:T.interactive, background:'none', border:'none', cursor:'pointer', fontFamily:'inherit', fontWeight:500 }}>Edit</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// ── App Root ─────────────────────────────────────────────────────────────────
+const PAGES = { overview: OverviewPage, library: LibraryPage, studio: StudioPage, productions: ProductionsPage, settings: SettingsPage };
+
+function App() {
+  const [page, setPage] = useState(() => localStorage.getItem('ds-dash-page') || 'overview');
+  useEffect(() => { localStorage.setItem('ds-dash-page', page); }, [page]);
+  const Page = PAGES[page] || OverviewPage;
+  return (
+    <div style={{ display:'flex', height:'100vh', overflow:'hidden' }}>
+      <Sidebar active={page} onNav={setPage} />
+      <Page onNav={setPage} />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html><head>
+<style>
+@font-face { font-family: 'Geist Mono'; src: url('../fonts/GeistMono-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geist'; src: url('../fonts/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface-02); font-family: var(--font-sans); }
+  .section-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 14px 0 8px; }
+  .shadow-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+  .shadow-item { text-align: center; }
+  .shadow-box { width: 80px; height: 60px; border-radius: 12px; background: var(--layer-01); }
+  .s-label { font-size: 9px; font-family: var(--font-mono); color: var(--text-tertiary); margin-top: 6px; }
+  .s-desc { font-size: 9px; color: var(--text-secondary); max-width: 80px; }
+  .elevation-stack { display: flex; gap: 8px; align-items: flex-end; }
+  .el-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .el-box { border-radius: 8px; background: var(--layer-01); }
+</style>
+</head><body>
+<div class="section-title">Shadow System</div>
+<div class="shadow-row">
+  <div class="shadow-item">
+    <div class="shadow-box" style="box-shadow:none;border:1px solid var(--border-subtle)"></div>
+    <div class="s-label">border-only</div>
+    <div class="s-desc">Dense tables</div>
+  </div>
+  <div class="shadow-item">
+    <div class="shadow-box" style="box-shadow:0 0 16px rgba(0,0,0,0.02),0 0 8px rgba(0,0,0,0.008);border:1px solid var(--border-subtle)"></div>
+    <div class="s-label">shadow-ambient</div>
+    <div class="s-desc">Subscription banners</div>
+  </div>
+  <div class="shadow-item">
+    <div class="shadow-box" style="box-shadow:0 1px 5px -4px rgba(19,19,22,0.12),0 0 0 1px rgba(34,42,53,0.06),0 4px 14px rgba(34,42,53,0.06)"></div>
+    <div class="s-label">shadow-card</div>
+    <div class="s-desc">Cards, overview panels</div>
+  </div>
+</div>
+
+<div class="section-title">Depth Budget (max 2 + optional modal)</div>
+<div class="elevation-stack">
+  <div class="el-item">
+    <div class="el-box" style="width:120px;height:60px;background:var(--background);border:1px solid var(--border-subtle)"></div>
+    <div class="s-label" style="text-align:center">0 · Background</div>
+  </div>
+  <div class="el-item">
+    <div class="el-box" style="width:100px;height:50px;box-shadow:0 1px 5px -4px rgba(19,19,22,0.12),0 0 0 1px rgba(34,42,53,0.06),0 4px 14px rgba(34,42,53,0.06)"></div>
+    <div class="s-label" style="text-align:center">1 · Card</div>
+  </div>
+  <div class="el-item">
+    <div class="el-box" style="width:80px;height:40px;box-shadow:0 8px 30px rgba(0,0,0,0.15),0 0 0 1px rgba(34,42,53,0.08)"></div>
+    <div class="s-label" style="text-align:center">2 · Modal</div>
+  </div>
+</div>
+</body></html>

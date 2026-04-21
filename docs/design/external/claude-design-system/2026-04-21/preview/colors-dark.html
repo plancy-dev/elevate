@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html><head>
+<style>
+@font-face { font-family: 'Geist'; src: url('../fonts/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geist Mono'; src: url('../fonts/GeistMono-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<meta charset="utf-8">
+<style>
+  body { margin: 0; padding: 16px; background: #0d0d0d; font-family: 'Geist', system-ui, sans-serif; }
+  .section-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #8d8d8d; margin: 14px 0 6px; }
+  .section-title:first-child { margin-top: 0; }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
+  .chip { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; border: 1px solid #262626; }
+  .chip-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .chip-label { font-size: 11px; color: #c6c6c6; }
+  .chip-val { font-size: 9px; font-family: 'Geist Mono', monospace; color: #8d8d8d; }
+</style>
+</head><body>
+<div class="section-title">Surfaces · Layers · Field (dark)</div>
+<div class="row">
+  <div class="chip"><div class="chip-dot" style="background:#0d0d0d;border:1px solid #393939"></div><span class="chip-label">Background</span><span class="chip-val">#0d0d0d</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#161616;border:1px solid #393939"></div><span class="chip-label">Layer 01 = Surface</span><span class="chip-val">#161616</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#1c1c1c;border:1px solid #393939"></div><span class="chip-label">Layer 02 = Field</span><span class="chip-val">#1c1c1c</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#262626;border:1px solid #393939"></div><span class="chip-label">Layer 03</span><span class="chip-val">#262626</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#2c2c2c;border:1px solid #393939"></div><span class="chip-label">Surface Hover</span><span class="chip-val">#2c2c2c</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#262626;border:1px solid #393939"></div><span class="chip-label">Field Hover</span><span class="chip-val">#262626</span></div>
+</div>
+
+<div class="section-title">Primary — IBM Blue (dark)</div>
+<div class="row">
+  <div class="chip"><div class="chip-dot" style="background:#0f62fe"></div><span class="chip-label">Primary</span><span class="chip-val">#0f62fe</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#4589ff"></div><span class="chip-label">Interactive (dark)</span><span class="chip-val">#4589ff</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#0353e9"></div><span class="chip-label">Hover</span><span class="chip-val">#0353e9</span></div>
+  <div class="chip"><div class="chip-dot" style="background:rgba(15,98,254,0.10);border:1px solid #262626"></div><span class="chip-label">Highlight</span><span class="chip-val">10%</span></div>
+</div>
+
+<div class="section-title">Text Stack (dark)</div>
+<div class="row">
+  <div class="chip"><div class="chip-dot" style="background:#f4f4f4"></div><span class="chip-label">Primary</span><span class="chip-val">#f4f4f4</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#c6c6c6"></div><span class="chip-label">Secondary</span><span class="chip-val">#c6c6c6</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#8d8d8d"></div><span class="chip-label">Tertiary</span><span class="chip-val">#8d8d8d</span></div>
+</div>
+
+<div class="section-title">State Colors (dark)</div>
+<div class="row">
+  <div class="chip"><div class="chip-dot" style="background:#42be65"></div><span class="chip-label">Accent</span><span class="chip-val">#42be65</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#3dab5a"></div><span class="chip-label">Accent Hover</span><span class="chip-val">#3dab5a</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#da1e28"></div><span class="chip-label">Danger</span><span class="chip-val">#da1e28</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#f1c21b"></div><span class="chip-label">Warning</span><span class="chip-val">#f1c21b</span></div>
+</div>
+
+<div class="section-title">Borders (dark)</div>
+<div class="row">
+  <div class="chip"><div class="chip-dot" style="background:#393939"></div><span class="chip-label">Border</span><span class="chip-val">#393939</span></div>
+  <div class="chip"><div class="chip-dot" style="background:#262626"></div><span class="chip-label">Subtle</span><span class="chip-val">#262626</span></div>
+</div>
+
+<div class="section-title">Card Shadow (dark)</div>
+<div class="row">
+  <div style="width:72px;height:40px;border-radius:8px;background:#161616;box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 1px 4px -2px rgba(0,0,0,0.45),0 18px 40px rgba(0,0,0,0.35)"></div>
+  <div style="padding:4px 0;display:flex;align-items:center"><span style="font-size:9px;font-family:'Geist Mono',monospace;color:#8d8d8d">shadow-card · 3-layer ring+diffuse</span></div>
+</div>
+</body></html>

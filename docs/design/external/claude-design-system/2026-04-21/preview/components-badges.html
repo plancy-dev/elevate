@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html><head>
+<style>
+@font-face { font-family: 'Geist Mono'; src: url('../fonts/GeistMono-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geist'; src: url('../fonts/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: var(--background); font-family: var(--font-sans); }
+  .section-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 14px 0 8px; }
+  .section-title:first-child { margin-top: 0; }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+  .badge { display: inline-flex; align-items: center; padding: 2px 8px; font-size: 12px; font-weight: 500; font-family: var(--font-sans); }
+  .badge-default { background: var(--surface-03); color: var(--text-secondary); }
+  .badge-blue { background: rgba(0,67,206,0.20); color: var(--info); }
+  .badge-green { background: rgba(25,128,56,0.20); color: var(--accent); }
+  .badge-red { background: rgba(218,30,40,0.20); color: var(--danger); }
+  .badge-warm { background: #393939; color: white; }
+  .label { font-size: 9px; font-family: var(--font-mono); color: var(--text-tertiary); text-align: center; margin-top: 3px; display: block; }
+  .grp { display: flex; flex-direction: column; align-items: flex-start; }
+</style>
+</head><body>
+<div class="section-title">Badge Variants</div>
+<div class="row">
+  <div class="grp"><span class="badge badge-default">Default</span><span class="label">default</span></div>
+  <div class="grp"><span class="badge badge-blue">Ebook</span><span class="label">blue</span></div>
+  <div class="grp"><span class="badge badge-blue">Draft</span><span class="label">blue</span></div>
+  <div class="grp"><span class="badge badge-green">Included</span><span class="label">green</span></div>
+  <div class="grp"><span class="badge badge-red">Error</span><span class="label">red</span></div>
+  <div class="grp"><span class="badge badge-warm">Beta</span><span class="label">warm-gray</span></div>
+</div>
+
+<div class="section-title">In Context</div>
+<div style="display:flex;flex-direction:column;gap:6px;max-width:360px">
+  <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border-subtle);background:var(--layer-01)">
+    <span class="badge badge-blue">Ebook</span>
+    <span style="font-size:14px;font-weight:600;color:var(--text-primary)">AI Workflow Guide 2026</span>
+    <span class="badge badge-green" style="margin-left:auto">Included</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border-subtle);background:var(--layer-01)">
+    <span class="badge badge-blue">Draft</span>
+    <span style="font-size:14px;font-weight:600;color:var(--text-primary)">Automation Workflow Episode</span>
+    <span class="badge badge-warm" style="margin-left:auto">Beta</span>
+  </div>
+</div>
+</body></html>

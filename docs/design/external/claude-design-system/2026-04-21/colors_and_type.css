@@ -1,0 +1,270 @@
+/**
+ * Elevate Design System — Colors & Typography Tokens
+ * Source of truth: app/globals.css + design/VISUAL_LANGUAGE_V2.md
+ * Font: Geist Sans + Geist Mono (via next/font/local in production)
+ * Nearest CDN substitute used in design system previews: https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap
+ * FLAG: Production uses Geist (Vercel). Previews substitute DM Sans (very close metrics). Provide Geist font files for pixel-perfect match.
+ */
+
+/* ─── Base Reset ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ─── Font Imports ───────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Geist';
+  src: url('fonts/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('fonts/Geist-Italic.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('fonts/GeistMono-Italic.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ─── App Shell Tokens (light) ──────────────────────────────────────────── */
+:root {
+  /* Surfaces */
+  --background:        #fafafa;
+  --foreground:        #161616;
+
+  /* Borders */
+  --border:            #c6c6c6;
+  --border-subtle:     #e0e0e0;
+
+  /* Text */
+  --text-primary:      #161616;
+  --text-secondary:    #393939;
+  --text-tertiary:     #6f6f6f;
+  --text-on-color:     #ffffff;
+
+  /* Brand / Interactive — --interactive and --focus alias --primary today;
+     kept distinct so they can diverge without a breaking rename */
+  --primary:           #0f62fe;  /* IBM Blue */
+  --primary-hover:     #0353e9;
+  --primary-active:    #002d9c;
+  --interactive:       #0f62fe;  /* links, icon fills (app) */
+  --focus:             #0f62fe;  /* focus rings, keyboard navigation */
+  --highlight:         rgba(15, 98, 254, 0.12);
+
+  /* Layers — canonical elevation stack */
+  --layer-01:          #ffffff;
+  --layer-02:          #f4f4f4;
+  --layer-03:          #e8e8e8;
+
+  /* Surface aliases — globals.css ships both --surface-* and --layer-*
+     (1:1 values today). Both kept explicit so future migrations see the alias. */
+  --surface:           #ffffff;   /* = --layer-01 */
+  --surface-02:        #f4f4f4;   /* = --layer-02 */
+  --surface-03:        #e8e8e8;   /* = --layer-03 */
+  --surface-hover:     #e0e0e0;
+
+  /* Field — same value as --layer-02 but semantically distinct:
+     unambiguous source for Input/Textarea/Select backgrounds */
+  --field:             #f4f4f4;
+  --field-hover:       #e8e8e8;
+
+  /* State */
+  --accent:            #198038;  /* success / positive */
+  --accent-hover:      #166a32;  /* success hover — pair with --accent on interactive success CTAs */
+  --danger:            #da1e28;
+  --warning:           #f1c21b;
+  --info:              #4589ff;
+
+  /* Marketing-only (scoped to .elevate-marketing-chrome) */
+  --marketing-canvas:          #f2f1ed;
+  --marketing-ink:             #26251e;
+  --marketing-ink-secondary:   #3f3e38;
+  --marketing-ink-tertiary:    #6f6d63;
+  --marketing-accent:          #f54e00;  /* Cursor Orange */
+  --marketing-accent-hover:    #e04400;
+  --marketing-glow:            rgba(245, 78, 0, 0.12);
+  --marketing-border-subtle:   rgba(38, 37, 30, 0.10);
+
+  /* Radius */
+  --radius-sm:    0.25rem;   /* 4px  — legacy chips only */
+  --radius-md:    0.5rem;    /* 8px  — tabs, segmented controls */
+  --radius-lg:    0.625rem;  /* 10px — default inputs, buttons */
+  --radius-xl:    0.75rem;   /* 12px — cards, dialogs */
+  --radius-pill:  9999px;    /* marketing CTA only */
+
+  /* Shadows */
+  --shadow-ambient:
+    0 0 16px rgba(0, 0, 0, 0.02),
+    0 0 8px rgba(0, 0, 0, 0.008);
+  --shadow-card:
+    0 1px 5px -4px rgba(19, 19, 22, 0.12),
+    0 0 0 1px rgba(34, 42, 53, 0.06),
+    0 4px 14px rgba(34, 42, 53, 0.06);
+
+  /* Typography */
+  --font-sans:  'Geist', system-ui, -apple-system, sans-serif;
+  --font-mono:  'Geist Mono', 'SF Mono', 'Fira Code', monospace;
+
+  /* Marketing fluid type scale */
+  --text-home-hero:       clamp(2rem, 1.2rem + 3.2vw, 3.5rem);
+  --text-section-title:   clamp(1.375rem, 1.12rem + 1.05vw, 1.875rem);
+  --text-page-title:      clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+  --text-lead:            clamp(1rem, 0.94rem + 0.22vw, 1.125rem);
+  --text-prose-body:      clamp(0.9375rem, 0.875rem + 0.2vw, 1.0625rem);
+  --text-prose-leading:   1.65;
+  --text-list-title:      clamp(1.0625rem, 0.96rem + 0.45vw, 1.25rem);
+
+  /* App shell type (fixed) */
+  --text-app-page-title:   1.5rem;    /* 24px, font-semibold */
+  --text-app-section:      0.875rem;  /* 14px, font-medium */
+  --text-app-body:         0.875rem;  /* 14px */
+  --text-app-caption:      0.75rem;   /* 12px */
+  --text-app-label:        0.6875rem; /* 11px, uppercase tracking-wider */
+
+  /* Spacing scale (Tailwind-aligned, 4px base) */
+  --space-1:   0.25rem;   /* 4px */
+  --space-2:   0.5rem;    /* 8px */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+}
+
+/* ─── Dark Mode Overrides ───────────────────────────────────────────────── */
+.dark, [data-theme="dark"] {
+  --background:       #0d0d0d;
+  --foreground:       #f4f4f4;
+  --surface:          #161616;
+  --surface-02:       #1c1c1c;
+  --surface-03:       #262626;
+  --surface-hover:    #2c2c2c;
+  --border:           #393939;
+  --border-subtle:    #262626;
+  --text-primary:     #f4f4f4;
+  --text-secondary:   #c6c6c6;
+  --text-tertiary:    #8d8d8d;
+  --layer-01:         #161616;
+  --layer-02:         #1c1c1c;
+  --layer-03:         #262626;
+  --field:            #1c1c1c;
+  --field-hover:      #262626;
+  --interactive:      #4589ff;
+  --accent:           #42be65;
+  --accent-hover:     #3dab5a;
+  --marketing-canvas: #141413;
+  --marketing-ink:    #f2f1ed;
+  --marketing-ink-secondary: #c9c8c2;
+  --marketing-ink-tertiary:  #8b8a84;
+  --marketing-glow:   rgba(245, 78, 0, 0.14);
+  --marketing-border-subtle: rgba(255, 255, 255, 0.12);
+  --shadow-card:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 1px 4px -2px rgba(0, 0, 0, 0.45),
+    0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* ─── Marketing Chrome Scope ────────────────────────────────────────────── */
+.elevate-marketing-chrome {
+  --foreground:     var(--marketing-ink);
+  --text-primary:   var(--marketing-ink);
+  --text-secondary: var(--marketing-ink-secondary);
+  --text-tertiary:  var(--marketing-ink-tertiary);
+  --border-subtle:  var(--marketing-border-subtle);
+  --interactive:    var(--marketing-accent);
+  --focus:          var(--marketing-accent);
+}
+
+/* ─── Semantic Element Styles ───────────────────────────────────────────── */
+body {
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--text-primary);
+  font-size: var(--text-app-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Marketing headings */
+.mkt-h1 {
+  font-family: var(--font-sans);
+  font-size: var(--text-home-hero);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  color: var(--text-primary);
+}
+.mkt-h2 {
+  font-family: var(--font-sans);
+  font-size: var(--text-section-title);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.mkt-lead {
+  font-size: var(--text-lead);
+  line-height: var(--text-prose-leading);
+  color: var(--text-secondary);
+}
+.mkt-body {
+  font-size: var(--text-prose-body);
+  line-height: var(--text-prose-leading);
+  color: var(--text-secondary);
+}
+
+/* App shell headings */
+.app-page-title {
+  font-family: var(--font-sans);
+  font-size: var(--text-app-page-title);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+.app-section-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-app-label);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+.app-body {
+  font-size: var(--text-app-body);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.app-caption {
+  font-size: var(--text-app-caption);
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+code, .mono {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+::selection { background: rgba(15, 98, 254, 0.3); color: #fff; }

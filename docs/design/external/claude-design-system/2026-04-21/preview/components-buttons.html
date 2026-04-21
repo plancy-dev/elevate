@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html><head>
+<style>
+@font-face { font-family: 'Geist Mono'; src: url('../fonts/GeistMono-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geist'; src: url('../fonts/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+</style>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: var(--background); font-family: var(--font-sans); }
+  .section-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 14px 0 8px; }
+  .section-title:first-child { margin-top: 0; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--font-sans); font-weight: 500; cursor: pointer; border: none; transition: background 100ms; }
+  /* variants */
+  .btn-primary { background: var(--primary); color: white; border-radius: 10px; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-secondary { background: var(--surface-03); color: var(--text-primary); border-radius: 10px; border: 1px solid transparent; }
+  .btn-tertiary { background: transparent; color: var(--interactive); border: 1px solid var(--interactive); border-radius: 10px; }
+  .btn-ghost { background: transparent; color: var(--interactive); border-radius: 10px; }
+  .btn-danger { background: var(--danger); color: white; border-radius: 10px; }
+  .btn-marketing { background: var(--marketing-accent); color: white; border-radius: 9999px; }
+  /* sizes */
+  .btn-sm { height: 32px; padding: 0 16px; font-size: 12px; }
+  .btn-md { height: 40px; padding: 0 16px; font-size: 14px; }
+  .btn-lg { height: 48px; padding: 0 16px; font-size: 14px; }
+  .btn-disabled { opacity: 0.4; cursor: not-allowed; }
+  .label { font-size: 9px; font-family: var(--font-mono); color: var(--text-tertiary); text-align: center; display: block; margin-top: 4px; }
+  .btn-group { display: flex; flex-direction: column; align-items: center; }
+</style>
+</head><body>
+<div class="section-title">Variants (md size)</div>
+<div class="row">
+  <div class="btn-group"><button class="btn btn-primary btn-md">Primary</button><span class="label">primary</span></div>
+  <div class="btn-group"><button class="btn btn-secondary btn-md">Secondary</button><span class="label">secondary</span></div>
+  <div class="btn-group"><button class="btn btn-tertiary btn-md">Tertiary</button><span class="label">tertiary</span></div>
+  <div class="btn-group"><button class="btn btn-ghost btn-md">Ghost</button><span class="label">ghost</span></div>
+  <div class="btn-group"><button class="btn btn-danger btn-md">Danger</button><span class="label">danger</span></div>
+  <div class="btn-group" style="background:#f2f1ed;padding:6px 8px;border-radius:8px"><button class="btn btn-marketing btn-md">Join waitlist</button><span class="label">marketing</span></div>
+</div>
+
+<div class="section-title">Sizes (primary)</div>
+<div class="row">
+  <div class="btn-group"><button class="btn btn-primary btn-sm">Small</button><span class="label">sm · 32px</span></div>
+  <div class="btn-group"><button class="btn btn-primary btn-md">Medium</button><span class="label">md · 40px</span></div>
+  <div class="btn-group"><button class="btn btn-primary btn-lg">Large</button><span class="label">lg · 48px</span></div>
+</div>
+
+<div class="section-title">States</div>
+<div class="row">
+  <div class="btn-group"><button class="btn btn-primary btn-md btn-disabled" disabled>Disabled</button><span class="label">disabled · opacity 40%</span></div>
+  <div class="btn-group">
+    <button class="btn btn-primary btn-md" style="display:inline-flex;align-items:center;gap:6px">
+      <svg class="spin" width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"/><path fill="currentColor" opacity="0.75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+      Loading
+    </button>
+    <span class="label">loading</span>
+  </div>
+</div>
+<style>
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</body></html>
