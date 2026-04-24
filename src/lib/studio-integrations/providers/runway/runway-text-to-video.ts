@@ -159,6 +159,14 @@ export async function runRunwayTextToVideo(
     if (e instanceof TaskTimedOutError) {
       return { ok: false, code: "runway_timeout" };
     }
-    return { ok: false, code: "runway_api_error", message: String(e) };
+    // Runway preflight 400 (e.g. "You do not have enough credits") surfaces
+    // as a BadRequestError whose message carries the string. Mirror the
+    // TaskFailedError branch so insufficient credits aren't misreported as
+    // a generic API error.
+    const rawMsg = e instanceof Error ? e.message : String(e);
+    if (failureLooksLikeInsufficientCredits(rawMsg)) {
+      return { ok: false, code: "runway_insufficient_credits", message: rawMsg };
+    }
+    return { ok: false, code: "runway_api_error", message: rawMsg };
   }
 }

@@ -232,10 +232,22 @@ export async function runRunwayImageToVideo(
     if (e instanceof TaskTimedOutError) {
       return { ok: false, code: "runway_i2v_timeout" };
     }
+    // Runway's preflight validation (createTask) can 400 with
+    // `{"error":"You do not have enough credits to run this task."}` before
+    // the polling loop even starts. The SDK surfaces that as a BadRequestError
+    // whose `.message` contains the string. Check both shapes.
+    const rawMsg = e instanceof Error ? e.message : String(e);
+    if (failureLooksLikeInsufficientCredits(rawMsg)) {
+      return {
+        ok: false,
+        code: "runway_i2v_insufficient_credits",
+        message: rawMsg,
+      };
+    }
     return {
       ok: false,
       code: "runway_i2v_api_error",
-      message: e instanceof Error ? e.message : String(e),
+      message: rawMsg,
     };
   }
 }

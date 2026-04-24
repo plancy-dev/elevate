@@ -71,8 +71,18 @@ Ran the Phase 1 flow end-to-end in the real app with live Gemini + Supabase.
    `studio-scene-images` URLs are now accessible.
 
 **Outcome:** scene keyframe grid renders 4 real Gemini images, watermark-free,
-ready for First/Last promotion. Runway I2V round-trip not yet tested (credit
-budget) but the remaining path is pure UI + the already-unit-tested adapter.
+ready for First/Last promotion.
+
+5. **Runway I2V preflight credit-check 400** — promoted candidates 0 and 1 to
+   First/Last Frame, then called `imageToVideo.create` with veo3.1 +
+   1080:1920 + 4s + both frames. Runway returned
+   `400 "You do not have enough credits to run this task."` immediately —
+   everything upstream (auth, model id, ratio, duration, frame URLs) was
+   correct. The account is simply out of credits. The adapter previously
+   classified this as `runway_i2v_api_error`; the i18n-friendly path is
+   `runway_i2v_insufficient_credits`. Fix: also run
+   `failureLooksLikeInsufficientCredits(err.message)` on the non-SDK-typed
+   error branch. Mirrored the same fix in `runway-text-to-video.ts`.
 
 ## Known debt / follow-ups
 
