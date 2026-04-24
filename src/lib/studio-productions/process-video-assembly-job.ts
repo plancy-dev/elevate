@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+import type { EditorOverlay } from "@/lib/studio-productions/editor-dsl";
 import { assembleVideo } from "@/lib/studio-productions/video-assembly";
 import {
   assembleVideoPerScene,
@@ -17,6 +18,25 @@ import { getContentStorageBucket } from "@/lib/env/content-storage";
 import type { Database, Json } from "@/types/database.types";
 
 type JobRow = Database["public"]["Tables"]["studio_video_assembly_jobs"]["Row"];
+
+function parseEditorOverlayExtensions(raw: unknown): EditorOverlay[] | undefined {
+  // Active today:
+  // - overlays: consumed by both legacy and per-scene assembly
+  //
+  // Reserved for later implementation:
+  // - scene_transitions_ms
+  // - narration_gain_db
+  // - bgm_gain_db / bgm_fade_in_sec / bgm_fade_out_sec
+  // - resolution
+  if (
+    raw &&
+    typeof raw === "object" &&
+    Array.isArray((raw as { overlays?: unknown }).overlays)
+  ) {
+    return (raw as { overlays: unknown[] }).overlays as EditorOverlay[];
+  }
+  return undefined;
+}
 
 async function failJob(
   admin: SupabaseClient<Database>,
@@ -49,6 +69,10 @@ export async function processVideoAssemblyJob(
   }
   const input: VideoAssemblyJobInput = raw;
   const clipCount = effectiveAssemblyClipCount(input);
+  // `editor_extensions` is only populated by the v3 editor export path.
+  const overlays = parseEditorOverlayExtensions(
+    (raw as { editor_extensions?: unknown }).editor_extensions,
+  );
 
   const result =
     input.per_scene && input.per_scene.length > 0
@@ -58,6 +82,7 @@ export async function processVideoAssemblyJob(
           srtContent: input.srt_content ?? undefined,
           bgMusicUrl: input.bg_music_url ?? undefined,
           bgMusicVolume: input.bg_music_volume ?? undefined,
+          overlays,
         })
       : await assembleVideo({
           clipUrls: input.clip_urls,
@@ -65,6 +90,7 @@ export async function processVideoAssemblyJob(
           srtContent: input.srt_content ?? undefined,
           bgMusicUrl: input.bg_music_url ?? undefined,
           bgMusicVolume: input.bg_music_volume ?? undefined,
+          overlays,
         });
 
   if (!result.ok) {

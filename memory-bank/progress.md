@@ -33,7 +33,8 @@
 | Visual language v2 + marketing/dashboard surface alignment | Shipped (see `tasks.md` P1 backlog) |
 | PostHog funnels saved in UI | Ops — [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) |
 | E2E on PR label | Optional — `e2e.yml` |
-| Timeline editor (Phase 2 — U5 + U6) | **Pending** — see `tasks.md` § G3.1.5 |
+| **Timeline editor (Phase 2 — U5 + U6)** | **Shipped 2026-04-24 — [`ADR-010`](../docs/adr/ADR-010-fullscreen-timeline-editor.md) · editor DSL v3 + FFmpeg overlay/xfade/amix builders · 마이그레이션 0건 (JSONB 재활용)** |
+| **Scene → Publish REFLECT/ARCHIVE (Phase 1+2+3)** | **Documented 2026-04-24 — [`archive-scene-to-publish-2026-04.md`](archive/work-history/archive-scene-to-publish-2026-04.md) + REFLECT Phase 1/3 + Phase 2 문서 · Reliability Hardening 포함** |
 
 ---
 

@@ -215,10 +215,25 @@
   - Buffer GraphQL 어댑터 (createPost / createIdea / listChannels) + verify + env fallback
   - 플랫폼별 캡션 LLM (IG/TT/YT Shorts) + 수동 편집 저장
   - PublishScheduler UI + 예약/재시도/취소
-- [x] **i18n:** `Dashboard.productions` 신규 키 (en/ko/ja/zh-CN/zh-TW, ~100개 키) · action-errors 18개
-- [x] **VERIFY:** `pnpm verify` + `pnpm test:i18n` 통과 · 단위 테스트 270개
-- [ ] **Phase 2 BUILD (U5+U6) — 웹 타임라인 편집기** (다음 작업 후보)
-- [ ] **REFLECT / ARCHIVE:** Phase 1 + Phase 3 종합 REFLECT 문서
+- [x] **i18n:** `Dashboard.productions` 신규 키 (en/ko/ja/zh-CN/zh-TW, ~170개 키) · action-errors 23개
+- [x] **VERIFY:** `pnpm verify` + `pnpm test:i18n` 통과 · 단위 테스트 298개
+- [x] **미들웨어 Supabase 요청 최적화 — 2026-04-24** ✅ (`src/lib/proxy/skip-session.ts` + `src/proxy.ts` + 12 단위 테스트): 정적/웹훅/쿠키 없는 anon 요청에서 `getUser()` 왕복 제거. 4/23 33k/일 이슈 해소.
+- [x] **Phase 2 BUILD (U5+U6) — 풀스크린 타임라인 편집기 — 2026-04-24** ✅
+  - ADR-010 (`docs/adr/ADR-010-fullscreen-timeline-editor.md`) 작성
+  - 편집 DSL v3 (`editor-dsl.ts` · 17 단위 테스트) + `dslToAssemblyJobInput` + JSONB 저장 (마이그레이션 0건)
+  - 풀스크린 라우트 `/dashboard/productions/[episodeId]/editor` + 자체 layout + `EditorShell` + `useReducer` store + 3초 debounce autosave (`saveEditorDsl`)
+  - PreviewPane: HTML5 `<video>` 연속 재생 + 플레이헤드 + 스크럽 바 + 재생/일시정지/리셋 컨트롤 + 오디오 2트랙 (narration + BGM) 동기화
+  - Scene track: HTML5 native DnD 재배열 + 루프/전환 배지 / Scene inspector: trim·duration·transition·loop·open source
+  - Overlay track: 시간 기반 텍스트 카드 (상/중/하/커스텀 좌표) + 폰트/색상/배경/불투명도/애니메이션(fade_in/slide_up) / OverlayLayer CSS 오버레이 준-프리뷰
+  - Audio inspector: narration gain 슬라이더 + BGM URL/gain/startSec/fadeIn/fadeOut + 실시간 볼륨/페이드 반영
+  - FFmpeg 확장: `ffmpeg-overlay-filter.ts` (drawtext chain + xfade + amix 빌더, 11 단위 테스트) + `video-assembly.ts` + `assemble-video-per-scene.ts` 두 번째 패스 + worker editor_extensions.overlays 라우팅
+  - ExportDialog + `exportEditorToAssembly` 서버 액션 + 에피소드 페이지 "편집기 열기" CTA 카드 (5개 로케일)
+- [x] **REFLECT / ARCHIVE — 2026-04-24** ✅
+  - Phase 1 + Phase 3 REFLECT: [`archive/work-history/reflect-scene-keyframes-i2v-buffer-2026-04.md`](archive/work-history/reflect-scene-keyframes-i2v-buffer-2026-04.md)
+  - Phase 2 + Reliability Hardening REFLECT: [`archive/work-history/reflect-fullscreen-editor-phase2-2026-04.md`](archive/work-history/reflect-fullscreen-editor-phase2-2026-04.md)
+  - 통합 ARCHIVE 허브: [`archive/work-history/archive-scene-to-publish-2026-04.md`](archive/work-history/archive-scene-to-publish-2026-04.md)
+- [ ] **Phase 2 polish (backlog):** overlay DnD on timeline · transition preview(CSS) · export 진행률 realtime 토스트
+- [ ] **실사용 End-to-End smoke (보류):** Buffer 채널 연결 + 24h rate-limit 창 확보 후 1회전 증빙. 운영 전제조건은 [`archive-scene-to-publish-2026-04.md`](archive/work-history/archive-scene-to-publish-2026-04.md) 참고.
 
 #### G3.1.4 — **씬** 단계: 사용자 영상 업로드 + TTS/자막 정렬 (INIT · 2026-04-17)
 
@@ -419,6 +434,10 @@
 | P2 | **롱폼·모바일 타이포 리듬** | ✅ Phase A–C [`docs/features/PLAN-responsive-longform-typography.md`](../docs/features/PLAN-responsive-longform-typography.md) — 배포 후 Lighthouse로 CV·LCP만 점검 |
 | P2 | **Studio AI 콘텐츠 OS** — 제공자·에셋·잡 레이어 ([`tasks.md`](tasks.md) § G3.3) | INIT 준비됨 → PLAN 후 단계적 BUILD |
 | P2 | **Studio 파이프라인 초안 다이얼로그** — PostHog `ELEVATE_STUDIO_PIPELINE_DRAFT_DIALOG_OPENED`(이름 합의) · 모달 **포커스 트랩**·오픈 시 **첫 필드/닫기 버튼** 초점(`Modal` / `EpisodeDraftWorkbench`) | G3.1.2 BUILD 완료 · 수동 스모크·CREATIVE §8은 [`archive-pipeline-draft-dialog-2026-04.md`](archive/work-history/archive-pipeline-draft-dialog-2026-04.md) |
+| P2 | **Phase 2 편집기 polish** — (a) overlay DnD on timeline (현재는 클릭 선택만), (b) transition preview(CSS/Canvas), (c) export 진행률 realtime 토스트 | [`ADR-010`](../docs/adr/ADR-010-fullscreen-timeline-editor.md) 확장; 마이그레이션 불필요. 편집 반응성이 실사용자 피드백에서 병목으로 확인될 때 착수 |
+| P2 | **실사용 End-to-End smoke (Phase 1→2→3)** — Gemini/Runway/Buffer 실키 1회전 증빙 (scene keyframe → I2V → editor → export → Buffer 예약) | 외부 전제조건: Buffer 채널 연결 + 24h rate-limit 창. 체크리스트는 [`archive-scene-to-publish-2026-04.md`](archive/work-history/archive-scene-to-publish-2026-04.md) |
+| P3 | **private 버킷 + signed-URL 어댑터 (prod)** — Runway I2V가 public HTTPS를 요구하므로, prod에서 `elevate-content` 비공개 유지 시 signed URL 분기 필요 | REFLECT Phase 1 §follow-ups |
+| P3 | **Buffer remote 취소 reconciliation worker** — 현재 cancel은 로컬 row만 업데이트 | REFLECT Phase 1 §follow-ups |
 
 ---
 

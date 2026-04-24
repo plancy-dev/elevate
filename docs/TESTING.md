@@ -11,7 +11,7 @@
 ## Commands
 
 | Command | Purpose |
-|---------|---------|
+| ------- | ------- |
 | `pnpm test` | Vitest — **unit tests only** (`tests/unit/`) |
 | `pnpm test:watch` | Vitest watch, unit only |
 | `pnpm test:integration` | Vitest — Supabase smoke (see below) |
@@ -89,6 +89,25 @@ CI does **not** run integration tests unless you add secrets and env to the work
 
 **Specs:** `smoke.spec.ts` — login page shell only. `marketing-waitlist.spec.ts` — home band waitlist (mocked API) + primary-band Contact sales link. `auth-dashboard.spec.ts` — password sign-in and dashboard sidebar. `library.spec.ts` — login → Library heading. `auth-session.spec.ts` — sign out → login page → sign in again (session regression).
 
+### Live smoke prerequisites + mutation warning
+
+`live-phase123-full-smoke.spec.ts` / `live-phase2-phase3-smoke.spec.ts` are **state-mutating** end-to-end flows.
+
+- They can insert/update: `studio_video_assembly_jobs`, `studio_production_artifacts`, `studio_scheduled_posts`, and some `pipeline_prefs` setup values.
+- Run only against a dedicated test episode/project, never on production-critical content.
+- Required env baseline: `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `E2E_USER_EMAIL`, `E2E_USER_PASSWORD`.
+- If Buffer returns 24h rate-limit, treat it as external backlog; verify internal retry UX/row transitions separately.
+
+### IMPLEMENT validation gate (recommended order)
+
+Use this exact sequence before calling a refactor "done":
+
+1. `pnpm run typecheck`
+2. `pnpm run lint`
+3. `pnpm test` (unit)
+4. Targeted E2E set for touched scope (`auth-*`, `live-phase*` as needed)
+5. `pnpm verify` once the above are stable
+
 ### GitHub Actions (optional)
 
 Workflow **`.github/workflows/e2e.yml`**:
@@ -99,7 +118,7 @@ Workflow **`.github/workflows/e2e.yml`**:
 Add these **repository secrets** (same values as a working `.env.local` against your Supabase project):
 
 | Secret | Purpose |
-|--------|---------|
+| ------ | ------- |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon key |
 | `E2E_USER_EMAIL` | Test user email |

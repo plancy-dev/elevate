@@ -6,8 +6,14 @@
  * @see https://buffer.com/developers/api
  */
 
-const BUFFER_GRAPHQL_URL =
-  process.env.BUFFER_API_URL?.trim() || "https://graph.buffer.com";
+function resolveBufferGraphqlUrl(): string {
+  const raw = process.env.BUFFER_API_URL?.trim();
+  if (!raw) return "https://api.buffer.com/graphql";
+  if (raw === "https://graph.buffer.com") return "https://api.buffer.com/graphql";
+  return raw;
+}
+
+const BUFFER_GRAPHQL_URL = resolveBufferGraphqlUrl();
 
 export async function verifyBufferApiKey(apiKey: string): Promise<
   { ok: true } | { ok: false; status: number }

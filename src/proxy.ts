@@ -1,6 +1,10 @@
 import createIntlMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "@/i18n/routing";
+import {
+  classifyProxyRequest,
+  shouldForceLoginRedirect,
+} from "@/lib/proxy/skip-session";
 import { redirectAuthLandingToCallbackIfNeeded } from "@/lib/supabase/auth-callback-forward";
 import { updateSession } from "@/lib/supabase/update-session";
 
@@ -76,7 +80,42 @@ export async function proxy(request: NextRequest) {
   const authForward = redirectAuthLandingToCallbackIfNeeded(request);
   if (authForward) return authForward;
 
-  if (shouldSkipIntl(request.nextUrl.pathname)) {
+  const pathname = request.nextUrl.pathname;
+  const classification = classifyProxyRequest({
+    pathname,
+    cookieNames: request.cookies.getAll().map((c) => c.name),
+  });
+
+  /**
+   * Short-circuit for static + public paths (robots/sitemap/feed/webhooks).
+   * No session check, no i18n — just pass the request through so Next
+   * handles the response. This is the single largest quota save because
+   * crawlers hit these constantly.
+   */
+  if (classification === "skip_static") {
+    return NextResponse.next({ request });
+  }
+
+  /**
+   * Anonymous request (no Supabase auth cookies). We can skip
+   * `updateSession` entirely — `getUser()` would just return null after a
+   * network round-trip. Still enforce the one guard we care about:
+   * `/dashboard` must redirect to `/login`.
+   */
+  if (classification === "skip_anonymous") {
+    if (shouldForceLoginRedirect(pathname)) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("next", pathname);
+      return NextResponse.redirect(url);
+    }
+    if (shouldSkipIntl(pathname)) {
+      return NextResponse.next({ request });
+    }
+    return intlMiddleware(request);
+  }
+
+  if (shouldSkipIntl(pathname)) {
     return updateSession(request);
   }
 
