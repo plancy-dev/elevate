@@ -183,6 +183,43 @@
 > **SoT:** [`docs/features/PLAN-pipeline-source-visibility.md`](../docs/features/PLAN-pipeline-source-visibility.md) · [`pipeline-reference-context.ts`](../src/lib/studio-productions/pipeline-reference-context.ts) · UI [`pipeline-reference-sources-strip.tsx`](../src/components/dashboard/pipeline-reference-sources-strip.tsx) (`ProductionEpisodePipeline` 진행률 바 아래).  
 > **관련 UX:** 모델·사전 프롬프트 접기 — [`pipeline-step-advanced-toggle.tsx`](../src/components/dashboard/pipeline-step-advanced-toggle.tsx) (Lucide `SlidersHorizontal` / `ChevronUp`, 파이프라인·YouTube 업로드 카드).
 
+#### G3.1.5 — **씬 이미지 → Runway I2V → 웹 편집 → Buffer 예약 발행** (INIT · 2026-04-23)
+
+> **목표:** “키만 넣어두면 딸깍딸깍” — 씬별 **키프레임 이미지 생성(Nano Banana 2 / FLUX / Seedream)** → **First/Last Frame 고정** → Runway **image-to-video** → **웹 타임라인 편집** → **Buffer 3채널 예약 발행**까지 파이프라인 확장. 프롬프트 스튜디오의 발전형으로서 각 태스크에 맞게 프롬프트가 자동 최적화된다.
+> **SoT (INIT):** [`docs/features/INIT-scene-image-to-video-and-publishing.md`](../docs/features/INIT-scene-image-to-video-and-publishing.md)
+> **비목표 (INIT):** 코드 구현 — PLAN/ADR/CREATIVE 입력용 정리.
+
+| INIT 요약 | |
+|-----------|--|
+| **복잡도** | **L4** — 신규 provider 5개 후보(Gemini Imagen/FLUX/Seedream + Runway I2V + Buffer)·마이그레이션 3~4개·대형 UI 2개(갤러리·편집기)·FFmpeg 그래프 확장 |
+| **재활용 대상** | `studio_production_artifacts` 원장 · `studio_org_provider_connections` · OpenAI Images(썸네일) 경로 · Runway T2V 어댑터 · FFmpeg assembleVideo · YouTube OAuth 패턴 · `packaging_draft` LLM 경로 · 편집 프리셋 · `studio_projects.brand_guide` JSONB |
+| **슬라이스** | **U1** 이미지 provider 추상화 + 4개 어댑터(Gemini/FLUX Replicate/FLUX fal.ai/Seedream) + 공식 문서 링크 · **U2** 씬 이미지 갤러리 + Character Bible + First/Last 지정 · **U3** Runway I2V 어댑터/프롬프트 + preflight · **U5~U6** 타임라인 편집기 · **U7~U9** Buffer 연동·캡션·예약 발행 |
+| **Phase 매핑** | **Phase 1 = U1+U2+U3** · Phase 2 = U5+U6 · Phase 3 = U7+U8+U9 |
+| **확정 결정 (INIT)** | D1: provider 4개 Phase 1 포함 · D2: FLUX Replicate+fal.ai 둘 다 · D3: `brand_guide` JSONB 확장 + Master Reference 아티팩트 · D4: UI는 First/Last 둘 다, 어댑터는 provider 능력별 주입 · D5: IDENTITY LOCK + reference image (LoRA는 비목표) · D6: 조직 기본값+에피소드 오버라이드 · D7: preflight만 · D8: 완성도 높은 MVP · **D9: 모든 UI에 provider 공식 문서 앵커 링크** |
+| **ADR 후보** | **ADR-008** (이미지 provider + 키프레임 + 워터마크 정책) · **ADR-009** (편집 DSL + Buffer 예약) · (장기) ADR-010 LoRA/파인튜닝 |
+| **다음 모드** | **PLAN** — Phase 1 집중 (사용자 답변: Phase 1 "완성도 높은 MVP"로 풀 볼륨) |
+
+**체크리스트 (2026-04-24 업데이트 — Phase 1 + Phase 3 선행 완료)**
+
+- [x] **PLAN (Phase 1 집중):** [`.cursor/plans/scene_keyframes_and_i2v_phase_1_*.plan.md`](../.cursor/plans/)
+- [x] **ADR-009 (확정):** [`docs/adr/ADR-009-studio-image-providers-and-keyframes.md`](../docs/adr/ADR-009-studio-image-providers-and-keyframes.md) — plan의 ADR-008은 기존 번호와 충돌해 009로 조정
+- [x] **Phase 1 BUILD (U1+U2+U3) — 2026-04-23** ✅
+  - 마이그레이션 `038` (provider CHECK: flux_replicate/flux_fal/seedream) · `039` (character_bible JSONB + Master Reference URL/Storage Path)
+  - 이미지 provider 추상화 + 4개 어댑터 ([`src/lib/studio-integrations/providers/images/`](../src/lib/studio-integrations/providers/images/))
+  - `provider-docs.ts` 공식 문서 링크 SoT (D9)
+  - Character Bible 하이브리드 JSONB + Master Reference 업로드 UI
+  - 씬 이미지 갤러리 + First/Last Frame 지정 + IDENTITY LOCK 프롬프트
+  - Runway I2V 어댑터 (capability 테이블 — veo3.1 기본 · first/last 자동 분기)
+- [x] **Phase 3 BUILD (U7+U8+U9) — 2026-04-23** ✅ (Phase 2 선행 스킵)
+  - 마이그레이션 `040` (buffer CHECK) · `041` (studio_scheduled_posts + RLS + UNIQUE 멱등)
+  - Buffer GraphQL 어댑터 (createPost / createIdea / listChannels) + verify + env fallback
+  - 플랫폼별 캡션 LLM (IG/TT/YT Shorts) + 수동 편집 저장
+  - PublishScheduler UI + 예약/재시도/취소
+- [x] **i18n:** `Dashboard.productions` 신규 키 (en/ko/ja/zh-CN/zh-TW, ~100개 키) · action-errors 18개
+- [x] **VERIFY:** `pnpm verify` + `pnpm test:i18n` 통과 · 단위 테스트 270개
+- [ ] **Phase 2 BUILD (U5+U6) — 웹 타임라인 편집기** (다음 작업 후보)
+- [ ] **REFLECT / ARCHIVE:** Phase 1 + Phase 3 종합 REFLECT 문서
+
 #### G3.1.4 — **씬** 단계: 사용자 영상 업로드 + TTS/자막 정렬 (INIT · 2026-04-17)
 
 > **목표:** UI에서 **「씬 렌더 (Runway)」→「씬」** 등으로 정리하고, 씬별로 **Runway 생성 클립 대신(또는 혼합)** **임의 영상 파일**을 올리면 **에피소드 TTS·전체 자막**을 씬 길이에 맞게 잘라 최종 조립에 반영한다. **운영 서비스 수준**·**추가 SaaS 비용 없음**을 전제로 설계한다.  

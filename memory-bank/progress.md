@@ -29,9 +29,11 @@
 | Library detail, Lemon billing entry, purchase history, admin catalog edits (`020`–`021`) | Shipped 2026-04 — [`archive/work-history/archive-dashboard-billing-library-lemon-2026-04.md`](archive/work-history/archive-dashboard-billing-library-lemon-2026-04.md) |
 | Prompt Studio placeholder + beta allowlist | Shipped |
 | Studio Productions v1 (episodes, artifacts, workbench) | Shipped — ADR [`docs/adr/ADR-003-studio-productions-mvp.md`](../docs/adr/ADR-003-studio-productions-mvp.md) |
+| **Scene keyframes + Runway I2V + Buffer scheduled publishing (Phase 1 + Phase 3)** | **Shipped 2026-04-24 — [`ADR-009`](../docs/adr/ADR-009-studio-image-providers-and-keyframes.md) · migrations `038`–`041`** |
 | Visual language v2 + marketing/dashboard surface alignment | Shipped (see `tasks.md` P1 backlog) |
 | PostHog funnels saved in UI | Ops — [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) |
 | E2E on PR label | Optional — `e2e.yml` |
+| Timeline editor (Phase 2 — U5 + U6) | **Pending** — see `tasks.md` § G3.1.5 |
 
 ---
 

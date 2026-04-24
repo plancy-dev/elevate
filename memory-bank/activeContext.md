@@ -2,9 +2,27 @@
 
 ## 현재 페이즈
 
-**INIT (2026-04-17) — 씬 단계: 사용자 영상 + TTS/자막 정렬 (운영 수준 설계)**  
-**SoT:** [`docs/features/INIT-scene-user-media-assembly.md`](../docs/features/INIT-scene-user-media-assembly.md) · **tasks:** [`tasks.md`](tasks.md) **§ G3.1.4**  
-**다음:** **PLAN** — 스키마·조립 잡 JSON·Storage·용량 상한 확정 → CREATIVE(씬 카드 UX) → BUILD.
+**Phase 1 + Phase 3 BUILD 완료 (2026-04-23 / 커밋: 2026-04-24) — AI 콘텐츠 자동화 스튜디오 v3**
+**SoT:** [`docs/features/INIT-scene-image-to-video-and-publishing.md`](../docs/features/INIT-scene-image-to-video-and-publishing.md) · [`ADR-009`](../docs/adr/ADR-009-studio-image-providers-and-keyframes.md) · **tasks:** [`tasks.md`](tasks.md) **§ G3.1.5**
+**이번 출시 범위 (U1+U2+U3, U7+U8+U9):** 이미지 provider 4개(Gemini/FLUX-Replicate/FLUX-fal/Seedream) → Character Bible + Master Reference → 씬 키프레임 갤러리 + First/Last Frame → Runway I2V (veo3.1, capability 분기) → Buffer 예약 발행 (3채널 캡션 자동 생성 + 재시도/취소).
+
+**품질:** `pnpm verify` + `pnpm test:i18n` 통과 · 단위 테스트 **270개** · 마이그레이션 `038/039/040/041` 원격 적용 완료.
+
+**확정 결정 (D1~D9):** 어제 합의 유지 — provider 4개 Phase 1 일괄 포함, UI는 First+Last 둘 다, IDENTITY LOCK + reference image, 공식 문서 링크 전면 노출.
+
+**다음 후보:**
+
+1. **Phase 2 (U5+U6) — 웹 타임라인 편집기** (L4): 트림/순서/텍스트 오버레이/전환/BGM + 편집 DSL v2 + FFmpeg 그래프 확장.
+2. **실사용 E2E 검증** — Gemini 키로 한 에피소드 전체 파이프라인 수동 스모크 → 버그 리포트.
+3. **REFLECT/ARCHIVE 정리** — Phase 1+3 종합 회고 문서.
+4. **`proxy.ts` DB 요청 최적화** — 봇/정적 경로 미들웨어 스킵 (어제 33k/일 건 건).
+
+**선택 권장:** Phase 2 진입 전에 **2번(실사용 검증)**을 한 번 돌려 P1/P3 잔 버그를 걸러내는 것이 가장 비용 대비 효용 큼.
+
+---
+
+**INIT (2026-04-17) — 씬 단계: 사용자 영상 + TTS/자막 정렬 (운영 수준 설계)** — 상위 INIT으로 흡수됨(G3.1.5).
+**SoT:** [`docs/features/INIT-scene-user-media-assembly.md`](../docs/features/INIT-scene-user-media-assembly.md) · **tasks:** [`tasks.md`](tasks.md) **§ G3.1.4**
 
 ---
 
