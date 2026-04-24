@@ -31,7 +31,7 @@ import {
   deleteSceneImageFromStorage,
   uploadSceneImageToContentStorage,
 } from "@/lib/studio-productions/scene-image-storage";
-import { parseSceneRows } from "@/lib/studio-productions/scene-rows-json";
+import { scenePlanRowsFromPipelinePrefs } from "@/lib/studio-productions/episode-scene-plan-dto";
 import { resolveEpisodeFormat, FORMAT_SPECS } from "@/lib/studio-productions/episode-format";
 import { isSceneKeyframeRole } from "@/lib/studio-productions/artifact-roles";
 import { STUDIO_CONTENT_TEXT_MAX } from "@/lib/studio-productions/constants";
@@ -79,23 +79,14 @@ async function loadEpisodeProject(
   return { episode, project };
 }
 
-async function loadSceneForIndex(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  organizationId: string,
-  episodeId: string,
+function loadSceneFromPipelinePrefs(
+  episode: { pipeline_prefs?: unknown } | null | undefined,
   sceneIndex: number,
-): Promise<{ narration: string; visualPrompt: string } | null> {
-  const { data: rows } = await supabase
-    .from("studio_production_artifacts")
-    .select("content_text, created_at")
-    .eq("episode_id", episodeId)
-    .eq("organization_id", organizationId)
-    .eq("artifact_role", "settings")
-    .eq("tool_platform", "scene_plan")
-    .order("created_at", { ascending: false })
-    .limit(1);
-  const payload = rows?.[0]?.content_text ?? "";
-  const parsed = parseSceneRows(payload);
+): { narration: string; visualPrompt: string } | null {
+  const prefs = episode?.pipeline_prefs;
+  const parsed = scenePlanRowsFromPipelinePrefs(
+    (prefs ?? null) as Parameters<typeof scenePlanRowsFromPipelinePrefs>[0],
+  );
   if (!parsed) return null;
   const match = parsed.find((r) => r.index === sceneIndex);
   if (!match) return null;
@@ -170,12 +161,7 @@ export async function generateSceneKeyframes(
     return { error: ActionErrorCode.studioSceneImageNoProviderKey };
   }
 
-  const scene = await loadSceneForIndex(
-    supabase,
-    auth.ctx.organizationId,
-    episodeId,
-    sceneIndex,
-  );
+  const scene = loadSceneFromPipelinePrefs(ctx.episode, sceneIndex);
   if (!scene) {
     return { error: ActionErrorCode.studioSceneRenderScenesInvalid };
   }

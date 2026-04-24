@@ -11,6 +11,7 @@ import "server-only";
 
 import {
   IMAGE_PROVIDER_META,
+  type ImageGenErrorCode,
   type ImageGenParams,
   type ImageGenResult,
   type ImageProviderAdapter,
@@ -94,64 +95,104 @@ export const geminiImageAdapter: ImageProviderAdapter = async (
   const images: GeneratedImage[] = [];
 
   try {
-    // Gemini does not accept `n` in generateContent; call once per candidate
-    // with a different candidateCount setting (up to maxCount in vendor).
-    // In practice we request `count` candidates in a single call via
-    // generationConfig.candidateCount which the model supports up to 4.
+    // Gemini's image-generation models (Nano Banana / Nano Banana 2 / Pro) do
+    // not support `candidateCount > 1`. Fan out `count` parallel requests
+    // instead, same as the FLUX Replicate adapter.
     const url = new URL(GEMINI_ENDPOINT);
     url.searchParams.set("key", key);
 
-    const res = await fetch(url.toString(), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts }],
-        generationConfig: {
-          candidateCount: count,
-          responseModalities: ["IMAGE"],
-        },
-      }),
-      signal: controller.signal,
-    });
+    type SingleCallResult =
+      | { ok: true; images: GeneratedImage[] }
+      | { ok: false; code: ImageGenErrorCode; status?: number; message?: string };
+    const singleCall = async (): Promise<SingleCallResult> => {
+      const res = await fetch(url.toString(), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts }],
+          generationConfig: {
+            candidateCount: 1,
+            responseModalities: ["IMAGE"],
+          },
+        }),
+        signal: controller.signal,
+      });
 
-    if (!res.ok) {
-      if (res.status === 429) {
-        return { ok: false, code: "image_provider_rate_limited", status: 429 };
+      if (!res.ok) {
+        if (res.status === 429) {
+          return { ok: false, code: "image_provider_rate_limited", status: 429 };
+        }
+        const text = await res.text().catch(() => "");
+        return {
+          ok: false,
+          code: "image_provider_api_error",
+          status: res.status,
+          message: text.slice(0, 500),
+        };
       }
-      const text = await res.text().catch(() => "");
-      return {
-        ok: false,
-        code: "image_provider_api_error",
-        status: res.status,
-        message: text.slice(0, 500),
-      };
-    }
 
-    const body = (await res.json()) as GeminiResponseBody;
+      const body = (await res.json()) as GeminiResponseBody;
 
-    if (body.promptFeedback?.blockReason) {
+      if (body.promptFeedback?.blockReason) {
+        return {
+          ok: false,
+          code: "image_provider_safety_blocked",
+          message: body.promptFeedback.blockReason,
+        };
+      }
+
+      const imgs: GeneratedImage[] = [];
+      for (const cand of body.candidates ?? []) {
+        for (const p of cand.content?.parts ?? []) {
+          if (p.inlineData?.data && p.inlineData.mimeType) {
+            imgs.push({
+              bytes: Buffer.from(p.inlineData.data, "base64"),
+              mimeType: p.inlineData.mimeType,
+              width: 0,
+              height: 0,
+              watermarkFree: true,
+            });
+          }
+        }
+      }
+      return { ok: true, images: imgs };
+    };
+
+    const results = await Promise.all(
+      Array.from({ length: count }, () => singleCall()),
+    );
+
+    // If every parallel call was safety-blocked, surface that code; if every
+    // call failed for another reason, surface the first error. Otherwise
+    // aggregate the images we did get.
+    const allSafetyBlocked = results.every(
+      (r) => !r.ok && r.code === "image_provider_safety_blocked",
+    );
+    if (allSafetyBlocked) {
+      const first = results[0];
       return {
         ok: false,
         code: "image_provider_safety_blocked",
-        message: body.promptFeedback.blockReason,
+        message: !first.ok ? first.message : undefined,
       };
     }
 
-    for (const cand of body.candidates ?? []) {
-      for (const p of cand.content?.parts ?? []) {
-        if (p.inlineData?.data && p.inlineData.mimeType) {
-          images.push({
-            bytes: Buffer.from(p.inlineData.data, "base64"),
-            mimeType: p.inlineData.mimeType,
-            width: 0,
-            height: 0,
-            watermarkFree: true,
-          });
-        }
-      }
+    for (const r of results) {
+      if (r.ok) images.push(...r.images);
     }
 
     if (images.length === 0) {
+      const firstError = results.find(
+        (r): r is Extract<SingleCallResult, { ok: false }> => !r.ok,
+      );
+      if (firstError) {
+        return {
+          ok: false,
+          code: firstError.code,
+          status: firstError.status,
+          message: firstError.message,
+        };
+      }
       return {
         ok: false,
         code: "image_provider_api_error",

@@ -17,7 +17,7 @@ import {
 import { parseCharacterBible } from "@/lib/studio-productions/character-bible";
 import { buildSceneI2VPrompt } from "@/lib/studio-productions/scene-i2v-prompt";
 import { parseSceneKeyframeMetadata } from "@/lib/studio-productions/scene-keyframe-metadata";
-import { parseSceneRows } from "@/lib/studio-productions/scene-rows-json";
+import { scenePlanRowsFromPipelinePrefs } from "@/lib/studio-productions/episode-scene-plan-dto";
 import { resolveEpisodeFormat, FORMAT_SPECS } from "@/lib/studio-productions/episode-format";
 import { STUDIO_CONTENT_TEXT_MAX } from "@/lib/studio-productions/constants";
 import { logAudit } from "@/lib/audit/log";
@@ -115,18 +115,9 @@ export async function renderSceneWithI2V(
     return { error: ActionErrorCode.studioRunwayI2vNoFirstFrame };
   }
 
-  // Look up the scene plan to find duration + visual prompt + narration.
-  const { data: planRows } = await supabase
-    .from("studio_production_artifacts")
-    .select("content_text, created_at")
-    .eq("episode_id", episodeId)
-    .eq("organization_id", auth.ctx.organizationId)
-    .eq("artifact_role", "settings")
-    .eq("tool_platform", "scene_plan")
-    .order("created_at", { ascending: false })
-    .limit(1);
-
-  const scenes = parseSceneRows(planRows?.[0]?.content_text ?? "") ?? [];
+  // Scene plan lives in `episode.pipeline_prefs.sceneRender.scenesJson`,
+  // not as a settings/scene_plan artifact. See scenePlanRowsFromPipelinePrefs.
+  const scenes = scenePlanRowsFromPipelinePrefs(episode.pipeline_prefs) ?? [];
   const sceneRow = scenes.find((s) => s.index === sceneIndex);
   if (!sceneRow) {
     return { error: ActionErrorCode.studioSceneRenderScenesInvalid };

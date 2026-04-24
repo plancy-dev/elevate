@@ -7,6 +7,7 @@
 **이번 출시 범위 (U1+U2+U3, U7+U8+U9):** 이미지 provider 4개(Gemini/FLUX-Replicate/FLUX-fal/Seedream) → Character Bible + Master Reference → 씬 키프레임 갤러리 + First/Last Frame → Runway I2V (veo3.1, capability 분기) → Buffer 예약 발행 (3채널 캡션 자동 생성 + 재시도/취소).
 
 **품질:** `pnpm verify` + `pnpm test:i18n` 통과 · 단위 테스트 **270개** · 마이그레이션 `038/039/040/041` 원격 적용 완료.
+**E2E 스모크 (2026-04-24):** Phase 1 핵심 경로(Character Bible 저장 → Scene Keyframe Gallery → Gemini 4장 생성) **PASS**. 발견된 버그 4개 전부 수정 — scene plan 파서 정합, Gemini 모델명(3.1-flash-image-preview), candidateCount fan-out, Storage bucket public. 상세: [`archive/work-history/reflect-scene-keyframes-i2v-buffer-2026-04.md`](archive/work-history/reflect-scene-keyframes-i2v-buffer-2026-04.md).
 
 **확정 결정 (D1~D9):** 어제 합의 유지 — provider 4개 Phase 1 일괄 포함, UI는 First+Last 둘 다, IDENTITY LOCK + reference image, 공식 문서 링크 전면 노출.
 

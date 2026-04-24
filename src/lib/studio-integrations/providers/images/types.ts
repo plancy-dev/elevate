@@ -83,7 +83,7 @@ export const IMAGE_PROVIDER_META: Record<
 > = {
   google_gemini: {
     id: "google_gemini",
-    defaultModel: "gemini-2.5-flash-image-preview",
+    defaultModel: "gemini-3.1-flash-image-preview",
     maxCount: 4,
     supportsReference: true,
   },

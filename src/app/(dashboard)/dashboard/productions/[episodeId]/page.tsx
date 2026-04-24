@@ -18,7 +18,6 @@ import {
 } from "@/lib/data/studio-productions";
 import { listScheduledPostsForEpisode } from "@/lib/data/studio-scheduled-posts";
 import { loadSceneKeyframeArtifacts } from "@/lib/studio-productions/scene-keyframe-artifacts";
-import { parseSceneRows } from "@/lib/studio-productions/scene-rows-json";
 import {
   parseSocialCaptions,
   type SocialCaptions,
@@ -173,23 +172,14 @@ export default async function ProductionEpisodePage({ params }: Props) {
 
   // Scene keyframes (ADR-009): load artifacts + parsed scene plan + available
   // image provider keys so the gallery only shows providers the org can use.
+  // Scene plan lives in `episode.pipeline_prefs.sceneRender.scenesJson`, not
+  // as a `settings/scene_plan` artifact — reuse the already-parsed `scenePlanRows`.
   const sceneKeyframesByIndex = await loadSceneKeyframeArtifacts(
     supabase,
     orgId,
     episodeId,
   );
-  const scenePlanForKeyframes = (() => {
-    const latest = artifacts
-      .filter(
-        (a) => a.artifact_role === "settings" && a.tool_platform === "scene_plan",
-      )
-      .sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-      )[0];
-    return latest ? parseSceneRows(latest.content_text ?? "") ?? [] : [];
-  })();
-  const sceneGalleryRows = scenePlanForKeyframes.map((row) => {
+  const sceneGalleryRows = (scenePlanRows ?? []).map((row) => {
     const slot = sceneKeyframesByIndex.get(row.index);
     return {
       ...row,
