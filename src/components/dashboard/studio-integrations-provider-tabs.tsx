@@ -34,6 +34,14 @@ function tabLabel(
       return t("integrationsProvider.google_gemini.shortTitle");
     case "elevenlabs":
       return t("integrationsProvider.elevenlabs.shortTitle");
+    case "flux_replicate":
+      return t("integrationsProvider.flux_replicate.shortTitle");
+    case "flux_fal":
+      return t("integrationsProvider.flux_fal.shortTitle");
+    case "seedream":
+      return t("integrationsProvider.seedream.shortTitle");
+    case "buffer":
+      return t("integrationsProvider.buffer.shortTitle");
   }
 }
 

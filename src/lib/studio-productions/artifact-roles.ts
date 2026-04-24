@@ -15,15 +15,34 @@ export const STUDIO_SUGGESTED_ARTIFACT_ROLES = [
   "subtitle_srt",
   "subtitle_vtt",
   "scene_clip",
+  "scene_keyframe_candidate",
+  "scene_keyframe_first",
+  "scene_keyframe_last",
   "assembled_video",
   "thumbnail",
   "timed_script",
   "packaging_draft",
+  "social_captions",
   "reference_source",
   "title_suggestion",
   "compliance_note",
   "other",
 ] as const;
+
+/** Scene keyframe artifact roles (ADR-009 §3). */
+export const STUDIO_SCENE_KEYFRAME_ROLES = [
+  "scene_keyframe_candidate",
+  "scene_keyframe_first",
+  "scene_keyframe_last",
+] as const;
+export type StudioSceneKeyframeRole =
+  (typeof STUDIO_SCENE_KEYFRAME_ROLES)[number];
+
+export function isSceneKeyframeRole(
+  role: string,
+): role is StudioSceneKeyframeRole {
+  return (STUDIO_SCENE_KEYFRAME_ROLES as readonly string[]).includes(role);
+}
 
 export type StudioSuggestedArtifactRole =
   (typeof STUDIO_SUGGESTED_ARTIFACT_ROLES)[number];

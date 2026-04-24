@@ -5,6 +5,14 @@ import { getOrgMemberContext } from "@/lib/auth/require-org-editor";
 import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database.types";
+import {
+  parseCharacterBibleFromFormData,
+  serializeCharacterBible,
+} from "@/lib/studio-productions/character-bible";
+import {
+  deleteCharacterReference,
+  uploadCharacterReference,
+} from "@/lib/studio-productions/character-reference-storage";
 
 export type StudioProjectActionState = {
   ok?: boolean;
@@ -12,6 +20,14 @@ export type StudioProjectActionState = {
   projectId?: string;
   slug?: string;
 } | null;
+
+const REFERENCE_IMAGE_MAX_BYTES = 8 * 1024 * 1024;
+const REFERENCE_IMAGE_ALLOWED_MIMES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+]);
 
 function slugify(name: string): string {
   return (
@@ -80,9 +96,134 @@ export async function updateStudioProject(
   if (formData.has("description")) patch.description = description;
   if (formData.has("brand_guide")) patch.brand_guide = brandGuide;
 
+  // Character Bible (ADR-009 §5): parsed when any `bible_*` field is posted.
+  const hasBibleField = Array.from(formData.keys()).some((k) =>
+    k.startsWith("bible_"),
+  );
+  if (hasBibleField) {
+    const bible = parseCharacterBibleFromFormData(formData);
+    patch.character_bible = serializeCharacterBible(bible);
+  }
+
   const { error } = await supabase
     .from("studio_projects")
     .update(patch)
+    .eq("id", projectId)
+    .eq("organization_id", auth.ctx.organizationId);
+
+  if (error) return { error: ActionErrorCode.unexpected };
+
+  revalidatePath("/dashboard/productions");
+  return { ok: true, projectId };
+}
+
+/**
+ * Upload a Master Reference Image for a project (Character Bible visual anchor).
+ * Deletes the previous reference (if any) and persists the new public URL +
+ * internal storage path on `studio_projects`.
+ */
+export async function uploadStudioProjectReferenceImage(
+  _prev: StudioProjectActionState,
+  formData: FormData,
+): Promise<StudioProjectActionState> {
+  void _prev;
+  const supabase = await createClient();
+  const auth = await getOrgMemberContext(supabase);
+  if (!auth.ok) return { error: auth.error };
+
+  const projectId = String(formData.get("project_id") ?? "").trim();
+  if (!projectId) return { error: ActionErrorCode.unexpected };
+
+  const file = formData.get("reference_image");
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: ActionErrorCode.unexpected };
+  }
+  if (file.size > REFERENCE_IMAGE_MAX_BYTES) {
+    return { error: ActionErrorCode.unexpected };
+  }
+  if (!REFERENCE_IMAGE_ALLOWED_MIMES.has(file.type)) {
+    return { error: ActionErrorCode.unexpected };
+  }
+
+  const { data: existing } = await supabase
+    .from("studio_projects")
+    .select("id, character_reference_image_storage_path")
+    .eq("id", projectId)
+    .eq("organization_id", auth.ctx.organizationId)
+    .maybeSingle();
+  if (!existing) return { error: ActionErrorCode.unexpected };
+
+  const body = Buffer.from(await file.arrayBuffer());
+
+  const prevPath = existing.character_reference_image_storage_path;
+  if (prevPath) {
+    try {
+      await deleteCharacterReference(prevPath);
+    } catch {
+      /* best effort */
+    }
+  }
+
+  const upload = await uploadCharacterReference({
+    organizationId: auth.ctx.organizationId,
+    projectId,
+    body,
+    contentType: file.type || "image/jpeg",
+  });
+
+  const { error } = await supabase
+    .from("studio_projects")
+    .update({
+      character_reference_image_url: upload.publicUrl,
+      character_reference_image_storage_path: upload.storagePath,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", projectId)
+    .eq("organization_id", auth.ctx.organizationId);
+
+  if (error) return { error: ActionErrorCode.unexpected };
+
+  revalidatePath("/dashboard/productions");
+  return { ok: true, projectId };
+}
+
+export async function deleteStudioProjectReferenceImage(
+  _prev: StudioProjectActionState,
+  formData: FormData,
+): Promise<StudioProjectActionState> {
+  void _prev;
+  const supabase = await createClient();
+  const auth = await getOrgMemberContext(supabase);
+  if (!auth.ok) return { error: auth.error };
+
+  const projectId = String(formData.get("project_id") ?? "").trim();
+  if (!projectId) return { error: ActionErrorCode.unexpected };
+
+  const { data: existing } = await supabase
+    .from("studio_projects")
+    .select("id, character_reference_image_storage_path")
+    .eq("id", projectId)
+    .eq("organization_id", auth.ctx.organizationId)
+    .maybeSingle();
+  if (!existing) return { error: ActionErrorCode.unexpected };
+
+  if (existing.character_reference_image_storage_path) {
+    try {
+      await deleteCharacterReference(
+        existing.character_reference_image_storage_path,
+      );
+    } catch {
+      /* best effort */
+    }
+  }
+
+  const { error } = await supabase
+    .from("studio_projects")
+    .update({
+      character_reference_image_url: null,
+      character_reference_image_storage_path: null,
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", projectId)
     .eq("organization_id", auth.ctx.organizationId);
 

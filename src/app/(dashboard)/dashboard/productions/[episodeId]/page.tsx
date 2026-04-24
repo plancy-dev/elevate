@@ -8,12 +8,27 @@ import { ProductionEpisodeAtAGlance } from "@/components/dashboard/production-ep
 import { ProductionEpisodeArtifactsClient } from "@/components/dashboard/production-episode-artifacts-client";
 import { ProductionEpisodeDetailWorkspace } from "@/components/dashboard/production-episode-detail-workspace";
 import { ProductionEpisodeWorkbench } from "@/components/dashboard/production-episode-workbench";
+import { PublishScheduler } from "@/components/dashboard/publish-scheduler";
+import { SceneImageGallery } from "@/components/dashboard/scene-image-gallery";
 import { createClient } from "@/lib/supabase/server";
 import { listStudioProjectsForOrg } from "@/lib/data/studio-projects";
 import {
   getStudioEpisodeForOrg,
   listStudioArtifactsForEpisode,
 } from "@/lib/data/studio-productions";
+import { listScheduledPostsForEpisode } from "@/lib/data/studio-scheduled-posts";
+import { loadSceneKeyframeArtifacts } from "@/lib/studio-productions/scene-keyframe-artifacts";
+import { parseSceneRows } from "@/lib/studio-productions/scene-rows-json";
+import {
+  parseSocialCaptions,
+  type SocialCaptions,
+} from "@/lib/studio-productions/social-captions";
+import { resolveBufferApiKey } from "@/lib/studio-integrations/buffer-key-source";
+import { listBufferChannels, type BufferChannel } from "@/lib/studio-integrations/providers/buffer";
+import {
+  STUDIO_IMAGE_PROVIDER_IDS,
+  type StudioImageProviderId,
+} from "@/lib/studio-integrations/types";
 import { getLatestActiveAssemblyJobForEpisode } from "@/lib/data/studio-video-assembly-jobs";
 import { isStudioIntegrationsEncryptionConfigured } from "@/lib/studio-integrations/crypto";
 import { getOrgProviderApiKey } from "@/lib/studio-integrations/org-provider-secret";
@@ -156,6 +171,80 @@ export default async function ProductionEpisodePage({ params }: Props) {
     episode.pipeline_prefs ?? null,
   );
 
+  // Scene keyframes (ADR-009): load artifacts + parsed scene plan + available
+  // image provider keys so the gallery only shows providers the org can use.
+  const sceneKeyframesByIndex = await loadSceneKeyframeArtifacts(
+    supabase,
+    orgId,
+    episodeId,
+  );
+  const scenePlanForKeyframes = (() => {
+    const latest = artifacts
+      .filter(
+        (a) => a.artifact_role === "settings" && a.tool_platform === "scene_plan",
+      )
+      .sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      )[0];
+    return latest ? parseSceneRows(latest.content_text ?? "") ?? [] : [];
+  })();
+  const sceneGalleryRows = scenePlanForKeyframes.map((row) => {
+    const slot = sceneKeyframesByIndex.get(row.index);
+    return {
+      ...row,
+      first: slot?.first ?? null,
+      last: slot?.last ?? null,
+      candidates: slot?.candidates ?? [],
+    };
+  });
+
+  const availableImageProviders: StudioImageProviderId[] = [];
+  if (integrationsEnvReady) {
+    for (const id of STUDIO_IMAGE_PROVIDER_IDS) {
+      if (await getOrgProviderApiKey(supabase, orgId, id)) {
+        availableImageProviders.push(id);
+      }
+    }
+  }
+
+  // Publish scheduler inputs (Phase 3). Falls back silently when Buffer is
+  // not configured or the user cannot edit — the UI renders a dormant hint.
+  const assembledVideoArtifact = artifacts
+    .filter((a) => a.artifact_role === "assembled_video")
+    .sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    )[0];
+  const assembledVideoUrl = assembledVideoArtifact?.external_url ?? null;
+
+  const captionsArtifact = artifacts
+    .filter((a) => a.artifact_role === "social_captions")
+    .sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    )[0];
+  const parsedCaptions: SocialCaptions | null = captionsArtifact?.content_text
+    ? parseSocialCaptions(captionsArtifact.content_text)
+    : null;
+
+  let bufferChannels: BufferChannel[] = [];
+  let bufferReady = false;
+  if (integrationsEnvReady) {
+    const bufferKey = await resolveBufferApiKey(supabase, orgId);
+    if (bufferKey) {
+      bufferReady = true;
+      const listResult = await listBufferChannels(bufferKey);
+      if (listResult.ok) bufferChannels = listResult.channels;
+    }
+  }
+
+  const scheduledPosts = await listScheduledPostsForEpisode(
+    supabase,
+    orgId,
+    episodeId,
+  );
+
   return (
     <Suspense fallback={null}>
       <ProductionsHubWithDialogs payload={studioDialogPayload}>
@@ -201,6 +290,26 @@ export default async function ProductionEpisodePage({ params }: Props) {
                   activeAssemblyJob={activeAssemblyJob}
                   brandGuide={episode.studio_projects?.brand_guide?.trim() ?? null}
                   scenePlanRows={scenePlanRows}
+                  sceneKeyframesSlot={
+                    sceneGalleryRows.length > 0 ? (
+                      <section className="rounded-xl border border-border-subtle bg-layer-02/30 p-4">
+                        <header className="mb-3 space-y-1">
+                          <h3 className="text-sm font-semibold text-text-primary">
+                            {t("sceneKeyframeGalleryTitle")}
+                          </h3>
+                          <p className="text-[11px] leading-snug text-text-tertiary">
+                            {t("sceneKeyframeGallerySubtitle")}
+                          </p>
+                        </header>
+                        <SceneImageGallery
+                          episodeId={episode.id}
+                          scenes={sceneGalleryRows}
+                          availableProviders={availableImageProviders}
+                          canEdit={canEditDraft}
+                        />
+                      </section>
+                    ) : null
+                  }
                   helpSection={
                     <section
                       className="rounded-xl border border-dashed border-border-subtle bg-layer-02/30 px-4 py-3"
@@ -220,6 +329,15 @@ export default async function ProductionEpisodePage({ params }: Props) {
                       </p>
                     </section>
                   }
+                />
+                <PublishScheduler
+                  episodeId={episode.id}
+                  videoUrl={assembledVideoUrl}
+                  captions={parsedCaptions}
+                  channels={bufferChannels}
+                  scheduled={scheduledPosts}
+                  bufferReady={bufferReady}
+                  canEdit={canEditDraft}
                 />
                 <ProductionEpisodeArtifactsClient
                   episodeId={episode.id}

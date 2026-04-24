@@ -12,6 +12,7 @@ import {
 } from "@/actions/studio-org-integrations";
 import type { StudioOrgProviderConnectionMeta } from "@/lib/data/studio-org-integrations";
 import { STUDIO_PROVIDER_KEY_SOURCES } from "@/lib/studio-integrations/provider-key-sources";
+import { STUDIO_PROVIDER_DOCS } from "@/lib/studio-integrations/provider-docs";
 import type { StudioIntegrationProviderId } from "@/lib/studio-integrations/types";
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import { toast } from "@/lib/ui/app-toast";
@@ -92,6 +93,7 @@ export function StudioProviderConnectionPanel({
 
   const fieldId = `studio-provider-secret-${providerId}`;
   const keyUrls = STUDIO_PROVIDER_KEY_SOURCES[providerId];
+  const providerDocs = STUDIO_PROVIDER_DOCS[providerId];
 
   useEffect(() => {
     if (!hasSavedKey) {
@@ -175,6 +177,39 @@ export function StudioProviderConnectionPanel({
         <p className="mt-1 text-sm text-text-tertiary leading-relaxed">
           {providerMsg(t, providerId, "intro")}
         </p>
+        {providerDocs ? (
+          <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs">
+            <a
+              href={providerDocs.apiDocsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("integrationsProviderDocsAria")}
+              className="font-medium text-interactive underline underline-offset-2 hover:opacity-90"
+            >
+              {t("integrationsProviderDocsLink")}
+            </a>
+            {providerDocs.pricingUrl ? (
+              <a
+                href={providerDocs.pricingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-tertiary underline underline-offset-2 hover:text-interactive"
+              >
+                {t("integrationsProviderPricingLink")}
+              </a>
+            ) : null}
+            {providerDocs.tosUrl ? (
+              <a
+                href={providerDocs.tosUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-tertiary underline underline-offset-2 hover:text-interactive"
+              >
+                {t("integrationsProviderTosLink")}
+              </a>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
       {providerId === "youtube_data" ? (

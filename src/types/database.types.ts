@@ -1315,6 +1315,9 @@ export type Database = {
       studio_projects: {
         Row: {
           brand_guide: string
+          character_bible: Json
+          character_reference_image_storage_path: string | null
+          character_reference_image_url: string | null
           created_at: string
           default_template_key: string | null
           description: string
@@ -1326,6 +1329,9 @@ export type Database = {
         }
         Insert: {
           brand_guide?: string
+          character_bible?: Json
+          character_reference_image_storage_path?: string | null
+          character_reference_image_url?: string | null
           created_at?: string
           default_template_key?: string | null
           description?: string
@@ -1337,6 +1343,9 @@ export type Database = {
         }
         Update: {
           brand_guide?: string
+          character_bible?: Json
+          character_reference_image_storage_path?: string | null
+          character_reference_image_url?: string | null
           created_at?: string
           default_template_key?: string | null
           description?: string
@@ -1349,6 +1358,78 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "studio_projects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_scheduled_posts: {
+        Row: {
+          buffer_channel_id: string
+          buffer_post_id: string | null
+          caption: string
+          created_at: string
+          created_by: string | null
+          episode_id: string
+          id: string
+          idempotency_key: string
+          last_error: string | null
+          organization_id: string
+          platform: string
+          retry_count: number
+          scheduled_at: string
+          status: string
+          updated_at: string
+          video_url: string
+        }
+        Insert: {
+          buffer_channel_id: string
+          buffer_post_id?: string | null
+          caption: string
+          created_at?: string
+          created_by?: string | null
+          episode_id: string
+          id?: string
+          idempotency_key: string
+          last_error?: string | null
+          organization_id: string
+          platform: string
+          retry_count?: number
+          scheduled_at: string
+          status?: string
+          updated_at?: string
+          video_url: string
+        }
+        Update: {
+          buffer_channel_id?: string
+          buffer_post_id?: string | null
+          caption?: string
+          created_at?: string
+          created_by?: string | null
+          episode_id?: string
+          id?: string
+          idempotency_key?: string
+          last_error?: string | null
+          organization_id?: string
+          platform?: string
+          retry_count?: number
+          scheduled_at?: string
+          status?: string
+          updated_at?: string
+          video_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_scheduled_posts_episode_id_fkey"
+            columns: ["episode_id"]
+            isOneToOne: false
+            referencedRelation: "studio_production_episodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "studio_scheduled_posts_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"

@@ -129,6 +129,7 @@ function ProductionEpisodeDetailWorkspaceInner({
   activeAssemblyJob,
   brandGuide,
   scenePlanRows,
+  sceneKeyframesSlot,
 }: {
   episode: StudioProductionEpisodeRowWithEmbeds;
   studioProjects: ProjectOpt[];
@@ -150,6 +151,11 @@ function ProductionEpisodeDetailWorkspaceInner({
   brandGuide?: string | null;
   /** Parsed `pipeline_prefs.sceneRender.scenesJson` (null if empty/invalid). */
   scenePlanRows: EpisodeScenePlanRow[] | null;
+  /**
+   * Server-rendered scene keyframe gallery (ADR-009). Rendered inside the
+   * pipeline panel above `ProductionEpisodePipeline`.
+   */
+  sceneKeyframesSlot?: ReactNode;
 }) {
   const t = useTranslations("Dashboard.productions");
   const baseId = useId();
@@ -356,6 +362,7 @@ function ProductionEpisodeDetailWorkspaceInner({
             scenePlanRows={scenePlanRows}
             artifacts={artifacts}
           />
+          {sceneKeyframesSlot}
           <ProductionEpisodePipeline
             episodeId={episode.id}
             pipelinePrefs={episode.pipeline_prefs ?? {}}

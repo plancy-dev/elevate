@@ -37,4 +37,24 @@ export const STUDIO_PROVIDER_KEY_SOURCES: Record<
     primary: "https://elevenlabs.io/app/settings/api-keys",
     billing: "https://elevenlabs.io/app/subscription",
   },
+  flux_replicate: {
+    primary: "https://replicate.com/account/api-tokens",
+    secondary: "https://replicate.com/black-forest-labs/flux-1.1-pro",
+    billing: "https://replicate.com/account/billing",
+  },
+  flux_fal: {
+    primary: "https://fal.ai/dashboard/keys",
+    secondary: "https://fal.ai/models/fal-ai/flux-pro",
+    billing: "https://fal.ai/dashboard/billing",
+  },
+  seedream: {
+    primary: "https://console.byteplus.com/auth/apikey/",
+    secondary: "https://docs.byteplus.com/en/docs/ModelArk/1099455",
+    billing: "https://console.byteplus.com/billing/",
+  },
+  buffer: {
+    primary: "https://publish.buffer.com/account/apps",
+    secondary: "https://buffer.com/developers/api",
+    billing: "https://publish.buffer.com/account/billing",
+  },
 };

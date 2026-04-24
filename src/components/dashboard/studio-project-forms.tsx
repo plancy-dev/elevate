@@ -16,6 +16,11 @@ import {
   BRAND_GUIDE_PRESET_SNIPPETS,
   type BrandGuidePresetId,
 } from "@/lib/studio-productions/brand-guide-presets";
+import { parseCharacterBible } from "@/lib/studio-productions/character-bible";
+import {
+  CharacterBibleFields,
+  CharacterReferenceImageField,
+} from "@/components/dashboard/character-bible-editor";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/lib/ui/app-toast";
 import { cn } from "@/lib/utils";
@@ -122,6 +127,7 @@ export function StudioProjectEditForm({ project }: { project: StudioProjectRow }
   const router = useRouter();
   const processedRef = useRef<StudioProjectActionState>(null);
   const [brandGuide, setBrandGuide] = useState(project.brand_guide ?? "");
+  const bible = parseCharacterBible(project.character_bible);
 
   const [state, action, pending] = useActionState(updateStudioProject, null);
 
@@ -207,6 +213,9 @@ export function StudioProjectEditForm({ project }: { project: StudioProjectRow }
         />
         <p className="mt-1.5 text-[11px] leading-snug text-text-tertiary">{t("projectsFormBrandGuideHint")}</p>
       </div>
+
+      <CharacterBibleFields initial={bible} />
+
       <Button type="submit" variant="primary" size="sm" isLoading={pending}>
         {t("projectsFormSubmitUpdate")}
       </Button>
@@ -218,6 +227,10 @@ export function StudioProjectEditFormWithDelete({ project }: { project: StudioPr
   return (
     <div className="space-y-6">
       <StudioProjectEditForm key={project.id} project={project} />
+      <CharacterReferenceImageField
+        projectId={project.id}
+        currentUrl={project.character_reference_image_url}
+      />
       <div className="border-t border-border-subtle pt-4">
         <StudioProjectDeleteButton projectId={project.id} />
       </div>

@@ -11,10 +11,36 @@ export const STUDIO_INTEGRATION_PROVIDER_IDS = [
   "youtube_data",
   "google_gemini",
   "elevenlabs",
+  "flux_replicate",
+  "flux_fal",
+  "seedream",
+  "buffer",
 ] as const;
 
 export type StudioIntegrationProviderId =
   (typeof STUDIO_INTEGRATION_PROVIDER_IDS)[number];
+
+/**
+ * Provider IDs usable for scene keyframe image generation.
+ * Gemini is reused (one key serves LLM + images). See ADR-009.
+ */
+export const STUDIO_IMAGE_PROVIDER_IDS = [
+  "google_gemini",
+  "flux_replicate",
+  "flux_fal",
+  "seedream",
+] as const;
+
+export type StudioImageProviderId = (typeof STUDIO_IMAGE_PROVIDER_IDS)[number];
+
+export function isStudioImageProviderId(
+  v: unknown,
+): v is StudioImageProviderId {
+  return (
+    typeof v === "string" &&
+    (STUDIO_IMAGE_PROVIDER_IDS as readonly string[]).includes(v)
+  );
+}
 
 /** Rollout phases for UI and server capability (PLAN-studio-provider-integrations). */
 export type StudioIntegrationsRolloutPhase =

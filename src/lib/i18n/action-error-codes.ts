@@ -169,6 +169,53 @@ export const ActionErrorCode = {
   studioReferenceUseYoutubeTab: "studioReferenceUseYoutubeTab",
   /** yt-dlp / ffmpeg not on PATH (common on serverless) */
   studioReferenceYoutubeToolMissing: "studioReferenceYoutubeToolMissing",
+
+  /** Scene keyframe generation: no API key for the chosen image provider */
+  studioSceneImageNoProviderKey: "studioSceneImageNoProviderKey",
+  /** Scene keyframe generation: provider returned error */
+  studioSceneImageProviderError: "studioSceneImageProviderError",
+  /** Scene keyframe generation: provider blocked by safety policies */
+  studioSceneImageSafetyBlocked: "studioSceneImageSafetyBlocked",
+  /** Scene keyframe generation: provider rate-limited */
+  studioSceneImageRateLimited: "studioSceneImageRateLimited",
+  /** Scene keyframe generation: provider timed out */
+  studioSceneImageTimeout: "studioSceneImageTimeout",
+  /** Scene keyframe: cannot promote a watermarked candidate to First/Last */
+  studioSceneImageWatermarkedRejected: "studioSceneImageWatermarkedRejected",
+  /** Scene keyframe: artifact not found for the episode/slot change */
+  studioSceneImageArtifactNotFound: "studioSceneImageArtifactNotFound",
+  /** Scene keyframe: unknown image provider ID posted */
+  studioSceneImageProviderInvalid: "studioSceneImageProviderInvalid",
+
+  /** Runway I2V: first frame artifact missing for this scene */
+  studioRunwayI2vNoFirstFrame: "studioRunwayI2vNoFirstFrame",
+  /** Runway I2V: model ID not in allowed capability table */
+  studioRunwayI2vInvalidModel: "studioRunwayI2vInvalidModel",
+
+  /** Buffer: no API key (env fallback nor org row) */
+  studioBufferNoKey: "studioBufferNoKey",
+  /** Buffer: auth rejected */
+  studioBufferAuthError: "studioBufferAuthError",
+  /** Buffer: validation / GraphQL error */
+  studioBufferValidation: "studioBufferValidation",
+  /** Buffer: rate limit */
+  studioBufferRateLimited: "studioBufferRateLimited",
+  /** Buffer: timeout */
+  studioBufferTimeout: "studioBufferTimeout",
+  /** Buffer: generic API error */
+  studioBufferApiError: "studioBufferApiError",
+  /** Scheduler: no final assembled video on the episode */
+  studioSchedulerNoVideo: "studioSchedulerNoVideo",
+  /** Scheduler: no channel selected */
+  studioSchedulerNoChannels: "studioSchedulerNoChannels",
+  /** Scheduler: scheduled_at in the past */
+  studioSchedulerPastTime: "studioSchedulerPastTime",
+  /** Scheduler: captions empty for a selected platform */
+  studioSchedulerCaptionRequired: "studioSchedulerCaptionRequired",
+  /** Scheduler: row already cancelled / published */
+  studioSchedulerInvalidStatus: "studioSchedulerInvalidStatus",
+  /** Captions: LLM returned non-JSON / missing fields */
+  studioCaptionsLlmBadResponse: "studioCaptionsLlmBadResponse",
 } as const;
 
 export type ActionErrorCode =

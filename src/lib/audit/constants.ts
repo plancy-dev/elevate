@@ -28,8 +28,16 @@ export const AuditAction = {
   STUDIO_TTS_GENERATE: "studio.tts.generate",
   STUDIO_SUBTITLE_GENERATE: "studio.subtitle.generate",
   STUDIO_SCENE_RENDER: "studio.scene.render",
+  STUDIO_SCENE_IMAGE_GENERATE: "studio.scene_image.generate",
+  STUDIO_SCENE_IMAGE_PROMOTE: "studio.scene_image.promote",
+  STUDIO_SCENE_IMAGE_DELETE: "studio.scene_image.delete",
+  STUDIO_RUNWAY_I2V: "studio.runway.i2v",
   STUDIO_VIDEO_ASSEMBLE: "studio.video.assemble",
   STUDIO_YOUTUBE_UPLOAD: "studio.youtube.upload",
+  STUDIO_CAPTIONS_GENERATE: "studio.captions.generate",
+  STUDIO_BUFFER_SCHEDULE: "studio.buffer.schedule",
+  STUDIO_BUFFER_CANCEL: "studio.buffer.cancel",
+  STUDIO_BUFFER_RETRY: "studio.buffer.retry",
 } as const;
 
 export const AuditEntityType = {
