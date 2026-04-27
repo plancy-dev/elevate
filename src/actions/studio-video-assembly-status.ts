@@ -2,6 +2,8 @@
 
 import { getOrgMemberContext } from "@/lib/auth/require-org-editor";
 import { createClient } from "@/lib/supabase/server";
+import { parseArtifactMetadata } from "@/lib/studio-productions/artifact-metadata-schemas";
+import type { Json } from "@/types/database.types";
 
 export type VideoAssemblyJobStatusState = {
   status: "pending" | "processing" | "completed" | "failed" | "unknown";
@@ -42,7 +44,10 @@ export async function getVideoAssemblyJobStatus(
         .select("metadata")
         .eq("id", row.output_artifact_id)
         .maybeSingle();
-      const meta = art?.metadata;
+      const meta = parseArtifactMetadata(
+        "assembled_video",
+        (art?.metadata ?? null) as Json | null,
+      );
       if (meta && typeof meta === "object" && meta !== null && "duration_seconds" in meta) {
         const ds = (meta as { duration_seconds?: unknown }).duration_seconds;
         durationSeconds = typeof ds === "number" ? ds : null;

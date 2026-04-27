@@ -15,6 +15,7 @@ import {
 } from "@/lib/studio-productions/video-assembly-job-input";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import { getContentStorageBucket } from "@/lib/env/content-storage";
+import { normalizeArtifactMetadataForWrite } from "@/lib/studio-productions/artifact-metadata-schemas";
 import type { Database, Json } from "@/types/database.types";
 
 type JobRow = Database["public"]["Tables"]["studio_video_assembly_jobs"]["Row"];
@@ -146,7 +147,10 @@ export async function processVideoAssemblyJob(
       tool_platform: "ffmpeg",
       content_text: `Assembled ${clipCount} clips, ${result.durationSeconds.toFixed(1)}s`,
       external_url: publicUrl,
-      metadata,
+      metadata: normalizeArtifactMetadataForWrite(
+        "assembled_video",
+        metadata as Json,
+      ),
     })
     .select("id")
     .single();

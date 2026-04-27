@@ -19,6 +19,7 @@ import {
   type VideoAssemblyJobInput,
 } from "@/lib/studio-productions/video-assembly-job-input";
 import { mergeVideoAssemblyJobInput, scenesJsonFromEpisodePipelinePrefs } from "@/lib/studio-productions/build-video-assembly-input";
+import { normalizeArtifactMetadataForWrite } from "@/lib/studio-productions/artifact-metadata-schemas";
 import {
   assembleVideoPerScene,
   perSceneJobClipsToSpecs,
@@ -216,7 +217,10 @@ export async function assembleEpisodeVideo(
       tool_platform: "ffmpeg",
       content_text: `Assembled ${assemblyClipCount} clips, ${result.durationSeconds.toFixed(1)}s`,
       external_url: externalUrl,
-      metadata,
+      metadata: normalizeArtifactMetadataForWrite(
+        "assembled_video",
+        metadata as Json,
+      ),
     })
     .select("id")
     .single();

@@ -35,6 +35,7 @@ import { scenePlanRowsFromPipelinePrefs } from "@/lib/studio-productions/episode
 import { resolveEpisodeFormat, FORMAT_SPECS } from "@/lib/studio-productions/episode-format";
 import { isSceneKeyframeRole } from "@/lib/studio-productions/artifact-roles";
 import { STUDIO_CONTENT_TEXT_MAX } from "@/lib/studio-productions/constants";
+import { normalizeArtifactMetadataForWrite } from "@/lib/studio-productions/artifact-metadata-schemas";
 import { logAudit } from "@/lib/audit/log";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import type { Database, Json } from "@/types/database.types";
@@ -249,7 +250,10 @@ export async function generateSceneKeyframes(
         tool_platform: provider,
         content_text: `scene ${sceneIndex}: keyframe candidate`,
         external_url: upload.publicUrl,
-        metadata: serializeSceneKeyframeMetadata(meta) as Json,
+        metadata: normalizeArtifactMetadataForWrite(
+          "scene_keyframe_candidate",
+          serializeSceneKeyframeMetadata(meta) as Json,
+        ),
         sort_order: sort,
       })
       .select("id")

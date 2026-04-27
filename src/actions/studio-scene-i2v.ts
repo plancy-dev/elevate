@@ -22,6 +22,7 @@ import { parseSceneKeyframeMetadata } from "@/lib/studio-productions/scene-keyfr
 import { scenePlanRowsFromPipelinePrefs } from "@/lib/studio-productions/episode-scene-plan-dto";
 import { resolveEpisodeFormat, FORMAT_SPECS } from "@/lib/studio-productions/episode-format";
 import { STUDIO_CONTENT_TEXT_MAX } from "@/lib/studio-productions/constants";
+import { normalizeArtifactMetadataForWrite } from "@/lib/studio-productions/artifact-metadata-schemas";
 import { logAudit } from "@/lib/audit/log";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import type { Json } from "@/types/database.types";
@@ -206,7 +207,7 @@ export async function renderSceneWithI2V(
       tool_platform: "runway",
       content_text: content,
       external_url: primaryUrl.length > 0 ? primaryUrl : null,
-      metadata: {
+      metadata: normalizeArtifactMetadataForWrite("scene_clip", {
         source: "runway_i2v",
         runway_task_id: result.task_id,
         output_urls: result.output_urls,
@@ -218,7 +219,7 @@ export async function renderSceneWithI2V(
         first_frame_url: firstUrl,
         last_frame_url: cap.supportsLastFrame ? lastUrl : null,
         prompt_used: promptText,
-      } as Json,
+      } as Json),
       sort_order: nextOrder,
     })
     .select("id")

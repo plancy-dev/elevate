@@ -14,6 +14,10 @@ import {
   type TtsSegment,
 } from "@/lib/studio-productions/tts-chunked-pipeline";
 import { resolveVoiceIdFromPreset } from "@/lib/studio-productions/elevenlabs-tts-presets";
+import {
+  normalizeArtifactMetadataForWrite,
+  parseArtifactMetadata,
+} from "@/lib/studio-productions/artifact-metadata-schemas";
 import { logAudit } from "@/lib/audit/log";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import type { Json } from "@/types/database.types";
@@ -234,7 +238,7 @@ export async function generateTtsFromScript(
       tool_platform: "elevenlabs",
       content_text: contentText,
       external_url: dataUri,
-      metadata,
+      metadata: normalizeArtifactMetadataForWrite("tts_audio", metadata as Json),
     })
     .select("id")
     .single();
@@ -287,7 +291,10 @@ export async function generateSubtitlesFromAudio(
     .order("created_at", { ascending: false })
     .limit(1);
 
-  const ttsMetadata = ttsRows?.[0]?.metadata as Record<string, unknown> | null;
+  const ttsMetadata = parseArtifactMetadata(
+    "tts_audio",
+    (ttsRows?.[0]?.metadata ?? null) as Json | null,
+  ) as Record<string, unknown> | null;
   const savedSegments = ttsMetadata?.segments as
     | Array<{ i: number; t: string; s: number; e: number }>
     | undefined;
@@ -319,7 +326,10 @@ export async function generateSubtitlesFromAudio(
         artifact_role: "subtitle_srt",
         tool_platform: "elevenlabs_segments",
         content_text: vttContent,
-        metadata,
+        metadata: normalizeArtifactMetadataForWrite(
+          "subtitle_srt",
+          metadata as Json,
+        ),
       })
       .select("id")
       .single();
@@ -391,7 +401,7 @@ export async function generateSubtitlesFromAudio(
       artifact_role: "subtitle_srt",
       tool_platform: "openai_whisper",
       content_text: srtContent,
-      metadata,
+      metadata: normalizeArtifactMetadataForWrite("subtitle_srt", metadata as Json),
     })
     .select("id")
     .single();
