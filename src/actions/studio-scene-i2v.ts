@@ -14,6 +14,8 @@ import {
   RUNWAY_I2V_MODELS,
   parseRunwayI2VModelId,
 } from "@/lib/studio-integrations/providers/runway/runway-i2v-models";
+import { checkRunwayCredits } from "@/lib/studio-integrations/providers/runway/runway-credits";
+import { estimateRunwayI2VCreditsForDuration } from "@/lib/studio-integrations/providers/runway/runway-i2v-credits-estimate";
 import { parseCharacterBible } from "@/lib/studio-productions/character-bible";
 import { buildSceneI2VPrompt } from "@/lib/studio-productions/scene-i2v-prompt";
 import { parseSceneKeyframeMetadata } from "@/lib/studio-productions/scene-keyframe-metadata";
@@ -143,6 +145,17 @@ export async function renderSceneWithI2V(
     endStateHint: endStateHint || undefined,
     modelSupportsLastFrame: cap.supportsLastFrame,
   });
+
+  // Prefer deterministic org credit preflight over fragile message matching.
+  // If preflight API fails, keep generation path + runtime fallback classification.
+  const estimatedCredits = estimateRunwayI2VCreditsForDuration(
+    model,
+    sceneRow.durationSeconds,
+  );
+  const creditCheck = await checkRunwayCredits(apiKey, estimatedCredits);
+  if (!creditCheck.ok && creditCheck.code === "insufficient_credits") {
+    return { error: ActionErrorCode.studioRunwayInsufficientCredits };
+  }
 
   const result = await runRunwayImageToVideo(apiKey, {
     promptText,

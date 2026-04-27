@@ -12,11 +12,13 @@ Vercel (Next.js) and this worker **do not call each other over HTTP**. They shar
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server-only; worker uses RPC + storage + inserts. |
 | `CONTENT_STORAGE_BUCKET` | Yes | Same bucket name as Next.js; objects under `studio-assembled/...`. |
 | `WORKER_POLL_IDLE_MS` | No | Idle delay when no job (default `2500`). |
+| `WORKER_STALE_JOB_MINUTES` | No | Reclaim threshold for stuck `processing` jobs (default `30`). |
+| `WORKER_STALE_RECOVERY_EVERY_LOOPS` | No | How often stale recovery runs in poll loop (default `10`). |
 | `PORT` | Fly.io only | Set automatically on Fly; enables `GET /health` for platform checks. |
 | `VIDEO_ASSEMBLY_SUBTITLE_FONT` | No | libass `Fontname` for SRT burn-in (default `Noto Sans CJK KR`). Must match a font family installed on the host. |
 | `VIDEO_ASSEMBLY_SUBTITLE_FONTSDIR` | No | Optional extra directory passed to FFmpeg `subtitles=...:fontsdir=...` if fontconfig cannot find the font. |
 
-Apply migrations **`034`** (jobs table + RLS + claim RPC) and **`035`** (Realtime broadcast for dashboard progress) to your Supabase project before relying on production assembly. The dashboard uses Realtime for job updates and falls back to slower HTTP polling if Realtime is unavailable.
+Apply migrations **`034`** (jobs table + RLS + claim RPC), **`035`** (Realtime broadcast), and **`044`** (stale recovery + retry fields) before relying on production assembly. The dashboard uses Realtime for job updates and falls back to slower HTTP polling if Realtime is unavailable.
 
 ## Incident triage (runbook)
 
