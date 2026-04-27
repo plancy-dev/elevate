@@ -19,6 +19,7 @@
 **품질 게이트:** `pnpm typecheck` · `pnpm lint` · `pnpm test`(325) · `pnpm test:e2e tests/e2e/auth-*` green. live-phase* 는 Buffer 채널 prerequisite 외에는 결정적 동작.
 
 **PR-1 (데이터 정합성) 진행 메모 · 2026-04-27:** Supabase 로컬 마이그레이션 번호 충돌(`013`/`014`)은 최신 생성 파일을 `042`/`043`으로 renumber 처리. `studio_org_provider_connections.provider` CHECK는 `025`·`030`·`038`·`040`에서 이미 확장되어 현재 코드 기준 enum 드리프트 이슈는 해소됨.
+**PR-2 (Studio 견고성) 진행 메모 · 2026-04-27:** Runway I2V는 `organization.retrieve()` 기반 크레딧 preflight를 추가했고, `studio_video_assembly_jobs`는 `044` 마이그레이션으로 stale recovery RPC/`retry_count`를 도입해 워커 시작·주기 실행 시 stuck `processing` 잡을 자동 회수한다.
 
 **다음 후보:**
 

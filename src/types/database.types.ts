@@ -1446,8 +1446,11 @@ export type Database = {
           error_message: string | null
           id: string
           input: Json
+          max_retries: number
           organization_id: string
           output_artifact_id: string | null
+          processing_started_at: string | null
+          retry_count: number
           started_at: string | null
           status: string
           updated_at: string
@@ -1460,8 +1463,11 @@ export type Database = {
           error_message?: string | null
           id?: string
           input?: Json
+          max_retries?: number
           organization_id: string
           output_artifact_id?: string | null
+          processing_started_at?: string | null
+          retry_count?: number
           started_at?: string | null
           status: string
           updated_at?: string
@@ -1474,8 +1480,11 @@ export type Database = {
           error_message?: string | null
           id?: string
           input?: Json
+          max_retries?: number
           organization_id?: string
           output_artifact_id?: string | null
+          processing_started_at?: string | null
+          retry_count?: number
           started_at?: string | null
           status?: string
           updated_at?: string
@@ -1720,6 +1729,13 @@ export type Database = {
       claim_studio_video_assembly_job: {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Tables"]["studio_video_assembly_jobs"]["Row"][]
+      }
+      reset_stale_studio_video_assembly_jobs: {
+        Args: { stale_before?: unknown }
+        Returns: {
+          failed_count: number
+          requeued_count: number
+        }[]
       }
       user_organization_id: { Args: never; Returns: string }
       user_role: {

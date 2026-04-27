@@ -14,6 +14,7 @@ import http from "node:http";
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { processVideoAssemblyJob } from "@/lib/studio-productions/process-video-assembly-job";
+import { resetStaleVideoAssemblyJobs } from "./stale-recovery";
 
 function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms));
@@ -48,6 +49,36 @@ function pollMs(): number {
   return Number.isFinite(n) && n >= 200 ? n : 2500;
 }
 
+function staleMinutes(): number {
+  const raw = process.env.WORKER_STALE_JOB_MINUTES?.trim();
+  const n = raw ? Number.parseInt(raw, 10) : NaN;
+  return Number.isFinite(n) && n >= 1 ? n : 30;
+}
+
+function staleRecoveryEveryLoops(): number {
+  const raw = process.env.WORKER_STALE_RECOVERY_EVERY_LOOPS?.trim();
+  const n = raw ? Number.parseInt(raw, 10) : NaN;
+  return Number.isFinite(n) && n >= 1 ? n : 10;
+}
+
+async function maybeRecoverStaleJobs(
+  admin: ReturnType<typeof createAdminClient>,
+  staleMin: number,
+  reason: "startup" | "interval",
+): Promise<void> {
+  try {
+    const summary = await resetStaleVideoAssemblyJobs(admin, staleMin);
+    if (summary.requeuedCount > 0 || summary.failedCount > 0) {
+      console.info(
+        `[assembly-worker] stale-recovery(${reason}) requeued=${summary.requeuedCount} failed=${summary.failedCount}`,
+      );
+    }
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    console.warn(`[assembly-worker] stale-recovery(${reason}) failed:`, msg);
+  }
+}
+
 async function failJobCrash(
   admin: ReturnType<typeof createAdminClient>,
   jobId: string,
@@ -67,9 +98,22 @@ async function failJobCrash(
 async function runPollLoop(): Promise<void> {
   const admin = createAdminClient();
   const idle = pollMs();
+  const staleMin = staleMinutes();
+  const recoveryEvery = staleRecoveryEveryLoops();
   console.info(`[assembly-worker] poll loop started (idle ${idle}ms)`);
+  console.info(
+    `[assembly-worker] stale recovery: threshold=${staleMin}m every=${recoveryEvery} loops`,
+  );
+
+  await maybeRecoverStaleJobs(admin, staleMin, "startup");
+  let loop = 0;
 
   for (;;) {
+    loop += 1;
+    if (loop % recoveryEvery === 0) {
+      await maybeRecoverStaleJobs(admin, staleMin, "interval");
+    }
+
     const { data: rows, error } = await admin.rpc("claim_studio_video_assembly_job");
     if (error) {
       console.error("[assembly-worker] claim error:", error.message);
