@@ -429,6 +429,7 @@
 | P1 | **대시보드 단일 표면 UX** — [`docs/design/DASHBOARD_UX_PRINCIPLES.md`](../docs/design/DASHBOARD_UX_PRINCIPLES.md) | ✅ 개요·라이브러리·설정·스튜디오·프로덕션 목록 등(2026-04); 팀·빌링 등은 동일 패턴으로 확장 가능 |
 | P1 | **PROJECT_OVERVIEW §9 권고 1·2 (데이터 정합성)** — 마이그레이션 번호 충돌 + provider CHECK 드리프트 점검 | ✅ `013/014` 충돌 파일을 `042/043`으로 renumber, provider CHECK는 `025/030/038/040`로 이미 확장됨 |
 | P1 | **PROJECT_OVERVIEW §9 권고 5·6 (메타 검증)** — artifact metadata zod + Lemon 멱등성 확인 | ✅ role별 zod 느슨한 검증 도입(`artifact-metadata-schemas.ts`), Lemon `ls_order_identifier`는 `018`에서 PK로 이미 멱등성 충족 |
+| P1 | **PROJECT_OVERVIEW §9 권고 3·4 (Studio 견고성)** — Runway 크레딧 사전검증 + stale assembly job 회수 | ✅ Runway `organization.retrieve()` preflight + `044` stale recovery RPC(`retry_count`/`max_retries`) + 워커 주기 회수 |
 | P1 | PostHog 대시보드(퍼널 시각화) | 이벤트: `elevate_funnel_*`, `elevate_waitlist_*`, `elevate_marketing_cta_click`, `elevate_blog_post_viewed` — [`docs/POSTHOG_FUNNELS.md`](../docs/POSTHOG_FUNNELS.md) 참고 후 UI에서 구성 |
 | P1 | E2E CI — PR에 `run-e2e` 라벨 또는 수동 workflow | `e2e.yml` |
 | P2 | **대시보드 접근 게이트** — `profiles.dashboard_access` · [`src/lib/auth/dashboard-access.ts`](../src/lib/auth/dashboard-access.ts) · `/access-pending` · PKCE 콜백 정리 | ✅ (2026-04) 마이그레이션 `037` + 서버 `SUPABASE_SERVICE_ROLE_KEY`; REFLECT [`archive/work-history/reflect-dashboard-access-pkce-2026-04.md`](archive/work-history/reflect-dashboard-access-pkce-2026-04.md) |
