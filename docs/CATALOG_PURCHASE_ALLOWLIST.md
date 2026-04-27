@@ -10,7 +10,7 @@ This is **not** the marketing waitlist (`waitlist_signups`). Match is on **`prof
 
 ## Operations
 
-1. Apply migration **`014_catalog_purchase_allowlist.sql`**
+1. Apply migration **`043_catalog_purchase_allowlist.sql`**
 2. Add emails via **`/admin/purchase-allowlist`** (platform admin shell) or SQL `insert into public.catalog_purchase_allowlist (email_normalized) values ('user@example.com');`
 3. Set env in production: `CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true`
 

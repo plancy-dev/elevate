@@ -16,11 +16,12 @@
    - `migrations/011_toss_payment_intent_content_product.sql` — optional `content_product_id` on `toss_payment_intents` for checkout → entitlement
    - `migrations/012_content_product_storage_path.sql` — optional `storage_object_path` for signed downloads
    - `migrations/013_waitlist_signups.sql` — marketing waitlist (service-role inserts from `/api/waitlist`)
-   - `migrations/014_catalog_purchase_allowlist.sql` — optional catalog checkout email gate
    - `migrations/015_platform_email_settings.sql` — singleton row for waitlist BCC etc.
    - `migrations/016_prompt_studio_beta_allowlist.sql` — optional Prompt Studio beta email gate (`STUDIO_BETA_REQUIRE_ALLOWLIST`; manage `/admin/prompt-studio-allowlist`)
    - … (see `supabase/migrations/` for `017`–`036` studio / content / video jobs migrations)
    - `migrations/037_profiles_dashboard_access.sql` — **`profiles.dashboard_access`** boolean; required for `/dashboard` gate in the app
+   - `migrations/042_content_ebook_delivery_and_first_open.sql` — ebook delivery mode + first-open audit table
+   - `migrations/043_catalog_purchase_allowlist.sql` — optional catalog checkout email gate
 
 Who may open **`/dashboard`** is decided by **`profiles.dashboard_access`** (see `src/lib/auth/dashboard-access.ts` and [`docs/DEVELOPMENT.md`](../docs/DEVELOPMENT.md) § Dashboard access). The **`waitlist_signups`** and **`prompt_studio_beta_allowlist`** tables are used for other product gates (e.g. marketing / Prompt Studio beta), not for the dashboard shell.
 
