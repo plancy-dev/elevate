@@ -11,6 +11,8 @@
 
 **확정 결정 (D1~D9):** 어제 합의 유지 — provider 4개 Phase 1 일괄 포함, UI는 First+Last 둘 다, IDENTITY LOCK + reference image, 공식 문서 링크 전면 노출.
 
+**PR-1 (데이터 정합성) 진행 메모 · 2026-04-27:** Supabase 로컬 마이그레이션 번호 충돌(`013`/`014`)은 최신 생성 파일을 `042`/`043`으로 renumber 처리. `studio_org_provider_connections.provider` CHECK는 `025`·`030`·`038`·`040`에서 이미 확장되어 현재 코드 기준 enum 드리프트 이슈는 해소됨.
+
 **다음 후보:**
 
 1. **Phase 2 (U5+U6) — 웹 타임라인 편집기** (L4): 트림/순서/텍스트 오버레이/전환/BGM + 편집 DSL v2 + FFmpeg 그래프 확장.
