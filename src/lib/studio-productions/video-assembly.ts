@@ -12,7 +12,16 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { promisify } from "node:util";
 
-import { resolveFfmpegBinary, resolveFfprobeBinary } from "@/lib/studio-productions/ffmpeg-binary";
+import { resolveFfmpegBinary } from "@/lib/studio-productions/ffmpeg-binary";
+import {
+  buildSubtitlesFilterChainSegment,
+  escapeConcatFilePath,
+  ffmpegAvailable,
+  probeDurationSeconds,
+  SCALE_PAD_1080X1920,
+} from "@/lib/studio-productions/ffmpeg-common";
+import { buildOverlayFilterGraph } from "@/lib/studio-productions/ffmpeg-overlay-filter";
+import type { EditorOverlay } from "@/lib/studio-productions/editor-dsl";
 
 const execFileAsync = promisify(execFile);
 
@@ -22,11 +31,18 @@ export type AssemblyInput = {
   srtContent?: string;
   bgMusicUrl?: string;
   bgMusicVolume?: number;
+  /**
+   * Optional editor DSL v3 extensions. When present, extra `drawtext`
+   * filters are chained on top of the base concat. Scene-level cross-fades
+   * and per-track gain are intentionally not wired here yet — they live in
+   * the per-scene variant and PR S8's export path.
+   */
+  overlays?: EditorOverlay[];
 };
 
 export type AssemblyResult =
   | { ok: true; outputBuffer: Buffer; durationSeconds: number }
-  | { ok: false; code: "no_clips" | "ffmpeg_not_found" | "ffmpeg_error" | "download_failed"; message?: string };
+  | { ok: false; code: "no_clips" | "ffmpeg_not_found" | "ffmpeg_error"; message?: string };
 
 export async function downloadToFile(url: string, filePath: string): Promise<void> {
   if (url.startsWith("data:")) {
@@ -39,15 +55,6 @@ export async function downloadToFile(url: string, filePath: string): Promise<voi
   if (!res.ok) throw new Error(`Download failed: ${res.status} ${url}`);
   const buf = Buffer.from(await res.arrayBuffer());
   await writeFile(filePath, buf);
-}
-
-async function ffmpegAvailable(): Promise<boolean> {
-  try {
-    await execFileAsync(resolveFfmpegBinary(), ["-version"], { timeout: 5000 });
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 /**
@@ -91,7 +98,7 @@ export async function assembleVideo(
 
     const concatFile = join(workDir, "concat.txt");
     const concatContent = clipPaths
-      .map((p) => `file '${p}'`)
+      .map((p) => `file '${escapeConcatFilePath(p)}'`)
       .join("\n");
     await writeFile(concatFile, concatContent);
     tempFiles.push(concatFile);
@@ -127,6 +134,7 @@ export async function assembleVideo(
       bgMusicPath,
       bgMusicVolume: input.bgMusicVolume ?? 0.15,
       outputPath,
+      overlays: input.overlays ?? [],
     });
 
     await execFileAsync(resolveFfmpegBinary(), ffmpegArgs, {
@@ -136,7 +144,7 @@ export async function assembleVideo(
 
     const outputBuffer = await readFile(outputPath);
 
-    const durationSeconds = await probeDuration(outputPath);
+    const durationSeconds = await probeDurationSeconds(outputPath, 10_000);
 
     return { ok: true, outputBuffer, durationSeconds };
   } catch (err) {
@@ -159,23 +167,8 @@ type FfmpegBuildArgs = {
   bgMusicPath?: string;
   bgMusicVolume: number;
   outputPath: string;
+  overlays: EditorOverlay[];
 };
-
-/** libass / fontconfig family name — must exist on the host (install fonts-noto-cjk on Linux workers). */
-function resolvedSubtitleFontName(): string {
-  return process.env.VIDEO_ASSEMBLY_SUBTITLE_FONT?.trim() || "Noto Sans CJK KR";
-}
-
-function buildSubtitlesFilterChainSegment(srtPath: string): string {
-  const escapedPath = srtPath.replace(/'/g, "'\\''").replace(/:/g, "\\:");
-  const font = resolvedSubtitleFontName();
-  const fontsdir = process.env.VIDEO_ASSEMBLY_SUBTITLE_FONTSDIR?.trim();
-  const style = `FontSize=24,Fontname=${font},PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2,Alignment=2,MarginV=80`;
-  const base = `subtitles='${escapedPath}':charenc=UTF-8:force_style='${style}'`;
-  if (!fontsdir) return base;
-  const escDir = fontsdir.replace(/'/g, "'\\''").replace(/:/g, "\\:");
-  return `subtitles='${escapedPath}':fontsdir='${escDir}':charenc=UTF-8:force_style='${style}'`;
-}
 
 function buildFfmpegArgs(opts: FfmpegBuildArgs): string[] {
   const args: string[] = ["-y"];
@@ -194,12 +187,27 @@ function buildFfmpegArgs(opts: FfmpegBuildArgs): string[] {
   let videoStream = "[0:v]";
   let audioStream: string | undefined;
 
-  filterParts.push(`${videoStream}scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2[vscaled]`);
+  filterParts.push(`${videoStream}${SCALE_PAD_1080X1920}[vscaled]`);
   videoStream = "[vscaled]";
 
   if (opts.srtPath) {
     filterParts.push(`${videoStream}${buildSubtitlesFilterChainSegment(opts.srtPath)}[vsub]`);
     videoStream = "[vsub]";
+  }
+
+  if (opts.overlays.length > 0) {
+    // Strip the surrounding "[]" so we can splice drawtext onto the current
+    // video stream without breaking the chain.
+    const inputLabel = videoStream.replace(/^\[|\]$/g, "");
+    const outputLabel = "voverlay";
+    const graph = buildOverlayFilterGraph(opts.overlays, {
+      inputLabel,
+      outputLabel,
+    });
+    if (graph) {
+      filterParts.push(graph);
+      videoStream = `[${outputLabel}]`;
+    }
   }
 
   if (opts.audioPath && opts.bgMusicPath) {
@@ -234,16 +242,3 @@ function buildFfmpegArgs(opts: FfmpegBuildArgs): string[] {
   return args;
 }
 
-async function probeDuration(filePath: string): Promise<number> {
-  try {
-    const { stdout } = await execFileAsync(resolveFfprobeBinary(), [
-      "-v", "quiet",
-      "-show_entries", "format=duration",
-      "-of", "default=noprint_wrappers=1:nokey=1",
-      filePath,
-    ], { timeout: 10_000 });
-    return parseFloat(stdout.trim()) || 0;
-  } catch {
-    return 0;
-  }
-}

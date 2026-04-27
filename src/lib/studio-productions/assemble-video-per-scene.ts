@@ -9,7 +9,14 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { promisify } from "node:util";
 
-import { resolveFfmpegBinary, resolveFfprobeBinary } from "@/lib/studio-productions/ffmpeg-binary";
+import { resolveFfmpegBinary } from "@/lib/studio-productions/ffmpeg-binary";
+import {
+  buildSubtitlesFilterChainSegment,
+  escapeConcatFilePath,
+  ffmpegAvailable,
+  probeDurationSeconds,
+  SCALE_PAD_1080X1920,
+} from "@/lib/studio-productions/ffmpeg-common";
 import { sliceSrtToLocalWindow } from "@/lib/studio-productions/srt-slice";
 import { downloadToFile } from "@/lib/studio-productions/video-assembly";
 import type { PerSceneAssemblyClip } from "@/lib/studio-productions/video-assembly-job-input";
@@ -40,64 +47,25 @@ export type AssembleVideoPerSceneInput = {
   srtContent?: string;
   bgMusicUrl?: string;
   bgMusicVolume?: number;
+  /**
+   * Optional editor DSL v3 overlays. Applied as a second FFmpeg pass on the
+   * finished file so the per-scene copy-codec fast path remains intact.
+   */
+  overlays?: import("@/lib/studio-productions/editor-dsl").EditorOverlay[];
 };
 
 export type AssembleVideoPerSceneResult =
   | { ok: true; outputBuffer: Buffer; durationSeconds: number }
   | {
       ok: false;
-      code:
-        | "no_scenes"
-        | "ffmpeg_not_found"
-        | "ffmpeg_error"
-        | "download_failed"
-        | "probe_failed";
+      code: "no_scenes" | "ffmpeg_not_found" | "ffmpeg_error";
       message?: string;
     };
 
-async function ffmpegAvailable(): Promise<boolean> {
-  try {
-    await execFileAsync(resolveFfmpegBinary(), ["-version"], { timeout: 5000 });
-    return true;
-  } catch {
-    return false;
-  }
+function isDrawtextUnavailableError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  return /No such filter:\s*'drawtext'/.test(err.message);
 }
-
-async function probeDurationSeconds(filePath: string): Promise<number> {
-  try {
-    const { stdout } = await execFileAsync(resolveFfprobeBinary(), [
-      "-v",
-      "quiet",
-      "-show_entries",
-      "format=duration",
-      "-of",
-      "default=noprint_wrappers=1:nokey=1",
-      filePath,
-    ], { timeout: 15_000 });
-    return parseFloat(stdout.trim()) || 0;
-  } catch {
-    return 0;
-  }
-}
-
-function resolvedSubtitleFontName(): string {
-  return process.env.VIDEO_ASSEMBLY_SUBTITLE_FONT?.trim() || "Noto Sans CJK KR";
-}
-
-function buildSubtitlesFilterChainSegment(srtPath: string): string {
-  const escapedPath = srtPath.replace(/'/g, "'\\''").replace(/:/g, "\\:");
-  const font = resolvedSubtitleFontName();
-  const fontsdir = process.env.VIDEO_ASSEMBLY_SUBTITLE_FONTSDIR?.trim();
-  const style = `FontSize=24,Fontname=${font},PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2,Alignment=2,MarginV=80`;
-  const base = `subtitles='${escapedPath}':charenc=UTF-8:force_style='${style}'`;
-  if (!fontsdir) return base;
-  const escDir = fontsdir.replace(/'/g, "'\\''").replace(/:/g, "\\:");
-  return `subtitles='${escapedPath}':fontsdir='${escDir}':charenc=UTF-8:force_style='${style}'`;
-}
-
-const SCALE_PAD =
-  "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2";
 
 /**
  * Normalize one scene clip to exact duration, optional local SRT burn-in, video-only h264.
@@ -134,9 +102,9 @@ async function normalizeOneScene(opts: {
     throw new Error(`scene_${index}_needs_loop_or_shorter_target`);
   }
 
-  let vf = SCALE_PAD;
+  let vf = SCALE_PAD_1080X1920;
   if (localSrtPath) {
-    vf = `${SCALE_PAD},${buildSubtitlesFilterChainSegment(localSrtPath)}`;
+    vf = `${SCALE_PAD_1080X1920},${buildSubtitlesFilterChainSegment(localSrtPath)}`;
   }
 
   const args: string[] = ["-y"];
@@ -165,7 +133,7 @@ async function concatVideoFiles(
   tempFiles: string[],
 ): Promise<string> {
   const concatFile = join(workDir, "vconcat.txt");
-  const body = paths.map((p) => `file '${p.replace(/'/g, "'\\''")}'`).join("\n");
+  const body = paths.map((p) => `file '${escapeConcatFilePath(p)}'`).join("\n");
   await writeFile(concatFile, body);
   tempFiles.push(concatFile);
   const out = join(workDir, "video_concat.mp4");
@@ -289,7 +257,7 @@ async function sliceAndConcatTts(opts: {
   tempFiles.push(list);
   await writeFile(
     list,
-    parts.map((p) => `file '${p.replace(/'/g, "'\\''")}'`).join("\n"),
+    parts.map((p) => `file '${escapeConcatFilePath(p)}'`).join("\n"),
   );
   const out = join(workDir, "tts_concat.m4a");
   tempFiles.push(out);
@@ -447,8 +415,61 @@ export async function assembleVideoPerScene(
       );
     }
 
-    const outputBuffer = await readFile(outputPath);
-    const durationSeconds = await probeDurationSeconds(outputPath);
+    // Second pass: apply editor overlays (drawtext chain) on the finished
+    // file. Skipping re-encode when no overlays keeps the fast path intact.
+    const overlays = input.overlays ?? [];
+    let finalPath = outputPath;
+    if (overlays.length > 0) {
+      const { buildOverlayFilterGraph } = await import(
+        "@/lib/studio-productions/ffmpeg-overlay-filter"
+      );
+      const overlayedPath = join(workDir, "output_overlayed.mp4");
+      tempFiles.push(overlayedPath);
+      const graph = buildOverlayFilterGraph(overlays, {
+        inputLabel: "0:v",
+        outputLabel: "vout",
+      });
+      if (graph) {
+        try {
+          await execFileAsync(
+            resolveFfmpegBinary(),
+            [
+              "-y",
+              "-i",
+              outputPath,
+              "-filter_complex",
+              graph,
+              "-map",
+              "[vout]",
+              "-map",
+              "0:a?",
+              "-c:v",
+              "libx264",
+              "-preset",
+              "fast",
+              "-crf",
+              "23",
+              "-c:a",
+              "copy",
+              "-movflags",
+              "+faststart",
+              overlayedPath,
+            ],
+            { timeout: 300_000, maxBuffer: 50 * 1024 * 1024 },
+          );
+          finalPath = overlayedPath;
+        } catch (overlayErr) {
+          // Some ffmpeg builds omit drawtext support. Degrade gracefully by
+          // returning the non-overlayed render instead of failing export.
+          if (!isDrawtextUnavailableError(overlayErr)) {
+            throw overlayErr;
+          }
+        }
+      }
+    }
+
+    const outputBuffer = await readFile(finalPath);
+    const durationSeconds = await probeDurationSeconds(finalPath);
     return { ok: true, outputBuffer, durationSeconds };
   } catch (err) {
     return {

@@ -2,25 +2,38 @@
 
 ## 현재 페이즈
 
-**Phase 1 + Phase 3 BUILD 완료 (2026-04-23 / 커밋: 2026-04-24) — AI 콘텐츠 자동화 스튜디오 v3**
-**SoT:** [`docs/features/INIT-scene-image-to-video-and-publishing.md`](../docs/features/INIT-scene-image-to-video-and-publishing.md) · [`ADR-009`](../docs/adr/ADR-009-studio-image-providers-and-keyframes.md) · **tasks:** [`tasks.md`](tasks.md) **§ G3.1.5**
-**이번 출시 범위 (U1+U2+U3, U7+U8+U9):** 이미지 provider 4개(Gemini/FLUX-Replicate/FLUX-fal/Seedream) → Character Bible + Master Reference → 씬 키프레임 갤러리 + First/Last Frame → Runway I2V (veo3.1, capability 분기) → Buffer 예약 발행 (3채널 캡션 자동 생성 + 재시도/취소).
+**Phase 1+2+3 완료 + REFLECT/ARCHIVE 문서화 완료 (2026-04-24)**
+**SoT:** [`docs/features/INIT-scene-image-to-video-and-publishing.md`](../docs/features/INIT-scene-image-to-video-and-publishing.md) §4.2 · [`ADR-009`](../docs/adr/ADR-009-studio-image-providers-and-keyframes.md) · [`ADR-010`](../docs/adr/ADR-010-fullscreen-timeline-editor.md) · **tasks:** [`tasks.md`](tasks.md) **§ G3.1.5**
 
-**품질:** `pnpm verify` + `pnpm test:i18n` 통과 · 단위 테스트 **270개** · 마이그레이션 `038/039/040/041` 원격 적용 완료.
-**E2E 스모크 (2026-04-24):** Phase 1 핵심 경로(Character Bible 저장 → Scene Keyframe Gallery → Gemini 4장 생성) **PASS**. 발견된 버그 4개 전부 수정 — scene plan 파서 정합, Gemini 모델명(3.1-flash-image-preview), candidateCount fan-out, Storage bucket public. 상세: [`archive/work-history/reflect-scene-keyframes-i2v-buffer-2026-04.md`](archive/work-history/reflect-scene-keyframes-i2v-buffer-2026-04.md).
+**아카이브 허브:** [`archive/work-history/archive-scene-to-publish-2026-04.md`](archive/work-history/archive-scene-to-publish-2026-04.md)
+- Phase 1 + Phase 3 REFLECT: [`reflect-scene-keyframes-i2v-buffer-2026-04.md`](archive/work-history/reflect-scene-keyframes-i2v-buffer-2026-04.md)
+- Phase 2 + Reliability Hardening REFLECT: [`reflect-fullscreen-editor-phase2-2026-04.md`](archive/work-history/reflect-fullscreen-editor-phase2-2026-04.md)
 
-**확정 결정 (D1~D9):** 어제 합의 유지 — provider 4개 Phase 1 일괄 포함, UI는 First+Last 둘 다, IDENTITY LOCK + reference image, 공식 문서 링크 전면 노출.
+**함께 랜딩된 안정화 (REFLECT Readiness Plan 2026-04-24):**
+- P0 buffer correctness — 벌크 재시도 에러 집계 정정 + DB update 실패를 `dbError`로 표면화 + `pending` 개별 재시도 UX
+- P1 assembly maintainability — `ffmpeg-common.ts` 공용 헬퍼 추출 + 에러 union 정렬 + `editor_extensions` 주석
+- P1 E2E stability — 하이드레이션 가드(`hydration-guard.ts`) + 로케일 안정 auth selector + `button:visible` + `requireVisibleBufferChannelChip()`
+- P2 ops docs — 수동 운영 체크리스트 · worker 인시던트 런북 · live-smoke 전제조건 · IMPLEMENT validation gate
+- `proxy.ts` DB 요청 최적화 (33k/일 → 대폭 감소, 2026-04-24)
+
+**품질 게이트:** `pnpm typecheck` · `pnpm lint` · `pnpm test`(325) · `pnpm test:e2e tests/e2e/auth-*` green. live-phase* 는 Buffer 채널 prerequisite 외에는 결정적 동작.
 
 **PR-1 (데이터 정합성) 진행 메모 · 2026-04-27:** Supabase 로컬 마이그레이션 번호 충돌(`013`/`014`)은 최신 생성 파일을 `042`/`043`으로 renumber 처리. `studio_org_provider_connections.provider` CHECK는 `025`·`030`·`038`·`040`에서 이미 확장되어 현재 코드 기준 enum 드리프트 이슈는 해소됨.
 
 **다음 후보:**
 
-1. **Phase 2 (U5+U6) — 웹 타임라인 편집기** (L4): 트림/순서/텍스트 오버레이/전환/BGM + 편집 DSL v2 + FFmpeg 그래프 확장.
-2. **실사용 E2E 검증** — Gemini 키로 한 에피소드 전체 파이프라인 수동 스모크 → 버그 리포트.
-3. **REFLECT/ARCHIVE 정리** — Phase 1+3 종합 회고 문서.
-4. **`proxy.ts` DB 요청 최적화** — 봇/정적 경로 미들웨어 스킵 (어제 33k/일 건 건).
+---
 
-**선택 권장:** Phase 2 진입 전에 **2번(실사용 검증)**을 한 번 돌려 P1/P3 잔 버그를 걸러내는 것이 가장 비용 대비 효용 큼.
+## 남은 작업 (보류 포함, 2026-04-24 기준)
+
+| 상태 | 항목 | 비고 |
+|------|------|------|
+| **보류 (외부 전제조건)** | 실사용 End-to-End 1회전 증빙 (Phase 1→2→3) | Buffer 채널 연결 + 24h rate-limit 창 확보 필요. 운영 체크리스트는 아카이브 허브 §운영 전제조건 |
+| **백로그 (P2)** | Phase 2 polish — overlay DnD on timeline, transition preview(CSS), export 진행률 realtime 토스트 | [`ADR-010`](../docs/adr/ADR-010-fullscreen-timeline-editor.md) 확장, 마이그레이션 불필요 |
+| **백로그 (P3)** | private 버킷 + signed-URL 어댑터 (prod), Buffer remote 취소 reconciliation worker | REFLECT Phase 1 §follow-ups 참고 |
+| **운영 보류** | 스테이지/프로덕션 배포 & 모니터링, commit/PR | 사용자 명시 지시 시 착수 |
+
+**"지금 당장 더 이상 끝낼 수 있는 코드 작업 없음"** — 다음 착수 지점은 사용자 판단.
 
 ---
 

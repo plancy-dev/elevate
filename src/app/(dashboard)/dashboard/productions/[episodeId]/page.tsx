@@ -320,6 +320,24 @@ export default async function ProductionEpisodePage({ params }: Props) {
                     </section>
                   }
                 />
+                <section className="mb-6 rounded-xl border border-border-subtle bg-layer-02/40 p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-text-primary">
+                        {t("editorCtaTitle")}
+                      </p>
+                      <p className="mt-1 text-xs text-text-tertiary">
+                        {t("editorCtaSubtitle")}
+                      </p>
+                    </div>
+                    <Link
+                      href={`/dashboard/productions/${episode.id}/editor`}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20"
+                    >
+                      {t("editorCtaButton")}
+                    </Link>
+                  </div>
+                </section>
                 <PublishScheduler
                   episodeId={episode.id}
                   videoUrl={assembledVideoUrl}

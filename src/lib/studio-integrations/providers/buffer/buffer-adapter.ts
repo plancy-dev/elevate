@@ -44,8 +44,15 @@ export type BufferError = {
   status?: number;
 };
 
-const BUFFER_GRAPHQL_URL =
-  process.env.BUFFER_API_URL?.trim() || "https://graph.buffer.com";
+function resolveBufferGraphqlUrl(): string {
+  const raw = process.env.BUFFER_API_URL?.trim();
+  if (!raw) return "https://api.buffer.com/graphql";
+  // Buffer now requires api.buffer.com/graphql. Keep old env values safe.
+  if (raw === "https://graph.buffer.com") return "https://api.buffer.com/graphql";
+  return raw;
+}
+
+const BUFFER_GRAPHQL_URL = resolveBufferGraphqlUrl();
 const DEFAULT_TIMEOUT_MS = 20_000;
 
 function mapServiceToPlatform(service: string | null | undefined): BufferPlatform {

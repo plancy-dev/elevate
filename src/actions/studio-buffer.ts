@@ -270,30 +270,47 @@ export async function schedulePostToBuffer(
         scheduledAt: scheduledDate.toISOString(),
         mediaUrls: [videoUrl],
       });
+      const nowIso = new Date().toISOString();
       if (post.ok) {
-        await supabase
+        const { error: updateErr } = await supabase
           .from("studio_scheduled_posts")
           .update({
             status: "scheduled",
             buffer_post_id: post.postId,
             last_error: null,
             retry_count: 0,
-            updated_at: new Date().toISOString(),
+            updated_at: nowIso,
           })
           .eq("id", row.id)
           .eq("organization_id", auth.ctx.organizationId);
+        if (updateErr) {
+          return {
+            rowId: row.id,
+            ok: false as const,
+            channelId: row.buffer_channel_id,
+            error: ActionErrorCode.dbError,
+          };
+        }
         return { rowId: row.id, ok: true as const };
       }
-      await supabase
+      const { error: updateErr } = await supabase
         .from("studio_scheduled_posts")
         .update({
           status: "failed",
           last_error:
             post.error.message?.slice(0, 500) ?? post.error.code,
-          updated_at: new Date().toISOString(),
+          updated_at: nowIso,
         })
         .eq("id", row.id)
         .eq("organization_id", auth.ctx.organizationId);
+      if (updateErr) {
+        return {
+          rowId: row.id,
+          ok: false as const,
+          channelId: row.buffer_channel_id,
+          error: ActionErrorCode.dbError,
+        };
+      }
       return {
         rowId: row.id,
         ok: false as const,
@@ -307,6 +324,12 @@ export async function schedulePostToBuffer(
   const failures = results
     .filter((r): r is Extract<typeof r, { ok: false }> => !r.ok)
     .map((r) => ({ channelId: r.channelId, error: r.error }));
+  const aggregateError =
+    okIds.length === 0 && failures.length > 0
+      ? deriveAggregateRetryError(
+          failures.map((f) => ({ errorCode: f.error })),
+        )
+      : undefined;
 
   void logAudit({
     organizationId: auth.ctx.organizationId,
@@ -324,6 +347,7 @@ export async function schedulePostToBuffer(
   revalidatePath(`/dashboard/productions/${episodeId}`);
   return {
     ok: okIds.length > 0,
+    error: aggregateError,
     scheduledIds: okIds,
     failures: failures.length > 0 ? failures : undefined,
   };
@@ -333,6 +357,9 @@ export type ScheduledPostMutationState = {
   ok?: boolean;
   error?: string;
 } | null;
+
+type ScheduledPostRow =
+  Database["public"]["Tables"]["studio_scheduled_posts"]["Row"];
 
 export async function cancelScheduledPost(
   _prev: ScheduledPostMutationState,
@@ -423,26 +450,13 @@ export async function retryScheduledPost(
   const apiKey = await resolveBufferApiKey(supabase, auth.ctx.organizationId);
   if (!apiKey) return { error: ActionErrorCode.studioBufferNoKey };
 
-  const post = await createBufferPost(apiKey, {
-    channelId: row.buffer_channel_id,
-    text: row.caption,
-    scheduledAt: row.scheduled_at,
-    mediaUrls: [row.video_url],
-  });
-
-  if (post.ok) {
-    await supabase
-      .from("studio_scheduled_posts")
-      .update({
-        status: "scheduled",
-        buffer_post_id: post.postId,
-        last_error: null,
-        retry_count: row.retry_count + 1,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", row.id)
-      .eq("organization_id", auth.ctx.organizationId);
-
+  const retried = await retryOneScheduledPost(
+    supabase,
+    auth.ctx.organizationId,
+    apiKey,
+    row,
+  );
+  if (retried.ok) {
     void logAudit({
       organizationId: auth.ctx.organizationId,
       actorId: auth.ctx.userId,
@@ -451,21 +465,155 @@ export async function retryScheduledPost(
       entityId: row.episode_id,
       metadata: { scheduled_post_id: row.id, retry: row.retry_count + 1 },
     });
-
     revalidatePath(`/dashboard/productions/${row.episode_id}`);
     return { ok: true };
   }
+  return { error: retried.errorCode };
+}
 
-  await supabase
+type RetryOneResult =
+  | { ok: true }
+  | { ok: false; errorCode: string };
+
+function deriveAggregateRetryError(
+  failures: Array<{ errorCode: string }>,
+): string {
+  if (failures.length === 0) return ActionErrorCode.unexpected;
+  const unique = [...new Set(failures.map((f) => f.errorCode))];
+  if (unique.length === 1) return unique[0]!;
+  if (unique.includes(ActionErrorCode.studioBufferRateLimited)) {
+    return ActionErrorCode.studioBufferRateLimited;
+  }
+  if (unique.includes(ActionErrorCode.dbError)) {
+    return ActionErrorCode.dbError;
+  }
+  return ActionErrorCode.studioBufferApiError;
+}
+
+async function retryOneScheduledPost(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  organizationId: string,
+  apiKey: string,
+  row: ScheduledPostRow,
+): Promise<RetryOneResult> {
+  const post = await createBufferPost(apiKey, {
+    channelId: row.buffer_channel_id,
+    text: row.caption,
+    scheduledAt: row.scheduled_at,
+    mediaUrls: [row.video_url],
+  });
+  const nowIso = new Date().toISOString();
+  if (post.ok) {
+    const { error: updateErr } = await supabase
+      .from("studio_scheduled_posts")
+      .update({
+        status: "scheduled",
+        buffer_post_id: post.postId,
+        last_error: null,
+        retry_count: row.retry_count + 1,
+        updated_at: nowIso,
+      })
+      .eq("id", row.id)
+      .eq("organization_id", organizationId);
+    if (updateErr) {
+      return { ok: false, errorCode: ActionErrorCode.dbError };
+    }
+    return { ok: true };
+  }
+  const { error: updateErr } = await supabase
     .from("studio_scheduled_posts")
     .update({
       status: "failed",
       last_error: post.error.message?.slice(0, 500) ?? post.error.code,
       retry_count: row.retry_count + 1,
-      updated_at: new Date().toISOString(),
+      updated_at: nowIso,
     })
     .eq("id", row.id)
-    .eq("organization_id", auth.ctx.organizationId);
+    .eq("organization_id", organizationId);
+  if (updateErr) {
+    return { ok: false, errorCode: ActionErrorCode.dbError };
+  }
+  return { ok: false, errorCode: mapBufferErrorCode(post.error) };
+}
 
-  return { error: mapBufferErrorCode(post.error) };
+export type RetryEpisodeScheduledPostsState = {
+  ok?: boolean;
+  error?: string;
+  successCount?: number;
+  failCount?: number;
+} | null;
+
+/**
+ * One-click Step4 retry for an episode. Retries all failed/pending rows
+ * (retry_count < 3) and leaves per-row outcomes for transparency.
+ */
+export async function retryEpisodeScheduledPosts(
+  _prev: RetryEpisodeScheduledPostsState,
+  formData: FormData,
+): Promise<RetryEpisodeScheduledPostsState> {
+  void _prev;
+  if (!readStudioIntegrationsServerEnabled()) {
+    return { error: ActionErrorCode.studioIntegrationsDisabled };
+  }
+  if (!isStudioIntegrationsEncryptionConfigured()) {
+    return { error: ActionErrorCode.studioIntegrationsEncryptionNotConfigured };
+  }
+  const supabase = await createClient();
+  const auth = await getOrgMemberContext(supabase);
+  if (!auth.ok) return { error: auth.error };
+
+  const episodeId = String(formData.get("episode_id") ?? "").trim();
+  if (!episodeId) return { error: ActionErrorCode.unexpected };
+
+  const { data: rows, error: rowsErr } = await supabase
+    .from("studio_scheduled_posts")
+    .select("*")
+    .eq("organization_id", auth.ctx.organizationId)
+    .eq("episode_id", episodeId)
+    .in("status", ["failed", "pending"])
+    .lt("retry_count", 3)
+    .order("created_at", { ascending: true });
+  if (rowsErr) return { error: ActionErrorCode.dbError };
+  if (!rows || rows.length === 0) {
+    return { ok: true, successCount: 0, failCount: 0 };
+  }
+
+  const apiKey = await resolveBufferApiKey(supabase, auth.ctx.organizationId);
+  if (!apiKey) return { error: ActionErrorCode.studioBufferNoKey };
+
+  const results = await Promise.all(
+    rows.map((row) =>
+      retryOneScheduledPost(supabase, auth.ctx.organizationId, apiKey, row),
+    ),
+  );
+  const successCount = results.filter((r) => r.ok).length;
+  const failCount = results.length - successCount;
+  const failedResults = results.filter(
+    (r): r is Extract<RetryOneResult, { ok: false }> => !r.ok,
+  );
+
+  void logAudit({
+    organizationId: auth.ctx.organizationId,
+    actorId: auth.ctx.userId,
+    action: AuditAction.STUDIO_BUFFER_RETRY,
+    entityType: AuditEntityType.STUDIO_EPISODE,
+    entityId: episodeId,
+    metadata: {
+      mode: "episode_bulk_retry",
+      row_count: rows.length,
+      success_count: successCount,
+      fail_count: failCount,
+    },
+  });
+
+  revalidatePath(`/dashboard/productions/${episodeId}`);
+  return {
+    ok: successCount > 0,
+    successCount,
+    failCount,
+    error:
+      failCount > 0 && successCount === 0
+        ? deriveAggregateRetryError(failedResults)
+        : undefined,
+  };
 }

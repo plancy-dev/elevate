@@ -192,6 +192,17 @@ export const ActionErrorCode = {
   /** Runway I2V: model ID not in allowed capability table */
   studioRunwayI2vInvalidModel: "studioRunwayI2vInvalidModel",
 
+  /** Editor DSL: invalid / malformed payload */
+  studioEditorDslInvalid: "studioEditorDslInvalid",
+  /** Editor DSL: episode id mismatch between payload and URL */
+  studioEditorDslEpisodeMismatch: "studioEditorDslEpisodeMismatch",
+  /** Editor DSL: no scenes with a renderable source URL */
+  studioEditorNoRenderableScenes: "studioEditorNoRenderableScenes",
+  /** Editor DSL: autosave conflict (payload older than server copy) */
+  studioEditorSaveStale: "studioEditorSaveStale",
+  /** Editor DSL: exceeds the pipeline_prefs JSON size cap */
+  studioEditorDslTooLarge: "studioEditorDslTooLarge",
+
   /** Buffer: no API key (env fallback nor org row) */
   studioBufferNoKey: "studioBufferNoKey",
   /** Buffer: auth rejected */

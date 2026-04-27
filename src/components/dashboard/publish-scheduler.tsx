@@ -27,8 +27,10 @@ import { useRouter } from "next/navigation";
 import { Calendar, ExternalLink, RotateCw, Sparkles, Trash2 } from "lucide-react";
 import {
   cancelScheduledPost,
+  retryEpisodeScheduledPosts,
   retryScheduledPost,
   schedulePostToBuffer,
+  type RetryEpisodeScheduledPostsState,
   type SchedulePostState,
 } from "@/actions/studio-buffer";
 import {
@@ -123,10 +125,15 @@ export function PublishScheduler(props: Props) {
     schedulePostToBuffer,
     null,
   );
+  const [batchRetryState, batchRetryAction, batchRetryPending] = useActionState(
+    retryEpisodeScheduledPosts,
+    null,
+  );
 
   const prevGenerate = useRef<GenerateCaptionsState>(null);
   const prevSave = useRef<GenerateCaptionsState>(null);
   const prevSchedule = useRef<SchedulePostState>(null);
+  const prevBatchRetry = useRef<RetryEpisodeScheduledPostsState>(null);
 
   useEffect(() => {
     if (!generateState || prevGenerate.current === generateState) return;
@@ -179,6 +186,24 @@ export function PublishScheduler(props: Props) {
     }
   }, [scheduleState, router, t, tAction]);
 
+  useEffect(() => {
+    if (!batchRetryState || prevBatchRetry.current === batchRetryState) return;
+    prevBatchRetry.current = batchRetryState;
+    if (batchRetryState.ok) {
+      toast.success(
+        t("publishBulkRetryToastOk", {
+          ok: batchRetryState.successCount ?? 0,
+          fail: batchRetryState.failCount ?? 0,
+        }),
+      );
+      router.refresh();
+      return;
+    }
+    if (batchRetryState.error) {
+      toast.error(translateActionErrorMessage(batchRetryState.error, tAction));
+    }
+  }, [batchRetryState, router, t, tAction]);
+
   const selectedChannelCount = useMemo(
     () => Object.values(selectedChannels).filter(Boolean).length,
     [selectedChannels],
@@ -202,6 +227,27 @@ export function PublishScheduler(props: Props) {
   }, [props.channels]);
 
   const bufferDocs = STUDIO_PROVIDER_DOCS.buffer.apiDocsUrl;
+  const retryableRows = useMemo(
+    () =>
+      props.scheduled.filter(
+        (row) =>
+          (row.status === "failed" || row.status === "pending") &&
+          row.retry_count < 3,
+      ),
+    [props.scheduled],
+  );
+  const hasRateLimitedRows = useMemo(
+    () =>
+      retryableRows.some((row) =>
+        /rate.?limit|too many requests|24h|RATE_LIMIT_EXCEEDED/i.test(
+          row.last_error ?? "",
+        ),
+      ),
+    [retryableRows],
+  );
+  const showRateLimitHint =
+    hasRateLimitedRows ||
+    batchRetryState?.error === "studioBufferRateLimited";
 
   return (
     <section className="space-y-5 rounded-xl border border-border-subtle bg-layer-01 p-5 shadow-sm">
@@ -406,9 +452,34 @@ export function PublishScheduler(props: Props) {
 
       {props.scheduled.length > 0 ? (
         <div className="space-y-2 rounded-lg border border-border-subtle bg-layer-02/40 p-4">
-          <p className="text-sm font-semibold text-text-primary">
-            {t("publishScheduledListTitle")}
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm font-semibold text-text-primary">
+              {t("publishScheduledListTitle")}
+            </p>
+            {retryableRows.length > 0 ? (
+              <div className="flex flex-col items-end gap-1">
+                <form action={batchRetryAction}>
+                  <input type="hidden" name="episode_id" value={props.episodeId} />
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    size="sm"
+                    disabled={!props.canEdit || batchRetryPending}
+                    isLoading={batchRetryPending}
+                    className="inline-flex items-center gap-1"
+                  >
+                    <RotateCw className="h-3 w-3" aria-hidden />
+                    {t("publishBulkRetryCta", { count: retryableRows.length })}
+                  </Button>
+                </form>
+                {showRateLimitHint ? (
+                  <p className="text-[10px] text-amber-700 dark:text-amber-200/95">
+                    {t("publishBulkRetryRateLimitHint")}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
           <ul className="space-y-2">
             {props.scheduled.map((row) => {
               const channel = props.channels.find(
@@ -440,7 +511,7 @@ export function PublishScheduler(props: Props) {
                   </div>
                   <div className="flex items-center gap-1.5">
                     <StatusBadge status={row.status} />
-                    {row.status === "failed" ? (
+                    {row.status === "failed" || row.status === "pending" ? (
                       <ScheduledPostAction
                         action="retry"
                         rowId={row.id}

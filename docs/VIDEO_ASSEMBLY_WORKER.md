@@ -7,7 +7,7 @@ Vercel (Next.js) and this worker **do not call each other over HTTP**. They shar
 ## Environment
 
 | Variable | Required | Notes |
-|----------|----------|--------|
+| -------- | -------- | ----- |
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Same project as the app. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server-only; worker uses RPC + storage + inserts. |
 | `CONTENT_STORAGE_BUCKET` | Yes | Same bucket name as Next.js; objects under `studio-assembled/...`. |
@@ -17,6 +17,23 @@ Vercel (Next.js) and this worker **do not call each other over HTTP**. They shar
 | `VIDEO_ASSEMBLY_SUBTITLE_FONTSDIR` | No | Optional extra directory passed to FFmpeg `subtitles=...:fontsdir=...` if fontconfig cannot find the font. |
 
 Apply migrations **`034`** (jobs table + RLS + claim RPC) and **`035`** (Realtime broadcast for dashboard progress) to your Supabase project before relying on production assembly. The dashboard uses Realtime for job updates and falls back to slower HTTP polling if Realtime is unavailable.
+
+## Incident triage (runbook)
+
+When assembly appears stuck or failed, check in this order:
+
+1. **Job table state**
+   - Query latest rows in `studio_video_assembly_jobs` for target `episode_id`.
+   - If rows stay `queued`, worker claim loop or RPC path is likely broken.
+   - If rows go `processing` then `failed`, inspect `error_message` first.
+2. **Worker health/logs**
+   - `fly logs -a elevate-video-assembly` and confirm poll loop activity.
+   - Verify `/health` endpoint success and machine not repeatedly restarting.
+3. **Storage + artifact handoff**
+   - Confirm assembled object uploaded under `studio-assembled/...`.
+   - Confirm corresponding `studio_production_artifacts(artifact_role='assembled_video')` row exists.
+4. **Dashboard sync**
+   - Realtime disabled/delayed still recovers via page refresh; if DB is correct but UI stale, validate Realtime channel health separately.
 
 ### If the Fly machine shows **Stopped** / **Suspended**
 

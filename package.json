@@ -26,6 +26,7 @@
     "og:default": "node scripts/build-og-default.mjs",
     "og:default:webp": "node scripts/build-og-default.mjs --webp",
     "db:types": "node scripts/gen-db-types.mjs",
+    "buffer:retry-step4": "node scripts/retry-buffer-step4.mjs",
     "worker:assembly": "tsx workers/video-assembly/run.ts",
     "prepare": "husky"
   },
