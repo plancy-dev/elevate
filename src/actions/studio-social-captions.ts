@@ -17,6 +17,7 @@ import {
 } from "@/lib/studio-productions/social-captions";
 import { draftTripleFromArtifactTimestamps } from "@/lib/studio-productions/resolve-episode-draft-artifacts";
 import { STUDIO_CONTENT_TEXT_MAX } from "@/lib/studio-productions/constants";
+import { normalizeArtifactMetadataForWrite } from "@/lib/studio-productions/artifact-metadata-schemas";
 import { logAudit } from "@/lib/audit/log";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import type { Json } from "@/types/database.types";
@@ -190,7 +191,10 @@ export async function generateSocialCaptions(
       .from("studio_production_artifacts")
       .update({
         content_text: contentText,
-        metadata: meta as Json,
+        metadata: normalizeArtifactMetadataForWrite(
+          "social_captions",
+          meta as Json,
+        ),
         tool_platform: cred.provider,
       })
       .eq("id", existing.id);
@@ -201,7 +205,7 @@ export async function generateSocialCaptions(
       artifact_role: "social_captions",
       tool_platform: cred.provider,
       content_text: contentText,
-      metadata: meta as Json,
+      metadata: normalizeArtifactMetadataForWrite("social_captions", meta as Json),
       sort_order: 55,
     });
   }
@@ -274,7 +278,10 @@ export async function saveSocialCaptionsManual(
       .from("studio_production_artifacts")
       .update({
         content_text: contentText,
-        metadata: meta as Json,
+        metadata: normalizeArtifactMetadataForWrite(
+          "social_captions",
+          meta as Json,
+        ),
         tool_platform: "elevate",
       })
       .eq("id", existing.id);
@@ -286,7 +293,7 @@ export async function saveSocialCaptionsManual(
       artifact_role: "social_captions",
       tool_platform: "elevate",
       content_text: contentText,
-      metadata: meta as Json,
+      metadata: normalizeArtifactMetadataForWrite("social_captions", meta as Json),
       sort_order: 55,
     });
     if (error) return { error: ActionErrorCode.dbError };

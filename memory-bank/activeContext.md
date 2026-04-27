@@ -19,6 +19,7 @@
 **품질 게이트:** `pnpm typecheck` · `pnpm lint` · `pnpm test`(325) · `pnpm test:e2e tests/e2e/auth-*` green. live-phase* 는 Buffer 채널 prerequisite 외에는 결정적 동작.
 
 **PR-1 (데이터 정합성) 진행 메모 · 2026-04-27:** Supabase 로컬 마이그레이션 번호 충돌(`013`/`014`)은 최신 생성 파일을 `042`/`043`으로 renumber 처리. `studio_org_provider_connections.provider` CHECK는 `025`·`030`·`038`·`040`에서 이미 확장되어 현재 코드 기준 enum 드리프트 이슈는 해소됨.
+**PR-3 (메타 검증) 진행 메모 · 2026-04-27:** `artifact-metadata-schemas.ts`에 role별 zod 스키마/디스패처를 도입해 `scene_clip`·`tts_audio`·`subtitle_srt`·`assembled_video`·`social_captions`·`scene_keyframe_*` write 경로에 느슨한 정규화를 적용했다. Lemon 주문 멱등성은 `018`의 `ls_order_identifier PRIMARY KEY`로 이미 충족됨을 확인.
 
 **다음 후보:**
 

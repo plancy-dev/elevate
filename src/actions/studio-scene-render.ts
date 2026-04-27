@@ -25,6 +25,7 @@ import { generateScenesWithLlm } from "@/lib/studio-productions/scene-llm-planne
 import { resolveOrgLlmCredentialForDraftModel } from "@/lib/studio-productions/episode-llm";
 import { DEFAULT_PACKAGING_DRAFT_MODEL_ID } from "@/lib/studio-productions/episode-llm-models";
 import { resolveEpisodeFormat, FORMAT_SPECS } from "@/lib/studio-productions/episode-format";
+import { normalizeArtifactMetadataForWrite } from "@/lib/studio-productions/artifact-metadata-schemas";
 import { logAudit } from "@/lib/audit/log";
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import type { Json } from "@/types/database.types";
@@ -177,7 +178,7 @@ async function renderOneScene(params: {
       tool_platform: "runway",
       content_text: scene.narration.slice(0, 500),
       external_url: result.output_urls[0] ?? null,
-      metadata,
+      metadata: normalizeArtifactMetadataForWrite("scene_clip", metadata as Json),
       sort_order: scene.index,
     })
     .select("id")

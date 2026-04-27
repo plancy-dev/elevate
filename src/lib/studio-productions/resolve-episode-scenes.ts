@@ -13,6 +13,7 @@ import {
 import {
   validateAndParseScenesJsonArray,
 } from "@/lib/studio-productions/scenes-json-validate";
+import { parseArtifactMetadata } from "@/lib/studio-productions/artifact-metadata-schemas";
 
 export type ResolveEpisodeScenesInput = {
   supabase: SupabaseClient<Database>;
@@ -50,7 +51,11 @@ export async function resolveEpisodeScenes(
     .order("created_at", { ascending: false })
     .limit(1);
 
-  const ttsTimings = parseTtsSegmentTimings(ttsRows?.[0]?.metadata);
+  const ttsMetadata = parseArtifactMetadata(
+    "tts_audio",
+    (ttsRows?.[0]?.metadata ?? null) as Database["public"]["Tables"]["studio_production_artifacts"]["Row"]["metadata"] | null,
+  );
+  const ttsTimings = parseTtsSegmentTimings(ttsMetadata);
   const scenesFromTts =
     scriptText && ttsTimings
       ? buildScenesFromTtsTimings(scriptText, ttsTimings)
