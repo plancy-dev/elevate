@@ -1583,6 +1583,74 @@ export type Database = {
           },
         ]
       }
+      user_blog_subscription_webhook_events: {
+        Row: {
+          event_id: string
+          event_name: string
+          lemon_squeezy_subscription_id: string | null
+          payload: Json
+          processed_at: string
+        }
+        Insert: {
+          event_id: string
+          event_name: string
+          lemon_squeezy_subscription_id?: string | null
+          payload?: Json
+          processed_at?: string
+        }
+        Update: {
+          event_id?: string
+          event_name?: string
+          lemon_squeezy_subscription_id?: string | null
+          payload?: Json
+          processed_at?: string
+        }
+        Relationships: []
+      }
+      user_blog_subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          lemon_squeezy_subscription_id: string | null
+          lemon_squeezy_variant_id: number | null
+          manage_subscription_url: string | null
+          subscription_status: Database["public"]["Enums"]["blog_subscription_status"] | null
+          subscription_tier: Database["public"]["Enums"]["blog_subscription_tier"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          lemon_squeezy_subscription_id?: string | null
+          lemon_squeezy_variant_id?: number | null
+          manage_subscription_url?: string | null
+          subscription_status?: Database["public"]["Enums"]["blog_subscription_status"] | null
+          subscription_tier?: Database["public"]["Enums"]["blog_subscription_tier"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          lemon_squeezy_subscription_id?: string | null
+          lemon_squeezy_variant_id?: number | null
+          manage_subscription_url?: string | null
+          subscription_status?: Database["public"]["Enums"]["blog_subscription_status"] | null
+          subscription_tier?: Database["public"]["Enums"]["blog_subscription_tier"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_blog_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       toss_payment_intents: {
         Row: {
           amount_krw: number
@@ -1744,6 +1812,8 @@ export type Database = {
       }
     }
     Enums: {
+      blog_subscription_status: "active" | "cancelled" | "expired" | "past_due"
+      blog_subscription_tier: "free" | "monthly" | "annual"
       event_status:
         | "draft"
         | "planning"
@@ -1890,6 +1960,8 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      blog_subscription_status: ["active", "cancelled", "expired", "past_due"],
+      blog_subscription_tier: ["free", "monthly", "annual"],
       event_status: [
         "draft",
         "planning",
