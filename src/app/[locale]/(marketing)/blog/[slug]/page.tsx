@@ -180,20 +180,21 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         ) : (
           <>
-            <div className="relative mt-10">
+            <div className="relative isolate mt-10">
               <div className="prose-blog max-h-136 overflow-hidden">
                 <MDXRemote source={post.body} components={blogMdxComponents} />
               </div>
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-paper-50 via-paper-50/95 to-transparent"
+                className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-40 bg-linear-to-t from-paper-50 via-paper-50/95 to-transparent"
               />
             </div>
             <BlogPaywallCta
               {...(access.requiredAccessTier === "member"
-                ? { mode: "member" as const }
+                ? { mode: "member" as const, isAuthenticated: Boolean(user) }
                 : {
                     mode: "premium" as const,
+                    isAuthenticated: Boolean(user),
                     monthlyCheckoutUrl,
                     annualCheckoutUrl,
                   })}

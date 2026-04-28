@@ -1,0 +1,23 @@
+---
+title: "Sample (Premium): Subscriber-only deep dive"
+description: "A premium sample post to verify paid subscription gating."
+date: "2026-04-28"
+access_tier: "premium"
+---
+
+This sample post is **premium-only**.
+
+Paid subscribers (monthly/annual, active status) should read the full article.
+Free users and logged-out users should only see a preview and the premium upgrade CTA.
+
+## Verification checklist
+
+1. Logged out: preview + paid CTA buttons.
+2. Logged in (free): preview + paid CTA buttons.
+3. Logged in (active monthly/annual): full content.
+4. Cancelled/expired subscription: preview + paid CTA buttons.
+
+## Extra body content
+
+This section is intentionally long enough to make the preview cutoff obvious.
+Use this post for quick regression checks after webhook or pricing changes.

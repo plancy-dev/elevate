@@ -12,6 +12,40 @@ import {
 
 type Props = { params: Promise<{ locale: string }> };
 
+function CurrentPlanBadge(props: { planLabel: string; tone?: "neutral" | "vermilion" }) {
+  const tone = props.tone ?? "neutral";
+  const wrapperClass =
+    tone === "vermilion"
+      ? "border-vermilion-300 bg-vermilion-50/40 text-vermilion-700"
+      : "border-ink-300 bg-paper-50 text-ink-700";
+
+  return (
+    <div
+      className={`inline-flex min-h-12 w-full items-center gap-2 border px-3 py-2.5 ${wrapperClass}`}
+      aria-label={`Current plan: ${props.planLabel}`}
+    >
+      <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center border border-current text-current">
+        <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" aria-hidden>
+          <path
+            d="M4 8.25 6.5 10.5 12 5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+      <span className="flex min-w-0 flex-col text-left">
+        <span className="font-mono text-[10px] uppercase tracking-[0.08em] opacity-75">
+          Current plan
+        </span>
+        <span className="text-sm font-medium leading-tight">{props.planLabel}</span>
+      </span>
+    </div>
+  );
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const tMeta = await getTranslations({ locale, namespace: "Metadata" });
@@ -40,6 +74,10 @@ export default async function PricingPage({ params }: Props) {
   const showActiveState =
     subscription.status === "active" &&
     (subscription.tier === "monthly" || subscription.tier === "annual");
+  const isAuthenticated = Boolean(user);
+  const effectiveTier: "free" | "monthly" | "annual" = showActiveState
+    ? subscription.tier
+    : "free";
 
   return (
     <div className="border-t border-ink-100">
@@ -67,12 +105,22 @@ export default async function PricingPage({ params }: Props) {
               <li>- Save bookmarks and reading history</li>
             </ul>
             <div className="mt-6">
-              <NextLink
-                href="/signup"
-                className="inline-flex items-center justify-center border border-ink-100 bg-paper-50 px-4 py-2.5 text-sm font-medium text-ink-900 transition-colors duration-80 ease-(--ease-editorial) hover:bg-paper-0"
-              >
-                Create free account
-              </NextLink>
+              {isAuthenticated ? (
+                effectiveTier === "free" ? (
+                  <CurrentPlanBadge planLabel="Free" />
+                ) : (
+                  <span className="inline-flex min-h-12 w-full items-center justify-center border border-ink-200 bg-paper-50 px-4 py-2.5 text-sm font-medium text-ink-500">
+                    Included in your paid plan
+                  </span>
+                )
+              ) : (
+                <NextLink
+                  href="/signup"
+                  className="inline-flex min-h-12 items-center justify-center border border-ink-100 bg-paper-50 px-4 py-2.5 text-sm font-medium text-ink-900 transition-colors duration-80 ease-(--ease-editorial) hover:bg-paper-0"
+                >
+                  Create free account
+                </NextLink>
+              )}
             </div>
           </article>
 
@@ -89,14 +137,23 @@ export default async function PricingPage({ params }: Props) {
               <li>- Full archive access</li>
             </ul>
             <div className="mt-6">
-              <a
-                href={monthlyCheckoutUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center border border-ink-900 bg-ink-900 px-4 py-2.5 text-sm font-medium text-paper-50 transition-colors duration-80 ease-(--ease-editorial) hover:bg-ink-700"
-              >
-                Subscribe Monthly - $5.99/mo
-              </a>
+              {effectiveTier === "monthly" ? (
+                <CurrentPlanBadge planLabel="Monthly" />
+              ) : (
+                <a
+                  href={monthlyCheckoutUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-12 w-full min-w-0 items-center justify-center border border-ink-900 bg-ink-900 px-4 py-2.5 text-center text-[13px] leading-snug font-medium whitespace-normal text-paper-50 transition-colors duration-80 ease-(--ease-editorial) hover:bg-ink-700 sm:text-sm"
+                >
+                  <span className="sm:hidden">Monthly - $5.99/mo</span>
+                  <span className="hidden sm:inline">
+                    {effectiveTier === "annual"
+                      ? "Switch to Monthly - $5.99/mo"
+                      : "Subscribe Monthly - $5.99/mo"}
+                  </span>
+                </a>
+              )}
             </div>
           </article>
 
@@ -116,14 +173,28 @@ export default async function PricingPage({ params }: Props) {
               <li>- Save 33% compared to monthly billing</li>
             </ul>
             <div className="mt-6">
-              <a
-                href={annualCheckoutUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center border border-vermilion-600 bg-vermilion-600 px-4 py-2.5 text-sm font-medium text-paper-50 transition-colors duration-80 ease-(--ease-editorial) hover:bg-vermilion-700"
-              >
-                Subscribe Annually - $47.99/yr (Save 33%)
-              </a>
+              {effectiveTier === "annual" ? (
+                <CurrentPlanBadge planLabel="Annual" tone="vermilion" />
+              ) : (
+                <a
+                  href={annualCheckoutUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-12 w-full min-w-0 items-center justify-center border border-vermilion-600 bg-vermilion-600 px-4 py-2.5 text-center text-[13px] leading-snug font-medium whitespace-normal text-paper-50 transition-colors duration-80 ease-(--ease-editorial) hover:bg-vermilion-700 sm:text-sm"
+                >
+                  <span className="sm:hidden">Annual - $47.99/yr</span>
+                  <span className="hidden sm:inline xl:hidden">
+                    {effectiveTier === "monthly"
+                      ? "Upgrade to Annual - $47.99/yr"
+                      : "Subscribe Annually - $47.99/yr"}
+                  </span>
+                  <span className="hidden xl:inline">
+                    {effectiveTier === "monthly"
+                      ? "Upgrade to Annual - $47.99/yr (Save 33%)"
+                      : "Subscribe Annually - $47.99/yr (Save 33%)"}
+                  </span>
+                </a>
+              )}
             </div>
           </article>
         </div>
@@ -166,7 +237,9 @@ export default async function PricingPage({ params }: Props) {
               </p>
               <p className="mt-2 text-lg font-semibold text-ink-900">Free</p>
               <p className="mt-2 text-sm text-ink-700">
-                Upgrade to monthly or annual for full access to all posts and archive.
+                {isAuthenticated
+                  ? "You're on the Free plan. Upgrade to Monthly or Annual for unlimited access to premium posts and the full archive."
+                  : "Upgrade to monthly or annual for full access to all posts and archive."}
               </p>
               {!user ? (
                 <NextLink

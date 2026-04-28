@@ -52,46 +52,93 @@ function verifyStandardWebhookSignature(args: {
 export async function POST(req: Request) {
   const rawBody = await req.text();
   const secret = process.env.POLAR_WEBHOOK_SECRET?.trim();
-  if (!secret) {
-    return NextResponse.json({ error: "server misconfigured" }, { status: 503 });
-  }
-
   const webhookId = req.headers.get("webhook-id");
   const webhookTimestamp = req.headers.get("webhook-timestamp");
   const webhookSignature = req.headers.get("webhook-signature");
   const polarSignature = req.headers.get("polar-signature");
-  const valid =
-    verifyStandardWebhookSignature({
-      rawBody,
-      webhookId,
-      webhookTimestamp,
-      webhookSignature,
-      secret,
-    }) ||
-    verifyLegacyPolarSignature({
-      rawBody,
-      headerSignature: polarSignature,
-      secret,
-    });
+  const headerEventType = req.headers.get("polar-event");
+  const eventTypeForLog =
+    headerEventType ??
+    (() => {
+      try {
+        const parsed = JSON.parse(rawBody) as { type?: unknown };
+        return typeof parsed.type === "string" ? parsed.type : null;
+      } catch {
+        return null;
+      }
+    })();
+
+  const logMeta = {
+    delivery_id: webhookId ?? "missing",
+    event_type: eventTypeForLog ?? "unknown",
+    has_secret: Boolean(secret),
+    has_webhook_id: Boolean(webhookId),
+    has_webhook_timestamp: Boolean(webhookTimestamp),
+    has_webhook_signature: Boolean(webhookSignature),
+    has_legacy_polar_signature: Boolean(polarSignature),
+  };
+
+  console.info("[polar-webhook] received", logMeta);
+
+  if (!secret) {
+    console.error("[polar-webhook] misconfigured: missing POLAR_WEBHOOK_SECRET", logMeta);
+    return NextResponse.json({ error: "server misconfigured" }, { status: 503 });
+  }
+
+  const validStandard = verifyStandardWebhookSignature({
+    rawBody,
+    webhookId,
+    webhookTimestamp,
+    webhookSignature,
+    secret,
+  });
+  const validLegacy = verifyLegacyPolarSignature({
+    rawBody,
+    headerSignature: polarSignature,
+    secret,
+  });
+  const valid = validStandard || validLegacy;
   if (!valid) {
+    console.warn("[polar-webhook] signature verification failed", {
+      ...logMeta,
+      verification_mode: "none",
+    });
     return NextResponse.json({ error: "invalid signature" }, { status: 401 });
   }
+  console.info("[polar-webhook] signature verified", {
+    ...logMeta,
+    verification_mode: validStandard ? "standard" : "legacy",
+  });
 
   let parsed: unknown;
   try {
     parsed = JSON.parse(rawBody);
   } catch {
+    console.warn("[polar-webhook] invalid json payload", logMeta);
     return NextResponse.json({ error: "invalid json" }, { status: 400 });
   }
 
   const admin = createAdminClient();
-  await processPolarSubscriptionWebhook({
-    admin,
-    body: parsed,
-    rawBody,
-    headerEventType: req.headers.get("polar-event"),
-    deliveryId: webhookId,
-  });
+  try {
+    const result = await processPolarSubscriptionWebhook({
+      admin,
+      body: parsed,
+      rawBody,
+      headerEventType,
+      deliveryId: webhookId,
+    });
+    console.info("[polar-webhook] processed", {
+      ...logMeta,
+      handler_result: result.kind,
+      ...(result.kind === "skipped" ? { skip_reason: result.reason } : {}),
+    });
+  } catch (error) {
+    console.error("[polar-webhook] handler error", {
+      ...logMeta,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return NextResponse.json({ error: "webhook handler failed" }, { status: 500 });
+  }
 
   return NextResponse.json({ received: true });
 }
