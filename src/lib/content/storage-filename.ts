@@ -12,7 +12,7 @@ const MAX_ORIGINAL_LEN = 255;
 export function normalizeOriginalFileNameForDb(raw: string): string {
   const t = raw.trim().replace(/\0/g, "");
   const noPath = t.replace(/[/\\]/g, "_").replace(/\r|\n|\t/g, "");
-  const collapsed = noPath.replace(/\s+/g, "").trim();
+  const collapsed = noPath.replace(/\s+/g, " ").trim();
   const out = collapsed.slice(0, MAX_ORIGINAL_LEN);
   return out || "download.bin";
 }
