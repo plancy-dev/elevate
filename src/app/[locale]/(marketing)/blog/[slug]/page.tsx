@@ -15,6 +15,15 @@ import {
 import { getSiteUrl } from "@/lib/seo/site-url";
 import { BlogPostViewedCapture } from "@/components/blog/blog-post-viewed-capture";
 import { BlogShareLinkButton } from "@/components/blog/blog-share-link-button";
+import { BlogPaywallCta } from "@/components/blog/blog-paywall-cta";
+import { createClient } from "@/lib/supabase/server";
+import {
+  buildBlogSubscriptionCheckoutUrl,
+  canReadPremiumBlogPost,
+  getBlogSubscriptionByUserId,
+  LEMON_ANNUAL_VARIANT_ID,
+  LEMON_MONTHLY_VARIANT_ID,
+} from "@/lib/subscriptions/blog-subscription";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -85,6 +94,23 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   const t = await getTranslations("Blog");
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const subscription = await getBlogSubscriptionByUserId(supabase, user?.id ?? null);
+  const access = canReadPremiumBlogPost({
+    isPremium: post.meta.isPremium,
+    subscription,
+  });
+  const monthlyCheckoutUrl = buildBlogSubscriptionCheckoutUrl({
+    variantId: LEMON_MONTHLY_VARIANT_ID,
+    email: user?.email,
+  });
+  const annualCheckoutUrl = buildBlogSubscriptionCheckoutUrl({
+    variantId: LEMON_ANNUAL_VARIANT_ID,
+    email: user?.email,
+  });
   const base = getSiteUrl();
   const pathname = getPathname({
     locale,
@@ -147,9 +173,27 @@ export default async function BlogPostPage({ params }: Props) {
           title={post.meta.title}
         />
 
-        <div className="mt-10 prose-blog">
-          <MDXRemote source={post.body} components={blogMdxComponents} />
-        </div>
+        {access.canReadFull ? (
+          <div className="mt-10 prose-blog">
+            <MDXRemote source={post.body} components={blogMdxComponents} />
+          </div>
+        ) : (
+          <>
+            <div className="relative mt-10">
+              <div className="prose-blog max-h-136 overflow-hidden">
+                <MDXRemote source={post.body} components={blogMdxComponents} />
+              </div>
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-paper-50 via-paper-50/95 to-transparent"
+              />
+            </div>
+            <BlogPaywallCta
+              monthlyCheckoutUrl={monthlyCheckoutUrl}
+              annualCheckoutUrl={annualCheckoutUrl}
+            />
+          </>
+        )}
 
         <div className="mt-14 border-t border-ink-100 pt-8">
           <Link

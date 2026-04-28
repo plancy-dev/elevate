@@ -12,6 +12,7 @@ export type BlogPostMeta = {
   title: string;
   description: string;
   date: string;
+  isPremium: boolean;
   /** Absolute path from site root for OG/Twitter preview, e.g. `/blog/my-slug/hero.jpg`. Must live under `public/`. */
   ogImage?: string;
 };
@@ -38,8 +39,9 @@ function parseFrontmatter(
     typeof data.date === "string"
       ? data.date
       : new Date().toISOString().slice(0, 10);
+  const isPremium = data.is_premium === true;
   const ogImage = parseOgImage(data.ogImage);
-  return { title, description, date, ...(ogImage ? { ogImage } : {}) };
+  return { title, description, date, isPremium, ...(ogImage ? { ogImage } : {}) };
 }
 
 function listMdxFiles(dir: string): string[] {
