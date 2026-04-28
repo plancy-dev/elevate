@@ -5,8 +5,14 @@ vi.mock("server-only", () => ({}));
 import { routing } from "@/i18n/routing";
 import { getAllPostMetaForLocale, getPostBySlug } from "@/lib/blog/posts";
 
-/** en+ko: release note + flagship. ja/zh: flagship translation + legacy samples (no release MDX yet). */
-const EN_KO_SLUGS = ["release-0-2-0", "the-prompt-is-your-product-surface"].sort();
+/** en+ko: release note + flagship + access-tier sample posts. ja/zh: flagship translation + legacy samples (no release MDX yet). */
+const EN_KO_SLUGS = [
+  "release-0-2-0",
+  "sample-member-account-required",
+  "sample-premium-subscriber-only",
+  "sample-public-open-notes",
+  "the-prompt-is-your-product-surface",
+].sort();
 const JA_ZH_SLUGS = ["seo-and-waitlist", "the-prompt-is-your-product-surface", "welcome"].sort();
 
 describe("blog posts (locale MDX)", () => {

@@ -9,7 +9,7 @@ export default function ForgotPasswordPage() {
     <div className="flex min-h-screen bg-paper-50">
       <div className="mx-auto flex w-full max-w-[400px] flex-col justify-center px-6 py-16">
         <Link href="/">
-          <ElevateLogo size="md" />
+          <ElevateLogo size="lg" />
         </Link>
 
         <h1 className="mt-10 text-2xl font-semibold tracking-[-0.02em] text-ink-900">

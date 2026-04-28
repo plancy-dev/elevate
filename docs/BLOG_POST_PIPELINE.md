@@ -27,6 +27,14 @@ Ship **one slug** per topic across en/ko so `hreflang` and [`buildBlogPostAltern
 
 ## 2. Outline & draft (English)
 
+**Fast start (copy-paste):** Start from one of the blog templates in [`docs/templates/`](templates/):
+
+- [`blog-post-public.mdx.example`](templates/blog-post-public.mdx.example)
+- [`blog-post-member.mdx.example`](templates/blog-post-member.mdx.example)
+- [`blog-post-premium.mdx.example`](templates/blog-post-premium.mdx.example)
+
+These templates are designed for both human authors and AI assistants so `access_tier` and CTA structure stay consistent.
+
 1. **Hook** — contrarian or lived experience (avoid generic “AI is transforming…”).
 2. **Problem** — organizational, not only technical; name the hidden cost (rework, drift, governance).
 3. **Insight** — one memorable frame (e.g. “prompt = product surface”).

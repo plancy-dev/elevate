@@ -20,7 +20,7 @@ export default function LoginPage() {
       </div>
       <div className="hidden flex-col justify-between border-r border-ink-100 bg-marketing-canvas p-10 lg:flex lg:w-[480px] xl:w-[560px]">
         <Link href="/">
-          <ElevateLogo size="md" />
+          <ElevateLogo size="lg" />
         </Link>
 
         <div>

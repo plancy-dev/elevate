@@ -65,7 +65,7 @@ export function DeskShell({
       if (mode === "admin") return;
       if (seq === "s") router.push("/dashboard/studio");
       if (seq === "t") router.push("/dashboard/productions");
-      if (seq === "p") router.push("/dashboard/productions/channels");
+      if (seq === "p") router.push("/dashboard/productions");
     },
   });
 

@@ -114,18 +114,6 @@ export function TOC({
             href: "/dashboard/productions",
             label: tx("studio.productions", "Productions"),
           },
-          {
-            href: "/dashboard/productions/projects",
-            label: tx("studio.projects", "Projects"),
-          },
-          {
-            href: "/dashboard/productions/integrations",
-            label: tx("studio.integrations", "Integrations"),
-          },
-          {
-            href: "/dashboard/productions/channels",
-            label: tx("studio.channels", "Channels"),
-          },
         ],
       },
       {
