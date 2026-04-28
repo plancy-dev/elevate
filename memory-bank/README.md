@@ -8,7 +8,7 @@
 |------|------|
 | **tasks.md** | 로드맵·페이즈·우선순위 (SoT) |
 | **progress.md** | 완료 vs 열린 일 요약 (SoT는 tasks) |
-| **creative-apple-tier-visual-system.md** | 시각 언어 v2 요약 (VISUAL_LANGUAGE_V2 링크) |
+| **archive/design-v2/** | 시각 언어 v2 자료 아카이브 (현재 SoT는 ADR-011) |
 | **marketing-content-pipeline.md** | PLG·블로그↔전자책·PostHog·gstack 역할 (Phase M) |
 | **marketing-pillars-m2.md** | M2 필라 5개·다국어 우선순위·에디토리얼 캘린더 템플릿 |
 | **activeContext.md** | 지금 페이즈, 다음 작업 앵커 |
@@ -23,7 +23,7 @@
 - **기능 완료 시**: `progress.md`
 - **아키텍처 변경 시**: `creative-architecture.md`
 
-**대시보드 UX·접근:** [`docs/design/DASHBOARD_UX_PRINCIPLES.md`](../docs/design/DASHBOARD_UX_PRINCIPLES.md) · 엄격 모드 게이트는 `src/lib/auth/dashboard-access.ts` + `/access-pending`.
+**Editor's Desk v3 SoT:** [`docs/adr/ADR-011-design-system-v3-editors-desk.md`](../docs/adr/ADR-011-design-system-v3-editors-desk.md) · [`docs/features/PLAN-editors-desk-s0-s1-s2.md`](../docs/features/PLAN-editors-desk-s0-s1-s2.md).
 
 ## gstack과의 관계
 

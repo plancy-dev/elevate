@@ -842,6 +842,80 @@
       "orgSettings": "設定",
       "orgNavComingSoon": "準備中"
     },
+    "toc": {
+      "collapse": "折りたたむ",
+      "expand": "展開",
+      "studio": {
+        "section": "Studio",
+        "productions": "Productions",
+        "projects": "Projects",
+        "integrations": "Integrations",
+        "channels": "Channels"
+      },
+      "scripts": {
+        "section": "Scripts",
+        "promptStudio": "Prompt Studio"
+      },
+      "library": {
+        "section": "Library",
+        "library": "Library"
+      },
+      "house": {
+        "section": "編集室",
+        "team": "チーム",
+        "organization": "組織",
+        "audit": "監査",
+        "admin": "管理"
+      },
+      "settings": {
+        "section": "Settings",
+        "profile": "プロフィール",
+        "billing": "請求",
+        "help": "ヘルプ"
+      },
+      "admin": {
+        "content": "コンテンツ",
+        "waitlist": "ウェイトリスト",
+        "purchaseAllowlist": "チェックアウト許可リスト",
+        "promptStudioAllowlist": "Prompt Studio ベータ"
+      }
+    },
+    "commandBar": {
+      "placeholder": "コマンドまたはルートを入力...",
+      "empty": "結果なし",
+      "recentEmpty": "最近のエピソードなし",
+      "group": {
+        "routes": "ルート",
+        "recentEpisodes": "最近のエピソード",
+        "help": "ヘルプ"
+      },
+      "routes": {
+        "overview": "概要",
+        "productions": "制作",
+        "promptStudio": "プロンプトスタジオ",
+        "publish": "公開",
+        "library": "ライブラリ",
+        "settings": "設定",
+        "content": "コンテンツ",
+        "waitlist": "ウェイトリスト"
+      },
+      "help": {
+        "default": "ヘルプとサポート",
+        "admin": "管理ホーム"
+      }
+    },
+    "shellTitles": {
+      "overview": "概要",
+      "productions": "制作",
+      "studio": "プロンプトスタジオ",
+      "library": "ライブラリ",
+      "settings": "設定",
+      "help": "ヘルプとサポート",
+      "billing": "請求",
+      "team": "チーム",
+      "organization": "組織",
+      "admin": "管理"
+    },
     "overview": {
       "title": "概要",
       "liveData": "ライブデータ",

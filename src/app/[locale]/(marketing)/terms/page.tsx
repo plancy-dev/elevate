@@ -28,9 +28,9 @@ export default async function TermsPage({ params }: Props) {
   ];
 
   return (
-    <div className="border-t border-marketing-border-subtle">
+    <div className="border-t border-ink-100">
       <MarketingSection title={t("title")} description={t("updated")}>
-        <div className="max-w-3xl space-y-5 text-sm text-text-secondary leading-relaxed">
+        <div className="max-w-3xl space-y-5 text-sm leading-relaxed text-ink-700">
           {paragraphs.map((p, i) => (
             <p key={i}>{p}</p>
           ))}

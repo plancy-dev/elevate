@@ -19,7 +19,7 @@ export default async function OrganizationAuditLogPage() {
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-paper-50 p-6">
         <ActionErrorMessage code={ensured.error} />
       </div>
     );
@@ -37,12 +37,12 @@ export default async function OrganizationAuditLogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border-subtle bg-background px-6 h-12">
-        <h1 className="text-sm font-medium text-text-primary">{t("title")}</h1>
+    <div className="min-h-screen bg-paper-50">
+      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-ink-100 bg-paper-50 px-6 h-12">
+        <h1 className="text-sm font-medium text-ink-900">{t("title")}</h1>
         <Link
           href="/dashboard/team"
-          className="text-xs text-interactive hover:text-primary flex items-center gap-1 transition-colors"
+          className="text-xs text-vermilion-600 hover:text-primary flex items-center gap-1 transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
           {tOrg("backFromAudit")}

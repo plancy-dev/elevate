@@ -4,13 +4,13 @@ This document defines **how** we layer external references, tokens, and UI so ag
 
 ## 0. Visual execution contract (CREATIVE lock)
 
-**Product-facing rules for calm, Apple-tier consistency** — marketing vs app accents, radius semantics, motion, rollout order:
+**Product-facing rules for Editor's Desk v3** - ink/paper/vermilion, near-zero radius, no shadows, editorial motion rules:
 
-→ **[`VISUAL_LANGUAGE_V2.md`](VISUAL_LANGUAGE_V2.md)**  
-Dashboard nav/list anti-template notes: [`DASHBOARD_UX_PRINCIPLES.md`](DASHBOARD_UX_PRINCIPLES.md)  
-Memory-bank pointer: [`memory-bank/creative-apple-tier-visual-system.md`](../memory-bank/creative-apple-tier-visual-system.md)
+→ **[`../adr/ADR-011-design-system-v3-editors-desk.md`](../adr/ADR-011-design-system-v3-editors-desk.md)**  
+TOC IA lock: [`v3-creative/toc-ia-mapping.md`](v3-creative/toc-ia-mapping.md)  
+Superseded v2 docs: [`../../memory-bank/archive/design-v2/`](../../memory-bank/archive/design-v2/)
 
-If `SYSTEM.md` and `VISUAL_LANGUAGE_V2.md` disagree on **visual behavior**, **V2 wins** until amended.
+If `SYSTEM.md` and ADR-011 disagree on visual behavior, ADR-011 wins until amended.
 
 ## 1. Reference layer — [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) + [getdesign.md](https://getdesign.md/what-is-design-md)
 
@@ -45,7 +45,7 @@ If `SYSTEM.md` and `VISUAL_LANGUAGE_V2.md` disagree on **visual behavior**, **V2
 | Marketing-only | `--marketing-*` (cream canvas, warm ink, orange accent) — scoped by `.elevate-marketing-chrome` |
 | `@theme inline` | Tailwind v4 token bridge (`--color-*`, `--radius-*`, shadows) |
 | `@layer base` (interactive) | Default **cursor** for links, buttons, tabs, selects — see [`INTERACTIVE_AFFORDANCES.md`](INTERACTIVE_AFFORDANCES.md) |
-| Feature CSS | e.g. `src/app/film-strip.css` imported from `globals.css` |
+| Feature CSS | Editor's Desk utilities live in `src/app/globals.css` and `src/styles/tokens.css` |
 
 Product surfaces **keep IBM-style blue primary** inside the app shell; marketing uses **warm marketing accent** for primary CTAs where specified in components.
 

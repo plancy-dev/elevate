@@ -25,7 +25,7 @@ export function ElevateLogo({
       <div
         className={cn(
           s.box,
-          "relative shrink-0 overflow-hidden rounded-full bg-transparent ring-1 ring-black/10 dark:ring-white/15",
+          "relative shrink-0 overflow-hidden border border-ink-100 bg-transparent",
         )}
       >
         <Image
@@ -41,7 +41,7 @@ export function ElevateLogo({
         <span
           className={cn(
             s.text,
-            "font-semibold tracking-[-0.02em] text-text-primary",
+            "font-semibold tracking-[-0.02em] text-ink-900",
           )}
         >
           Elevate

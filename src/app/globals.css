@@ -1,62 +1,51 @@
 @import "tailwindcss";
-@import "./film-strip.css";
+@import "../styles/tokens.css";
 
-/* Light theme (default when .dark is not on <html>) */
+/* Semantic aliases on top of Editor's Desk v3 tokens */
 :root {
-  --background: #fafafa;
-  --foreground: #161616;
-  --surface: #ffffff;
-  --surface-02: #f4f4f4;
-  --surface-03: #e8e8e8;
-  --surface-hover: #e0e0e0;
-  --border: #c6c6c6;
-  --border-subtle: #e0e0e0;
-  --text-primary: #161616;
-  --text-secondary: #393939;
-  --text-tertiary: #6f6f6f;
-  --text-on-color: #ffffff;
-  --primary: #0f62fe;
-  --primary-hover: #0353e9;
-  --primary-active: #002d9c;
-  --accent: #198038;
-  --accent-hover: #166a32;
-  --danger: #da1e28;
-  --warning: #f1c21b;
-  --info: #4589ff;
-  --layer-01: #ffffff;
-  --layer-02: #f4f4f4;
-  --layer-03: #e8e8e8;
-  --field: #f4f4f4;
-  --field-hover: #e8e8e8;
-  --focus: #0f62fe;
-  --interactive: #0f62fe;
-  --highlight: rgba(15, 98, 254, 0.12);
+  --background: var(--paper-50);
+  --foreground: var(--ink-900);
+  --surface: var(--paper-0);
+  --surface-02: var(--paper-100);
+  --surface-03: var(--paper-100);
+  --surface-hover: var(--paper-100);
+  --border: var(--ink-100);
+  --border-subtle: var(--ink-100);
+  --text-primary: var(--ink-900);
+  --text-secondary: var(--ink-700);
+  --text-tertiary: var(--ink-500);
+  --text-on-color: var(--paper-0);
+  --primary: var(--vermilion-600);
+  --primary-hover: var(--vermilion-600);
+  --primary-active: var(--vermilion-600);
+  --accent: var(--vermilion-600);
+  --accent-hover: var(--vermilion-600);
+  --danger: var(--err);
+  --warning: var(--warn);
+  --info: var(--ink-700);
+  --layer-01: var(--paper-0);
+  --layer-02: var(--paper-50);
+  --layer-03: var(--paper-100);
+  --field: var(--paper-0);
+  --field-hover: var(--paper-100);
+  --focus: var(--vermilion-600);
+  --interactive: var(--vermilion-600);
+  --highlight: var(--vermilion-100);
 
-  /* Marketing-only (Cursor-inspired cream + accent; use under [locale]/(marketing)) */
-  --marketing-canvas: #f2f1ed;
-  --marketing-ink: #26251e;
-  --marketing-ink-secondary: #3f3e38;
-  --marketing-ink-tertiary: #6f6d63;
-  --marketing-accent: #f54e00;
-  --marketing-accent-hover: #e04400;
-  --marketing-glow: rgba(245, 78, 0, 0.12);
-  --marketing-border-subtle: rgba(38, 37, 30, 0.1);
+  --marketing-canvas: var(--paper-50);
+  --marketing-ink: var(--ink-900);
+  --marketing-ink-secondary: var(--ink-700);
+  --marketing-ink-tertiary: var(--ink-500);
+  --marketing-accent: var(--vermilion-600);
+  --marketing-accent-hover: var(--vermilion-600);
+  --marketing-glow: var(--vermilion-100);
+  --marketing-border-subtle: color-mix(in oklab, var(--ink-900) 12%, transparent);
 
-  /* Radius / elevation (aligned with Cursor DESIGN.md §5–6; app + marketing) */
-  --elevate-radius-sm: 0.25rem;
-  --elevate-radius-md: 0.5rem;
-  --elevate-radius-lg: 0.625rem;
-  /** 12px — cards / large surfaces (VISUAL_LANGUAGE_V2) */
-  --elevate-radius-xl: 0.75rem;
-  --elevate-radius-pill: 9999px;
-  --elevate-shadow-ambient: 0 0 16px rgba(0, 0, 0, 0.02), 0 0 8px rgba(0, 0, 0, 0.008);
-  /* Cal-influenced: contact + ring + diffuse (see docs/design/elevate-cal-alignment.md) */
-  --elevate-shadow-card:
-    0 1px 5px -4px rgba(19, 19, 22, 0.12),
-    0 0 0 1px rgba(34, 42, 53, 0.06),
-    0 4px 14px rgba(34, 42, 53, 0.06);
-
-  /* Long-form reading (blog MDX, library reader) — PLAN-responsive-longform-typography.md */
+  --elevate-radius-sm: var(--radius-0);
+  --elevate-radius-md: var(--radius-1);
+  --elevate-radius-lg: var(--radius-1);
+  --elevate-radius-xl: var(--radius-1);
+  --elevate-radius-pill: var(--radius-full);
   --elevate-prose-body-size: clamp(0.9375rem, 0.875rem + 0.2vw, 1.0625rem);
   --elevate-prose-body-leading: 1.65;
   --elevate-prose-hero-title-size: clamp(1.75rem, 1.45rem + 1.25vw, 2.25rem);
@@ -64,7 +53,6 @@
   --elevate-prose-mdx-h2-size: clamp(1.2rem, 1.05rem + 0.65vw, 1.25rem);
   --elevate-prose-mdx-h3-size: clamp(1.0625rem, 0.98rem + 0.4vw, 1.125rem);
 
-  /* Marketing layouts — PLAN Phase B (home, blog index, section headers) */
   --elevate-marketing-gutter-x: 1rem;
   --elevate-app-gutter-x: 1rem;
   --elevate-marketing-home-hero-size: clamp(2rem, 1.2rem + 3.2vw, 3.5rem);
@@ -72,12 +60,7 @@
   --elevate-marketing-page-title-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
   --elevate-marketing-lead-size: clamp(1rem, 0.94rem + 0.22vw, 1.125rem);
   --elevate-pretext-hero-line-size: clamp(1.375rem, 1.05rem + 1.35vw, 1.875rem);
-  /** Blog index rows, compact titles */
   --elevate-marketing-list-title-size: clamp(1.0625rem, 0.96rem + 0.45vw, 1.25rem);
-  /**
-   * Blog index `content-visibility` placeholder height (title + 2-line excerpt + padding).
-   * Tune after Lighthouse mobile run; set to 0 to effectively disable intrinsic hint (more layout shift).
-   */
   --elevate-cv-list-row-intrinsic: 8.5rem;
 }
 
@@ -95,49 +78,39 @@
   }
 }
 
+:root.dark,
+[data-theme="dark"],
 .dark {
-  --background: #0d0d0d;
-  --foreground: #f4f4f4;
-  --surface: #161616;
-  --surface-02: #1c1c1c;
-  --surface-03: #262626;
-  --surface-hover: #2c2c2c;
-  --border: #393939;
-  --border-subtle: #262626;
-  --text-primary: #f4f4f4;
-  --text-secondary: #c6c6c6;
-  --text-tertiary: #8d8d8d;
-  --text-on-color: #ffffff;
-  --primary: #0f62fe;
-  --primary-hover: #0353e9;
-  --primary-active: #002d9c;
-  --accent: #42be65;
-  --accent-hover: #3dab5a;
-  --danger: #da1e28;
-  --warning: #f1c21b;
-  --info: #4589ff;
-  --layer-01: #161616;
-  --layer-02: #1c1c1c;
-  --layer-03: #262626;
-  --field: #1c1c1c;
-  --field-hover: #262626;
-  --focus: #0f62fe;
-  --interactive: #4589ff;
-  --highlight: rgba(15, 98, 254, 0.1);
-
-  --marketing-canvas: #141413;
-  --marketing-ink: #f2f1ed;
-  --marketing-ink-secondary: #c9c8c2;
-  --marketing-ink-tertiary: #8b8a84;
-  --marketing-glow: rgba(245, 78, 0, 0.14);
-  --marketing-border-subtle: rgba(255, 255, 255, 0.12);
-  --elevate-shadow-card:
-    0 0 0 1px rgba(255, 255, 255, 0.06),
-    0 1px 4px -2px rgba(0, 0, 0, 0.45),
-    0 18px 40px rgba(0, 0, 0, 0.35);
+  --background: var(--paper-50);
+  --foreground: var(--ink-900);
+  --surface: var(--paper-0);
+  --surface-02: var(--paper-100);
+  --surface-03: var(--paper-100);
+  --surface-hover: var(--paper-100);
+  --border: var(--ink-100);
+  --border-subtle: var(--ink-100);
+  --text-primary: var(--ink-900);
+  --text-secondary: var(--ink-700);
+  --text-tertiary: var(--ink-500);
+  --marketing-canvas: var(--paper-50);
+  --marketing-ink: var(--ink-900);
+  --marketing-ink-secondary: var(--ink-700);
+  --marketing-ink-tertiary: var(--ink-500);
+  --marketing-border-subtle: color-mix(in oklab, var(--ink-900) 16%, transparent);
 }
 
 @theme inline {
+  --color-ink-900: var(--ink-900);
+  --color-ink-700: var(--ink-700);
+  --color-ink-500: var(--ink-500);
+  --color-ink-300: var(--ink-300);
+  --color-ink-100: var(--ink-100);
+  --color-paper-50: var(--paper-50);
+  --color-paper-100: var(--paper-100);
+  --color-paper-0: var(--paper-0);
+  --color-vermilion-600: var(--vermilion-600);
+  --color-vermilion-100: var(--vermilion-100);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
@@ -173,15 +146,14 @@
   --color-marketing-accent-hover: var(--marketing-accent-hover);
   --color-marketing-glow: var(--marketing-glow);
   --color-marketing-border-subtle: var(--marketing-border-subtle);
+
   --radius-sm: var(--elevate-radius-sm);
   --radius-md: var(--elevate-radius-md);
   --radius-lg: var(--elevate-radius-lg);
   --radius-xl: var(--elevate-radius-xl);
   --radius-pill: var(--elevate-radius-pill);
-  --shadow-ambient: var(--elevate-shadow-ambient);
-  --shadow-card: var(--elevate-shadow-card);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
 }
 
 /**
@@ -270,16 +242,21 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  transition: background-color 0.2s ease, color 0.15s ease;
+  font-family: var(--font-body);
+  transition:
+    background-color var(--dur-quick) var(--ease-editorial),
+    color var(--dur-instant) var(--ease-editorial);
 }
 
 ::selection {
-  background: rgba(15, 98, 254, 0.3);
-  color: #fff;
+  background: var(--vermilion-100);
+  color: var(--ink-900);
 }
 
+:root.dark ::selection,
+[data-theme="dark"] ::selection,
 .dark ::selection {
-  color: #fff;
+  color: var(--ink-900);
 }
 
 ::-webkit-scrollbar {
@@ -384,4 +361,42 @@ body {
 
 .elevate-pretext-hero-animate {
   animation: elevate-pretext-hero-fade-up 0.75s ease-out both;
+}
+
+.elevate-interactive-subtle {
+  transition:
+    background-color var(--dur-quick) var(--ease-editorial),
+    border-color var(--dur-quick) var(--ease-editorial),
+    color var(--dur-quick) var(--ease-editorial),
+    transform 140ms var(--ease-editorial);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .elevate-interactive-subtle:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-slide-in-right,
+  .animate-count-up,
+  .animate-pulse-subtle,
+  .elevate-pretext-hero-animate {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .stagger-1,
+  .stagger-2,
+  .stagger-3,
+  .stagger-4 {
+    animation-delay: 0ms !important;
+  }
+
+  .elevate-interactive-subtle {
+    transition-duration: 0ms !important;
+    transform: none !important;
+  }
 }

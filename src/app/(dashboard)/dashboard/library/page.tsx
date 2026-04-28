@@ -51,10 +51,10 @@ export default async function LibraryPage() {
       <FunnelCaptureOnce event={PostHogEvent.ELEVATE_FUNNEL_LIBRARY_VIEW} />
       <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <div className="min-w-0">
-          <h1 className="text-2xl font-semibold text-text-primary tracking-tight">
+          <h1 className="text-2xl font-semibold text-ink-900 tracking-tight">
             {t("metaTitle")}
           </h1>
-          <p className="mt-2 text-sm text-text-tertiary leading-relaxed max-w-2xl">
+          <p className="mt-2 text-sm text-ink-500 leading-relaxed max-w-2xl">
             {t("subtitle")}
           </p>
         </div>
@@ -68,10 +68,10 @@ export default async function LibraryPage() {
 
       {showStarterSubscription ? (
         <div
-          className="mb-8 max-w-2xl rounded-xl border border-dashed border-border-subtle bg-layer-02/80 p-4 shadow-ambient"
+          className="mb-8 max-w-2xl rounded-[var(--radius-1)] border border-dashed border-ink-100 bg-paper-50/80 p-4"
           role="note"
         >
-          <p className="text-sm leading-relaxed text-text-secondary">
+          <p className="text-sm leading-relaxed text-ink-700">
             {t("subscriptionBanner")}
           </p>
           <Link
@@ -85,15 +85,15 @@ export default async function LibraryPage() {
 
       {products.length === 0 ? (
         <div className="space-y-3 max-w-2xl">
-          <p className="text-sm text-text-secondary">{t("empty")}</p>
+          <p className="text-sm text-ink-700">{t("empty")}</p>
           {showStarterSubscription ? (
-            <p className="text-sm text-text-tertiary leading-relaxed">
+            <p className="text-sm text-ink-500 leading-relaxed">
               {t("emptyStarterNote")}
             </p>
           ) : null}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
+        <div className="overflow-hidden rounded-[var(--radius-1)] border border-ink-100 bg-paper-0">
           <ul className="divide-y divide-border-subtle">
             {products.map((p) => {
               const canRead = canReadCatalogProduct({
@@ -104,13 +104,13 @@ export default async function LibraryPage() {
               const kindLabel = t(productKindMessageKey(p.product_kind));
               return (
                 <li key={p.id}>
-                  <div className="flex flex-col gap-4 px-5 py-4 transition-colors duration-150 hover:bg-layer-02 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex flex-col gap-4 px-5 py-4 transition-colors duration-150 hover:bg-paper-50 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <Badge variant="blue" className="shrink-0">
                           {kindLabel}
                         </Badge>
-                        <h2 className="text-base font-semibold text-text-primary">
+                        <h2 className="text-base font-semibold text-ink-900">
                           <Link
                             href={`/dashboard/library/${encodeURIComponent(p.slug)}`}
                             className="hover:text-primary hover:underline"
@@ -126,16 +126,16 @@ export default async function LibraryPage() {
                         </Badge>
                       </div>
                       {p.description ? (
-                        <p className="mt-2 text-sm leading-relaxed text-text-tertiary">
+                        <p className="mt-2 text-sm leading-relaxed text-ink-500">
                           {p.description}
                         </p>
                       ) : null}
-                      <p className="mt-2 font-mono text-xs text-text-tertiary">
+                      <p className="mt-2 font-mono text-xs text-ink-500">
                         {p.slug}
                       </p>
                     </div>
                     <div className="flex flex-col items-stretch gap-2 text-right sm:items-end">
-                      <span className="text-sm font-medium whitespace-nowrap text-text-primary">
+                      <span className="text-sm font-medium whitespace-nowrap text-ink-900">
                         {formatCurrencyMinor(p.price_cents, p.currency)}
                       </span>
                       {!canRead ? (

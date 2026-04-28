@@ -65,21 +65,21 @@ export function PretextHeroStatement({
       </span>
       <div ref={wrapRef}>
         <div
-          className="elevate-pretext-hero-animate text-[length:var(--elevate-pretext-hero-line-size)] font-semibold tracking-[-0.02em] leading-[1.15] text-text-primary whitespace-pre-wrap"
+          className="elevate-pretext-hero-animate text-[length:var(--elevate-pretext-hero-line-size)] font-semibold tracking-[-0.02em] leading-[1.15] text-ink-900 whitespace-pre-wrap"
           style={minHeight ? { minHeight } : undefined}
         >
           <span
             className={
-              variant === "marketing" ? "text-text-primary" : "text-primary"
+              variant === "marketing" ? "text-ink-900" : "text-vermilion-600"
             }
           >
             {line1}
           </span>
           {"\n"}
-          <span className="text-text-secondary">{line2}</span>
+          <span className="text-ink-700">{line2}</span>
         </div>
       </div>
-      <p className="mt-4 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-tertiary">
+      <p className="mt-4 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
         {sub}
       </p>
     </div>

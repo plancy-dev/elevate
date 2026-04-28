@@ -57,15 +57,15 @@ export default async function AdminLemonWebhookPage() {
     origin.includes("localhost") || origin.startsWith("http://127.");
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border-subtle bg-background px-6 h-12">
+    <div className="min-h-screen bg-paper-50">
+      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-ink-100 bg-paper-50 px-6 h-12">
         <div className="flex items-center gap-2">
           <Cable className="h-4 w-4 text-primary" aria-hidden />
-          <h1 className="text-sm font-medium text-text-primary">{t("title")}</h1>
+          <h1 className="text-sm font-medium text-ink-900">{t("title")}</h1>
         </div>
         <Link
           href="/admin"
-          className="inline-flex items-center gap-1 text-xs text-interactive hover:text-primary transition-colors"
+          className="inline-flex items-center gap-1 text-xs text-vermilion-600 hover:text-vermilion-700 transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
           {tAdmin("backToOverview")}
@@ -73,12 +73,12 @@ export default async function AdminLemonWebhookPage() {
       </div>
 
       <div className="p-6 max-w-4xl space-y-6">
-        <p className="text-sm text-text-secondary leading-relaxed">{t("intro")}</p>
+        <p className="text-sm text-ink-700 leading-relaxed">{t("intro")}</p>
 
         <p className="text-sm">
           <Link
             href="/admin/content"
-            className="text-interactive hover:text-primary underline-offset-2 hover:underline"
+            className="text-vermilion-600 hover:text-vermilion-700 underline-offset-2 hover:underline"
           >
             {t("linkCatalog")}
           </Link>
@@ -103,8 +103,8 @@ export default async function AdminLemonWebhookPage() {
           webhookUrl={webhookUrl}
         />
 
-        <div className="flex items-start gap-2 rounded-lg border border-border-subtle bg-layer-02 p-3 text-xs text-text-tertiary">
-          <Shield className="h-4 w-4 shrink-0 mt-0.5 text-text-secondary" aria-hidden />
+        <div className="flex items-start gap-2 border border-ink-100 bg-paper-50 p-3 text-xs text-ink-500">
+          <Shield className="h-4 w-4 shrink-0 mt-0.5 text-ink-700" aria-hidden />
           <p>{t("footerNote")}</p>
         </div>
       </div>

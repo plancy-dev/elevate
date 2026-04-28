@@ -88,30 +88,30 @@ export function ProductionEpisodeScenesOverview({
   if (!scenePlanRows || scenePlanRows.length === 0) {
     return (
       <section
-        className="mb-8 rounded-xl border border-dashed border-border-subtle bg-layer-02/25 px-4 py-4 dark:border-border-subtle"
+        className="mb-8 border border-dashed border-ink-100 bg-paper-100 px-4 py-4"
         aria-labelledby="scenes-overview-heading"
       >
         <div className="flex items-start gap-3">
           <Film
-            className="mt-0.5 h-5 w-5 shrink-0 text-text-tertiary"
+            className="mt-0.5 h-5 w-5 shrink-0 text-ink-500"
             aria-hidden
           />
           <div className="min-w-0 space-y-2">
             <h2
               id="scenes-overview-heading"
-              className="text-sm font-semibold text-text-primary"
+              className="text-sm font-semibold text-ink-900"
             >
               {t("scenesOverviewHeading")}
             </h2>
-            <p className="text-sm text-text-secondary leading-relaxed">
+            <p className="text-sm leading-relaxed text-ink-700">
               {t("scenesOverviewEmptyNoPlan")}
             </p>
-            <p className="text-xs text-text-tertiary leading-relaxed">
+            <p className="text-xs leading-relaxed text-ink-500">
               {t("scenesOverviewEmptyHint")}
             </p>
             <Link
               href={sceneRenderHref}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-interactive hover:underline"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-vermilion-600 hover:underline"
             >
               <Link2 className="h-3.5 w-3.5 shrink-0" aria-hidden />
               {t("sceneCardOpenSceneRender")}
@@ -124,36 +124,36 @@ export function ProductionEpisodeScenesOverview({
 
   return (
     <section
-      className="mb-8 rounded-xl border border-border-subtle bg-layer-02/30 px-4 py-4 dark:border-border-subtle dark:bg-layer-02/40"
+      className="mb-8 border border-ink-100 bg-paper-100 px-4 py-4"
       aria-labelledby="scenes-overview-heading"
     >
       <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
         <div className="flex items-start gap-2 min-w-0">
           <Film
-            className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+            className="mt-0.5 h-5 w-5 shrink-0 text-vermilion-600"
             aria-hidden
           />
           <div className="min-w-0">
             <h2
               id="scenes-overview-heading"
-              className="text-sm font-semibold text-text-primary"
+              className="text-sm font-semibold text-ink-900"
             >
               {t("scenesOverviewHeading")}
             </h2>
-            <p className="mt-1 text-xs text-text-tertiary leading-relaxed max-w-prose">
+            <p className="mt-1 max-w-prose text-xs leading-relaxed text-ink-500">
               {t("scenesOverviewDeck")}
             </p>
           </div>
         </div>
         <Link
           href={sceneRenderHref}
-          className="inline-flex shrink-0 items-center gap-1.5 text-xs font-medium text-interactive hover:underline"
+          className="inline-flex shrink-0 items-center gap-1.5 text-xs font-medium text-vermilion-600 hover:underline"
         >
           <Link2 className="h-3.5 w-3.5 shrink-0" aria-hidden />
           {t("sceneCardOpenSceneRender")}
         </Link>
       </div>
-      <p className="mb-3 text-[11px] text-text-tertiary">
+      <p className="mb-3 font-mono text-[11px] text-ink-500">
         {t("scenesOverviewClipCount", { count: sceneClips.length })}
       </p>
       <ul className="m-0 grid list-none gap-2 p-0 sm:grid-cols-2">
@@ -167,25 +167,25 @@ export function ProductionEpisodeScenesOverview({
             <li key={row.index}>
               <div
                 className={cn(
-                  "flex h-full flex-col rounded-lg border px-3 py-3",
+                  "flex h-full flex-col border px-3 py-3",
                   ok
-                    ? "border-green-500/30 bg-green-500/[0.04]"
-                    : "border-border-subtle bg-layer-01/40 dark:border-border-subtle",
+                    ? "border-vermilion-600/35 bg-paper-50"
+                    : "border-ink-100 bg-paper-50",
                 )}
               >
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-text-tertiary">
+                <div className="font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
                   {t("sceneCardTitle", { index: row.index })}
                 </div>
-                <div className="mt-1 text-[11px] text-text-tertiary tabular-nums">
+                <div className="mt-1 font-mono text-[11px] tabular-nums text-ink-500">
                   {t("sceneCardDuration", { seconds: row.durationSeconds })}
                 </div>
-                <p className="mt-2 line-clamp-2 text-xs text-text-secondary leading-snug">
+                <p className="mt-2 line-clamp-2 text-xs leading-snug text-ink-700">
                   {row.visualPrompt.trim() || row.narration.trim() || "—"}
                 </p>
                 <p
                   className={cn(
                     "mt-2 text-[11px] font-medium",
-                    ok ? "text-green-700 dark:text-green-400/90" : "text-text-tertiary",
+                    ok ? "text-vermilion-600" : "text-ink-500",
                   )}
                 >
                   {line}

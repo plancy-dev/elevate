@@ -19,7 +19,7 @@ const SYSTEM = [
   "Use 4–8 scenes for a typical Shorts script unless the script is very short.",
   "narration must be the exact voiceover line for that scene in the script language (full sentences). Never use bullet lists, numbered outlines, or stage directions only.",
   "visual_prompt must be visually concrete (setting, motion, lighting); no meta-instructions about JSON.",
-].join(" ");
+].join("");
 
 export async function generateScenesWithLlm(params: {
   cred: OrgLlmCredential;

@@ -3,10 +3,10 @@ import { expect, test } from "@playwright/test";
 test.describe("marketing home: waitlist band", () => {
   test("band Contact sales link points at contact route", async ({ page }) => {
     await page.goto("/en");
-    const band = page.locator("section.bg-primary");
+    const band = page.locator("section").filter({ hasText: /Contact sales/i }).last();
     const contact = band.getByRole("link", { name: /Contact sales/i });
     await expect(contact).toBeVisible();
-    await expect(contact).toHaveAttribute("href", "/contact");
+    await expect(contact).toHaveAttribute("href", /\/contact$/);
   });
 
   test("band waitlist submit shows success when API returns ok", async ({

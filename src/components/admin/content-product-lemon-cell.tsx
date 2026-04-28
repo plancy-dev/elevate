@@ -112,7 +112,7 @@ export function ContentProductLemonCell({ lemonLink }: { lemonLink: LemonLinkRow
           value={variantInput}
           onChange={(e) => setVariantInput(e.target.value)}
           placeholder={tLemon("variantPlaceholder")}
-          className="w-full min-w-[120px] max-w-[200px] rounded border border-border-subtle bg-background px-2 py-1 text-[11px] font-mono"
+          className="w-full min-w-[120px] max-w-[200px] rounded border border-ink-100 bg-paper-50 px-2 py-1 text-[11px] font-mono"
           aria-label={tLemon("variantAria")}
           autoComplete="off"
         />
@@ -120,7 +120,7 @@ export function ContentProductLemonCell({ lemonLink }: { lemonLink: LemonLinkRow
           type="button"
           onClick={openBrowse}
           className={cn(
-            "rounded border border-border-subtle px-2 py-1 text-[11px] font-medium hover:bg-layer-02",
+            "rounded border border-ink-100 px-2 py-1 text-[11px] font-medium hover:bg-paper-50",
           )}
         >
           {tLemon("browse")}
@@ -130,7 +130,7 @@ export function ContentProductLemonCell({ lemonLink }: { lemonLink: LemonLinkRow
             type="button"
             onClick={onClearLocal}
             className={cn(
-              "rounded border border-border-subtle px-2 py-1 text-[11px] text-text-tertiary hover:bg-layer-02",
+              "rounded border border-ink-100 px-2 py-1 text-[11px] text-ink-500 hover:bg-paper-50",
             )}
           >
             {tLemon("clear")}
@@ -139,13 +139,13 @@ export function ContentProductLemonCell({ lemonLink }: { lemonLink: LemonLinkRow
       </div>
       {variantInput.trim() ? (
         <p
-          className="text-[10px] text-text-tertiary font-mono truncate"
+          className="text-[10px] text-ink-500 font-mono truncate"
           title={variantInput.trim()}
         >
           {tLemon("linked", { id: variantInput.trim() })}
         </p>
       ) : (
-        <p className="text-[10px] text-text-tertiary">{tLemon("notLinked")}</p>
+        <p className="text-[10px] text-ink-500">{tLemon("notLinked")}</p>
       )}
 
       {browseOpen ? (
@@ -155,14 +155,14 @@ export function ContentProductLemonCell({ lemonLink }: { lemonLink: LemonLinkRow
           aria-modal="true"
           aria-labelledby="lemon-browse-title"
         >
-          <div className="max-h-[85vh] w-full max-w-lg overflow-auto rounded-xl border border-border-subtle bg-background p-4 shadow-card">
+          <div className="max-h-[85vh] w-full max-w-lg overflow-auto rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 p-4">
             <div className="flex items-start justify-between gap-2 mb-3">
-              <h3 id="lemon-browse-title" className="text-sm font-semibold text-text-primary">
+              <h3 id="lemon-browse-title" className="text-sm font-semibold text-ink-900">
                 {tLemon("modalTitle")}
               </h3>
               <button
                 type="button"
-                className="text-xs text-text-tertiary hover:text-text-primary"
+                className="text-xs text-ink-500 hover:text-ink-900"
                 onClick={() => {
                   setBrowseOpen(false);
                   resetBrowse();
@@ -171,34 +171,34 @@ export function ContentProductLemonCell({ lemonLink }: { lemonLink: LemonLinkRow
                 {tLemon("close")}
               </button>
             </div>
-            <p className="text-xs text-text-secondary mb-3 leading-relaxed">{tLemon("modalIntro")}</p>
+            <p className="text-xs text-ink-700 mb-3 leading-relaxed">{tLemon("modalIntro")}</p>
             {loadError ? (
               <p className="text-xs text-amber-600 dark:text-amber-400 mb-2" role="alert">
                 {loadError}
               </p>
             ) : null}
             {products === null ? (
-              <p className="text-xs text-text-tertiary">{tLemon("loadingProducts")}</p>
+              <p className="text-xs text-ink-500">{tLemon("loadingProducts")}</p>
             ) : products.length === 0 ? (
-              <p className="text-xs text-text-secondary">{tLemon("emptyProducts")}</p>
+              <p className="text-xs text-ink-700">{tLemon("emptyProducts")}</p>
             ) : (
               <div className="space-y-4">
                 <div>
-                  <p className="text-[11px] font-medium text-text-tertiary mb-1">{tLemon("pickProduct")}</p>
-                  <ul className="max-h-40 overflow-auto rounded border border-border-subtle divide-y divide-border-subtle">
+                  <p className="text-[11px] font-medium text-ink-500 mb-1">{tLemon("pickProduct")}</p>
+                  <ul className="max-h-40 overflow-auto rounded border border-ink-100 divide-y divide-ink-100">
                     {products.map((p) => (
                       <li key={p.id}>
                         <button
                           type="button"
                           className={cn(
-                            "w-full text-left px-2 py-2 text-xs hover:bg-layer-02",
-                            selectedProductId === p.id && "bg-layer-02",
+                            "w-full text-left px-2 py-2 text-xs hover:bg-paper-50",
+                            selectedProductId === p.id && "bg-paper-50",
                           )}
                           onClick={() => onPickProduct(p.id)}
                         >
-                          <span className="font-medium text-text-primary">{p.name}</span>
-                          <span className="ml-2 font-mono text-text-tertiary">#{p.id}</span>
-                          <span className="ml-2 text-text-tertiary">({p.status})</span>
+                          <span className="font-medium text-ink-900">{p.name}</span>
+                          <span className="ml-2 font-mono text-ink-500">#{p.id}</span>
+                          <span className="ml-2 text-ink-500">({p.status})</span>
                         </button>
                       </li>
                     ))}
@@ -206,26 +206,26 @@ export function ContentProductLemonCell({ lemonLink }: { lemonLink: LemonLinkRow
                 </div>
                 {selectedProductId ? (
                   variants === null ? (
-                    <p className="text-xs text-text-tertiary">{tLemon("loadingVariants")}</p>
+                    <p className="text-xs text-ink-500">{tLemon("loadingVariants")}</p>
                   ) : variants.length === 0 ? (
-                    <p className="text-xs text-text-secondary">{tLemon("emptyVariants")}</p>
+                    <p className="text-xs text-ink-700">{tLemon("emptyVariants")}</p>
                   ) : (
                     <div>
-                      <p className="text-[11px] font-medium text-text-tertiary mb-1">{tLemon("pickVariant")}</p>
-                      <ul className="max-h-48 overflow-auto rounded border border-border-subtle divide-y divide-border-subtle">
+                      <p className="text-[11px] font-medium text-ink-500 mb-1">{tLemon("pickVariant")}</p>
+                      <ul className="max-h-48 overflow-auto rounded border border-ink-100 divide-y divide-ink-100">
                         {variants.map((v) => (
                           <li key={v.id}>
                             <button
                               type="button"
-                              className="w-full text-left px-2 py-2 text-xs hover:bg-layer-02"
+                              className="w-full text-left px-2 py-2 text-xs hover:bg-paper-50"
                               onClick={() => pickVariant(v.id, selectedProductId)}
                             >
                               <span className="font-medium">{v.name}</span>
-                              <span className="ml-2 font-mono text-text-tertiary">#{v.id}</span>
-                              <span className="ml-2 tabular-nums text-text-secondary">
+                              <span className="ml-2 font-mono text-ink-500">#{v.id}</span>
+                              <span className="ml-2 tabular-nums text-ink-700">
                                 {tLemon("variantPrice", { amount: v.price })}
                               </span>
-                              <span className="ml-2 text-text-tertiary">({v.status})</span>
+                              <span className="ml-2 text-ink-500">({v.status})</span>
                             </button>
                           </li>
                         ))}

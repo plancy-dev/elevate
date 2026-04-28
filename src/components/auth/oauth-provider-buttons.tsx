@@ -1,7 +1,7 @@
 "use client";
 
 const oauthButtonClass =
-  "flex items-center justify-center gap-3 h-12 w-full rounded-lg bg-layer-01 border border-border-subtle text-sm text-text-primary hover:bg-layer-02 transition-colors disabled:opacity-50";
+  "flex h-12 w-full items-center justify-center gap-3 border border-ink-100 bg-paper-100 text-sm text-ink-900 transition-colors duration-80 ease-(--ease-editorial) hover:bg-paper-50 disabled:opacity-50";
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -75,9 +75,9 @@ export function OAuthProviderButtons({
 export function AuthMethodDivider() {
   return (
     <div className="flex items-center gap-4 my-6">
-      <div className="flex-1 h-px bg-border-subtle" />
-      <span className="text-xs text-text-tertiary">or</span>
-      <div className="flex-1 h-px bg-border-subtle" />
+      <div className="h-px flex-1 bg-ink-100" />
+      <span className="font-mono text-xs text-ink-500">or</span>
+      <div className="h-px flex-1 bg-ink-100" />
     </div>
   );
 }

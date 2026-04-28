@@ -38,7 +38,7 @@ export function SignOutButton({
       type="button"
       onClick={signOut}
       className={cn(
-        "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs text-text-tertiary transition-colors hover:bg-layer-02 hover:text-text-primary",
+        "flex w-full items-center gap-2 px-2 py-1.5 text-xs text-ink-500 transition-colors duration-80 ease-(--ease-editorial) hover:bg-paper-100 hover:text-ink-900",
         className,
       )}
     >

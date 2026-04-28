@@ -64,7 +64,7 @@ export function ProductionsProjectSwitcher({
   return (
     <div className="w-full min-w-0 max-w-full sm:max-w-md">
       {controlLabel ? (
-        <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-text-tertiary">
+        <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-ink-500">
           {controlLabel}
         </p>
       ) : null}

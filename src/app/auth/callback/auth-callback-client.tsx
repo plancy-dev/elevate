@@ -32,8 +32,8 @@ function AuthCallbackInner() {
   }, [router]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <p className="text-sm text-text-tertiary">Completing sign-in…</p>
+    <div className="flex min-h-screen items-center justify-center bg-paper-50 px-4">
+      <p className="text-sm text-ink-500">Completing sign-in...</p>
     </div>
   );
 }
@@ -42,7 +42,7 @@ export function AuthCallbackClient() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-background" aria-busy aria-label="Loading" />
+        <div className="min-h-screen bg-paper-50" aria-busy aria-label="Loading" />
       }
     >
       <AuthCallbackInner />

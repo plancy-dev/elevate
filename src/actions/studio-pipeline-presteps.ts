@@ -203,7 +203,7 @@ export async function generateTimedScriptFromEpisode(
   const system = [
     "You are a video script timing assistant. Output valid JSON only.",
     'The JSON must include key "segments" with at least one object.',
-  ].join(" ");
+  ].join("");
 
   let rawText = "";
 
@@ -389,7 +389,7 @@ export async function generatePackagingDraftFromEpisode(
     "You are a YouTube packaging expert. Output valid JSON only.",
     "Your packaging must comply with YouTube Community Guidelines and advertiser-friendly content policies.",
     "Never generate metadata that could be considered misleading, clickbait, or policy-violating.",
-  ].join(" ");
+  ].join("");
 
   let rawText = "";
 

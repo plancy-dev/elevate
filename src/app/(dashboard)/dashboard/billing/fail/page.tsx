@@ -21,16 +21,16 @@ export default async function BillingPaymentFailPage({
   const t = await getTranslations("Dashboard.billing");
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-paper-50 p-6">
       <Suspense fallback={null}>
         <BillingReturnFlashToast />
       </Suspense>
-      <h1 className="text-lg font-medium text-text-primary">{t("failTitle")}</h1>
-      <p className="text-sm text-text-secondary mt-2 max-w-md">
+      <h1 className="text-lg font-medium text-ink-900">{t("failTitle")}</h1>
+      <p className="text-sm text-ink-700 mt-2 max-w-md">
         {message || t("failBody")}
       </p>
       {code ? (
-        <p className="text-xs text-text-tertiary mt-2 font-mono">
+        <p className="text-xs text-ink-500 mt-2 font-mono">
           {t("failCode", { code })}
         </p>
       ) : null}

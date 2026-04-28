@@ -38,7 +38,7 @@ export function SettingsLocaleForm({
 
   return (
     <div className="space-y-2">
-      <label htmlFor="app-locale" className="block text-xs text-text-secondary">
+      <label htmlFor="app-locale" className="block text-xs text-ink-700">
         {t("label")}
       </label>
       <select
@@ -46,7 +46,7 @@ export function SettingsLocaleForm({
         defaultValue={defaultLocale}
         disabled={pending}
         onChange={onChange}
-        className="h-10 w-full max-w-md bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus-visible:border-focus focus-visible:ring-2 focus-visible:ring-focus/25 disabled:opacity-60"
+        className="h-10 w-full max-w-md bg-paper-0 border border-ink-100 px-3 text-sm text-ink-900 focus:outline-none focus-visible:border-focus focus-visible:ring-2 focus-visible:ring-focus/25 disabled:opacity-60"
       >
         {routing.locales.map((loc) => (
           <option key={loc} value={loc}>
@@ -54,9 +54,9 @@ export function SettingsLocaleForm({
           </option>
         ))}
       </select>
-      <p className="text-xs text-text-tertiary leading-relaxed">{t("hint")}</p>
+      <p className="text-xs text-ink-500 leading-relaxed">{t("hint")}</p>
       {pending ? (
-        <p className="text-xs text-text-tertiary" aria-live="polite">
+        <p className="text-xs text-ink-500" aria-live="polite">
           {t("saving")}
         </p>
       ) : null}

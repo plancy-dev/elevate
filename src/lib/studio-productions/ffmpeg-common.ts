@@ -19,13 +19,13 @@ export function resolvedSubtitleFontName(): string {
 }
 
 export function buildSubtitlesFilterChainSegment(srtPath: string): string {
-  const escapedPath = srtPath.replace(/'/g, "'\\''").replace(/:/g, "\\:");
+  const escapedPath = srtPath.replace(/'/g, "'\\''").replace(/:/g,"\\:");
   const font = resolvedSubtitleFontName();
   const fontsdir = process.env.VIDEO_ASSEMBLY_SUBTITLE_FONTSDIR?.trim();
   const style = `FontSize=24,Fontname=${font},PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2,Alignment=2,MarginV=80`;
   const base = `subtitles='${escapedPath}':charenc=UTF-8:force_style='${style}'`;
   if (!fontsdir) return base;
-  const escDir = fontsdir.replace(/'/g, "'\\''").replace(/:/g, "\\:");
+  const escDir = fontsdir.replace(/'/g, "'\\''").replace(/:/g,"\\:");
   return `subtitles='${escapedPath}':fontsdir='${escDir}':charenc=UTF-8:force_style='${style}'`;
 }
 

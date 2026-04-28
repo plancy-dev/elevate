@@ -69,13 +69,13 @@ export function ConnectedIdentities() {
   }
 
   if (loading) {
-    return <p className="text-xs text-text-tertiary">{t("loading")}</p>;
+    return <p className="text-xs text-ink-500">{t("loading")}</p>;
   }
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-text-tertiary leading-relaxed">{t("intro")}</p>
-      <ul className="text-sm text-text-secondary space-y-1">
+      <p className="text-xs leading-relaxed text-ink-500">{t("intro")}</p>
+      <ul className="space-y-1 text-sm text-ink-700">
         {identities.length === 0 ? (
           <li>—</li>
         ) : (
@@ -87,7 +87,7 @@ export function ConnectedIdentities() {
         )}
       </ul>
       {message ? (
-        <p className="text-xs text-danger border border-danger/40 bg-danger/10 px-3 py-2 rounded-md">
+        <p className="rounded-none border border-vermilion-300 bg-vermilion-50 px-3 py-2 text-xs text-vermilion-700">
           {message}
         </p>
       ) : null}
@@ -97,7 +97,7 @@ export function ConnectedIdentities() {
             type="button"
             disabled={busy !== null}
             onClick={() => void linkProvider("google")}
-            className="text-xs px-3 py-1.5 border border-border-subtle bg-layer-01 hover:bg-layer-02 text-text-primary disabled:opacity-50"
+            className="border border-ink-100 bg-paper-100 px-3 py-1.5 text-xs text-ink-900 transition-colors duration-80 ease-(--ease-editorial) hover:bg-paper-50 disabled:opacity-50"
           >
             {busy === "google" ? t("redirecting") : t("linkGoogle")}
           </button>
@@ -107,7 +107,7 @@ export function ConnectedIdentities() {
             type="button"
             disabled={busy !== null}
             onClick={() => void linkProvider("azure")}
-            className="text-xs px-3 py-1.5 border border-border-subtle bg-layer-01 hover:bg-layer-02 text-text-primary disabled:opacity-50"
+            className="border border-ink-100 bg-paper-100 px-3 py-1.5 text-xs text-ink-900 transition-colors duration-80 ease-(--ease-editorial) hover:bg-paper-50 disabled:opacity-50"
           >
             {busy === "azure" ? t("redirecting") : t("linkMicrosoft")}
           </button>

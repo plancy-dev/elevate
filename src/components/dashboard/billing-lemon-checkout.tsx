@@ -40,7 +40,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
     <button
       type="button"
       onClick={onCopy}
-      className="rounded-md border border-border-subtle bg-layer-01 px-2 py-1 text-xs text-text-secondary hover:bg-layer-02 hover:text-text-primary transition-colors"
+      className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-2 py-1 text-xs text-ink-700 hover:bg-paper-50 hover:text-ink-900 transition-colors"
     >
       {label}
     </button>
@@ -102,10 +102,10 @@ export function BillingLemonCheckout({
     return (
       <div className="space-y-4">
         <div
-          className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-text-secondary"
+          className="rounded-[var(--radius-1)] border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-ink-700"
           role="alert"
         >
-          <p className="font-medium text-text-primary">{t(titleKey)}</p>
+          <p className="font-medium text-ink-900">{t(titleKey)}</p>
           <p className="mt-2 leading-relaxed">
             {unconfiguredReason === "price_below_lemon_minimum"
               ? t("lemonPriceBelowMinimumBody", { minKrw: LEMON_CUSTOM_PRICE_MIN_KRW })
@@ -113,9 +113,9 @@ export function BillingLemonCheckout({
           </p>
         </div>
         {showManualCustomData ? (
-          <div className="rounded-lg border border-border-subtle bg-layer-02 p-3">
-            <p className="text-xs font-medium text-text-tertiary mb-2">{t("lemonCustomDataLabel")}</p>
-            <pre className="text-[11px] leading-snug text-text-secondary whitespace-pre-wrap break-all mb-2 font-mono">
+          <div className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 p-3">
+            <p className="text-xs font-medium text-ink-500 mb-2">{t("lemonCustomDataLabel")}</p>
+            <pre className="text-[11px] leading-snug text-ink-700 whitespace-pre-wrap break-all mb-2 font-mono">
               {customDataJson}
             </pre>
             <CopyButton text={customDataJson} label={t("lemonCopyCustomData")} />
@@ -127,11 +127,11 @@ export function BillingLemonCheckout({
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-text-secondary leading-relaxed">
+      <p className="text-sm text-ink-700 leading-relaxed">
         {t("lemonCheckoutWithSlug", { slug: contentProductSlug })}
       </p>
       {profileEmail ? (
-        <p className="text-xs text-text-tertiary leading-relaxed">
+        <p className="text-xs text-ink-500 leading-relaxed">
           {t("lemonEmailCurrent", { email: profileEmail })}
         </p>
       ) : null}
@@ -140,27 +140,27 @@ export function BillingLemonCheckout({
           href={checkoutUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-ambient transition-opacity hover:opacity-90"
+          className="inline-flex items-center justify-center rounded-[var(--radius-1)] bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
         >
           {t("lemonOpenCheckout")}
         </a>
       </div>
-      <p className="text-xs text-text-tertiary leading-relaxed">{t("lemonEmailHint")}</p>
+      <p className="text-xs text-ink-500 leading-relaxed">{t("lemonEmailHint")}</p>
       {embedsCustomDataInCheckout ? (
-        <p className="text-xs text-text-secondary border border-border-subtle rounded-lg bg-layer-02 px-3 py-2 leading-relaxed">
+        <p className="text-xs text-ink-700 border border-ink-100 rounded-[var(--radius-1)] bg-paper-50 px-3 py-2 leading-relaxed">
           {t("lemonEmbeddedCheckoutNote")}
         </p>
       ) : null}
       {showManualCustomData ? (
-        <div className="rounded-lg border border-border-subtle bg-layer-02 p-3">
-          <p className="text-xs font-medium text-text-tertiary mb-2">{t("lemonCustomDataLabel")}</p>
-          <pre className="text-[11px] leading-snug text-text-secondary whitespace-pre-wrap break-all mb-2 font-mono">
+        <div className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 p-3">
+          <p className="text-xs font-medium text-ink-500 mb-2">{t("lemonCustomDataLabel")}</p>
+          <pre className="text-[11px] leading-snug text-ink-700 whitespace-pre-wrap break-all mb-2 font-mono">
             {customDataJson}
           </pre>
           <CopyButton text={customDataJson} label={t("lemonCopyCustomData")} />
         </div>
       ) : null}
-      <p className="text-sm text-text-tertiary border-t border-border-subtle pt-4 leading-relaxed">
+      <p className="text-sm text-ink-500 border-t border-ink-100 pt-4 leading-relaxed">
         {t("lemonAfterPay")}
       </p>
     </div>

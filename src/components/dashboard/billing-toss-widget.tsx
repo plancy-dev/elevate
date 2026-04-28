@@ -202,14 +202,14 @@ export function BillingTossWidget({
         type="button"
         onClick={() => void handlePay()}
         disabled={!ready || busy}
-        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-text-on-color hover:bg-primary-hover disabled:opacity-50"
+        className="rounded-[var(--radius-1)] bg-primary px-4 py-2 text-sm font-medium text-paper-0 hover:bg-primary-hover disabled:opacity-50"
       >
         {busy
           ? t("widgetOpening")
           : t("widgetPay", { amount: TOSS_POC_AMOUNT_KRW })}
       </button>
       {!ready ? (
-        <p className="text-xs text-text-tertiary">{t("widgetLoading")}</p>
+        <p className="text-xs text-ink-500">{t("widgetLoading")}</p>
       ) : null}
     </div>
   );

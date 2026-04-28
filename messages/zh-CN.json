@@ -842,6 +842,80 @@
       "orgSettings": "设置",
       "orgNavComingSoon": "即将推出"
     },
+    "toc": {
+      "collapse": "收起",
+      "expand": "展开",
+      "studio": {
+        "section": "Studio",
+        "productions": "Productions",
+        "projects": "Projects",
+        "integrations": "Integrations",
+        "channels": "Channels"
+      },
+      "scripts": {
+        "section": "Scripts",
+        "promptStudio": "Prompt Studio"
+      },
+      "library": {
+        "section": "Library",
+        "library": "Library"
+      },
+      "house": {
+        "section": "编辑部",
+        "team": "团队",
+        "organization": "组织",
+        "audit": "审计",
+        "admin": "管理"
+      },
+      "settings": {
+        "section": "Settings",
+        "profile": "个人资料",
+        "billing": "账单",
+        "help": "帮助"
+      },
+      "admin": {
+        "content": "内容",
+        "waitlist": "候补名单",
+        "purchaseAllowlist": "结账许可名单",
+        "promptStudioAllowlist": "Prompt Studio 测试版"
+      }
+    },
+    "commandBar": {
+      "placeholder": "输入命令或路由...",
+      "empty": "无结果",
+      "recentEmpty": "暂无最近剧集",
+      "group": {
+        "routes": "路由",
+        "recentEpisodes": "最近剧集",
+        "help": "帮助"
+      },
+      "routes": {
+        "overview": "概览",
+        "productions": "制作",
+        "promptStudio": "提示工作室",
+        "publish": "发布",
+        "library": "资料库",
+        "settings": "设置",
+        "content": "内容",
+        "waitlist": "候补名单"
+      },
+      "help": {
+        "default": "帮助与支持",
+        "admin": "管理主页"
+      }
+    },
+    "shellTitles": {
+      "overview": "概览",
+      "productions": "制作",
+      "studio": "提示工作室",
+      "library": "资料库",
+      "settings": "设置",
+      "help": "帮助与支持",
+      "billing": "账单",
+      "team": "团队",
+      "organization": "组织",
+      "admin": "管理"
+    },
     "overview": {
       "title": "概览",
       "liveData": "实时数据",

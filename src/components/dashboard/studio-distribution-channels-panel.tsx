@@ -64,18 +64,18 @@ export function StudioDistributionChannelsPanel({
 
   return (
     <div className="space-y-10">
-      <section className="rounded-2xl border border-border-subtle/90 bg-layer-01 p-6 shadow-sm space-y-4">
+      <section className="rounded-2xl border border-ink-100/90 bg-paper-0 p-6 space-y-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-700">
             {t("integrationsYoutubeUploadHeading")}
           </p>
-          <p className="mt-1 text-xs text-text-tertiary leading-relaxed">
+          <p className="mt-1 text-xs text-ink-500 leading-relaxed">
             {t("channelsYoutubeOAuthIntro")}
           </p>
         </div>
 
         {youtubeChannelTitle ? (
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-xl border border-green-500/25 bg-green-500/[0.06] px-4 py-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-[var(--radius-1)] border border-green-500/25 bg-green-500/[0.06] px-4 py-3">
             <div className="flex min-w-0 items-start gap-2.5">
               <CheckCircle2
                 className="mt-0.5 h-4 w-4 shrink-0 text-green-600 dark:text-green-400"
@@ -85,7 +85,7 @@ export function StudioDistributionChannelsPanel({
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-green-700 dark:text-green-400/95">
                   {t("integrationsYoutubeOAuthStatusBadge")}
                 </p>
-                <p className="mt-0.5 text-sm font-medium text-text-primary truncate">
+                <p className="mt-0.5 text-sm font-medium text-ink-900 truncate">
                   {youtubeChannelTitle}
                 </p>
               </div>
@@ -103,8 +103,8 @@ export function StudioDistributionChannelsPanel({
             ) : null}
           </div>
         ) : youtubeOAuthEnvConfigured ? (
-          <div className="rounded-xl border border-dashed border-border-subtle bg-layer-02/40 px-4 py-4 space-y-3">
-            <p className="text-sm text-text-secondary leading-relaxed">
+          <div className="rounded-[var(--radius-1)] border border-dashed border-ink-100 bg-paper-50/40 px-4 py-4 space-y-3">
+            <p className="text-sm text-ink-700 leading-relaxed">
               {t("integrationsYoutubeOAuthDisconnectedLead")}
             </p>
             {canEdit && encryptionConfigured && serverCallsEnabled ? (
@@ -119,33 +119,33 @@ export function StudioDistributionChannelsPanel({
         ) : null}
 
         {!youtubeOAuthEnvConfigured ? (
-          <p className="text-xs text-text-tertiary leading-relaxed">
+          <p className="text-xs text-ink-500 leading-relaxed">
             {t("integrationsYoutubeOAuthNotConfigured")}
           </p>
         ) : null}
         {canEdit &&
         youtubeOAuthEnvConfigured &&
         (!encryptionConfigured || !serverCallsEnabled) ? (
-          <p className="text-xs text-text-tertiary leading-relaxed">
+          <p className="text-xs text-ink-500 leading-relaxed">
             {!encryptionConfigured ? t("integrationsEncryptionOff") : t("integrationsServerCallsOff")}
           </p>
         ) : null}
         {!canEdit && youtubeOAuthEnvConfigured ? (
-          <p className="text-xs text-text-tertiary leading-relaxed">{t("integrationsReadOnlyEditors")}</p>
+          <p className="text-xs text-ink-500 leading-relaxed">{t("integrationsReadOnlyEditors")}</p>
         ) : null}
       </section>
 
-      <section className="rounded-2xl border border-border-subtle/90 bg-layer-01 p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-text-primary">{t("channelsAddTitle")}</h2>
-        <p className="mt-1 text-sm text-text-tertiary">{t("channelsAddSubtitle")}</p>
+      <section className="rounded-2xl border border-ink-100/90 bg-paper-0 p-6">
+        <h2 className="text-lg font-semibold text-ink-900">{t("channelsAddTitle")}</h2>
+        <p className="mt-1 text-sm text-ink-500">{t("channelsAddSubtitle")}</p>
         <form action={createAction} className="mt-6 space-y-4 max-w-xl">
           {createState?.error ? (
-            <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+            <p className="rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
               {translateActionErrorMessage(createState.error, tAction)}
             </p>
           ) : null}
           <div>
-            <label htmlFor="ch_label" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="ch_label" className="block text-xs font-medium text-ink-700 mb-1">
               {t("channelsFieldLabel")}
             </label>
             <input
@@ -154,11 +154,11 @@ export function StudioDistributionChannelsPanel({
               required
               maxLength={200}
               placeholder={t("channelsFieldLabelPlaceholder")}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+              className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
           <div>
-            <label htmlFor="ch_url" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="ch_url" className="block text-xs font-medium text-ink-700 mb-1">
               {t("channelsFieldUrl")}
             </label>
             <input
@@ -167,17 +167,17 @@ export function StudioDistributionChannelsPanel({
               type="url"
               required
               placeholder="https://www.youtube.com/@…"
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+              className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
           <div>
-            <label htmlFor="ch_platform" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="ch_platform" className="block text-xs font-medium text-ink-700 mb-1">
               {t("channelsFieldPlatform")}
             </label>
             <StudioChannelPlatformSelect id="ch_platform" />
           </div>
           <div>
-            <label htmlFor="ch_notes" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="ch_notes" className="block text-xs font-medium text-ink-700 mb-1">
               {t("channelsFieldNotes")}
             </label>
             <textarea
@@ -185,7 +185,7 @@ export function StudioDistributionChannelsPanel({
               name="notes"
               rows={2}
               maxLength={4000}
-              className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm text-ink-900 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
           <Button type="submit" variant="primary" isLoading={createPending}>
@@ -195,26 +195,26 @@ export function StudioDistributionChannelsPanel({
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-text-primary mb-2">{t("channelsListTitle")}</h2>
+        <h2 className="text-lg font-semibold text-ink-900 mb-2">{t("channelsListTitle")}</h2>
         {deleteState?.error ? (
-          <p className="mb-3 rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+          <p className="mb-3 rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
             {translateActionErrorMessage(deleteState.error, tAction)}
           </p>
         ) : null}
         {channels.length === 0 ? (
-          <p className="text-sm text-text-secondary">{t("channelsListEmpty")}</p>
+          <p className="text-sm text-ink-700">{t("channelsListEmpty")}</p>
         ) : (
-          <ul className="divide-y divide-border-subtle rounded-xl border border-border-subtle bg-layer-02/30">
+          <ul className="divide-y divide-border-subtle rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/30">
             {channels.map((ch) => (
               <li
                 key={ch.id}
                 className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="min-w-0">
-                  <p className="font-medium text-text-primary">{ch.label}</p>
-                  <p className="text-xs text-text-tertiary mt-0.5">{ch.platform}</p>
+                  <p className="font-medium text-ink-900">{ch.label}</p>
+                  <p className="text-xs text-ink-500 mt-0.5">{ch.platform}</p>
                   {ch.notes ? (
-                    <p className="text-sm text-text-secondary mt-1 line-clamp-2">{ch.notes}</p>
+                    <p className="text-sm text-ink-700 mt-1 line-clamp-2">{ch.notes}</p>
                   ) : null}
                 </div>
                 <div className="flex flex-wrap items-center gap-2 shrink-0">
@@ -222,7 +222,7 @@ export function StudioDistributionChannelsPanel({
                     href={ch.channel_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-border-subtle bg-layer-01 px-3 py-2 text-sm font-medium text-primary hover:bg-layer-02"
+                    className="inline-flex items-center gap-1.5 rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm font-medium text-primary hover:bg-paper-50"
                   >
                     <ExternalLink className="h-4 w-4" aria-hidden />
                     {t("channelsOpen")}

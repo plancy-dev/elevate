@@ -129,19 +129,19 @@ export function ProductionEpisodeDraftPanel({
     return (
       <section
         className={cn(
-          embedded ? "space-y-2" : "mb-10 rounded-2xl border border-border-subtle/90 bg-layer-01 p-6 shadow-sm",
+          embedded ? "space-y-2" : "mb-10 rounded-2xl border border-ink-100/90 bg-paper-0 p-6",
           className,
         )}
       >
         <h2
           className={cn(
-            "font-semibold text-text-primary mb-2",
+            "font-semibold text-ink-900 mb-2",
             embedded ? "text-base tracking-tight" : "text-sm",
           )}
         >
           {t("draftPanelTitle")}
         </h2>
-        <p className="text-sm text-text-tertiary">{t("draftPanelReadOnly")}</p>
+        <p className="text-sm text-ink-500">{t("draftPanelReadOnly")}</p>
       </section>
     );
   }

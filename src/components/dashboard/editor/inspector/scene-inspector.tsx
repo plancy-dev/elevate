@@ -23,7 +23,7 @@ export function SceneInspector() {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-semibold text-text-primary">
+      <h3 className="text-sm font-semibold text-ink-900">
         {t("sceneInspectorTitle")}
       </h3>
       <NumberField
@@ -50,7 +50,7 @@ export function SceneInspector() {
         step={50}
         onChange={(v) => update({ transitionToNextMs: v })}
       />
-      <label className="flex items-center gap-2 text-xs text-text-secondary">
+      <label className="flex items-center gap-2 text-xs text-ink-700">
         <input
           type="checkbox"
           checked={scene.loop}
@@ -63,12 +63,12 @@ export function SceneInspector() {
           href={scene.sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block text-[11px] text-interactive underline underline-offset-2"
+          className="inline-block font-mono text-[11px] text-vermilion-600 underline underline-offset-2"
         >
           {t("sceneSourceOpen")}
         </a>
       ) : (
-        <p className="text-[11px] text-amber-800 dark:text-amber-200/95">
+        <p className="font-mono text-[11px] text-vermilion-600">
           {t("sceneSourceMissing")}
         </p>
       )}
@@ -93,7 +93,7 @@ function NumberField({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+      <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
         {label}
       </span>
       <input
@@ -106,7 +106,7 @@ function NumberField({
           const n = Number(e.target.value);
           if (Number.isFinite(n)) onChange(n);
         }}
-        className="h-9 w-full rounded-md border border-border-subtle bg-field px-2 text-sm"
+        className="h-9 w-full border-b border-ink-300 bg-transparent px-0 text-sm text-ink-900 outline-none focus:border-vermilion-600"
       />
     </label>
   );

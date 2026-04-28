@@ -8,7 +8,7 @@ import type { Json } from "@/types/database.types";
  * YouTube Shorts / 릴스에 올리고, 설명란·고정 댓으로 수익 링크를 운영하는 흐름.
  */
 export const DEMO_SCENARIO_SUMMARY_KO =
-  "1인·소규모 크리에이터 팀이 AI로 숏폼을 만들고 쇼츠·릴스로 노출한 뒤, " +
+  "1인·소규모 크리에이터 팀이 AI로 숏폼을 만들고 쇼츠·릴스로 노출한 뒤," +
   "광고·스폰·애필리에이트로 수익화하는 과정을 에피소드(한 편)와 아티팩트(프롬프트·링크·설정)로 나눠 기록합니다.";
 
 export type DemoArtifactSeed = {
@@ -37,7 +37,7 @@ export function getDemoEpisodesForOrgSeed(): DemoEpisodeSeed[] {
       distribution_label: "youtube_shorts",
       publish_url: null,
       notes:
-        "시나리오: 신규 유입용 짧은 제품 데모. ChatGPT로 훅 3안 → Runway에서 9:16 클립만 먼저 생성해 비용 통제. " +
+        "시나리오: 신규 유입용 짧은 제품 데모. ChatGPT로 훅 3안 → Runway에서 9:16 클립만 먼저 생성해 비용 통제." +
         "수익: YouTube 광고 + 설명란 애필리에이트 링크(고정 댓). 다음 스텝: 썸네일 문구 확정 후 상태를 Ready로.",
       artifacts: [
         {
@@ -113,7 +113,7 @@ export function getDemoEpisodesForOrgSeed(): DemoEpisodeSeed[] {
       distribution_label: "instagram_reels",
       publish_url: null,
       notes:
-        "시나리오: 실제 고객 인터뷰 대신 AI 생성 UGC 스타일 B-roll + 자막. " +
+        "시나리오: 실제 고객 인터뷰 대신 AI 생성 UGC 스타일 B-roll + 자막." +
         "클링으로 보조 클립 생성, 캡컷에서 자막·BGM만 넣으면 업로드 가능한 상태(Ready).",
       artifacts: [
         {
@@ -164,7 +164,7 @@ export function getDemoEpisodesForOrgSeed(): DemoEpisodeSeed[] {
       distribution_label: "youtube_shorts",
       publish_url: "https://www.youtube.com/watch?v=jNQXAC9IVRw",
       notes:
-        "시나리오: ‘Me at the zoo’ 스타일이 아니라 **데모용 placeholder URL**입니다. 실제 운영 시 본인 쇼츠 URL로 교체하세요. " +
+        "시나리오: ‘Me at the zoo’ 스타일이 아니라 **데모용 placeholder URL**입니다. 실제 운영 시 본인 쇼츠 URL로 교체하세요." +
         "이 에피소드는 Published로 두어 목록·한눈에에서 ‘완료된 한 편’ 예시로 씁니다.",
       artifacts: [
         {

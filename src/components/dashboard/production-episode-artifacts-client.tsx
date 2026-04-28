@@ -37,7 +37,7 @@ export function ProductionEpisodeArtifactsClient({
   if (prefill === undefined) {
     return (
       <div
-        className="mt-6 h-48 animate-pulse rounded-xl bg-layer-02/80 dark:bg-white/5"
+        className="mt-6 h-48 animate-pulse rounded-[var(--radius-1)] bg-paper-50/80 dark:bg-white/5"
         aria-hidden
       />
     );

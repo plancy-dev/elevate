@@ -21,7 +21,7 @@ export default async function SettingsPage() {
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-paper-50 p-6">
         <ActionErrorMessage code={ensured.error} />
       </div>
     );
@@ -59,15 +59,15 @@ export default async function SettingsPage() {
   const locale = await getAppLocale();
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-30 flex items-center border-b border-border-subtle bg-background px-6 h-12">
-        <h1 className="text-sm font-medium text-text-primary">{t("title")}</h1>
+    <div className="min-h-screen bg-paper-50">
+      <div className="sticky top-0 z-30 flex items-center border-b border-ink-100 bg-paper-50 px-6 h-12">
+        <h1 className="text-sm font-medium text-ink-900">{t("title")}</h1>
       </div>
 
       <div className="mx-auto w-full max-w-xl p-6">
-        <div className="divide-y divide-border-subtle overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
+        <div className="divide-y divide-border-subtle overflow-hidden rounded-[var(--radius-1)] border border-ink-100 bg-paper-0">
           <section className="px-5 py-6">
-            <h2 className="text-xs font-medium uppercase tracking-wider text-text-tertiary">
+            <h2 className="text-xs font-medium uppercase tracking-wider text-ink-500">
               {t("connectedAccounts")}
             </h2>
             <div className="mt-4">
@@ -76,7 +76,7 @@ export default async function SettingsPage() {
           </section>
 
           <section className="px-5 py-6">
-            <h2 className="text-xs font-medium uppercase tracking-wider text-text-tertiary">
+            <h2 className="text-xs font-medium uppercase tracking-wider text-ink-500">
               {t("language.section")}
             </h2>
             <div className="mt-4">
@@ -85,7 +85,7 @@ export default async function SettingsPage() {
           </section>
 
           <section className="px-5 py-6">
-            <h2 className="text-xs font-medium uppercase tracking-wider text-text-tertiary">
+            <h2 className="text-xs font-medium uppercase tracking-wider text-ink-500">
               {t("organization")}
             </h2>
             <div className="mt-4">
@@ -94,16 +94,16 @@ export default async function SettingsPage() {
               ) : (
                 <div className="space-y-3">
                   <div>
-                    <label className="mb-1 block text-xs text-text-secondary">
+                    <label className="mb-1 block text-xs text-ink-700">
                       {t("orgNameReadOnly")}
                     </label>
                     <input
                       type="text"
                       readOnly
                       value={org?.name ?? ""}
-                      className="h-10 w-full border border-border-subtle bg-field px-3 text-sm text-text-tertiary focus:outline-none"
+                      className="h-10 w-full border border-ink-100 bg-paper-0 px-3 text-sm text-ink-500 focus:outline-none"
                     />
-                    <p className="mt-1 text-xs text-text-tertiary">
+                    <p className="mt-1 text-xs text-ink-500">
                       {t("orgNameHint")}
                     </p>
                   </div>
@@ -113,7 +113,7 @@ export default async function SettingsPage() {
           </section>
 
           <section className="px-5 py-6">
-            <h2 className="text-xs font-medium uppercase tracking-wider text-text-tertiary">
+            <h2 className="text-xs font-medium uppercase tracking-wider text-ink-500">
               {t("yourProfile")}
             </h2>
             <div className="mt-4">

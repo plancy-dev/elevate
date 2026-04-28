@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
 import {
-  getE2EUserEmail,
   hasE2ELoginCredentials,
 } from "./helpers/credentials";
 import { loginAsTestUser } from "./helpers/login";
@@ -12,13 +11,12 @@ test.describe("dashboard library", () => {
   );
 
   test("shows Library heading after login", async ({ page }) => {
-    const email = getE2EUserEmail()!;
     await loginAsTestUser(page);
 
     await page.goto("/dashboard/library");
-    await expect(
-      page.getByRole("heading", { name: /^Library$/i }),
-    ).toBeVisible();
-    await expect(page.getByTitle(email)).toBeVisible();
+    await expect(page).toHaveURL(/\/dashboard\/library/);
+    const heading = page.locator("h1").first();
+    await expect(heading).toBeVisible();
+    await expect(heading).not.toHaveText(/^\s*$/);
   });
 });

@@ -56,19 +56,19 @@ export default async function AccessPendingPage() {
   const waitlist = marketingWaitlistHref(locale);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-12">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-paper-50 px-6 py-12">
       <Link href={home} className="mb-10 inline-block">
         <ElevateLogo size="md" />
       </Link>
       <div className="w-full max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-text-primary">
+        <h1 className="text-xl font-semibold tracking-tight text-ink-900">
           {t("title")}
         </h1>
-        <p className="mt-4 text-sm leading-relaxed text-text-secondary">
+        <p className="mt-4 text-sm leading-relaxed text-ink-700">
           {t("body")}
         </p>
         {user.email ? (
-          <p className="mt-3 rounded-md border border-border-subtle bg-layer-02 px-3 py-2 text-xs text-text-tertiary">
+          <p className="mt-3 border border-ink-100 bg-paper-100 px-3 py-2 text-xs text-ink-500">
             {user.email}
           </p>
         ) : null}
@@ -86,11 +86,11 @@ export default async function AccessPendingPage() {
             {t("contact")}
           </Link>
         </div>
-        <div className="mt-10 flex flex-col items-center gap-4 border-t border-border-subtle pt-8">
+        <div className="mt-10 flex flex-col items-center gap-4 border-t border-ink-100 pt-8">
           <AccessPendingSignOut label={t("signOut")} />
           <Link
             href={home}
-            className="text-sm text-interactive transition-colors hover:text-primary"
+            className="text-sm text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
           >
             {t("backHome")}
           </Link>

@@ -75,7 +75,7 @@ export function SceneImageGallery({
 
   if (scenes.length === 0) {
     return (
-      <p className="text-xs text-text-tertiary">
+      <p className="text-xs text-ink-500">
         {t("sceneKeyframeGalleryEmpty")}
       </p>
     );
@@ -84,12 +84,12 @@ export function SceneImageGallery({
   return (
     <div className="space-y-4">
       {!canEdit ? (
-        <p className="rounded-md border border-border-subtle bg-layer-02/50 px-3 py-2 text-xs text-text-secondary">
+        <p className="border border-ink-100 bg-paper-100 px-3 py-2 text-xs text-ink-700">
           {t("sceneKeyframeReadOnly")}
         </p>
       ) : null}
       {availableProviders.length === 0 ? (
-        <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-950 dark:text-amber-100/95">
+        <p className="border border-vermilion-600/40 bg-vermilion-100/40 px-3 py-2 text-xs text-vermilion-600">
           {t("sceneKeyframeNoProviderKey")}
         </p>
       ) : null}
@@ -197,19 +197,19 @@ function SceneCard({
   const bothFramesSelected = !!scene.first && !!scene.last;
 
   return (
-    <section className="space-y-3 rounded-xl border border-border-subtle bg-layer-01 p-4 shadow-sm">
+    <section className="space-y-3 border border-ink-100 bg-paper-100 p-4">
       <header className="flex flex-wrap items-center justify-between gap-2">
         <div className="space-y-0.5">
-          <p className="text-sm font-semibold text-text-primary">
+          <p className="text-sm font-semibold text-ink-900">
             {t("sceneKeyframeSceneTitle", { index: scene.index + 1 })}
           </p>
-          <p className="text-[11px] text-text-tertiary">
+          <p className="text-[11px] text-ink-500">
             {scene.narration.slice(0, 140)}
             {scene.narration.length > 140 ? "…" : ""}
           </p>
         </div>
         {bothFramesSelected ? (
-          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/35 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-800 dark:text-emerald-200/95">
+          <span className="inline-flex items-center gap-1 border border-vermilion-600/35 bg-paper-0 px-2 py-0.5 font-mono text-[10px] text-vermilion-600">
             <Star className="h-3 w-3" aria-hidden />
             {t("sceneKeyframeReadyBadge")}
           </span>
@@ -232,8 +232,8 @@ function SceneCard({
       </div>
 
       {canEdit ? (
-        <div className="flex flex-wrap items-center gap-2 border-t border-border-subtle pt-3">
-          <label className="flex items-center gap-1.5 text-[11px] text-text-secondary">
+        <div className="flex flex-wrap items-center gap-2 border-t border-ink-100 pt-3">
+          <label className="flex items-center gap-1.5 font-mono text-[11px] text-ink-600">
             <span>{t("sceneKeyframeProviderLabel")}</span>
             <select
               value={provider}
@@ -241,7 +241,7 @@ function SceneCard({
                 setProvider(e.target.value as StudioImageProviderId)
               }
               disabled={generating || !canGenerate}
-              className="h-8 rounded-md border border-border-subtle bg-field px-2 text-xs"
+              className="h-8 border-b border-ink-300 bg-transparent px-0 text-xs text-ink-900 outline-none focus:border-vermilion-600"
             >
               {STUDIO_IMAGE_PROVIDER_IDS.map((id) => {
                 const disabled = !availableProviders.includes(id);
@@ -254,13 +254,13 @@ function SceneCard({
               })}
             </select>
           </label>
-          <label className="flex items-center gap-1.5 text-[11px] text-text-secondary">
+          <label className="flex items-center gap-1.5 font-mono text-[11px] text-ink-600">
             <span>{t("sceneKeyframeCountLabel")}</span>
             <select
               value={count}
               onChange={(e) => setCount(Number(e.target.value))}
               disabled={generating || !canGenerate}
-              className="h-8 rounded-md border border-border-subtle bg-field px-2 text-xs"
+              className="h-8 border-b border-ink-300 bg-transparent px-0 text-xs text-ink-900 outline-none focus:border-vermilion-600"
             >
               {[1, 2, 3, 4].map((n) => (
                 <option key={n} value={n}>
@@ -285,7 +285,7 @@ function SceneCard({
             href={STUDIO_PROVIDER_DOCS[provider].apiDocsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[11px] text-interactive underline underline-offset-2 hover:opacity-90"
+            className="inline-flex items-center gap-1 font-mono text-[11px] text-vermilion-600 underline underline-offset-2 hover:opacity-90"
           >
             <ExternalLink className="h-3 w-3" aria-hidden />
             {t("sceneKeyframeProviderDocsLink")}
@@ -307,7 +307,7 @@ function SceneCard({
           ))}
         </div>
       ) : (
-        <p className="text-[11px] text-text-tertiary">
+        <p className="text-[11px] text-ink-500">
           {t("sceneKeyframeCandidatesEmpty")}
         </p>
       )}
@@ -338,8 +338,8 @@ function FrameSlot({
 }) {
   const t = useTranslations("Dashboard.productions");
   return (
-    <div className="rounded-lg border border-border-subtle bg-layer-02/50 p-2">
-      <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-text-secondary">
+    <div className="border border-ink-100 bg-paper-50 p-2">
+      <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.04em] text-ink-500">
         {label}
       </p>
       {artifact?.externalUrl ? (
@@ -350,7 +350,7 @@ function FrameSlot({
             width={128}
             height={128}
             unoptimized
-            className="h-24 w-24 rounded-md border border-border-subtle object-cover"
+            className="h-24 w-24 border border-ink-100 object-cover"
           />
           {canEdit ? (
             <Button
@@ -365,7 +365,7 @@ function FrameSlot({
           ) : null}
         </div>
       ) : (
-        <p className="text-[11px] text-text-tertiary">
+        <p className="text-[11px] text-ink-500">
           {t("sceneKeyframeSlotEmpty")}
         </p>
       )}
@@ -407,9 +407,9 @@ function Candidate({
     <div
       ref={menuRef}
       className={cn(
-        "group relative aspect-square overflow-hidden rounded-lg border border-border-subtle bg-layer-02",
+        "group relative aspect-square overflow-hidden border border-ink-100 bg-paper-50",
         !art.metadata.watermark_free
-          ? "ring-1 ring-amber-500/40"
+          ? "border-vermilion-600/40"
           : "",
       )}
     >
@@ -424,18 +424,18 @@ function Candidate({
         />
       ) : null}
       {!art.metadata.watermark_free ? (
-        <span className="absolute left-1 top-1 rounded bg-amber-500/80 px-1.5 py-0.5 text-[9px] font-medium text-amber-950">
+        <span className="absolute top-1 left-1 border border-vermilion-600/40 bg-paper-0 px-1.5 py-0.5 font-mono text-[9px] text-vermilion-600">
           {t("sceneKeyframeWatermarkBadge")}
         </span>
       ) : null}
       {canEdit ? (
-        <div className="pointer-events-none absolute inset-0 flex items-end justify-between gap-1 bg-linear-to-t from-black/70 to-transparent p-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
+        <div className="pointer-events-none absolute inset-0 flex items-end justify-between gap-1 bg-ink-900/55 p-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
           <div className="pointer-events-auto flex gap-1">
             <button
               type="button"
               onClick={onSetFirst}
               title={t("sceneKeyframeSetFirst")}
-              className="rounded bg-white/90 p-1 text-text-primary hover:bg-white"
+              className="border border-ink-100 bg-paper-0 p-1 text-ink-700 hover:text-ink-900"
               aria-label={t("sceneKeyframeSetFirst")}
             >
               <Flag className="h-3 w-3" aria-hidden />
@@ -444,7 +444,7 @@ function Candidate({
               type="button"
               onClick={onSetLast}
               title={t("sceneKeyframeSetLast")}
-              className="rounded bg-white/90 p-1 text-text-primary hover:bg-white"
+              className="border border-ink-100 bg-paper-0 p-1 text-ink-700 hover:text-ink-900"
               aria-label={t("sceneKeyframeSetLast")}
             >
               <Star className="h-3 w-3" aria-hidden />
@@ -454,7 +454,7 @@ function Candidate({
             type="button"
             onClick={onDelete}
             title={t("sceneKeyframeDelete")}
-            className="pointer-events-auto rounded bg-white/90 p-1 text-danger hover:bg-white"
+            className="pointer-events-auto border border-vermilion-600 bg-paper-0 p-1 text-vermilion-600"
             aria-label={t("sceneKeyframeDelete")}
           >
             <Trash2 className="h-3 w-3" aria-hidden />

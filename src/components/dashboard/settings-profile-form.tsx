@@ -35,14 +35,14 @@ export function SettingsProfileForm({
   return (
     <form action={formAction} className="space-y-4">
       {state?.error && (
-        <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       )}
       <div>
         <label
           htmlFor="display_name"
-          className="block text-xs text-text-secondary mb-1"
+          className="block text-xs text-ink-700 mb-1"
         >
           {t("displayNameLabel")}
         </label>
@@ -51,19 +51,19 @@ export function SettingsProfileForm({
           name="display_name"
           defaultValue={defaultDisplayName}
           maxLength={200}
-          className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
+          className="h-10 w-full bg-paper-0 border border-ink-100 px-3 text-sm text-ink-900 focus:outline-none focus:border-focus"
           placeholder={t("displayNamePlaceholder")}
         />
-        <p className="mt-1 text-xs text-text-tertiary">
+        <p className="mt-1 text-xs text-ink-500">
           {t("displayNameHint")}
         </p>
       </div>
 
       <div>
-        <h3 className="text-xs font-medium text-text-tertiary uppercase tracking-wider">
+        <h3 className="text-xs font-medium text-ink-500 uppercase tracking-wider">
           {t("notificationsHeading")}
         </h3>
-        <label className="mt-3 flex items-center gap-2 text-sm text-text-secondary">
+        <label className="mt-3 flex items-center gap-2 text-sm text-ink-700">
           <input
             type="checkbox"
             name="email_milestone_digest"
@@ -73,7 +73,7 @@ export function SettingsProfileForm({
           />
           {t("digestLabel")}
         </label>
-        <p className="mt-2 text-xs text-text-tertiary">{t("digestHint")}</p>
+        <p className="mt-2 text-xs text-ink-500">{t("digestHint")}</p>
       </div>
 
       <Button variant="primary" size="md" type="submit" isLoading={pending}>

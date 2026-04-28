@@ -215,7 +215,7 @@ function FieldHintBlock({
           width: coords.width,
           zIndex: 300,
         }}
-        className="max-h-[min(42vh,18rem)] overflow-y-auto rounded-lg border border-border-subtle/90 bg-layer-01 px-3 py-2 text-left text-[11px] leading-relaxed text-text-secondary shadow-xl dark:bg-layer-02"
+        className="max-h-[min(42vh,18rem)] overflow-y-auto rounded-[var(--radius-1)] border border-ink-100/90 bg-paper-0 px-3 py-2 text-left text-[11px] leading-relaxed text-ink-700 dark:bg-paper-50"
         onMouseEnter={() => {
           clearLeaveTimer();
           setHover(true);
@@ -241,7 +241,7 @@ function FieldHintBlock({
         >
           <button
             type="button"
-            className="mt-0.5 inline-flex rounded-md p-0.5 text-text-tertiary outline-none transition-colors hover:bg-layer-02 hover:text-text-secondary focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 focus-visible:ring-offset-layer-01"
+            className="mt-0.5 inline-flex rounded-[var(--radius-1)] p-0.5 text-ink-500 outline-none transition-colors hover:bg-paper-50 hover:text-ink-700 focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 focus-visible:ring-offset-layer-01"
             aria-describedby={open ? tooltipId : undefined}
             aria-expanded={pinned}
             aria-label={t("draftFieldHelpAria")}
@@ -290,7 +290,7 @@ function draftLlmTierBadgeClass(tier: DraftModelCostTier): string {
     case "high":
       return "border-amber-500/40 bg-amber-500/[0.08] text-amber-950 dark:border-amber-500/35 dark:bg-amber-500/10 dark:text-amber-100";
     case "medium":
-      return "border-border-subtle/90 bg-layer-02/90 text-text-secondary";
+      return "border-ink-100/90 bg-paper-50/90 text-ink-700";
     case "low":
       return "border-emerald-500/35 bg-emerald-500/[0.07] text-emerald-950 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100";
   }
@@ -329,29 +329,29 @@ function FieldDiffBlock({
   const changed = previous.trim() !== next.trim();
   if (!changed) {
     return (
-      <p className="text-xs text-text-tertiary">
-        <span className="font-medium text-text-secondary">{fieldLabel}:</span>{" "}
+      <p className="text-xs text-ink-500">
+        <span className="font-medium text-ink-700">{fieldLabel}:</span>{""}
         {unchangedLabel}
       </p>
     );
   }
   return (
     <div className="space-y-1.5">
-      <p className="text-[11px] font-medium text-text-secondary">{fieldLabel}</p>
+      <p className="text-[11px] font-medium text-ink-700">{fieldLabel}</p>
       <div className="grid gap-2 sm:grid-cols-2">
-        <div className="rounded-lg border border-border-subtle/80 bg-layer-02/40 p-2">
-          <p className="text-[10px] uppercase tracking-wide text-text-tertiary mb-1">
+        <div className="rounded-[var(--radius-1)] border border-ink-100/80 bg-paper-50/40 p-2">
+          <p className="text-[10px] uppercase tracking-wide text-ink-500 mb-1">
             {prevColLabel}
           </p>
-          <pre className="text-xs text-text-secondary whitespace-pre-wrap wrap-break-word font-sans leading-relaxed max-h-40 overflow-y-auto">
+          <pre className="text-xs text-ink-700 whitespace-pre-wrap wrap-break-word font-sans leading-relaxed max-h-40 overflow-y-auto">
             {previous || "—"}
           </pre>
         </div>
-        <div className="rounded-lg border border-primary/25 bg-primary/6 p-2">
+        <div className="rounded-[var(--radius-1)] border border-primary/25 bg-primary/6 p-2">
           <p className="text-[10px] uppercase tracking-wide text-primary/90 mb-1">
             {nextColLabel}
           </p>
-          <pre className="text-xs text-text-primary whitespace-pre-wrap wrap-break-word font-sans leading-relaxed max-h-40 overflow-y-auto">
+          <pre className="text-xs text-ink-900 whitespace-pre-wrap wrap-break-word font-sans leading-relaxed max-h-40 overflow-y-auto">
             {next || "—"}
           </pre>
         </div>
@@ -795,13 +795,13 @@ export function EpisodeDraftWorkbench({
         <h2
           id={draftSectionTitleId}
           className={cn(
-            "font-semibold text-text-primary mb-1",
+            "font-semibold text-ink-900 mb-1",
             embedded ? "text-base tracking-tight" : "text-sm",
           )}
         >
           {t("draftPanelTitle")}
         </h2>
-        <p className="text-xs text-text-tertiary leading-relaxed max-w-prose">
+        <p className="text-xs text-ink-500 leading-relaxed max-w-prose">
           {embedded ? t("draftSectionDescription") : t("draftPanelSubtitle")}
         </p>
       </div>
@@ -811,7 +811,7 @@ export function EpisodeDraftWorkbench({
     <>
 {err ? (
         <p
-          className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger"
+          className="rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger"
           role="alert"
         >
           {translateActionErrorMessage(err, tAction)}
@@ -819,18 +819,18 @@ export function EpisodeDraftWorkbench({
       ) : null}
       {compareOpen && comparePrevious && compareProposed ? (
         <div
-          className="rounded-xl border border-primary/30 bg-primary/4 p-4 space-y-4"
+          className="rounded-[var(--radius-1)] border border-primary/30 bg-primary/4 p-4 space-y-4"
           role="region"
           aria-labelledby={fieldIds.compareHeading}
         >
           <div>
             <h3
               id={fieldIds.compareHeading}
-              className="text-sm font-semibold text-text-primary"
+              className="text-sm font-semibold text-ink-900"
             >
               {t("draftCompareTitle")}
             </h3>
-            <p className="mt-1 text-xs text-text-tertiary leading-relaxed">
+            <p className="mt-1 text-xs text-ink-500 leading-relaxed">
               {t("draftCompareSubtitle")}
             </p>
           </div>
@@ -895,22 +895,22 @@ export function EpisodeDraftWorkbench({
         </div>
       ) : null}
 
-      <div className="overflow-hidden rounded-xl border border-border-subtle/80 bg-layer-02/25 shadow-sm">
-        <div className="border-b border-border-subtle/70 bg-layer-02/50 px-3 py-2.5 sm:px-3.5">
+      <div className="overflow-hidden rounded-[var(--radius-1)] border border-ink-100/80 bg-paper-50/25">
+        <div className="border-b border-ink-100/70 bg-paper-50/50 px-3 py-2.5 sm:px-3.5">
           <FieldHintBlock
             titleRow={
-              <h3 className="text-xs font-semibold tracking-tight text-text-primary">
+              <h3 className="text-xs font-semibold tracking-tight text-ink-900">
                 {t("draftLlmSetupTitle")}
               </h3>
             }
             belowTitle={
-              <p className="mt-1 text-[11px] leading-relaxed text-text-tertiary">
+              <p className="mt-1 text-[11px] leading-relaxed text-ink-500">
                 {t("draftLlmSetupDescription")}
               </p>
             }
             hint={
-              <div className="space-y-2 text-text-tertiary">
-                <p className="font-medium text-text-secondary">
+              <div className="space-y-2 text-ink-500">
+                <p className="font-medium text-ink-700">
                   {t("draftLlmPricingDetailsSummary")}
                 </p>
                 <p>{t("draftLlmPricingFootnote")}</p>
@@ -920,7 +920,7 @@ export function EpisodeDraftWorkbench({
         </div>
         <div className="space-y-3 px-3 py-3 sm:px-3.5">
           {!llmReady ? (
-            <div className="rounded-lg border border-amber-500/30 bg-amber-500/[0.06] px-3 py-2.5 text-[11px] leading-relaxed text-text-secondary">
+            <div className="rounded-[var(--radius-1)] border border-amber-500/30 bg-amber-500/[0.06] px-3 py-2.5 text-[11px] leading-relaxed text-ink-700">
               <p>{t("draftLlmKeysRequiredHint")}</p>
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 {studioDialogs ? (
@@ -946,7 +946,7 @@ export function EpisodeDraftWorkbench({
           ) : null}
 
           {llmReady && !showProviderPicker ? (
-            <p className="text-[11px] text-text-tertiary">
+            <p className="text-[11px] text-ink-500">
               {t("draftLlmSingleProviderCaption", {
                 provider:
                   effectiveProvider === "openai"
@@ -960,14 +960,14 @@ export function EpisodeDraftWorkbench({
             <div>
               <p
                 id={`${fieldIds.llmProvider}-legend`}
-                className="mb-1.5 text-[11px] font-medium text-text-secondary"
+                className="mb-1.5 text-[11px] font-medium text-ink-700"
               >
                 {t("draftLlmProviderLabel")}
               </p>
               <div
                 role="radiogroup"
                 aria-labelledby={`${fieldIds.llmProvider}-legend`}
-                className="flex gap-1 rounded-xl border border-border-subtle/70 bg-layer-02/45 p-1"
+                className="flex gap-1 rounded-[var(--radius-1)] border border-ink-100/70 bg-paper-50/45 p-1"
               >
                 <button
                   type="button"
@@ -979,10 +979,10 @@ export function EpisodeDraftWorkbench({
                     setLlmModel(defaultDraftModel("openai"));
                   }}
                   className={cn(
-                    "min-h-9 flex-1 rounded-lg px-2.5 text-xs font-medium transition-colors",
+                    "min-h-9 flex-1 rounded-[var(--radius-1)] px-2.5 text-xs font-medium transition-colors",
                     llmProvider === "openai"
-                      ? "bg-layer-01 text-text-primary shadow-sm ring-1 ring-border-subtle/80"
-                      : "text-text-secondary hover:bg-layer-01/70 hover:text-text-primary",
+                      ? "bg-paper-0 text-ink-900 ring-1 ring-border-subtle/80"
+                      : "text-ink-700 hover:bg-paper-0/70 hover:text-ink-900",
                     !draftLlmAvailability.openai && "cursor-not-allowed opacity-45",
                   )}
                 >
@@ -998,10 +998,10 @@ export function EpisodeDraftWorkbench({
                     setLlmModel(defaultDraftModel("anthropic"));
                   }}
                   className={cn(
-                    "min-h-9 flex-1 rounded-lg px-2.5 text-xs font-medium transition-colors",
+                    "min-h-9 flex-1 rounded-[var(--radius-1)] px-2.5 text-xs font-medium transition-colors",
                     llmProvider === "anthropic"
-                      ? "bg-layer-01 text-text-primary shadow-sm ring-1 ring-border-subtle/80"
-                      : "text-text-secondary hover:bg-layer-01/70 hover:text-text-primary",
+                      ? "bg-paper-0 text-ink-900 ring-1 ring-border-subtle/80"
+                      : "text-ink-700 hover:bg-paper-0/70 hover:text-ink-900",
                     !draftLlmAvailability.anthropic && "cursor-not-allowed opacity-45",
                   )}
                 >
@@ -1013,7 +1013,7 @@ export function EpisodeDraftWorkbench({
 
           <div className="min-w-0">
             <label
-              className="mb-1.5 block text-[11px] font-medium text-text-secondary"
+              className="mb-1.5 block text-[11px] font-medium text-ink-700"
               htmlFor={fieldIds.llmModel}
             >
               {t("draftLlmModelLabel")}
@@ -1031,13 +1031,13 @@ export function EpisodeDraftWorkbench({
               <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
                 <span
                   className={cn(
-                    "inline-flex max-w-full items-center rounded-md border px-2 py-0.5 text-[10px] font-medium tabular-nums",
+                    "inline-flex max-w-full items-center rounded-[var(--radius-1)] border px-2 py-0.5 text-[10px] font-medium tabular-nums",
                     draftLlmTierBadgeClass(resolvedModelMeta.costTier),
                   )}
                 >
                   {t(draftLlmTierLabelKey(resolvedModelMeta.costTier))}
                 </span>
-                <span className="text-[10px] tabular-nums text-text-tertiary">
+                <span className="text-[10px] tabular-nums text-ink-500">
                   {resolvedModelMeta.pricingHint}
                 </span>
               </div>
@@ -1050,7 +1050,7 @@ export function EpisodeDraftWorkbench({
         <div
           role="tablist"
           aria-label={t("draftDialogTablistAria")}
-          className="flex flex-wrap gap-1 rounded-xl border border-border-subtle/70 bg-layer-02/40 p-1"
+          className="flex flex-wrap gap-1 rounded-[var(--radius-1)] border border-ink-100/70 bg-paper-50/40 p-1"
         >
           {(
             [
@@ -1066,10 +1066,10 @@ export function EpisodeDraftWorkbench({
               aria-selected={dialogTab === id}
               onClick={() => setDialogTab(id)}
               className={cn(
-                "inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-lg px-2.5 text-xs font-medium transition-colors sm:flex-none sm:px-3",
+                "inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-[var(--radius-1)] px-2.5 text-xs font-medium transition-colors sm:flex-none sm:px-3",
                 dialogTab === id
-                  ? "bg-layer-01 text-text-primary shadow-sm ring-1 ring-border-subtle/80"
-                  : "text-text-secondary hover:bg-layer-01/60 hover:text-text-primary",
+                  ? "bg-paper-0 text-ink-900 ring-1 ring-border-subtle/80"
+                  : "text-ink-700 hover:bg-paper-0/60 hover:text-ink-900",
               )}
             >
               <Icon className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
@@ -1095,10 +1095,10 @@ export function EpisodeDraftWorkbench({
           <input type="hidden" name="llm_provider" value={effectiveProvider} />
           <input type="hidden" name="llm_model" value={resolvedModel} />
           <input type="hidden" name="draft_generate_mode" value={draftGenerateMode} />
-          <div className="space-y-2 rounded-lg border border-border-subtle/70 bg-layer-02/20 p-3">
+          <div className="space-y-2 rounded-[var(--radius-1)] border border-ink-100/70 bg-paper-50/20 p-3">
             <FieldHintBlock
               titleRow={
-                <p className="text-[11px] font-medium text-text-secondary">
+                <p className="text-[11px] font-medium text-ink-700">
                   {t("draftGenerateModeLabel")}
                 </p>
               }
@@ -1110,10 +1110,10 @@ export function EpisodeDraftWorkbench({
                 disabled={!llmReady}
                 onClick={() => setDraftGenerateMode("develop")}
                 className={cn(
-                  "rounded-lg border px-3 py-1.5 text-left text-xs transition-colors",
+                  "rounded-[var(--radius-1)] border px-3 py-1.5 text-left text-xs transition-colors",
                   draftGenerateMode === "develop"
-                    ? "border-primary/40 bg-primary/10 text-text-primary ring-1 ring-primary/25"
-                    : "border-border-subtle/80 bg-field text-text-secondary hover:bg-layer-02",
+                    ? "border-primary/40 bg-primary/10 text-ink-900 ring-1 ring-primary/25"
+                    : "border-ink-100/80 bg-paper-0 text-ink-700 hover:bg-paper-50",
                 )}
               >
                 {t("draftGenerateModeDevelop")}
@@ -1123,10 +1123,10 @@ export function EpisodeDraftWorkbench({
                 disabled={!llmReady}
                 onClick={() => setDraftGenerateMode("fresh")}
                 className={cn(
-                  "rounded-lg border px-3 py-1.5 text-left text-xs transition-colors",
+                  "rounded-[var(--radius-1)] border px-3 py-1.5 text-left text-xs transition-colors",
                   draftGenerateMode === "fresh"
-                    ? "border-primary/40 bg-primary/10 text-text-primary ring-1 ring-primary/25"
-                    : "border-border-subtle/80 bg-field text-text-secondary hover:bg-layer-02",
+                    ? "border-primary/40 bg-primary/10 text-ink-900 ring-1 ring-primary/25"
+                    : "border-ink-100/80 bg-paper-0 text-ink-700 hover:bg-paper-50",
                 )}
               >
                 {t("draftGenerateModeFresh")}
@@ -1139,7 +1139,7 @@ export function EpisodeDraftWorkbench({
                 <FieldHintBlock
                   titleRow={
                     <label
-                      className="block text-xs font-medium text-text-secondary"
+                      className="block text-xs font-medium text-ink-700"
                       htmlFor={fieldIds.template}
                     >
                       {t("draftTemplateLabel")}
@@ -1164,7 +1164,7 @@ export function EpisodeDraftWorkbench({
             />
           </div>
           {brandGuide?.trim() ? (
-            <div className="rounded-lg border border-border-subtle/60 bg-layer-02/25 px-3 py-2 text-[11px] text-text-secondary leading-relaxed">
+            <div className="rounded-[var(--radius-1)] border border-ink-100/60 bg-paper-50/25 px-3 py-2 text-[11px] text-ink-700 leading-relaxed">
               <p>{t("draftBrandGuideStrip")}</p>
               <Link
                 href={brandGuideEditHref}
@@ -1174,14 +1174,14 @@ export function EpisodeDraftWorkbench({
               </Link>
             </div>
           ) : null}
-          <div className="space-y-2 rounded-lg border border-border-subtle/70 bg-layer-02/20 p-3">
+          <div className="space-y-2 rounded-[var(--radius-1)] border border-ink-100/70 bg-paper-50/20 p-3">
             <div className="flex items-start gap-2">
-              <Layers className="h-4 w-4 shrink-0 text-text-tertiary mt-0.5" aria-hidden />
+              <Layers className="h-4 w-4 shrink-0 text-ink-500 mt-0.5" aria-hidden />
               <div className="min-w-0 flex-1 space-y-1">
                 <FieldHintBlock
                   titleRow={
                     <label
-                      className="block text-xs font-medium text-text-secondary"
+                      className="block text-xs font-medium text-ink-700"
                       htmlFor={fieldIds.sticky}
                     >
                       {t("draftStickyContextLabel")}
@@ -1190,7 +1190,7 @@ export function EpisodeDraftWorkbench({
                   belowTitle={
                     <p
                       id={fieldIds.stickyHint}
-                      className="mt-1 text-[11px] text-text-tertiary leading-snug"
+                      className="mt-1 text-[11px] text-ink-500 leading-snug"
                     >
                       {t("draftStickyContextDescription")}
                     </p>
@@ -1208,7 +1208,7 @@ export function EpisodeDraftWorkbench({
               placeholder={t("draftStickyContextPlaceholder")}
               maxLength={DRAFT_STICKY_MAX_CHARS}
               aria-describedby={fieldIds.stickyHint}
-              className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm placeholder:text-text-tertiary"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm placeholder:text-ink-500"
             />
             <div className="flex flex-wrap gap-2 pt-0.5">
               <Button
@@ -1227,7 +1227,7 @@ export function EpisodeDraftWorkbench({
             <FieldHintBlock
               titleRow={
                 <label
-                  className="block text-xs font-medium text-text-secondary"
+                  className="block text-xs font-medium text-ink-700"
                   htmlFor={fieldIds.briefing}
                 >
                   {t("draftBriefingLabel")}
@@ -1244,7 +1244,7 @@ export function EpisodeDraftWorkbench({
               placeholder={t("draftBriefingPlaceholder")}
               disabled={!llmReady}
               maxLength={12000}
-              className="mt-1.5 w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm placeholder:text-text-tertiary disabled:opacity-60"
+              className="mt-1.5 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm placeholder:text-ink-500 disabled:opacity-60"
             />
           </div>
           <div className="flex flex-wrap gap-2 pt-0.5">
@@ -1267,7 +1267,7 @@ export function EpisodeDraftWorkbench({
         <form action={saveAction} className="space-y-3">
           <input type="hidden" name="episode_id" value={episodeId} />
           <div>
-            <label className="block text-xs font-medium text-text-secondary mb-1" htmlFor={fieldIds.hook}>
+            <label className="block text-xs font-medium text-ink-700 mb-1" htmlFor={fieldIds.hook}>
               {t("draftHookLabel")}
             </label>
             <textarea
@@ -1276,11 +1276,11 @@ export function EpisodeDraftWorkbench({
               rows={2}
               value={hook}
               onChange={(e) => setHook(e.target.value)}
-              className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-text-secondary mb-1" htmlFor={fieldIds.title}>
+            <label className="block text-xs font-medium text-ink-700 mb-1" htmlFor={fieldIds.title}>
               {t("draftTitleLabel")}
             </label>
             <input
@@ -1288,12 +1288,12 @@ export function EpisodeDraftWorkbench({
               name="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm"
+              className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm"
             />
           </div>
           <div>
             <label
-              className="block text-xs font-medium text-text-secondary mb-1"
+              className="block text-xs font-medium text-ink-700 mb-1"
               htmlFor={fieldIds.script}
             >
               {t("draftScriptLabel")}
@@ -1304,7 +1304,7 @@ export function EpisodeDraftWorkbench({
               rows={scriptTextareaRows}
               value={scriptDraft}
               onChange={(e) => setScriptDraft(e.target.value)}
-              className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm"
             />
           </div>
           <Button type="submit" variant="primary" size="sm" isLoading={savePending}>
@@ -1328,7 +1328,7 @@ export function EpisodeDraftWorkbench({
           <input type="hidden" name="episode_id" value={episodeId} />
           <input type="hidden" name="llm_provider" value={effectiveProvider} />
           <input type="hidden" name="llm_model" value={resolvedModel} />
-          <label className="block text-xs font-medium text-text-secondary" htmlFor={fieldIds.instr}>
+          <label className="block text-xs font-medium text-ink-700" htmlFor={fieldIds.instr}>
             {t("draftRefineLabel")}
           </label>
           <textarea
@@ -1338,7 +1338,7 @@ export function EpisodeDraftWorkbench({
             value={instruction}
             onChange={(e) => setInstruction(e.target.value)}
             placeholder={t("draftRefinePlaceholder")}
-            className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm"
+            className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm"
           />
           <Button
             type="submit"
@@ -1356,17 +1356,17 @@ export function EpisodeDraftWorkbench({
 
       {afterRefineSlot}
 
-      <div className="border-t border-border-subtle pt-5 space-y-3">
+      <div className="border-t border-ink-100 pt-5 space-y-3">
         <div>
-          <h3 className="text-sm font-semibold text-text-primary">{t("draftHistoryTitle")}</h3>
-          <p className="mt-1 text-xs text-text-tertiary leading-relaxed">{t("draftHistorySubtitle")}</p>
+          <h3 className="text-sm font-semibold text-ink-900">{t("draftHistoryTitle")}</h3>
+          <p className="mt-1 text-xs text-ink-500 leading-relaxed">{t("draftHistorySubtitle")}</p>
         </div>
         {draftSnapshots.length === 0 ? (
-          <p className="text-xs text-text-tertiary">{t("draftHistoryEmpty")}</p>
+          <p className="text-xs text-ink-500">{t("draftHistoryEmpty")}</p>
         ) : (
           <ul className="space-y-2 max-h-72 overflow-y-auto pr-1">
             {draftSnapshots.map((row) => {
-              const preview = [row.hook, row.title].filter(Boolean).join(" · ").trim() || row.script_draft;
+              const preview = [row.hook, row.title].filter(Boolean).join("·").trim() || row.script_draft;
               const clipped = preview.length > 140 ? `${preview.slice(0, 140)}…` : preview;
               const when = format.dateTime(new Date(row.created_at), {
                 dateStyle: "medium",
@@ -1375,14 +1375,14 @@ export function EpisodeDraftWorkbench({
               return (
                 <li
                   key={row.id}
-                  className="rounded-lg border border-border-subtle/80 bg-layer-02/20 px-3 py-2.5"
+                  className="rounded-[var(--radius-1)] border border-ink-100/80 bg-paper-50/20 px-3 py-2.5"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-medium uppercase tracking-wide text-text-tertiary">
+                      <p className="text-[10px] font-medium uppercase tracking-wide text-ink-500">
                         {when} · {labelForSnapshotSource(row.source)}
                       </p>
-                      <p className="mt-1 text-xs text-text-secondary line-clamp-2 whitespace-pre-wrap wrap-break-word">
+                      <p className="mt-1 text-xs text-ink-700 line-clamp-2 whitespace-pre-wrap wrap-break-word">
                         {clipped || "—"}
                       </p>
                     </div>
@@ -1418,7 +1418,7 @@ export function EpisodeDraftWorkbench({
       className={cn(
         embedded
           ? "space-y-6"
-          : "mb-10 rounded-2xl border border-border-subtle/90 bg-layer-01 p-6 shadow-sm space-y-6",
+          : "mb-10 rounded-2xl border border-ink-100/90 bg-paper-0 p-6 space-y-6",
         className,
       )}
     >

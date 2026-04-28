@@ -92,30 +92,30 @@ export function YoutubeUploadPipelineStep({
       : t("pipelineYoutubeFormatLongform");
 
   const summaryBlock = (
-    <div className="rounded-lg border border-border-subtle bg-layer-02/40 px-3 py-2 text-[11px] text-text-secondary leading-relaxed">
+    <div className="border border-ink-100 bg-paper-100 px-3 py-2 font-mono text-[11px] leading-relaxed text-ink-600">
       <p>
-        <span className="font-medium text-text-primary">{t("pipelineYoutubeFormatBadge")}:</span>{" "}
+        <span className="font-medium text-ink-900">{t("pipelineYoutubeFormatBadge")}:</span>{""}
         {formatLabel}
       </p>
       <p className="mt-1.5">
-        <span className="font-medium text-text-primary">
+        <span className="font-medium text-ink-900">
           {t("pipelineYoutubeUploadTarget")}:
-        </span>{" "}
+        </span>{""}
         {oauthConnected ? (
-          <span className="text-text-primary">{youtubeChannelTitle}</span>
+          <span className="text-ink-900">{youtubeChannelTitle}</span>
         ) : (
-          <span className="text-amber-600 dark:text-amber-400">
+          <span className="text-vermilion-600">
             {t("pipelineYoutubeNotConnectedShort")}
           </span>
         )}
       </p>
       {distributionChannelLabel?.trim() ? (
-        <p className="mt-1.5 text-text-tertiary">
-          {t("pipelineYoutubeDistributionHint")}{" "}
-          <span className="text-text-secondary">{distributionChannelLabel.trim()}</span>
+        <p className="mt-1.5 text-ink-500">
+          {t("pipelineYoutubeDistributionHint")}{""}
+          <span className="text-ink-700">{distributionChannelLabel.trim()}</span>
         </p>
       ) : null}
-      <p className="mt-2 text-[10px] text-text-tertiary">{t("pipelineYoutubeOAuthExplain")}</p>
+      <p className="mt-2 text-[10px] text-ink-500">{t("pipelineYoutubeOAuthExplain")}</p>
     </div>
   );
 
@@ -123,12 +123,12 @@ export function YoutubeUploadPipelineStep({
     <>
       <div
         className={cn(
-          "rounded-lg border px-3 py-3",
+          "border px-3 py-3",
           hasYoutubePublish
-            ? "border-green-500/30 bg-green-500/5"
+            ? "border-vermilion-600/35 bg-paper-0"
             : disabled
-              ? "border-border-subtle/50 bg-layer-02/20 opacity-60"
-              : "border-border-subtle bg-layer-02/40",
+              ? "border-ink-100 bg-paper-100 opacity-60"
+              : "border-ink-100 bg-paper-100",
           "sm:col-span-2",
         )}
       >
@@ -136,15 +136,15 @@ export function YoutubeUploadPipelineStep({
           <div className="flex items-center gap-2 min-w-0">
             <span
               className={cn(
-                "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
+                "flex h-5 w-5 shrink-0 items-center justify-center border font-mono text-[10px]",
                 hasYoutubePublish
-                  ? "bg-green-500/20 text-green-600 dark:text-green-400"
-                  : "bg-layer-03 text-text-tertiary",
+                  ? "border-vermilion-600 text-vermilion-600"
+                  : "border-ink-300 text-ink-500",
               )}
             >
               {hasYoutubePublish ? "\u2713" : step}
             </span>
-            <span className="text-xs font-medium text-text-primary truncate">
+            <span className="truncate text-xs font-medium text-ink-900">
               {t("draftYoutubeCta")}
             </span>
           </div>
@@ -163,10 +163,10 @@ export function YoutubeUploadPipelineStep({
               onClick={() => openModal("preview")}
               aria-label={t("pipelineYoutubeButtonView")}
               title={t("pipelineYoutubeButtonView")}
-              className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
+              className="h-7 gap-1 px-2.5 sm:gap-1.5 sm:px-3"
             >
               <Eye className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
-              <span className="hidden sm:inline">{t("pipelineYoutubeButtonView")}</span>
+              <span>{t("pipelineYoutubeButtonView")}</span>
             </Button>
             <Button
               type="button"
@@ -184,14 +184,14 @@ export function YoutubeUploadPipelineStep({
                   ? t("pipelineYoutubeButtonReupload")
                   : t("pipelineYoutubeButtonUpload")
               }
-              className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
+              className="h-7 gap-1 px-2.5 sm:gap-1.5 sm:px-3"
             >
               {hasYoutubePublish ? (
                 <RotateCw className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
               ) : (
                 <UploadCloud className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
               )}
-              <span className="hidden sm:inline">
+              <span>
                 {hasYoutubePublish
                   ? t("pipelineYoutubeButtonReupload")
                   : t("pipelineYoutubeButtonUpload")}
@@ -200,21 +200,21 @@ export function YoutubeUploadPipelineStep({
           </div>
         </div>
         {cardAdvOpen && !disabled ? (
-          <p className="mt-2 text-[10px] text-text-tertiary leading-relaxed pl-7 border-t border-border-subtle/50 pt-2">
+          <p className="mt-2 border-t border-ink-100 pt-2 pl-7 text-[10px] leading-relaxed text-ink-500">
             {t("pipelineYoutubeCardAdvancedHint")}
           </p>
         ) : null}
         {disabled && !hasYoutubePublish ? (
-          <p className="mt-1.5 text-[10px] text-text-tertiary leading-relaxed pl-7">
+          <p className="mt-1.5 pl-7 text-[10px] leading-relaxed text-ink-500">
             {t("draftYoutubeDisabledHint")}
           </p>
         ) : null}
         {!disabled && !oauthConnected ? (
-          <p className="mt-1.5 text-[10px] text-text-tertiary leading-relaxed pl-7">
-            {t("pipelineYoutubeNotConnected")}{" "}
+          <p className="mt-1.5 pl-7 text-[10px] leading-relaxed text-ink-500">
+            {t("pipelineYoutubeNotConnected")}{""}
             <Link
               href="/dashboard/productions?studio=channels"
-              className="font-medium text-primary hover:underline"
+              className="font-medium text-vermilion-600 hover:underline"
             >
               {t("draftRunwayIntegrationsLink")}
             </Link>
@@ -238,18 +238,18 @@ export function YoutubeUploadPipelineStep({
 
           {thumbnailUrl ? (
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-text-tertiary mb-1.5">
+              <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.04em] text-ink-500">
                 {t("pipelineYoutubeThumbnailLabel")}
               </p>
               {/* eslint-disable-next-line @next/next/no-img-element -- data URL or remote preview */}
               <img
                 src={thumbnailUrl}
                 alt=""
-                className="max-h-40 w-full max-w-md rounded-lg border border-border-subtle object-contain bg-black/5"
+                className="max-h-40 w-full max-w-md border border-ink-100 bg-paper-50 object-contain"
               />
             </div>
           ) : (
-            <p className="text-xs text-text-tertiary">{t("pipelineYoutubeNoThumbnail")}</p>
+            <p className="text-xs text-ink-500">{t("pipelineYoutubeNoThumbnail")}</p>
           )}
 
           {hasYoutubePublish && publishUrl?.trim() ? (
@@ -258,7 +258,7 @@ export function YoutubeUploadPipelineStep({
                 href={publishUrl.trim()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-primary hover:underline"
+                className="font-medium text-vermilion-600 hover:underline"
               >
                 {t("pipelineYoutubePublishedLink")}
               </a>
@@ -266,18 +266,18 @@ export function YoutubeUploadPipelineStep({
           ) : null}
 
           {modalMode === "preview" ? (
-            <div className="space-y-3 rounded-lg border border-border-subtle/80 bg-layer-02/25 px-3 py-3">
+            <div className="space-y-3 border border-ink-100 bg-paper-50 px-3 py-3">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wide text-text-tertiary">
+                <p className="font-mono text-[10px] uppercase tracking-[0.04em] text-ink-500">
                   {t("pipelineYoutubeTitleLabel")}
                 </p>
-                <p className="mt-1 text-text-primary whitespace-pre-wrap">{title || "—"}</p>
+                <p className="mt-1 whitespace-pre-wrap text-ink-900">{title || "—"}</p>
               </div>
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wide text-text-tertiary">
+                <p className="font-mono text-[10px] uppercase tracking-[0.04em] text-ink-500">
                   {t("pipelineYoutubeDescriptionLabel")}
                 </p>
-                <p className="mt-1 text-text-secondary whitespace-pre-wrap leading-relaxed">
+                <p className="mt-1 whitespace-pre-wrap leading-relaxed text-ink-700">
                   {description || "—"}
                 </p>
               </div>
@@ -289,7 +289,7 @@ export function YoutubeUploadPipelineStep({
               <input type="hidden" name="episode_id" value={episodeId} />
 
               <div>
-                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5" htmlFor="yt-upload-title">
+                <label className="mb-0.5 block font-mono text-[10px] text-ink-500" htmlFor="yt-upload-title">
                   {t("pipelineYoutubeTitleLabel")}
                 </label>
                 <input
@@ -298,14 +298,14 @@ export function YoutubeUploadPipelineStep({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   maxLength={100}
-                  className="w-full rounded border border-border-subtle bg-field px-2 py-1.5 text-sm text-text-primary"
+                  className="w-full border-b border-ink-300 bg-transparent px-0 py-1.5 text-sm text-ink-900 outline-none focus:border-vermilion-600"
                   required
                 />
               </div>
 
               <div>
                 <label
-                  className="block text-[10px] font-medium text-text-tertiary mb-0.5"
+                  className="mb-0.5 block font-mono text-[10px] text-ink-500"
                   htmlFor="yt-upload-desc"
                 >
                   {t("pipelineYoutubeDescriptionLabel")}
@@ -316,12 +316,12 @@ export function YoutubeUploadPipelineStep({
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={5}
-                  className="w-full rounded border border-border-subtle bg-field px-2 py-1.5 text-sm text-text-primary"
+                  className="w-full border border-ink-100 bg-paper-0 px-2 py-1.5 text-sm text-ink-900"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5" htmlFor="yt-tags">
+                <label className="mb-0.5 block font-mono text-[10px] text-ink-500" htmlFor="yt-tags">
                   {t("pipelineYoutubeTagsLabel")}
                 </label>
                 <input
@@ -330,12 +330,12 @@ export function YoutubeUploadPipelineStep({
                   value={tags}
                   onChange={(e) => setTags(e.target.value)}
                   placeholder={t("pipelineYoutubeTagsPlaceholder")}
-                  className="w-full rounded border border-border-subtle bg-field px-2 py-1.5 text-sm text-text-primary placeholder:text-text-tertiary"
+                  className="w-full border-b border-ink-300 bg-transparent px-0 py-1.5 text-sm text-ink-900 placeholder:text-ink-400 outline-none focus:border-vermilion-600"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5" htmlFor="yt-privacy">
+                <label className="mb-0.5 block font-mono text-[10px] text-ink-500" htmlFor="yt-privacy">
                   {t("pipelineYoutubePrivacyLabel")}
                 </label>
                 <select
@@ -343,7 +343,7 @@ export function YoutubeUploadPipelineStep({
                   name="privacy"
                   value={privacy}
                   onChange={(e) => setPrivacy(e.target.value)}
-                  className="w-full max-w-xs rounded border border-border-subtle bg-field px-2 py-1.5 text-sm text-text-primary"
+                  className="w-full max-w-xs border-b border-ink-300 bg-transparent px-0 py-1.5 text-sm text-ink-900 outline-none focus:border-vermilion-600"
                 >
                   <option value="private">{t("pipelineYoutubePrivacyPrivate")}</option>
                   <option value="unlisted">{t("pipelineYoutubePrivacyUnlisted")}</option>

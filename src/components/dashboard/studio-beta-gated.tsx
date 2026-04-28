@@ -13,18 +13,18 @@ export async function StudioBetaGated({ reason }: { reason: Reason }) {
 
   return (
     <div className="p-6 lg:p-8 max-w-3xl">
-      <Card className="border-border-subtle">
+      <Card className="border-ink-100">
         <CardContent className="p-8 space-y-4">
-          <h1 className="text-xl font-semibold text-text-primary">{t("gatedTitle")}</h1>
-          <p className="text-sm text-text-secondary leading-relaxed">{body}</p>
+          <h1 className="text-xl font-semibold text-ink-900">{t("gatedTitle")}</h1>
+          <p className="text-sm text-ink-700 leading-relaxed">{body}</p>
           <div className="flex flex-wrap gap-3 pt-2">
             <Link
               href={homeWaitlist}
-              className="text-sm font-medium text-interactive hover:underline"
+              className="text-sm font-medium text-vermilion-600 hover:underline"
             >
               {t("gatedCtaWaitlist")}
             </Link>
-            <Link href="/dashboard/library" className="text-sm text-text-tertiary hover:text-primary">
+            <Link href="/dashboard/library" className="text-sm text-ink-500 hover:text-primary">
               {t("ctaLibrary")}
             </Link>
           </div>

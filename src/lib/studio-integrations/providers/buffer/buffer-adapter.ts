@@ -125,7 +125,7 @@ async function bufferFetch<T>(
       const message = parsed.errors
         .map((e) => e.message ?? "")
         .filter(Boolean)
-        .join("; ");
+        .join(";");
       return {
         ok: false,
         error: { code: "buffer_validation", message },

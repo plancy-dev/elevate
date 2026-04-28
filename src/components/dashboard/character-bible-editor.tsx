@@ -54,11 +54,11 @@ export function CharacterBibleFields({ initial }: { initial: CharacterBible }) {
     setExtras(extras.map((r) => (r.id === id ? { ...r, ...patch } : r)));
 
   return (
-    <fieldset className="space-y-4 rounded-lg border border-border-subtle bg-layer-02/40 p-4">
-      <legend className="px-1 text-sm font-semibold text-text-primary">
+    <fieldset className="space-y-4 rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/40 p-4">
+      <legend className="px-1 text-sm font-semibold text-ink-900">
         {t("characterBibleTitle")}
       </legend>
-      <p className="text-[11px] leading-snug text-text-tertiary">
+      <p className="text-[11px] leading-snug text-ink-500">
         {t("characterBibleIntro")}
       </p>
 
@@ -138,7 +138,7 @@ export function CharacterBibleFields({ initial }: { initial: CharacterBible }) {
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <p className="text-xs font-medium text-text-secondary">
+          <p className="text-xs font-medium text-ink-700">
             {t("characterBibleExtrasTitle")}
           </p>
           <Button
@@ -153,7 +153,7 @@ export function CharacterBibleFields({ initial }: { initial: CharacterBible }) {
           </Button>
         </div>
         {extras.length === 0 ? (
-          <p className="text-[11px] leading-snug text-text-tertiary">
+          <p className="text-[11px] leading-snug text-ink-500">
             {t("characterBibleExtrasEmpty")}
           </p>
         ) : (
@@ -167,7 +167,7 @@ export function CharacterBibleFields({ initial }: { initial: CharacterBible }) {
                     updateExtra(row.id, { key: e.target.value })
                   }
                   placeholder={t("characterBibleExtrasKeyPlaceholder")}
-                  className="h-9 w-1/3 rounded-lg border border-border-subtle bg-field px-2 text-sm"
+                  className="h-9 w-1/3 rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-2 text-sm"
                 />
                 <input
                   name="bible_extras_value[]"
@@ -176,7 +176,7 @@ export function CharacterBibleFields({ initial }: { initial: CharacterBible }) {
                     updateExtra(row.id, { value: e.target.value })
                   }
                   placeholder={t("characterBibleExtrasValuePlaceholder")}
-                  className="h-9 flex-1 rounded-lg border border-border-subtle bg-field px-2 text-sm"
+                  className="h-9 flex-1 rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-2 text-sm"
                 />
                 <Button
                   type="button"
@@ -204,7 +204,7 @@ function Field(props: {
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+      <span className="mb-1 block text-[11px] font-medium text-ink-700">
         {props.label}
       </span>
       <input
@@ -212,7 +212,7 @@ function Field(props: {
         defaultValue={props.defaultValue}
         placeholder={props.placeholder}
         maxLength={500}
-        className="h-9 w-full rounded-lg border border-border-subtle bg-field px-2 text-sm"
+        className="h-9 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-2 text-sm"
       />
     </label>
   );
@@ -270,19 +270,19 @@ export function CharacterReferenceImageField({
   const geminiDocs = STUDIO_PROVIDER_DOCS.google_gemini.apiDocsUrl;
 
   return (
-    <div className="space-y-3 rounded-lg border border-border-subtle bg-layer-02/40 p-4">
+    <div className="space-y-3 rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/40 p-4">
       <div>
-        <p className="text-sm font-semibold text-text-primary">
+        <p className="text-sm font-semibold text-ink-900">
           {t("characterReferenceTitle")}
         </p>
-        <p className="mt-1 text-[11px] leading-snug text-text-tertiary">
+        <p className="mt-1 text-[11px] leading-snug text-ink-500">
           {t("characterReferenceIntro")}
         </p>
         <a
           href={geminiDocs}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-1 inline-block text-[11px] font-medium text-interactive underline underline-offset-2 hover:opacity-90"
+          className="mt-1 inline-block text-[11px] font-medium text-vermilion-600 underline underline-offset-2 hover:opacity-90"
         >
           {t("characterReferenceGuideLink")}
         </a>
@@ -296,7 +296,7 @@ export function CharacterReferenceImageField({
             width={96}
             height={96}
             unoptimized
-            className="h-24 w-24 rounded-lg border border-border-subtle object-cover"
+            className="h-24 w-24 rounded-[var(--radius-1)] border border-ink-100 object-cover"
           />
           <form action={deleteAction} className="flex flex-col gap-2">
             <input type="hidden" name="project_id" value={projectId} />
@@ -316,7 +316,7 @@ export function CharacterReferenceImageField({
           </form>
         </div>
       ) : (
-        <p className="text-[11px] text-text-tertiary">
+        <p className="text-[11px] text-ink-500">
           {t("characterReferenceEmpty")}
         </p>
       )}
@@ -324,7 +324,7 @@ export function CharacterReferenceImageField({
       <form action={uploadAction} className="space-y-2">
         <input type="hidden" name="project_id" value={projectId} />
         <label className="block">
-          <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+          <span className="mb-1 block text-[11px] font-medium text-ink-700">
             {t("characterReferenceUploadLabel")}
           </span>
           <input
@@ -334,11 +334,11 @@ export function CharacterReferenceImageField({
             accept="image/png,image/jpeg,image/webp,image/gif"
             required
             onChange={(e) => setSelectedName(e.target.files?.[0]?.name ?? null)}
-            className="block w-full text-xs file:mr-3 file:rounded-md file:border file:border-border-subtle file:bg-layer-01 file:px-2 file:py-1 file:text-xs file:font-medium file:text-text-primary"
+            className="block w-full text-xs file:mr-3 file:rounded-[var(--radius-1)] file:border file:border-ink-100 file:bg-paper-0 file:px-2 file:py-1 file:text-xs file:font-medium file:text-ink-900"
           />
         </label>
         {selectedName ? (
-          <p className="text-[11px] text-text-tertiary">{selectedName}</p>
+          <p className="text-[11px] text-ink-500">{selectedName}</p>
         ) : null}
         <Button
           type="submit"
@@ -350,7 +350,7 @@ export function CharacterReferenceImageField({
           <Upload className="h-3 w-3" aria-hidden />
           {t("characterReferenceUploadSubmit")}
         </Button>
-        <p className="text-[11px] leading-snug text-text-tertiary">
+        <p className="text-[11px] leading-snug text-ink-500">
           {t("characterReferenceUploadHint")}
         </p>
       </form>

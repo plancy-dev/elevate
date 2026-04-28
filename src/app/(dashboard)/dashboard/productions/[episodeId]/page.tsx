@@ -242,7 +242,7 @@ export default async function ProductionEpisodePage({ params }: Props) {
           <div className="mb-6">
             <Link
               href="/dashboard/productions"
-              className="text-sm font-medium text-interactive hover:underline"
+              className="text-sm font-medium text-vermilion-600 hover:underline"
             >
               {t("backToList")}
             </Link>
@@ -282,12 +282,12 @@ export default async function ProductionEpisodePage({ params }: Props) {
                   scenePlanRows={scenePlanRows}
                   sceneKeyframesSlot={
                     sceneGalleryRows.length > 0 ? (
-                      <section className="rounded-xl border border-border-subtle bg-layer-02/30 p-4">
+                      <section className="border border-ink-100 bg-paper-100 p-4">
                         <header className="mb-3 space-y-1">
-                          <h3 className="text-sm font-semibold text-text-primary">
+                          <h3 className="text-sm font-semibold text-ink-900">
                             {t("sceneKeyframeGalleryTitle")}
                           </h3>
-                          <p className="text-[11px] leading-snug text-text-tertiary">
+                          <p className="font-mono text-[11px] leading-snug text-ink-500">
                             {t("sceneKeyframeGallerySubtitle")}
                           </p>
                         </header>
@@ -302,37 +302,37 @@ export default async function ProductionEpisodePage({ params }: Props) {
                   }
                   helpSection={
                     <section
-                      className="rounded-xl border border-dashed border-border-subtle bg-layer-02/30 px-4 py-3"
+                      className="border border-dashed border-ink-100 bg-paper-100 px-4 py-3"
                       aria-labelledby="prod-help-title"
                     >
                       <h2
                         id="prod-help-title"
-                        className="text-[11px] font-semibold uppercase tracking-wider text-text-tertiary"
+                        className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-500"
                       >
                         {t("helpTitle")}
                       </h2>
-                      <p className="mt-1.5 text-sm text-text-tertiary leading-relaxed">
+                      <p className="mt-1.5 text-sm leading-relaxed text-ink-500">
                         {t("helpBody")}
                       </p>
-                      <p className="mt-2 text-sm text-text-tertiary leading-relaxed">
+                      <p className="mt-2 text-sm leading-relaxed text-ink-500">
                         {t("helpRunbook")}
                       </p>
                     </section>
                   }
                 />
-                <section className="mb-6 rounded-xl border border-border-subtle bg-layer-02/40 p-4">
+                <section className="mb-6 border border-ink-100 bg-paper-100 p-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-text-primary">
+                      <p className="text-sm font-semibold text-ink-900">
                         {t("editorCtaTitle")}
                       </p>
-                      <p className="mt-1 text-xs text-text-tertiary">
+                      <p className="mt-1 text-xs text-ink-500">
                         {t("editorCtaSubtitle")}
                       </p>
                     </div>
                     <Link
                       href={`/dashboard/productions/${episode.id}/editor`}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20"
+                      className="inline-flex items-center gap-1.5 border border-vermilion-600 bg-paper-0 px-3 py-1.5 text-xs font-semibold text-vermilion-600 hover:bg-vermilion-100"
                     >
                       {t("editorCtaButton")}
                     </Link>

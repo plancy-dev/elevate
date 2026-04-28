@@ -250,12 +250,12 @@ export function PublishScheduler(props: Props) {
     batchRetryState?.error === "studioBufferRateLimited";
 
   return (
-    <section className="space-y-5 rounded-xl border border-border-subtle bg-layer-01 p-5 shadow-sm">
+    <section className="space-y-5 border border-ink-100 bg-paper-100 p-5">
       <header className="space-y-1">
-        <h2 className="text-lg font-semibold text-text-primary">
+        <h2 className="text-lg font-semibold text-ink-900">
           {t("publishSchedulerTitle")}
         </h2>
-        <p className="text-sm text-text-tertiary leading-relaxed">
+        <p className="text-sm leading-relaxed text-ink-500">
           {t("publishSchedulerSubtitle")}
         </p>
         <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs">
@@ -263,7 +263,7 @@ export function PublishScheduler(props: Props) {
             href={bufferDocs}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 font-medium text-interactive underline underline-offset-2 hover:opacity-90"
+            className="inline-flex items-center gap-1 font-medium text-vermilion-600 underline underline-offset-2 hover:opacity-90"
           >
             <ExternalLink className="h-3 w-3" aria-hidden />
             {t("publishSchedulerBufferDocs")}
@@ -272,19 +272,19 @@ export function PublishScheduler(props: Props) {
       </header>
 
       {!props.videoUrl ? (
-        <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-950 dark:text-amber-100/95">
+        <p className="border border-vermilion-600/40 bg-vermilion-100/40 px-3 py-2 text-xs text-vermilion-600">
           {t("publishSchedulerNoVideoHint")}
         </p>
       ) : null}
       {!props.bufferReady ? (
-        <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-950 dark:text-amber-100/95">
+        <p className="border border-vermilion-600/40 bg-vermilion-100/40 px-3 py-2 text-xs text-vermilion-600">
           {t("publishSchedulerNoBufferHint")}
         </p>
       ) : null}
 
-      <div className="space-y-3 rounded-lg border border-border-subtle bg-layer-02/40 p-4">
+      <div className="space-y-3 border border-ink-100 bg-paper-50 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-sm font-semibold text-text-primary">
+          <p className="text-sm font-semibold text-ink-900">
             {t("publishCaptionsSectionTitle")}
           </p>
           <form action={generateAction}>
@@ -353,19 +353,19 @@ export function PublishScheduler(props: Props) {
         </form>
       </div>
 
-      <div className="space-y-3 rounded-lg border border-border-subtle bg-layer-02/40 p-4">
-        <p className="text-sm font-semibold text-text-primary">
+      <div className="space-y-3 border border-ink-100 bg-paper-50 p-4">
+        <p className="text-sm font-semibold text-ink-900">
           {t("publishChannelsSectionTitle")}
         </p>
         {props.channels.length === 0 ? (
-          <p className="text-xs text-text-tertiary">
+          <p className="text-xs text-ink-500">
             {t("publishChannelsEmpty")}
           </p>
         ) : (
           <div className="space-y-2">
             {Array.from(channelsByPlatform.entries()).map(([platform, list]) => (
               <div key={platform} className="flex flex-col gap-1.5">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-text-secondary">
+                <p className="font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
                   {platformLabel(platform)}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -382,10 +382,10 @@ export function PublishScheduler(props: Props) {
                           }))
                         }
                         className={cn(
-                          "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                          "border px-3 py-1 text-xs font-medium transition-colors duration-80 ease-(--ease-editorial)",
                           selected
-                            ? "border-primary/50 bg-primary/10 text-primary"
-                            : "border-border-subtle bg-layer-01 text-text-secondary hover:border-primary/30",
+                            ? "border-vermilion-600 bg-paper-0 text-vermilion-600"
+                            : "border-ink-100 bg-paper-100 text-ink-600 hover:border-ink-900 hover:text-ink-900",
                         )}
                       >
                         {ch.name}
@@ -399,7 +399,7 @@ export function PublishScheduler(props: Props) {
         )}
       </div>
 
-      <form action={scheduleAction} className="space-y-3 rounded-lg border border-border-subtle bg-layer-02/40 p-4">
+      <form action={scheduleAction} className="space-y-3 border border-ink-100 bg-paper-50 p-4">
         <input type="hidden" name="episode_id" value={props.episodeId} />
         <input type="hidden" name="scheduled_at" value={
           scheduledAt ? new Date(scheduledAt).toISOString() : ""
@@ -427,13 +427,13 @@ export function PublishScheduler(props: Props) {
           );
         })}
         <div className="flex flex-wrap items-end gap-2">
-          <label className="flex flex-col gap-1 text-xs text-text-secondary">
-            <span className="font-medium">{t("publishScheduleTimeLabel")}</span>
+          <label className="flex flex-col gap-1 text-xs text-ink-700">
+            <span className="font-mono">{t("publishScheduleTimeLabel")}</span>
             <input
               type="datetime-local"
               value={scheduledAt}
               onChange={(e) => setScheduledAt(e.target.value)}
-              className="h-9 rounded-md border border-border-subtle bg-field px-2 text-xs"
+              className="h-9 border-b border-ink-300 bg-transparent px-0 text-xs text-ink-900 outline-none focus:border-vermilion-600"
             />
           </label>
           <Button
@@ -451,9 +451,9 @@ export function PublishScheduler(props: Props) {
       </form>
 
       {props.scheduled.length > 0 ? (
-        <div className="space-y-2 rounded-lg border border-border-subtle bg-layer-02/40 p-4">
+        <div className="space-y-2 border border-ink-100 bg-paper-50 p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-sm font-semibold text-text-primary">
+            <p className="text-sm font-semibold text-ink-900">
               {t("publishScheduledListTitle")}
             </p>
             {retryableRows.length > 0 ? (
@@ -473,7 +473,7 @@ export function PublishScheduler(props: Props) {
                   </Button>
                 </form>
                 {showRateLimitHint ? (
-                  <p className="text-[10px] text-amber-700 dark:text-amber-200/95">
+                  <p className="font-mono text-[10px] text-vermilion-600">
                     {t("publishBulkRetryRateLimitHint")}
                   </p>
                 ) : null}
@@ -495,16 +495,16 @@ export function PublishScheduler(props: Props) {
               return (
                 <li
                   key={row.id}
-                  className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border-subtle bg-layer-01 px-3 py-2 text-xs"
+                  className="flex flex-wrap items-center justify-between gap-2 border border-ink-100 bg-paper-100 px-3 py-2 text-xs"
                 >
                   <div className="flex flex-col">
-                    <span className="font-medium text-text-primary">
+                    <span className="font-medium text-ink-900">
                       {platformLabel(row.platform as BufferChannel["platform"])}
-                      {channel ? ` · ${channel.name}` : ""}
+                      {channel ? `· ${channel.name}` : ""}
                     </span>
-                    <span className="text-text-tertiary">{formatted}</span>
+                    <span className="font-mono text-ink-500">{formatted}</span>
                     {row.last_error ? (
-                      <span className="mt-0.5 text-[10px] text-danger">
+                      <span className="mt-0.5 text-[10px] text-vermilion-600">
                         {row.last_error}
                       </span>
                     ) : null}
@@ -557,8 +557,8 @@ function CaptionField({
   return (
     <label className="block">
       <div className="mb-1 flex items-center justify-between">
-        <span className="text-[11px] font-medium text-text-secondary">{label}</span>
-        <span className="text-[10px] text-text-tertiary">{remaining}</span>
+        <span className="font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">{label}</span>
+        <span className="font-mono text-[10px] text-ink-500">{remaining}</span>
       </div>
       {rows === 1 ? (
         <input
@@ -566,7 +566,7 @@ function CaptionField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           maxLength={maxLength}
-          className="h-9 w-full rounded-md border border-border-subtle bg-field px-2 text-xs"
+          className="h-9 w-full border-b border-ink-300 bg-transparent px-0 text-xs text-ink-900 outline-none focus:border-vermilion-600"
         />
       ) : (
         <textarea
@@ -575,11 +575,11 @@ function CaptionField({
           onChange={(e) => onChange(e.target.value)}
           rows={rows}
           maxLength={maxLength}
-          className="w-full rounded-md border border-border-subtle bg-field px-2 py-1.5 text-xs"
+          className="w-full border border-ink-100 bg-paper-0 px-2 py-1.5 text-xs text-ink-900"
         />
       )}
       {hint ? (
-        <p className="mt-1 text-[10px] text-text-tertiary">{hint}</p>
+        <p className="mt-1 text-[10px] text-ink-500">{hint}</p>
       ) : null}
     </label>
   );
@@ -643,21 +643,21 @@ function StatusBadge({ status }: { status: string }) {
   const cls = (() => {
     switch (status) {
       case "scheduled":
-        return "border-primary/35 bg-primary/10 text-primary";
+        return "border-vermilion-600/35 bg-paper-0 text-vermilion-600";
       case "published":
-        return "border-emerald-500/35 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200/95";
+        return "border-ink-900 bg-paper-0 text-ink-900";
       case "failed":
-        return "border-danger/40 bg-danger/10 text-danger";
+        return "border-vermilion-600 bg-paper-0 text-vermilion-600";
       case "cancelled":
-        return "border-border-subtle bg-layer-02 text-text-tertiary";
+        return "border-ink-100 bg-paper-100 text-ink-500";
       default:
-        return "border-amber-500/40 bg-amber-500/10 text-amber-900 dark:text-amber-100/95";
+        return "border-ink-300 bg-paper-100 text-ink-700";
     }
   })();
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium",
+        "inline-flex items-center border px-2 py-0.5 font-mono text-[10px]",
         cls,
       )}
     >

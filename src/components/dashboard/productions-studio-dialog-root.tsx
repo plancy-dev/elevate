@@ -255,12 +255,12 @@ function ProductionsStudioModals({
 
       <Modal open={modal === "integrations"} onClose={onClose} title={t("integrationsTitle")} size="xl">
         {!int.organizationId ? (
-          <p className="rounded-lg border border-border-subtle bg-layer-01 p-4 text-sm text-text-secondary">
+          <p className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 p-4 text-sm text-ink-700">
             {t("integrationsNoOrganization")}
           </p>
         ) : (
           <div className="space-y-6">
-            <p className="text-sm text-text-secondary leading-relaxed">{t("integrationsIntro")}</p>
+            <p className="text-sm text-ink-700 leading-relaxed">{t("integrationsIntro")}</p>
             <StudioIntegrationsProviderTabs
               connections={int.connections}
               canEdit={int.canEdit}
@@ -287,7 +287,7 @@ function ProjectsDialogBody({
   if (projects.length === 0) {
     return (
       <div className="space-y-6">
-        <p className="text-sm text-text-secondary">{t("projectsListEmpty")}</p>
+        <p className="text-sm text-ink-700">{t("projectsListEmpty")}</p>
         <StudioProjectCreateForm />
       </div>
     );
@@ -295,7 +295,7 @@ function ProjectsDialogBody({
 
   return (
     <div className="space-y-6">
-      <ul className="max-h-[40vh] divide-y divide-border-subtle overflow-y-auto rounded-lg border border-border-subtle">
+      <ul className="max-h-[40vh] divide-y divide-border-subtle overflow-y-auto rounded-[var(--radius-1)] border border-ink-100">
         {projects.map((proj) => {
           const count = episodeCountsByProjectId[proj.id] ?? 0;
           const updated = new Date(proj.updated_at).toLocaleString(locale, {
@@ -304,19 +304,19 @@ function ProjectsDialogBody({
           });
           return (
             <li key={proj.id} className="flex items-start gap-3 px-4 py-3">
-              <FolderKanban className="mt-0.5 h-5 w-5 shrink-0 text-text-tertiary" aria-hidden />
+              <FolderKanban className="mt-0.5 h-5 w-5 shrink-0 text-ink-500" aria-hidden />
               <div className="min-w-0 flex-1">
                 <Link
                   href={`/dashboard/productions?project=${encodeURIComponent(proj.id)}`}
                   onClick={onNavigate}
-                  className="font-semibold text-text-primary hover:text-interactive"
+                  className="font-semibold text-ink-900 hover:text-vermilion-600"
                 >
                   {proj.name}
                 </Link>
                 {proj.description ? (
-                  <p className="mt-0.5 line-clamp-2 text-xs text-text-tertiary">{proj.description}</p>
+                  <p className="mt-0.5 line-clamp-2 text-xs text-ink-500">{proj.description}</p>
                 ) : null}
-                <p className="mt-1 text-xs text-text-tertiary">
+                <p className="mt-1 text-xs text-ink-500">
                   {t("projectsEpisodeCount", { count })} · {updated}
                 </p>
               </div>
@@ -366,13 +366,13 @@ export function ProductionsQueueHeadingRow({
     <div className="flex items-center justify-between gap-3 px-0.5">
       <h2
         id="productions-queue-heading"
-        className="text-sm font-semibold tracking-tight text-text-primary"
+        className="text-sm font-semibold tracking-tight text-ink-900"
       >
         {title}
       </h2>
       <div className="flex items-center gap-2">
         {episodeCount > 0 ? (
-          <span className="rounded-md bg-layer-02 px-2 py-0.5 text-xs font-medium tabular-nums text-text-secondary">
+          <span className="rounded-[var(--radius-1)] bg-paper-50 px-2 py-0.5 text-xs font-medium tabular-nums text-ink-700">
             {episodeCount}
           </span>
         ) : null}
@@ -398,7 +398,7 @@ export function ProductionsQueueProjectSettingsButton({
       type="button"
       variant="ghost"
       size="sm"
-      className="shrink-0 gap-1.5 text-text-secondary"
+      className="shrink-0 gap-1.5 text-ink-700"
       onClick={() => openEditProject(scopedProject.id)}
       aria-label={t("hubQueueProjectSettingsAria")}
     >

@@ -49,7 +49,7 @@ export function PreviewPane() {
   return (
     <div className="flex flex-col items-center gap-3">
       <div
-        className="relative w-full max-w-[360px] overflow-hidden rounded-xl border border-border-subtle bg-black shadow-lg"
+        className="relative w-full max-w-[360px] overflow-hidden border border-ink-100 bg-ink-900"
         style={{ aspectRatio: String(aspect) }}
       >
         {anyScene ? (
@@ -155,7 +155,7 @@ function PreviewControls(props: {
         disabled={props.disabled}
         className="flex-1"
       />
-      <span className="w-16 text-right text-[11px] tabular-nums text-text-tertiary">
+      <span className="w-16 text-right font-mono text-[11px] tabular-nums text-ink-500">
         {props.currentTime.toFixed(1)} / {props.totalDuration.toFixed(1)}s
       </span>
     </div>

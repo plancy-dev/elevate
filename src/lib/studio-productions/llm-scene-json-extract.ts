@@ -52,7 +52,7 @@ function findBalancedJsonSlice(s: string): string | null {
 }
 
 /**
- * Strips ```json ... ``` fences and returns the innermost JSON-looking substring.
+ * Strips ```json ...``` fences and returns the innermost JSON-looking substring.
  */
 export function extractJsonPayloadFromLlmOutput(text: string): string | null {
   let t = text.trim().replace(/^\uFEFF/, "");
@@ -74,6 +74,6 @@ export function extractJsonPayloadFromLlmOutput(text: string): string | null {
 }
 
 export function previewForSceneLlmLog(text: string): string {
-  const oneLine = text.replace(/\s+/g, " ").trim();
+  const oneLine = text.replace(/\s+/g, "").trim();
   return oneLine.length <= PREVIEW_MAX ? oneLine : `${oneLine.slice(0, PREVIEW_MAX)}…`;
 }

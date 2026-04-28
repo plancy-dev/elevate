@@ -19,10 +19,10 @@ export function PipelineStepAdvancedToggle({ open, onToggle, disabled }: Props) 
       type="button"
       disabled={disabled}
       className={cn(
-        "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-text-secondary transition-colors",
-        "border-border-subtle/90 bg-layer-02/70 hover:bg-layer-01 hover:text-text-primary",
+        "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-1)] border text-ink-700 transition-colors",
+        "border-ink-100/90 bg-paper-50/70 hover:bg-paper-0 hover:text-ink-900",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-        "dark:border-border-subtle dark:bg-layer-02/50",
+        "dark:border-ink-100 dark:bg-paper-50/50",
         open && "border-primary/35 bg-primary/10 text-primary",
         disabled && "pointer-events-none opacity-40",
       )}

@@ -25,7 +25,7 @@ import type { Json } from "@/types/database.types";
 /** Safe snippet for UI (no newlines spam; max length). */
 function sanitizeProviderErrorDetail(raw: string | undefined): string | undefined {
   if (!raw?.trim()) return undefined;
-  const s = raw.replace(/\s+/g, " ").trim().slice(0, 400);
+  const s = raw.replace(/\s+/g, "").trim().slice(0, 400);
   return s || undefined;
 }
 
@@ -159,7 +159,7 @@ export async function generateTtsFromScript(
     if (!chunked.ok) {
       const segHint =
         chunked.failedIndex != null
-          ? ` (paragraph ${chunked.failedIndex + 1})`
+          ? `(paragraph ${chunked.failedIndex + 1})`
           : "";
       return {
         error: mapElevenLabsProviderCode(chunked.code),

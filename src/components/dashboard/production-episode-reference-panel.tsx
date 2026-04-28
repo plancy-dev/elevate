@@ -93,21 +93,21 @@ export function ProductionEpisodeReferencePanel({
   useRefActionToast(deleteState, "referenceDeleteSuccess", t, tAction, router);
 
   return (
-    <div className={cn("flex flex-col gap-4 border-t border-border-subtle pt-5", className)}>
+    <div className={cn("flex flex-col gap-4 border-t border-ink-100 pt-5", className)}>
       {!omitSectionHeader ? (
         <div>
-          <h3 className="text-sm font-semibold text-text-primary">
+          <h3 className="text-sm font-semibold text-ink-900">
             {t("referenceTitle")}
           </h3>
-          <p className="mt-1 text-xs text-text-tertiary leading-relaxed">
+          <p className="mt-1 text-xs text-ink-500 leading-relaxed">
             {t("referenceSubtitle")}
           </p>
         </div>
       ) : null}
 
       {refSources.length > 0 ? (
-        <div className="rounded-lg border border-border-subtle bg-layer-02/30 p-3">
-          <p className="text-xs font-medium text-text-secondary mb-2">
+        <div className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/30 p-3">
+          <p className="text-xs font-medium text-ink-700 mb-2">
             {t("referenceSourceCount", { count: refSources.length })}
           </p>
           <ul className="space-y-1.5">
@@ -118,15 +118,15 @@ export function ProductionEpisodeReferencePanel({
               return (
                 <li
                   key={ref.id}
-                  className="flex gap-2 text-xs text-text-tertiary items-start"
+                  className="flex gap-2 text-xs text-ink-500 items-start"
                 >
                   <div className="min-w-0 flex-1">
-                    <span className="text-text-secondary font-medium">
+                    <span className="text-ink-700 font-medium">
                       [{sourceTypeLabel(t, st)}]
-                    </span>{" "}
+                    </span>{""}
                     <span className="truncate">{sourceLabel}</span>
                     {ref.content_text ? (
-                      <span className="block text-text-tertiary/90 mt-0.5 line-clamp-2">
+                      <span className="block text-ink-500/90 mt-0.5 line-clamp-2">
                         {ref.content_text.slice(0, 200)}
                         {ref.content_text.length > 200 ? "…" : ""}
                       </span>
@@ -147,7 +147,7 @@ export function ProductionEpisodeReferencePanel({
                       type="submit"
                       variant="ghost"
                       size="sm"
-                      className="h-8 w-8 p-0 text-text-tertiary hover:text-destructive"
+                      className="h-8 w-8 p-0 text-ink-500 hover:text-destructive"
                       isLoading={deletePending}
                       aria-label={t("referenceDeleteCta")}
                       title={t("referenceDeleteCta")}
@@ -180,10 +180,10 @@ export function ProductionEpisodeReferencePanel({
               type="button"
               onClick={() => setSourceType(id)}
               className={cn(
-                "rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
+                "rounded-[var(--radius-1)] px-3 py-1.5 text-xs font-medium transition-colors",
                 sourceType === id
                   ? "bg-primary/10 text-primary border border-primary/30"
-                  : "text-text-secondary hover:bg-layer-02",
+                  : "text-ink-700 hover:bg-paper-50",
               )}
             >
               {label}
@@ -196,20 +196,20 @@ export function ProductionEpisodeReferencePanel({
             name="source_value"
             required
             placeholder={t("referenceUrlPlaceholder")}
-            className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm"
+            className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm"
           />
         ) : null}
 
         {sourceType === "web_url" ? (
           <>
-            <p className="text-xs text-text-tertiary leading-relaxed">
+            <p className="text-xs text-ink-500 leading-relaxed">
               {t("referenceWebUrlHint")}
             </p>
             <input
               name="source_value"
               required
               placeholder={t("referenceWebUrlPlaceholder")}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm"
+              className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm"
             />
           </>
         ) : null}
@@ -219,34 +219,34 @@ export function ProductionEpisodeReferencePanel({
             <input
               name="source_label"
               placeholder={t("referenceLabelPlaceholder")}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm"
+              className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm"
             />
             <textarea
               name="source_value"
               required
               rows={5}
               placeholder={t("referenceTextPlaceholder")}
-              className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm"
             />
           </>
         ) : null}
 
         {sourceType === "manual_note" ? (
           <>
-            <p className="text-xs text-text-tertiary leading-relaxed">
+            <p className="text-xs text-ink-500 leading-relaxed">
               {t("referenceNoteHint")}
             </p>
             <input
               name="source_label"
               placeholder={t("referenceNoteLabelPlaceholder")}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm"
+              className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm"
             />
             <textarea
               name="source_value"
               required
               rows={5}
               placeholder={t("referenceNotePlaceholder")}
-              className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm"
             />
           </>
         ) : null}
@@ -261,17 +261,17 @@ export function ProductionEpisodeReferencePanel({
       </form>
 
       {refSources.length > 0 ? (
-        <form action={adaptAction} className="space-y-3 border-t border-border-subtle pt-4">
+        <form action={adaptAction} className="space-y-3 border-t border-ink-100 pt-4">
           <input type="hidden" name="episode_id" value={episodeId} />
 
           <div>
-            <label className="block text-xs font-medium text-text-secondary mb-1.5">
+            <label className="block text-xs font-medium text-ink-700 mb-1.5">
               {t("referenceAdaptMode")}
             </label>
             <select
               name="mode"
               defaultValue="translate"
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm"
+              className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm"
             >
               <option value="translate">{t("referenceAdaptModeTranslate")}</option>
               <option value="summarize">{t("referenceAdaptModeSummarize")}</option>
@@ -284,24 +284,24 @@ export function ProductionEpisodeReferencePanel({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-text-secondary mb-1.5">
+            <label className="block text-xs font-medium text-ink-700 mb-1.5">
               {t("referenceTargetLanguage")}
             </label>
             <input
               name="target_language"
               defaultValue="Korean"
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm"
+              className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-text-secondary mb-1.5">
+            <label className="block text-xs font-medium text-ink-700 mb-1.5">
               {t("referenceInstructions")}
             </label>
             <textarea
               name="instructions"
               rows={2}
-              className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm"
             />
           </div>
 

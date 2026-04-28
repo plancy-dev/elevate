@@ -14,7 +14,7 @@ export const MICROSOFT_ENTRA_OAUTH_SCOPES = [
   "email",
   "offline_access",
   "https://graph.microsoft.com/User.Read",
-].join(" ");
+].join("");
 
 /**
  * Shared Google / Azure OAuth entry for login and signup flows.

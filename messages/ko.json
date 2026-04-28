@@ -850,6 +850,80 @@
       "orgSettings": "설정",
       "orgNavComingSoon": "준비 중"
     },
+    "toc": {
+      "collapse": "접기",
+      "expand": "펼치기",
+      "studio": {
+        "section": "스튜디오",
+        "productions": "제작",
+        "projects": "프로젝트",
+        "integrations": "연동",
+        "channels": "채널"
+      },
+      "scripts": {
+        "section": "스크립트",
+        "promptStudio": "프롬프트 스튜디오"
+      },
+      "library": {
+        "section": "라이브러리",
+        "library": "라이브러리"
+      },
+      "house": {
+        "section": "편집실",
+        "team": "팀",
+        "organization": "조직",
+        "audit": "감사",
+        "admin": "관리"
+      },
+      "settings": {
+        "section": "설정",
+        "profile": "프로필",
+        "billing": "결제",
+        "help": "도움말"
+      },
+      "admin": {
+        "content": "콘텐츠",
+        "waitlist": "대기명단",
+        "purchaseAllowlist": "결제 허용 목록",
+        "promptStudioAllowlist": "Prompt Studio 베타"
+      }
+    },
+    "commandBar": {
+      "placeholder": "명령어 또는 경로를 입력하세요...",
+      "empty": "결과 없음",
+      "recentEmpty": "최근 에피소드 없음",
+      "group": {
+        "routes": "경로",
+        "recentEpisodes": "최근 에피소드",
+        "help": "도움말"
+      },
+      "routes": {
+        "overview": "개요",
+        "productions": "제작",
+        "promptStudio": "프롬프트 스튜디오",
+        "publish": "퍼블리시",
+        "library": "라이브러리",
+        "settings": "설정",
+        "content": "콘텐츠",
+        "waitlist": "대기명단"
+      },
+      "help": {
+        "default": "도움말 및 지원",
+        "admin": "관리 홈"
+      }
+    },
+    "shellTitles": {
+      "overview": "개요",
+      "productions": "제작",
+      "studio": "프롬프트 스튜디오",
+      "library": "라이브러리",
+      "settings": "설정",
+      "help": "도움말 및 지원",
+      "billing": "결제",
+      "team": "팀",
+      "organization": "조직",
+      "admin": "관리"
+    },
     "overview": {
       "title": "개요",
       "liveData": "실시간 데이터",

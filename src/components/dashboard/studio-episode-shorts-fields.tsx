@@ -36,17 +36,17 @@ export function StudioEpisodeOptionalChannelFields({
   }, [channels, t]);
 
   return (
-    <div className="rounded-2xl border border-border-subtle/90 bg-gradient-to-br from-layer-01 via-primary/10 to-layer-01 p-6 shadow-sm dark:via-primary/15">
-      <h3 className="text-sm font-semibold text-text-primary mb-1">
+    <div className="rounded-2xl border border-ink-100/90 bg-gradient-to-br from-layer-01 via-primary/10 to-layer-01 p-6 dark:via-primary/15">
+      <h3 className="text-sm font-semibold text-ink-900 mb-1">
         {t("optionalChannelTitle")}
       </h3>
-      <p className="text-xs text-text-tertiary mb-4 leading-relaxed">
+      <p className="text-xs text-ink-500 mb-4 leading-relaxed">
         {t("optionalChannelSubtitle")}
       </p>
       <div>
         <label
           htmlFor={`${idPrefix}_optional_studio_distribution_channel_id`}
-          className="block text-xs font-medium text-text-secondary mb-1.5"
+          className="block text-xs font-medium text-ink-700 mb-1.5"
         >
           {t("shortsChannelLabel")}
         </label>
@@ -57,7 +57,7 @@ export function StudioEpisodeOptionalChannelFields({
           onChange={(e) => setChannelId(e.target.value)}
           options={channelOptions}
         />
-        <p className="mt-1 text-xs text-text-tertiary">{t("shortsChannelHint")}</p>
+        <p className="mt-1 text-xs text-ink-500">{t("shortsChannelHint")}</p>
       </div>
     </div>
   );

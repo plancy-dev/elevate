@@ -24,7 +24,7 @@ export function ProductionsNewHandoffForm({
   if (initialNotes === undefined) {
     return (
       <div
-        className="h-[28rem] w-full animate-pulse rounded-xl border border-border-subtle bg-layer-02/70 shadow-card dark:bg-layer-02/40"
+        className="h-[28rem] w-full animate-pulse rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/70 dark:bg-paper-50/40"
         aria-hidden
       />
     );

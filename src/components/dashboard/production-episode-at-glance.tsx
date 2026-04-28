@@ -10,7 +10,7 @@ import {
 } from "@/lib/studio-productions/studio-artifact-workflow-phase";
 
 function excerpt(text: string, max: number): string {
-  const t = text.trim().replace(/\s+/g, " ");
+  const t = text.trim().replace(/\s+/g, "");
   if (t.length <= max) return t;
   return `${t.slice(0, max)}…`;
 }
@@ -34,16 +34,16 @@ function ArtifactMiniCard({ a }: { a: StudioProductionArtifactRow }) {
       className="film-strip-frame min-w-[220px] max-w-[260px] shrink-0 snap-start"
       role="listitem"
     >
-      <div className="flex h-full min-h-[140px] max-h-[168px] flex-col rounded-md border border-border-subtle bg-layer-01/98 p-3 shadow-sm transition-colors hover:border-primary/30 dark:border-border-subtle dark:bg-layer-01/95 dark:hover:border-primary/35">
+      <div className="flex h-full min-h-[140px] max-h-[168px] flex-col rounded-[var(--radius-1)] border border-ink-100 bg-paper-0/98 p-3 transition-colors hover:border-primary/30 dark:border-ink-100 dark:bg-paper-0/95 dark:hover:border-primary/35">
         <div className="mb-1.5 flex flex-wrap gap-1">
           <span className="inline-flex max-w-full items-center truncate rounded bg-primary/12 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary dark:bg-primary/20">
             {a.artifact_role}
           </span>
-          <span className="inline-flex max-w-full items-center truncate rounded bg-layer-02/90 px-1.5 py-0.5 text-[10px] text-text-secondary dark:bg-white/5">
+          <span className="inline-flex max-w-full items-center truncate rounded bg-paper-50/90 px-1.5 py-0.5 text-[10px] text-ink-700 dark:bg-white/5">
             {a.tool_platform}
           </span>
         </div>
-        <p className="text-xs leading-snug text-text-primary line-clamp-6 whitespace-pre-wrap">
+        <p className="text-xs leading-snug text-ink-900 line-clamp-6 whitespace-pre-wrap">
           {a.content_text.trim() ? excerpt(a.content_text, 160) : "—"}
         </p>
         {a.external_url ? (
@@ -52,7 +52,7 @@ function ArtifactMiniCard({ a }: { a: StudioProductionArtifactRow }) {
               href={a.external_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-interactive line-clamp-2 break-all hover:underline"
+              className="text-vermilion-600 line-clamp-2 break-all hover:underline"
             >
               {a.external_url}
             </a>
@@ -87,14 +87,14 @@ export function ProductionEpisodeAtAGlance({
 
   return (
     <section
-      className="mb-10 rounded-xl border border-border-subtle bg-layer-01 p-4 sm:p-5"
+      className="mb-10 rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 p-4 sm:p-5"
       aria-labelledby="at-a-glance-heading"
     >
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <LayoutList className="h-4 w-4 shrink-0 text-text-tertiary" aria-hidden />
+        <LayoutList className="h-4 w-4 shrink-0 text-ink-500" aria-hidden />
         <h2
           id="at-a-glance-heading"
-          className="text-sm font-semibold tracking-tight text-text-primary"
+          className="text-sm font-semibold tracking-tight text-ink-900"
         >
           {t("atAGlanceTitle")}
         </h2>
@@ -114,18 +114,18 @@ export function ProductionEpisodeAtAGlance({
       ) : null}
 
       {!hasArtifactDeck && !showNotes ? (
-        <p className="text-sm text-text-tertiary leading-relaxed max-w-prose">
+        <p className="text-sm text-ink-500 leading-relaxed max-w-prose">
           {t("atAGlanceEmpty")}
         </p>
       ) : (
         <div
-          className="rounded-lg border border-border-subtle/80 bg-layer-02/40 px-2 py-3"
+          className="rounded-[var(--radius-1)] border border-ink-100/80 bg-paper-50/40 px-2 py-3"
           role="list"
         >
           <div className="space-y-4">
             {showNotes ? (
               <div>
-                <p className="mb-2 px-1 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+                <p className="mb-2 px-1 text-[10px] font-semibold uppercase tracking-wider text-ink-500">
                   {t("atAGlanceNotes")}
                 </p>
                 <div className="flex gap-2 overflow-x-auto overscroll-x-contain touch-pan-x pb-1 snap-x snap-mandatory scroll-pl-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch]">
@@ -133,8 +133,8 @@ export function ProductionEpisodeAtAGlance({
                     className="film-strip-frame min-w-[220px] max-w-[260px] shrink-0 snap-start"
                     data-testid="at-glance-notes"
                   >
-                    <div className="flex h-full min-h-[140px] flex-col rounded-md border border-border-subtle/90 bg-layer-01/98 p-3 shadow-sm dark:border-border-subtle dark:bg-layer-01/95">
-                      <p className="text-xs text-text-secondary leading-relaxed line-clamp-8 whitespace-pre-wrap">
+                    <div className="flex h-full min-h-[140px] flex-col rounded-[var(--radius-1)] border border-ink-100/90 bg-paper-0/98 p-3 dark:border-ink-100 dark:bg-paper-0/95">
+                      <p className="text-xs text-ink-700 leading-relaxed line-clamp-8 whitespace-pre-wrap">
                         {notes.trim()}
                       </p>
                     </div>
@@ -145,7 +145,7 @@ export function ProductionEpisodeAtAGlance({
 
             {byPhase.map(({ phase, items }) => (
               <div key={phase}>
-                <p className="mb-2 px-1 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+                <p className="mb-2 px-1 text-[10px] font-semibold uppercase tracking-wider text-ink-500">
                   {t(PHASE_LABEL_KEY[phase])}
                 </p>
                 <div className="flex gap-2 overflow-x-auto overscroll-x-contain touch-pan-x pb-1 pt-0.5 snap-x snap-mandatory scroll-pl-2 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch]">

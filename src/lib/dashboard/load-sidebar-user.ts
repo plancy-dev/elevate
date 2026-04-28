@@ -1,6 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { SidebarUser } from "@/components/dashboard/sidebar";
+import type { DeskShellUser } from "@/components/desk/shell-user";
 import { getInitialsFromDisplayName } from "@/lib/user-display";
 import { normalizeOrgRoleKey } from "@/lib/user-roles";
 
@@ -11,7 +11,7 @@ import { normalizeOrgRoleKey } from "@/lib/user-roles";
 export async function loadSidebarUser(
   supabase: SupabaseClient,
   user: User,
-): Promise<SidebarUser> {
+): Promise<DeskShellUser> {
   const { data: profile } = await supabase
     .from("profiles")
     .select(

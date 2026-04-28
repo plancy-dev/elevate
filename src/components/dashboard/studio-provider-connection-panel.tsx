@@ -169,12 +169,12 @@ export function StudioProviderConnectionPanel({
     : providerMsg(t, providerId, "placeholder");
 
   return (
-    <section className="rounded-2xl border border-border-subtle/90 bg-layer-01 p-6 shadow-sm space-y-5">
+    <section className="rounded-2xl border border-ink-100/90 bg-paper-0 p-6 space-y-5">
       <div>
-        <h2 className="text-lg font-semibold text-text-primary">
+        <h2 className="text-lg font-semibold text-ink-900">
           {providerMsg(t, providerId, "title")}
         </h2>
-        <p className="mt-1 text-sm text-text-tertiary leading-relaxed">
+        <p className="mt-1 text-sm text-ink-500 leading-relaxed">
           {providerMsg(t, providerId, "intro")}
         </p>
         {providerDocs ? (
@@ -184,7 +184,7 @@ export function StudioProviderConnectionPanel({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t("integrationsProviderDocsAria")}
-              className="font-medium text-interactive underline underline-offset-2 hover:opacity-90"
+              className="font-medium text-vermilion-600 underline underline-offset-2 hover:opacity-90"
             >
               {t("integrationsProviderDocsLink")}
             </a>
@@ -193,7 +193,7 @@ export function StudioProviderConnectionPanel({
                 href={providerDocs.pricingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-text-tertiary underline underline-offset-2 hover:text-interactive"
+                className="text-ink-500 underline underline-offset-2 hover:text-vermilion-600"
               >
                 {t("integrationsProviderPricingLink")}
               </a>
@@ -203,7 +203,7 @@ export function StudioProviderConnectionPanel({
                 href={providerDocs.tosUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-text-tertiary underline underline-offset-2 hover:text-interactive"
+                className="text-ink-500 underline underline-offset-2 hover:text-vermilion-600"
               >
                 {t("integrationsProviderTosLink")}
               </a>
@@ -213,16 +213,16 @@ export function StudioProviderConnectionPanel({
       </div>
 
       {providerId === "youtube_data" ? (
-        <p className="rounded-lg border border-border-subtle/80 bg-layer-02/35 px-4 py-3 text-xs text-text-tertiary leading-relaxed">
+        <p className="rounded-[var(--radius-1)] border border-ink-100/80 bg-paper-50/35 px-4 py-3 text-xs text-ink-500 leading-relaxed">
           {t("integrationsYoutubeDataUploadHint")}
         </p>
       ) : null}
 
-      <div className="rounded-lg border border-border-subtle/80 bg-layer-02/35 px-4 py-3 space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
+      <div className="rounded-[var(--radius-1)] border border-ink-100/80 bg-paper-50/35 px-4 py-3 space-y-2">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-700">
           {t("integrationsKeySourceHeading")}
         </p>
-        <p className="text-xs text-text-tertiary leading-relaxed">
+        <p className="text-xs text-ink-500 leading-relaxed">
           {providerMsg(t, providerId, "keySourceHint")}
         </p>
         <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
@@ -230,7 +230,7 @@ export function StudioProviderConnectionPanel({
             href={keyUrls.primary}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-interactive underline underline-offset-2 hover:opacity-90"
+            className="font-medium text-vermilion-600 underline underline-offset-2 hover:opacity-90"
           >
             {providerMsg(t, providerId, "keySourcePrimaryLabel")}
           </a>
@@ -239,7 +239,7 @@ export function StudioProviderConnectionPanel({
               href={keyUrls.secondary}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-interactive underline underline-offset-2 hover:opacity-90"
+              className="font-medium text-vermilion-600 underline underline-offset-2 hover:opacity-90"
             >
               {providerMsg(t, providerId, "keySourceSecondaryLabel")}
             </a>
@@ -249,7 +249,7 @@ export function StudioProviderConnectionPanel({
 
       {!encryptionConfigured ? (
         <p
-          className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-950 dark:text-amber-100/95"
+          className="rounded-[var(--radius-1)] border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-950 dark:text-amber-100/95"
           role="status"
         >
           {t("integrationsEncryptionOff")}
@@ -258,7 +258,7 @@ export function StudioProviderConnectionPanel({
 
       {!serverCallsEnabled ? (
         <p
-          className="rounded-md border border-border-subtle bg-layer-02/50 px-3 py-2 text-xs text-text-secondary leading-relaxed"
+          className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/50 px-3 py-2 text-xs text-ink-700 leading-relaxed"
           role="status"
         >
           {t("integrationsServerCallsOff")}
@@ -266,19 +266,19 @@ export function StudioProviderConnectionPanel({
       ) : null}
 
       {!canEdit ? (
-        <p className="text-sm text-text-secondary">
+        <p className="text-sm text-ink-700">
           {t("integrationsReadOnlyEditors")}
         </p>
       ) : null}
 
       {hasSavedKey ? (
-        <div className="text-sm text-text-secondary space-y-2">
+        <div className="text-sm text-ink-700 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <span
               className={
                 lastVerified
-                  ? "inline-flex items-center rounded-full border border-emerald-500/35 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:text-emerald-200/95"
-                  : "inline-flex items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-950 dark:text-amber-100/90"
+                  ? "inline-flex items-center rounded-[var(--radius-1)] border border-emerald-500/35 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:text-emerald-200/95"
+                  : "inline-flex items-center rounded-[var(--radius-1)] border border-amber-500/40 bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-950 dark:text-amber-100/90"
               }
             >
               {lastVerified
@@ -288,11 +288,11 @@ export function StudioProviderConnectionPanel({
             <p className="text-sm">{t("integrationsKeySavedStatus")}</p>
           </div>
           {lastVerified ? (
-            <p className="text-xs text-text-tertiary">
+            <p className="text-xs text-ink-500">
               {t("integrationsLastVerified", { date: lastVerified })}
             </p>
           ) : (
-            <div className="text-xs text-text-tertiary space-y-1">
+            <div className="text-xs text-ink-500 space-y-1">
               <p>{t("integrationsNeverVerified")}</p>
               {serverCallsEnabled ? (
                 <p>{t("integrationsRunConnectionTestHint")}</p>
@@ -302,15 +302,15 @@ export function StudioProviderConnectionPanel({
             </div>
           )}
           {keyUrls.billing ? (
-            <div className="rounded-lg border border-border-subtle/80 bg-layer-02/35 px-3 py-2 space-y-1.5">
-              <p className="text-xs text-text-tertiary leading-relaxed">
+            <div className="rounded-[var(--radius-1)] border border-ink-100/80 bg-paper-50/35 px-3 py-2 space-y-1.5">
+              <p className="text-xs text-ink-500 leading-relaxed">
                 {t("integrationsBillingCreditNote")}
               </p>
               <a
                 href={keyUrls.billing}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex text-xs font-medium text-interactive underline underline-offset-2 hover:opacity-90"
+                className="inline-flex text-xs font-medium text-vermilion-600 underline underline-offset-2 hover:opacity-90"
               >
                 {t("integrationsBillingLink")}
               </a>
@@ -323,7 +323,7 @@ export function StudioProviderConnectionPanel({
         <form action={saveAction} className="space-y-4 max-w-xl">
           {saveState?.error ? (
             <p
-              className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger"
+              className="rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger"
               role="alert"
             >
               {translateActionErrorMessage(saveState.error, tAction)}
@@ -331,12 +331,12 @@ export function StudioProviderConnectionPanel({
           ) : null}
           {hasSavedKey ? (
             <div className="space-y-2">
-              <p className="text-xs font-medium text-text-secondary">
+              <p className="text-xs font-medium text-ink-700">
                 {t("integrationsStoredKeyLabel")}
               </p>
               {secretValue === "" ? (
                 <p
-                  className="font-mono text-sm tracking-[0.2em] text-text-primary select-none rounded-lg border border-border-subtle bg-field px-3 py-2.5"
+                  className="font-mono text-sm tracking-[0.2em] text-ink-900 select-none rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2.5"
                   aria-hidden
                 >
                   {t("integrationsStoredKeyMasked")}
@@ -383,7 +383,7 @@ export function StudioProviderConnectionPanel({
                   {translateActionErrorMessage(revealError, tAction)}
                 </p>
               ) : null}
-              <p className="text-xs text-text-tertiary leading-relaxed">
+              <p className="text-xs text-ink-500 leading-relaxed">
                 {t("integrationsRevealSensitiveHint")}
               </p>
             </div>
@@ -391,7 +391,7 @@ export function StudioProviderConnectionPanel({
           <div>
             <label
               htmlFor={fieldId}
-              className="block text-xs font-medium text-text-secondary mb-1"
+              className="block text-xs font-medium text-ink-700 mb-1"
             >
               {t("integrationsFieldApiKey")}
             </label>
@@ -409,12 +409,12 @@ export function StudioProviderConnectionPanel({
                 }}
                 placeholder={inputPlaceholder}
                 disabled={!encryptionConfigured}
-                className="h-10 w-full rounded-lg border border-border-subtle bg-field pl-3 pr-10 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 disabled:opacity-60"
+                className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 pl-3 pr-10 text-sm text-ink-900 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 disabled:opacity-60"
               />
               {secretValue !== "" ? (
                 <button
                   type="button"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-text-secondary hover:bg-surface-03 hover:text-text-primary"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-ink-700 hover:bg-surface-03 hover:text-ink-900"
                   onClick={() => setShowPlaintext((v) => !v)}
                   aria-label={
                     showPlaintext
@@ -444,12 +444,12 @@ export function StudioProviderConnectionPanel({
       ) : null}
 
       {canEdit ? (
-        <div className="space-y-5 pt-4 border-t border-border-subtle">
+        <div className="space-y-5 pt-4 border-t border-ink-100">
           <form action={testAction} className="space-y-2 max-w-xl">
             <input type="hidden" name="provider" value={providerId} />
             {testState?.error ? (
               <p
-                className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger"
+                className="rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger"
                 role="alert"
               >
                 {translateActionErrorMessage(testState.error, tAction)}
@@ -470,7 +470,7 @@ export function StudioProviderConnectionPanel({
             <input type="hidden" name="provider" value={providerId} />
             {deleteState?.error ? (
               <p
-                className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger"
+                className="rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger"
                 role="alert"
               >
                 {translateActionErrorMessage(deleteState.error, tAction)}

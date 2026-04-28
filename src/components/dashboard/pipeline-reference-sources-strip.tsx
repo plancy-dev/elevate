@@ -39,19 +39,19 @@ export function PipelineReferenceSourcesStrip({ artifacts, onOpenReferences }: P
 
   if (items.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border-subtle/90 bg-gradient-to-b from-layer-02/50 to-layer-02/25 px-4 py-4 shadow-sm ring-1 ring-black/[0.02] dark:ring-white/[0.03]">
+      <div className="rounded-[var(--radius-1)] border border-dashed border-ink-100/90 bg-gradient-to-b from-layer-02/50 to-layer-02/25 px-4 py-4 ring-1 ring-black/[0.02] dark:ring-white/[0.03]">
         <div className="flex gap-3">
           <div
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-1)] bg-primary/10 text-primary"
             aria-hidden
           >
             <Layers className="h-5 w-5 opacity-90" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-text-primary leading-snug">
+            <p className="text-sm font-medium text-ink-900 leading-snug">
               {t("pipelineInputSourcesTitle")}
             </p>
-            <p className="mt-1 text-xs text-text-secondary leading-relaxed">
+            <p className="mt-1 text-xs text-ink-700 leading-relaxed">
               {t("pipelineInputSourcesEmpty")}
             </p>
             <Button
@@ -70,24 +70,24 @@ export function PipelineReferenceSourcesStrip({ artifacts, onOpenReferences }: P
   }
 
   return (
-    <div className="rounded-xl border border-border-subtle/90 bg-layer-02/40 px-3 py-2.5 shadow-sm ring-1 ring-black/[0.02] dark:ring-white/[0.03]">
+    <div className="rounded-[var(--radius-1)] border border-ink-100/90 bg-paper-50/40 px-3 py-2.5 ring-1 ring-black/[0.02] dark:ring-white/[0.03]">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="flex min-h-10 min-w-0 flex-1 items-center justify-between gap-2 rounded-lg text-left transition-colors hover:bg-layer-01/40 -mx-0.5 px-0.5"
+          className="flex min-h-10 min-w-0 flex-1 items-center justify-between gap-2 rounded-[var(--radius-1)] text-left transition-colors hover:bg-paper-0/40 -mx-0.5 px-0.5"
           aria-expanded={open}
         >
           <span className="inline-flex min-w-0 items-center gap-2">
             <BookOpen className="h-4 w-4 shrink-0 text-primary/90" aria-hidden />
-            <span className="text-sm font-medium text-text-primary">
+            <span className="text-sm font-medium text-ink-900">
               {t("pipelineInputSourcesTitle")}
             </span>
-            <span className="text-[11px] text-text-tertiary tabular-nums">({items.length})</span>
+            <span className="text-[11px] text-ink-500 tabular-nums">({items.length})</span>
           </span>
           <ChevronDown
             className={cn(
-              "h-4 w-4 shrink-0 text-text-tertiary transition-transform duration-200",
+              "h-4 w-4 shrink-0 text-ink-500 transition-transform duration-200",
               open && "rotate-180",
             )}
             aria-hidden
@@ -104,16 +104,16 @@ export function PipelineReferenceSourcesStrip({ artifacts, onOpenReferences }: P
         </Button>
       </div>
       {open ? (
-        <ul role="list" className="mt-2 space-y-2 border-t border-border-subtle/60 pt-2">
+        <ul role="list" className="mt-2 space-y-2 border-t border-ink-100/60 pt-2">
           {items.map((item) => (
             <li
               key={item.id}
-              className="rounded-md bg-layer-01/60 px-2.5 py-2 dark:bg-layer-02/35"
+              className="rounded-[var(--radius-1)] bg-paper-0/60 px-2.5 py-2 dark:bg-paper-50/35"
             >
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-text-tertiary">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-ink-500">
                 [{kindLabel(item.sourceType)}]
               </p>
-              <p className="mt-0.5 text-xs font-medium text-text-primary line-clamp-2">
+              <p className="mt-0.5 text-xs font-medium text-ink-900 line-clamp-2">
                 {item.label}
               </p>
               {item.href ? (
@@ -128,7 +128,7 @@ export function PipelineReferenceSourcesStrip({ artifacts, onOpenReferences }: P
                 </a>
               ) : null}
               {item.contentPreview ? (
-                <p className="mt-1.5 text-[11px] text-text-tertiary leading-relaxed line-clamp-3">
+                <p className="mt-1.5 text-[11px] text-ink-500 leading-relaxed line-clamp-3">
                   {item.contentPreview}
                 </p>
               ) : null}

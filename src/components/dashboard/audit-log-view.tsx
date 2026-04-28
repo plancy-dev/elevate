@@ -14,10 +14,10 @@ export function AuditLogView({ loadError, rows }: Props) {
 
   return (
     <>
-      <p className="text-xs text-text-tertiary mb-2 max-w-2xl leading-relaxed">
+      <p className="text-xs text-ink-500 mb-2 max-w-2xl leading-relaxed">
         {t("intro")}
       </p>
-      <p className="text-xs text-text-tertiary mb-4 max-w-2xl leading-relaxed border-l-2 border-border-subtle pl-3">
+      <p className="text-xs text-ink-500 mb-4 max-w-2xl leading-relaxed border-l-2 border-ink-100 pl-3">
         {t("hint")}
       </p>
       {loadError ? (
@@ -26,13 +26,13 @@ export function AuditLogView({ loadError, rows }: Props) {
         </p>
       ) : null}
       {!loadError && rows.length === 0 ? (
-        <p className="text-sm text-text-tertiary max-w-xl">{t("empty")}</p>
+        <p className="text-sm text-ink-500 max-w-xl">{t("empty")}</p>
       ) : null}
       {!loadError && rows.length > 0 ? (
-        <div className="border border-border-subtle bg-layer-01 overflow-x-auto">
+        <div className="border border-ink-100 bg-paper-0 overflow-x-auto">
           <table className="w-full text-sm min-w-[720px]">
             <thead>
-              <tr className="border-b border-border-subtle text-left text-xs text-text-tertiary uppercase tracking-wider">
+              <tr className="border-b border-ink-100 text-left text-xs text-ink-500 uppercase tracking-wider">
                 <th className="px-4 py-2 font-medium">{t("colTime")}</th>
                 <th className="px-4 py-2 font-medium">{t("colActor")}</th>
                 <th className="px-4 py-2 font-medium">{t("colAction")}</th>
@@ -44,24 +44,24 @@ export function AuditLogView({ loadError, rows }: Props) {
               {rows.map((r) => (
                 <tr
                   key={r.id}
-                  className="border-b border-border-subtle last:border-0 hover:bg-layer-02 align-top"
+                  className="border-b border-ink-100 last:border-0 hover:bg-paper-50 align-top"
                 >
-                  <td className="px-4 py-2 text-text-tertiary text-xs whitespace-nowrap">
+                  <td className="px-4 py-2 text-ink-500 text-xs whitespace-nowrap">
                     {formatDateTimeUtc(r.created_at)}
                   </td>
-                  <td className="px-4 py-2 text-xs text-text-secondary">
+                  <td className="px-4 py-2 text-xs text-ink-700">
                     {r.actor_email ?? "—"}
                   </td>
                   <td className="px-4 py-2 font-mono text-xs">{r.action}</td>
-                  <td className="px-4 py-2 text-xs text-text-secondary">
+                  <td className="px-4 py-2 text-xs text-ink-700">
                     {r.entity_type || "—"}
                     {r.entity_id ? (
-                      <span className="block text-text-tertiary truncate max-w-[120px]">
+                      <span className="block text-ink-500 truncate max-w-[120px]">
                         {r.entity_id}
                       </span>
                     ) : null}
                   </td>
-                  <td className="px-4 py-2 text-xs text-text-tertiary font-mono max-w-md break-all">
+                  <td className="px-4 py-2 text-xs text-ink-500 font-mono max-w-md break-all">
                     {Object.keys(r.metadata).length > 0
                       ? JSON.stringify(r.metadata)
                       : "—"}

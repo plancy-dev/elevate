@@ -19,16 +19,16 @@ export function AudioInspector({ target }: { target: "narration" | "bgm" }) {
   if (target === "narration") {
     return (
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-text-primary">
+        <h3 className="text-sm font-semibold text-ink-900">
           {t("audioNarrationTitle")}
         </h3>
         {dsl.audio.narration ? (
           <div className="space-y-2">
-            <p className="break-all text-[11px] text-text-tertiary">
+            <p className="break-all font-mono text-[11px] text-ink-500">
               {dsl.audio.narration.url}
             </p>
             <label className="block">
-              <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+              <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
                 {t("audioGainDb")}
               </span>
               <input
@@ -45,13 +45,13 @@ export function AudioInspector({ target }: { target: "narration" | "bgm" }) {
                 }
                 className="w-full"
               />
-              <span className="text-[11px] text-text-tertiary">
+              <span className="font-mono text-[11px] text-ink-500">
                 {dsl.audio.narration.gainDb} dB
               </span>
             </label>
           </div>
         ) : (
-          <p className="text-xs text-text-tertiary">
+          <p className="text-xs text-ink-500">
             {t("audioNarrationNotAvailable")}
           </p>
         )}
@@ -76,11 +76,11 @@ export function AudioInspector({ target }: { target: "narration" | "bgm" }) {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-text-primary">
+      <h3 className="text-sm font-semibold text-ink-900">
         {t("audioBgmTitle")}
       </h3>
       <label className="block">
-        <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+        <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
           {t("audioBgmUrl")}
         </span>
         <input
@@ -88,13 +88,13 @@ export function AudioInspector({ target }: { target: "narration" | "bgm" }) {
           value={bgm?.url ?? ""}
           onChange={(e) => updateBgm({ url: e.target.value })}
           placeholder="https://…"
-          className="h-9 w-full rounded-md border border-border-subtle bg-field px-2 text-sm"
+          className="h-9 w-full border-b border-ink-300 bg-transparent px-0 text-sm text-ink-900 outline-none focus:border-vermilion-600"
         />
       </label>
       {bgm?.url ? (
         <>
           <label className="block">
-            <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+            <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
               {t("audioGainDb")}
             </span>
             <input
@@ -108,7 +108,7 @@ export function AudioInspector({ target }: { target: "narration" | "bgm" }) {
               }
               className="w-full"
             />
-            <span className="text-[11px] text-text-tertiary">
+            <span className="font-mono text-[11px] text-ink-500">
               {bgm.gainDb} dB
             </span>
           </label>
@@ -141,7 +141,7 @@ export function AudioInspector({ target }: { target: "narration" | "bgm" }) {
           <button
             type="button"
             onClick={() => dispatch({ type: "setBgm", bgm: null })}
-            className="text-[11px] text-danger underline"
+            className="font-mono text-[11px] text-vermilion-600 underline"
           >
             {t("audioBgmRemove")}
           </button>
@@ -168,7 +168,7 @@ function NumberField({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+      <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
         {label}
       </span>
       <input
@@ -181,7 +181,7 @@ function NumberField({
           const n = Number(e.target.value);
           if (Number.isFinite(n)) onChange(n);
         }}
-        className="h-9 w-full rounded-md border border-border-subtle bg-field px-2 text-sm"
+        className="h-9 w-full border-b border-ink-300 bg-transparent px-0 text-sm text-ink-900 outline-none focus:border-vermilion-600"
       />
     </label>
   );

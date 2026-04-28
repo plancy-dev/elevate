@@ -11,11 +11,11 @@ export function MarketingSection({
 }) {
   return (
     <div className="elevate-marketing-shell py-12 sm:py-16">
-      <h1 className="text-[length:var(--elevate-marketing-page-title-size)] font-semibold tracking-[-0.02em] text-text-primary">
+      <h1 className="text-[length:var(--elevate-marketing-page-title-size)] font-semibold tracking-[-0.02em] text-ink-900">
         {title}
       </h1>
       {description && (
-        <p className="mt-4 max-w-2xl text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-text-secondary">
+        <p className="mt-4 max-w-2xl text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
           {description}
         </p>
       )}

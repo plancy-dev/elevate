@@ -18,12 +18,12 @@ export default async function DemoPage({ params }: Props) {
   const t = await getTranslations("Demo");
 
   return (
-    <div className="border-t border-marketing-border-subtle">
+    <div className="border-t border-ink-100">
       <MarketingSection title={t("pausedTitle")} description={t("pausedDescription")}>
         <p>
           <Link
             href="/"
-            className="text-sm font-medium text-primary hover:underline"
+            className="text-sm font-medium text-vermilion-600 hover:underline"
           >
             {t("pausedBackHome")}
           </Link>

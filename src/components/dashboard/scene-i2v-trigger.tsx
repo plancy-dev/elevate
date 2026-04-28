@@ -71,15 +71,15 @@ export function SceneI2VTrigger({
   };
 
   return (
-    <div className="space-y-2 rounded-lg border border-border-subtle bg-layer-02/40 p-3">
+    <div className="space-y-2 border border-ink-100 bg-paper-50 p-3">
       <div className="flex flex-wrap items-center gap-2">
-        <label className="flex items-center gap-1.5 text-[11px] text-text-secondary">
+        <label className="flex items-center gap-1.5 font-mono text-[11px] text-ink-600">
           <span>{t("sceneI2vModelLabel")}</span>
           <select
             value={model}
             onChange={(e) => setModel(e.target.value as RunwayI2VModelId)}
             disabled={pending}
-            className="h-8 rounded-md border border-border-subtle bg-field px-2 text-xs"
+            className="h-8 border-b border-ink-300 bg-transparent px-0 text-xs text-ink-900 outline-none focus:border-vermilion-600"
           >
             {RUNWAY_I2V_MODEL_IDS.map((id) => (
               <option key={id} value={id}>
@@ -91,8 +91,8 @@ export function SceneI2VTrigger({
         <span
           className={
             cap.supportsLastFrame
-              ? "inline-flex items-center rounded-full border border-emerald-500/35 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-800 dark:text-emerald-200/95"
-              : "inline-flex items-center rounded-full border border-border-subtle bg-layer-02 px-2 py-0.5 text-[10px] font-medium text-text-secondary"
+              ? "inline-flex items-center border border-vermilion-600/35 bg-paper-0 px-2 py-0.5 font-mono text-[10px] text-vermilion-600"
+              : "inline-flex items-center border border-ink-100 bg-paper-100 px-2 py-0.5 font-mono text-[10px] text-ink-500"
           }
         >
           {cap.supportsLastFrame
@@ -115,24 +115,24 @@ export function SceneI2VTrigger({
           href={runwayDocs}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[11px] text-interactive underline underline-offset-2 hover:opacity-90"
+          className="font-mono text-[11px] text-vermilion-600 underline underline-offset-2 hover:opacity-90"
         >
           {t("sceneI2vDocsLink")}
         </a>
       </div>
       {!hasFirstFrame ? (
-        <p className="text-[11px] text-amber-700 dark:text-amber-200/95">
+        <p className="font-mono text-[11px] text-vermilion-600">
           {t("sceneI2vFirstFrameRequired")}
         </p>
       ) : null}
       {!cap.supportsLastFrame && hasLastFrame ? (
-        <p className="text-[11px] text-text-tertiary">
+        <p className="text-[11px] text-ink-500">
           {t("sceneI2vLastUnsupportedTip")}
         </p>
       ) : null}
       {!cap.supportsLastFrame ? (
         <label className="block">
-          <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+          <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
             {t("sceneI2vEndHintLabel")}
           </span>
           <input
@@ -140,11 +140,11 @@ export function SceneI2VTrigger({
             onChange={(e) => setHint(e.target.value)}
             maxLength={300}
             placeholder={t("sceneI2vEndHintPlaceholder")}
-            className="h-8 w-full rounded-md border border-border-subtle bg-field px-2 text-xs"
+            className="h-8 w-full border-b border-ink-300 bg-transparent px-0 text-xs text-ink-900 outline-none focus:border-vermilion-600"
           />
         </label>
       ) : usesLastFrame ? (
-        <p className="text-[11px] text-text-tertiary">
+        <p className="text-[11px] text-ink-500">
           {t("sceneI2vLastBoundHint")}
         </p>
       ) : null}

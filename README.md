@@ -22,9 +22,10 @@ Elevate helps teams turn **measurable AI outcomes** into repeatable workflows: p
 | [`docs/CONTENT_FUNNEL.md`](docs/CONTENT_FUNNEL.md) | Ebook-first funnel & journey vs codebase |
 | [`memory-bank/archive/work-history/reflect-ebook-content-funnel.md`](memory-bank/archive/work-history/reflect-ebook-content-funnel.md) | REFLECT audit (implementation + gaps; archived) |
 | [`memory-bank/tasks.md`](memory-bank/tasks.md) | Roadmap SoT |
-| [`docs/design/SYSTEM.md`](docs/design/SYSTEM.md) | Design tokens, marketing vs app shell, component map |
-| [`docs/design/VISUAL_LANGUAGE_V2.md`](docs/design/VISUAL_LANGUAGE_V2.md) | Visual execution contract (accents, radius, rollout) |
-| [`docs/design/DASHBOARD_UX_PRINCIPLES.md`](docs/design/DASHBOARD_UX_PRINCIPLES.md) | Dashboard list/nav patterns (anti-template) |
+| [`docs/adr/ADR-011-design-system-v3-editors-desk.md`](docs/adr/ADR-011-design-system-v3-editors-desk.md) | Editor's Desk v3 architectural decision record |
+| [`docs/features/INIT-editors-desk-design-system.md`](docs/features/INIT-editors-desk-design-system.md) | Design philosophy, constraints, and rollout scope |
+| [`docs/features/PLAN-editors-desk-s0-s1-s2.md`](docs/features/PLAN-editors-desk-s0-s1-s2.md) | S0-S2 build checklist and acceptance gates |
+| [`docs/design/v3-creative/toc-ia-mapping.md`](docs/design/v3-creative/toc-ia-mapping.md) | Locked TOC IA mapping (Option A) |
 | [`.github/DESIGN.md`](.github/DESIGN.md) | Studio scene render — GitHub epic/labels pointer [#1](https://github.com/plancy-dev/elevate/issues/1) |
 | [`docs/DEV_PROCESS_GITHUB.md`](docs/DEV_PROCESS_GITHUB.md) | Issues/PR/gh CLI + gstack — 원격 작업 큐·`pnpm issues:studio` |
 | [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) | AI 도구 레이어 (gstack·Memory Bank·규칙) |
@@ -94,16 +95,16 @@ supabase/migrations/            # Database migration SQL
 
 ## Design System
 
-Semantic tokens live in **`src/app/globals.css`** (Tailwind v4 `@theme`). **Marketing** routes use **`.elevate-marketing-chrome`** (warm cream canvas, orange **marketing** CTA variant). **App** (`(dashboard)`, `(admin)`) keeps **IBM-style blue** primary for interactive elements — see [`docs/design/VISUAL_LANGUAGE_V2.md`](docs/design/VISUAL_LANGUAGE_V2.md).
+Semantic tokens live in **`src/styles/tokens.css`** and are bridged via **`src/app/globals.css`** (`@theme inline`). Editor's Desk v3 uses ink/paper/vermilion and 1px rules (no shadows, near-zero radius) per [`docs/adr/ADR-011-design-system-v3-editors-desk.md`](docs/adr/ADR-011-design-system-v3-editors-desk.md).
 
 | Token (examples) | Typical usage |
 |------------------|----------------|
 | `primary` / `interactive` | App shell buttons, links, focus |
-| `marketing-accent` | Marketing primary CTA only (scoped) |
+| `marketing-accent` | Marketing primary CTA only (scoped; now vermilion) |
 | `layer-01` / `layer-02` | Panels, list row hover |
 | `background` / `border-subtle` | Page chrome, dividers |
 
-Full mapping: [`docs/design/SYSTEM.md`](docs/design/SYSTEM.md) · [`docs/design/elevate-cursor-alignment.md`](docs/design/elevate-cursor-alignment.md).
+Current mapping and rollout docs: [`docs/features/INIT-editors-desk-design-system.md`](docs/features/INIT-editors-desk-design-system.md) · [`docs/features/PLAN-editors-desk-s0-s1-s2.md`](docs/features/PLAN-editors-desk-s0-s1-s2.md).
 
 ## License
 

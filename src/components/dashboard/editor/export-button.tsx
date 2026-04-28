@@ -53,7 +53,7 @@ export function EditorExportButton({ episodeId }: { episodeId: string }) {
   return (
     <div className="flex items-center gap-2">
       {!canExport && status.state === "dirty" ? (
-        <span className="text-[11px] text-text-tertiary">
+        <span className="font-mono text-[11px] text-ink-500">
           {t("exportDirtyHint")}
         </span>
       ) : null}
@@ -93,11 +93,11 @@ function ExportDialog(props: {
   const t = useTranslations("Dashboard.productions.editor");
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-sm rounded-xl border border-border-subtle bg-layer-01 p-5 shadow-xl">
-        <h3 className="text-base font-semibold text-text-primary">
+      <div className="w-full max-w-sm border border-ink-100 bg-paper-100 p-5">
+        <h3 className="text-base font-semibold text-ink-900">
           {t("exportDialogTitle")}
         </h3>
-        <p className="mt-1 text-xs text-text-tertiary">
+        <p className="mt-1 font-mono text-xs text-ink-500">
           {t("exportDialogSubtitle")}
         </p>
         <dl className="mt-4 grid grid-cols-3 gap-2 text-center text-[11px]">
@@ -135,11 +135,11 @@ function ExportDialog(props: {
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-border-subtle bg-layer-02/50 p-2">
-      <p className="text-[9px] uppercase tracking-wide text-text-tertiary">
+    <div className="border border-ink-100 bg-paper-0 p-2">
+      <p className="font-mono text-[9px] uppercase tracking-[0.04em] text-ink-500">
         {label}
       </p>
-      <p className="mt-0.5 text-sm font-semibold text-text-primary">{value}</p>
+      <p className="mt-0.5 text-sm font-semibold text-ink-900">{value}</p>
     </div>
   );
 }

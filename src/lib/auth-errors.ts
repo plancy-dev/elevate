@@ -55,8 +55,8 @@ export function formatSignInPasswordError(err: { message: string }): string {
     lower.includes("wrong password")
   ) {
     return (
-      "That email and password don’t match what the server has. Check Caps Lock and try again. " +
-      "If you just finished a password reset, confirm you’re using the new password. " +
+      "That email and password don’t match what the server has. Check Caps Lock and try again." +
+      "If you just finished a password reset, confirm you’re using the new password." +
       "If it still fails: Supabase → Authentication → Users → open this user and confirm the email is verified, or use “Send password recovery” / set a temporary password from the dashboard."
     );
   }
@@ -78,14 +78,14 @@ export function formatOAuthCallbackError(
   description: string | null,
   errorCode?: string | null,
 ): string {
-  const d = description?.replace(/\+/g, " ").trim() ?? "";
+  const d = description?.replace(/\+/g, "").trim() ?? "";
   if (
     errorCode === "otp_expired" ||
     (code === "access_denied" &&
       /(invalid or has expired|email link)/i.test(d))
   ) {
     return (
-      "This password reset or email link has expired or was already used. " +
+      "This password reset or email link has expired or was already used." +
       "Request a new reset from Forgot password and open the latest email link within about an hour."
     );
   }
@@ -94,9 +94,9 @@ export function formatOAuthCallbackError(
   }
   if (/getting user email from external provider/i.test(d)) {
     return (
-      "Microsoft did not return an email address Supabase can use (common with Entra ID when optional email claims are missing). " +
-      "In Azure Portal → App registration → Token configuration: add an optional claim for ID tokens — claim **email** (or ensure **user principal name** is exposed). " +
-      "Under API permissions, ensure **openid**, **profile**, **email**, and **User.Read** are granted (admin consent if required). " +
+      "Microsoft did not return an email address Supabase can use (common with Entra ID when optional email claims are missing)." +
+      "In Azure Portal → App registration → Token configuration: add an optional claim for ID tokens — claim **email** (or ensure **user principal name** is exposed)." +
+      "Under API permissions, ensure **openid**, **profile**, **email**, and **User.Read** are granted (admin consent if required)." +
       "Then try linking again. See docs/SOCIAL_AUTH.md."
     );
   }

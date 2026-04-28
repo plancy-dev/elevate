@@ -98,17 +98,17 @@ export function ContentCatalogEditDialog({
       }}
     >
       <div
-        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-border-subtle bg-background p-5 shadow-card"
+        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 p-5"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-2 mb-4">
-          <h2 id="catalog-edit-title" className="text-base font-semibold text-text-primary">
+          <h2 id="catalog-edit-title" className="text-base font-semibold text-ink-900">
             {t("editHeading")}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="text-sm text-text-tertiary hover:text-text-primary"
+            className="text-sm text-ink-500 hover:text-ink-900"
           >
             {t("cancel")}
           </button>
@@ -118,7 +118,7 @@ export function ContentCatalogEditDialog({
           <input type="hidden" name="contentProductId" value={row.id} />
 
           <div>
-            <label htmlFor="edit-slug" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="edit-slug" className="block text-xs font-medium text-ink-700 mb-1">
               {t("slug")}
             </label>
             <input
@@ -127,14 +127,14 @@ export function ContentCatalogEditDialog({
               type="text"
               required
               defaultValue={row.slug}
-              className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm font-mono"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm font-mono"
               autoComplete="off"
             />
-            <p className="mt-1 text-[11px] text-text-tertiary">{t("slugEditHint")}</p>
+            <p className="mt-1 text-[11px] text-ink-500">{t("slugEditHint")}</p>
           </div>
 
           <div>
-            <label htmlFor="edit-title" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="edit-title" className="block text-xs font-medium text-ink-700 mb-1">
               {t("titleLabel")}
             </label>
             <input
@@ -143,12 +143,12 @@ export function ContentCatalogEditDialog({
               type="text"
               required
               defaultValue={row.title}
-              className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm"
             />
           </div>
 
           <div>
-            <label htmlFor="edit-desc" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="edit-desc" className="block text-xs font-medium text-ink-700 mb-1">
               {t("description")}
             </label>
             <textarea
@@ -156,12 +156,12 @@ export function ContentCatalogEditDialog({
               name="description"
               rows={3}
               defaultValue={row.description}
-              className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm"
             />
           </div>
 
           <div>
-            <label htmlFor="edit-price" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="edit-price" className="block text-xs font-medium text-ink-700 mb-1">
               {t("priceKrw")}
             </label>
             <input
@@ -171,15 +171,15 @@ export function ContentCatalogEditDialog({
               min={0}
               step={1}
               defaultValue={priceKrw}
-              className="w-full max-w-[200px] rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm tabular-nums"
+              className="w-full max-w-[200px] rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm tabular-nums"
             />
-            <p className="mt-1 text-[11px] text-text-tertiary leading-relaxed">
+            <p className="mt-1 text-[11px] text-ink-500 leading-relaxed">
               {t("priceKrwLemonHint", { minKrw: LEMON_CUSTOM_PRICE_MIN_KRW })}
             </p>
           </div>
 
           <div>
-            <label htmlFor="edit-kind" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="edit-kind" className="block text-xs font-medium text-ink-700 mb-1">
               {t("productKind")}
             </label>
             <select
@@ -190,7 +190,7 @@ export function ContentCatalogEditDialog({
                   ? row.product_kind
                   : "ebook"
               }
-              className="w-full max-w-xs rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
+              className="w-full max-w-xs rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm"
             >
               {KINDS.map((k) => (
                 <option key={k} value={k}>
@@ -200,18 +200,18 @@ export function ContentCatalogEditDialog({
             </select>
           </div>
 
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-text-secondary">
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-ink-700">
             <input
               type="checkbox"
               name="isActive"
               defaultChecked={row.is_active}
-              className="h-4 w-4 rounded border-border-subtle"
+              className="h-4 w-4 rounded border-ink-100"
             />
             {t("activeLabel")}
           </label>
 
           <div>
-            <label htmlFor="edit-file" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="edit-file" className="block text-xs font-medium text-ink-700 mb-1">
               {t("replaceFileLabel")}
             </label>
             <input
@@ -219,16 +219,16 @@ export function ContentCatalogEditDialog({
               name="replaceFile"
               type="file"
               accept=".pdf,.epub,.zip,application/pdf,application/epub+zip,application/zip"
-              className="block w-full text-sm text-text-secondary file:mr-3 file:rounded-md file:border-0 file:bg-highlight file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-primary"
+              className="block w-full text-sm text-ink-700 file:mr-3 file:rounded-[var(--radius-1)] file:border-0 file:bg-highlight file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-primary"
             />
-            <p className="mt-1 text-[11px] text-text-tertiary">{t("replaceFileHint")}</p>
+            <p className="mt-1 text-[11px] text-ink-500">{t("replaceFileHint")}</p>
           </div>
 
-          <div className="border-t border-border-subtle pt-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-2">
+          <div className="border-t border-ink-100 pt-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-ink-500 mb-2">
               {t("lemonSectionInEdit")}
             </p>
-            <p className="text-[11px] text-text-tertiary mb-2 leading-relaxed">{t("lemonInlineHint")}</p>
+            <p className="text-[11px] text-ink-500 mb-2 leading-relaxed">{t("lemonInlineHint")}</p>
             <input type="hidden" name="hadLemonLinkBefore" value={row.lemonLink ? "1" : "0"} />
             <ContentProductLemonCell lemonLink={row.lemonLink} />
           </div>
@@ -244,9 +244,9 @@ export function ContentCatalogEditDialog({
               type="submit"
               disabled={pending}
               className={cn(
-                "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors",
+                "inline-flex items-center justify-center rounded-[var(--radius-1)] px-4 py-2 text-sm font-medium transition-colors",
                 pending
-                  ? "bg-surface-03 text-text-tertiary cursor-not-allowed"
+                  ? "bg-surface-03 text-ink-500 cursor-not-allowed"
                   : "bg-primary text-[var(--color-text-on-color)] hover:opacity-90",
               )}
             >
@@ -255,7 +255,7 @@ export function ContentCatalogEditDialog({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-border-subtle px-4 py-2 text-sm text-text-secondary hover:bg-layer-02"
+              className="rounded-[var(--radius-1)] border border-ink-100 px-4 py-2 text-sm text-ink-700 hover:bg-paper-50"
             >
               {t("cancel")}
             </button>

@@ -76,7 +76,7 @@ export function splitScriptToScenes(
     const perChunk = Math.ceil(sentences.length / target);
     chunks = [];
     for (let i = 0; i < sentences.length; i += perChunk) {
-      chunks.push(sentences.slice(i, i + perChunk).join(" "));
+      chunks.push(sentences.slice(i, i + perChunk).join(""));
     }
   }
 
@@ -96,8 +96,8 @@ export function splitScriptToScenes(
 /** Exported for Runway scenes derived from TTS segment timings. */
 export function buildVisualPromptFromNarration(narration: string, index: number): string {
   const prefix = index === 0
-    ? "Opening shot, cinematic, vertical 9:16 format. "
-    : `Scene ${index + 1}, cinematic continuation, vertical 9:16 format. `;
+    ? "Opening shot, cinematic, vertical 9:16 format."
+    : `Scene ${index + 1}, cinematic continuation, vertical 9:16 format.`;
 
   const cleaned = narration
     .replace(/[#*_~`]/g, "")

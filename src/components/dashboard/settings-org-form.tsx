@@ -29,14 +29,14 @@ export function SettingsOrgForm({ defaultName }: { defaultName: string }) {
   return (
     <form action={formAction} className="space-y-3">
       {state?.error && (
-        <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       )}
       <div>
         <label
           htmlFor="organization_name"
-          className="block text-xs text-text-secondary mb-1"
+          className="block text-xs text-ink-700 mb-1"
         >
           {t("nameLabel")}
         </label>
@@ -46,9 +46,9 @@ export function SettingsOrgForm({ defaultName }: { defaultName: string }) {
           required
           defaultValue={defaultName}
           maxLength={200}
-          className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
+          className="h-10 w-full bg-paper-0 border border-ink-100 px-3 text-sm text-ink-900 focus:outline-none focus:border-focus"
         />
-        <p className="mt-1 text-xs text-text-tertiary">{t("nameHint")}</p>
+        <p className="mt-1 text-xs text-ink-500">{t("nameHint")}</p>
       </div>
       <Button variant="primary" size="md" type="submit" isLoading={pending}>
         {t("save")}

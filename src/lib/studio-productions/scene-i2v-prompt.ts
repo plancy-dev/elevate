@@ -34,10 +34,10 @@ function identitySummary(bible: CharacterBible | null | undefined): string {
   const parts: string[] = [];
   if (bible.name) parts.push(bible.name);
   if (bible.appearance?.ethnicity) parts.push(bible.appearance.ethnicity);
-  if (bible.appearance?.hair) parts.push(bible.appearance.hair + " hair");
+  if (bible.appearance?.hair) parts.push(bible.appearance.hair + "hair");
   if (bible.wardrobe) parts.push(bible.wardrobe);
   if (bible.style) parts.push(bible.style);
-  return parts.join(", ");
+  return parts.join(",");
 }
 
 function countWords(s: string): number {
@@ -51,7 +51,7 @@ function countWords(s: string): number {
 function clampWordCount(s: string, max: number): string {
   const words = s.trim().split(/\s+/);
   if (words.length <= max) return s.trim();
-  return words.slice(0, max).join(" ");
+  return words.slice(0, max).join("");
 }
 
 export function buildSceneI2VPrompt(opts: BuildSceneI2VPromptOptions): string {
@@ -78,7 +78,7 @@ export function buildSceneI2VPrompt(opts: BuildSceneI2VPromptOptions): string {
     "Cinematic, shallow depth of field. Natural lighting. Subtle motion. No on-image text.",
   );
 
-  const combined = sections.join(" ");
+  const combined = sections.join("");
   const clamped = clampWordCount(combined, 80);
   // Runway sweet spot is 30-80 words; we do not enforce a minimum because
   // shorter, cleaner prompts still work. Return verbatim.

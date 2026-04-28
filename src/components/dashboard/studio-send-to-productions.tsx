@@ -9,7 +9,6 @@ import { PostHogEvent } from "@/lib/analytics/posthog-events";
 import { writeStudioToProductionsHandoff } from "@/lib/studio-productions/studio-to-production-handoff";
 import { Button } from "@/components/ui/button";
 import { FieldSelect } from "@/components/ui/field-select";
-import { modalPanelClassName } from "@/lib/design-system-classes";
 import { cn } from "@/lib/utils";
 
 export type StudioEpisodeOption = { id: string; title: string };
@@ -97,12 +96,12 @@ export function StudioSendToProductions({
         <Clapperboard className="h-5 w-5 text-primary shrink-0" aria-hidden />
         <h2
           id="studio-prompt-heading"
-          className="text-sm font-semibold text-text-primary"
+          className="text-sm font-semibold text-ink-900"
         >
           {t("scratchTitle")}
         </h2>
       </div>
-      <p className="text-xs text-text-tertiary mb-3 leading-relaxed">
+      <p className="text-xs text-ink-500 mb-3 leading-relaxed">
         {t("scratchHint")}
       </p>
       <label htmlFor="studio_prompt_scratch" className="sr-only">
@@ -114,7 +113,7 @@ export function StudioSendToProductions({
         onChange={(e) => setPromptText(e.target.value)}
         rows={6}
         placeholder={t("scratchPlaceholder")}
-        className="w-full min-h-[140px] rounded-xl border border-border-subtle bg-field px-3 py-3 text-sm leading-relaxed text-text-primary placeholder:text-text-tertiary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
+        className="w-full min-h-[140px] rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-3 text-sm leading-relaxed text-ink-900 placeholder:text-ink-500 focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-ink-100"
       />
       <div className="mt-4 flex flex-wrap gap-3">
         <Button variant="primary" type="button" onClick={openDialog}>
@@ -125,8 +124,7 @@ export function StudioSendToProductions({
       <dialog
         ref={dialogRef}
         className={cn(
-          "w-[min(100%,420px)] p-5 backdrop:bg-black/40",
-          modalPanelClassName,
+          "w-[min(100%,420px)] border border-ink-700 bg-paper-100 p-5 backdrop:bg-black/40",
         )}
         aria-labelledby="studio-handoff-dialog-title"
         aria-describedby="studio-handoff-dialog-desc"
@@ -134,19 +132,19 @@ export function StudioSendToProductions({
       >
         <h3
           id="studio-handoff-dialog-title"
-          className="text-base font-semibold text-text-primary mb-1"
+          className="text-base font-semibold text-ink-900 mb-1"
         >
           {t("dialogTitle")}
         </h3>
         <p
           id="studio-handoff-dialog-desc"
-          className="text-xs text-text-tertiary mb-4 leading-relaxed"
+          className="text-xs text-ink-500 mb-4 leading-relaxed"
         >
           {t("dialogHint")}
         </p>
         <fieldset className="space-y-3 mb-4">
           <legend className="sr-only">{t("dialogTitle")}</legend>
-          <label className="flex cursor-pointer items-start gap-2 rounded-lg border border-transparent px-1 py-1 hover:bg-layer-02/80 dark:hover:bg-white/5">
+          <label className="flex cursor-pointer items-start gap-2 rounded-[var(--radius-1)] border border-transparent px-1 py-1 hover:bg-paper-50/80 dark:hover:bg-white/5">
             <input
               type="radio"
               name="handoff_target"
@@ -157,16 +155,16 @@ export function StudioSendToProductions({
               }}
             />
             <span>
-              <span className="block text-sm font-medium text-text-primary">
+              <span className="block text-sm font-medium text-ink-900">
                 {t("optionNew")}
               </span>
-              <span className="block text-xs text-text-tertiary">
+              <span className="block text-xs text-ink-500">
                 {t("optionNewDesc")}
               </span>
             </span>
           </label>
           <label
-            className={`flex cursor-pointer items-start gap-2 rounded-lg border px-1 py-1 hover:bg-layer-02/80 dark:hover:bg-white/5 ${
+            className={`flex cursor-pointer items-start gap-2 rounded-[var(--radius-1)] border px-1 py-1 hover:bg-paper-50/80 dark:hover:bg-white/5 ${
               episodes.length === 0
                 ? "cursor-not-allowed opacity-50"
                 : "border-transparent"
@@ -184,10 +182,10 @@ export function StudioSendToProductions({
               }}
             />
             <span className="min-w-0 flex-1">
-              <span className="block text-sm font-medium text-text-primary">
+              <span className="block text-sm font-medium text-ink-900">
                 {t("optionExisting")}
               </span>
-              <span className="block text-xs text-text-tertiary">
+              <span className="block text-xs text-ink-500">
                 {t("optionExistingDesc")}
               </span>
               {target === "existing_episode" && episodes.length > 0 ? (
@@ -203,7 +201,7 @@ export function StudioSendToProductions({
                 </div>
               ) : null}
               {target === "existing_episode" && episodes.length === 0 ? (
-                <p className="mt-2 text-xs text-text-tertiary">{t("noEpisodes")}</p>
+                <p className="mt-2 text-xs text-ink-500">{t("noEpisodes")}</p>
               ) : null}
             </span>
           </label>

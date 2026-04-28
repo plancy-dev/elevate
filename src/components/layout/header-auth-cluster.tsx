@@ -42,7 +42,7 @@ export function HeaderAuthCluster({
     return (
       <div
         className={cn(
-          "h-8 shrink-0 rounded-md bg-layer-02 animate-pulse",
+          "h-8 shrink-0 animate-pulse bg-paper-100",
           size === "sm" ? "w-[7.5rem]" : "w-full",
         )}
         aria-hidden
@@ -85,7 +85,7 @@ export function HeaderAuthCluster({
         )}
       >
         <div
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-highlight text-xs font-semibold text-primary"
+          className="flex h-8 w-8 shrink-0 items-center justify-center border border-ink-100 bg-paper-50 text-xs font-semibold text-vermilion-600"
           aria-hidden
         >
           {initials}
@@ -94,20 +94,20 @@ export function HeaderAuthCluster({
           {size === "md" ? (
             <>
               <p
-                className="truncate text-xs font-medium text-text-primary"
+                className="truncate text-xs font-medium text-ink-900"
                 title={title}
               >
                 {label}
               </p>
               {email ? (
-                <p className="truncate text-[10px] text-text-tertiary" title={email}>
+                <p className="truncate text-[10px] text-ink-500" title={email}>
                   {email}
                 </p>
               ) : null}
             </>
           ) : (
             <p
-              className="max-w-[10rem] truncate text-xs font-medium text-text-primary xl:max-w-[12rem]"
+              className="max-w-[10rem] truncate text-xs font-medium text-ink-900 xl:max-w-[12rem]"
               title={title}
             >
               {label}

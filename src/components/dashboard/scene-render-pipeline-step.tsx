@@ -99,10 +99,10 @@ function ScenePlanDialogTable({
   const t = useTranslations("Dashboard.productions");
 
   return (
-    <div className="max-w-full min-w-0 overflow-x-auto rounded-lg border border-border-subtle/60 bg-layer-02/20 dark:bg-layer-02/35">
-      <table className="w-full min-w-[48rem] border-collapse text-left text-[11px] text-text-secondary sm:min-w-[56rem]">
+    <div className="max-w-full min-w-0 overflow-x-auto border border-ink-100 bg-paper-50">
+      <table className="w-full min-w-3xl border-collapse text-left text-[11px] text-ink-700 sm:min-w-4xl">
         <thead>
-          <tr className="border-b border-border-subtle/60 bg-layer-02/40 text-[10px] font-medium text-text-tertiary dark:bg-layer-02/25">
+          <tr className="border-b border-ink-100 bg-paper-100 font-mono text-[10px] text-ink-500">
             <th
               scope="col"
               className="w-14 min-w-14 whitespace-nowrap py-2 pl-2 pr-2 text-left font-medium sm:w-16"
@@ -117,14 +117,14 @@ function ScenePlanDialogTable({
             </th>
             <th
               scope="col"
-              className="min-w-[5.5rem] whitespace-nowrap py-2 pr-2 text-left font-medium tabular-nums"
+              className="min-w-22 whitespace-nowrap py-2 pr-2 text-left font-medium tabular-nums"
             >
               {t("pipelineSceneColEstCredits")}
             </th>
-            <th scope="col" className="min-w-[12rem] py-2 pr-2 text-left font-medium lg:min-w-[14rem]">
+            <th scope="col" className="min-w-48 py-2 pr-2 text-left font-medium lg:min-w-56">
               {t("pipelineSceneColNarration")}
             </th>
-            <th scope="col" className="min-w-[12rem] py-2 pr-2 text-left font-medium lg:min-w-[16rem]">
+            <th scope="col" className="min-w-48 py-2 pr-2 text-left font-medium lg:min-w-64">
               {t("pipelineSceneColVisualPrompt")}
             </th>
             {hasSceneActivity ? (
@@ -156,7 +156,7 @@ function ScenePlanDialogTable({
                       : null;
             const narrationPreview = row.narration.trim();
             return (
-              <tr key={row.index} className="border-b border-border-subtle/35">
+              <tr key={row.index} className="border-b border-ink-100/80">
                 <td className="whitespace-nowrap py-2 pl-2 pr-2 align-top tabular-nums">
                   {t("pipelineSceneRowLabel", { index: row.index + 1 })}
                 </td>
@@ -165,30 +165,30 @@ function ScenePlanDialogTable({
                 </td>
                 <td className="whitespace-nowrap py-2 pr-2 align-top tabular-nums">~{perScene}</td>
                 <td className="max-w-[min(28rem,40vw)] align-top text-[11px] leading-snug">
-                  <span className="wrap-break-word text-text-secondary">{narrationPreview}</span>
+                  <span className="wrap-break-word text-ink-700">{narrationPreview}</span>
                 </td>
                 <td className="max-w-[min(28rem,40vw)] align-top text-[11px] leading-snug">
-                  <span className="wrap-break-word text-text-secondary">{row.visualPrompt}</span>
+                  <span className="wrap-break-word text-ink-700">{row.visualPrompt}</span>
                 </td>
                 {hasSceneActivity ? (
                   <td className="whitespace-nowrap py-2 pl-1 pr-2 align-top text-right">
                     {statusLabel ? (
                       <span
                         className={cn(
-                          "inline-block rounded px-1.5 py-0.5 text-[10px] font-medium",
+                          "inline-block border px-1.5 py-0.5 font-mono text-[10px]",
                           st === "ok"
-                            ? "bg-green-500/15 text-green-700 dark:text-green-400"
+                            ? "border-vermilion-600/40 bg-paper-0 text-vermilion-600"
                             : st === "error"
-                              ? "bg-danger/15 text-danger"
+                              ? "border-vermilion-600 bg-paper-0 text-vermilion-600"
                               : st === "running"
-                                ? "bg-primary/15 text-primary"
-                                : "bg-layer-03 text-text-tertiary",
+                                ? "border-ink-300 bg-paper-0 text-ink-900"
+                                : "border-ink-100 bg-paper-100 text-ink-500",
                         )}
                       >
                         {statusLabel}
                       </span>
                     ) : (
-                      <span className="text-text-tertiary">—</span>
+                      <span className="text-ink-500">—</span>
                     )}
                   </td>
                 ) : null}
@@ -197,10 +197,10 @@ function ScenePlanDialogTable({
           })}
         </tbody>
         <tfoot>
-          <tr className="border-t border-border-subtle/60">
+          <tr className="border-t border-ink-100">
             <td
               colSpan={hasSceneActivity ? 6 : 5}
-              className="py-2 pl-2 pr-2 text-[10px] text-text-tertiary"
+              className="py-2 pl-2 pr-2 font-mono text-[10px] text-ink-500"
             >
               {t("pipelineScenePlanTableTotal", { credits: estimatedCredits })}
             </td>
@@ -528,28 +528,28 @@ export function SceneRenderPipelineStep({
     <div
       id="scene-render-pipeline"
       className={cn(
-        "flex flex-col rounded-xl border px-3 py-3 shadow-sm transition-shadow sm:px-3.5 scroll-mt-24",
+        "flex flex-col border px-3 py-3 sm:px-3.5 scroll-mt-24",
         done
-          ? "border-green-500/35 bg-green-500/[0.07] ring-1 ring-green-500/15"
+          ? "border-vermilion-600/35 bg-paper-0"
           : disabled
-            ? "border-border-subtle/50 bg-layer-02/20 opacity-60"
-            : "border-border-subtle/90 bg-layer-02/45 ring-1 ring-black/[0.03] dark:ring-white/[0.04]",
+            ? "border-ink-100 bg-paper-100 opacity-60"
+            : "border-ink-100 bg-paper-100",
       )}
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <span
             className={cn(
-              "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
+              "flex h-5 w-5 shrink-0 items-center justify-center border font-mono text-[10px]",
               done
-                ? "bg-green-500/20 text-green-600 dark:text-green-400"
-                : "bg-layer-03 text-text-tertiary",
+                ? "border-vermilion-600 text-vermilion-600"
+                : "border-ink-300 text-ink-500",
             )}
             aria-hidden
           >
             {stepBadge}
           </span>
-          <span className="truncate text-xs font-medium text-text-primary">
+          <span className="truncate text-xs font-medium text-ink-900">
             {t("draftSceneRenderCta")}
           </span>
         </div>
@@ -562,13 +562,13 @@ export function SceneRenderPipelineStep({
               type="button"
               variant="secondary"
               size="sm"
-              className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
+              className="h-7 gap-1 px-2.5 sm:gap-1.5 sm:px-3"
               onClick={() => setScenePlanDialogOpen(true)}
               aria-label={t("pipelineScenePlanOpenAria")}
               title={t("pipelineScenePlanOpenAria")}
             >
               <ListTree className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
-              <span className="hidden sm:inline">{t("pipelineScenePlanOpenDialog")}</span>
+              <span>{t("pipelineScenePlanOpenDialog")}</span>
             </Button>
           ) : null}
           {showView && onView ? (
@@ -579,10 +579,10 @@ export function SceneRenderPipelineStep({
               onClick={onView}
               aria-label={t("pipelineSceneClipsViewAria")}
               title={t("pipelineSceneClipsViewAria")}
-              className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
+              className="h-7 gap-1 px-2.5 sm:gap-1.5 sm:px-3"
             >
               <Eye className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
-              <span className="hidden sm:inline">{t("pipelineStepView")}</span>
+              <span>{t("pipelineStepView")}</span>
             </Button>
           ) : null}
           {hasFailures && !orchestrating ? (
@@ -591,7 +591,7 @@ export function SceneRenderPipelineStep({
               variant="secondary"
               size="sm"
               onClick={onRetryFailed}
-              className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
+              className="h-7 gap-1 px-2.5 sm:gap-1.5 sm:px-3"
             >
               {t("pipelineSceneRetryFailed")}
             </Button>
@@ -605,7 +605,7 @@ export function SceneRenderPipelineStep({
             onClick={onPrimary}
             aria-label={done ? t("pipelineStepRedo") : t("pipelineStepRun")}
             title={done ? t("pipelineStepRedo") : t("pipelineStepRun")}
-            className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
+            className="h-7 gap-1 px-2.5 sm:gap-1.5 sm:px-3"
           >
             {!orchestrating &&
               (done ? (
@@ -613,13 +613,13 @@ export function SceneRenderPipelineStep({
               ) : (
                 <Play className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
               ))}
-            <span className="hidden sm:inline">{done ? t("pipelineStepRedo") : t("pipelineStepRun")}</span>
+            <span>{done ? t("pipelineStepRedo") : t("pipelineStepRun")}</span>
           </Button>
         </div>
       </div>
 
       {!runwayRenderReady && !done ? (
-        <p className="mt-1.5 rounded-md border border-amber-500/25 bg-amber-500/[0.06] px-2 py-1.5 text-[11px] leading-snug text-text-secondary">
+        <p className="mt-1.5 border border-vermilion-600/30 bg-vermilion-100/40 px-2 py-1.5 text-[11px] leading-snug text-vermilion-600">
           {t("draftRunwayDisabledHint")}
         </p>
       ) : null}
@@ -628,18 +628,18 @@ export function SceneRenderPipelineStep({
         <form
           id={advId}
           className={cn(
-            "mt-2 space-y-3 border-t border-border-subtle/50 pt-3 pl-7",
+            "mt-2 space-y-3 border-t border-ink-100 pt-3 pl-7",
             !advOpen && "hidden",
           )}
         >
           <div>
             <label
-              className="block text-[10px] font-medium text-text-tertiary mb-0.5"
+              className="mb-0.5 block font-mono text-[10px] text-ink-500"
               htmlFor={`${advId}-runway-model`}
             >
               {t("pipelineSceneRunwayVideoModelLabel")}
             </label>
-            <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+            <p className="mb-1 text-[10px] leading-relaxed text-ink-500">
               {t("pipelineSceneRunwayVideoModelHint")}
             </p>
             <div className="relative min-w-0 max-w-md">
@@ -651,10 +651,10 @@ export function SceneRenderPipelineStep({
                 }
                 aria-label={t("pipelineSceneRunwayVideoModelLabel")}
                 className={cn(
-                  "h-7 w-full min-w-0 max-w-full cursor-pointer appearance-none rounded border border-border-subtle bg-field",
-                  "pl-2.5 pr-10 text-left text-[11px] text-text-primary",
+                  "h-7 w-full min-w-0 max-w-full cursor-pointer appearance-none border-b border-ink-300 bg-transparent",
+                  "pl-0 pr-8 text-left text-[11px] text-ink-900",
                   "overflow-hidden text-ellipsis whitespace-nowrap",
-                  "focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25",
+                  "focus-visible:border-vermilion-600 focus-visible:outline-none",
                 )}
               >
                 {RUNWAY_TEXT_TO_VIDEO_MODEL_IDS.map((id) => (
@@ -664,19 +664,19 @@ export function SceneRenderPipelineStep({
                 ))}
               </select>
               <ChevronDown
-                className="pointer-events-none absolute right-2 top-1/2 z-1 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary opacity-90"
+                className="pointer-events-none absolute top-1/2 right-0 z-1 h-3.5 w-3.5 -translate-y-1/2 text-ink-500 opacity-90"
                 aria-hidden
               />
             </div>
           </div>
           <div>
             <label
-              className="block text-[10px] font-medium text-text-tertiary mb-0.5"
+              className="mb-0.5 block font-mono text-[10px] text-ink-500"
               htmlFor={`${advId}-runway-suffix`}
             >
               {t("pipelineSceneRunwayVisualSuffixLabel")}
             </label>
-            <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+            <p className="mb-1 text-[10px] leading-relaxed text-ink-500">
               {t("pipelineSceneRunwayVisualSuffixHint")}
             </p>
             <textarea
@@ -685,7 +685,7 @@ export function SceneRenderPipelineStep({
               maxLength={2000}
               value={visualPromptSuffix}
               onChange={(e) => setVisualPromptSuffix(e.target.value)}
-              className="w-full rounded border border-border-subtle bg-field px-2 py-1.5 text-[11px] text-text-primary placeholder:text-text-tertiary"
+              className="w-full border border-ink-100 bg-paper-0 px-2 py-1.5 text-[11px] text-ink-900 placeholder:text-ink-400"
               placeholder={t("pipelineSceneRunwayVisualSuffixPlaceholder")}
             />
           </div>
@@ -693,7 +693,7 @@ export function SceneRenderPipelineStep({
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
               <div className="min-w-0 flex-1">
                 <label
-                  className="block text-[10px] font-medium text-text-tertiary mb-0.5"
+                  className="mb-0.5 block font-mono text-[10px] text-ink-500"
                   htmlFor={`${advId}-plan-model`}
                 >
                   {t("pipelineScenePlanLlmModelLabel")}
@@ -706,10 +706,10 @@ export function SceneRenderPipelineStep({
                     title={selectedPlanModelLabel}
                     aria-label={t("pipelineScenePlanLlmModelLabel")}
                     className={cn(
-                      "h-7 w-full min-w-0 max-w-full cursor-pointer appearance-none rounded border border-border-subtle bg-field",
-                      "pl-2.5 pr-10 text-left text-[11px] text-text-primary",
+                      "h-7 w-full min-w-0 max-w-full cursor-pointer appearance-none border-b border-ink-300 bg-transparent",
+                      "pl-0 pr-8 text-left text-[11px] text-ink-900",
                       "overflow-hidden text-ellipsis whitespace-nowrap",
-                      "focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25",
+                      "focus-visible:border-vermilion-600 focus-visible:outline-none",
                     )}
                   >
                     {packagingModelOptions.map((o) => (
@@ -719,7 +719,7 @@ export function SceneRenderPipelineStep({
                     ))}
                   </select>
                   <ChevronDown
-                    className="pointer-events-none absolute right-2 top-1/2 z-1 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary opacity-90"
+                    className="pointer-events-none absolute top-1/2 right-0 z-1 h-3.5 w-3.5 -translate-y-1/2 text-ink-500 opacity-90"
                     aria-hidden
                   />
                 </div>
@@ -739,21 +739,21 @@ export function SceneRenderPipelineStep({
             </div>
           ) : null}
           {packagingLlmReady ? (
-            <p className="text-[10px] text-text-tertiary leading-relaxed">{t("pipelineScenePlanLlmHint")}</p>
+            <p className="text-[10px] leading-relaxed text-ink-500">{t("pipelineScenePlanLlmHint")}</p>
           ) : null}
 
           <div>
-            <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+            <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
               {t("pipelineProduceTargetSceneCountLabel")}
             </label>
-            <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+            <p className="mb-1 text-[10px] leading-relaxed text-ink-500">
               {t("pipelineProduceTargetSceneCountHint")}
             </p>
             <select
               name="target_scene_count"
               value={targetSceneCount}
               onChange={(e) => setTargetSceneCount(e.target.value)}
-              className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+              className="h-7 w-full max-w-xs border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 outline-none focus:border-vermilion-600"
             >
               <option value="">{t("pipelineProduceTargetSceneCountAuto")}</option>
               {[4, 5, 6, 7, 8].map((n) => (
@@ -764,10 +764,10 @@ export function SceneRenderPipelineStep({
             </select>
           </div>
           <div>
-            <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+            <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
               {t("pipelineProduceScenesJsonLabel")}
             </label>
-            <p className="text-[10px] text-text-tertiary mb-1.5 leading-relaxed">
+            <p className="mb-1.5 text-[10px] leading-relaxed text-ink-500">
               {t("pipelineProduceScenesJsonHint")}
             </p>
             <textarea
@@ -778,10 +778,10 @@ export function SceneRenderPipelineStep({
               onChange={(e) => setScenesJsonControlled(e.target.value)}
               placeholder={SCENES_JSON_INPUT_PLACEHOLDER}
               title={t("pipelineProduceScenesJsonPlaceholder")}
-              className="w-full rounded border border-border-subtle bg-field px-2 py-1.5 text-[11px] text-text-primary placeholder:text-text-tertiary font-mono"
+              className="w-full border border-ink-100 bg-paper-0 px-2 py-1.5 font-mono text-[11px] text-ink-900 placeholder:text-ink-400"
             />
             <div className="mt-1.5 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-[10px] text-text-tertiary leading-relaxed">
+              <p className="text-[10px] leading-relaxed text-ink-500">
                 {t("pipelinePrefsAutoSaveHint")}
               </p>
               <Button
@@ -801,11 +801,11 @@ export function SceneRenderPipelineStep({
       ) : null}
 
       {showLegacyProgressList ? (
-        <ul className="mt-2 space-y-1.5 border-t border-border-subtle/40 pt-2 pl-7">
-          <li className="mb-1.5 text-[10px] leading-relaxed text-text-tertiary">
+        <ul className="mt-2 space-y-1.5 border-t border-ink-100 pt-2 pl-7">
+          <li className="mb-1.5 text-[10px] leading-relaxed text-ink-500">
             {t("pipelineSceneRunwayQueueRefreshHint")}
           </li>
-          <li className="mb-1 text-[10px] font-medium text-text-tertiary">
+          <li className="mb-1 font-mono text-[10px] text-ink-500">
             {t("pipelineSceneSceneListHeading")}
           </li>
           {sceneRowsFromStatus.map((idx) => {
@@ -821,21 +821,21 @@ export function SceneRenderPipelineStep({
             return (
               <li
                 key={idx}
-                className="flex items-center justify-between gap-2 text-[11px] text-text-secondary"
+                className="flex items-center justify-between gap-2 text-[11px] text-ink-700"
               >
                 <span className="min-w-0 truncate">
                   {t("pipelineSceneRowLabel", { index: idx + 1 })}
                 </span>
                 <span
                   className={cn(
-                    "shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium",
+                    "shrink-0 border px-1.5 py-0.5 font-mono text-[10px]",
                     st === "ok"
-                      ? "bg-green-500/15 text-green-700 dark:text-green-400"
+                      ? "border-vermilion-600/40 bg-paper-0 text-vermilion-600"
                       : st === "error"
-                        ? "bg-danger/15 text-danger"
+                        ? "border-vermilion-600 bg-paper-0 text-vermilion-600"
                         : st === "running"
-                          ? "bg-primary/15 text-primary"
-                          : "bg-layer-03 text-text-tertiary",
+                          ? "border-ink-300 bg-paper-0 text-ink-900"
+                          : "border-ink-100 bg-paper-100 text-ink-500",
                   )}
                 >
                   {label}
@@ -848,40 +848,40 @@ export function SceneRenderPipelineStep({
 
       <dialog
         ref={preflightRef}
-        className="fixed left-1/2 top-1/2 z-50 w-[min(100vw-2rem,22rem)] max-h-[min(90vh,32rem)] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border-subtle bg-layer-01 p-0 text-text-primary shadow-2xl [&::backdrop]:bg-black/50"
+        className="fixed left-1/2 top-1/2 z-50 max-h-[min(90vh,32rem)] w-[min(100vw-2rem,22rem)] -translate-x-1/2 -translate-y-1/2 border border-ink-100 bg-paper-100 p-0 text-ink-900 backdrop:bg-black/50"
         aria-labelledby={preflightTitleId}
         onClose={() => setPreflightData(null)}
       >
         {preflightData ? (
           <div className="flex max-h-[min(90vh,32rem)] flex-col">
-            <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
-              <h2 id={preflightTitleId} className="text-sm font-semibold text-text-primary">
+            <div className="flex items-center justify-between border-b border-ink-100 px-4 py-3">
+              <h2 id={preflightTitleId} className="text-sm font-semibold text-ink-900">
                 {t("pipelineScenePreflightTitle")}
               </h2>
               <button
                 type="button"
                 onClick={() => preflightRef.current?.close()}
-                className="rounded-md p-1.5 text-text-secondary hover:bg-layer-02 hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                className="p-1.5 text-ink-500 hover:bg-paper-0 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vermilion-600"
                 aria-label={t("pipelineScenePreflightCloseLabel")}
               >
                 <X className="h-5 w-5" aria-hidden />
               </button>
             </div>
             <div className="space-y-2 overflow-y-auto px-4 pb-3 pt-3 text-xs">
-              <p className="text-text-secondary leading-snug">
+              <p className="leading-snug text-ink-700">
                 {t("pipelineScenePreflightSummary", {
                   count: preflightData.sceneCount,
                   credits: preflightData.estimatedCredits,
                 })}
               </p>
               {preflightData.totalDurationSeconds != null ? (
-                <p className="text-text-tertiary">
+                <p className="text-ink-500">
                   {t("pipelineScenePreflightDuration", {
                     seconds: preflightData.totalDurationSeconds,
                   })}
                 </p>
               ) : null}
-              <p className="text-[10px] text-text-tertiary leading-relaxed">
+              <p className="text-[10px] leading-relaxed text-ink-500">
                 {t("pipelineSceneBudgetThresholds", {
                   warnSeconds: SCENE_BUDGET_WARN_TOTAL_SECONDS,
                   maxSeconds: SCENE_BUDGET_MAX_TOTAL_SECONDS,
@@ -889,17 +889,17 @@ export function SceneRenderPipelineStep({
               </p>
               {preflightData.budgetWarning === "overSoftBudget" &&
               preflightData.totalDurationSeconds != null ? (
-                <p className="rounded border border-amber-500/30 bg-amber-500/10 px-2 py-1.5 text-[11px] text-amber-950 dark:text-amber-100">
+                <p className="border border-vermilion-600/30 bg-vermilion-100/40 px-2 py-1.5 text-[11px] text-vermilion-600">
                   {t("pipelineSceneBudgetSoftWarning", {
                     seconds: preflightData.totalDurationSeconds,
                   })}
                 </p>
               ) : null}
-              <p className="text-[10px] text-text-tertiary leading-relaxed">
+              <p className="text-[10px] leading-relaxed text-ink-500">
                 {t("pipelineSceneEstimatedCreditsDisclaimer")}
               </p>
             </div>
-            <div className="flex flex-wrap justify-end gap-2 border-t border-border-subtle px-4 py-3">
+            <div className="flex flex-wrap justify-end gap-2 border-t border-ink-100 px-4 py-3">
               <Button
                 type="button"
                 variant="secondary"
@@ -949,7 +949,7 @@ export function SceneRenderPipelineStep({
         !disabled ? (
           <div
             className={cn(
-              estimatedRunwayCredits != null && "mt-4 border-t border-border-subtle/60 pt-4",
+              estimatedRunwayCredits != null && "mt-4 border-t border-ink-100 pt-4",
             )}
           >
             <SceneClipUploadRows episodeId={episodeId} rows={parsedSceneRowsForEstimate} />
