@@ -14,12 +14,14 @@ type WaitlistFormProps = {
   className?: string;
   /** Larger padding on band/footer variants */
   variant?: "inline" | "panel";
+  analyticsContext?: Record<string, string | number | boolean | null>;
 };
 
 export function WaitlistForm({
   source,
   className,
   variant = "inline",
+  analyticsContext,
 }: WaitlistFormProps) {
   const t = useTranslations("Waitlist");
   const locale = useLocale();
@@ -61,6 +63,7 @@ export function WaitlistForm({
           source,
           locale,
           http_status: res.status,
+          ...analyticsContext,
         });
         setStatus("error");
         setErrorMessage(data.error ?? t("errorGeneric"));
@@ -69,6 +72,7 @@ export function WaitlistForm({
       posthog?.capture(PostHogEvent.ELEVATE_WAITLIST_SUBMITTED, {
         source,
         locale,
+        ...analyticsContext,
       });
       setStatus("success");
       setEmail("");
@@ -77,6 +81,7 @@ export function WaitlistForm({
         source,
         locale,
         http_status: 0,
+        ...analyticsContext,
       });
       setStatus("error");
       setErrorMessage(t("errorGeneric"));

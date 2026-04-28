@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildBlogSubscriptionCheckoutUrl,
+  canReadBlogPost,
   canReadPremiumBlogPost,
   LEMON_ANNUAL_VARIANT_ID,
   LEMON_MONTHLY_VARIANT_ID,
@@ -79,5 +80,58 @@ describe("canReadPremiumBlogPost", () => {
     });
     expect(monthlyActive.canReadFull).toBe(true);
     expect(annualExpired.canReadFull).toBe(false);
+  });
+});
+
+describe("canReadBlogPost", () => {
+  const freeSubscription = {
+    tier: "free" as const,
+    status: null,
+    currentPeriodEnd: null,
+    manageSubscriptionUrl: null,
+    lemonSubscriptionId: null,
+    lemonVariantId: null,
+  };
+
+  it("allows public posts for everyone", () => {
+    const decision = canReadBlogPost({
+      accessTier: "public",
+      isAuthenticated: false,
+      subscription: freeSubscription,
+    });
+    expect(decision.canReadFull).toBe(true);
+    expect(decision.requiredAccessTier).toBe("public");
+  });
+
+  it("requires authentication for member-only posts", () => {
+    const guestDecision = canReadBlogPost({
+      accessTier: "member",
+      isAuthenticated: false,
+      subscription: freeSubscription,
+    });
+    const memberDecision = canReadBlogPost({
+      accessTier: "member",
+      isAuthenticated: true,
+      subscription: freeSubscription,
+    });
+    expect(guestDecision.canReadFull).toBe(false);
+    expect(memberDecision.canReadFull).toBe(true);
+    expect(guestDecision.requiredAccessTier).toBe("member");
+  });
+
+  it("requires active paid subscription for premium posts", () => {
+    const paidActive = canReadBlogPost({
+      accessTier: "premium",
+      isAuthenticated: true,
+      subscription: { ...freeSubscription, tier: "monthly", status: "active" },
+    });
+    const paidExpired = canReadBlogPost({
+      accessTier: "premium",
+      isAuthenticated: true,
+      subscription: { ...freeSubscription, tier: "annual", status: "expired" },
+    });
+    expect(paidActive.canReadFull).toBe(true);
+    expect(paidExpired.canReadFull).toBe(false);
+    expect(paidExpired.requiredAccessTier).toBe("premium");
   });
 });

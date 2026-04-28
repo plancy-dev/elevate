@@ -19,7 +19,7 @@ import { BlogPaywallCta } from "@/components/blog/blog-paywall-cta";
 import { createClient } from "@/lib/supabase/server";
 import {
   buildBlogSubscriptionCheckoutUrl,
-  canReadPremiumBlogPost,
+  canReadBlogPost,
   getBlogSubscriptionByUserId,
   LEMON_ANNUAL_VARIANT_ID,
   LEMON_MONTHLY_VARIANT_ID,
@@ -99,8 +99,9 @@ export default async function BlogPostPage({ params }: Props) {
     data: { user },
   } = await supabase.auth.getUser();
   const subscription = await getBlogSubscriptionByUserId(supabase, user?.id ?? null);
-  const access = canReadPremiumBlogPost({
-    isPremium: post.meta.isPremium,
+  const access = canReadBlogPost({
+    accessTier: post.meta.accessTier,
+    isAuthenticated: Boolean(user),
     subscription,
   });
   const monthlyCheckoutUrl = buildBlogSubscriptionCheckoutUrl({
@@ -189,8 +190,13 @@ export default async function BlogPostPage({ params }: Props) {
               />
             </div>
             <BlogPaywallCta
-              monthlyCheckoutUrl={monthlyCheckoutUrl}
-              annualCheckoutUrl={annualCheckoutUrl}
+              {...(access.requiredAccessTier === "member"
+                ? { mode: "member" as const }
+                : {
+                    mode: "premium" as const,
+                    monthlyCheckoutUrl,
+                    annualCheckoutUrl,
+                  })}
             />
           </>
         )}

@@ -10,12 +10,17 @@ import {
 } from "@/lib/analytics/posthog-events";
 
 type CtaId = (typeof MarketingCtaId)[keyof typeof MarketingCtaId];
+type EventProperties = Record<string, string | number | boolean | null>;
 
-type LocaleLinkProps = ComponentProps<typeof Link> & { ctaId: CtaId };
+type LocaleLinkProps = ComponentProps<typeof Link> & {
+  ctaId: CtaId;
+  eventProperties?: EventProperties;
+};
 
 /** Locale-aware marketing link with PostHog `elevate_marketing_cta_click`. */
 export function MarketingTrackedLocaleLink({
   ctaId,
+  eventProperties,
   onClick,
   children,
   ...rest
@@ -27,6 +32,7 @@ export function MarketingTrackedLocaleLink({
       onClick={(e) => {
         posthog?.capture(PostHogEvent.ELEVATE_MARKETING_CTA_CLICK, {
           cta_id: ctaId,
+          ...eventProperties,
         });
         onClick?.(e);
       }}
@@ -39,6 +45,7 @@ export function MarketingTrackedLocaleLink({
 type NextLinkProps = {
   href: string;
   ctaId: CtaId;
+  eventProperties?: EventProperties;
   className?: string;
   children: ReactNode;
 };
@@ -47,6 +54,7 @@ type NextLinkProps = {
 export function MarketingTrackedNextLink({
   href,
   ctaId,
+  eventProperties,
   className,
   children,
 }: NextLinkProps) {
@@ -58,6 +66,7 @@ export function MarketingTrackedNextLink({
       onClick={() =>
         posthog?.capture(PostHogEvent.ELEVATE_MARKETING_CTA_CLICK, {
           cta_id: ctaId,
+          ...eventProperties,
         })
       }
     >

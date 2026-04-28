@@ -2,6 +2,15 @@ import createIntlMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "@/i18n/routing";
 import {
+  HERO_VARIANT_COOKIE,
+  HERO_VARIANT_SOURCE_COOKIE,
+  parseHeroVariant,
+  parseHeroVariantSource,
+  pickHeroVariant,
+  type HeroVariant,
+  type HeroVariantSource,
+} from "@/lib/analytics/hero-variant";
+import {
   classifyProxyRequest,
   shouldForceLoginRedirect,
 } from "@/lib/proxy/skip-session";
@@ -73,12 +82,88 @@ function redirectResourcesToBlog(request: NextRequest) {
   return null;
 }
 
+function isLocaleRootPath(pathname: string) {
+  if (pathname === "/") return true;
+  const segments = pathname.split("/").filter(Boolean);
+  return (
+    segments.length === 1 &&
+    (routing.locales as readonly string[]).includes(segments[0])
+  );
+}
+
+function resolveHeroVariant(request: NextRequest) {
+  const queryVariant = parseHeroVariant(request.nextUrl.searchParams.get("hero_variant"));
+  const cookieVariant = parseHeroVariant(request.cookies.get(HERO_VARIANT_COOKIE)?.value);
+  const source: HeroVariantSource = queryVariant
+    ? "query"
+    : cookieVariant
+      ? "cookie"
+      : "random";
+  return {
+    queryVariant,
+    cookieVariant,
+    source,
+    assigned: queryVariant ?? cookieVariant ?? pickHeroVariant(),
+  };
+}
+
+function setHeroVariantCookies(args: {
+  response: NextResponse;
+  variant: HeroVariant;
+  source: HeroVariantSource;
+}) {
+  const base = {
+    path: "/",
+    httpOnly: false,
+    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 90,
+  };
+  args.response.cookies.set({
+    name: HERO_VARIANT_COOKIE,
+    value: args.variant,
+    ...base,
+  });
+  args.response.cookies.set({
+    name: HERO_VARIANT_SOURCE_COOKIE,
+    value: args.source,
+    ...base,
+  });
+}
+
+function withHeroVariantCookie(request: NextRequest, response: NextResponse) {
+  if (!isLocaleRootPath(request.nextUrl.pathname)) return response;
+  const { cookieVariant, source, assigned } = resolveHeroVariant(request);
+  const cookieSource = parseHeroVariantSource(
+    request.cookies.get(HERO_VARIANT_SOURCE_COOKIE)?.value,
+  );
+  if (cookieVariant === assigned && cookieSource === source) return response;
+
+  setHeroVariantCookies({ response, variant: assigned, source });
+  return response;
+}
+
+function maybeRedirectToCleanHeroVariantUrl(request: NextRequest) {
+  if (!isLocaleRootPath(request.nextUrl.pathname)) return null;
+  if (!request.nextUrl.searchParams.has("hero_variant")) return null;
+
+  const url = request.nextUrl.clone();
+  url.searchParams.delete("hero_variant");
+  const response = NextResponse.redirect(url, 307);
+  const { assigned, source } = resolveHeroVariant(request);
+  setHeroVariantCookies({ response, variant: assigned, source });
+  return response;
+}
+
 export async function proxy(request: NextRequest) {
   const resourcesRedirect = redirectResourcesToBlog(request);
   if (resourcesRedirect) return resourcesRedirect;
 
   const authForward = redirectAuthLandingToCallbackIfNeeded(request);
   if (authForward) return authForward;
+
+  const heroVariantRedirect = maybeRedirectToCleanHeroVariantUrl(request);
+  if (heroVariantRedirect) return heroVariantRedirect;
 
   const pathname = request.nextUrl.pathname;
   const classification = classifyProxyRequest({
@@ -93,7 +178,7 @@ export async function proxy(request: NextRequest) {
    * crawlers hit these constantly.
    */
   if (classification === "skip_static") {
-    return NextResponse.next({ request });
+    return withHeroVariantCookie(request, NextResponse.next({ request }));
   }
 
   /**
@@ -107,20 +192,20 @@ export async function proxy(request: NextRequest) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
       url.searchParams.set("next", pathname);
-      return NextResponse.redirect(url);
+      return withHeroVariantCookie(request, NextResponse.redirect(url));
     }
     if (shouldSkipIntl(pathname)) {
-      return NextResponse.next({ request });
+      return withHeroVariantCookie(request, NextResponse.next({ request }));
     }
-    return intlMiddleware(request);
+    return withHeroVariantCookie(request, intlMiddleware(request));
   }
 
   if (shouldSkipIntl(pathname)) {
-    return updateSession(request);
+    return withHeroVariantCookie(request, await updateSession(request));
   }
 
   const intlResponse = intlMiddleware(request);
-  return updateSession(request, intlResponse);
+  return withHeroVariantCookie(request, await updateSession(request, intlResponse));
 }
 
 export const config = {

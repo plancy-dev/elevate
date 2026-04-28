@@ -23,9 +23,44 @@ export type BlogAccessDecision = {
   canReadFull: boolean;
   tier: BlogSubscriptionTier;
   previewRatio: number;
+  requiredAccessTier: "public" | "member" | "premium";
 };
 
 const DEFAULT_PREVIEW_RATIO = 0.35;
+
+export function canReadBlogPost(args: {
+  accessTier: "public" | "member" | "premium";
+  isAuthenticated: boolean;
+  subscription: BlogSubscriptionSnapshot;
+}): BlogAccessDecision {
+  if (args.accessTier === "public") {
+    return {
+      canReadFull: true,
+      tier: args.subscription.tier,
+      previewRatio: 1,
+      requiredAccessTier: "public",
+    };
+  }
+
+  if (args.accessTier === "member") {
+    return {
+      canReadFull: args.isAuthenticated,
+      tier: args.subscription.tier,
+      previewRatio: DEFAULT_PREVIEW_RATIO,
+      requiredAccessTier: "member",
+    };
+  }
+
+  const paidTier =
+    args.subscription.tier === "monthly" || args.subscription.tier === "annual";
+  const active = args.subscription.status === "active";
+  return {
+    canReadFull: paidTier && active,
+    tier: paidTier && active ? args.subscription.tier : "free",
+    previewRatio: DEFAULT_PREVIEW_RATIO,
+    requiredAccessTier: "premium",
+  };
+}
 
 export function mapVariantIdToBlogTier(
   variantId: number | string | null | undefined,
@@ -101,15 +136,9 @@ export function canReadPremiumBlogPost(args: {
   isPremium: boolean;
   subscription: BlogSubscriptionSnapshot;
 }): BlogAccessDecision {
-  if (!args.isPremium) {
-    return { canReadFull: true, tier: args.subscription.tier, previewRatio: 1 };
-  }
-  const paidTier =
-    args.subscription.tier === "monthly" || args.subscription.tier === "annual";
-  const active = args.subscription.status === "active";
-  return {
-    canReadFull: paidTier && active,
-    tier: paidTier && active ? args.subscription.tier : "free",
-    previewRatio: DEFAULT_PREVIEW_RATIO,
-  };
+  return canReadBlogPost({
+    accessTier: args.isPremium ? "premium" : "public",
+    isAuthenticated: true,
+    subscription: args.subscription,
+  });
 }

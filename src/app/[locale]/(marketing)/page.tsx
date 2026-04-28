@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import {
   ArrowRight,
   BarChart3,
@@ -23,7 +24,18 @@ import { getSiteUrl } from "@/lib/seo/site-url";
 import { KPIDashboardPreview } from "@/components/marketing/kpi-dashboard-preview";
 import { PretextHeroStatement } from "@/components/marketing/pretext-hero-statement";
 import { WaitlistForm } from "@/components/marketing/waitlist-form";
-type Props = { params: Promise<{ locale: string }> };
+import {
+  HERO_VARIANT_COOKIE,
+  HERO_VARIANT_SOURCE_COOKIE,
+  parseHeroVariant,
+  parseHeroVariantSource,
+  type HeroVariant,
+  type HeroVariantSource,
+} from "@/lib/analytics/hero-variant";
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ hero_variant?: string | string[] }>;
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -46,10 +58,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function Home({ params }: Props) {
+export default async function Home({ params, searchParams }: Props) {
   const { locale } = await params;
+  const query = await searchParams;
   setRequestLocale(locale);
   const t = await getTranslations("Home");
+  const cookieStore = await cookies();
+  const queryHeroVariant = parseHeroVariant(
+    Array.isArray(query.hero_variant) ? query.hero_variant[0] : query.hero_variant,
+  );
+  const cookieHeroVariant = parseHeroVariant(
+    cookieStore.get(HERO_VARIANT_COOKIE)?.value,
+  );
+  const cookieHeroSource = parseHeroVariantSource(
+    cookieStore.get(HERO_VARIANT_SOURCE_COOKIE)?.value,
+  );
+  const heroVariant: HeroVariant = queryHeroVariant ?? cookieHeroVariant ?? "A";
+  const heroVariantSource: HeroVariantSource = queryHeroVariant
+    ? "query"
+    : cookieHeroSource ?? (cookieHeroVariant ? "cookie" : "random");
+  const isVariantA = heroVariant === "A";
+  const showHeroVariantDebugBadge = process.env.NODE_ENV !== "production";
 
   const capabilities = [
     {
@@ -99,9 +128,16 @@ export default async function Home({ params }: Props) {
         <div className="relative elevate-marketing-shell">
           <div className="grid gap-10 py-14 sm:gap-12 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:py-24">
             <div className="flex flex-col justify-center">
-              <Badge variant="blue" className="mb-6 w-fit">
-                {t("badge")}
-              </Badge>
+              <div className="mb-6 flex items-center gap-2">
+                <Badge variant="blue" className="w-fit">
+                  {t("badge")}
+                </Badge>
+                {showHeroVariantDebugBadge ? (
+                  <span className="inline-flex items-center border border-ink-100 bg-paper-100 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-500">
+                    {heroVariant} · {heroVariantSource}
+                  </span>
+                ) : null}
+              </div>
 
               <h1 className="text-[length:var(--elevate-marketing-home-hero-size)] font-semibold tracking-[-0.02em] leading-[1.12] text-ink-900">
                 {t("headline")}
@@ -124,15 +160,23 @@ export default async function Home({ params }: Props) {
                 <MarketingTrackedLocaleLink
                   href="/#waitlist"
                   ctaId={MarketingCtaId.HERO_WAITLIST_ANCHOR}
+                  eventProperties={{
+                    hero_variant: heroVariant,
+                    intent: "notify_me",
+                  }}
                 >
                   <Button variant="marketing" size="lg" className="px-6">
-                    {t("ctaWaitlist")}
+                    {isVariantA ? t("ctaWaitlist") : t("ctaWaitlistB")}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </MarketingTrackedLocaleLink>
                 <MarketingTrackedLocaleLink
                   href="/product/prompt-studio"
                   ctaId={MarketingCtaId.HERO_PROMPT_STUDIO}
+                  eventProperties={{
+                    hero_variant: heroVariant,
+                    intent: "explore_product",
+                  }}
                 >
                   <Button variant="tertiary" size="lg">
                     {t("ctaPromptStudio")}
@@ -141,6 +185,10 @@ export default async function Home({ params }: Props) {
                 <MarketingTrackedLocaleLink
                   href="/product/ebooks-and-guides"
                   ctaId={MarketingCtaId.HERO_EBOOKS}
+                  eventProperties={{
+                    hero_variant: heroVariant,
+                    intent: "explore_resources",
+                  }}
                 >
                   <Button variant="tertiary" size="lg">
                     {t("ctaEbooks")}
@@ -148,14 +196,54 @@ export default async function Home({ params }: Props) {
                 </MarketingTrackedLocaleLink>
               </div>
               <p className="mt-4 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
-                {t("ctaSignUpHint")}{""}
-                <MarketingTrackedNextLink
-                  href="/signup"
-                  ctaId={MarketingCtaId.HERO_SIGNUP}
-                  className="font-medium text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
-                >
-                  {t("ctaSignUp")}
-                </MarketingTrackedNextLink>
+                {isVariantA ? (
+                  <>
+                    {t("ctaSignUpHint")}{" "}
+                    <MarketingTrackedNextLink
+                      href="/signup"
+                      ctaId={MarketingCtaId.HERO_SIGNUP}
+                      eventProperties={{ hero_variant: heroVariant, intent: "read_now" }}
+                      className="font-medium text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
+                    >
+                      {t("ctaSignUp")}
+                    </MarketingTrackedNextLink>
+                    <span aria-hidden className="mx-2 text-ink-300">
+                      ·
+                    </span>
+                    <MarketingTrackedLocaleLink
+                      href="/#waitlist"
+                      ctaId={MarketingCtaId.HERO_WAITLIST_INLINE_NOTIFY}
+                      eventProperties={{ hero_variant: heroVariant, intent: "notify_me" }}
+                      className="font-medium text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
+                    >
+                      {t("ctaWaitlistNotify")}
+                    </MarketingTrackedLocaleLink>
+                  </>
+                ) : (
+                  <>
+                    {t("ctaSignUpHintB")}{" "}
+                    <MarketingTrackedLocaleLink
+                      href="/#waitlist"
+                      ctaId={MarketingCtaId.HERO_WAITLIST_INLINE_NOTIFY}
+                      eventProperties={{ hero_variant: heroVariant, intent: "notify_me" }}
+                      className="font-medium text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
+                    >
+                      {t("ctaWaitlistNotifyB")}
+                    </MarketingTrackedLocaleLink>
+                    <span aria-hidden className="mx-2 text-ink-300">
+                      ·
+                    </span>
+                    {t("ctaSignUpHintB2")}{" "}
+                    <MarketingTrackedNextLink
+                      href="/signup"
+                      ctaId={MarketingCtaId.HERO_SIGNUP}
+                      eventProperties={{ hero_variant: heroVariant, intent: "read_now" }}
+                      className="font-medium text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
+                    >
+                      {t("ctaSignUpB")}
+                    </MarketingTrackedNextLink>
+                  </>
+                )}
               </p>
             </div>
 
@@ -234,7 +322,11 @@ export default async function Home({ params }: Props) {
             <p className="mt-3 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
               {t("sectionWaitlistSub")}
             </p>
-            <WaitlistForm source="home" className="mt-8" />
+            <WaitlistForm
+              source="home"
+              className="mt-8"
+              analyticsContext={{ hero_variant: heroVariant }}
+            />
           </div>
         </div>
       </section>
@@ -275,6 +367,7 @@ export default async function Home({ params }: Props) {
               source="band"
               variant="panel"
               className="mt-8 max-w-xl"
+              analyticsContext={{ hero_variant: heroVariant }}
             />
           </div>
 

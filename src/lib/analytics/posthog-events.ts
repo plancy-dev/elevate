@@ -44,6 +44,7 @@ export const PostHogEvent = {
 export const MarketingCtaId = {
   HERO_EBOOKS: "hero_ebooks",
   HERO_WAITLIST_ANCHOR: "hero_waitlist_anchor",
+  HERO_WAITLIST_INLINE_NOTIFY: "hero_waitlist_inline_notify",
   HERO_PROMPT_STUDIO: "hero_prompt_studio",
   HERO_SIGNUP: "hero_signup",
   BAND_CONTACT: "band_contact",

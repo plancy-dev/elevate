@@ -12,6 +12,7 @@ export type BlogPostMeta = {
   title: string;
   description: string;
   date: string;
+  accessTier: "public" | "member" | "premium";
   isPremium: boolean;
   /** Absolute path from site root for OG/Twitter preview, e.g. `/blog/my-slug/hero.jpg`. Must live under `public/`. */
   ogImage?: string;
@@ -29,6 +30,14 @@ function parseOgImage(value: unknown): string | undefined {
   return t;
 }
 
+function parseAccessTier(
+  data: Record<string, unknown>,
+): BlogPostMeta["accessTier"] {
+  const raw = data.access_tier;
+  if (raw === "public" || raw === "member" || raw === "premium") return raw;
+  return data.is_premium === true ? "premium" : "public";
+}
+
 function parseFrontmatter(
   data: Record<string, unknown>,
   slug: string,
@@ -39,9 +48,17 @@ function parseFrontmatter(
     typeof data.date === "string"
       ? data.date
       : new Date().toISOString().slice(0, 10);
-  const isPremium = data.is_premium === true;
+  const accessTier = parseAccessTier(data);
+  const isPremium = accessTier === "premium";
   const ogImage = parseOgImage(data.ogImage);
-  return { title, description, date, isPremium, ...(ogImage ? { ogImage } : {}) };
+  return {
+    title,
+    description,
+    date,
+    accessTier,
+    isPremium,
+    ...(ogImage ? { ogImage } : {}),
+  };
 }
 
 function listMdxFiles(dir: string): string[] {
