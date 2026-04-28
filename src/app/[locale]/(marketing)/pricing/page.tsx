@@ -44,10 +44,10 @@ export default async function PricingPage({ params }: Props) {
   return (
     <div className="border-t border-ink-100">
       <section className="elevate-marketing-shell py-14 text-center sm:py-16">
-        <h1 className="text-[length:var(--elevate-marketing-home-hero-size)] font-semibold leading-[1.1] tracking-[-0.02em] text-ink-900">
+        <h1 className="text-(length:--elevate-marketing-home-hero-size) font-semibold leading-[1.1] tracking-[-0.02em] text-ink-900">
           Choose your plan
         </h1>
-        <p className="mx-auto mt-4 max-w-xl text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
+        <p className="mx-auto mt-4 max-w-xl text-(length:--elevate-marketing-lead-size) leading(--elevate-prose-body-leading) text-ink-700">
           Weekly practical AI tips for everyday users, from quick previews to full archive access.
         </p>
       </section>
@@ -56,10 +56,10 @@ export default async function PricingPage({ params }: Props) {
         <div className="grid gap-px overflow-hidden border border-ink-100 bg-ink-100 md:grid-cols-3">
           <article className="bg-paper-100 p-8">
             <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-500">Free</p>
-            <h2 className="mt-2 text-[length:var(--elevate-marketing-lead-size)] font-semibold text-ink-900">
+            <h2 className="mt-2 text-(length:--elevate-marketing-lead-size) font-semibold text-ink-900">
               $0
             </h2>
-            <p className="mt-3 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
+            <p className="mt-3 text-(length:--elevate-prose-body-size) leading(--elevate-prose-body-leading) text-ink-700">
               Preview access and saved reading list.
             </p>
             <ul className="mt-4 space-y-2 text-sm text-ink-700">
@@ -78,10 +78,10 @@ export default async function PricingPage({ params }: Props) {
 
           <article className="bg-paper-100 p-8">
             <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-500">Monthly</p>
-            <h2 className="mt-2 text-[length:var(--elevate-marketing-lead-size)] font-semibold text-ink-900">
+            <h2 className="mt-2 text-(length:--elevate-marketing-lead-size) font-semibold text-ink-900">
               $5.99 / month
             </h2>
-            <p className="mt-3 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
+            <p className="mt-3 text-(length:--elevate-prose-body-size) leading(--elevate-prose-body-leading) text-ink-700">
               Full access to all posts and the full archive.
             </p>
             <ul className="mt-4 space-y-2 text-sm text-ink-700">
@@ -104,10 +104,10 @@ export default async function PricingPage({ params }: Props) {
             <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-vermilion-600">
               Annual
             </p>
-            <h2 className="mt-2 text-[length:var(--elevate-marketing-lead-size)] font-semibold text-ink-900">
+            <h2 className="mt-2 text-(length:--elevate-marketing-lead-size) font-semibold text-ink-900">
               $47.99 / year
             </h2>
-            <p className="mt-3 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
+            <p className="mt-3 text-(length:--elevate-prose-body-size) leading(--elevate-prose-body-leading) text-ink-700">
               Full access plus the best value for long-term readers.
             </p>
             <ul className="mt-4 space-y-2 text-sm text-ink-700">
@@ -130,7 +130,7 @@ export default async function PricingPage({ params }: Props) {
       </section>
 
       <section className="elevate-marketing-shell pb-16 sm:pb-20">
-        <h2 className="mb-6 text-center text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-ink-900">
+        <h2 className="mb-6 text-center text-(length:--elevate-marketing-section-title-size) font-semibold tracking-[-0.02em] text-ink-900">
           Subscription status
         </h2>
         <div className="mx-auto max-w-xl border border-ink-100 bg-paper-100 p-6">

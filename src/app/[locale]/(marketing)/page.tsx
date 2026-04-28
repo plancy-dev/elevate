@@ -139,13 +139,13 @@ export default async function Home({ params, searchParams }: Props) {
                 ) : null}
               </div>
 
-              <h1 className="text-[length:var(--elevate-marketing-home-hero-size)] font-semibold tracking-[-0.02em] leading-[1.12] text-ink-900">
+              <h1 className="text-(length:--elevate-marketing-home-hero-size) font-semibold tracking-[-0.02em] leading-[1.12] text-ink-900">
                 {t("headline")}
                 <br />
                 <span className="text-ink-500">{t("headlineAccent")}</span>
               </h1>
 
-              <p className="mt-6 max-w-lg text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
+              <p className="mt-6 max-w-lg text-(length:--elevate-marketing-lead-size) leading(--elevate-prose-body-leading) text-ink-700">
                 {t("subhead")}
               </p>
 
@@ -195,7 +195,7 @@ export default async function Home({ params, searchParams }: Props) {
                   </Button>
                 </MarketingTrackedLocaleLink>
               </div>
-              <p className="mt-4 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
+              <p className="mt-4 text-(length:--elevate-prose-body-size) leading(--elevate-prose-body-leading) text-ink-500">
                 {isVariantA ? (
                   <>
                     {t("ctaSignUpHint")}{" "}
@@ -264,10 +264,10 @@ export default async function Home({ params, searchParams }: Props) {
                 key={p.title}
                 className={`px-4 py-8 sm:px-6 ${i < 3 ? "border-r border-ink-100" : ""}`}
               >
-                <div className="text-[length:var(--elevate-prose-body-size)] font-medium leading-snug text-ink-900">
+                <div className="text-(length:--elevate-prose-body-size) font-medium leading-snug text-ink-900">
                   {p.title}
                 </div>
-                <div className="mt-2 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
+                <div className="mt-2 text-(length:--elevate-prose-body-size) leading(--elevate-prose-body-leading) text-ink-500">
                   {p.sub}
                 </div>
               </div>
@@ -279,10 +279,10 @@ export default async function Home({ params, searchParams }: Props) {
       <section className="border-b border-ink-100">
         <div className="elevate-marketing-shell py-14 sm:py-16 lg:py-20">
           <div className="mb-10 max-w-2xl sm:mb-12">
-            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-ink-900">
+            <h2 className="text-(length:--elevate-marketing-section-title-size) font-semibold tracking-[-0.02em] text-ink-900">
               {t("sectionCapabilitiesTitle")}
             </h2>
-            <p className="mt-3 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
+            <p className="mt-3 text-(length:--elevate-marketing-lead-size) leading(--elevate-prose-body-leading) text-ink-700">
               {t("sectionCapabilitiesSub")}
             </p>
           </div>
@@ -297,10 +297,10 @@ export default async function Home({ params, searchParams }: Props) {
                   <div className="mb-4 flex h-10 w-10 items-center justify-center border border-ink-100 bg-paper-50 text-vermilion-600">
                     {cap.icon}
                   </div>
-                  <h3 className="mb-2 text-[length:var(--elevate-marketing-lead-size)] font-semibold text-ink-900">
+                  <h3 className="mb-2 text-(length:--elevate-marketing-lead-size) font-semibold text-ink-900">
                     {cap.title}
                   </h3>
-                  <p className="text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
+                  <p className="text-(length:--elevate-prose-body-size) leading(--elevate-prose-body-leading) text-ink-500">
                     {cap.description}
                   </p>
                 </CardContent>
@@ -316,10 +316,10 @@ export default async function Home({ params, searchParams }: Props) {
       >
         <div className="elevate-marketing-shell py-14 sm:py-16">
           <div className="max-w-xl">
-            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-ink-900">
+            <h2 className="text-(length:--elevate-marketing-section-title-size) font-semibold tracking-[-0.02em] text-ink-900">
               {t("sectionWaitlistTitle")}
             </h2>
-            <p className="mt-3 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
+            <p className="mt-3 text-(length:--elevate-marketing-lead-size) leading(--elevate-prose-body-leading) text-ink-700">
               {t("sectionWaitlistSub")}
             </p>
             <WaitlistForm
@@ -337,15 +337,15 @@ export default async function Home({ params, searchParams }: Props) {
             <Badge variant="green" className="mb-4">
               {t("resourcesBadge")}
             </Badge>
-            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-ink-900">
+            <h2 className="text-(length:--elevate-marketing-section-title-size) font-semibold tracking-[-0.02em] text-ink-900">
               {t("resourcesTitle")}
             </h2>
-            <p className="mt-3 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
+            <p className="mt-3 text-(length:--elevate-marketing-lead-size) leading(--elevate-prose-body-leading) text-ink-500">
               {t("resourcesBody")}
             </p>
             <Link
               href="/blog"
-              className="elevate-interactive-subtle mt-6 inline-flex items-center gap-1.5 text-[length:var(--elevate-prose-body-size)] font-medium text-vermilion-600 hover:text-vermilion-700"
+              className="elevate-interactive-subtle mt-6 inline-flex items-center gap-1.5 text-(length:--elevate-prose-body-size) font-medium text-vermilion-600 hover:text-vermilion-700"
             >
               {t("resourcesCta")}
               <ArrowRight className="h-3 w-3" />
@@ -357,10 +357,10 @@ export default async function Home({ params, searchParams }: Props) {
       <section className="border-t border-ink-100 bg-ink-900 text-paper-50 dark:bg-paper-0 dark:text-ink-900">
         <div className="elevate-marketing-shell py-14 sm:py-16">
           <div className="max-w-2xl">
-            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-paper-50 dark:text-ink-900">
+            <h2 className="text-(length:--elevate-marketing-section-title-size) font-semibold tracking-[-0.02em] text-paper-50 dark:text-ink-900">
               {t("ctaBandTitle")}
             </h2>
-            <p className="mt-2 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-paper-100 dark:text-ink-700">
+            <p className="mt-2 text-(length:--elevate-marketing-lead-size) leading(--elevate-prose-body-leading) text-paper-100 dark:text-ink-700">
               {t("ctaBandSub")}
             </p>
             <WaitlistForm

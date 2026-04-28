@@ -158,11 +158,11 @@ export default async function BlogPostPage({ params }: Props) {
             {t("published", { date: post.meta.date })}
           </time>
         </p>
-        <h1 className="mt-2 text-[length:var(--elevate-prose-hero-title-size)] font-semibold leading-[1.15] tracking-tight text-ink-900">
+        <h1 className="mt-2 text-(length:--elevate-prose-hero-title-size) font-semibold leading-[1.15] tracking-tight text-ink-900">
           {post.meta.title}
         </h1>
         {post.meta.description ? (
-          <p className="mt-3 text-[length:var(--elevate-prose-body-size)] leading-relaxed text-ink-700">
+          <p className="mt-3 text-(length:--elevate-prose-body-size) leading-relaxed text-ink-700">
             {post.meta.description}
           </p>
         ) : null}
