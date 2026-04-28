@@ -26,7 +26,7 @@ function ThemeToggleInner({
     return (
       <div
         className={cn(
-          "h-8 w-[7.5rem] shrink-0 rounded-md border border-border-subtle bg-layer-02",
+          "h-8 w-[7.5rem] shrink-0 border border-ink-100 bg-paper-100",
           className,
         )}
         aria-hidden
@@ -49,20 +49,20 @@ function ThemeToggleInner({
       aria-label={labels.aria}
       title={`${labels.light} / ${labels.dark} / ${labels.system}`}
       className={cn(
-        "flex h-8 shrink-0 items-center gap-2 rounded-md border border-border-subtle bg-layer-01 px-3 text-xs text-text-secondary",
-        "shadow-none outline-none transition-colors",
-        "hover:bg-layer-02 hover:text-text-primary",
-        "focus-visible:border-focus focus-visible:ring-2 focus-visible:ring-focus/25",
+        "flex h-8 shrink-0 items-center gap-2 border border-ink-100 bg-paper-100 px-3 text-xs text-ink-600",
+        "outline-none transition-colors duration-80 ease-(--ease-editorial)",
+        "hover:bg-paper-50 hover:text-ink-900",
+        "focus-visible:border-vermilion-600 focus-visible:outline focus-visible:outline-1 focus-visible:outline-vermilion-600",
         className,
       )}
       onClick={() => setTheme(next)}
     >
       {current === "light" ||
       (current === "system" && resolvedTheme === "light") ? (
-        <Sun className="h-3.5 w-3.5 shrink-0 text-warning" />
+        <Sun className="h-3.5 w-3.5 shrink-0 text-vermilion-600" />
       ) : current === "dark" ||
         (current === "system" && resolvedTheme === "dark") ? (
-        <Moon className="h-3.5 w-3.5 shrink-0 text-info" />
+        <Moon className="h-3.5 w-3.5 shrink-0 text-ink-700" />
       ) : (
         <Monitor className="h-3.5 w-3.5 shrink-0" />
       )}

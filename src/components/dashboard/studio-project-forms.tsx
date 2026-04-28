@@ -56,7 +56,7 @@ export function StudioProjectCreateForm() {
   return (
     <form action={action} className="space-y-4">
       <div>
-        <label className="block text-xs font-medium text-text-secondary mb-1.5" htmlFor="proj_name">
+        <label className="block text-xs font-medium text-ink-700 mb-1.5" htmlFor="proj_name">
           {t("projectsFormName")}
         </label>
         <input
@@ -65,11 +65,11 @@ export function StudioProjectCreateForm() {
           required
           maxLength={200}
           placeholder={t("projectsFormNamePlaceholder")}
-          className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm"
+          className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm"
         />
       </div>
       <div>
-        <label className="block text-xs font-medium text-text-secondary mb-1.5" htmlFor="proj_desc">
+        <label className="block text-xs font-medium text-ink-700 mb-1.5" htmlFor="proj_desc">
           {t("projectsFormDescription")}
         </label>
         <input
@@ -77,14 +77,14 @@ export function StudioProjectCreateForm() {
           name="description"
           maxLength={500}
           placeholder={t("projectsFormDescriptionPlaceholder")}
-          className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm"
+          className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm"
         />
       </div>
       <div>
-        <label className="block text-xs font-medium text-text-secondary mb-1.5" htmlFor="proj_guide">
+        <label className="block text-xs font-medium text-ink-700 mb-1.5" htmlFor="proj_guide">
           {t("projectsFormBrandGuide")}
         </label>
-        <p className="mb-2 text-[11px] font-medium text-text-tertiary">{t("projectsFormTonePresetsLabel")}</p>
+        <p className="mb-2 text-[11px] font-medium text-ink-500">{t("projectsFormTonePresetsLabel")}</p>
         <div className="mb-3 flex flex-wrap gap-2">
           {BRAND_GUIDE_PRESET_IDS.map((id) => (
             <button
@@ -92,8 +92,8 @@ export function StudioProjectCreateForm() {
               type="button"
               onClick={() => appendPreset(id)}
               className={cn(
-                "rounded-full border border-border-subtle bg-layer-02/80 px-2.5 py-1 text-[11px] font-medium",
-                "text-text-secondary transition-colors hover:border-primary/30 hover:bg-layer-02 hover:text-text-primary",
+                "rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/80 px-2.5 py-1 text-[11px] font-medium",
+                "text-ink-700 transition-colors hover:border-primary/30 hover:bg-paper-50 hover:text-ink-900",
               )}
             >
               {t(`projectsFormToneChip.${id}`)}
@@ -108,9 +108,9 @@ export function StudioProjectCreateForm() {
           value={brandGuide}
           onChange={(e) => setBrandGuide(e.target.value)}
           placeholder={t("projectsFormBrandGuidePlaceholder")}
-          className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm"
+          className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm"
         />
-        <p className="mt-1.5 text-[11px] text-text-tertiary leading-snug">
+        <p className="mt-1.5 text-[11px] text-ink-500 leading-snug">
           {t("projectsFormBrandGuideHint")}
         </p>
       </div>
@@ -155,7 +155,7 @@ export function StudioProjectEditForm({ project }: { project: StudioProjectRow }
     <form action={action} className="space-y-4">
       <input type="hidden" name="project_id" value={project.id} />
       <div>
-        <label className="mb-1.5 block text-xs font-medium text-text-secondary" htmlFor="edit_proj_name">
+        <label className="mb-1.5 block text-xs font-medium text-ink-700" htmlFor="edit_proj_name">
           {t("projectsFormName")}
         </label>
         <input
@@ -165,11 +165,11 @@ export function StudioProjectEditForm({ project }: { project: StudioProjectRow }
           maxLength={200}
           defaultValue={project.name}
           placeholder={t("projectsFormNamePlaceholder")}
-          className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm"
+          className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm"
         />
       </div>
       <div>
-        <label className="mb-1.5 block text-xs font-medium text-text-secondary" htmlFor="edit_proj_desc">
+        <label className="mb-1.5 block text-xs font-medium text-ink-700" htmlFor="edit_proj_desc">
           {t("projectsFormDescription")}
         </label>
         <input
@@ -178,14 +178,14 @@ export function StudioProjectEditForm({ project }: { project: StudioProjectRow }
           maxLength={500}
           defaultValue={project.description ?? ""}
           placeholder={t("projectsFormDescriptionPlaceholder")}
-          className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm"
+          className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm"
         />
       </div>
       <div>
-        <label className="mb-1.5 block text-xs font-medium text-text-secondary" htmlFor="edit_proj_guide">
+        <label className="mb-1.5 block text-xs font-medium text-ink-700" htmlFor="edit_proj_guide">
           {t("projectsFormBrandGuide")}
         </label>
-        <p className="mb-2 text-[11px] font-medium text-text-tertiary">{t("projectsFormTonePresetsLabel")}</p>
+        <p className="mb-2 text-[11px] font-medium text-ink-500">{t("projectsFormTonePresetsLabel")}</p>
         <div className="mb-3 flex flex-wrap gap-2">
           {BRAND_GUIDE_PRESET_IDS.map((id) => (
             <button
@@ -193,8 +193,8 @@ export function StudioProjectEditForm({ project }: { project: StudioProjectRow }
               type="button"
               onClick={() => appendPreset(id)}
               className={cn(
-                "rounded-full border border-border-subtle bg-layer-02/80 px-2.5 py-1 text-[11px] font-medium",
-                "text-text-secondary transition-colors hover:border-primary/30 hover:bg-layer-02 hover:text-text-primary",
+                "rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/80 px-2.5 py-1 text-[11px] font-medium",
+                "text-ink-700 transition-colors hover:border-primary/30 hover:bg-paper-50 hover:text-ink-900",
               )}
             >
               {t(`projectsFormToneChip.${id}`)}
@@ -209,9 +209,9 @@ export function StudioProjectEditForm({ project }: { project: StudioProjectRow }
           value={brandGuide}
           onChange={(e) => setBrandGuide(e.target.value)}
           placeholder={t("projectsFormBrandGuidePlaceholder")}
-          className="w-full rounded-lg border border-border-subtle bg-field px-3 py-2 text-sm"
+          className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2 text-sm"
         />
-        <p className="mt-1.5 text-[11px] leading-snug text-text-tertiary">{t("projectsFormBrandGuideHint")}</p>
+        <p className="mt-1.5 text-[11px] leading-snug text-ink-500">{t("projectsFormBrandGuideHint")}</p>
       </div>
 
       <CharacterBibleFields initial={bible} />
@@ -231,7 +231,7 @@ export function StudioProjectEditFormWithDelete({ project }: { project: StudioPr
         projectId={project.id}
         currentUrl={project.character_reference_image_url}
       />
-      <div className="border-t border-border-subtle pt-4">
+      <div className="border-t border-ink-100 pt-4">
         <StudioProjectDeleteButton projectId={project.id} />
       </div>
     </div>

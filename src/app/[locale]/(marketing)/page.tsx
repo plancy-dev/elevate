@@ -93,7 +93,7 @@ export default async function Home({ params }: Props) {
 
   return (
     <div className="flex flex-col">
-      <section className="relative overflow-hidden border-b border-marketing-border-subtle">
+      <section className="relative overflow-hidden border-b border-ink-100">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--marketing-glow),transparent_58%)]" />
 
         <div className="relative elevate-marketing-shell">
@@ -103,13 +103,13 @@ export default async function Home({ params }: Props) {
                 {t("badge")}
               </Badge>
 
-              <h1 className="text-[length:var(--elevate-marketing-home-hero-size)] font-semibold tracking-[-0.02em] leading-[1.12] text-text-primary">
+              <h1 className="text-[length:var(--elevate-marketing-home-hero-size)] font-semibold tracking-[-0.02em] leading-[1.12] text-ink-900">
                 {t("headline")}
                 <br />
-                <span className="text-text-tertiary">{t("headlineAccent")}</span>
+                <span className="text-ink-500">{t("headlineAccent")}</span>
               </h1>
 
-              <p className="mt-6 max-w-lg text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-text-secondary">
+              <p className="mt-6 max-w-lg text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
                 {t("subhead")}
               </p>
 
@@ -134,7 +134,7 @@ export default async function Home({ params }: Props) {
                   href="/product/prompt-studio"
                   ctaId={MarketingCtaId.HERO_PROMPT_STUDIO}
                 >
-                  <Button variant="tertiary" size="lg" className="rounded-full">
+                  <Button variant="tertiary" size="lg">
                     {t("ctaPromptStudio")}
                   </Button>
                 </MarketingTrackedLocaleLink>
@@ -142,17 +142,17 @@ export default async function Home({ params }: Props) {
                   href="/product/ebooks-and-guides"
                   ctaId={MarketingCtaId.HERO_EBOOKS}
                 >
-                  <Button variant="tertiary" size="lg" className="rounded-full">
+                  <Button variant="tertiary" size="lg">
                     {t("ctaEbooks")}
                   </Button>
                 </MarketingTrackedLocaleLink>
               </div>
-              <p className="mt-4 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-tertiary">
-                {t("ctaSignUpHint")}{" "}
+              <p className="mt-4 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
+                {t("ctaSignUpHint")}{""}
                 <MarketingTrackedNextLink
                   href="/signup"
                   ctaId={MarketingCtaId.HERO_SIGNUP}
-                  className="font-medium text-interactive transition-colors hover:text-marketing-accent-hover"
+                  className="font-medium text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
                 >
                   {t("ctaSignUp")}
                 </MarketingTrackedNextLink>
@@ -168,18 +168,18 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
-      <section className="border-b border-marketing-border-subtle bg-layer-01">
+      <section className="border-b border-ink-100 bg-paper-100">
         <div className="elevate-marketing-shell">
           <div className="grid grid-cols-2 lg:grid-cols-4">
             {pillars.map((p, i) => (
               <div
                 key={p.title}
-                className={`px-4 py-8 sm:px-6 ${i < 3 ? "border-r border-marketing-border-subtle" : ""}`}
+                className={`px-4 py-8 sm:px-6 ${i < 3 ? "border-r border-ink-100" : ""}`}
               >
-                <div className="text-[length:var(--elevate-prose-body-size)] font-medium leading-snug text-text-primary">
+                <div className="text-[length:var(--elevate-prose-body-size)] font-medium leading-snug text-ink-900">
                   {p.title}
                 </div>
-                <div className="mt-2 text-[length:var(--elevate-prose-body-size)] text-text-tertiary leading-[var(--elevate-prose-body-leading)]">
+                <div className="mt-2 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
                   {p.sub}
                 </div>
               </div>
@@ -188,31 +188,31 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
-      <section className="border-b border-marketing-border-subtle">
+      <section className="border-b border-ink-100">
         <div className="elevate-marketing-shell py-14 sm:py-16 lg:py-20">
           <div className="mb-10 max-w-2xl sm:mb-12">
-            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-text-primary">
+            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-ink-900">
               {t("sectionCapabilitiesTitle")}
             </h2>
-            <p className="mt-3 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-text-secondary">
+            <p className="mt-3 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
               {t("sectionCapabilitiesSub")}
             </p>
           </div>
 
-          <div className="grid gap-px border border-marketing-border-subtle bg-marketing-border-subtle md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-px border border-ink-100 bg-ink-100 md:grid-cols-2 lg:grid-cols-3">
             {capabilities.map((cap) => (
               <Card
                 key={cap.title}
-                className="border-0 bg-layer-01 shadow-none transition-colors duration-150 hover:bg-layer-02"
+                className="elevate-interactive-subtle border-0 bg-paper-100 hover:bg-paper-50"
               >
                 <CardContent className="p-5 sm:p-6">
-                  <div className="mb-4 flex h-10 w-10 items-center justify-center bg-highlight text-primary">
+                  <div className="mb-4 flex h-10 w-10 items-center justify-center border border-ink-100 bg-paper-50 text-vermilion-600">
                     {cap.icon}
                   </div>
-                  <h3 className="mb-2 text-[length:var(--elevate-marketing-lead-size)] font-semibold text-text-primary">
+                  <h3 className="mb-2 text-[length:var(--elevate-marketing-lead-size)] font-semibold text-ink-900">
                     {cap.title}
                   </h3>
-                  <p className="text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-tertiary">
+                  <p className="text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
                     {cap.description}
                   </p>
                 </CardContent>
@@ -224,14 +224,14 @@ export default async function Home({ params }: Props) {
 
       <section
         id="waitlist"
-        className="border-b border-marketing-border-subtle bg-layer-01 scroll-mt-20"
+        className="border-b border-ink-100 bg-paper-100 scroll-mt-20"
       >
         <div className="elevate-marketing-shell py-14 sm:py-16">
           <div className="max-w-xl">
-            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-text-primary">
+            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-ink-900">
               {t("sectionWaitlistTitle")}
             </h2>
-            <p className="mt-3 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-text-secondary">
+            <p className="mt-3 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
               {t("sectionWaitlistSub")}
             </p>
             <WaitlistForm source="home" className="mt-8" />
@@ -239,21 +239,21 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
-      <section className="border-b border-marketing-border-subtle bg-layer-01">
+      <section className="border-b border-ink-100 bg-paper-100">
         <div className="elevate-marketing-shell py-14 sm:py-16 lg:py-20">
           <div className="max-w-xl">
             <Badge variant="green" className="mb-4">
               {t("resourcesBadge")}
             </Badge>
-            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-text-primary">
+            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-ink-900">
               {t("resourcesTitle")}
             </h2>
-            <p className="mt-3 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-text-tertiary">
+            <p className="mt-3 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
               {t("resourcesBody")}
             </p>
             <Link
               href="/blog"
-              className="mt-6 inline-flex items-center gap-1.5 text-[length:var(--elevate-prose-body-size)] font-medium text-interactive transition-colors hover:text-primary"
+              className="elevate-interactive-subtle mt-6 inline-flex items-center gap-1.5 text-[length:var(--elevate-prose-body-size)] font-medium text-vermilion-600 hover:text-vermilion-700"
             >
               {t("resourcesCta")}
               <ArrowRight className="h-3 w-3" />
@@ -262,13 +262,13 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
-      <section className="bg-primary">
+      <section className="border-t border-ink-100 bg-ink-900 text-paper-50 dark:bg-paper-0 dark:text-ink-900">
         <div className="elevate-marketing-shell py-14 sm:py-16">
           <div className="max-w-2xl">
-            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-white">
+            <h2 className="text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-paper-50 dark:text-ink-900">
               {t("ctaBandTitle")}
             </h2>
-            <p className="mt-2 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-white/80">
+            <p className="mt-2 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-paper-100 dark:text-ink-700">
               {t("ctaBandSub")}
             </p>
             <WaitlistForm
@@ -287,7 +287,7 @@ export default async function Home({ params }: Props) {
               <Button
                 variant="ghost"
                 size="lg"
-                className="w-full sm:w-auto border-0 bg-white px-6 font-semibold text-primary shadow-md transition-shadow hover:bg-zinc-50 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-w-[12rem]"
+                className="w-full border border-paper-50/45 bg-paper-50 px-6 font-semibold text-ink-900 transition-colors duration-80 ease-(--ease-editorial) hover:bg-paper-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper-50 dark:border-ink-900 dark:bg-ink-900 dark:text-paper-50 dark:hover:bg-ink-700 dark:focus-visible:outline-ink-900 sm:min-w-48 sm:w-auto"
               >
                 {t("ctaBandContact")}
                 <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />

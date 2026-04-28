@@ -27,24 +27,23 @@ import {
 } from "@/lib/studio-productions/draft-prompt-templates";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/lib/ui/app-toast";
-import { modalPanelClassName } from "@/lib/design-system-classes";
 import { cn } from "@/lib/utils";
 
 const initialState: StudioDraftTemplateActionState = undefined;
 
 /** Shared styles: bias hint + textarea + char limit (create + edit). */
 const biasFieldSectionClassName = cn(
-  "space-y-2 rounded-lg border border-border-subtle/90 bg-field/80 p-3",
-  "dark:border-border-subtle dark:bg-layer-02/50",
+  "space-y-2 rounded-[var(--radius-1)] border border-ink-100/90 bg-paper-0/80 p-3",
+  "dark:border-ink-100 dark:bg-paper-50/50",
 );
 
 const biasTextareaClassName = cn(
-  "min-h-[220px] w-full resize-y rounded-lg border border-border-subtle bg-field px-3 py-2.5",
-  "text-sm leading-relaxed font-mono text-text-primary placeholder:text-text-tertiary sm:min-h-[260px]",
+  "min-h-[220px] w-full resize-y rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2.5",
+  "text-sm leading-relaxed font-mono text-ink-900 placeholder:text-ink-500 sm:min-h-[260px]",
 );
 
 const nameInputClassName =
-  "h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm";
+  "h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm";
 
 type Props = {
   templates: StudioEpisodeDraftTemplateRow[];
@@ -150,18 +149,18 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
       <div
         className={cn(
           "flex max-h-[min(92vh-1rem,52rem)] flex-col overflow-hidden",
-          modalPanelClassName,
+          "border border-ink-700 bg-paper-100",
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="shrink-0 border-b border-border-subtle/80 px-5 pb-4 pt-5 dark:border-border-subtle">
+        <div className="shrink-0 border-b border-ink-100/80 px-5 pb-4 pt-5 dark:border-ink-100">
           <h3
             id={titleId}
-            className="text-base font-semibold text-text-primary mb-1 pr-8 sm:text-lg"
+            className="text-base font-semibold text-ink-900 mb-1 pr-8 sm:text-lg"
           >
             {t("draftTemplateManageTitle")}
           </h3>
-          <p className="text-xs text-text-tertiary leading-relaxed">
+          <p className="text-xs text-ink-500 leading-relaxed">
             {t("draftTemplateManageIntro")}
           </p>
         </div>
@@ -169,7 +168,7 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
           <ul className="space-y-3">
             {templates.length === 0 ? (
-              <li className="text-sm text-text-tertiary">{t("draftTemplateManageEmpty")}</li>
+              <li className="text-sm text-ink-500">{t("draftTemplateManageEmpty")}</li>
             ) : (
               templates.map((row) => {
                 const nameInputId = `${fieldIdPrefix}-name-${row.id}`;
@@ -180,22 +179,22 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
                   data-draft-template-edit={editingId === row.id ? row.id : undefined}
                   className={
                     editingId === row.id
-                      ? "rounded-xl border-2 border-primary/35 bg-primary/6 p-4 shadow-sm ring-1 ring-primary/15 dark:border-primary/40 dark:bg-primary/8"
-                      : "rounded-lg border border-border-subtle/80 bg-layer-02/30 p-3 dark:border-border-subtle"
+                      ? "rounded-[var(--radius-1)] border-2 border-primary/35 bg-primary/6 p-4 ring-1 ring-primary/15 dark:border-primary/40 dark:bg-primary/8"
+                      : "rounded-[var(--radius-1)] border border-ink-100/80 bg-paper-50/30 p-3 dark:border-ink-100"
                   }
                 >
                   {editingId === row.id ? (
                     <form action={updateAction} className="space-y-5">
                       <input type="hidden" name="template_id" value={row.id} />
                       <div>
-                        <p className="text-xs font-semibold text-text-primary mb-3">
+                        <p className="text-xs font-semibold text-ink-900 mb-3">
                           {t("draftTemplateManageEditingTitle")}
                         </p>
                         <div className="space-y-4">
                           <div className="space-y-1.5">
                             <label
                               htmlFor={nameInputId}
-                              className="block text-xs font-medium text-text-secondary"
+                              className="block text-xs font-medium text-ink-700"
                             >
                               {t("draftTemplateManageNameLabel")}
                             </label>
@@ -211,11 +210,11 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
                           <div className={biasFieldSectionClassName}>
                             <label
                               htmlFor={biasInputId}
-                              className="block text-xs font-medium text-text-secondary"
+                              className="block text-xs font-medium text-ink-700"
                             >
                               {t("draftTemplateManageBiasLabel")}
                             </label>
-                            <p className="text-[11px] text-text-tertiary leading-relaxed">
+                            <p className="text-[11px] text-ink-500 leading-relaxed">
                               {t("draftTemplateManageBiasHint")}
                             </p>
                             <textarea
@@ -227,7 +226,7 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
                               defaultValue={row.bias_body}
                               className={biasTextareaClassName}
                             />
-                            <p className="text-[10px] text-text-tertiary tabular-nums">
+                            <p className="text-[10px] text-ink-500 tabular-nums">
                               {t("draftTemplateManageBiasCharLimit", {
                                 max: STUDIO_DRAFT_TEMPLATE_BIAS_MAX,
                               })}
@@ -235,7 +234,7 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-wrap gap-2 border-t border-border-subtle/80 pt-4 dark:border-border-subtle">
+                      <div className="flex flex-wrap gap-2 border-t border-ink-100/80 pt-4 dark:border-ink-100">
                         <Button type="submit" size="sm" isLoading={updatePending}>
                           {t("draftTemplateManageSave")}
                         </Button>
@@ -252,11 +251,11 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
                   ) : (
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-text-primary truncate">
+                        <p className="text-sm font-medium text-ink-900 truncate">
                           {row.name}
                         </p>
-                        <p className="text-[11px] text-text-tertiary line-clamp-3 mt-0.5">
-                          {row.bias_body.trim().replace(/\s+/g, " ")}
+                        <p className="text-[11px] text-ink-500 line-clamp-3 mt-0.5">
+                          {row.bias_body.trim().replace(/\s+/g, "")}
                         </p>
                       </div>
                       <div className="flex shrink-0 gap-2">
@@ -294,14 +293,14 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
           </ul>
         </div>
 
-        <div className="shrink-0 border-t border-border-subtle px-5 py-4 dark:border-border-subtle">
+        <div className="shrink-0 border-t border-ink-100 px-5 py-4 dark:border-ink-100">
           {editingId ? (
-            <p className="rounded-lg border border-dashed border-border-subtle bg-layer-02/40 px-3 py-3 text-center text-[11px] leading-relaxed text-text-tertiary dark:border-border-subtle">
+            <p className="rounded-[var(--radius-1)] border border-dashed border-ink-100 bg-paper-50/40 px-3 py-3 text-center text-[11px] leading-relaxed text-ink-500 dark:border-ink-100">
               {t("draftTemplateManageAddPausedHint")}
             </p>
           ) : (
             <>
-              <p className="text-xs font-medium text-text-secondary mb-2">
+              <p className="text-xs font-medium text-ink-700 mb-2">
                 {t("draftTemplateManageAddTitle")}
               </p>
               <form action={createAction} className="space-y-3">
@@ -313,7 +312,7 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
                   className={nameInputClassName}
                 />
                 <div className={biasFieldSectionClassName}>
-                  <p className="text-[11px] text-text-tertiary leading-relaxed">
+                  <p className="text-[11px] text-ink-500 leading-relaxed">
                     {t("draftTemplateManageBiasHint")}
                   </p>
                   <textarea
@@ -324,7 +323,7 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
                     placeholder={t("draftTemplateManageBiasPlaceholder")}
                     className={biasTextareaClassName}
                   />
-                  <p className="text-[10px] text-text-tertiary tabular-nums">
+                  <p className="text-[10px] text-ink-500 tabular-nums">
                     {t("draftTemplateManageBiasCharLimit", {
                       max: STUDIO_DRAFT_TEMPLATE_BIAS_MAX,
                     })}
@@ -338,7 +337,7 @@ export function DraftTemplateManageDialog({ templates, onTemplatesChange }: Prop
           )}
         </div>
 
-        <div className="flex justify-end border-t border-border-subtle px-5 py-3 dark:border-border-subtle">
+        <div className="flex justify-end border-t border-ink-100 px-5 py-3 dark:border-ink-100">
           <Button
             type="button"
             variant="secondary"

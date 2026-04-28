@@ -98,12 +98,12 @@ export function SignupForm() {
   return (
     <>
       {error && (
-        <p className="mb-4 rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="mb-4 border border-vermilion-300 bg-vermilion-50 px-3 py-2 text-xs text-vermilion-700">
           {error}
         </p>
       )}
       {message && (
-        <p className="mb-4 rounded-md border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-accent">
+        <p className="mb-4 border border-vermilion-300 bg-vermilion-50 px-3 py-2 text-xs text-vermilion-700">
           {message}
         </p>
       )}
@@ -120,7 +120,7 @@ export function SignupForm() {
         <div>
           <label
             htmlFor="full_name"
-            className="block text-xs font-medium text-text-secondary mb-1.5"
+              className="mb-1.5 block text-xs font-medium text-ink-700"
           >
             Full name
           </label>
@@ -138,7 +138,7 @@ export function SignupForm() {
         <div>
           <label
             htmlFor="email"
-            className="block text-xs font-medium text-text-secondary mb-1.5"
+              className="mb-1.5 block text-xs font-medium text-ink-700"
           >
             Work email
           </label>
@@ -156,7 +156,7 @@ export function SignupForm() {
         <div>
           <label
             htmlFor="password"
-            className="block text-xs font-medium text-text-secondary mb-1.5"
+              className="mb-1.5 block text-xs font-medium text-ink-700"
           >
             Password
           </label>
@@ -175,7 +175,7 @@ export function SignupForm() {
         <Button
           variant="primary"
           size="lg"
-          className="w-full mt-2"
+          className="mt-2 w-full"
           disabled={loading}
           isLoading={loading}
           type="submit"
@@ -184,18 +184,18 @@ export function SignupForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-xs text-text-tertiary text-center leading-relaxed">
-        By continuing, you agree to our{" "}
+      <p className="mt-6 text-center text-xs leading-relaxed text-ink-500">
+        By continuing, you agree to our{""}
         <Link
           href="/terms"
-          className="text-interactive hover:text-primary transition-colors"
+          className="text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
         >
           Terms of Service
-        </Link>{" "}
-        and{" "}
+        </Link>{""}
+        and{""}
         <Link
           href="/privacy"
-          className="text-interactive hover:text-primary transition-colors"
+          className="text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
         >
           Privacy Policy
         </Link>

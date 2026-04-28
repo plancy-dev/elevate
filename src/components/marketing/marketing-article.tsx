@@ -14,19 +14,19 @@ export function MarketingArticle({
   return (
     <div className="elevate-marketing-shell py-12 sm:py-16 lg:py-20">
       <article className="mx-auto max-w-[min(45rem,100%)]">
-        <h1 className="text-[length:var(--elevate-marketing-page-title-size)] font-semibold tracking-[-0.02em] leading-[1.12] text-text-primary">
+        <h1 className="text-[length:var(--elevate-marketing-page-title-size)] font-semibold tracking-[-0.02em] leading-[1.12] text-ink-900">
           {title}
         </h1>
-        <p className="mt-5 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-text-secondary">
+        <p className="mt-5 text-[length:var(--elevate-marketing-lead-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
           {lead}
         </p>
         <div className="mt-12 space-y-10 sm:mt-14 sm:space-y-12">
           {sections.map((section, i) => (
             <section key={i}>
-              <h2 className="border-b border-border-subtle pb-2 text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-text-primary">
+              <h2 className="border-b border-ink-100 pb-2 text-[length:var(--elevate-marketing-section-title-size)] font-semibold tracking-[-0.02em] text-ink-900">
                 {section.title}
               </h2>
-              <div className="mt-4 space-y-4 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-secondary">
+              <div className="mt-4 space-y-4 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
                 {section.body
                   .split(/\n\n+/)
                   .map((para) => para.trim())

@@ -206,10 +206,10 @@ export function buildDraftPrompt(context: {
 
   const modePreamble =
     mode === "fresh"
-      ? "Generation mode: FRESH. Write a new hook, title, and script_draft as if starting from scratch for this episode. " +
+      ? "Generation mode: FRESH. Write a new hook, title, and script_draft as if starting from scratch for this episode." +
         "Do not treat the episode working title, creator notes, niche, format, or channel profile as binding for topic, setting, or vocabulary when they conflict with 'Additional direction' below—those fields may reflect an older idea. " +
         "The on-editor draft text is intentionally omitted from this prompt; do not assume or revive its themes."
-      : "Generation mode: DEVELOP. Improve, tighten, or re-angle the current on-editor draft (below when present). " +
+      : "Generation mode: DEVELOP. Improve, tighten, or re-angle the current on-editor draft (below when present)." +
         "Keep continuity unless Additional direction explicitly asks for a different angle.";
 
   const lines: string[] = [
@@ -280,12 +280,12 @@ export function buildDraftPrompt(context: {
 
   lines.push(
     "",
-    "Important: You do not have internet access, YouTube access, or any ability to fetch URLs. " +
-      "URLs mentioned by the user are opaque unless the same message includes pasted text " +
-      "(transcript, lyrics, description, bullet summary). Do not invent song titles, artists, " +
-      "plots, or video-specific facts from a bare link. If the user asks to summarize or adapt " +
-      "external media and only a URL is given without pasted content, refuse fabrication: " +
-      "use hook/title/script_draft to briefly ask them to paste key text in creator notes or " +
+    "Important: You do not have internet access, YouTube access, or any ability to fetch URLs." +
+      "URLs mentioned by the user are opaque unless the same message includes pasted text" +
+      "(transcript, lyrics, description, bullet summary). Do not invent song titles, artists," +
+      "plots, or video-specific facts from a bare link. If the user asks to summarize or adapt" +
+      "external media and only a URL is given without pasted content, refuse fabrication:" +
+      "use hook/title/script_draft to briefly ask them to paste key text in creator notes or" +
       "the direction field, in the same language as the rest of the prompt.",
     "",
     "Respond with a single JSON object only, keys: hook (string), title (string), script_draft (string).",
@@ -301,8 +301,8 @@ export async function generateDraftWithLlm(
   options?: { model?: string | null },
 ): Promise<{ ok: true; payload: LlmDraftPayload; model: string } | { ok: false; status: number }> {
   const system =
-    "You are a senior short-form content strategist. Follow the channel context strictly. " +
-    "Never fabricate specifics about videos, music, or links you were not given as plain text in the user message. " +
+    "You are a senior short-form content strategist. Follow the channel context strictly." +
+    "Never fabricate specifics about videos, music, or links you were not given as plain text in the user message." +
     "Output valid JSON only.";
   const model = resolveDraftModel(cred.provider, options?.model);
 

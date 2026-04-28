@@ -4,19 +4,19 @@
 
 The repo has a root **`DESIGN.md`** next to `AGENTS.md` ([Stitch / awesome-design-md](https://github.com/VoltAgent/awesome-design-md) convention). It is **Cal.com–inspired** (neutral SaaS moodboard) with **§0** tying it to Elevate tokens. Vendored snapshots stay under `third-party/` (Cursor pack, Cal CLI pack) so upstream diffs do not fight customized prose.
 
-See **[`SYSTEM.md`](SYSTEM.md)** for how [awesome-design-md](https://github.com/VoltAgent/awesome-design-md), [getdesign.md](https://getdesign.md/what-is-design-md), Elevate tokens, and surface modes (marketing chrome vs app shell) fit together.
+See **[`../adr/ADR-011-design-system-v3-editors-desk.md`](../adr/ADR-011-design-system-v3-editors-desk.md)** for the active design system contract and **[`../features/PLAN-editors-desk-s0-s1-s2.md`](../features/PLAN-editors-desk-s0-s1-s2.md)** for rollout steps.
 
 **Cal → shipped UI:** [`elevate-cal-alignment.md`](elevate-cal-alignment.md) · **Cursor marketing → tokens:** [`elevate-cursor-alignment.md`](elevate-cursor-alignment.md)
 
-**Visual contract (CREATIVE):** **[`VISUAL_LANGUAGE_V2.md`](VISUAL_LANGUAGE_V2.md)** — accent discipline, radius scale, rollout order for Apple-tier polish.
+**Visual contract (CREATIVE):** **[`../adr/ADR-011-design-system-v3-editors-desk.md`](../adr/ADR-011-design-system-v3-editors-desk.md)** — Editor's Desk v3 tokens, vocabulary, and constraints.
 
-**PLAN (PR breakdown):** **[`PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md`](PLAN_VISUAL_LANGUAGE_V2_ROLLOUT.md)** — §9 as PR-1 … PR-6.
+**PLAN (S0-S2):** **[`../features/PLAN-editors-desk-s0-s1-s2.md`](../features/PLAN-editors-desk-s0-s1-s2.md)**.
 
 **Quality (gstack + verify):** **[`QUALITY_PIPELINE.md`](QUALITY_PIPELINE.md)** — designer plan review → engineering plan review → build → verify → optional visual QA.
 
-**Audit (consistency + UX redesign judgment):** **[`DESIGN_UX_AUDIT_REPORT.md`](DESIGN_UX_AUDIT_REPORT.md)** — code/docs review (2026-04-06) + live screenshots in [`audit-screenshots/`](audit-screenshots/) (2026-04-08).
+**v2 archive:** legacy visual docs and screenshots moved to [`../../memory-bank/archive/design-v2/`](../../memory-bank/archive/design-v2/).
 
-**Dashboard (app shell) anti-template rules:** **[`DASHBOARD_UX_PRINCIPLES.md`](DASHBOARD_UX_PRINCIPLES.md)** — lists as one container + row hover; nav marker discipline.
+**TOC IA lock:** **[`v3-creative/toc-ia-mapping.md`](v3-creative/toc-ia-mapping.md)**.
 
 **Pointers & cursors:** **[`INTERACTIVE_AFFORDANCES.md`](INTERACTIVE_AFFORDANCES.md)** — links, tabs, buttons, selects; base layer in `globals.css`.
 

@@ -26,7 +26,7 @@ export function AudioTrack({ pxPerSec }: { pxPerSec: number }) {
             selection: { kind: "audio", target: "narration" },
           })
         }
-        className="h-4 overflow-hidden rounded border border-emerald-500/35 bg-emerald-500/10 px-2 text-left text-[9px] text-emerald-900 hover:bg-emerald-500/20 dark:text-emerald-200/95"
+        className="h-4 overflow-hidden border border-ink-300 bg-paper-0 px-2 text-left font-mono text-[9px] text-ink-700 transition-colors duration-80 ease-(--ease-editorial) hover:border-ink-900 hover:text-ink-900"
         style={{ width: totalWidth }}
       >
         {dsl.audio.narration ? t("audioNarrationPresent") : t("audioNarrationMissing")}
@@ -39,7 +39,7 @@ export function AudioTrack({ pxPerSec }: { pxPerSec: number }) {
             selection: { kind: "audio", target: "bgm" },
           })
         }
-        className="h-4 overflow-hidden rounded border border-sky-500/35 bg-sky-500/10 px-2 text-left text-[9px] text-sky-900 hover:bg-sky-500/20 dark:text-sky-200/95"
+        className="h-4 overflow-hidden border border-ink-300 bg-paper-0 px-2 text-left font-mono text-[9px] text-ink-700 transition-colors duration-80 ease-(--ease-editorial) hover:border-ink-900 hover:text-ink-900"
         style={{ width: totalWidth }}
       >
         {dsl.audio.bgm ? t("audioBgmPresent") : t("audioBgmMissing")}

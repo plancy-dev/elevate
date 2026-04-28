@@ -581,18 +581,18 @@ export function ProductionEpisodePipeline({
   const PIPELINE_TOTAL_STEPS = 8;
 
   return (
-    <div className={cn("flex flex-col gap-6 border-t border-border-subtle pt-5", className)}>
-      <p className="text-sm text-text-secondary leading-relaxed max-w-prose -mt-1">
+    <div className={cn("flex flex-col gap-6 border-t border-ink-100 pt-5", className)}>
+      <p className="-mt-1 max-w-prose text-sm leading-relaxed text-ink-700">
         {t("producePanelLead")}
       </p>
 
       <section
-        className="rounded-xl border border-border-subtle/90 bg-gradient-to-b from-layer-02/55 to-layer-02/30 px-3 py-3 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.04]"
+        className="border border-ink-100 bg-paper-100 px-3 py-3"
         aria-labelledby={pipelineProgressTitleId}
       >
         <div className="flex items-start gap-3">
           <div
-            className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary"
+            className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center border border-vermilion-600/35 bg-paper-0 text-vermilion-600"
             aria-hidden
           >
             <ListChecks className="h-4 w-4" strokeWidth={2} />
@@ -601,26 +601,26 @@ export function ProductionEpisodePipeline({
             <div className="flex flex-wrap items-center justify-between gap-2 gap-y-1">
               <p
                 id={pipelineProgressTitleId}
-                className="text-xs font-semibold text-text-primary"
+                className="text-xs font-semibold text-ink-900"
               >
                 {t("draftPipelineTitle")}
               </p>
             </div>
             <div className="flex flex-wrap items-center justify-between gap-2 gap-y-1">
-              <p className="text-[11px] font-medium text-text-primary">
+              <p className="font-mono text-[11px] text-ink-700">
                 {t("pipelineProgressLabel", {
                   completed: pipelineCompletedCount,
                   total: PIPELINE_TOTAL_STEPS,
                 })}
               </p>
-              <p className="text-[11px] text-text-tertiary">
+              <p className="font-mono text-[11px] text-ink-500">
                 {pipelineNextLabel
                   ? t("pipelineNextUpLabel", { step: pipelineNextLabel })
                   : t("pipelineAllComplete")}
               </p>
             </div>
             <div
-              className="h-1.5 overflow-hidden rounded-full bg-layer-03"
+              className="h-1.5 overflow-hidden bg-ink-100"
               role="progressbar"
               aria-valuenow={pipelineCompletedCount}
               aria-valuemin={0}
@@ -631,7 +631,7 @@ export function ProductionEpisodePipeline({
               })}
             >
               <div
-                className="h-full rounded-full bg-gradient-to-r from-primary/90 to-primary/75 transition-[width] duration-300 ease-out"
+                className="h-full bg-vermilion-600 transition-[width] duration-300 ease-out"
                 style={{
                   width: `${Math.min(100, (pipelineCompletedCount / PIPELINE_TOTAL_STEPS) * 100)}%`,
                 }}
@@ -646,11 +646,11 @@ export function ProductionEpisodePipeline({
         onOpenReferences={() => setReferencesDialogOpen(true)}
       />
 
-      <div className="border-l-2 border-primary/45 pl-3">
-        <h3 className="text-sm font-semibold tracking-tight text-text-primary">
+      <div className="border-l border-ink-100 pl-3">
+        <h3 className="text-sm font-semibold tracking-tight text-ink-900">
           {t("pipelinePhasePrepareTitle")}
         </h3>
-        <p className="mt-1 text-xs text-text-secondary leading-relaxed">
+        <p className="mt-1 text-xs leading-relaxed text-ink-700">
           {t("pipelinePhasePrepareSubtitle")}
         </p>
       </div>
@@ -775,11 +775,11 @@ export function ProductionEpisodePipeline({
       </div>
 
       {!packagingLlmReady && (
-        <p className="text-[11px] text-text-tertiary max-w-prose leading-relaxed -mt-2">
-          {t("draftPreprodPackagingHintNoLlm")}{" "}
+        <p className="-mt-2 max-w-prose text-[11px] leading-relaxed text-ink-500">
+          {t("draftPreprodPackagingHintNoLlm")}{""}
           <Link
             href="/dashboard/productions?studio=channels"
-            className="font-medium text-primary hover:underline"
+            className="font-medium text-vermilion-600 hover:underline"
           >
             {t("draftRunwayIntegrationsLink")}
           </Link>
@@ -813,10 +813,10 @@ export function ProductionEpisodePipeline({
             pipelineShortcutPrefill={draftPipelinePrefill}
             pipelineShortcutNonce={draftPrefillNonce}
             footerSlot={
-              <p className="pt-3 text-xs text-text-tertiary border-t border-border-subtle">
+              <p className="border-t border-ink-100 pt-3 text-xs text-ink-500">
                 <button
                   type="button"
-                  className="font-medium text-primary hover:underline"
+                  className="font-medium text-vermilion-600 hover:underline"
                   onClick={() => {
                     setDraftDialogOpen(false);
                     setReferencesDialogOpen(true);
@@ -880,7 +880,7 @@ export function ProductionEpisodePipeline({
         title={t("pipelineModalTimedTitle")}
         size="xl"
       >
-        <pre className="max-h-[min(70vh,32rem)] overflow-auto whitespace-pre-wrap rounded-lg border border-border-subtle bg-layer-02/40 p-3 text-xs text-text-secondary leading-relaxed">
+        <pre className="max-h-[min(70vh,32rem)] overflow-auto whitespace-pre-wrap border border-ink-100 bg-paper-50 p-3 text-xs leading-relaxed text-ink-700">
           {timedArtifact?.content_text?.trim() || "—"}
         </pre>
       </Modal>
@@ -894,32 +894,32 @@ export function ProductionEpisodePipeline({
         {packagingParsed ? (
           <div className="space-y-4 text-sm">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-text-tertiary">
+              <p className="font-mono text-[10px] uppercase tracking-[0.04em] text-ink-500">
                 {t("pipelinePackagingYoutubeTitle")}
               </p>
-              <p className="mt-1 text-text-primary whitespace-pre-wrap">
+              <p className="mt-1 whitespace-pre-wrap text-ink-900">
                 {packagingParsed.youtube_title || "—"}
               </p>
             </div>
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-text-tertiary">
+              <p className="font-mono text-[10px] uppercase tracking-[0.04em] text-ink-500">
                 {t("pipelinePackagingYoutubeDescription")}
               </p>
-              <p className="mt-1 text-text-secondary whitespace-pre-wrap leading-relaxed">
+              <p className="mt-1 whitespace-pre-wrap leading-relaxed text-ink-700">
                 {packagingParsed.youtube_description || "—"}
               </p>
             </div>
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-text-tertiary">
+              <p className="font-mono text-[10px] uppercase tracking-[0.04em] text-ink-500">
                 {t("pipelinePackagingThumbnailPrompt")}
               </p>
-              <p className="mt-1 text-text-secondary whitespace-pre-wrap leading-relaxed">
+              <p className="mt-1 whitespace-pre-wrap leading-relaxed text-ink-700">
                 {packagingParsed.thumbnail_image_prompt || "—"}
               </p>
             </div>
           </div>
         ) : (
-          <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
+          <p className="text-sm text-ink-500">{t("pipelineModalEmpty")}</p>
         )}
       </Modal>
 
@@ -936,16 +936,16 @@ export function ProductionEpisodePipeline({
             <img
               src={thumbnailArtifact.external_url}
               alt=""
-              className="w-full max-h-[min(70vh,28rem)] rounded-lg border border-border-subtle object-contain bg-black/5"
+              className="w-full max-h-[min(70vh,28rem)] border border-ink-100 bg-paper-50 object-contain"
             />
             {thumbnailArtifact.content_text?.trim() ? (
-              <pre className="max-h-40 overflow-auto whitespace-pre-wrap rounded-lg border border-border-subtle bg-layer-02/40 p-3 text-[11px] text-text-tertiary">
+              <pre className="max-h-40 overflow-auto whitespace-pre-wrap border border-ink-100 bg-paper-50 p-3 font-mono text-[11px] text-ink-500">
                 {thumbnailArtifact.content_text}
               </pre>
             ) : null}
           </div>
         ) : (
-          <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
+          <p className="text-sm text-ink-500">{t("pipelineModalEmpty")}</p>
         )}
       </Modal>
 
@@ -966,13 +966,13 @@ export function ProductionEpisodePipeline({
               <track kind="captions" />
             </audio>
             {ttsArtifact.content_text?.trim() ? (
-              <pre className="max-h-[min(50vh,24rem)] overflow-auto whitespace-pre-wrap rounded-lg border border-border-subtle bg-layer-02/40 p-3 text-xs text-text-secondary leading-relaxed">
+              <pre className="max-h-[min(50vh,24rem)] overflow-auto whitespace-pre-wrap border border-ink-100 bg-paper-50 p-3 text-xs leading-relaxed text-ink-700">
                 {ttsArtifact.content_text}
               </pre>
             ) : null}
           </div>
         ) : (
-          <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
+          <p className="text-sm text-ink-500">{t("pipelineModalEmpty")}</p>
         )}
       </Modal>
 
@@ -983,11 +983,11 @@ export function ProductionEpisodePipeline({
         size="xl"
       >
         {subtitleArtifact?.content_text?.trim() ? (
-          <pre className="max-h-[min(70vh,32rem)] overflow-auto whitespace-pre-wrap rounded-lg border border-border-subtle bg-layer-02/40 p-3 text-xs text-text-secondary leading-relaxed font-mono">
+          <pre className="max-h-[min(70vh,32rem)] overflow-auto whitespace-pre-wrap border border-ink-100 bg-paper-50 p-3 font-mono text-xs leading-relaxed text-ink-700">
             {subtitleArtifact.content_text}
           </pre>
         ) : (
-          <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
+          <p className="text-sm text-ink-500">{t("pipelineModalEmpty")}</p>
         )}
       </Modal>
 
@@ -1002,9 +1002,9 @@ export function ProductionEpisodePipeline({
             {sceneClips.map((clip, idx) => (
               <li
                 key={clip.id}
-                className="rounded-lg border border-border-subtle bg-layer-02/30 p-3"
+                className="border border-ink-100 bg-paper-50 p-3"
               >
-                <p className="text-[10px] font-medium text-text-tertiary mb-2">
+                <p className="mb-2 font-mono text-[10px] text-ink-500">
                   {t("pipelineModalSceneClipLabel", {
                     index: idx + 1,
                   })}
@@ -1013,15 +1013,15 @@ export function ProductionEpisodePipeline({
                   <video
                     src={clip.external_url}
                     controls
-                    className="w-full max-h-48 rounded-md border border-border-subtle bg-black/40"
+                    className="w-full max-h-48 border border-ink-100 bg-ink-900/20"
                   >
                     <track kind="captions" />
                   </video>
                 ) : clip.external_url ? (
-                  <p className="text-xs text-text-tertiary break-all">{clip.external_url}</p>
+                  <p className="break-all text-xs text-ink-500">{clip.external_url}</p>
                 ) : null}
                 {clip.content_text?.trim() ? (
-                  <p className="mt-2 text-xs text-text-secondary whitespace-pre-wrap line-clamp-4">
+                  <p className="mt-2 line-clamp-4 whitespace-pre-wrap text-xs text-ink-700">
                     {clip.content_text}
                   </p>
                 ) : null}
@@ -1029,7 +1029,7 @@ export function ProductionEpisodePipeline({
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
+          <p className="text-sm text-ink-500">{t("pipelineModalEmpty")}</p>
         )}
       </Modal>
 
@@ -1042,9 +1042,9 @@ export function ProductionEpisodePipeline({
         {assemblyArtifact?.external_url ? (
           <div className="space-y-3">
             {assemblyPlaybackLoading ? (
-              <p className="text-sm text-text-secondary">{t("pipelineAssemblyVideoLoading")}</p>
+              <p className="text-sm text-ink-700">{t("pipelineAssemblyVideoLoading")}</p>
             ) : assemblyPlaybackError ? (
-              <p className="text-sm text-destructive">
+              <p className="text-sm text-vermilion-600">
                 {t("pipelineAssemblyVideoError", { detail: assemblyPlaybackError })}
               </p>
             ) : assemblyPlaybackUrl &&
@@ -1055,27 +1055,27 @@ export function ProductionEpisodePipeline({
                 src={assemblyPlaybackUrl}
                 controls
                 playsInline
-                className="w-full max-h-[min(70vh,28rem)] rounded-lg border border-border-subtle bg-black/40"
+                className="w-full max-h-[min(70vh,28rem)] border border-ink-100 bg-ink-900/20"
               >
                 <track kind="captions" />
               </video>
             ) : (
-              <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
+              <p className="text-sm text-ink-500">{t("pipelineModalEmpty")}</p>
             )}
             {assemblyArtifact.content_text?.trim() ? (
-              <p className="text-sm text-text-secondary">{assemblyArtifact.content_text}</p>
+              <p className="text-sm text-ink-700">{assemblyArtifact.content_text}</p>
             ) : null}
           </div>
         ) : (
-          <p className="text-sm text-text-tertiary">{t("pipelineModalEmpty")}</p>
+          <p className="text-sm text-ink-500">{t("pipelineModalEmpty")}</p>
         )}
       </Modal>
 
-      <div className="border-l-2 border-primary/45 pl-3">
-        <h3 className="text-sm font-semibold tracking-tight text-text-primary">
+      <div className="border-l border-ink-100 pl-3">
+        <h3 className="text-sm font-semibold tracking-tight text-ink-900">
           {t("pipelinePhaseProduceTitle")}
         </h3>
-        <p className="mt-1 text-xs text-text-secondary leading-relaxed">
+        <p className="mt-1 text-xs leading-relaxed text-ink-700">
           {t("pipelinePhaseProduceSubtitle")}
         </p>
       </div>
@@ -1108,7 +1108,7 @@ export function ProductionEpisodePipeline({
           renderAdvancedExtra={(formId) => (
             <div className="space-y-3">
               <div>
-                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
                   {t("pipelineProduceVoicePresetLabel")}
                 </label>
                 <select
@@ -1121,7 +1121,7 @@ export function ProductionEpisodePipeline({
                       voicePreset: e.target.value as "female" | "male" | "custom",
                     }))
                   }
-                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                  className="h-7 w-full max-w-xs border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 outline-none focus:border-vermilion-600"
                 >
                   <option value="female">{t("pipelineProduceVoicePresetFemale")}</option>
                   <option value="male">{t("pipelineProduceVoicePresetMale")}</option>
@@ -1130,10 +1130,10 @@ export function ProductionEpisodePipeline({
               </div>
               {ttsForm.voicePreset === "custom" ? (
                 <div>
-                  <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                  <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
                     {t("pipelineProduceVoiceIdLabel")}
                   </label>
-                  <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+                  <p className="mb-1 text-[10px] leading-relaxed text-ink-500">
                     {t("pipelineProduceVoiceIdHintCustom")}
                   </p>
                   <input
@@ -1145,15 +1145,15 @@ export function ProductionEpisodePipeline({
                     }
                     maxLength={64}
                     placeholder="21m00Tcm4TlvDq8ikWAM"
-                    className="h-7 w-full max-w-md rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary placeholder:text-text-tertiary"
+                    className="h-7 w-full max-w-md border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 placeholder:text-ink-400 outline-none focus:border-vermilion-600"
                   />
                 </div>
               ) : null}
               <div>
-                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
                   {t("pipelineProduceLanguageLabel")}
                 </label>
-                <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+                <p className="mb-1 text-[10px] leading-relaxed text-ink-500">
                   {t("pipelineProduceLanguageHint")}
                 </p>
                 <select
@@ -1163,7 +1163,7 @@ export function ProductionEpisodePipeline({
                   onChange={(e) =>
                     setTtsForm((p) => ({ ...p, language: e.target.value }))
                   }
-                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                  className="h-7 w-full max-w-xs border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 outline-none focus:border-vermilion-600"
                 >
                   {ELEVENLABS_LANGUAGE_SELECT_OPTIONS.map((o) => (
                     <option key={o.value || "auto"} value={o.value}>
@@ -1174,7 +1174,7 @@ export function ProductionEpisodePipeline({
               </div>
               <div className="grid gap-2 sm:grid-cols-2">
                 <div>
-                  <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                  <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
                     {t("pipelineProduceTtsStabilityLabel")}
                   </label>
                   <input
@@ -1188,11 +1188,11 @@ export function ProductionEpisodePipeline({
                     onChange={(e) =>
                       setTtsForm((p) => ({ ...p, stability: e.target.value }))
                     }
-                    className="h-7 w-full rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                    className="h-7 w-full border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 outline-none focus:border-vermilion-600"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                  <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
                     {t("pipelineProduceTtsSimilarityLabel")}
                   </label>
                   <input
@@ -1206,15 +1206,15 @@ export function ProductionEpisodePipeline({
                     onChange={(e) =>
                       setTtsForm((p) => ({ ...p, similarity: e.target.value }))
                     }
-                    className="h-7 w-full rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                    className="h-7 w-full border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 outline-none focus:border-vermilion-600"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
                   {t("pipelineProduceTtsStyleLabel")}
                 </label>
-                <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+                <p className="mb-1 text-[10px] leading-relaxed text-ink-500">
                   {t("pipelineProduceTtsStyleHint")}
                 </p>
                 <input
@@ -1229,11 +1229,11 @@ export function ProductionEpisodePipeline({
                     setTtsForm((p) => ({ ...p, style: e.target.value }))
                   }
                   placeholder={t("pipelineProduceTtsStylePlaceholder")}
-                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary placeholder:text-text-tertiary"
+                  className="h-7 w-full max-w-xs border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 placeholder:text-ink-400 outline-none focus:border-vermilion-600"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
                   {t("pipelineProduceTtsSpeakerBoostLabel")}
                 </label>
                 <select
@@ -1243,7 +1243,7 @@ export function ProductionEpisodePipeline({
                   onChange={(e) =>
                     setTtsForm((p) => ({ ...p, speakerBoost: e.target.value }))
                   }
-                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                  className="h-7 w-full max-w-xs border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 outline-none focus:border-vermilion-600"
                 >
                   <option value="">{t("pipelineProduceTtsSpeakerBoostDefault")}</option>
                   <option value="1">{t("pipelineProduceTtsSpeakerBoostOn")}</option>
@@ -1276,7 +1276,7 @@ export function ProductionEpisodePipeline({
           onView={() => setViewOpen("subtitle")}
           showCustomInstructions={false}
           renderAdvancedExtra={() => (
-            <p className="text-[10px] text-text-tertiary leading-relaxed">
+            <p className="text-[10px] leading-relaxed text-ink-500">
               {t("pipelineProduceSubtitleAdvancedHint")}
             </p>
           )}
@@ -1329,7 +1329,7 @@ export function ProductionEpisodePipeline({
           renderAdvancedExtra={(formId) => (
             <div className="space-y-2">
               <div>
-                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
                   {t("pipelineProduceBgMusicLabel")}
                 </label>
                 <input
@@ -1342,14 +1342,14 @@ export function ProductionEpisodePipeline({
                     setAssemblyForm((p) => ({ ...p, bgMusicUrl: e.target.value }))
                   }
                   placeholder={t("pipelineProduceBgMusicPlaceholder")}
-                  className="h-7 w-full rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary placeholder:text-text-tertiary"
+                  className="h-7 w-full border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 placeholder:text-ink-400 outline-none focus:border-vermilion-600"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+                <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
                   {t("pipelineProduceBgMusicVolumeLabel")}
                 </label>
-                <p className="text-[10px] text-text-tertiary mb-1 leading-relaxed">
+                <p className="mb-1 text-[10px] leading-relaxed text-ink-500">
                   {t("pipelineProduceBgMusicVolumeHint")}
                 </p>
                 <select
@@ -1359,7 +1359,7 @@ export function ProductionEpisodePipeline({
                   onChange={(e) =>
                     setAssemblyForm((p) => ({ ...p, bgMusicVolume: e.target.value }))
                   }
-                  className="h-7 w-full max-w-xs rounded border border-border-subtle bg-field px-2 text-[11px] text-text-primary"
+                  className="h-7 w-full max-w-xs border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 outline-none focus:border-vermilion-600"
                 >
                   {[0.05, 0.1, 0.15, 0.2, 0.25].map((v) => (
                     <option key={v} value={String(v)}>
@@ -1392,11 +1392,11 @@ export function ProductionEpisodePipeline({
       </div>
 
       {!elevenlabsKeyConfigured && (
-        <p className="text-[11px] text-text-tertiary max-w-prose leading-relaxed">
-          {t("draftTtsDisabledHint")}{" "}
+        <p className="max-w-prose text-[11px] leading-relaxed text-ink-500">
+          {t("draftTtsDisabledHint")}{""}
           <Link
             href="/dashboard/productions?studio=channels"
-            className="font-medium text-primary hover:underline"
+            className="font-medium text-vermilion-600 hover:underline"
           >
             {t("draftRunwayIntegrationsLink")}
           </Link>
@@ -1404,11 +1404,11 @@ export function ProductionEpisodePipeline({
       )}
 
       {!runwayRenderReady && (
-        <p className="text-[11px] text-text-tertiary max-w-prose leading-relaxed">
-          {t("draftRunwayDisabledHint")}{" "}
+        <p className="max-w-prose text-[11px] leading-relaxed text-ink-500">
+          {t("draftRunwayDisabledHint")}{""}
           <Link
             href="/dashboard/productions?studio=channels"
-            className="font-medium text-primary hover:underline"
+            className="font-medium text-vermilion-600 hover:underline"
           >
             {t("draftRunwayIntegrationsLink")}
           </Link>
@@ -1544,27 +1544,27 @@ function PreprodPipelineStep({
   return (
     <div
       className={cn(
-        "flex flex-col rounded-xl border px-3 py-3 shadow-sm transition-shadow",
+        "flex flex-col border px-3 py-3",
         done
-          ? "border-green-500/35 bg-green-500/[0.07] ring-1 ring-green-500/15"
+          ? "border-vermilion-600/35 bg-paper-0"
           : disabled
-            ? "border-border-subtle/50 bg-layer-02/20 opacity-60"
-            : "border-border-subtle/90 bg-layer-02/45 ring-1 ring-black/[0.03] dark:ring-white/[0.04]",
+            ? "border-ink-100 bg-paper-100 opacity-60"
+            : "border-ink-100 bg-paper-100",
       )}
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <span
             className={cn(
-              "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
+              "flex h-5 w-5 shrink-0 items-center justify-center border font-mono text-[10px]",
               done
-                ? "bg-green-500/20 text-green-600 dark:text-green-400"
-                : "bg-layer-03 text-text-tertiary",
+                ? "border-vermilion-600 text-vermilion-600"
+                : "border-ink-300 text-ink-500",
             )}
           >
             {stepBadge}
           </span>
-          <span className="text-xs font-medium text-text-primary truncate">
+          <span className="truncate text-xs font-medium text-ink-900">
             {label}
           </span>
         </div>
@@ -1583,10 +1583,10 @@ function PreprodPipelineStep({
               onClick={onViewClick}
               aria-label={viewLabel}
               title={viewLabel}
-              className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
+              className="h-7 gap-1 px-2.5 sm:gap-1.5 sm:px-3"
             >
               <Eye className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
-              <span className="hidden sm:inline">{viewLabel}</span>
+              <span>{viewLabel}</span>
             </Button>
           ) : null}
           {isDraft && draftInteractive ? (
@@ -1603,14 +1603,14 @@ function PreprodPipelineStep({
               }
               aria-label={done ? redoLabel : runLabel}
               title={done ? redoLabel : runLabel}
-              className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
+              className="h-7 gap-1 px-2.5 sm:gap-1.5 sm:px-3"
             >
               {done ? (
                 <RotateCw className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
               ) : (
                 <Play className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
               )}
-              <span className="hidden sm:inline">{done ? redoLabel : runLabel}</span>
+              <span>{done ? redoLabel : runLabel}</span>
             </Button>
           ) : (
             <form action={formAction} className="inline" id={formId}>
@@ -1628,7 +1628,7 @@ function PreprodPipelineStep({
                 disabled={disabled}
                 aria-label={done ? redoLabel : runLabel}
                 title={done ? redoLabel : runLabel}
-                className="gap-1 px-2.5 sm:gap-1.5 sm:px-3"
+                className="h-7 gap-1 px-2.5 sm:gap-1.5 sm:px-3"
               >
                 {!pending &&
                   (done ? (
@@ -1636,27 +1636,27 @@ function PreprodPipelineStep({
                   ) : (
                     <Play className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
                   ))}
-                <span className="hidden sm:inline">{done ? redoLabel : runLabel}</span>
+                <span>{done ? redoLabel : runLabel}</span>
               </Button>
             </form>
           )}
         </div>
       </div>
       {hint && !done && (
-        <p className="mt-1.5 text-[10px] text-text-tertiary leading-relaxed pl-7">
+        <p className="mt-1.5 pl-7 text-[10px] leading-relaxed text-ink-500">
           {hint}
         </p>
       )}
       {hasAdvanced && !disabled ? (
         <div
           className={cn(
-            "mt-2 pl-7 space-y-2 border-t border-border-subtle/50 pt-2",
+            "mt-2 space-y-2 border-t border-ink-100 pt-2 pl-7",
             !advOpen && "hidden",
           )}
         >
           {modelOptions?.length ? (
             <div>
-              <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+              <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
                 {tStep("pipelineStepModelLabel")}
               </label>
               <select
@@ -1664,7 +1664,7 @@ function PreprodPipelineStep({
                 form={isDraft ? undefined : formId}
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
-                className="h-8 w-full max-w-xs rounded-md border border-border-subtle bg-field px-2 text-[11px] text-text-primary shadow-inner"
+                className="h-8 w-full max-w-xs border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 outline-none focus:border-vermilion-600"
               >
                 {modelOptions.map((o) => (
                   <option key={o.id} value={o.id}>
@@ -1676,7 +1676,7 @@ function PreprodPipelineStep({
           ) : null}
           {showCustomInstructions ? (
             <div>
-              <label className="block text-[10px] font-medium text-text-tertiary mb-0.5">
+              <label className="mb-0.5 block font-mono text-[10px] text-ink-500">
                 {tStep("pipelineStepCustomInstructionsLabel")}
               </label>
               {isDraft ? (
@@ -1685,7 +1685,7 @@ function PreprodPipelineStep({
                   onChange={(e) => setShortcutInstr(e.target.value)}
                   maxLength={500}
                   placeholder={tStep("pipelineStepCustomInstructionsPlaceholder")}
-                  className="h-8 w-full rounded-md border border-border-subtle bg-field px-2 text-[11px] text-text-primary shadow-inner placeholder:text-text-tertiary"
+                  className="h-8 w-full border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 placeholder:text-ink-400 outline-none focus:border-vermilion-600"
                 />
               ) : (
                 <input
@@ -1693,7 +1693,7 @@ function PreprodPipelineStep({
                   form={formId}
                   maxLength={500}
                   placeholder={tStep("pipelineStepCustomInstructionsPlaceholder")}
-                  className="h-8 w-full rounded-md border border-border-subtle bg-field px-2 text-[11px] text-text-primary shadow-inner placeholder:text-text-tertiary"
+                  className="h-8 w-full border-b border-ink-300 bg-transparent px-0 text-[11px] text-ink-900 placeholder:text-ink-400 outline-none focus:border-vermilion-600"
                 />
               )}
             </div>

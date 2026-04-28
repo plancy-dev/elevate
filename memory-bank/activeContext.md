@@ -1,6 +1,46 @@
 # Active Context — Elevate
 
-## 현재 페이즈
+## 현재 페이즈 (활성)
+
+**IMPLEMENT (2026-04-28) — Design System v3 "Editor's Desk" (편집자의 책상), S7 완료**
+
+**브랜치:** `feat/editors-desk-v3` (main에서 분기, 별도 PR 단위)
+**SoT:** [`docs/features/INIT-editors-desk-design-system.md`](../docs/features/INIT-editors-desk-design-system.md) · [`ADR-011`](../docs/adr/ADR-011-design-system-v3-editors-desk.md) (Accepted) · [`PLAN S0-S2`](../docs/features/PLAN-editors-desk-s0-s1-s2.md) · [`TOC IA`](../docs/design/v3-creative/toc-ia-mapping.md)
+
+**복잡도:** **L4** — 디자인 토큰 전면 교체(ink/paper/vermilion) + 3서체(Fraunces/Geist/JetBrains Mono) + UI 프리미티브 10개 재작성 + 앱 쉘 교체(Sidebar→TOC, Masthead) + 시그니처 **Columnar Timeline** 신규 + Studio Phase 2 fullscreen editor 표면 sweep + 마케팅·어드민·인증 전 라우트. **스키마/서버 액션/마이그레이션 변경 없음**(순수 표현 계층).
+
+**이전 시도(2026-04-24):** 동일 작업이 한 차례 진행되었으나 main에 머지되지 않은 채 사라졌고, ADR-010 번호는 별도 주제(`ADR-010-fullscreen-timeline-editor`)에 재배정됨. 본 재시작은 **ADR-011**을 사용하고, Q1-Q9 결정은 그대로 가져가며 Q10(`src/components/desk/` 경로 — `dashboard/editor/`와 어휘 충돌 회피)을 추가.
+
+**확정 결정 (Q1-Q10):**
+- **Q1** v2 문서 즉시 archive → `memory-bank/archive/design-v2/` (S0)
+- **Q2** 마케팅 오렌지 폐기 (버밀리언 유일 크로매틱)
+- **Q3** Framer Motion 경로 제한 — `src/components/desk/**` + 지정된 micro-interaction 경로만
+- **Q4** Tailwind 완전 교체 — S0는 v2 토큰 shim으로 빌드 보호; S6에서 namespace lock
+- **Q5** 다크 테마 Phase 2 (S7)
+- **Q6** TOC IA Option A (Editorial metaphor): I. Studio / II. Scripts / III. Library / IV. House / V. Settings
+- **Q7** CJK 폴백 — Noto Serif KR/JP/SC/TC + 시스템 산세리프
+- **Q8** Fraunces display-lg 1 weight만 preload + `display=swap`
+- **Q9** ColumnTimeline 데이터 — 기존 `resolve-episode-scenes.ts` + `studio-productions.ts` 재사용; 스키마 무변경
+- **Q10** `src/components/desk/` 경로 (Studio Phase 2의 `src/components/dashboard/editor/`와 어휘 충돌 회피)
+
+**슬라이스 순서:** S0 (Tokens+Fonts+Archive, L2) → S1 (Primitives, L3) → S2 (Shell TOC/Masthead/CommandBar, L3) → **S3 (Columnar Timeline 시그니처, L3)** → **S4 (Scene/Publish + Phase 2 sweep, L3)** → **S5 (Marketing+Auth, L3)** → **S6 (Admin+Billing + namespace lock, L2)** → **S7 (Dark, 선택, L2)**. 각 슬라이스 = 1 commit, 전체 = 1 PR.
+
+**완료된 이번 단계 (S7):** 다크 테마 토글 경로를 v3 토큰과 완전 동기화. `src/styles/tokens.css`에서 다크 오버라이드를 `.dark` + `[data-theme="dark"]` + `:root.dark`로 통합하고 `color-scheme: dark`를 적용. `src/app/globals.css`의 semantic dark alias도 동일 선택자 집합으로 정렬해 시스템/수동 토글 모두 일관 동작.
+
+**검증:** `pnpm -s tsc --noEmit` + `pnpm -s eslint src --max-warnings=0` + `pnpm -s vitest run tests/unit/auth-errors.test.ts tests/unit/editor-dsl.test.ts` 통과.
+
+**다음 단계:** Editor's Desk v3 슬라이스(S0-S7) 구현 완료. 필요 시 최종 QA/ship 단계(수동 다크 스모크 + PR 정리)로 전환.
+
+**04-24 학습(반드시 회피):**
+- L1: PostCSS 8.4.31 + Turbopack은 CSS 주석의 em-dash(`U+2014`)에 `Unknown word` 에러 → tokens.css/globals.css 주석 ASCII-only.
+- L2: `@theme { --shadow-*: initial; }` namespace wipe는 ~40 콜러 즉시 깨짐 → S0 v2-shim 보호; S6에서 lock.
+- L3: Modal/CommandBar는 framer-motion 필요하나 `src/components/ui/modal.tsx`는 ESLint 차단 → Modal을 `desk/`에 두고 ui/는 thin re-export.
+- L4: `next/font/google` 제거 시 `${geistSans.variable}` 잔존 → SSR 깨짐.
+- L5: `design-system-classes.ts` 즉시 삭제 시 3 콜러 깨짐 → S0 stub, S1 마이그레이션 후 삭제.
+
+---
+
+## 직전 페이즈 (보관, 2026-04-24)
 
 **Phase 1+2+3 완료 + REFLECT/ARCHIVE 문서화 완료 (2026-04-24)**
 **SoT:** [`docs/features/INIT-scene-image-to-video-and-publishing.md`](../docs/features/INIT-scene-image-to-video-and-publishing.md) §4.2 · [`ADR-009`](../docs/adr/ADR-009-studio-image-providers-and-keyframes.md) · [`ADR-010`](../docs/adr/ADR-010-fullscreen-timeline-editor.md) · **tasks:** [`tasks.md`](tasks.md) **§ G3.1.5**

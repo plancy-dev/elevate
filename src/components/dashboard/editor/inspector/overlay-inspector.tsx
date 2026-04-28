@@ -37,7 +37,7 @@ export function OverlayInspector() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-text-primary">
+        <h3 className="text-sm font-semibold text-ink-900">
           {t("overlayInspectorTitle")}
         </h3>
         <button
@@ -45,7 +45,7 @@ export function OverlayInspector() {
           onClick={() =>
             dispatch({ type: "removeOverlay", overlayId: overlay.id })
           }
-          className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-danger/30 text-danger hover:bg-danger/10"
+          className="inline-flex h-7 w-7 items-center justify-center border border-vermilion-600 text-vermilion-600 hover:bg-vermilion-100"
           aria-label={t("overlayRemove")}
         >
           <Trash2 className="h-3.5 w-3.5" aria-hidden />
@@ -53,7 +53,7 @@ export function OverlayInspector() {
       </div>
 
       <label className="block">
-        <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+        <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
           {t("overlayText")}
         </span>
         <textarea
@@ -61,7 +61,7 @@ export function OverlayInspector() {
           maxLength={500}
           onChange={(e) => update({ text: e.target.value })}
           rows={3}
-          className="w-full rounded-md border border-border-subtle bg-field px-2 py-1.5 text-sm"
+          className="w-full border border-ink-100 bg-paper-0 px-2 py-1.5 text-sm text-ink-900"
         />
       </label>
 
@@ -85,13 +85,13 @@ export function OverlayInspector() {
       </div>
 
       <label className="block">
-        <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+        <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
           {t("overlayPosition")}
         </span>
         <select
           value={positionValue}
           onChange={(e) => setPosition(e.target.value)}
-          className="h-9 w-full rounded-md border border-border-subtle bg-field px-2 text-sm"
+          className="h-9 w-full border-b border-ink-300 bg-transparent px-0 text-sm text-ink-900 outline-none focus:border-vermilion-600"
         >
           <option value="top">{t("overlayPositionTop")}</option>
           <option value="center">{t("overlayPositionCenter")}</option>
@@ -136,7 +136,7 @@ export function OverlayInspector() {
 
       <div className="grid grid-cols-2 gap-2">
         <label className="block">
-          <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+            <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
             {t("overlayAnimation")}
           </span>
           <select
@@ -144,7 +144,7 @@ export function OverlayInspector() {
             onChange={(e) =>
               update({ animation: e.target.value as OverlayAnimation })
             }
-            className="h-9 w-full rounded-md border border-border-subtle bg-field px-2 text-sm"
+            className="h-9 w-full border-b border-ink-300 bg-transparent px-0 text-sm text-ink-900 outline-none focus:border-vermilion-600"
           >
             <option value="none">{t("overlayAnimationNone")}</option>
             <option value="fade_in">{t("overlayAnimationFade")}</option>
@@ -161,12 +161,12 @@ export function OverlayInspector() {
         />
       </div>
 
-      <fieldset className="space-y-2 rounded-md border border-border-subtle bg-layer-02/40 p-3">
-        <legend className="px-1 text-[11px] font-semibold uppercase tracking-wide text-text-secondary">
+      <fieldset className="space-y-2 border border-ink-100 bg-paper-50 p-3">
+        <legend className="px-1 font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
           {t("overlayStyleTitle")}
         </legend>
         <label className="block">
-          <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+          <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
             {t("overlayStyleFontFamily")}
           </span>
           <select
@@ -179,7 +179,7 @@ export function OverlayInspector() {
                 },
               })
             }
-            className="h-9 w-full rounded-md border border-border-subtle bg-field px-2 text-sm"
+            className="h-9 w-full border-b border-ink-300 bg-transparent px-0 text-sm text-ink-900 outline-none focus:border-vermilion-600"
           >
             <option value="system">{t("overlayFontSystem")}</option>
             <option value="serif">{t("overlayFontSerif")}</option>
@@ -198,7 +198,7 @@ export function OverlayInspector() {
             }
           />
           <label className="block">
-            <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+            <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
               {t("overlayStyleFontWeight")}
             </span>
             <select
@@ -211,7 +211,7 @@ export function OverlayInspector() {
                   },
                 })
               }
-              className="h-9 w-full rounded-md border border-border-subtle bg-field px-2 text-sm"
+              className="h-9 w-full border-b border-ink-300 bg-transparent px-0 text-sm text-ink-900 outline-none focus:border-vermilion-600"
             >
               <option value={400}>{t("overlayFontWeight400")}</option>
               <option value={600}>{t("overlayFontWeight600")}</option>
@@ -236,7 +236,7 @@ export function OverlayInspector() {
           />
         </div>
         <label className="block">
-          <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+          <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
             {t("overlayStyleBackgroundOpacity", {
               pct: Math.round(overlay.style.backgroundOpacity * 100),
             })}
@@ -306,7 +306,7 @@ function ColorField({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+      <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
         {label}
       </span>
       <div className="flex items-center gap-2">
@@ -314,14 +314,14 @@ function ColorField({
           type="color"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-9 w-10 shrink-0 cursor-pointer rounded border border-border-subtle bg-field p-1"
+          className="h-9 w-10 shrink-0 cursor-pointer border border-ink-100 bg-paper-0 p-1"
         />
         <input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           pattern="#[0-9a-fA-F]{6}"
-          className="h-9 flex-1 rounded-md border border-border-subtle bg-field px-2 font-mono text-[11px]"
+          className="h-9 flex-1 border-b border-ink-300 bg-transparent px-0 font-mono text-[11px] text-ink-900 outline-none focus:border-vermilion-600"
         />
       </div>
     </label>
@@ -345,7 +345,7 @@ function NumberField({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-[11px] font-medium text-text-secondary">
+      <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
         {label}
       </span>
       <input
@@ -358,7 +358,7 @@ function NumberField({
           const n = Number(e.target.value);
           if (Number.isFinite(n)) onChange(n);
         }}
-        className="h-9 w-full rounded-md border border-border-subtle bg-field px-2 text-sm"
+        className="h-9 w-full border-b border-ink-300 bg-transparent px-0 text-sm text-ink-900 outline-none focus:border-vermilion-600"
       />
     </label>
   );

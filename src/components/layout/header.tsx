@@ -48,7 +48,7 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-marketing-border-subtle bg-marketing-canvas/90 backdrop-blur-md supports-[backdrop-filter]:bg-marketing-canvas/75">
+    <header className="sticky top-0 z-50 border-b border-ink-100 bg-marketing-canvas/90 backdrop-blur-md supports-[backdrop-filter]:bg-marketing-canvas/75">
       <div className="mx-auto flex h-12 max-w-[1584px] items-center justify-between gap-2 px-4 lg:px-8">
         <div className="flex min-w-0 items-center gap-4 lg:gap-8">
           <Link href="/" className="flex shrink-0 items-center">
@@ -62,8 +62,8 @@ export function Header() {
                   key={entry.href}
                   href={entry.href}
                   className={cn(
-                    "flex items-center h-12 px-4 text-sm text-text-secondary transition-colors",
-                    "hover:text-text-primary hover:bg-layer-02",
+                    "flex h-12 items-center px-4 text-sm text-ink-600 transition-colors duration-80 ease-(--ease-editorial)",
+                    "hover:bg-paper-100 hover:text-ink-900",
                   )}
                 >
                   {entry.label}
@@ -98,7 +98,7 @@ export function Header() {
 
         <button
           type="button"
-          className="lg:hidden flex h-8 w-8 shrink-0 items-center justify-center text-text-secondary hover:bg-layer-02"
+          className="lg:hidden flex h-8 w-8 shrink-0 items-center justify-center text-ink-600 hover:bg-paper-100"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-expanded={mobileOpen}
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -112,8 +112,8 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-marketing-border-subtle bg-marketing-canvas lg:hidden">
-          <div className="flex items-center justify-between gap-2 border-b border-border-subtle px-4 py-2">
+        <div className="border-t border-ink-100 bg-marketing-canvas lg:hidden">
+          <div className="flex items-center justify-between gap-2 border-b border-ink-100 px-4 py-2">
             <LanguageSwitcher className="flex-1" />
             <ThemeToggle />
           </div>
@@ -123,22 +123,22 @@ export function Header() {
                 <Link
                   key={entry.href}
                   href={entry.href}
-                  className="px-4 py-3 text-sm text-text-secondary hover:text-text-primary hover:bg-layer-02"
+                  className="px-4 py-3 text-sm text-ink-600 hover:bg-paper-100 hover:text-ink-900"
                   onClick={() => setMobileOpen(false)}
                 >
                   {entry.label}
                 </Link>
               ) : (
-                <div key={entry.label} className="border-b border-border-subtle">
-                  <div className="px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+                <div key={entry.label} className="border-b border-ink-100">
+                  <div className="px-4 py-2 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-500">
                     {entry.label}
                   </div>
-                  <div className="bg-layer-01">
+                  <div className="bg-paper-100">
                     {entry.items.map((item) => (
                       <Link
                         key={item.href}
                         href={item.href}
-                        className="block px-6 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-layer-02"
+                        className="block px-6 py-2.5 text-sm text-ink-600 hover:bg-paper-50 hover:text-ink-900"
                         onClick={() => setMobileOpen(false)}
                       >
                         {item.label}
@@ -148,7 +148,7 @@ export function Header() {
                 </div>
               ),
             )}
-            <div className="border-t border-border-subtle p-4 flex flex-col gap-2">
+            <div className="flex flex-col gap-2 border-t border-ink-100 p-4">
               {showLeadGen ? (
                 <IntlButtonLink
                   href="/#waitlist"

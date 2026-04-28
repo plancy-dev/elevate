@@ -13,7 +13,7 @@ type Props = {
   /** Stored `distribution_label` from DB (preset key or free text). */
   distributionStored: string;
   idPrefix: "new" | "edit";
-  /** Controlled preset key (including `""`, `__custom__`, or a `DISTRIBUTION_PRESET_KEYS` value). */
+  /** Controlled preset key (including `""`,`__custom__`, or a`DISTRIBUTION_PRESET_KEYS` value). */
   preset: string;
   onPresetChange: (preset: string) => void;
 };
@@ -57,7 +57,7 @@ export function StudioEpisodeDistributionFields({
       <div>
         <label
           htmlFor={`${idPrefix}_distribution_preset`}
-          className="block text-xs font-medium text-text-secondary mb-1.5"
+          className="block text-xs font-medium text-ink-700 mb-1.5"
         >
           {t("distributionLabel")}
         </label>
@@ -71,7 +71,7 @@ export function StudioEpisodeDistributionFields({
         />
         <p
           id={`${idPrefix}_distribution_hint`}
-          className="mt-1.5 text-xs text-text-tertiary leading-relaxed"
+          className="mt-1.5 text-xs text-ink-500 leading-relaxed"
         >
           {t("distributionSelectHint")}
         </p>
@@ -81,7 +81,7 @@ export function StudioEpisodeDistributionFields({
         <div className="transition-opacity duration-200">
           <label
             htmlFor={`${idPrefix}_distribution_custom`}
-            className="block text-xs font-medium text-text-secondary mb-1.5"
+            className="block text-xs font-medium text-ink-700 mb-1.5"
           >
             {t("distributionCustomLabel")}
           </label>
@@ -93,7 +93,7 @@ export function StudioEpisodeDistributionFields({
             maxLength={500}
             autoComplete="off"
             placeholder={t("distributionCustomPlaceholder")}
-            className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary placeholder:text-text-tertiary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25"
+            className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 placeholder:text-ink-500 focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25"
           />
         </div>
       ) : (

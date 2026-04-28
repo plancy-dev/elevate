@@ -23,9 +23,9 @@ export function TrackRuler({
             className="absolute top-0 h-full"
             style={{ left: i * pxPerSec }}
           >
-            <div className="h-2 w-px bg-border-subtle" />
+            <div className="h-2 w-px bg-ink-100" />
             {i % 5 === 0 ? (
-              <span className="absolute -translate-x-1/2 left-0 top-2 text-[9px] text-text-tertiary">
+              <span className="absolute top-2 left-0 -translate-x-1/2 font-mono text-[9px] text-ink-500">
                 {i}s
               </span>
             ) : null}

@@ -38,7 +38,7 @@ export function OverlayTrack({ pxPerSec }: { pxPerSec: number }) {
                 selection: { kind: "overlay", overlayId: overlay.id },
               })
             }
-            className="absolute top-1 bottom-1 flex items-center overflow-hidden rounded border border-fuchsia-500/40 bg-fuchsia-500/10 px-2 text-[10px] text-fuchsia-900 hover:bg-fuchsia-500/20 dark:text-fuchsia-200/95"
+            className="absolute top-1 bottom-1 flex items-center overflow-hidden border border-ink-300 bg-paper-0 px-2 font-mono text-[10px] text-ink-700 transition-colors duration-80 ease-(--ease-editorial) hover:border-ink-900 hover:text-ink-900"
             style={{ left, width }}
           >
             <span className="truncate">{overlay.text || "(empty)"}</span>
@@ -56,7 +56,7 @@ export function OverlayTrack({ pxPerSec }: { pxPerSec: number }) {
         }
         disabled={atCapacity}
         aria-label={t("overlayAddAria")}
-        className="absolute right-1 top-1 bottom-1 flex items-center gap-1 rounded border border-dashed border-border-subtle bg-layer-01 px-2 text-[10px] text-text-secondary hover:border-fuchsia-500/40 hover:text-fuchsia-900 disabled:cursor-not-allowed disabled:opacity-50"
+        className="absolute top-1 right-1 bottom-1 flex items-center gap-1 border border-dashed border-ink-300 bg-paper-100 px-2 font-mono text-[10px] text-ink-500 transition-colors duration-80 ease-(--ease-editorial) hover:border-ink-900 hover:text-ink-900 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Plus className="h-3 w-3" aria-hidden />
         {t("overlayAdd")}

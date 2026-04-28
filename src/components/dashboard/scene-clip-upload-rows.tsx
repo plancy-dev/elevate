@@ -46,12 +46,12 @@ function SceneClipUploadRow({
     <form
       ref={formRef}
       action={formAction}
-      className="flex flex-col gap-1.5 rounded-md border border-border-subtle/50 bg-layer-01/30 px-2 py-2 sm:flex-row sm:flex-wrap sm:items-end"
+      className="flex flex-col gap-1.5 border border-ink-100 bg-paper-100 px-2 py-2 sm:flex-row sm:flex-wrap sm:items-end"
     >
       <input type="hidden" name="episode_id" value={episodeId} />
       <input type="hidden" name="scene_index" value={String(row.index)} />
       <div className="min-w-0 flex-1">
-        <p className="text-[10px] font-medium text-text-tertiary">
+        <p className="font-mono text-[10px] text-ink-500">
           {t("pipelineSceneUploadRowLabel", {
             n: row.index + 1,
             seconds: row.durationSeconds,
@@ -61,13 +61,13 @@ function SceneClipUploadRow({
           type="file"
           name="file"
           accept="video/mp4,video/quicktime,video/webm"
-          className="mt-1 block w-full max-w-md text-[11px] text-text-secondary file:mr-2 file:rounded file:border-0 file:bg-layer-02 file:px-2 file:py-1 file:text-[11px]"
+          className="mt-1 block w-full max-w-md text-[11px] text-ink-700 file:mr-2 file:border file:border-ink-100 file:bg-paper-50 file:px-2 file:py-1 file:text-[11px]"
           disabled={pending}
           required
         />
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        <label className="flex items-center gap-1 text-[10px] text-text-tertiary">
+        <label className="flex items-center gap-1 font-mono text-[10px] text-ink-500">
           <span>{t("pipelineSceneUploadTrimLabel")}</span>
           <input
             type="number"
@@ -75,17 +75,17 @@ function SceneClipUploadRow({
             min={0}
             step={0.1}
             defaultValue={0}
-            className="h-7 w-16 rounded border border-border-subtle bg-field px-1 text-[11px] tabular-nums"
+            className="h-7 w-16 border-b border-ink-300 bg-transparent px-0 text-[11px] tabular-nums text-ink-900 outline-none focus:border-vermilion-600"
             disabled={pending}
           />
         </label>
-        <label className="flex items-center gap-1 text-[10px] text-text-tertiary">
+        <label className="flex items-center gap-1 font-mono text-[10px] text-ink-500">
           <input
             type="checkbox"
             name="loop"
             value="1"
             defaultChecked
-            className="rounded border-border-subtle"
+            className="border border-ink-300"
             disabled={pending}
           />
           {t("pipelineSceneUploadLoopLabel")}
@@ -117,10 +117,10 @@ export function SceneClipUploadRows({
   if (rows.length === 0) return null;
   return (
     <div className="space-y-2">
-      <p className="text-[10px] font-semibold uppercase tracking-wide text-text-tertiary">
+      <p className="font-mono text-[10px] uppercase tracking-[0.04em] text-ink-500">
         {t("pipelineSceneUploadSectionTitle")}
       </p>
-      <p className="text-[10px] leading-relaxed text-text-tertiary">{t("pipelineSceneUploadHint")}</p>
+      <p className="text-[10px] leading-relaxed text-ink-500">{t("pipelineSceneUploadHint")}</p>
       <div className="space-y-2">
         {rows.map((row) => (
           <SceneClipUploadRow key={row.index} episodeId={episodeId} row={row} />

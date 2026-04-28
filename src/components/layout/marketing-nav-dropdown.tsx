@@ -19,9 +19,9 @@ export function MarketingNavDropdown({ label, items, className }: Props) {
       <DropdownMenu.Trigger
         type="button"
         className={cn(
-          "flex items-center gap-1 h-12 px-4 text-sm text-text-secondary transition-colors",
-          "hover:text-text-primary hover:bg-layer-02",
-          "data-[state=open]:text-text-primary data-[state=open]:bg-layer-02",
+          "flex h-12 items-center gap-1 px-4 text-sm text-ink-600 transition-colors duration-80 ease-(--ease-editorial)",
+          "hover:bg-paper-100 hover:text-ink-900",
+          "data-[state=open]:bg-paper-100 data-[state=open]:text-ink-900",
           "outline-none",
           className,
         )}
@@ -31,7 +31,7 @@ export function MarketingNavDropdown({ label, items, className }: Props) {
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[240px] z-[100] rounded-lg border border-border-subtle bg-surface py-1 shadow-md"
+          className="z-[100] min-w-[240px] border border-ink-100 bg-paper-100 py-1"
           sideOffset={4}
           align="start"
         >
@@ -39,7 +39,7 @@ export function MarketingNavDropdown({ label, items, className }: Props) {
             <DropdownMenu.Item key={item.href} asChild>
               <Link
                 href={item.href}
-                className="block px-4 py-2.5 text-sm text-text-secondary outline-none cursor-pointer hover:bg-layer-02 hover:text-text-primary"
+                className="block cursor-pointer px-4 py-2.5 text-sm text-ink-600 outline-none transition-colors duration-80 ease-(--ease-editorial) hover:bg-paper-50 hover:text-ink-900"
               >
                 {item.label}
               </Link>

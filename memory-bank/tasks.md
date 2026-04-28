@@ -14,6 +14,48 @@
 
 ---
 
+## Design System v3 — "Editor's Desk" (편집자의 책상) — INIT 활성
+
+**브랜치:** `feat/editors-desk-v3` · **SoT:** [`INIT`](../docs/features/INIT-editors-desk-design-system.md) · [`ADR-011`](../docs/adr/ADR-011-design-system-v3-editors-desk.md) (Accepted) · [`PLAN S0-S2`](../docs/features/PLAN-editors-desk-s0-s1-s2.md) · [`TOC IA`](../docs/design/v3-creative/toc-ia-mapping.md). **복잡도 L4**. **스키마/서버 액션/마이그레이션 변경 없음** — 표현 계층(토큰·프리미티브·쉘·라우트) 전면 재작성.
+
+**철학.** 하나의 무드(조용·정확·자신감). 색은 **3계열** (`ink` + `paper` + **`vermilion-600` 유일 크로매틱**). 타이포 **Fraunces** (가변 세리프, opsz 9-144) + **Geist** + **JetBrains Mono**. **라운드·섀도우·그라디언트 전면 금지** — 분리는 1px `--ink-100` 룰로만. 시그니처 = **Columnar Timeline** (수직 280px 단 + 1px 세로 룰, 필름스트립 대체 금지). 키보드 퍼스트 (`Cmd+K` 바닥 시트, `g→*` 제스처).
+
+**Q1-Q10 락 완료** ([INIT § 11](../docs/features/INIT-editors-desk-design-system.md) 참조).
+
+### D1 — 이전 시도 메모 (2026-04-24)
+
+작업이 한 차례 진행되었으나 main에 머지되지 않고 사라짐. ADR-010 번호는 별도 주제(`ADR-010-fullscreen-timeline-editor`, Studio Phase 2)에 재배정됨. 본 재시작은 **ADR-011** 사용 + 별도 브랜치 `feat/editors-desk-v3`로 작업 보존.
+
+### D2 — 슬라이스 (1 commit/슬라이스, 전체 1 PR)
+
+| # | 슬라이스 | 복잡도 | 상태 | 주요 산출물 |
+|---|---------|-------|------|-----------|
+| **S0** | Tokens & Fonts + Archive | L2 | **완료 (2026-04-27)** | `tokens.css` · `globals.css` 재작성(v2 shim) · `layout.tsx` 폰트 · ESLint guard · v2 7건 archive |
+| **S1** | Primitives | L3 | **완료 (2026-04-27)** | `desk/{Plate,Mark,ShortcutBadge,Modal,index}` + `ui/*` 10개 재작성 + `design-system-classes.ts` 삭제 |
+| **S2** | Shell | L3 | **완료 (2026-04-27)** | `desk/{TOC,Masthead,CommandBar}` + `useShortcut` 훅 + sidebar 삭제 |
+| **S3** | **Columnar Timeline (시그니처)** | L3 | **완료 (2026-04-27)** | `desk/ColumnTimeline/{Column,Playhead,Rule}` + Phase 2 editor 통합 + column mapping unit test |
+| **S4** | Scene/Publish + Phase 2 sweep | L3 | **완료 (2026-04-27)** | Scene/Publish 표면 + episode shell + `dashboard/editor/*` 클래스명 v3 sweep |
+| **S5** | Marketing + Auth | L3 | **완료 (2026-04-28)** | `[locale]/(marketing)/*` + `components/marketing/*` + `components/layout/{header,footer,nav,theme,logo}` + `(auth)/*` + `auth/*` v3 sweep |
+| **S6** | Admin + Billing + Lock | L2 | **완료 (2026-04-28)** | admin/billing 표면 정렬 + legacy class wipe + `globals.css` v2 shim 제거 |
+| **S7** | Dark (선택) | L2 | **완료 (2026-04-28)** | dark 토글/시스템 모드와 v3 토큰 동기화 (`.dark` + `[data-theme="dark"]`) |
+
+**Merge order:** S0 → S1 → S2 → S3 (시그니처 우선 락) → S4 · S5 · S6 (병렬 가능) → S7.
+
+### D3 — 진행 체크
+
+- [x] **INIT (2026-04-27 재시작):** [`INIT-editors-desk-design-system.md`](../docs/features/INIT-editors-desk-design-system.md) · L4 · 슬라이스 S0-S7 · Q1-Q10 · 04-24 학습 L1-L5
+- [x] **ADR-011 (2026-04-27, Accepted):** [`ADR-011`](../docs/adr/ADR-011-design-system-v3-editors-desk.md) · 010→011 번호 이동 메모 + Studio Phase 2 통합 정책
+- [x] **CREATIVE S2.0:** TOC IA Option A 락 — [`toc-ia-mapping.md`](../docs/design/v3-creative/toc-ia-mapping.md)
+- [x] **PLAN S0/S1/S2:** [`PLAN-editors-desk-s0-s1-s2.md`](../docs/features/PLAN-editors-desk-s0-s1-s2.md) · 슬라이스별 BUILD-ready 체크리스트
+- [x] **브랜치:** `feat/editors-desk-v3` 생성 (main 기준)
+- [x] **BUILD S0:** v2 7건 archive · `tokens.css` 신규 · `globals.css` 재작성 · `layout.tsx` 폰트 · `eslint.config.mjs` framer-motion guard · 의존성 6 추가
+- [x] **BUILD S5:** marketing/auth/shared-marketing-shell v3 sweep 완료 (`src/app/[locale]/(marketing)/*`, `src/components/marketing/*`, `src/components/layout/*`, `src/app/(auth)/*`, `src/app/auth/*`, `src/components/auth/*`) + `tsc`/`eslint`/`vitest(auth-errors)` 통과
+- [x] **BUILD S6:** admin/billing 표면 + legacy class wipe + `src/app/globals.css` v2 shim 제거 완료 (`rg` 기준 legacy 클래스 0건)
+- [ ] **REFLECT:** S6 lock 시점에 라이트 스크린샷 · Lighthouse · a11y · PostHog `web_vitals`
+- [ ] **ARCHIVE:** 슬라이스별 회고 통합 → `memory-bank/archive/work-history/archive-editors-desk-design-system-2026.md`
+
+---
+
 ## AI 피벗 — Phase A (문서·랜딩·도구)
 
 | # | 항목 | 상태 |

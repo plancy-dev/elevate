@@ -25,19 +25,22 @@ export default async function ProductPage({ params }: Props) {
   const t = await getTranslations("Product");
 
   return (
-    <div className="border-t border-marketing-border-subtle">
+    <div className="border-t border-ink-100">
       <MarketingSection title={t("title")} description={t("description")}>
-        <div className="grid gap-px overflow-hidden rounded-xl border border-marketing-border-subtle bg-marketing-border-subtle md:grid-cols-2">
+        <div className="grid gap-px overflow-hidden border border-ink-100 bg-ink-100 md:grid-cols-2">
           {SLUGS.map((slug) => (
             <Link
               key={slug}
               href={`/product/${slug}`}
-              className="bg-layer-01 p-5 transition-colors duration-150 hover:bg-layer-02 sm:p-6"
+              className="elevate-interactive-subtle bg-paper-100 p-5 hover:bg-paper-50 focus-visible:bg-paper-50 sm:p-6"
             >
-              <h2 className="text-[length:var(--elevate-marketing-lead-size)] font-semibold leading-snug text-text-primary">
+              <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-500">
+                {slug.replaceAll("-", " ")}
+              </p>
+              <h2 className="text-[length:var(--elevate-marketing-lead-size)] font-semibold leading-snug text-ink-900">
                 {t(`modules.${slug}.title`)}
               </h2>
-              <p className="mt-2 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-tertiary">
+              <p className="mt-2 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
                 {t(`modules.${slug}.desc`)}
               </p>
             </Link>

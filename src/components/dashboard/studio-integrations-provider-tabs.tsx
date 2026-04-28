@@ -66,7 +66,7 @@ export function StudioIntegrationsProviderTabs({
       <div
         role="tablist"
         aria-label={t("integrationsTabsAriaLabel")}
-        className="flex flex-wrap gap-1 rounded-xl border border-border-subtle bg-layer-02/40 p-1 dark:border-border-subtle dark:bg-layer-02/60"
+        className="flex flex-wrap gap-1 rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/40 p-1 dark:border-ink-100 dark:bg-paper-50/60"
       >
         {STUDIO_INTEGRATION_PROVIDER_IDS.map((id) => {
           const selected = active === id;
@@ -81,10 +81,10 @@ export function StudioIntegrationsProviderTabs({
               tabIndex={selected ? 0 : -1}
               onClick={() => setActive(id)}
               className={cn(
-                "whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                "whitespace-nowrap rounded-[var(--radius-1)] px-3 py-2 text-sm font-medium transition-colors",
                 selected
-                  ? "border border-border-subtle/80 bg-layer-01 text-text-primary shadow-sm"
-                  : "text-text-secondary hover:bg-layer-01/60 hover:text-text-primary",
+                  ? "border border-ink-100/80 bg-paper-0 text-ink-900"
+                  : "text-ink-700 hover:bg-paper-0/60 hover:text-ink-900",
               )}
             >
               {tabLabel(t, id)}

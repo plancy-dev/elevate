@@ -842,6 +842,80 @@
       "orgSettings": "設定",
       "orgNavComingSoon": "即將推出"
     },
+    "toc": {
+      "collapse": "收合",
+      "expand": "展開",
+      "studio": {
+        "section": "Studio",
+        "productions": "Productions",
+        "projects": "Projects",
+        "integrations": "Integrations",
+        "channels": "Channels"
+      },
+      "scripts": {
+        "section": "Scripts",
+        "promptStudio": "Prompt Studio"
+      },
+      "library": {
+        "section": "Library",
+        "library": "Library"
+      },
+      "house": {
+        "section": "編輯部",
+        "team": "團隊",
+        "organization": "組織",
+        "audit": "稽核",
+        "admin": "管理"
+      },
+      "settings": {
+        "section": "Settings",
+        "profile": "個人資料",
+        "billing": "帳單",
+        "help": "說明"
+      },
+      "admin": {
+        "content": "內容",
+        "waitlist": "候補名單",
+        "purchaseAllowlist": "結帳許可名單",
+        "promptStudioAllowlist": "Prompt Studio 測試版"
+      }
+    },
+    "commandBar": {
+      "placeholder": "輸入指令或路由...",
+      "empty": "沒有結果",
+      "recentEmpty": "沒有最近劇集",
+      "group": {
+        "routes": "路由",
+        "recentEpisodes": "最近劇集",
+        "help": "說明"
+      },
+      "routes": {
+        "overview": "總覽",
+        "productions": "製作",
+        "promptStudio": "提示工作室",
+        "publish": "發佈",
+        "library": "資料庫",
+        "settings": "設定",
+        "content": "內容",
+        "waitlist": "候補名單"
+      },
+      "help": {
+        "default": "說明與支援",
+        "admin": "管理首頁"
+      }
+    },
+    "shellTitles": {
+      "overview": "總覽",
+      "productions": "製作",
+      "studio": "提示工作室",
+      "library": "資料庫",
+      "settings": "設定",
+      "help": "說明與支援",
+      "billing": "帳單",
+      "team": "團隊",
+      "organization": "組織",
+      "admin": "管理"
+    },
     "overview": {
       "title": "總覽",
       "liveData": "即時資料",

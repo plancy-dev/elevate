@@ -32,7 +32,7 @@ export function AccessPendingSignOut({
       type="button"
       onClick={() => void signOut()}
       className={cn(
-        "flex w-full items-center justify-center gap-2 rounded-md px-2 py-1.5 text-xs text-text-tertiary transition-colors hover:bg-layer-02 hover:text-text-primary",
+        "flex w-full items-center justify-center gap-2 px-2 py-1.5 text-xs text-ink-500 transition-colors duration-80 ease-(--ease-editorial) hover:bg-paper-100 hover:text-ink-900",
       )}
     >
       <LogOut className="h-3.5 w-3.5 shrink-0" aria-hidden />

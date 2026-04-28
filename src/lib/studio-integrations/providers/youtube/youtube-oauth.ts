@@ -16,7 +16,7 @@ const YOUTUBE_CHANNEL_URL = "https://www.googleapis.com/youtube/v3/channels";
 const YOUTUBE_SCOPES = [
   "https://www.googleapis.com/auth/youtube.upload",
   "https://www.googleapis.com/auth/youtube.readonly",
-].join(" ");
+].join("");
 
 export type YouTubeOAuthConfig = {
   clientId: string;

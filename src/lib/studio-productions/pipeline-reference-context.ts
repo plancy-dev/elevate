@@ -29,7 +29,7 @@ function parseSourceType(raw: unknown): ReferenceSourceType | "unknown" {
 }
 
 function trimPreview(text: string): string {
-  const t = text.trim().replace(/\s+/g, " ");
+  const t = text.trim().replace(/\s+/g, "");
   if (t.length <= PREVIEW_CHARS) return t;
   return `${t.slice(0, PREVIEW_CHARS)}…`;
 }

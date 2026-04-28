@@ -25,19 +25,22 @@ export default async function SolutionsIndexPage({ params }: Props) {
   const t = await getTranslations("Solutions");
 
   return (
-    <div className="border-t border-marketing-border-subtle">
+    <div className="border-t border-ink-100">
       <MarketingSection title={t("title")} description={t("description")}>
-        <ul className="grid gap-px overflow-hidden rounded-xl border border-marketing-border-subtle bg-marketing-border-subtle md:grid-cols-2">
+        <ul className="grid gap-px overflow-hidden border border-ink-100 bg-ink-100 md:grid-cols-2">
           {SLUGS.map((slug) => (
-            <li key={slug} className="bg-layer-01">
+            <li key={slug} className="bg-paper-100">
               <Link
                 href={`/solutions/${slug}`}
-                className="block p-5 transition-colors duration-150 hover:bg-layer-02 sm:p-6"
+                className="elevate-interactive-subtle block p-5 hover:bg-paper-50 focus-visible:bg-paper-50 sm:p-6"
               >
-                <span className="text-[length:var(--elevate-marketing-lead-size)] font-semibold leading-snug text-text-primary">
+                <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-500">
+                  {slug.replaceAll("-", " ")}
+                </p>
+                <span className="text-[length:var(--elevate-marketing-lead-size)] font-semibold leading-snug text-ink-900">
                   {t(`items.${slug}.title`)}
                 </span>
-                <p className="mt-2 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-tertiary">
+                <p className="mt-2 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-500">
                   {t(`items.${slug}.desc`)}
                 </p>
               </Link>

@@ -61,11 +61,11 @@ export function PromptStudioBetaAllowlistAdminClient({ initialRows }: Props) {
 
   return (
     <div className="max-w-2xl space-y-8">
-      <p className="text-sm text-text-secondary leading-relaxed">{t("intro")}</p>
+      <p className="text-sm text-ink-700 leading-relaxed">{t("intro")}</p>
 
-      <div className="space-y-3 rounded-lg border border-border-subtle bg-layer-02/50 p-4 shadow-ambient">
+      <div className="space-y-3 rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/50 p-4">
         <div>
-          <label htmlFor="ps-allow-email" className="text-xs font-medium text-text-tertiary">
+          <label htmlFor="ps-allow-email" className="text-xs font-medium text-ink-500">
             {t("emailLabel")}
           </label>
           <input
@@ -74,12 +74,12 @@ export function PromptStudioBetaAllowlistAdminClient({ initialRows }: Props) {
             autoComplete="off"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm"
             placeholder="you@company.com"
           />
         </div>
         <div>
-          <label htmlFor="ps-allow-note" className="text-xs font-medium text-text-tertiary">
+          <label htmlFor="ps-allow-note" className="text-xs font-medium text-ink-500">
             {t("noteLabel")}
           </label>
           <input
@@ -87,14 +87,14 @@ export function PromptStudioBetaAllowlistAdminClient({ initialRows }: Props) {
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm"
           />
         </div>
         <button
           type="button"
           disabled={busy || !email.trim()}
           onClick={() => void onAdd()}
-          className="rounded-lg bg-primary px-3 py-2 text-sm font-medium text-text-on-color hover:bg-primary-hover disabled:opacity-50"
+          className="rounded-[var(--radius-1)] bg-primary px-3 py-2 text-sm font-medium text-paper-0 hover:bg-primary-hover disabled:opacity-50"
         >
           {t("add")}
         </button>
@@ -107,20 +107,20 @@ export function PromptStudioBetaAllowlistAdminClient({ initialRows }: Props) {
       ) : null}
 
       <div>
-        <h2 className="text-sm font-medium text-text-primary">{t("listHeading")}</h2>
+        <h2 className="text-sm font-medium text-ink-900">{t("listHeading")}</h2>
         {rows.length === 0 ? (
-          <p className="mt-2 text-sm text-text-tertiary">{t("empty")}</p>
+          <p className="mt-2 text-sm text-ink-500">{t("empty")}</p>
         ) : (
-          <ul className="mt-3 divide-y divide-border-subtle rounded-lg border border-border-subtle shadow-ambient">
+          <ul className="mt-3 divide-y divide-ink-100 border border-ink-100">
             {rows.map((row) => (
               <li
                 key={row.id}
                 className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 text-sm"
               >
                 <div>
-                  <span className="font-mono text-text-primary">{row.email_normalized}</span>
+                  <span className="font-mono text-ink-900">{row.email_normalized}</span>
                   {row.note ? (
-                    <span className="ml-2 text-text-tertiary">— {row.note}</span>
+                    <span className="ml-2 text-ink-500">— {row.note}</span>
                   ) : null}
                 </div>
                 <button

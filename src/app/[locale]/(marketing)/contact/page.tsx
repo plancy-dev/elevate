@@ -20,11 +20,11 @@ export default async function ContactPage({ params }: Props) {
   const t = await getTranslations("Contact");
 
   return (
-    <div className="border-t border-marketing-border-subtle">
+    <div className="border-t border-ink-100">
       <MarketingSection title={t("title")} description={t("description")}>
         <form className="max-w-md space-y-4">
           <div>
-            <label className="block text-xs font-medium text-text-secondary mb-1.5">
+            <label className="mb-1.5 block text-xs font-medium text-ink-700">
               {t("labelEmail")}
             </label>
             <Input
@@ -34,13 +34,13 @@ export default async function ContactPage({ params }: Props) {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-text-secondary mb-1.5">
+            <label className="mb-1.5 block text-xs font-medium text-ink-700">
               {t("labelCompany")}
             </label>
             <Input type="text" placeholder={t("placeholderCompany")} />
           </div>
           <div>
-            <label className="block text-xs font-medium text-text-secondary mb-1.5">
+            <label className="mb-1.5 block text-xs font-medium text-ink-700">
               {t("labelMessage")}
             </label>
             <Textarea placeholder={t("placeholderMessage")} rows={4} />

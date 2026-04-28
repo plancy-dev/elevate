@@ -20,7 +20,7 @@ const REG_LABEL: Record<string, string> = {
 };
 
 function registrationLabel(key: string): string {
-  return REG_LABEL[key] ?? key.replace(/_/g, " ");
+  return REG_LABEL[key] ?? key.replace(/_/g, "");
 }
 
 /** Attendees across all events in the organization (by event_id → events.organization_id). */
@@ -63,7 +63,7 @@ export async function listOrgAttendeesForOrg(
     const first = (r.first_name ?? "").trim();
     const last = (r.last_name ?? "").trim();
     const name =
-      [first, last].filter(Boolean).join(" ") || r.email || "—";
+      [first, last].filter(Boolean).join("") || r.email || "—";
     const regKey = String(r.registration_type ?? "general");
     return {
       id: r.id,

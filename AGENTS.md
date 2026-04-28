@@ -6,7 +6,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Design system (incremental)
 
-Root **`DESIGN.md`** is the discovery entry (Stitch / [awesome-design-md](https://github.com/VoltAgent/awesome-design-md); Cal-inspired moodboard with §0 Elevate contract). Implementation SoT: **`docs/design/SYSTEM.md`**, workflow **`docs/design/README.md`**, token mapping **`docs/design/elevate-cal-alignment.md`** + **`docs/design/elevate-cursor-alignment.md`**. **Visual contract:** **`docs/design/VISUAL_LANGUAGE_V2.md`**. **Dashboard lists/nav:** **`docs/design/DASHBOARD_UX_PRINCIPLES.md`**. Vendored references: **`docs/design/third-party/cal-getdesign/`** (CLI snapshot), **`docs/design/third-party/cursor-awesome-design-md/DESIGN.md`**. **Quality pipeline (gstack CTO/Eng + Designer + `pnpm verify`):** **`docs/design/QUALITY_PIPELINE.md`**. Prefer small, scoped changes (marketing vs dashboard vs shared tokens).
+Root **`DESIGN.md`** is the discovery entry (Stitch / [awesome-design-md](https://github.com/VoltAgent/awesome-design-md); Cal-inspired moodboard with §0 Elevate contract). Editor's Desk v3 implementation SoT: **`docs/adr/ADR-011-design-system-v3-editors-desk.md`**, **`docs/features/INIT-editors-desk-design-system.md`**, **`docs/features/PLAN-editors-desk-s0-s1-s2.md`**, and TOC IA lock **`docs/design/v3-creative/toc-ia-mapping.md`**. Superseded v2 docs are archived under **`memory-bank/archive/design-v2/`**. Prefer small, scoped changes (marketing vs dashboard vs shared tokens).
 
 ## Product vision (AI pivot)
 

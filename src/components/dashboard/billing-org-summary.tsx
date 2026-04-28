@@ -21,20 +21,20 @@ export async function BillingOrgSummary({ organizationName, plan }: Props) {
 
   return (
     <section
-      className="rounded-xl border border-border-subtle bg-layer-01 p-5 shadow-card space-y-3"
+      className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 p-5 space-y-3"
       aria-labelledby="billing-org-summary-heading"
     >
       <h2
         id="billing-org-summary-heading"
-        className="text-xs font-semibold uppercase tracking-wider text-text-tertiary"
+        className="text-xs font-semibold uppercase tracking-wider text-ink-500"
       >
         {t("orgSummaryTitle")}
       </h2>
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm font-medium text-text-primary">{organizationName}</span>
+        <span className="text-sm font-medium text-ink-900">{organizationName}</span>
         <Badge variant={paid ? "green" : "warm-gray"}>{planLabel}</Badge>
       </div>
-      <p className="text-sm text-text-secondary leading-relaxed">
+      <p className="text-sm text-ink-700 leading-relaxed">
         {paid ? t("orgPaidNote") : t("orgStarterNote")}
       </p>
       <Link

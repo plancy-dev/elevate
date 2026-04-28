@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { PostHogRoot } from "@/components/analytics/posthog-root";
 import { getSiteUrl } from "@/lib/seo/site-url";
 import {
@@ -11,16 +10,7 @@ import { AppThemeProvider } from "@/components/providers/app-theme-provider";
 import { AppToaster } from "@/components/ui/app-toaster";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
+/* eslint-disable @next/next/no-page-custom-font */
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   alternates: {
@@ -90,13 +80,71 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable}`}
-    >
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {process.env.NODE_ENV === "development" ? (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(() => {
+  const attr = "data-cursor-ref";
+  const stripNode = (node) => {
+    if (!(node instanceof Element)) return;
+    if (node.hasAttribute(attr)) node.removeAttribute(attr);
+    const nested = node.querySelectorAll("[" + attr + "]");
+    for (const el of nested) el.removeAttribute(attr);
+  };
+  const stripAll = () => {
+    const nodes = document.querySelectorAll("[" + attr + "]");
+    for (const el of nodes) el.removeAttribute(attr);
+  };
+  try {
+    stripAll();
+    const observer = new MutationObserver((records) => {
+      for (const record of records) {
+        if (
+          record.type === "attributes" &&
+          record.attributeName === attr &&
+          record.target instanceof Element
+        ) {
+          record.target.removeAttribute(attr);
+        }
+        if (record.type === "childList") {
+          for (const node of record.addedNodes) stripNode(node);
+        }
+      }
+    });
+    observer.observe(document.documentElement, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: [attr],
+    });
+    window.addEventListener(
+      "load",
+      () => {
+        setTimeout(() => observer.disconnect(), 2000);
+      },
+      { once: true },
+    );
+  } catch {}
+})();`,
+            }}
+          />
+        ) : null}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        />
+      </head>
       <body
-        className="min-h-screen bg-background font-sans text-foreground antialiased"
+        className="min-h-screen bg-paper-50 font-sans text-ink-900 antialiased"
         suppressHydrationWarning
       >
         <AppThemeProvider>

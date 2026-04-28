@@ -86,10 +86,10 @@ export default async function EbookReaderPage({ params }: Props) {
         properties={{ product_id: product.id, slug }}
       />
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-text-primary tracking-tight">
+        <h1 className="text-2xl font-semibold text-ink-900 tracking-tight">
           {product.title}
         </h1>
-        <p className="mt-4 text-xs text-text-tertiary leading-relaxed max-w-prose">
+        <p className="mt-4 text-xs text-ink-500 leading-relaxed max-w-prose">
           {t("readerUsageNotice")}
         </p>
       </div>
@@ -99,12 +99,12 @@ export default async function EbookReaderPage({ params }: Props) {
           <MDXRemote source={source} components={blogMdxComponents} />
         </div>
       ) : (
-        <p className="text-sm text-text-secondary leading-relaxed">
+        <p className="text-sm text-ink-700 leading-relaxed">
           {t("readerEmpty")}
         </p>
       )}
 
-      <div className="mt-14 border-t border-border-subtle pt-8">
+      <div className="mt-14 border-t border-ink-100 pt-8">
         <Link
           href="/dashboard/library"
           className="text-sm font-medium text-primary hover:underline"

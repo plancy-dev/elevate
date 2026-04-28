@@ -30,25 +30,25 @@ function EditorShellInner({ episodeId, episodeTitle }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col bg-background text-text-primary"
+      className="fixed inset-0 z-50 flex flex-col bg-paper-50 text-ink-900"
       data-editor-shell
     >
       <EditorHeader episodeId={episodeId} episodeTitle={episodeTitle} />
       <main className="flex min-h-0 flex-1">
         <section className="flex min-w-0 flex-1 flex-col">
-          <div className="flex min-h-0 flex-1 items-center justify-center bg-layer-02 p-4">
+          <div className="flex min-h-0 flex-1 items-center justify-center bg-paper-100 p-4">
             <PreviewPane />
           </div>
-          <div className="border-t border-border-subtle bg-layer-01">
+          <div className="border-t border-ink-100 bg-paper-50">
             <Timeline />
           </div>
         </section>
-        <aside className="w-[320px] shrink-0 border-l border-border-subtle bg-layer-01">
+        <aside className="w-[320px] shrink-0 border-l border-ink-100 bg-paper-100">
           <InspectorPanel />
         </aside>
       </main>
-      <footer className="flex items-center justify-between border-t border-border-subtle bg-layer-01 px-4 py-2">
-        <span className="text-[11px] text-text-tertiary">
+      <footer className="flex items-center justify-between border-t border-ink-100 bg-paper-100 px-4 py-2">
+        <span className="font-mono text-[11px] text-ink-500">
           {/* Preview accuracy disclaimer — kept in a plain span so the preview
               pane doesn't have to pipe i18n through its render loop. */}
           <span data-i18n="previewApproximateHint" />

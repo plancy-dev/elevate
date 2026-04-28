@@ -36,7 +36,7 @@ export default async function BillingPage({
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-paper-50 p-6">
         <ActionErrorMessage code={ensured.error} />
       </div>
     );
@@ -104,9 +104,9 @@ export default async function BillingPage({
   const tb = await getTranslations("Dashboard.billing");
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-30 flex items-center border-b border-border-subtle bg-background px-6 h-12">
-        <h1 className="text-sm font-medium text-text-primary">{t("billing.title")}</h1>
+    <div className="min-h-screen bg-paper-50">
+      <div className="sticky top-0 z-30 flex items-center border-b border-ink-100 bg-paper-50 px-6 h-12">
+        <h1 className="text-sm font-medium text-ink-900">{t("billing.title")}</h1>
       </div>
       <div className="mx-auto w-full max-w-xl space-y-6 p-6">
         <div className="flex justify-end">
@@ -134,19 +134,19 @@ export default async function BillingPage({
         {provider === "toss" ? (
           <>
             {contentProductSlug ? (
-              <p className="text-sm text-text-secondary leading-relaxed">
+              <p className="text-sm text-ink-700 leading-relaxed">
                 {tb("checkoutWithSlug", {
                   slug: contentProductSlug,
                   amount: TOSS_POC_AMOUNT_KRW,
                 })}
               </p>
             ) : (
-              <p className="text-sm text-text-secondary leading-relaxed">
+              <p className="text-sm text-ink-700 leading-relaxed">
                 {tb("tossIntroNoSlug", { amount: TOSS_POC_AMOUNT_KRW })}
               </p>
             )}
             {contentProductSlug ? (
-              <p className="text-sm text-text-secondary leading-relaxed">
+              <p className="text-sm text-ink-700 leading-relaxed">
                 {tb("tossIntro", { amount: TOSS_POC_AMOUNT_KRW })}
               </p>
             ) : null}
@@ -160,7 +160,7 @@ export default async function BillingPage({
                 contentProductSlug={contentProductSlug}
               />
             ) : (
-              <p className="text-sm text-text-tertiary">{tb("setClientKey")}</p>
+              <p className="text-sm text-ink-500">{tb("setClientKey")}</p>
             )}
           </>
         ) : null}

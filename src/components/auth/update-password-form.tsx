@@ -63,24 +63,24 @@ export function UpdatePasswordForm() {
 
   if (!sessionChecked) {
     return (
-      <div className="mt-8 h-40 animate-pulse rounded-md bg-layer-01/50" aria-hidden />
+      <div className="mt-8 h-40 animate-pulse bg-paper-100" aria-hidden />
     );
   }
 
   if (!hasSession) {
     return (
-      <p className="mt-8 text-sm text-text-secondary leading-relaxed">
-        This link is invalid or your session expired.{" "}
+      <p className="mt-8 text-sm leading-relaxed text-ink-700">
+        This link is invalid or your session expired.{""}
         <Link
           href="/forgot-password"
-          className="text-interactive hover:text-primary transition-colors"
+          className="text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
         >
           Request a new reset email
-        </Link>{" "}
-        or{" "}
+        </Link>{""}
+        or{""}
         <Link
           href="/login"
-          className="text-interactive hover:text-primary transition-colors"
+          className="text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
         >
           log in
         </Link>
@@ -92,14 +92,14 @@ export function UpdatePasswordForm() {
   return (
     <form className="mt-8 flex flex-col gap-4" onSubmit={onSubmit}>
       {error && (
-        <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="border border-vermilion-300 bg-vermilion-50 px-3 py-2 text-xs text-vermilion-700">
           {error}
         </p>
       )}
       <div>
         <label
           htmlFor="new-password"
-          className="block text-xs font-medium text-text-secondary mb-1.5"
+          className="mb-1.5 block text-xs font-medium text-ink-700"
         >
           New password
         </label>
@@ -116,7 +116,7 @@ export function UpdatePasswordForm() {
       <div>
         <label
           htmlFor="confirm-password"
-          className="block text-xs font-medium text-text-secondary mb-1.5"
+          className="mb-1.5 block text-xs font-medium text-ink-700"
         >
           Confirm password
         </label>

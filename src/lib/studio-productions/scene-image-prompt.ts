@@ -44,9 +44,9 @@ function buildIdentityLock(
 
   if (bible.age != null) fragments.push(`age ${bible.age}`);
   if (bible.appearance?.ethnicity) fragments.push(bible.appearance.ethnicity);
-  if (bible.appearance?.hair) fragments.push(bible.appearance.hair + " hair");
-  if (bible.appearance?.eyes) fragments.push(bible.appearance.eyes + " eyes");
-  if (bible.appearance?.skin) fragments.push(bible.appearance.skin + " skin");
+  if (bible.appearance?.hair) fragments.push(bible.appearance.hair + "hair");
+  if (bible.appearance?.eyes) fragments.push(bible.appearance.eyes + "eyes");
+  if (bible.appearance?.skin) fragments.push(bible.appearance.skin + "skin");
   if (bible.wardrobe) fragments.push(`wardrobe: ${bible.wardrobe}`);
   if (bible.style) fragments.push(`style: ${bible.style}`);
 
@@ -57,7 +57,7 @@ function buildIdentityLock(
       bible.color_palette.accent,
     ].filter(Boolean);
     if (colors.length > 0) {
-      fragments.push(`color palette: ${colors.join(", ")}`);
+      fragments.push(`color palette: ${colors.join(",")}`);
     }
   }
 

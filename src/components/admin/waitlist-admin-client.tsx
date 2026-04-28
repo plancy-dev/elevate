@@ -52,10 +52,10 @@ export function WaitlistAdminClient({
     <div className="space-y-8 max-w-4xl">
       <form
         onSubmit={onSaveBcc}
-        className="space-y-3 rounded-lg border border-border-subtle bg-layer-01 p-4 shadow-ambient"
+        className="space-y-3 rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 p-4"
       >
-        <h2 className="text-sm font-medium text-text-primary">{t("bccHeading")}</h2>
-        <p className="text-xs text-text-tertiary leading-relaxed">{t("bccIntro")}</p>
+        <h2 className="text-sm font-medium text-ink-900">{t("bccHeading")}</h2>
+        <p className="text-xs text-ink-500 leading-relaxed">{t("bccIntro")}</p>
         <div className="flex flex-wrap gap-2 items-end">
           <div className="flex-1 min-w-[200px]">
             <label htmlFor="waitlist-bcc" className="sr-only">
@@ -68,13 +68,13 @@ export function WaitlistAdminClient({
               value={bcc}
               onChange={(e) => setBcc(e.target.value)}
               placeholder={t("bccPlaceholder")}
-              className="w-full px-3 py-2 text-sm border border-border-subtle bg-background text-text-primary"
+              className="w-full px-3 py-2 text-sm border border-ink-100 bg-paper-50 text-ink-900"
             />
           </div>
           <button
             type="submit"
             disabled={pending}
-            className="text-xs px-3 py-2 border border-border-subtle bg-layer-02 hover:bg-highlight text-text-primary disabled:opacity-50"
+            className="text-xs px-3 py-2 border border-ink-100 bg-paper-50 hover:bg-highlight text-ink-900 disabled:opacity-50"
           >
             {pending ? t("saving") : t("bccSave")}
           </button>
@@ -89,37 +89,37 @@ export function WaitlistAdminClient({
 
       <div>
         <div className="flex items-center justify-between gap-2 mb-2">
-          <h2 className="text-sm font-medium text-text-primary">{t("listHeading")}</h2>
+          <h2 className="text-sm font-medium text-ink-900">{t("listHeading")}</h2>
           <button
             type="button"
             onClick={() => refresh()}
             disabled={pending}
-            className="text-xs text-interactive hover:text-primary disabled:opacity-50"
+            className="text-xs text-vermilion-600 hover:text-vermilion-700 disabled:opacity-50"
           >
             {t("refresh")}
           </button>
         </div>
         {rows.length === 0 ? (
-          <p className="text-xs text-text-tertiary">{t("empty")}</p>
+          <p className="text-xs text-ink-500">{t("empty")}</p>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-border-subtle shadow-ambient">
+          <div className="overflow-x-auto rounded-[var(--radius-1)] border border-ink-100">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-border-subtle bg-layer-02">
-                  <th className="p-2 font-medium text-text-secondary">{t("colEmail")}</th>
-                  <th className="p-2 font-medium text-text-secondary">{t("colLocale")}</th>
-                  <th className="p-2 font-medium text-text-secondary">{t("colSource")}</th>
-                  <th className="p-2 font-medium text-text-secondary">{t("colTime")}</th>
+                <tr className="border-b border-ink-100 bg-paper-50">
+                  <th className="p-2 font-medium text-ink-700">{t("colEmail")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("colLocale")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("colSource")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("colTime")}</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((r) => (
-                  <tr key={r.id} className="border-b border-border-subtle/80">
-                    <td className="p-2 text-text-primary font-mono">{r.email}</td>
-                    <td className="p-2 text-text-secondary">{r.locale ?? "—"}</td>
-                    <td className="p-2 text-text-secondary">{r.source}</td>
-                    <td className="p-2 text-text-tertiary whitespace-nowrap">
-                      {new Date(r.created_at).toISOString().replace("T", " ").slice(0, 19)} UTC
+                  <tr key={r.id} className="border-b border-ink-100/80">
+                    <td className="p-2 text-ink-900 font-mono">{r.email}</td>
+                    <td className="p-2 text-ink-700">{r.locale ?? "—"}</td>
+                    <td className="p-2 text-ink-700">{r.source}</td>
+                    <td className="p-2 text-ink-500 whitespace-nowrap">
+                      {new Date(r.created_at).toISOString().replace("T", "").slice(0, 19)} UTC
                     </td>
                   </tr>
                 ))}

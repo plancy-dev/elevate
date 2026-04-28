@@ -39,32 +39,32 @@ export default async function ElevateServiceAdminHomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-30 flex h-12 items-center border-b border-border-subtle bg-background px-6">
+    <div className="min-h-screen bg-paper-50">
+      <div className="sticky top-0 z-30 flex h-12 items-center border-b border-ink-100 bg-paper-50 px-6">
         <div className="flex items-center gap-2">
           <Shield className="h-4 w-4 text-primary" aria-hidden />
-          <h1 className="text-sm font-medium text-text-primary">{t("title")}</h1>
+          <h1 className="text-sm font-medium text-ink-900">{t("title")}</h1>
         </div>
       </div>
 
       <div className="p-6 max-w-3xl space-y-6">
-        <p className="text-sm text-text-secondary leading-relaxed">{t("intro")}</p>
+        <p className="text-sm text-ink-700 leading-relaxed">{t("intro")}</p>
 
         <ul className="space-y-3">
           {links.map((item) => (
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="flex gap-4 rounded-lg border border-border-subtle bg-layer-01 p-4 shadow-ambient transition-colors hover:bg-layer-02"
+                className="flex gap-4 border border-ink-100 bg-paper-100 p-4 transition-colors hover:bg-paper-50"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-highlight text-primary">
                   <item.icon className="h-5 w-5" aria-hidden />
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-text-primary">
+                  <div className="text-sm font-medium text-ink-900">
                     {item.title}
                   </div>
-                  <p className="mt-0.5 text-xs text-text-tertiary">{item.desc}</p>
+                  <p className="mt-0.5 text-xs text-ink-500">{item.desc}</p>
                 </div>
               </Link>
             </li>

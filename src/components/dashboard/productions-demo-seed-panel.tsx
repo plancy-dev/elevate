@@ -20,10 +20,10 @@ export function ProductionsDemoSeedPanel() {
         : null;
 
   return (
-    <div className="rounded-xl border border-dashed border-border-subtle bg-layer-02/40 p-4 space-y-3">
+    <div className="rounded-[var(--radius-1)] border border-dashed border-ink-100 bg-paper-50/40 p-4 space-y-3">
       <div>
-        <p className="text-sm font-medium text-text-primary">{tProd("demoSeedTitle")}</p>
-        <p className="mt-1 text-xs text-text-tertiary leading-relaxed">{tProd("demoSeedBody")}</p>
+        <p className="text-sm font-medium text-ink-900">{tProd("demoSeedTitle")}</p>
+        <p className="mt-1 text-xs text-ink-500 leading-relaxed">{tProd("demoSeedBody")}</p>
       </div>
       <form action={action} className="flex flex-col gap-2 sm:flex-row sm:items-center">
         <Button type="submit" variant="secondary" size="sm" disabled={pending}>

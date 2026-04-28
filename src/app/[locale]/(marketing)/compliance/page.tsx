@@ -17,7 +17,7 @@ export default async function CompliancePage({ params }: Props) {
   const t = await getTranslations("CompliancePage");
 
   return (
-    <div className="border-t border-marketing-border-subtle">
+    <div className="border-t border-ink-100">
       <MarketingSection title={t("title")} description={t("description")} />
     </div>
   );

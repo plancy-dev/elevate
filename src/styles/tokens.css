@@ -1,0 +1,104 @@
+/* Editor's Desk v3 design tokens (ADR-011) */
+
+:root {
+  /* Ink and paper */
+  --ink-900: #0A0A0A;
+  --ink-700: #2B2B2B;
+  --ink-500: #6B6B6B;
+  --ink-300: #BDBDBD;
+  --ink-100: #E6E2DA;
+
+  --paper-50: #FAF7F0;
+  --paper-100: #F3EEE1;
+  --paper-0: #FFFFFF;
+
+  /* Signature accent */
+  --vermilion-600: #D4341C;
+  --vermilion-100: #F9D9D1;
+
+  /* Semantic */
+  --ok: #2E7D48;
+  --warn: #B8830E;
+  --err: var(--vermilion-600);
+
+  /* Typography */
+  --font-display: "Fraunces", "Times New Roman", serif;
+  --font-body: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Near-zero radius */
+  --radius-0: 0;
+  --radius-1: 2px;
+  --radius-full: 9999px;
+
+  /* Motion */
+  --ease-editorial: cubic-bezier(0.2, 0, 0, 1);
+  --dur-instant: 80ms;
+  --dur-quick: 160ms;
+  --dur-page: 240ms;
+
+  /* Space */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+
+  /* Layout */
+  --toc-width: 240px;
+  --toc-rail-width: 48px;
+  --measure: 66ch;
+  color-scheme: light;
+}
+
+/* CJK fallback stacks */
+[lang="ko"] {
+  --font-body:
+    "Geist", "Pretendard", -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font-display:
+    "Fraunces", "Noto Serif KR", "Nanum Myeongjo", "Apple SD Gothic Neo", serif;
+}
+
+[lang="ja"] {
+  --font-body:
+    "Geist", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI",
+    "Meiryo", "Noto Sans JP", sans-serif;
+  --font-display:
+    "Fraunces", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+}
+
+[lang="zh-CN"] {
+  --font-body:
+    "Geist", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans SC", sans-serif;
+  --font-display:
+    "Fraunces", "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+}
+
+[lang="zh-TW"] {
+  --font-body:
+    "Geist", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  --font-display:
+    "Fraunces", "Noto Serif TC", "Source Han Serif TC", "Songti TC", serif;
+}
+
+/* Dark tokens (S7) */
+:root.dark,
+[data-theme="dark"],
+.dark {
+  --paper-50: #131210;
+  --paper-100: #1C1B18;
+  --paper-0: #0A0908;
+  --ink-900: #EDE8DD;
+  --ink-700: #C6C1B6;
+  --ink-500: #8F8A80;
+  --ink-300: #504C44;
+  --ink-100: #2A2824;
+  --vermilion-100: #42201B;
+  color-scheme: dark;
+}

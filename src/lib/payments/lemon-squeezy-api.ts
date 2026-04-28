@@ -34,7 +34,7 @@ function extractJsonApiErrors(body: unknown): string {
   }
   return o.errors
     .map((e) => (typeof e?.detail === "string" ? e.detail : null) ?? e?.title ?? "error")
-    .join("; ");
+    .join(";");
 }
 
 async function lemonRequest(

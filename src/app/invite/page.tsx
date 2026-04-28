@@ -14,11 +14,11 @@ export default async function InvitePage({
   const raw = token?.trim();
   if (!raw) {
     return (
-      <div className="min-h-screen bg-background p-6">
-        <p className="text-sm text-text-secondary">Missing invitation token.</p>
+      <div className="min-h-screen bg-paper-50 p-6">
+        <p className="text-sm text-ink-700">Missing invitation token.</p>
         <Link
           href="/login"
-          className="text-sm text-interactive mt-4 inline-block"
+          className="text-sm text-vermilion-600 mt-4 inline-block"
         >
           Log in
         </Link>
@@ -39,11 +39,11 @@ export default async function InvitePage({
   const result = await acceptInvitationByToken(raw);
   if (!result.ok) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
+      <div className="min-h-screen bg-paper-50 flex flex-col items-center justify-center p-6">
         <p className="text-sm text-danger max-w-md text-center leading-relaxed">
           {result.error}
         </p>
-        <Link className="mt-6 text-sm text-interactive" href="/dashboard">
+        <Link className="mt-6 text-sm text-vermilion-600" href="/dashboard">
           Dashboard
         </Link>
       </div>

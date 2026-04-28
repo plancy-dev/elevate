@@ -7,7 +7,7 @@ export const metadata = { title: "Create account" };
 
 export default function SignupPage() {
   return (
-    <div className="relative min-h-screen bg-background flex">
+    <div className="relative flex min-h-screen bg-paper-50">
       <div className="absolute right-4 top-4 z-10">
         <ThemeToggleEnglish />
       </div>
@@ -16,18 +16,18 @@ export default function SignupPage() {
           <ElevateLogo size="md" />
         </Link>
 
-        <h1 className="mt-10 text-2xl font-semibold tracking-[-0.02em] text-text-primary">
+        <h1 className="mt-10 text-2xl font-semibold tracking-[-0.02em] text-ink-900">
           Create account
         </h1>
-        <p className="mt-2 text-sm text-text-secondary leading-relaxed">
+        <p className="mt-2 text-sm leading-relaxed text-ink-700">
           For purchasing e-books, org Library downloads, and billing—not a gated
           product demo.
         </p>
-        <p className="mt-2 text-sm text-text-tertiary">
-          Already have an account?{" "}
+        <p className="mt-2 text-sm text-ink-500">
+          Already have an account?{""}
           <Link
             href="/login"
-            className="text-interactive hover:text-primary transition-colors"
+            className="text-vermilion-600 transition-colors duration-80 ease-(--ease-editorial) hover:text-vermilion-700"
           >
             Log in
           </Link>

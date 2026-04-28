@@ -39,7 +39,6 @@ import {
   ButtonLink,
   type ButtonSize,
 } from "@/components/ui/button";
-import { modalPanelClassName } from "@/lib/design-system-classes";
 import { cn } from "@/lib/utils";
 import { FieldSelect } from "@/components/ui/field-select";
 import { StudioEpisodeDistributionFields } from "@/components/dashboard/studio-episode-distribution-fields";
@@ -70,7 +69,7 @@ function metadataToFormString(metadata: Json | null): string {
 }
 
 function excerptArtifactText(text: string, max: number): string {
-  const s = text.trim().replace(/\s+/g, " ");
+  const s = text.trim().replace(/\s+/g, "");
   if (s.length <= max) return s;
   return `${s.slice(0, max)}…`;
 }
@@ -134,13 +133,13 @@ export function StudioProductionsNewForm({
   const [distributionPreset, setDistributionPreset] = useState("");
 
   const inputClass =
-    "h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary placeholder:text-text-tertiary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25";
+    "h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 placeholder:text-ink-500 focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25";
 
   return (
     <form action={formAction} className="w-full">
       {state?.error ? (
         <p
-          className="mb-4 rounded-lg border border-danger/35 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
+          className="mb-4 rounded-[var(--radius-1)] border border-danger/35 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
           role="alert"
         >
           {translateActionErrorMessage(state.error, tAction)}
@@ -150,14 +149,14 @@ export function StudioProductionsNewForm({
       <div
         className={cn(
           "overflow-hidden",
-          modalPanelClassName,
+          "border border-ink-700 bg-paper-100",
         )}
       >
         <div className="space-y-5 px-5 py-6 sm:px-7 sm:py-7">
           <div className="space-y-2">
             <label
               htmlFor="new_title"
-              className="block text-xs font-medium text-text-secondary"
+              className="block text-xs font-medium text-ink-700"
             >
               {t("titleLabel")}
             </label>
@@ -176,7 +175,7 @@ export function StudioProductionsNewForm({
             <div className="space-y-2">
               <label
                 htmlFor="new_status"
-                className="block text-xs font-medium text-text-secondary"
+                className="block text-xs font-medium text-ink-700"
               >
                 {t("statusLabel")}
               </label>
@@ -190,7 +189,7 @@ export function StudioProductionsNewForm({
             <div className="space-y-2">
               <label
                 htmlFor="new_project"
-                className="block text-xs font-medium text-text-secondary"
+                className="block text-xs font-medium text-ink-700"
               >
                 {t("episodeProjectLabel")}
               </label>
@@ -200,14 +199,14 @@ export function StudioProductionsNewForm({
                 defaultValue=""
                 options={projectOptions}
               />
-              <p className="text-xs leading-relaxed text-text-tertiary">
+              <p className="text-xs leading-relaxed text-ink-500">
                 {t("episodeProjectHint")}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-border-subtle px-5 py-6 sm:px-7 sm:py-6">
+        <div className="border-t border-ink-100 px-5 py-6 sm:px-7 sm:py-6">
           <StudioEpisodeDistributionFields
             idPrefix="new"
             distributionStored=""
@@ -216,11 +215,11 @@ export function StudioProductionsNewForm({
           />
         </div>
 
-        <div className="border-t border-border-subtle px-5 py-6 sm:px-7 sm:py-6">
+        <div className="border-t border-ink-100 px-5 py-6 sm:px-7 sm:py-6">
           <div className="space-y-2">
             <label
               htmlFor="new_notes"
-              className="block text-xs font-medium text-text-secondary"
+              className="block text-xs font-medium text-ink-700"
             >
               {t("notesLabel")}
             </label>
@@ -230,12 +229,12 @@ export function StudioProductionsNewForm({
               rows={5}
               defaultValue={initialNotes}
               placeholder={t("notesPlaceholder")}
-              className="min-h-[8.5rem] w-full rounded-lg border border-border-subtle bg-field px-3 py-3 text-sm leading-relaxed text-text-primary placeholder:text-text-tertiary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25"
+              className="min-h-[8.5rem] w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-3 text-sm leading-relaxed text-ink-900 placeholder:text-ink-500 focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25"
             />
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border-subtle bg-layer-02/50 px-5 py-4 sm:px-7 dark:bg-layer-02/35">
+        <div className="flex flex-wrap items-center justify-end gap-3 border-t border-ink-100 bg-paper-50/50 px-5 py-4 sm:px-7 dark:bg-paper-50/35">
           <ButtonLink href="/dashboard/productions" variant="secondary">
             {t("cancelNew")}
           </ButtonLink>
@@ -326,7 +325,7 @@ export function StudioProductionsEpisodeEditForm({
     >
       <input type="hidden" name="episode_id" value={episode.id} />
       {state?.error ? (
-        <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       ) : null}
@@ -334,7 +333,7 @@ export function StudioProductionsEpisodeEditForm({
         className={cn(
           embedded
             ? "grid gap-4 sm:grid-cols-2 sm:gap-5"
-            : "rounded-xl border border-border-subtle bg-layer-01 p-6",
+            : "rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 p-6",
         )}
       >
         {embedded ? (
@@ -342,7 +341,7 @@ export function StudioProductionsEpisodeEditForm({
             <div>
               <label
                 htmlFor="edit_title"
-                className="block text-xs font-medium text-text-secondary mb-1.5"
+                className="block text-xs font-medium text-ink-700 mb-1.5"
               >
                 {t("episodeTitleLabel")}
               </label>
@@ -352,13 +351,13 @@ export function StudioProductionsEpisodeEditForm({
                 required
                 defaultValue={episode.title}
                 maxLength={500}
-                className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+                className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
             <div>
               <label
                 htmlFor="edit_status"
-                className="block text-xs font-medium text-text-secondary mb-1.5"
+                className="block text-xs font-medium text-ink-700 mb-1.5"
               >
                 {t("statusLabel")}
               </label>
@@ -372,7 +371,7 @@ export function StudioProductionsEpisodeEditForm({
             <div className="sm:col-span-2">
               <label
                 htmlFor="edit_project"
-                className="block text-xs font-medium text-text-secondary mb-1.5"
+                className="block text-xs font-medium text-ink-700 mb-1.5"
               >
                 {t("episodeProjectLabel")}
               </label>
@@ -382,7 +381,7 @@ export function StudioProductionsEpisodeEditForm({
                 defaultValue={episode.project_id ?? ""}
                 options={projectOptions}
               />
-              <p className="mt-1.5 text-xs text-text-tertiary leading-relaxed">
+              <p className="mt-1.5 text-xs text-ink-500 leading-relaxed">
                 {t("episodeProjectHint")}
               </p>
             </div>
@@ -392,7 +391,7 @@ export function StudioProductionsEpisodeEditForm({
             <div>
               <label
                 htmlFor="edit_title"
-                className="block text-xs font-medium text-text-secondary mb-1.5"
+                className="block text-xs font-medium text-ink-700 mb-1.5"
               >
                 {t("episodeTitleLabel")}
               </label>
@@ -402,13 +401,13 @@ export function StudioProductionsEpisodeEditForm({
                 required
                 defaultValue={episode.title}
                 maxLength={500}
-                className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+                className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
             <div>
               <label
                 htmlFor="edit_status"
-                className="block text-xs font-medium text-text-secondary mb-1.5"
+                className="block text-xs font-medium text-ink-700 mb-1.5"
               >
                 {t("statusLabel")}
               </label>
@@ -422,7 +421,7 @@ export function StudioProductionsEpisodeEditForm({
             <div>
               <label
                 htmlFor="edit_project_standalone"
-                className="block text-xs font-medium text-text-secondary mb-1.5"
+                className="block text-xs font-medium text-ink-700 mb-1.5"
               >
                 {t("episodeProjectLabel")}
               </label>
@@ -432,7 +431,7 @@ export function StudioProductionsEpisodeEditForm({
                 defaultValue={episode.project_id ?? ""}
                 options={projectOptions}
               />
-              <p className="mt-1.5 text-xs text-text-tertiary leading-relaxed">
+              <p className="mt-1.5 text-xs text-ink-500 leading-relaxed">
                 {t("episodeProjectHint")}
               </p>
             </div>
@@ -451,7 +450,7 @@ export function StudioProductionsEpisodeEditForm({
       <div>
         <label
           htmlFor="edit_notes"
-          className="block text-xs font-medium text-text-secondary mb-1.5"
+          className="block text-xs font-medium text-ink-700 mb-1.5"
         >
           {t("notesLabel")}
         </label>
@@ -460,7 +459,7 @@ export function StudioProductionsEpisodeEditForm({
           name="notes"
           rows={6}
           defaultValue={episode.notes}
-          className="w-full min-h-[140px] rounded-xl border border-border-subtle bg-field px-3 py-3 text-sm leading-relaxed text-text-primary focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
+          className="w-full min-h-[140px] rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-3 text-sm leading-relaxed text-ink-900 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
         />
       </div>
       <Button variant="primary" type="submit" isLoading={pending}>
@@ -491,7 +490,7 @@ export function StudioProductionsDeleteEpisodeForm({
     <form action={formAction} className={cn("inline", className)}>
       <input type="hidden" name="episode_id" value={episodeId} />
       {state?.error ? (
-        <p className="mb-2 rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="mb-2 rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       ) : null}
@@ -550,18 +549,18 @@ function ArtifactAddForm({
     <form
       key={formKey}
       action={formAction}
-      className="space-y-3 rounded-xl border border-border-subtle bg-layer-02/30 p-4"
+      className="space-y-3 rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/30 p-4"
     >
       <input type="hidden" name="episode_id" value={episodeId} />
-      <p className="text-sm font-medium text-text-primary">{t("artifactAdd")}</p>
+      <p className="text-sm font-medium text-ink-900">{t("artifactAdd")}</p>
       {state?.error ? (
-        <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
+        <p className="rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
           {translateActionErrorMessage(state.error, tAction)}
         </p>
       ) : null}
       <div className="grid gap-3 sm:grid-cols-2">
         <div>
-          <label className="block text-xs text-text-secondary mb-1">
+          <label className="block text-xs text-ink-700 mb-1">
             {t("artifactRoleLabel")}
           </label>
           <input
@@ -571,14 +570,14 @@ function ArtifactAddForm({
             autoComplete="off"
             defaultValue={prefill?.artifact_role ?? ""}
             placeholder={t("artifactRolePlaceholder")}
-            className="h-9 w-full bg-field border border-border-subtle px-2 text-sm text-text-primary focus:outline-none focus:border-focus"
+            className="h-9 w-full bg-paper-0 border border-ink-100 px-2 text-sm text-ink-900 focus:outline-none focus:border-focus"
           />
-          <p className="mt-1 text-xs text-text-tertiary leading-snug">
+          <p className="mt-1 text-xs text-ink-500 leading-snug">
             {t("artifactRoleHint")}
           </p>
         </div>
         <div>
-          <label className="block text-xs text-text-secondary mb-1">
+          <label className="block text-xs text-ink-700 mb-1">
             {t("artifactPlatformLabel")}
           </label>
           <input
@@ -586,23 +585,23 @@ function ArtifactAddForm({
             required
             defaultValue={prefill?.tool_platform ?? ""}
             placeholder={t("artifactPlatformPlaceholder")}
-            className="h-9 w-full bg-field border border-border-subtle px-2 text-sm text-text-primary focus:outline-none focus:border-focus"
+            className="h-9 w-full bg-paper-0 border border-ink-100 px-2 text-sm text-ink-900 focus:outline-none focus:border-focus"
           />
         </div>
       </div>
       <div>
-        <label className="block text-xs text-text-secondary mb-1">
+        <label className="block text-xs text-ink-700 mb-1">
           {t("artifactContentLabel")}
         </label>
         <textarea
           name="content_text"
           rows={3}
           defaultValue={prefill?.contentText ?? ""}
-          className="w-full bg-field border border-border-subtle px-2 py-2 text-sm text-text-primary focus:outline-none focus:border-focus"
+          className="w-full bg-paper-0 border border-ink-100 px-2 py-2 text-sm text-ink-900 focus:outline-none focus:border-focus"
         />
       </div>
       <div>
-        <label className="block text-xs text-text-secondary mb-1">
+        <label className="block text-xs text-ink-700 mb-1">
           {t("artifactExternalUrlLabel")}
         </label>
         <input
@@ -610,20 +609,20 @@ function ArtifactAddForm({
           type="url"
           inputMode="url"
           placeholder="https://"
-          className="h-9 w-full bg-field border border-border-subtle px-2 text-sm text-text-primary focus:outline-none focus:border-focus"
+          className="h-9 w-full bg-paper-0 border border-ink-100 px-2 text-sm text-ink-900 focus:outline-none focus:border-focus"
         />
       </div>
       <div>
-        <label className="block text-xs text-text-secondary mb-1">
+        <label className="block text-xs text-ink-700 mb-1">
           {t("artifactMetadataLabel")}
         </label>
         <textarea
           name="metadata_json"
           rows={2}
           placeholder="{}"
-          className="w-full font-mono text-xs bg-field border border-border-subtle px-2 py-2 text-text-primary focus:outline-none focus:border-focus"
+          className="w-full font-mono text-xs bg-paper-0 border border-ink-100 px-2 py-2 text-ink-900 focus:outline-none focus:border-focus"
         />
-        <p className="mt-1 text-xs text-text-tertiary">
+        <p className="mt-1 text-xs text-ink-500">
           {t("artifactMetadataHint")}
         </p>
       </div>
@@ -676,13 +675,13 @@ function ArtifactEditDialogBody({
         <input type="hidden" name="episode_id" value={episodeId} />
         <input type="hidden" name="artifact_id" value={artifact.id} />
         {state?.error ? (
-          <p className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+          <p className="rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
             {translateActionErrorMessage(state.error, tAction)}
           </p>
         ) : null}
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-xs font-medium text-text-secondary">
+            <label className="mb-1 block text-xs font-medium text-ink-700">
               {t("artifactRoleLabel")}
             </label>
             <input
@@ -691,26 +690,26 @@ function ArtifactEditDialogBody({
               list={STUDIO_ARTIFACT_ROLE_DATALIST_ID}
               autoComplete="off"
               defaultValue={artifact.artifact_role}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
+              className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-ink-100"
             />
-            <p className="mt-1 text-xs text-text-tertiary leading-snug">
+            <p className="mt-1 text-xs text-ink-500 leading-snug">
               {t("artifactRoleHint")}
             </p>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-text-secondary">
+            <label className="mb-1 block text-xs font-medium text-ink-700">
               {t("artifactPlatformLabel")}
             </label>
             <input
               name="tool_platform"
               required
               defaultValue={artifact.tool_platform}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
+              className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-ink-100"
             />
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-text-secondary">
+          <label className="mb-1 block text-xs font-medium text-ink-700">
             {t("artifactSortLabel")}
           </label>
           <input
@@ -720,23 +719,23 @@ function ArtifactEditDialogBody({
             max={1_000_000}
             step={1}
             defaultValue={artifact.sort_order}
-            className="h-10 w-full max-w-[12rem] rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
+            className="h-10 w-full max-w-[12rem] rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-ink-100"
           />
-          <p className="mt-1.5 text-xs text-text-tertiary">{t("artifactSortHint")}</p>
+          <p className="mt-1.5 text-xs text-ink-500">{t("artifactSortHint")}</p>
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-text-secondary">
+          <label className="mb-1 block text-xs font-medium text-ink-700">
             {t("artifactContentLabel")}
           </label>
           <textarea
             name="content_text"
             rows={10}
             defaultValue={artifact.content_text}
-            className="min-h-[200px] w-full rounded-lg border border-border-subtle bg-field px-3 py-2.5 text-sm leading-relaxed text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
+            className="min-h-[200px] w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2.5 text-sm leading-relaxed text-ink-900 focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-ink-100"
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-text-secondary">
+          <label className="mb-1 block text-xs font-medium text-ink-700">
             {t("artifactExternalUrlLabel")}
           </label>
           <input
@@ -745,23 +744,23 @@ function ArtifactEditDialogBody({
             inputMode="url"
             defaultValue={artifact.external_url ?? ""}
             placeholder="https://"
-            className="h-10 w-full rounded-lg border border-border-subtle bg-field px-3 text-sm text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
+            className="h-10 w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-ink-100"
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-text-secondary">
+          <label className="mb-1 block text-xs font-medium text-ink-700">
             {t("artifactMetadataLabel")}
           </label>
           <textarea
             name="metadata_json"
             rows={6}
             defaultValue={metadataToFormString(artifact.metadata)}
-            className="min-h-[140px] w-full rounded-lg border border-border-subtle bg-field px-3 py-2.5 font-mono text-xs leading-relaxed text-text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-border-subtle"
+            className="min-h-[140px] w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-3 py-2.5 font-mono text-xs leading-relaxed text-ink-900 focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/25 dark:border-ink-100"
           />
-          <p className="mt-1.5 text-xs text-text-tertiary">{t("artifactMetadataHint")}</p>
+          <p className="mt-1.5 text-xs text-ink-500">{t("artifactMetadataHint")}</p>
         </div>
       </form>
-      <div className="mt-6 flex flex-wrap justify-end gap-2 border-t border-border-subtle pt-4 dark:border-border-subtle">
+      <div className="mt-6 flex flex-wrap justify-end gap-2 border-t border-ink-100 pt-4 dark:border-ink-100">
         <Button variant="secondary" type="button" size="sm" onClick={onCancel}>
           {t("artifactDialogCancel")}
         </Button>
@@ -868,7 +867,7 @@ export function StudioProductionsArtifactsSection({
   return (
     <section
       id="production-artifacts-anchor"
-      className="space-y-6 mt-6 border-t border-border-subtle pt-10 scroll-mt-24"
+      className="space-y-6 mt-6 border-t border-ink-100 pt-10 scroll-mt-24"
     >
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
@@ -877,11 +876,11 @@ export function StudioProductionsArtifactsSection({
               className="h-5 w-5 text-primary shrink-0"
               aria-hidden
             />
-            <h2 className="text-lg font-semibold tracking-tight text-text-primary">
+            <h2 className="text-lg font-semibold tracking-tight text-ink-900">
               {t("artifactsHeading")}
             </h2>
           </div>
-          <p className="text-sm text-text-tertiary max-w-prose leading-relaxed">
+          <p className="text-sm text-ink-500 max-w-prose leading-relaxed">
             {t("artifactsDeckSubtitle")}
           </p>
         </div>
@@ -899,12 +898,12 @@ export function StudioProductionsArtifactsSection({
             className="text-xs"
           >
             {showSceneClips ? t("artifactsHideSceneClips") : t("artifactsShowSceneClips")}
-            <span className="ml-1.5 tabular-nums text-text-tertiary">
+            <span className="ml-1.5 tabular-nums text-ink-500">
               ({sceneClipCount})
             </span>
           </Button>
           {!showSceneClips ? (
-            <span className="text-xs text-text-tertiary max-w-md leading-snug">
+            <span className="text-xs text-ink-500 max-w-md leading-snug">
               {t("artifactsSceneClipsHiddenHint")}
             </span>
           ) : null}
@@ -912,28 +911,28 @@ export function StudioProductionsArtifactsSection({
       ) : null}
       {listedArtifacts.length > 0 ? (
         <ul
-          className="list-none rounded-xl border border-border-subtle bg-layer-02/30 p-0 m-0 divide-y divide-border-subtle dark:border-border-subtle dark:bg-layer-02/40"
+          className="list-none rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/30 p-0 m-0 divide-y divide-border-subtle dark:border-ink-100 dark:bg-paper-50/40"
           aria-label={t("artifactsHeading")}
         >
           {listedArtifacts.map((a, idx) => (
             <li key={a.id}>
               <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-start sm:gap-5 sm:py-5">
                 <div
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-layer-02/90 text-xs font-bold tabular-nums text-text-secondary dark:border-border-subtle dark:bg-layer-03/90"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-1)] border border-ink-100 bg-paper-50/90 text-xs font-bold tabular-nums text-ink-700 dark:border-ink-100 dark:bg-paper-100/90"
                   aria-label={t("artifactStepBadge", { step: idx + 1 })}
                 >
                   {idx + 1}
                 </div>
                 <div className="min-w-0 flex-1 space-y-2">
                   <div className="flex flex-wrap gap-1.5">
-                    <span className="inline-flex max-w-full items-center truncate rounded-md bg-primary/12 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-primary dark:bg-primary/20">
+                    <span className="inline-flex max-w-full items-center truncate rounded-[var(--radius-1)] bg-primary/12 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-primary dark:bg-primary/20">
                       {a.artifact_role}
                     </span>
-                    <span className="inline-flex max-w-full items-center truncate rounded-md bg-layer-02/90 px-2 py-0.5 text-xs text-text-secondary dark:bg-white/5">
+                    <span className="inline-flex max-w-full items-center truncate rounded-[var(--radius-1)] bg-paper-50/90 px-2 py-0.5 text-xs text-ink-700 dark:bg-white/5">
                       {a.tool_platform}
                     </span>
                   </div>
-                  <p className="text-sm leading-relaxed text-text-secondary line-clamp-3 whitespace-pre-wrap">
+                  <p className="text-sm leading-relaxed text-ink-700 line-clamp-3 whitespace-pre-wrap">
                     {a.content_text.trim()
                       ? excerptArtifactText(a.content_text, 280)
                       : t("artifactPreviewEmpty")}
@@ -974,7 +973,7 @@ export function StudioProductionsArtifactsSection({
           ))}
         </ul>
       ) : artifacts.length > 0 ? (
-        <p className="text-sm text-text-tertiary leading-relaxed">
+        <p className="text-sm text-ink-500 leading-relaxed">
           {t("artifactsSceneClipsHiddenOnlyHint")}
         </p>
       ) : null}
@@ -993,13 +992,13 @@ export function StudioProductionsArtifactsSection({
         <div
           className={cn(
             "max-h-[min(90vh-2rem,52rem)] overflow-y-auto p-5",
-            modalPanelClassName,
+            "border border-ink-700 bg-paper-100",
           )}
           onClick={(e) => e.stopPropagation()}
         >
           <h3
             id="artifact-edit-dialog-title"
-            className="text-base font-semibold text-text-primary mb-4 pr-8"
+            className="text-base font-semibold text-ink-900 mb-4 pr-8"
           >
             {t("artifactEditTitle")}
           </h3>

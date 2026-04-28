@@ -29,14 +29,14 @@ export default async function BillingPaymentSuccessPage({
   /** Lemon / legacy redirects hit this URL without Toss query params. */
   if (!hasTossReturnParams || !Number.isFinite(amount)) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-paper-50 p-6">
         <Suspense fallback={null}>
           <BillingReturnFlashToast />
         </Suspense>
-        <h1 className="text-lg font-medium text-text-primary">
+        <h1 className="text-lg font-medium text-ink-900">
           {t("externalCheckoutReturnTitle")}
         </h1>
-        <p className="text-sm text-text-secondary mt-2 max-w-md leading-relaxed">
+        <p className="text-sm text-ink-700 mt-2 max-w-md leading-relaxed">
           {t("externalCheckoutReturnBody")}
         </p>
         <Link
@@ -48,7 +48,7 @@ export default async function BillingPaymentSuccessPage({
         <p className="mt-4">
           <Link
             href="/dashboard/billing"
-            className="text-sm text-text-tertiary hover:text-primary hover:underline"
+            className="text-sm text-ink-500 hover:text-vermilion-700 hover:underline"
           >
             {t("backToBilling")}
           </Link>
@@ -64,17 +64,17 @@ export default async function BillingPaymentSuccessPage({
   });
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-paper-50 p-6">
       <Suspense fallback={null}>
         <BillingReturnFlashToast />
       </Suspense>
       <PurchaseSuccessCapture ok={result.ok} />
       {result.ok ? (
         <>
-          <h1 className="text-lg font-medium text-text-primary">
+          <h1 className="text-lg font-medium text-ink-900">
             {t("successTitle")}
           </h1>
-          <p className="text-sm text-text-secondary mt-2 max-w-md">
+          <p className="text-sm text-ink-700 mt-2 max-w-md">
             {result.alreadyConfirmed ? t("successAlready") : t("successBody")}
           </p>
         </>
@@ -83,7 +83,7 @@ export default async function BillingPaymentSuccessPage({
           <h1 className="text-lg font-medium text-danger">
             {t("failConfirmTitle")}
           </h1>
-          <p className="text-sm text-text-secondary mt-2 max-w-md">
+          <p className="text-sm text-ink-700 mt-2 max-w-md">
             {"errorKey" in result && result.errorKey
               ? t(`confirmErrors.${result.errorKey}`)
               : result.error}

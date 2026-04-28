@@ -44,45 +44,45 @@ export default async function BlogPage({ params }: Props) {
   const posts = getAllPostMetaForLocale(locale);
 
   return (
-    <div className="border-t border-marketing-border-subtle">
+    <div className="border-t border-ink-100">
       <MarketingSection title={t("title")} description={t("description")} />
 
       <div className="elevate-marketing-shell pb-12 sm:pb-16">
         <div className="mx-auto w-full max-w-[min(60rem,100%)]">
-        {posts.length === 0 ? (
-          <p className="text-[length:var(--elevate-prose-body-size)] text-text-secondary">
-            {t("empty")}
-          </p>
-        ) : (
-          <ul className="grid gap-px overflow-hidden rounded-md border border-marketing-border-subtle bg-marketing-border-subtle">
-            {posts.map((post) => (
-              <li key={post.slug} className="elevate-cv-list-item bg-layer-01">
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="block p-5 sm:p-6 hover:bg-layer-02 transition-colors"
-                >
-                  <time
-                    dateTime={post.date}
-                    className="text-xs text-text-tertiary tabular-nums"
+          {posts.length === 0 ? (
+            <p className="text-[length:var(--elevate-prose-body-size)] text-ink-700">
+              {t("empty")}
+            </p>
+          ) : (
+            <ul className="grid gap-px overflow-hidden border border-ink-100 bg-ink-100">
+              {posts.map((post) => (
+                <li key={post.slug} className="elevate-cv-list-item bg-paper-100">
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="elevate-interactive-subtle block p-5 hover:bg-paper-50 focus-visible:bg-paper-50 sm:p-6"
                   >
-                    {t("published", { date: post.date })}
-                  </time>
-                  <h2 className="mt-1 text-[length:var(--elevate-marketing-list-title-size)] font-semibold leading-snug text-text-primary">
-                    {post.title}
-                  </h2>
-                  {post.description ? (
-                    <p className="mt-2 line-clamp-2 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-text-secondary">
-                      {post.description}
-                    </p>
-                  ) : null}
-                  <span className="mt-3 inline-block text-sm font-medium text-interactive">
-                    {t("readMore")}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
+                    <time
+                      dateTime={post.date}
+                      className="font-mono text-[10px] uppercase tabular-nums tracking-[0.08em] text-ink-500"
+                    >
+                      {t("published", { date: post.date })}
+                    </time>
+                    <h2 className="mt-2 text-[length:var(--elevate-marketing-list-title-size)] font-semibold leading-snug text-ink-900">
+                      {post.title}
+                    </h2>
+                    {post.description ? (
+                      <p className="mt-2 line-clamp-2 text-[length:var(--elevate-prose-body-size)] leading-[var(--elevate-prose-body-leading)] text-ink-700">
+                        {post.description}
+                      </p>
+                    ) : null}
+                    <span className="mt-3 inline-block text-sm font-medium text-vermilion-600">
+                      {t("readMore")}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </div>

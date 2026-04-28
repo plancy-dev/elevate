@@ -30,7 +30,10 @@ function resolveBaseURL(): string {
  */
 export default defineConfig({
   testDir: "./tests/e2e",
-  fullyParallel: true,
+  // E2E specs share one credentialed account in local env. Running files in
+  // parallel can invalidate auth state mid-run (sign-out/session rotation).
+  fullyParallel: false,
+  workers: 1,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "list",

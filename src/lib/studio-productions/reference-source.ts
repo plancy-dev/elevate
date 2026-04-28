@@ -137,8 +137,8 @@ export type ScriptAdaptationMode =
 
 const SOURCE_TYPE_HINT: Partial<Record<ReferenceSourceType, string>> = {
   manual_note:
-    " (author’s own summary, interpretation, or commentary — weight appropriately vs verbatim sources)",
-  web_url: " (fetched web page text and metadata)",
+    "(author’s own summary, interpretation, or commentary — weight appropriately vs verbatim sources)",
+  web_url: "(fetched web page text and metadata)",
 };
 
 /**
@@ -159,30 +159,30 @@ export function buildReferenceAdaptPrompt(
 
   const modeInstructions: Record<ScriptAdaptationMode, string> = {
     translate:
-      `Translate the source transcript(s) into ${targetLanguage}. Preserve meaning and tone. ` +
+      `Translate the source transcript(s) into ${targetLanguage}. Preserve meaning and tone.` +
       `Adapt cultural references for the target audience. Output a flowing narrative script.`,
     summarize:
-      `Summarize the key points from the source transcript(s) into a concise ${targetLanguage} script. ` +
+      `Summarize the key points from the source transcript(s) into a concise ${targetLanguage} script.` +
       `Focus on the most impactful insights. Target 60-90 seconds of narration.`,
     remix:
-      `Combine and remix the source transcript(s) into a fresh, engaging ${targetLanguage} script. ` +
-      `Create a new narrative arc that synthesizes the best ideas from all sources. ` +
+      `Combine and remix the source transcript(s) into a fresh, engaging ${targetLanguage} script.` +
+      `Create a new narrative arc that synthesizes the best ideas from all sources.` +
       `The result should feel original, not a simple concatenation.`,
     book_review_short:
-      `Based on the source text (book summary/review), create a compelling 40-60 second ${targetLanguage} script ` +
-      `for a YouTube Shorts video. End with a book recommendation CTA. ` +
+      `Based on the source text (book summary/review), create a compelling 40-60 second ${targetLanguage} script` +
+      `for a YouTube Shorts video. End with a book recommendation CTA.` +
       `Hook the viewer in the first 3 seconds with a provocative insight from the book.`,
     book_review_long:
-      `Based on the source text (book summary/review), create a 5-10 minute ${targetLanguage} script ` +
-      `for a long-form YouTube video. Structure: hook -> key insights (3-5) -> personal reflection -> recommendation CTA. ` +
+      `Based on the source text (book summary/review), create a 5-10 minute ${targetLanguage} script` +
+      `for a long-form YouTube video. Structure: hook -> key insights (3-5) -> personal reflection -> recommendation CTA.` +
       `Make each section visually describable for animation.`,
     storytelling_animation:
-      `Transform the source material into an entertaining, story-driven ${targetLanguage} script ` +
-      `designed for animated narration. Use dramatic structure: setup -> conflict -> resolution. ` +
+      `Transform the source material into an entertaining, story-driven ${targetLanguage} script` +
+      `designed for animated narration. Use dramatic structure: setup -> conflict -> resolution.` +
       `Make it engaging and slightly provocative to capture attention. Include visual cues in [brackets].`,
     news_summary:
-      `Summarize the source material into a news-style ${targetLanguage} script. ` +
-      `Lead with the most important finding. Use clear, authoritative language. ` +
+      `Summarize the source material into a news-style ${targetLanguage} script.` +
+      `Lead with the most important finding. Use clear, authoritative language.` +
       `Target 60-90 seconds. End with implications or what to watch for next.`,
   };
 

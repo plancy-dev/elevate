@@ -18,7 +18,7 @@ export default async function TeamPage() {
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-paper-50 p-6">
         <ActionErrorMessage code={ensured.error} />
       </div>
     );
@@ -48,9 +48,9 @@ export default async function TeamPage() {
   const t = await getTranslations("Dashboard.pages");
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-30 flex items-center border-b border-border-subtle bg-background px-6 h-12">
-        <h1 className="text-sm font-medium text-text-primary">{t("team.title")}</h1>
+    <div className="min-h-screen bg-paper-50">
+      <div className="sticky top-0 z-30 flex items-center border-b border-ink-100 bg-paper-50 px-6 h-12">
+        <h1 className="text-sm font-medium text-ink-900">{t("team.title")}</h1>
       </div>
       <TeamPageClient
         members={members}

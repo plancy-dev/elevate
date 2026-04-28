@@ -115,7 +115,7 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   return (
-    <div className="border-t border-marketing-border-subtle">
+    <div className="border-t border-ink-100">
       <BlogPostViewedCapture
         slug={slug}
         locale={locale}
@@ -126,16 +126,16 @@ export default async function BlogPostPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <article className="mx-auto max-w-[min(45rem,100%)] px-4 py-10 sm:px-6 lg:px-8">
-        <p className="text-xs text-text-tertiary">
+        <p className="text-xs text-ink-500">
           <time dateTime={post.meta.date}>
             {t("published", { date: post.meta.date })}
           </time>
         </p>
-        <h1 className="mt-2 font-semibold tracking-tight text-text-primary text-[length:var(--elevate-prose-hero-title-size)] leading-[1.15]">
+        <h1 className="mt-2 text-[length:var(--elevate-prose-hero-title-size)] font-semibold leading-[1.15] tracking-tight text-ink-900">
           {post.meta.title}
         </h1>
         {post.meta.description ? (
-          <p className="mt-3 text-[length:var(--elevate-prose-body-size)] text-text-secondary leading-relaxed">
+          <p className="mt-3 text-[length:var(--elevate-prose-body-size)] leading-relaxed text-ink-700">
             {post.meta.description}
           </p>
         ) : null}
@@ -151,10 +151,10 @@ export default async function BlogPostPage({ params }: Props) {
           <MDXRemote source={post.body} components={blogMdxComponents} />
         </div>
 
-        <div className="mt-14 border-t border-marketing-border-subtle pt-8">
+        <div className="mt-14 border-t border-ink-100 pt-8">
           <Link
             href="/blog"
-            className="text-sm font-medium text-interactive hover:underline"
+            className="text-sm font-medium text-vermilion-600 hover:underline"
           >
             {t("backToBlog")}
           </Link>

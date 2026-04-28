@@ -51,15 +51,15 @@ export default async function AdminContentCatalogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border-subtle bg-background px-6 h-12">
+    <div className="min-h-screen bg-paper-50">
+      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-ink-100 bg-paper-50 px-6 h-12">
         <div className="flex items-center gap-2">
           <Shield className="h-4 w-4 text-primary" aria-hidden />
-          <h1 className="text-sm font-medium text-text-primary">{t("title")}</h1>
+          <h1 className="text-sm font-medium text-ink-900">{t("title")}</h1>
         </div>
         <Link
           href="/admin"
-          className="inline-flex items-center gap-1 text-xs text-interactive hover:text-primary transition-colors"
+          className="inline-flex items-center gap-1 text-xs text-vermilion-600 hover:text-vermilion-700 transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
           {tAdmin("backToOverview")}
@@ -68,8 +68,8 @@ export default async function AdminContentCatalogPage() {
 
       <div className="p-6 max-w-6xl space-y-8">
         <div className="space-y-2 max-w-2xl">
-          <p className="text-sm text-text-secondary leading-relaxed">{t("intro")}</p>
-          <p className="text-sm text-text-tertiary leading-relaxed">{t("lemonBlurb")}</p>
+          <p className="text-sm text-ink-700 leading-relaxed">{t("intro")}</p>
+          <p className="text-sm text-ink-500 leading-relaxed">{t("lemonBlurb")}</p>
         </div>
 
         {loadError ? (

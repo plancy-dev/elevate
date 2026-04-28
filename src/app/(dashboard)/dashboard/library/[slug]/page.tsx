@@ -124,10 +124,10 @@ export default async function LibraryCatalogDetailPage({ params, searchParams }:
 
       {checkoutSuccess ? (
         <div
-          className="mb-6 rounded-xl border border-emerald-500/35 bg-emerald-500/10 px-4 py-3 text-sm text-text-secondary"
+          className="mb-6 rounded-[var(--radius-1)] border border-emerald-500/35 bg-emerald-500/10 px-4 py-3 text-sm text-ink-700"
           role="status"
         >
-          <p className="font-medium text-text-primary">{t("detailCheckoutSuccessTitle")}</p>
+          <p className="font-medium text-ink-900">{t("detailCheckoutSuccessTitle")}</p>
           <p className="mt-1 leading-relaxed">
             {canRead ? t("detailCheckoutSuccessUnlockedBody") : t("detailCheckoutSuccessPendingBody")}
           </p>
@@ -144,10 +144,10 @@ export default async function LibraryCatalogDetailPage({ params, searchParams }:
 
       {checkoutState === "error" ? (
         <div
-          className="mb-6 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-text-secondary"
+          className="mb-6 rounded-[var(--radius-1)] border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-ink-700"
           role="alert"
         >
-          <p className="font-medium text-text-primary">{t("detailCheckoutErrorTitle")}</p>
+          <p className="font-medium text-ink-900">{t("detailCheckoutErrorTitle")}</p>
           <p className="mt-1 leading-relaxed">
             {failReason === "not_linked" || failReason === "no_slug"
               ? t("checkoutErrorNotLinked")
@@ -172,10 +172,10 @@ export default async function LibraryCatalogDetailPage({ params, searchParams }:
 
       {showStarterSubscription ? (
         <div
-          className="mb-8 rounded-xl border border-dashed border-border-subtle bg-layer-02/80 p-4 shadow-ambient"
+          className="mb-8 rounded-[var(--radius-1)] border border-dashed border-ink-100 bg-paper-50/80 p-4"
           role="note"
         >
-          <p className="text-sm leading-relaxed text-text-secondary">
+          <p className="text-sm leading-relaxed text-ink-700">
             {t("subscriptionBanner")}
           </p>
           <Link
@@ -187,8 +187,8 @@ export default async function LibraryCatalogDetailPage({ params, searchParams }:
         </div>
       ) : null}
 
-      <div className="overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
-        <div className="border-b border-border-subtle bg-layer-02/80 px-5 py-4">
+      <div className="overflow-hidden rounded-[var(--radius-1)] border border-ink-100 bg-paper-0">
+        <div className="border-b border-ink-100 bg-paper-50/80 px-5 py-4">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="blue" className="shrink-0">
               {kindLabel}
@@ -201,10 +201,10 @@ export default async function LibraryCatalogDetailPage({ params, searchParams }:
                   : t("notIncluded")}
             </Badge>
           </div>
-          <h1 className="mt-3 text-xl font-semibold tracking-tight text-text-primary">
+          <h1 className="mt-3 text-xl font-semibold tracking-tight text-ink-900">
             {product.title}
           </h1>
-          <p className="mt-2 text-lg font-medium tabular-nums text-text-primary">
+          <p className="mt-2 text-lg font-medium tabular-nums text-ink-900">
             {formatCurrencyMinor(product.price_cents, product.currency)}
           </p>
         </div>
@@ -212,12 +212,12 @@ export default async function LibraryCatalogDetailPage({ params, searchParams }:
         <div className="px-5 py-5 space-y-6">
           {product.description ? (
             <section>
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-text-tertiary">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-ink-500">
                 {t("detailAboutHeading")}
               </h2>
               <div
                 className={cn(
-                  "mt-2 text-sm leading-relaxed text-text-secondary",
+                  "mt-2 text-sm leading-relaxed text-ink-700",
                   "whitespace-pre-wrap",
                 )}
               >
@@ -228,10 +228,10 @@ export default async function LibraryCatalogDetailPage({ params, searchParams }:
 
           {outlineLines.length > 0 ? (
             <section>
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-text-tertiary">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-ink-500">
                 {t("detailOutlineHeading")}
               </h2>
-              <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-text-secondary">
+              <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-ink-700">
                 {outlineLines.map((line) => (
                   <li key={line} className="leading-relaxed">
                     {line.replace(/^[-•*]\s+/, "").replace(/^\d+[.)]\s+/, "")}
@@ -241,12 +241,12 @@ export default async function LibraryCatalogDetailPage({ params, searchParams }:
             </section>
           ) : null}
 
-          <div className="flex flex-col gap-3 border-t border-border-subtle pt-5 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="flex flex-col gap-3 border-t border-ink-100 pt-5 sm:flex-row sm:flex-wrap sm:items-center">
             {!canRead && !pendingUnlockAfterCheckout ? (
               <Link
                 href={`/dashboard/library/${encodeURIComponent(slug)}/checkout`}
                 prefetch={false}
-                className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-[var(--color-text-on-color)] shadow-ambient transition-opacity hover:opacity-90"
+                className="inline-flex items-center justify-center rounded-[var(--radius-1)] bg-primary px-4 py-2.5 text-sm font-medium text-[var(--color-text-on-color)] transition-opacity hover:opacity-90"
               >
                 {t("detailPurchase")}
               </Link>

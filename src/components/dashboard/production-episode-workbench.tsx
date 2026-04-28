@@ -131,7 +131,7 @@ function ProductionEpisodeWorkbenchInner({
       <div
         role="tablist"
         aria-label={t("workbenchAriaLabel")}
-        className="flex flex-wrap items-stretch gap-1 rounded-xl border border-border-subtle bg-layer-02/40 p-1.5 dark:border-border-subtle dark:bg-layer-02/60"
+        className="flex flex-wrap items-stretch gap-1 border border-ink-100 bg-paper-50 p-1.5"
         onKeyDown={onTabListKeyDown}
       >
         {WORKBENCH_TAB_IDS.map((id) => {
@@ -152,10 +152,10 @@ function ProductionEpisodeWorkbenchInner({
                 aria-controls={panelId}
                 tabIndex={selected ? 0 : -1}
                 className={cn(
-                  "min-h-[42px] inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors sm:flex-none sm:min-w-[7.5rem] sm:px-4",
+                  "inline-flex min-h-[42px] flex-1 cursor-pointer items-center justify-center gap-2 px-3 py-2 text-sm font-medium transition-colors duration-80 ease-(--ease-editorial) sm:min-w-30 sm:flex-none sm:px-4",
                   selected
-                    ? "bg-layer-01 text-text-primary shadow-sm ring-1 ring-border-subtle dark:bg-layer-01 dark:ring-border-subtle"
-                    : "text-text-secondary hover:bg-layer-01/85 hover:text-text-primary dark:hover:bg-white/5",
+                    ? "border border-ink-100 bg-paper-100 text-ink-900"
+                    : "border border-transparent text-ink-600 hover:border-ink-100 hover:bg-paper-100 hover:text-ink-900",
                 )}
                 onClick={() => {
                   setTabAndUrl(id);
@@ -169,7 +169,7 @@ function ProductionEpisodeWorkbenchInner({
               </button>
               {TAB_DIVIDER_AFTER.includes(id) ? (
                 <div
-                  className="hidden h-8 w-px shrink-0 self-center bg-border-subtle/90 sm:block"
+                  className="hidden h-8 w-px shrink-0 self-center bg-ink-100 sm:block"
                   aria-hidden
                 />
               ) : null}
@@ -177,7 +177,7 @@ function ProductionEpisodeWorkbenchInner({
           );
         })}
       </div>
-      <p className="text-xs text-text-tertiary leading-relaxed max-w-prose px-0.5">
+      <p className="max-w-prose px-0.5 text-xs leading-relaxed text-ink-500">
         {t("workbenchTabsLead")}
       </p>
 
@@ -206,7 +206,7 @@ function ProductionEpisodeWorkbenchInner({
 function WorkbenchTabsFallback() {
   return (
     <div
-      className="h-[52px] rounded-xl border border-border-subtle bg-layer-02/40 dark:border-border-subtle animate-pulse"
+      className="h-[52px] animate-pulse border border-ink-100 bg-paper-100"
       aria-hidden
     />
   );

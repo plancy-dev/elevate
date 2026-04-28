@@ -35,7 +35,7 @@ export default async function PurchaseHistoryPage() {
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-paper-50 p-6">
         <ActionErrorMessage code={ensured.error} />
       </div>
     );
@@ -70,9 +70,9 @@ export default async function PurchaseHistoryPage() {
   const hasAny = entitlements.length > 0 || tossPayments.length > 0;
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-30 flex items-center border-b border-border-subtle bg-background px-6 h-12">
-        <h1 className="text-sm font-medium text-text-primary">{tPages("purchases.title")}</h1>
+    <div className="min-h-screen bg-paper-50">
+      <div className="sticky top-0 z-30 flex items-center border-b border-ink-100 bg-paper-50 px-6 h-12">
+        <h1 className="text-sm font-medium text-ink-900">{tPages("purchases.title")}</h1>
       </div>
       <div className="mx-auto w-full max-w-3xl space-y-8 p-6">
         <nav className="text-sm">
@@ -81,13 +81,13 @@ export default async function PurchaseHistoryPage() {
           </Link>
         </nav>
 
-        <p className="text-sm text-text-secondary leading-relaxed max-w-2xl">{t("intro")}</p>
+        <p className="text-sm text-ink-700 leading-relaxed max-w-2xl">{t("intro")}</p>
 
         {!orgId ? (
-          <p className="text-sm text-text-tertiary">{t("noOrganization")}</p>
+          <p className="text-sm text-ink-500">{t("noOrganization")}</p>
         ) : !hasAny ? (
-          <div className="rounded-xl border border-border-subtle bg-layer-01 p-6 shadow-card">
-            <p className="text-sm text-text-secondary">{t("empty")}</p>
+          <div className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 p-6">
+            <p className="text-sm text-ink-700">{t("empty")}</p>
             <Link
               href="/dashboard/library"
               className="mt-4 inline-block text-sm font-medium text-primary hover:underline"
@@ -101,12 +101,12 @@ export default async function PurchaseHistoryPage() {
               <section aria-labelledby="ph-unlocks">
                 <h3
                   id="ph-unlocks"
-                  className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-3"
+                  className="text-xs font-semibold uppercase tracking-wider text-ink-500 mb-3"
                 >
                   {t("sectionUnlocks")}
                 </h3>
-                <div className="overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
-                  <ul className="divide-y divide-border-subtle">
+                <div className="overflow-hidden rounded-[var(--radius-1)] border border-ink-100 bg-paper-0">
+                  <ul className="divide-y divide-ink-100">
                     {entitlements.map((row) => (
                       <li key={row.id} className="px-5 py-4">
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
@@ -119,20 +119,20 @@ export default async function PurchaseHistoryPage() {
                                   </Badge>
                                   <Link
                                     href={`/dashboard/library/${encodeURIComponent(row.product.slug)}`}
-                                    className="text-sm font-semibold text-text-primary hover:text-primary hover:underline"
+                                    className="text-sm font-semibold text-ink-900 hover:text-vermilion-700 hover:underline"
                                   >
                                     {row.product.title}
                                   </Link>
                                 </div>
-                                <p className="mt-1 text-sm tabular-nums text-text-secondary">
+                                <p className="mt-1 text-sm tabular-nums text-ink-700">
                                   {formatCurrencyMinor(row.product.price_cents, row.product.currency)}
                                 </p>
                               </>
                             ) : (
-                              <p className="text-sm text-text-tertiary">{t("removedProduct")}</p>
+                              <p className="text-sm text-ink-500">{t("removedProduct")}</p>
                             )}
                           </div>
-                          <p className="text-xs text-text-tertiary shrink-0 sm:text-right">
+                          <p className="text-xs text-ink-500 shrink-0 sm:text-right">
                             {t("unlockedAt", { date: formatTs(row.granted_at, locale) })}
                           </p>
                         </div>
@@ -147,18 +147,18 @@ export default async function PurchaseHistoryPage() {
               <section aria-labelledby="ph-toss">
                 <h3
                   id="ph-toss"
-                  className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-3"
+                  className="text-xs font-semibold uppercase tracking-wider text-ink-500 mb-3"
                 >
                   {t("sectionToss")}
                 </h3>
-                <p className="text-xs text-text-tertiary mb-3 leading-relaxed">{t("sectionTossHint")}</p>
-                <div className="overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
-                  <ul className="divide-y divide-border-subtle">
+                <p className="text-xs text-ink-500 mb-3 leading-relaxed">{t("sectionTossHint")}</p>
+                <div className="overflow-hidden rounded-[var(--radius-1)] border border-ink-100 bg-paper-0">
+                  <ul className="divide-y divide-ink-100">
                     {tossPayments.map((row) => (
                       <li key={row.id} className="px-5 py-3">
                         <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-start">
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-text-primary tabular-nums">
+                            <p className="text-sm font-medium text-ink-900 tabular-nums">
                               {t("tossAmount", { amount: row.amount_krw.toLocaleString(locale) })}
                             </p>
                             {row.product ? (
@@ -169,17 +169,17 @@ export default async function PurchaseHistoryPage() {
                                 {row.product.title}
                               </Link>
                             ) : null}
-                            <p className="text-[11px] font-mono text-text-tertiary mt-1 break-all">
+                            <p className="text-[11px] font-mono text-ink-500 mt-1 break-all">
                               {row.order_id}
                             </p>
                           </div>
-                          <div className="text-xs text-text-tertiary shrink-0 sm:text-right">
+                          <div className="text-xs text-ink-500 shrink-0 sm:text-right">
                             <span
                               className={cn(
                                 "inline-block rounded px-1.5 py-0.5 text-[10px] font-medium uppercase",
                                 row.status === "confirmed"
                                   ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                                  : "bg-layer-02 text-text-tertiary",
+                                  : "bg-paper-50 text-ink-500",
                               )}
                             >
                               {row.status}
@@ -200,7 +200,7 @@ export default async function PurchaseHistoryPage() {
           </div>
         )}
 
-        <p className="text-xs text-text-tertiary leading-relaxed border-t border-border-subtle pt-6">
+        <p className="text-xs text-ink-500 leading-relaxed border-t border-ink-100 pt-6">
           {t("orgScopeFootnote")}
         </p>
       </div>

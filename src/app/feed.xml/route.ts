@@ -12,7 +12,7 @@ function escapeXml(text: string): string {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g,"&quot;");
 }
 
 /** Atom 1.0 — default-locale blog only (`en`); add `/ko/feed.xml` etc. if product needs per-locale feeds. */

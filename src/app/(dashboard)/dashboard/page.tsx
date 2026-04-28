@@ -8,7 +8,7 @@ import {
   Package,
 } from "lucide-react";
 import type { Metadata } from "next";
-import { DashboardNavLink } from "@/components/dashboard/dashboard-nav-link";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
@@ -30,8 +30,8 @@ export default async function DashboardPage() {
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
-      <div className="min-h-screen bg-background p-6">
-        <div className="max-w-lg rounded-lg border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger">
+      <div className="min-h-screen bg-paper-50 p-6">
+        <div className="max-w-lg rounded-[var(--radius-1)] border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger">
           <ActionErrorMessage
             code={ensured.error}
             className="text-sm text-danger"
@@ -105,13 +105,13 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="sticky top-0 z-30 flex h-12 items-center justify-between border-b border-border-subtle bg-background px-6 shadow-ambient">
+    <div className="min-h-screen bg-paper-50">
+      <div className="sticky top-0 z-30 flex h-12 items-center justify-between border-b border-ink-100 bg-paper-50 px-6">
         <div>
-          <h1 className="text-sm font-medium text-text-primary">{t("title")}</h1>
+          <h1 className="text-sm font-medium text-ink-900">{t("title")}</h1>
         </div>
         <div className="flex items-center gap-2">
-          <span className="hidden text-xs text-text-tertiary sm:inline">
+          <span className="hidden text-xs text-ink-500 sm:inline">
             {t("liveData")}
           </span>
           <ButtonLink href="/dashboard/library" variant="tertiary" size="sm">
@@ -126,11 +126,11 @@ export default async function DashboardPage() {
       </div>
 
       <div className="space-y-6 p-6">
-        <div className="overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
+        <div className="overflow-hidden rounded-[var(--radius-1)] border border-ink-100 bg-paper-0">
           <div className="divide-y divide-border-subtle">
-            <DashboardNavLink
+            <Link
               href="/dashboard/studio"
-              className="group block p-6 transition-colors duration-150 hover:bg-layer-02"
+              className="group block p-6 transition-colors duration-150 hover:bg-paper-50"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -140,22 +140,22 @@ export default async function DashboardPage() {
                       {t("promptStudioBadge")}
                     </span>
                   </div>
-                  <h2 className="text-lg font-semibold text-text-primary">
+                  <h2 className="text-lg font-semibold text-ink-900">
                     {t("promptStudioHeadline")}
                   </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+                  <p className="mt-2 text-sm leading-relaxed text-ink-700">
                     {t("promptStudioDesc")}
                   </p>
                 </div>
                 <ArrowRight
-                  className="h-5 w-5 shrink-0 text-text-tertiary transition-colors group-hover:text-primary"
+                  className="h-5 w-5 shrink-0 text-ink-500 transition-colors group-hover:text-primary"
                   aria-hidden
                 />
               </div>
-            </DashboardNavLink>
-            <DashboardNavLink
+            </Link>
+            <Link
               href="/dashboard/library"
-              className="group block p-6 transition-colors duration-150 hover:bg-layer-02"
+              className="group block p-6 transition-colors duration-150 hover:bg-paper-50"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -165,36 +165,36 @@ export default async function DashboardPage() {
                       {t("libraryBadge")}
                     </span>
                   </div>
-                  <h2 className="text-lg font-semibold text-text-primary">
+                  <h2 className="text-lg font-semibold text-ink-900">
                     {entitledLabel}
                   </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+                  <p className="mt-2 text-sm leading-relaxed text-ink-700">
                     {t("libraryDesc")}
                   </p>
                 </div>
                 <ArrowRight
-                  className="h-5 w-5 shrink-0 text-text-tertiary transition-colors group-hover:text-primary"
+                  className="h-5 w-5 shrink-0 text-ink-500 transition-colors group-hover:text-primary"
                   aria-hidden
                 />
               </div>
-            </DashboardNavLink>
+            </Link>
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-xl border border-border-subtle bg-border-subtle shadow-card">
+        <div className="overflow-hidden rounded-[var(--radius-1)] border border-ink-100 bg-border-subtle">
           <div className="grid grid-cols-1 gap-px sm:grid-cols-2 xl:grid-cols-4">
             {kpis.map((kpi) => (
-              <div key={kpi.label} className="bg-layer-01 p-5">
+              <div key={kpi.label} className="bg-paper-0 p-5">
                 <div className="mb-3 flex items-center gap-2">
-                  <kpi.icon className="h-4 w-4 text-text-tertiary" aria-hidden />
-                  <span className="text-xs text-text-tertiary">{kpi.label}</span>
+                  <kpi.icon className="h-4 w-4 text-ink-500" aria-hidden />
+                  <span className="text-xs text-ink-500">{kpi.label}</span>
                 </div>
-                <div className="text-3xl font-semibold tracking-tight text-text-primary">
+                <div className="text-3xl font-semibold tracking-tight text-ink-900">
                   {kpi.value}
                 </div>
                 <div className="mt-2 flex items-center gap-1.5">
                   {kpi.change === "—" ? (
-                    <span className="text-xs text-text-tertiary">{kpi.period}</span>
+                    <span className="text-xs text-ink-500">{kpi.period}</span>
                   ) : (
                     <>
                       {kpi.trend === "up" ? (
@@ -207,7 +207,7 @@ export default async function DashboardPage() {
                       >
                         {kpi.change}
                       </span>
-                      <span className="text-xs text-text-tertiary">
+                      <span className="text-xs text-ink-500">
                         {kpi.period}
                       </span>
                     </>
@@ -218,38 +218,36 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card xl:grid xl:grid-cols-3">
-          <div className="border-b border-border-subtle xl:col-span-2 xl:border-b-0 xl:border-r">
-            <div className="flex items-center justify-between gap-4 border-b border-border-subtle px-5 pt-5 pb-3">
+        <div className="overflow-hidden rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 xl:grid xl:grid-cols-3">
+          <div className="border-b border-ink-100 xl:col-span-2 xl:border-b-0 xl:border-r">
+            <div className="flex items-center justify-between gap-4 border-b border-ink-100 px-5 pt-5 pb-3">
               <div>
-                <h2 className="text-sm font-medium text-text-primary">
+                <h2 className="text-sm font-medium text-ink-900">
                   {t("gettingStarted")}
                 </h2>
-                <p className="mt-0.5 text-xs text-text-tertiary">
+                <p className="mt-0.5 text-xs text-ink-500">
                   {t("gettingStartedSub")}
                 </p>
               </div>
-              <DashboardNavLink
+              <Link
                 href="/dashboard/studio"
-                layout="inline"
-                className="flex shrink-0 items-center gap-1 text-xs text-interactive transition-colors hover:text-primary"
+                className="flex shrink-0 items-center gap-1 text-xs text-vermilion-600 transition-colors hover:text-primary"
               >
-                {t("openStudio")}{" "}
+                {t("openStudio")}{""}
                 <ArrowRight className="h-3 w-3" aria-hidden />
-              </DashboardNavLink>
+              </Link>
             </div>
-            <div className="px-5 py-8 text-sm leading-relaxed text-text-secondary">
+            <div className="px-5 py-8 text-sm leading-relaxed text-ink-700">
               {showOrgAdminOverview ? (
                 <div>
                   {t.rich("bodyAdmin", {
                     link: (chunks) => (
-                      <DashboardNavLink
+                      <Link
                         href="/dashboard/team"
-                        layout="inline"
-                        className="font-medium text-interactive hover:text-primary"
+                        className="font-medium text-vermilion-600 hover:text-primary"
                       >
                         {chunks}
-                      </DashboardNavLink>
+                      </Link>
                     ),
                   })}
                 </div>
@@ -260,23 +258,23 @@ export default async function DashboardPage() {
           </div>
 
           <div>
-            <div className="border-b border-border-subtle px-5 pt-5 pb-3">
-              <h2 className="text-sm font-medium text-text-primary">
+            <div className="border-b border-ink-100 px-5 pt-5 pb-3">
+              <h2 className="text-sm font-medium text-ink-900">
                 {t("recentActivity")}
               </h2>
             </div>
             {recentActivity.length === 0 ? (
-              <div className="px-5 py-8 text-sm text-text-tertiary">
+              <div className="px-5 py-8 text-sm text-ink-500">
                 {t("recentActivityEmpty")}
               </div>
             ) : (
               <div className="divide-y divide-border-subtle">
                 {recentActivity.map((activity, i) => (
                   <div key={i} className="px-5 py-3">
-                    <p className="text-sm leading-relaxed text-text-secondary">
+                    <p className="text-sm leading-relaxed text-ink-700">
                       {activity.text}
                     </p>
-                    <p className="mt-1 text-xs text-text-tertiary">
+                    <p className="mt-1 text-xs text-ink-500">
                       {activity.time}
                     </p>
                   </div>

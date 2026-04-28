@@ -133,7 +133,7 @@ export function ContentProductsAdminClient({
         <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between mb-3">
           <h2
             id="catalog-list-heading"
-            className="text-xs font-semibold uppercase tracking-wider text-text-tertiary"
+            className="text-xs font-semibold uppercase tracking-wider text-ink-500"
           >
             {t("sectionListTitle")}
           </h2>
@@ -144,11 +144,11 @@ export function ContentProductsAdminClient({
           </p>
         ) : null}
         {initialRows.length === 0 ? (
-          <p className="text-sm text-text-secondary">{t("empty")}</p>
+          <p className="text-sm text-ink-700">{t("empty")}</p>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-border-subtle shadow-ambient">
+          <div className="overflow-x-auto rounded-[var(--radius-1)] border border-ink-100">
             <table className="w-full min-w-[720px] text-left text-sm">
-              <thead className="bg-layer-02 text-text-secondary">
+              <thead className="bg-paper-50 text-ink-700">
                 <tr>
                   <th className="px-3 py-2 font-medium">{t("colSlug")}</th>
                   <th className="px-3 py-2 font-medium">{t("colTitle")}</th>
@@ -165,13 +165,13 @@ export function ContentProductsAdminClient({
                 {initialRows.map((row) => (
                   <tr
                     key={row.id}
-                    className="border-t border-border-subtle hover:bg-layer-01"
+                    className="border-t border-ink-100 hover:bg-paper-0"
                   >
                     <td className="px-3 py-2 font-mono text-xs align-middle">{row.slug}</td>
                     <td className="px-3 py-2 max-w-[200px] truncate align-middle" title={row.title}>
                       {row.title}
                     </td>
-                    <td className="px-3 py-2 text-text-secondary align-middle">
+                    <td className="px-3 py-2 text-ink-700 align-middle">
                       {KINDS.includes(row.product_kind as (typeof KINDS)[number])
                         ? tKinds(row.product_kind as (typeof KINDS)[number])
                         : row.product_kind}
@@ -183,7 +183,7 @@ export function ContentProductsAdminClient({
                       {row.is_active ? t("yes") : t("no")}
                     </td>
                     <td
-                      className="px-3 py-2 font-mono text-[11px] text-text-tertiary max-w-[180px] truncate align-middle"
+                      className="px-3 py-2 font-mono text-[11px] text-ink-500 max-w-[180px] truncate align-middle"
                       title={row.storage_object_path ?? ""}
                     >
                       {row.storage_object_path ?? "—"}
@@ -193,7 +193,7 @@ export function ContentProductsAdminClient({
                         <button
                           type="button"
                           onClick={() => setEditing(row)}
-                          className="rounded-md border border-border-subtle bg-layer-01 px-2.5 py-1 text-xs font-medium text-text-primary hover:bg-layer-02"
+                          className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-0 px-2.5 py-1 text-xs font-medium text-ink-900 hover:bg-paper-50"
                         >
                           {t("editAction")}
                         </button>
@@ -201,7 +201,7 @@ export function ContentProductsAdminClient({
                           type="button"
                           disabled={pendingDelete}
                           onClick={() => requestDelete(row)}
-                          className="rounded-md border border-red-500/30 bg-red-500/5 px-2.5 py-1 text-xs font-medium text-red-700 dark:text-red-400 hover:bg-red-500/10 disabled:opacity-50"
+                          className="rounded-[var(--radius-1)] border border-red-500/30 bg-red-500/5 px-2.5 py-1 text-xs font-medium text-red-700 dark:text-red-400 hover:bg-red-500/10 disabled:opacity-50"
                         >
                           {t("deleteAction")}
                         </button>
@@ -215,17 +215,17 @@ export function ContentProductsAdminClient({
         )}
       </section>
 
-      <section aria-labelledby="catalog-create-heading" className="rounded-xl border border-border-subtle bg-layer-01/50 p-5 shadow-ambient">
+      <section aria-labelledby="catalog-create-heading" className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-0/50 p-5">
         <h2
           id="catalog-create-heading"
-          className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-4"
+          className="text-xs font-semibold uppercase tracking-wider text-ink-500 mb-4"
         >
           {t("sectionCreateTitle")}
         </h2>
-        <p className="text-sm text-text-tertiary mb-4 max-w-xl leading-relaxed">{t("createIntro")}</p>
+        <p className="text-sm text-ink-500 mb-4 max-w-xl leading-relaxed">{t("createIntro")}</p>
         <form action={uploadAction} className="max-w-lg space-y-4">
           <div>
-            <label htmlFor="cp-slug" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="cp-slug" className="block text-xs font-medium text-ink-700 mb-1">
               {t("slug")}
             </label>
             <input
@@ -233,22 +233,22 @@ export function ContentProductsAdminClient({
               name="slug"
               type="text"
               required
-              className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm"
               placeholder="team-alignment-ebook"
               autoComplete="off"
             />
-            <p className="mt-1 text-[11px] text-text-tertiary">{t("slugHint")}</p>
-            <label className="mt-3 flex cursor-pointer items-start gap-2 text-sm text-text-secondary">
+            <p className="mt-1 text-[11px] text-ink-500">{t("slugHint")}</p>
+            <label className="mt-3 flex cursor-pointer items-start gap-2 text-sm text-ink-700">
               <input
                 type="checkbox"
                 name="replaceExisting"
-                className="mt-0.5 h-4 w-4 shrink-0 rounded border-border-subtle"
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-ink-100"
               />
               <span>{t("replaceExisting")}</span>
             </label>
           </div>
           <div>
-            <label htmlFor="cp-title" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="cp-title" className="block text-xs font-medium text-ink-700 mb-1">
               {t("titleLabel")}
             </label>
             <input
@@ -256,22 +256,22 @@ export function ContentProductsAdminClient({
               name="title"
               type="text"
               required
-              className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm"
             />
           </div>
           <div>
-            <label htmlFor="cp-desc" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="cp-desc" className="block text-xs font-medium text-ink-700 mb-1">
               {t("description")}
             </label>
             <textarea
               id="cp-desc"
               name="description"
               rows={3}
-              className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
+              className="w-full rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm"
             />
           </div>
           <div>
-            <label htmlFor="cp-price" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="cp-price" className="block text-xs font-medium text-ink-700 mb-1">
               {t("priceKrw")}
             </label>
             <input
@@ -281,21 +281,21 @@ export function ContentProductsAdminClient({
               min={0}
               step={1}
               defaultValue={TOSS_POC_AMOUNT_KRW}
-              className="w-full max-w-[200px] rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm tabular-nums"
+              className="w-full max-w-[200px] rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm tabular-nums"
             />
-            <p className="mt-1 text-[11px] text-text-tertiary leading-relaxed">
+            <p className="mt-1 text-[11px] text-ink-500 leading-relaxed">
               {t("priceKrwLemonHint", { minKrw: LEMON_CUSTOM_PRICE_MIN_KRW })}
             </p>
           </div>
           <div>
-            <label htmlFor="cp-kind" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="cp-kind" className="block text-xs font-medium text-ink-700 mb-1">
               {t("productKind")}
             </label>
             <select
               id="cp-kind"
               name="productKind"
               defaultValue="ebook"
-              className="w-full max-w-xs rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm"
+              className="w-full max-w-xs rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm"
             >
               {KINDS.map((k) => (
                 <option key={k} value={k}>
@@ -305,7 +305,7 @@ export function ContentProductsAdminClient({
             </select>
           </div>
           <div>
-            <label htmlFor="cp-file" className="block text-xs font-medium text-text-secondary mb-1">
+            <label htmlFor="cp-file" className="block text-xs font-medium text-ink-700 mb-1">
               {t("file")}
             </label>
             <input
@@ -314,9 +314,9 @@ export function ContentProductsAdminClient({
               type="file"
               required
               accept=".pdf,.epub,.zip,application/pdf,application/epub+zip,application/zip"
-              className="block w-full text-sm text-text-secondary file:mr-3 file:rounded-md file:border-0 file:bg-highlight file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-primary"
+              className="block w-full text-sm text-ink-700 file:mr-3 file:rounded-[var(--radius-1)] file:border-0 file:bg-highlight file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-primary"
             />
-            <p className="mt-1 text-[11px] text-text-tertiary">{t("fileHint")}</p>
+            <p className="mt-1 text-[11px] text-ink-500">{t("fileHint")}</p>
           </div>
 
           {uploadState && !uploadState.ok ? (
@@ -334,9 +334,9 @@ export function ContentProductsAdminClient({
             type="submit"
             disabled={uploadPending}
             className={cn(
-              "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors",
+              "inline-flex items-center justify-center rounded-[var(--radius-1)] px-4 py-2 text-sm font-medium transition-colors",
               uploadPending
-                ? "bg-surface-03 text-text-tertiary cursor-not-allowed"
+                ? "bg-surface-03 text-ink-500 cursor-not-allowed"
                 : "bg-primary text-[var(--color-text-on-color)] hover:opacity-90",
             )}
           >

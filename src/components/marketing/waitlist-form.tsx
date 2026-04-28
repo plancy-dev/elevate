@@ -89,8 +89,8 @@ export function WaitlistForm({
     return (
       <p
         className={cn(
-          "text-sm text-accent",
-          variant === "panel" && "text-white",
+          "text-sm text-vermilion-600",
+          variant === "panel" && "text-vermilion-600",
           className,
         )}
         role="status"
@@ -131,13 +131,13 @@ export function WaitlistForm({
               disabled={status === "loading"}
               className={cn(
                 variant === "panel" &&
-                  "border-white/20 bg-white/10 text-white placeholder:text-white/50 focus:border-white/40 focus:ring-white/25",
+                  "border-paper-50/25 bg-paper-50/10 text-paper-50 placeholder:text-paper-50/60 focus:border-paper-50/45 focus-visible:outline-paper-50 dark:border-ink-300 dark:bg-paper-100 dark:text-ink-900 dark:placeholder:text-ink-500 dark:focus:border-ink-700 dark:focus-visible:outline-ink-700",
               )}
             />
             <p
               className={cn(
-                "mt-1.5 text-xs text-text-tertiary",
-                variant === "panel" && "text-white/60",
+                "mt-1.5 text-xs text-ink-500",
+                variant === "panel" && "text-paper-50/70 dark:text-ink-700",
               )}
             >
               {t("hintNewsletter")}
@@ -150,7 +150,7 @@ export function WaitlistForm({
             className={cn(
               "shrink-0 w-full sm:w-auto",
               variant === "panel" &&
-                "bg-white text-primary hover:bg-white/90 border-0",
+                "border border-paper-50/45 bg-paper-50 text-ink-900 hover:bg-paper-100 focus-visible:outline-paper-50 dark:border-ink-900 dark:bg-ink-900 dark:text-paper-50 dark:hover:bg-ink-700 dark:focus-visible:outline-ink-900",
             )}
             isLoading={status === "loading"}
           >
@@ -158,7 +158,7 @@ export function WaitlistForm({
           </Button>
         </div>
         {status === "error" && errorMessage && (
-          <p className="text-sm text-danger" role="alert">
+          <p className="text-sm text-vermilion-600" role="alert">
             {errorMessage}
           </p>
         )}

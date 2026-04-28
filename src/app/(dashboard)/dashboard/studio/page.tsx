@@ -49,29 +49,29 @@ export default async function StudioPage() {
     <div className="mx-auto w-full max-w-3xl p-6 lg:p-8">
       <div className="mb-8">
         <div className="flex flex-wrap items-center gap-2 mb-2">
-          <h1 className="text-2xl font-semibold text-text-primary tracking-tight">
+          <h1 className="text-2xl font-semibold text-ink-900 tracking-tight">
             {t("metaTitle")}
           </h1>
           <Badge variant="warm-gray">{t("badge")}</Badge>
         </div>
-        <p className="mt-2 text-sm text-text-tertiary leading-relaxed max-w-2xl">
+        <p className="mt-2 text-sm text-ink-500 leading-relaxed max-w-2xl">
           {t("intro")}
         </p>
-        <ul className="mt-4 space-y-2 text-sm text-text-secondary list-disc pl-5 max-w-2xl">
+        <ul className="mt-4 space-y-2 text-sm text-ink-700 list-disc pl-5 max-w-2xl">
           {bullets.map((line) => (
             <li key={line}>{line}</li>
           ))}
         </ul>
       </div>
 
-      <div className="mb-8 mt-8 overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-card">
-        <div className="border-b border-border-subtle p-5 lg:p-6">
+      <div className="mb-8 mt-8 overflow-hidden rounded-[var(--radius-1)] border border-ink-100 bg-paper-0">
+        <div className="border-b border-ink-100 p-5 lg:p-6">
           <StudioSendToProductions episodes={episodeOptions} />
         </div>
-        <div className="flex min-h-[120px] flex-col items-center justify-center bg-layer-02/40 px-5 py-10 text-center">
+        <div className="flex min-h-[120px] flex-col items-center justify-center bg-paper-50/40 px-5 py-10 text-center">
           <Sparkles className="mb-4 h-10 w-10 text-primary" aria-hidden />
-          <p className="text-sm font-medium text-text-primary">{t("building")}</p>
-          <p className="mt-2 max-w-md text-xs leading-relaxed text-text-tertiary">
+          <p className="text-sm font-medium text-ink-900">{t("building")}</p>
+          <p className="mt-2 max-w-md text-xs leading-relaxed text-ink-500">
             {t("note")}
           </p>
         </div>

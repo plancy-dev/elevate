@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { PostHogIdentify } from "@/components/analytics/posthog-identify";
 import { AppShellIntlProvider } from "@/components/dashboard/app-shell-intl-provider";
-import { Sidebar } from "@/components/dashboard/sidebar";
+import { DeskShell } from "@/components/desk";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { ActionErrorMessage } from "@/components/i18n/action-error-message";
 import { loadSidebarUser } from "@/lib/dashboard/load-sidebar-user";
@@ -10,7 +10,10 @@ import { getPosthogPublicConfig } from "@/lib/env/posthog-public";
 import { getAppLocale } from "@/lib/i18n/app-locale";
 import { loadMessagesForLocale } from "@/lib/i18n/app-messages";
 import { createClient } from "@/lib/supabase/server";
-import { canAccessOrganizationAdminConsole } from "@/lib/auth/platform-admin";
+import {
+  canAccessElevateServiceAdmin,
+  canAccessOrganizationAdminConsole,
+} from "@/lib/auth/platform-admin";
 import { canUseDashboard } from "@/lib/auth/dashboard-access";
 
 export default async function DashboardLayout({
@@ -45,7 +48,7 @@ export default async function DashboardLayout({
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-paper-50 p-6">
         <ActionErrorMessage code={ensured.error} />
       </div>
     );
@@ -55,6 +58,21 @@ export default async function DashboardLayout({
 
   const ph = getPosthogPublicConfig();
   const showOrganizationHub = canAccessOrganizationAdminConsole(prof?.role);
+  const showServiceAdmin = canAccessElevateServiceAdmin(user.email);
+
+  const { data: recentEpisodeRows } = prof?.organization_id
+    ? await supabase
+        .from("studio_production_episodes")
+        .select("id,title")
+        .eq("organization_id", prof.organization_id)
+        .order("updated_at", { ascending: false })
+        .limit(5)
+    : { data: [] as { id: string; title: string | null }[] };
+
+  const recentEpisodes = (recentEpisodeRows ?? []).map((episode) => ({
+    id: episode.id,
+    title: episode.title ?? "Untitled episode",
+  }));
 
   const locale = await getAppLocale();
   setRequestLocale(locale);
@@ -62,24 +80,23 @@ export default async function DashboardLayout({
 
   return (
     <AppShellIntlProvider locale={locale} messages={messages}>
-      <div className="flex min-h-screen">
-        <Sidebar
-          user={sidebarUser}
-          showBilling
-          showOrganizationHub={showOrganizationHub}
+      {ph && prof?.organization_id ? (
+        <PostHogIdentify
+          userId={user.id}
+          email={user.email ?? null}
+          organizationId={prof.organization_id}
+          role={prof.role ?? "viewer"}
         />
-        <div className="flex-1 ml-[240px]">
-          {ph && prof?.organization_id ? (
-            <PostHogIdentify
-              userId={user.id}
-              email={user.email ?? null}
-              organizationId={prof.organization_id}
-              role={prof.role ?? "viewer"}
-            />
-          ) : null}
-          {children}
-        </div>
-      </div>
+      ) : null}
+      <DeskShell
+        mode="dashboard"
+        user={sidebarUser}
+        isOrgAdmin={showOrganizationHub}
+        isServiceAdmin={showServiceAdmin}
+        recentEpisodes={recentEpisodes}
+      >
+        {children}
+      </DeskShell>
     </AppShellIntlProvider>
   );
 }

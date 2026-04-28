@@ -850,6 +850,80 @@
       "orgSettings": "Settings",
       "orgNavComingSoon": "Coming soon"
     },
+    "toc": {
+      "collapse": "Collapse",
+      "expand": "Expand",
+      "studio": {
+        "section": "Studio",
+        "productions": "Productions",
+        "projects": "Projects",
+        "integrations": "Integrations",
+        "channels": "Channels"
+      },
+      "scripts": {
+        "section": "Scripts",
+        "promptStudio": "Prompt Studio"
+      },
+      "library": {
+        "section": "Library",
+        "library": "Library"
+      },
+      "house": {
+        "section": "House",
+        "team": "Team",
+        "organization": "Organization",
+        "audit": "Audit",
+        "admin": "Admin"
+      },
+      "settings": {
+        "section": "Settings",
+        "profile": "Profile",
+        "billing": "Billing",
+        "help": "Help"
+      },
+      "admin": {
+        "content": "Content",
+        "waitlist": "Waitlist",
+        "purchaseAllowlist": "Checkout allowlist",
+        "promptStudioAllowlist": "Prompt Studio beta"
+      }
+    },
+    "commandBar": {
+      "placeholder": "Type a command or route...",
+      "empty": "No results",
+      "recentEmpty": "No recent episodes",
+      "group": {
+        "routes": "Routes",
+        "recentEpisodes": "Recent episodes",
+        "help": "Help"
+      },
+      "routes": {
+        "overview": "Overview",
+        "productions": "Productions",
+        "promptStudio": "Prompt Studio",
+        "publish": "Publish",
+        "library": "Library",
+        "settings": "Settings",
+        "content": "Content",
+        "waitlist": "Waitlist"
+      },
+      "help": {
+        "default": "Help & Support",
+        "admin": "Admin Home"
+      }
+    },
+    "shellTitles": {
+      "overview": "Overview",
+      "productions": "Productions",
+      "studio": "Prompt Studio",
+      "library": "Library",
+      "settings": "Settings",
+      "help": "Help & Support",
+      "billing": "Billing",
+      "team": "Team",
+      "organization": "Organization",
+      "admin": "Admin"
+    },
     "overview": {
       "title": "Overview",
       "liveData": "Live data",

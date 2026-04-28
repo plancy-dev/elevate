@@ -13,7 +13,7 @@ export function isUnhelpfulTossClientErrorMessage(message: string): boolean {
   const low = s.toLowerCase();
   if (low.includes("unknownerror") || low.includes("widgets.unknown")) return true;
   if (low === "unknown" || low === "unknown error") return true;
-  if (low.startsWith("unknown ") && low.length < 80) return true;
+  if (low.startsWith("unknown") && low.length < 80) return true;
 
   return false;
 }

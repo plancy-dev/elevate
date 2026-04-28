@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { PostHogIdentify } from "@/components/analytics/posthog-identify";
-import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AppShellIntlProvider } from "@/components/dashboard/app-shell-intl-provider";
+import { DeskShell } from "@/components/desk";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { ActionErrorMessage } from "@/components/i18n/action-error-message";
 import { loadSidebarUser } from "@/lib/dashboard/load-sidebar-user";
@@ -29,7 +29,7 @@ export default async function AdminLayout({
   const ensured = await ensureDefaultOrganization();
   if (!ensured.ok) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-paper-50 p-6">
         <ActionErrorMessage code={ensured.error} />
       </div>
     );
@@ -54,20 +54,23 @@ export default async function AdminLayout({
 
   return (
     <AppShellIntlProvider locale={locale} messages={messages}>
-      <div className="flex min-h-screen">
-        <AdminSidebar user={sidebarUser} />
-        <div className="flex-1 ml-[240px]">
-          {ph && prof?.organization_id ? (
-            <PostHogIdentify
-              userId={user.id}
-              email={user.email ?? null}
-              organizationId={prof.organization_id}
-              role={prof.role ?? "viewer"}
-            />
-          ) : null}
-          {children}
-        </div>
-      </div>
+      {ph && prof?.organization_id ? (
+        <PostHogIdentify
+          userId={user.id}
+          email={user.email ?? null}
+          organizationId={prof.organization_id}
+          role={prof.role ?? "viewer"}
+        />
+      ) : null}
+      <DeskShell
+        mode="admin"
+        user={sidebarUser}
+        isOrgAdmin
+        isServiceAdmin
+        recentEpisodes={[]}
+      >
+        {children}
+      </DeskShell>
     </AppShellIntlProvider>
   );
 }

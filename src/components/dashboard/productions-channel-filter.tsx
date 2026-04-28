@@ -7,7 +7,7 @@ import { FieldSelect } from "@/components/ui/field-select";
 export function ProductionsChannelFilter({
   channels,
   currentChannelId,
-  /** Preserved when changing channel (`""` = all, `"none"` = unassigned, else project id). */
+  /** Preserved when changing channel (`""`= all,`"none"` = unassigned, else project id). */
   preserveProjectParam,
   controlLabel,
 }: {
@@ -39,7 +39,7 @@ export function ProductionsChannelFilter({
   return (
     <div className="w-full min-w-0 max-w-full sm:max-w-xs sm:min-w-[12rem]">
       {controlLabel ? (
-        <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-text-tertiary">
+        <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-ink-500">
           {controlLabel}
         </p>
       ) : null}

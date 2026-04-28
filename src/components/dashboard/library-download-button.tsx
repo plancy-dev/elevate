@@ -33,12 +33,12 @@ export function LibraryPdfDownloadActions({ productId }: Props) {
       >
         {t("download")}
       </a>
-      <span className="hidden text-text-tertiary sm:inline" aria-hidden>
+      <span className="hidden text-ink-500 sm:inline" aria-hidden>
         ·
       </span>
       <a
         href={`${base}?disposition=inline`}
-        className="text-sm font-medium text-text-secondary hover:text-primary hover:underline"
+        className="text-sm font-medium text-ink-700 hover:text-primary hover:underline"
         target="_blank"
         rel="noreferrer"
         onClick={() => capture("inline")}

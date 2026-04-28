@@ -95,15 +95,15 @@ export function TeamPageClient({
   return (
     <div className="p-6 space-y-8">
       {canInvite && (
-        <section className="border border-border-subtle bg-layer-01 p-6 max-w-lg">
-          <h2 className="text-sm font-medium text-text-primary mb-4">
+        <section className="border border-ink-100 bg-paper-0 p-6 max-w-lg">
+          <h2 className="text-sm font-medium text-ink-900 mb-4">
             {t("inviteTitle")}
           </h2>
           <form action={inviteAction} className="flex flex-col gap-3">
             <div>
               <label
                 htmlFor="invite-email"
-                className="block text-xs font-medium text-text-secondary mb-1"
+                className="block text-xs font-medium text-ink-700 mb-1"
               >
                 {t("email")}
               </label>
@@ -113,13 +113,13 @@ export function TeamPageClient({
                 type="email"
                 required
                 autoComplete="email"
-                className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
+                className="h-10 w-full bg-paper-0 border border-ink-100 px-3 text-sm text-ink-900 focus:outline-none focus:border-focus"
               />
             </div>
             <div>
               <label
                 htmlFor="invite-role"
-                className="block text-xs font-medium text-text-secondary mb-1"
+                className="block text-xs font-medium text-ink-700 mb-1"
               >
                 {t("role")}
               </label>
@@ -127,7 +127,7 @@ export function TeamPageClient({
                 id="invite-role"
                 name="role"
                 defaultValue="viewer"
-                className="h-10 w-full bg-field border border-border-subtle px-3 text-sm text-text-primary focus:outline-none focus:border-focus"
+                className="h-10 w-full bg-paper-0 border border-ink-100 px-3 text-sm text-ink-900 focus:outline-none focus:border-focus"
               >
                 {ROLES.map((r) => (
                   <option key={r} value={r}>
@@ -155,13 +155,13 @@ export function TeamPageClient({
       )}
 
       <section>
-        <h2 className="text-sm font-medium text-text-primary mb-3">
+        <h2 className="text-sm font-medium text-ink-900 mb-3">
           {t("members")}
         </h2>
-        <div className="border border-border-subtle bg-layer-01 overflow-x-auto">
+        <div className="border border-ink-100 bg-paper-0 overflow-x-auto">
           <table className="w-full text-sm min-w-[520px]">
             <thead>
-              <tr className="border-b border-border-subtle text-left text-xs text-text-tertiary uppercase tracking-wider">
+              <tr className="border-b border-ink-100 text-left text-xs text-ink-500 uppercase tracking-wider">
                 <th className="px-4 py-2 font-medium">{t("colName")}</th>
                 <th className="px-4 py-2 font-medium">{t("colEmail")}</th>
                 <th className="px-4 py-2 font-medium">{t("colRole")}</th>
@@ -171,10 +171,10 @@ export function TeamPageClient({
               {members.map((m) => (
                 <tr
                   key={m.id}
-                  className="border-b border-border-subtle last:border-0 hover:bg-layer-02"
+                  className="border-b border-ink-100 last:border-0 hover:bg-paper-50"
                 >
-                  <td className="px-4 py-3 text-text-primary">{m.displayName}</td>
-                  <td className="px-4 py-3 text-text-tertiary text-xs">
+                  <td className="px-4 py-3 text-ink-900">{m.displayName}</td>
+                  <td className="px-4 py-3 text-ink-500 text-xs">
                     {m.email}
                   </td>
                   <td className="px-4 py-3">
@@ -183,7 +183,7 @@ export function TeamPageClient({
                         defaultValue={m.role}
                         disabled={rolePending}
                         onChange={(e) => onRoleChange(m.id, e.target.value)}
-                        className="h-8 bg-field border border-border-subtle px-2 text-xs text-text-primary"
+                        className="h-8 bg-paper-0 border border-ink-100 px-2 text-xs text-ink-900"
                       >
                         {ROLES.map((r) => (
                           <option key={r} value={r}>
@@ -192,7 +192,7 @@ export function TeamPageClient({
                         ))}
                       </select>
                     ) : (
-                      <span className="text-text-secondary">
+                      <span className="text-ink-700">
                         {tRoles(roleTranslationKey(m.role))}
                       </span>
                     )}
@@ -206,22 +206,22 @@ export function TeamPageClient({
 
       {canInvite && invitations.length > 0 && (
         <section>
-          <h2 className="text-sm font-medium text-text-primary mb-3">
+          <h2 className="text-sm font-medium text-ink-900 mb-3">
             {t("pendingInvitations")}
           </h2>
           <ul className="space-y-3">
             {invitations.map((inv) => (
               <li
                 key={inv.id}
-                className="border border-border-subtle bg-layer-01 p-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+                className="border border-ink-100 bg-paper-0 p-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <div className="text-sm text-text-primary">{inv.email}</div>
-                  <div className="text-xs text-text-tertiary">
-                    {tRoles(roleTranslationKey(inv.role))} ·{" "}
+                  <div className="text-sm text-ink-900">{inv.email}</div>
+                  <div className="text-xs text-ink-500">
+                    {tRoles(roleTranslationKey(inv.role))} ·{""}
                     {t("expires", { date: formatExpires(inv.expiresAt) })}
                   </div>
-                  <div className="mt-2 text-xs text-text-tertiary break-all font-mono">
+                  <div className="mt-2 text-xs text-ink-500 break-all font-mono">
                     {inviteAbsoluteUrl(inv.token)}
                   </div>
                 </div>

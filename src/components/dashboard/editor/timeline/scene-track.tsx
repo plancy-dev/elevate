@@ -26,7 +26,7 @@ export function SceneTrack({ pxPerSec }: { pxPerSec: number }) {
 
   if (dsl.scenes.length === 0) {
     return (
-      <p className="px-3 py-2 text-[11px] text-text-tertiary">
+      <p className="px-3 py-2 font-mono text-[11px] text-ink-500">
         {t("sceneTrackEmpty")}
       </p>
     );
@@ -82,25 +82,25 @@ export function SceneTrack({ pxPerSec }: { pxPerSec: number }) {
               })
             }
             className={cn(
-              "absolute top-1 bottom-1 flex items-center gap-1 overflow-hidden rounded border px-2 text-left text-[10px] font-medium transition-shadow",
+              "absolute top-1 bottom-1 flex items-center gap-1 overflow-hidden border px-2 text-left font-mono text-[10px] transition-colors duration-80 ease-(--ease-editorial)",
               hasSource
-                ? "border-primary/40 bg-primary/10 text-primary hover:bg-primary/20"
-                : "border-amber-500/40 bg-amber-500/10 text-amber-900 dark:text-amber-100/95",
-              isSelected && "ring-2 ring-primary ring-offset-1",
+                ? "border-ink-300 bg-paper-0 text-ink-700 hover:border-ink-900 hover:text-ink-900"
+                : "border-vermilion-600/40 bg-vermilion-100/40 text-vermilion-600",
+              isSelected && "border-vermilion-600 text-ink-900",
               isBeingDragged && "opacity-40",
-              isDropTarget && "ring-2 ring-primary/60",
+              isDropTarget && "border-vermilion-600",
             )}
             style={{ left, width }}
             title={scene.sourceUrl || t("sceneSourceMissing")}
           >
             <span className="truncate">#{i + 1}</span>
             {scene.loop ? (
-              <span className="rounded-sm bg-white/30 px-0.5 text-[8px] uppercase">
+              <span className="border border-ink-100 bg-paper-100 px-0.5 text-[8px] uppercase text-ink-500">
                 {t("sceneBadgeLoop")}
               </span>
             ) : null}
             {(scene.transitionToNextMs ?? 0) > 0 && i < dsl.scenes.length - 1 ? (
-              <span className="rounded-sm bg-white/30 px-0.5 text-[8px] uppercase">
+              <span className="border border-ink-100 bg-paper-100 px-0.5 text-[8px] uppercase text-ink-500">
                 {t("sceneBadgeTransition", {
                   ms: scene.transitionToNextMs ?? 0,
                 })}

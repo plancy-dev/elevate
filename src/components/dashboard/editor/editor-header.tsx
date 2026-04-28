@@ -38,37 +38,37 @@ export function EditorHeader({
   const status = useEditorSaveStatus();
 
   return (
-    <header className="flex items-center justify-between border-b border-border-subtle bg-layer-01 px-4 py-2.5">
+    <header className="flex items-center justify-between border-b border-ink-100 bg-paper-100 px-4 py-2.5">
       <div className="flex items-center gap-3">
         <Link
           href={`/dashboard/productions/${episodeId}?tab=episode`}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border-subtle text-text-secondary hover:bg-layer-02 hover:text-text-primary"
+          className="inline-flex h-8 w-8 items-center justify-center border border-ink-300 text-ink-500 transition-colors duration-80 ease-(--ease-editorial) hover:border-ink-900 hover:bg-paper-0 hover:text-ink-900"
           aria-label={t("closeAria")}
         >
           <X className="h-4 w-4" aria-hidden />
         </Link>
         <div className="min-w-0">
-          <p className="text-[11px] font-medium uppercase tracking-wide text-text-tertiary">
+          <p className="font-mono text-[11px] uppercase tracking-[0.04em] text-ink-500">
             {t("breadcrumb")}
           </p>
-          <h1 className="max-w-[48ch] truncate text-sm font-semibold text-text-primary">
+          <h1 className="max-w-[48ch] truncate text-sm font-semibold text-ink-900">
             {episodeTitle}
           </h1>
         </div>
       </div>
-      <div className="flex items-center gap-3 text-xs text-text-tertiary">
+      <div className="flex items-center gap-3 text-xs text-ink-500">
         <span
           className={
             status.state === "error"
-              ? "text-danger"
+              ? "text-vermilion-600"
               : status.state === "saving"
-                ? "text-primary"
-                : "text-text-tertiary"
+                ? "text-vermilion-600"
+                : "text-ink-500"
           }
         >
           {statusLabel(status, t)}
         </span>
-        <span className="rounded-md border border-border-subtle bg-layer-02 px-2 py-0.5">
+        <span className="border border-ink-100 bg-paper-0 px-2 py-0.5 font-mono text-[11px]">
           {t("stats", {
             scenes: dsl.scenes.length,
             overlays: dsl.overlays.length,

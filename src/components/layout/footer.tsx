@@ -40,19 +40,19 @@ export async function Footer() {
     ];
 
   return (
-    <footer className="border-t border-marketing-border-subtle bg-marketing-canvas">
+    <footer className="border-t border-ink-100 bg-marketing-canvas">
       <div className="mx-auto max-w-[1584px] px-4 py-10 lg:px-8">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div className="col-span-2 md:col-span-1">
             <ElevateLogo size="sm" />
-            <p className="mt-4 text-xs text-text-tertiary leading-relaxed max-w-[220px]">
+            <p className="mt-4 max-w-[220px] text-xs leading-relaxed text-ink-500">
               {t("tagline")}
             </p>
           </div>
 
           {footerColumns.map((column) => (
             <div key={column.title}>
-              <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-3">
+              <h3 className="mb-3 font-mono text-xs uppercase tracking-[0.08em] text-ink-500">
                 {column.title}
               </h3>
               <ul className="space-y-2">
@@ -60,7 +60,7 @@ export async function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-xs text-text-tertiary transition-colors hover:text-text-primary"
+                      className="text-xs text-ink-500 transition-colors duration-80 ease-(--ease-editorial) hover:text-ink-900"
                     >
                       {link.label}
                     </Link>
@@ -71,14 +71,14 @@ export async function Footer() {
           ))}
         </div>
 
-        <div className="mt-8 border-t border-border-subtle pt-4 flex flex-col sm:flex-row justify-between items-center gap-2">
-          <p className="text-xs text-text-tertiary">
+        <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-ink-100 pt-4 sm:flex-row">
+          <p className="text-xs text-ink-500">
             {t("copyright", { year })}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-            <span className="text-xs text-text-tertiary">{t("badgeSoc2")}</span>
-            <span className="text-xs text-text-tertiary">{t("badgeGdpr")}</span>
-            <span className="text-xs text-text-tertiary">{t("badgeIso")}</span>
+            <span className="text-xs text-ink-500">{t("badgeSoc2")}</span>
+            <span className="text-xs text-ink-500">{t("badgeGdpr")}</span>
+            <span className="text-xs text-ink-500">{t("badgeIso")}</span>
           </div>
         </div>
       </div>

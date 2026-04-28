@@ -99,13 +99,13 @@ function EpisodePanelIntro({
   const t = useTranslations("Dashboard.productions");
   return (
     <div className="mb-6 max-w-prose">
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+      <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-500">
         {t(phaseKey)}
       </p>
-      <h2 className="mt-1.5 text-base font-semibold tracking-tight text-text-primary">
+      <h2 className="mt-1.5 text-base font-semibold tracking-tight text-ink-900">
         {t(titleKey)}
       </h2>
-      <p className="mt-2 text-sm text-text-secondary leading-relaxed">{t(bodyKey)}</p>
+      <p className="mt-2 text-sm leading-relaxed text-ink-700">{t(bodyKey)}</p>
     </div>
   );
 }
@@ -234,34 +234,34 @@ function ProductionEpisodeDetailWorkspaceInner({
   const linkedChannel = episode.studio_distribution_channels;
 
   return (
-    <article className="mb-6 overflow-hidden rounded-xl border border-border-subtle bg-layer-01 shadow-sm dark:border-border-subtle">
-      <header className="flex flex-col gap-3 border-b border-border-subtle bg-layer-02/40 px-5 py-4 sm:flex-row sm:items-start sm:justify-between">
+    <article className="mb-6 overflow-hidden border border-ink-100 bg-paper-100">
+      <header className="flex flex-col gap-3 border-b border-ink-100 bg-paper-50 px-5 py-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-xl font-semibold tracking-tight text-text-primary sm:text-2xl">
+            <h1 className="text-xl font-semibold tracking-tight text-ink-900 sm:text-2xl">
               {episode.title}
             </h1>
-            <span className="rounded-full border border-primary/25 bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-primary">
+            <span className="border border-vermilion-600/30 bg-paper-0 px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.04em] text-vermilion-600">
               {t(statusKey)}
             </span>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
             {channelLine ? (
-              <p className="text-sm text-text-secondary">{channelLine}</p>
+              <p className="text-sm text-ink-700">{channelLine}</p>
             ) : null}
             {linkedChannel ? (
               <a
                 href={linkedChannel.channel_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-border-subtle bg-layer-01/80 px-3 py-1.5 text-sm font-medium text-primary hover:bg-layer-01 dark:bg-layer-02/90"
+                className="inline-flex w-fit items-center gap-1.5 border border-ink-100 bg-paper-100 px-3 py-1.5 text-sm font-medium text-vermilion-600 hover:border-ink-900"
               >
                 <ExternalLink className="h-4 w-4 shrink-0" aria-hidden />
                 {t("episodeChannelCta", { label: linkedChannel.label })}
               </a>
             ) : null}
           </div>
-          <p className="text-sm leading-relaxed text-text-tertiary max-w-prose">
+          <p className="max-w-prose text-sm leading-relaxed text-ink-500">
             {t("episodeWorkspaceSubtitleV2")}
           </p>
         </div>
@@ -276,7 +276,7 @@ function ProductionEpisodeDetailWorkspaceInner({
       <div
         role="tablist"
         aria-label={t("episodeDetailSubtabsAria")}
-        className="flex flex-wrap items-center gap-1 border-b border-border-subtle bg-layer-02/30 p-2 dark:border-border-subtle dark:bg-layer-02/45"
+        className="flex flex-wrap items-center gap-1 border-b border-ink-100 bg-paper-50 p-2"
         onKeyDown={onSubtabKeyDown}
       >
         {EPISODE_DETAIL_PANEL_IDS.map((id) => {
@@ -297,10 +297,10 @@ function ProductionEpisodeDetailWorkspaceInner({
                 aria-controls={`${baseId}-panel-${id}`}
                 tabIndex={selected ? 0 : -1}
                 className={cn(
-                  "min-h-[38px] inline-flex flex-1 cursor-pointer items-center justify-start gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors sm:flex-none sm:min-w-30 sm:px-4",
+                  "inline-flex min-h-[38px] flex-1 cursor-pointer items-center justify-start gap-2 px-3 py-2 text-left text-sm font-medium transition-colors duration-80 ease-(--ease-editorial) sm:min-w-30 sm:flex-none sm:px-4",
                   selected
-                    ? "bg-layer-01 text-text-primary shadow-sm ring-1 ring-border-subtle dark:ring-border-subtle"
-                    : "text-text-secondary hover:bg-layer-01/85 hover:text-text-primary dark:hover:bg-white/5",
+                    ? "border border-ink-100 bg-paper-100 text-ink-900"
+                    : "border border-transparent text-ink-600 hover:border-ink-100 hover:bg-paper-100 hover:text-ink-900",
                 )}
                 onClick={() => {
                   setPanelAndUrl(id);
@@ -314,7 +314,7 @@ function ProductionEpisodeDetailWorkspaceInner({
               </button>
               {TAB_DIVIDER_AFTER.includes(id) ? (
                 <div
-                  className="hidden h-7 w-px shrink-0 self-center bg-border-subtle/90 sm:block"
+                  className="hidden h-7 w-px shrink-0 self-center bg-ink-100 sm:block"
                   aria-hidden
                 />
               ) : null}
@@ -412,7 +412,7 @@ function ProductionEpisodeDetailWorkspaceInner({
             />
           </div>
         </section>
-        <div className="border-t border-border-subtle px-5 py-4 sm:px-6">
+        <div className="border-t border-ink-100 px-5 py-4 sm:px-6">
           {helpSection}
         </div>
       </div>
@@ -423,7 +423,7 @@ function ProductionEpisodeDetailWorkspaceInner({
 function DetailWorkspaceFallback() {
   return (
     <div
-      className="mb-6 h-[min(28rem,70vh)] animate-pulse rounded-xl border border-border-subtle bg-layer-02/50 shadow-sm dark:bg-layer-02/35"
+      className="mb-6 h-[min(28rem,70vh)] animate-pulse border border-ink-100 bg-paper-100"
       aria-hidden
     />
   );

@@ -17,7 +17,7 @@ export default async function CareersPage({ params }: Props) {
   const t = await getTranslations("Careers");
 
   return (
-    <div className="border-t border-marketing-border-subtle">
+    <div className="border-t border-ink-100">
       <MarketingSection title={t("title")} description={t("description")} />
     </div>
   );

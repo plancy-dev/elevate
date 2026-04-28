@@ -39,13 +39,11 @@ export function FieldSelect({
         id={id}
         className={cn(
           height,
-          "w-full min-w-0 appearance-none rounded-lg border border-border-subtle bg-field",
-          "pl-3 pr-10",
-          "text-sm",
-          "text-text-primary",
-          "cursor-pointer shadow-none outline-none transition-colors",
-          "hover:border-border-subtle focus-visible:border-focus focus-visible:ring-2 focus-visible:ring-focus/20",
-          "disabled:cursor-not-allowed disabled:opacity-50",
+          "w-full min-w-0 appearance-none border-b border-ink-300 bg-transparent",
+          "pl-0 pr-8 text-sm text-ink-900",
+          "cursor-pointer outline-none transition-[border-color,border-width] duration-[80ms] [transition-timing-function:var(--ease-editorial)]",
+          "focus-visible:border-b-2 focus-visible:border-vermilion-600",
+          "disabled:cursor-not-allowed disabled:opacity-40",
           className,
         )}
         {...props}
@@ -67,7 +65,7 @@ export function FieldSelect({
             ))}
       </select>
       <span
-        className="pointer-events-none absolute right-3 top-1/2 z-[1] -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-md bg-field/90 text-text-tertiary"
+        className="pointer-events-none absolute right-0 top-1/2 z-[1] -translate-y-1/2 flex h-7 w-7 items-center justify-center text-ink-500"
         aria-hidden
       >
         <ChevronDown className="h-4 w-4 shrink-0 opacity-80" strokeWidth={2} />

@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link, { useLinkStatus } from "next/link";
 import { type ButtonHTMLAttributes, forwardRef, type ReactNode } from "react";
+import { ShortcutBadge } from "@/components/desk/ShortcutBadge";
 import {
   buttonLinkClassName,
   sizeStyles,
@@ -17,6 +18,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   isLoading?: boolean;
+  shortcut?: ReadonlyArray<string>;
+  loadingLabel?: string;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -26,6 +29,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant = "primary",
       size = "md",
       isLoading,
+      shortcut,
+      loadingLabel = "...",
       disabled,
       children,
       ...props
@@ -37,41 +42,31 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         className={cn(
-          "inline-flex items-center justify-center gap-2 font-medium transition-colors duration-100 cursor-pointer",
+          "inline-flex items-center justify-center gap-3 whitespace-nowrap border rounded-sm font-sans font-medium leading-[1.3] tracking-[0.01em]",
+          "transition-[background-color,color,border-color,box-shadow] duration-80 ease-(--ease-editorial)",
+          "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-vermilion-600 focus-visible:ring-offset-1 focus-visible:ring-offset-paper-50",
           "disabled:opacity-40 disabled:cursor-not-allowed",
-          variant !== "marketing" && "rounded-lg",
-          variant !== "marketing" &&
-            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
-          variant === "marketing" &&
-            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marketing-accent",
+          shortcut && !isLoading && "justify-between",
           variantStyles[variant],
           sizeStyles[size],
           className,
         )}
         {...props}
       >
-        {isLoading && (
-          <svg
-            className="h-4 w-4 animate-spin"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            />
-          </svg>
+        {isLoading ? (
+          <span className="font-mono text-[11px] uppercase tracking-[0.04em]">
+            {loadingLabel}
+          </span>
+        ) : (
+          <>
+            <span className="inline-flex min-w-0 items-center gap-1 whitespace-nowrap">
+              {children}
+            </span>
+            {shortcut?.length ? (
+              <ShortcutBadge keys={shortcut} density="inline" />
+            ) : null}
+          </>
         )}
-        {children}
       </button>
     );
   },
@@ -86,6 +81,7 @@ type ButtonLinkProps = {
   className?: string;
   children: ReactNode;
   onClick?: () => void;
+  shortcut?: ReadonlyArray<string>;
 };
 
 function ButtonLinkNavPendingOverlay() {
@@ -93,29 +89,12 @@ function ButtonLinkNavPendingOverlay() {
   if (!pending) return null;
   return (
     <span
-      className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[inherit] bg-layer-01/75 backdrop-blur-[0.5px] dark:bg-black/50"
+      className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[inherit] bg-paper-50/75"
       aria-hidden
     >
-      <svg
-        className="h-4 w-4 animate-spin text-primary"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden
-      >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        />
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-        />
-      </svg>
+      <span className="font-mono text-[11px] uppercase tracking-[0.04em] text-ink-700">
+        ...
+      </span>
     </span>
   );
 }
@@ -127,6 +106,7 @@ export function ButtonLink({
   className,
   children,
   onClick,
+  shortcut,
 }: ButtonLinkProps) {
   return (
     <Link
@@ -134,12 +114,18 @@ export function ButtonLink({
       onClick={onClick}
       className={cn(
         "relative overflow-hidden",
+        shortcut && "justify-between",
         buttonLinkClassName(variant, size, className),
       )}
     >
       <ButtonLinkNavPendingOverlay />
-      <span className="relative inline-flex items-center justify-center gap-2">
-        {children}
+      <span className="relative inline-flex min-w-0 items-center justify-center gap-3">
+        <span className="inline-flex min-w-0 items-center gap-1 whitespace-nowrap">
+          {children}
+        </span>
+        {shortcut?.length ? (
+          <ShortcutBadge keys={shortcut} density="inline" />
+        ) : null}
       </span>
     </Link>
   );
