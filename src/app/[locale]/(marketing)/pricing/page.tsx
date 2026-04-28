@@ -6,8 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import {
   buildBlogSubscriptionCheckoutUrl,
   getBlogSubscriptionByUserId,
-  LEMON_ANNUAL_VARIANT_ID,
-  LEMON_MONTHLY_VARIANT_ID,
+  POLAR_ANNUAL_PRODUCT_ID,
+  POLAR_MONTHLY_PRODUCT_ID,
 } from "@/lib/subscriptions/blog-subscription";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -28,11 +28,11 @@ export default async function PricingPage({ params }: Props) {
   const subscription = await getBlogSubscriptionByUserId(supabase, user?.id ?? null);
 
   const monthlyCheckoutUrl = buildBlogSubscriptionCheckoutUrl({
-    variantId: LEMON_MONTHLY_VARIANT_ID,
+    productId: POLAR_MONTHLY_PRODUCT_ID,
     email: user?.email,
   });
   const annualCheckoutUrl = buildBlogSubscriptionCheckoutUrl({
-    variantId: LEMON_ANNUAL_VARIANT_ID,
+    productId: POLAR_ANNUAL_PRODUCT_ID,
     email: user?.email,
   });
 

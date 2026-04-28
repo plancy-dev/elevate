@@ -3,15 +3,15 @@ import {
   buildBlogSubscriptionCheckoutUrl,
   canReadBlogPost,
   canReadPremiumBlogPost,
-  LEMON_ANNUAL_VARIANT_ID,
-  LEMON_MONTHLY_VARIANT_ID,
+  POLAR_ANNUAL_PRODUCT_ID,
+  POLAR_MONTHLY_PRODUCT_ID,
   mapVariantIdToBlogTier,
 } from "@/lib/subscriptions/blog-subscription";
 
 describe("mapVariantIdToBlogTier", () => {
-  it("maps fixed Lemon variant ids to monthly/annual", () => {
-    expect(mapVariantIdToBlogTier(LEMON_MONTHLY_VARIANT_ID)).toBe("monthly");
-    expect(mapVariantIdToBlogTier(String(LEMON_ANNUAL_VARIANT_ID))).toBe("annual");
+  it("maps configured payment product ids to monthly/annual", () => {
+    expect(mapVariantIdToBlogTier(POLAR_MONTHLY_PRODUCT_ID)).toBe("monthly");
+    expect(mapVariantIdToBlogTier(String(POLAR_ANNUAL_PRODUCT_ID))).toBe("annual");
   });
 
   it("returns null for unknown variants", () => {
@@ -21,21 +21,22 @@ describe("mapVariantIdToBlogTier", () => {
 });
 
 describe("buildBlogSubscriptionCheckoutUrl", () => {
-  it("adds checkout[email] when email is provided", () => {
+  it("adds Polar checkout params when email is provided", () => {
     const url = buildBlogSubscriptionCheckoutUrl({
-      variantId: LEMON_MONTHLY_VARIANT_ID,
+      productId: POLAR_MONTHLY_PRODUCT_ID,
       email: "user@example.com",
     });
-    expect(url).toContain(`/checkout/buy/${LEMON_MONTHLY_VARIANT_ID}`);
-    expect(url).toContain("checkout%5Bemail%5D=user%40example.com");
+    expect(url).toContain("product_id=3e8c060a-93ee-4ef0-8d4d-b62e92d66a5a");
+    expect(url).toContain("customer_email=user%40example.com");
   });
 
-  it("returns plain hosted checkout url for guest users", () => {
+  it("returns Polar checkout url for guest users", () => {
     const url = buildBlogSubscriptionCheckoutUrl({
-      variantId: LEMON_ANNUAL_VARIANT_ID,
+      productId: POLAR_ANNUAL_PRODUCT_ID,
       email: null,
     });
-    expect(url).toBe(`https://elevate.lemonsqueezy.com/checkout/buy/${LEMON_ANNUAL_VARIANT_ID}`);
+    expect(url).toContain("https://polar.sh/checkout");
+    expect(url).toContain("product_id=fd78d399-dc29-4126-86a6-5a91a1215894");
   });
 });
 

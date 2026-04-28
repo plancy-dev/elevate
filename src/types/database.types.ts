@@ -1588,6 +1588,8 @@ export type Database = {
           event_id: string
           event_name: string
           lemon_squeezy_subscription_id: string | null
+          payment_provider: string | null
+          payment_subscription_id: string | null
           payload: Json
           processed_at: string
         }
@@ -1595,6 +1597,8 @@ export type Database = {
           event_id: string
           event_name: string
           lemon_squeezy_subscription_id?: string | null
+          payment_provider?: string | null
+          payment_subscription_id?: string | null
           payload?: Json
           processed_at?: string
         }
@@ -1602,6 +1606,8 @@ export type Database = {
           event_id?: string
           event_name?: string
           lemon_squeezy_subscription_id?: string | null
+          payment_provider?: string | null
+          payment_subscription_id?: string | null
           payload?: Json
           processed_at?: string
         }
@@ -1614,6 +1620,9 @@ export type Database = {
           lemon_squeezy_subscription_id: string | null
           lemon_squeezy_variant_id: number | null
           manage_subscription_url: string | null
+          payment_product_id: string | null
+          payment_provider: string | null
+          payment_subscription_id: string | null
           subscription_status: Database["public"]["Enums"]["blog_subscription_status"] | null
           subscription_tier: Database["public"]["Enums"]["blog_subscription_tier"]
           updated_at: string
@@ -1625,6 +1634,9 @@ export type Database = {
           lemon_squeezy_subscription_id?: string | null
           lemon_squeezy_variant_id?: number | null
           manage_subscription_url?: string | null
+          payment_product_id?: string | null
+          payment_provider?: string | null
+          payment_subscription_id?: string | null
           subscription_status?: Database["public"]["Enums"]["blog_subscription_status"] | null
           subscription_tier?: Database["public"]["Enums"]["blog_subscription_tier"]
           updated_at?: string
@@ -1636,6 +1648,9 @@ export type Database = {
           lemon_squeezy_subscription_id?: string | null
           lemon_squeezy_variant_id?: number | null
           manage_subscription_url?: string | null
+          payment_product_id?: string | null
+          payment_provider?: string | null
+          payment_subscription_id?: string | null
           subscription_status?: Database["public"]["Enums"]["blog_subscription_status"] | null
           subscription_tier?: Database["public"]["Enums"]["blog_subscription_tier"]
           updated_at?: string

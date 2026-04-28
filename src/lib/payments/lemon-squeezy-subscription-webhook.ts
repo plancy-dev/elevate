@@ -122,6 +122,8 @@ async function insertWebhookEventIfNew(args: {
       event_id: args.eventId,
       event_name: args.eventName,
       lemon_squeezy_subscription_id: args.subscriptionId,
+      payment_provider: "lemonsqueezy",
+      payment_subscription_id: args.subscriptionId,
       payload: (args.body ?? {}) as Database["public"]["Tables"]["user_blog_subscription_webhook_events"]["Insert"]["payload"],
     });
   if (!error) return true;
@@ -181,6 +183,10 @@ export async function processLemonSqueezySubscriptionWebhook(args: {
     user_id: userId,
     subscription_tier: next.tier,
     subscription_status: next.status,
+    payment_provider: "lemonsqueezy",
+    payment_subscription_id: payload.subscriptionId,
+    payment_product_id:
+      payload.variantId != null ? String(payload.variantId) : null,
     lemon_squeezy_subscription_id: payload.subscriptionId,
     lemon_squeezy_variant_id: payload.variantId,
     current_period_end: payload.periodEnd,

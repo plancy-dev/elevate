@@ -21,8 +21,8 @@ import {
   buildBlogSubscriptionCheckoutUrl,
   canReadBlogPost,
   getBlogSubscriptionByUserId,
-  LEMON_ANNUAL_VARIANT_ID,
-  LEMON_MONTHLY_VARIANT_ID,
+  POLAR_ANNUAL_PRODUCT_ID,
+  POLAR_MONTHLY_PRODUCT_ID,
 } from "@/lib/subscriptions/blog-subscription";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -105,11 +105,11 @@ export default async function BlogPostPage({ params }: Props) {
     subscription,
   });
   const monthlyCheckoutUrl = buildBlogSubscriptionCheckoutUrl({
-    variantId: LEMON_MONTHLY_VARIANT_ID,
+    productId: POLAR_MONTHLY_PRODUCT_ID,
     email: user?.email,
   });
   const annualCheckoutUrl = buildBlogSubscriptionCheckoutUrl({
-    variantId: LEMON_ANNUAL_VARIANT_ID,
+    productId: POLAR_ANNUAL_PRODUCT_ID,
     email: user?.email,
   });
   const base = getSiteUrl();

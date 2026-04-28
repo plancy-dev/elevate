@@ -1,8 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database.types";
 
-export const LEMON_MONTHLY_VARIANT_ID = 1585015;
-export const LEMON_ANNUAL_VARIANT_ID = 1585028;
+export const POLAR_MONTHLY_PRODUCT_ID = "3e8c060a-93ee-4ef0-8d4d-b62e92d66a5a";
+export const POLAR_ANNUAL_PRODUCT_ID = "fd78d399-dc29-4126-86a6-5a91a1215894";
 
 export type BlogSubscriptionTier = Database["public"]["Enums"]["blog_subscription_tier"];
 export type BlogSubscriptionStatus = Database["public"]["Enums"]["blog_subscription_status"];
@@ -15,6 +15,9 @@ export type BlogSubscriptionSnapshot = {
   status: BlogSubscriptionStatus | null;
   currentPeriodEnd: string | null;
   manageSubscriptionUrl: string | null;
+  paymentProvider?: string | null;
+  paymentSubscriptionId?: string | null;
+  paymentProductId?: string | null;
   lemonSubscriptionId: string | null;
   lemonVariantId: number | null;
 };
@@ -62,31 +65,36 @@ export function canReadBlogPost(args: {
   };
 }
 
-export function mapVariantIdToBlogTier(
-  variantId: number | string | null | undefined,
+export function mapPaymentProductIdToBlogTier(
+  productId: number | string | null | undefined,
 ): Extract<BlogSubscriptionTier, "monthly" | "annual"> | null {
-  const n =
-    typeof variantId === "number"
-      ? variantId
-      : typeof variantId === "string"
-        ? Number(variantId)
-        : NaN;
-  if (!Number.isFinite(n)) return null;
-  if (n === LEMON_MONTHLY_VARIANT_ID) return "monthly";
-  if (n === LEMON_ANNUAL_VARIANT_ID) return "annual";
+  const raw = String(productId ?? "").trim();
+  if (!raw) return null;
+  if (raw === POLAR_MONTHLY_PRODUCT_ID) return "monthly";
+  if (raw === POLAR_ANNUAL_PRODUCT_ID) return "annual";
+
+  // Legacy numeric IDs (Lemon Squeezy variants) for backward compatibility.
+  const n = Number(raw);
+  if (Number.isFinite(n)) {
+    if (n === 1585015) return "monthly";
+    if (n === 1585028) return "annual";
+  }
   return null;
 }
 
 export function buildBlogSubscriptionCheckoutUrl(args: {
-  variantId: number;
+  productId: string;
   email?: string | null;
 }): string {
-  const base = `https://elevate.lemonsqueezy.com/checkout/buy/${args.variantId}`;
+  const base =
+    process.env.NEXT_PUBLIC_POLAR_CHECKOUT_LINK?.trim() ||
+    process.env.POLAR_CHECKOUT_LINK?.trim() ||
+    "https://polar.sh/checkout";
+  const url = new URL(base);
+  url.searchParams.set("product_id", args.productId);
   const email = args.email?.trim();
-  if (!email) return base;
-  const params = new URLSearchParams();
-  params.set("checkout[email]", email);
-  return `${base}?${params.toString()}`;
+  if (email) url.searchParams.set("customer_email", email);
+  return url.toString();
 }
 
 export async function getBlogSubscriptionByUserId(
@@ -106,7 +114,7 @@ export async function getBlogSubscriptionByUserId(
   const { data } = await supabase
     .from("user_blog_subscriptions")
     .select(
-      "subscription_tier, subscription_status, current_period_end, manage_subscription_url, lemon_squeezy_subscription_id, lemon_squeezy_variant_id",
+      "subscription_tier, subscription_status, current_period_end, manage_subscription_url, payment_provider, payment_subscription_id, payment_product_id, lemon_squeezy_subscription_id, lemon_squeezy_variant_id",
     )
     .eq("user_id", userId)
     .maybeSingle();
@@ -127,8 +135,21 @@ export async function getBlogSubscriptionByUserId(
     status: data.subscription_status,
     currentPeriodEnd: data.current_period_end,
     manageSubscriptionUrl: data.manage_subscription_url,
-    lemonSubscriptionId: data.lemon_squeezy_subscription_id,
-    lemonVariantId: data.lemon_squeezy_variant_id,
+    paymentProvider: data.payment_provider,
+    paymentSubscriptionId:
+      data.payment_subscription_id ?? data.lemon_squeezy_subscription_id,
+    paymentProductId:
+      data.payment_product_id ??
+      (data.lemon_squeezy_variant_id != null
+        ? String(data.lemon_squeezy_variant_id)
+        : null),
+    lemonSubscriptionId:
+      data.lemon_squeezy_subscription_id ?? data.payment_subscription_id,
+    lemonVariantId:
+      data.lemon_squeezy_variant_id ??
+      (data.payment_product_id && /^\d+$/.test(data.payment_product_id)
+        ? Number(data.payment_product_id)
+        : null),
   };
 }
 
@@ -142,3 +163,6 @@ export function canReadPremiumBlogPost(args: {
     subscription: args.subscription,
   });
 }
+
+/** @deprecated Use `mapPaymentProductIdToBlogTier` */
+export const mapVariantIdToBlogTier = mapPaymentProductIdToBlogTier;
