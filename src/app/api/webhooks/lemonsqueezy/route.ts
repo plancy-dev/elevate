@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getLemonWebhookEventName } from "@/lib/payments/lemon-squeezy-request";
 import { verifyLemonSqueezySignature } from "@/lib/payments/lemon-squeezy-signature";
 import { processLemonSqueezyOrderWebhook } from "@/lib/payments/lemon-squeezy-webhook";
+import { processLemonSqueezySubscriptionWebhook } from "@/lib/payments/lemon-squeezy-subscription-webhook";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
@@ -48,6 +49,12 @@ export async function POST(req: Request) {
 
   const admin = createAdminClient();
   await processLemonSqueezyOrderWebhook(admin, parsed, eventName);
+  await processLemonSqueezySubscriptionWebhook({
+    admin,
+    body: parsed,
+    eventName,
+    rawBody,
+  });
 
   return NextResponse.json({ received: true });
 }
