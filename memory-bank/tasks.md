@@ -56,6 +56,21 @@
 
 ---
 
+## INIT — Blog Subscription (Lemon, Phase 1) — 활성
+
+**SoT:** [`docs/features/INIT-blog-subscription-lemon-phase1.md`](../docs/features/INIT-blog-subscription-lemon-phase1.md)  
+**복잡도:** **L4** — 구독 스키마/웹훅/블로그 접근제어/페이월 UI/가격 페이지 동시 변경.
+
+### 체크리스트
+
+- [ ] **PLAN 문서화:** DB shape(`free|monthly|annual`, status, LS subscription id, period end) + 기존 entitlement/org plan과 공존 규칙
+- [ ] **Webhook 확장:** `subscription_created|updated|cancelled|expired` 처리 + variant->tier 매핑 (`1585015`, `1585028`) + 멱등성
+- [ ] **접근제어:** 블로그 `is_premium` + preview cutoff(30~40%) + reusable paywall CTA
+- [ ] **Pricing/Manage:** 3티어 표 + checkout prefill(`checkout[email]`) + 구독자 상태/관리 링크
+- [ ] **검증:** type/lint/unit + 프리미엄 글 접근 스모크 + webhook 시나리오
+
+---
+
 ## AI 피벗 — Phase A (문서·랜딩·도구)
 
 | # | 항목 | 상태 |

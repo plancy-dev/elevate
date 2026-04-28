@@ -25,6 +25,7 @@
 
 | Area | Status |
 |------|--------|
+| Blog subscription Phase 1 (Lemon monthly/annual + premium paywall) | **INIT prepared 2026-04-28** — [`docs/features/INIT-blog-subscription-lemon-phase1.md`](../docs/features/INIT-blog-subscription-lemon-phase1.md), next: PLAN |
 | Content catalog, entitlements, Toss PoC, Library | Shipped (see `tasks.md` Phase B) |
 | Library detail, Lemon billing entry, purchase history, admin catalog edits (`020`–`021`) | Shipped 2026-04 — [`archive/work-history/archive-dashboard-billing-library-lemon-2026-04.md`](archive/work-history/archive-dashboard-billing-library-lemon-2026-04.md) |
 | Prompt Studio placeholder + beta allowlist | Shipped |
@@ -46,4 +47,4 @@
 
 ---
 
-마지막 구조 갱신: 2026-04-28 (S6 완료 반영)
+마지막 구조 갱신: 2026-04-28 (Blog subscription INIT 반영)
