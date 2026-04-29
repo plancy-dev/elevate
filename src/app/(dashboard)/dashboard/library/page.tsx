@@ -104,7 +104,7 @@ export default async function LibraryPage() {
               const kindLabel = t(productKindMessageKey(p.product_kind));
               return (
                 <li key={p.id}>
-                  <div className="flex flex-col gap-4 px-5 py-4 transition-colors duration-150 hover:bg-paper-50 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="grid gap-4 px-5 py-4 transition-colors duration-150 hover:bg-paper-50 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-6">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <Badge variant="blue" className="shrink-0">
@@ -134,7 +134,7 @@ export default async function LibraryPage() {
                         {p.slug}
                       </p>
                     </div>
-                    <div className="flex flex-col items-stretch gap-2 text-right sm:items-end">
+                    <div className="flex flex-col items-start gap-2 sm:min-w-[8.75rem] sm:items-end sm:text-right">
                       <span className="text-sm font-medium whitespace-nowrap text-ink-900">
                         {formatCurrencyMinor(p.price_cents, p.currency)}
                       </span>
@@ -142,7 +142,7 @@ export default async function LibraryPage() {
                         <Link
                           href={`/dashboard/library/${encodeURIComponent(p.slug)}/checkout`}
                           prefetch={false}
-                          className="text-sm font-medium text-primary hover:underline"
+                          className="text-sm font-medium whitespace-nowrap text-primary hover:underline"
                         >
                           {t("payCatalog")}
                         </Link>

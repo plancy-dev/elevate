@@ -9,6 +9,7 @@ import { loadSidebarUser } from "@/lib/dashboard/load-sidebar-user";
 import { getPosthogPublicConfig } from "@/lib/env/posthog-public";
 import { getAppLocale } from "@/lib/i18n/app-locale";
 import { loadMessagesForLocale } from "@/lib/i18n/app-messages";
+import { normalizeSidebarIconTonePreference } from "@/lib/settings-validation";
 import { createClient } from "@/lib/supabase/server";
 import { canAccessElevateServiceAdmin } from "@/lib/auth/platform-admin";
 
@@ -37,7 +38,7 @@ export default async function AdminLayout({
 
   const { data: prof } = await supabase
     .from("profiles")
-    .select("organization_id, role")
+    .select("organization_id, role, sidebar_icon_tone")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -67,6 +68,9 @@ export default async function AdminLayout({
         user={sidebarUser}
         isOrgAdmin
         isServiceAdmin
+        sidebarIconTonePreset={normalizeSidebarIconTonePreference(
+          prof?.sidebar_icon_tone ?? null,
+        )}
         recentEpisodes={[]}
       >
         {children}

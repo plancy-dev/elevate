@@ -6,6 +6,8 @@ import { revalidatePath } from "next/cache";
 import { getVenueManagerContext } from "@/lib/auth/require-org-editor";
 import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import {
+  normalizeSidebarIconTonePreference,
+  normalizeSpinnerTempoPreference,
   validateDisplayName,
   validateOrganizationName,
 } from "@/lib/settings-validation";
@@ -58,6 +60,8 @@ export async function updateProfileAndNotifications(
   const digest =
     formData.get("email_milestone_digest") === "on" ||
     formData.get("email_milestone_digest") === "true";
+  const spinnerTempo = normalizeSpinnerTempoPreference(formData.get("loading_spinner_tempo"));
+  const sidebarIconTone = normalizeSidebarIconTonePreference(formData.get("sidebar_icon_tone"));
 
   const supabase = await createClient();
   const {
@@ -70,6 +74,8 @@ export async function updateProfileAndNotifications(
     .update({
       display_name: nameCheck.value,
       email_milestone_digest: digest,
+      loading_spinner_tempo: spinnerTempo,
+      sidebar_icon_tone: sidebarIconTone,
     })
     .eq("id", user.id);
 
@@ -91,6 +97,8 @@ export async function updateProfileAndNotifications(
       metadata: {
         display_name: nameCheck.value,
         email_milestone_digest: digest,
+        loading_spinner_tempo: spinnerTempo,
+        sidebar_icon_tone: sidebarIconTone,
       },
     });
   }

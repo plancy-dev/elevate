@@ -6,6 +6,10 @@ import { ConnectedIdentities } from "@/components/auth/connected-identities";
 import { SettingsLocaleForm } from "@/components/dashboard/settings-locale-form";
 import { SettingsOrgForm } from "@/components/dashboard/settings-org-form";
 import { SettingsProfileForm } from "@/components/dashboard/settings-profile-form";
+import {
+  normalizeSidebarIconTonePreference,
+  normalizeSpinnerTempoPreference,
+} from "@/lib/settings-validation";
 import { getAppLocale } from "@/lib/i18n/app-locale";
 import { createClient } from "@/lib/supabase/server";
 import type { UserRole } from "@/types";
@@ -45,7 +49,9 @@ export default async function SettingsPage() {
       .maybeSingle(),
     supabase
       .from("profiles")
-      .select("display_name, role, email_milestone_digest, ui_locale")
+      .select(
+        "display_name, role, email_milestone_digest, ui_locale, loading_spinner_tempo, sidebar_icon_tone",
+      )
       .eq("id", user.id)
       .maybeSingle(),
   ]);
@@ -120,6 +126,12 @@ export default async function SettingsPage() {
               <SettingsProfileForm
                 defaultDisplayName={profile?.display_name ?? ""}
                 defaultEmailMilestoneDigest={digest}
+                defaultLoadingSpinnerTempo={normalizeSpinnerTempoPreference(
+                  profile?.loading_spinner_tempo ?? null,
+                )}
+                defaultSidebarIconTone={normalizeSidebarIconTonePreference(
+                  profile?.sidebar_icon_tone ?? null,
+                )}
               />
             </div>
           </section>

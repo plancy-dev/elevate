@@ -3,7 +3,11 @@
 import { useCallback, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMessages } from "next-intl";
-import { TOC, getInitialCollapsed } from "@/components/desk/TOC";
+import {
+  TOC,
+  getInitialCollapsed,
+  type SidebarIconTonePreset,
+} from "@/components/desk/TOC";
 import {
   CommandBar,
   type CommandBarRecentEpisode,
@@ -18,6 +22,7 @@ type DeskShellProps = {
   user: DeskShellUser;
   isOrgAdmin: boolean;
   isServiceAdmin: boolean;
+  sidebarIconTonePreset: SidebarIconTonePreset;
   recentEpisodes: CommandBarRecentEpisode[];
   children: React.ReactNode;
 };
@@ -27,6 +32,7 @@ export function DeskShell({
   user,
   isOrgAdmin,
   isServiceAdmin,
+  sidebarIconTonePreset,
   recentEpisodes,
   children,
 }: DeskShellProps) {
@@ -77,10 +83,11 @@ export function DeskShell({
         isOrgAdmin={isOrgAdmin}
         isServiceAdmin={isServiceAdmin}
         collapsed={collapsed}
+        iconTonePreset={sidebarIconTonePreset}
         onToggleCollapsed={() => setCollapsed((prev) => !prev)}
       />
 
-      <div className={collapsed ? "lg:ml-[48px]" : "lg:ml-[240px]"}>
+      <div className={collapsed ? "lg:ml-[68px]" : "lg:ml-[240px]"}>
         <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
           <Masthead title={title} eyebrow={mode === "admin" ? "House" : "Desk"} />
           {children}

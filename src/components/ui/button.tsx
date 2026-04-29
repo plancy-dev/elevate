@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import Link, { useLinkStatus } from "next/link";
 import { type ButtonHTMLAttributes, forwardRef, type ReactNode } from "react";
 import { ShortcutBadge } from "@/components/desk/ShortcutBadge";
+import { ElevateSpinner } from "@/components/ui/elevate-spinner";
 import {
   buttonLinkClassName,
   sizeStyles,
@@ -92,9 +93,7 @@ function ButtonLinkNavPendingOverlay() {
       className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[inherit] bg-paper-50/75"
       aria-hidden
     >
-      <span className="font-mono text-[11px] uppercase tracking-[0.04em] text-ink-700">
-        ...
-      </span>
+      <ElevateSpinner size="sm" variant="muted" tempo="calm" announce={false} />
     </span>
   );
 }

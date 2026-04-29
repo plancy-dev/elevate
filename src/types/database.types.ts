@@ -544,6 +544,8 @@ export type Database = {
           email: string
           email_milestone_digest: boolean
           id: string
+          loading_spinner_tempo: string
+          sidebar_icon_tone: string
           organization_id: string | null
           role: Database["public"]["Enums"]["user_role"]
           ui_locale: string | null
@@ -557,6 +559,8 @@ export type Database = {
           email: string
           email_milestone_digest?: boolean
           id: string
+          loading_spinner_tempo?: string
+          sidebar_icon_tone?: string
           organization_id?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           ui_locale?: string | null
@@ -570,6 +574,8 @@ export type Database = {
           email?: string
           email_milestone_digest?: boolean
           id?: string
+          loading_spinner_tempo?: string
+          sidebar_icon_tone?: string
           organization_id?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           ui_locale?: string | null
