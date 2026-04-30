@@ -23,7 +23,8 @@
     },
     {
       "slug": "weekly-agent-ops-scorecard",
-      "status": "pending",
+      "status": "done",
+      "completed_at_utc": "2026-04-30T02:44:47Z",
       "locale": ["en", "ko"],
       "access_tier": "public",
       "title_hint": "If you cannot measure your agent loop, you cannot improve it.",
