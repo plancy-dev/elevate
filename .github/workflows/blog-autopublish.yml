@@ -25,6 +25,7 @@ jobs:
       BLOG_AUTOPUBLISH_ENABLED: "true"
       BLOG_AUTOPUBLISH_TOPICS_PATH: docs/blog/automation/topics.json
       BLOG_AUTOPUBLISH_STATUS_PATH: artifacts/blog-autopublish-status.json
+      BLOG_QUALITY_GATE_STATUS_PATH: artifacts/blog-quality-gate.json
       CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
       AUTOMATION_GH_TOKEN: ${{ secrets.AUTOMATION_GH_TOKEN }}
       CURSOR_MODEL: ${{ vars.CURSOR_MODEL || 'gpt-5.5' }}
@@ -112,6 +113,53 @@ jobs:
         run: |
           echo "Generation failed on both attempts."
           exit 1
+
+      - name: Run blog quality gate
+        id: quality_gate
+        run: pnpm run blog:quality-gate
+
+      - name: Write quality gate summary
+        if: always()
+        run: |
+          node <<'EOF'
+          const fs = require("node:fs");
+          const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+          const gatePath = process.env.BLOG_QUALITY_GATE_STATUS_PATH || "artifacts/blog-quality-gate.json";
+          let payload = { status: "unknown", hard_errors: [], soft_warnings: [] };
+          if (fs.existsSync(gatePath)) {
+            try {
+              payload = JSON.parse(fs.readFileSync(gatePath, "utf8"));
+            } catch (error) {
+              payload = { status: "unknown", hard_errors: [{ file: "-", message: error.message }], soft_warnings: [] };
+            }
+          }
+
+          const lines = [
+            "## Blog Quality Gate",
+            "",
+            `- Status: ${payload.status || "unknown"}`,
+            `- Checked files: ${(payload.checked_files || []).join(", ") || "-"}`,
+            `- Hard errors: ${(payload.hard_errors || []).length}`,
+            `- Soft warnings: ${(payload.soft_warnings || []).length}`,
+            `- Gate artifact: \`${gatePath}\``
+          ];
+
+          if ((payload.hard_errors || []).length > 0) {
+            lines.push("", "### Hard errors");
+            for (const err of payload.hard_errors.slice(0, 10)) {
+              lines.push(`- ${err.file}: ${err.message}`);
+            }
+          }
+
+          if ((payload.soft_warnings || []).length > 0) {
+            lines.push("", "### Soft warnings");
+            for (const warn of payload.soft_warnings.slice(0, 10)) {
+              lines.push(`- ${warn.file}: ${warn.message}`);
+            }
+          }
+
+          fs.appendFileSync(summaryPath, `${lines.join("\n")}\n`);
+          EOF
 
       - name: Verify changed files are build-safe
         run: pnpm run lint && pnpm run typecheck

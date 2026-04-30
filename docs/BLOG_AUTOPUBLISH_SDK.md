@@ -117,3 +117,18 @@ The SDK runner writes `artifacts/blog-autopublish-status.json` with `failure_typ
 | `content_validation` | Queue schema/output file mismatch | Fix `docs/blog/automation/topics.json` or output expectations |
 | `unknown` | Uncategorized failure | Check summary + full logs, then rerun with `push_mode=pr` |
 
+## 7) Quality gate policy (hard vs soft)
+
+Workflow runs `pnpm run blog:quality-gate` after generation.
+
+- Hard fail (blocks commit/PR):
+  - missing frontmatter required keys
+  - locale/slug/date structural mismatches
+  - invalid internal CTA/link constraints (`/#waitlist`, `/ko#waitlist`)
+- Soft fail (non-blocking warning in run summary):
+  - repetitive AI boilerplate phrase detection
+
+Quality gate artifact:
+
+- `artifacts/blog-quality-gate.json`
+
