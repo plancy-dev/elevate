@@ -30,6 +30,7 @@ Elevate helps teams turn **measurable AI outcomes** into repeatable workflows: p
 | [`docs/DEV_PROCESS_GITHUB.md`](docs/DEV_PROCESS_GITHUB.md) | Issues/PR/gh CLI + gstack — 원격 작업 큐·`pnpm issues:studio` |
 | [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) | AI 도구 레이어 (gstack·Memory Bank·규칙) |
 | [`docs/AI_AGENT_MATURITY_REPORT.md`](docs/AI_AGENT_MATURITY_REPORT.md) | AI 에이전트 활용 성숙도·벤치마크·점수 (리포트) |
+| [`docs/AUTOMATIONS_NO_SLACK_OPS.md`](docs/AUTOMATIONS_NO_SLACK_OPS.md) | Slack/Linear 없이 운영하는 Cloud Agent 자동화 3종 |
 | [`docs/MANUAL_OPERATOR_CHECKLIST.md`](docs/MANUAL_OPERATOR_CHECKLIST.md) | Toss / Supabase / PostHog / env 수동 작업 체크리스트 |
 | [`docs/AI_USER_TEMPLATES.md`](docs/AI_USER_TEMPLATES.md) | 버그·기능 요청 권장 형식 |
 | [`docs/AI_WORKFLOW_PORTABILITY.md`](docs/AI_WORKFLOW_PORTABILITY.md) | 다른 프로젝트로 워크플로 이식 시 수정 파일 |

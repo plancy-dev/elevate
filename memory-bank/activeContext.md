@@ -2,20 +2,24 @@
 
 ## 현재 페이즈 (활성)
 
-**INIT (2026-04-28) — Blog Subscription (Lemon Squeezy, Phase 1)**
+**INIT (2026-04-30) — Automations Stabilization + Blog Quality Uplift**
 
-**브랜치:** `main` (직전 Editors Desk v3 PR #21 merge 완료 상태)  
-**SoT:** [`docs/features/INIT-blog-subscription-lemon-phase1.md`](../docs/features/INIT-blog-subscription-lemon-phase1.md)
+**브랜치:** `main`  
+**SoT:** [`docs/features/INIT-automations-blog-quality-2026-04-30.md`](../docs/features/INIT-automations-blog-quality-2026-04-30.md)
 
-**복잡도:** **L4** — DB 구독 스키마 + Lemon subscription webhook 확장 + 블로그 프리미엄 접근제어 + paywall CTA + pricing/manage UX를 기존 결제 인프라 위에 증설.
+**복잡도:** **L3** — Cloud/GitHub 자동화 신뢰성 보강 + 콘텐츠 품질 게이트 + 운영 가시성 표준화.
 
 **핵심 목표:**
-- 기존 단일 구독/권한 구조를 재작성하지 않고 확장
-- 블로그 전용 3티어(`free`, `monthly`, `annual`) 도입
-- Lemon Variant 고정 매핑 (`1585015`/`1585028`)
-- 프리미엄 포스트 preview cutoff + CTA reusable 컴포넌트
+- Slack/Linear 없이 GitHub 중심으로 automations 운영 안정화
+- 블로그 자동 생성 결과물에 품질 게이트(정합/톤/CTA/링크) 적용
+- Cloud Agent Automations 샘플을 Elevate 운영 플로우에 맞게 PoC
 
-**다음 단계:** **PLAN** (데이터 모델 확정 -> webhook/event lifecycle 설계 -> UI 접근제어 계약 확정).
+**다음 단계:** **PLAN** (신뢰성/품질 게이트/운영 가시성 3슬라이스 상세 계획 및 fail 정책 확정).
+
+---
+
+**직전 활성 페이즈 (2026-04-28) — Blog Subscription (Lemon Squeezy, Phase 1)**
+**SoT:** [`docs/features/INIT-blog-subscription-lemon-phase1.md`](../docs/features/INIT-blog-subscription-lemon-phase1.md)
 
 **04-24 학습(반드시 회피):**
 - L1: PostCSS 8.4.31 + Turbopack은 CSS 주석의 em-dash(`U+2014`)에 `Unknown word` 에러 → tokens.css/globals.css 주석 ASCII-only.
