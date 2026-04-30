@@ -124,7 +124,9 @@ Workflow runs `pnpm run blog:quality-gate` after generation.
 - Hard fail (blocks commit/PR):
   - missing frontmatter required keys
   - locale/slug/date structural mismatches
-  - invalid internal CTA/link constraints (`/#waitlist`, `/ko#waitlist`)
+  - invalid internal CTA/link constraints:
+    - public posts require waitlist CTA (`/#waitlist`, `/ko#waitlist`)
+    - member/premium posts require at least one internal action link
 - Soft fail (non-blocking warning in run summary):
   - repetitive AI boilerplate phrase detection
 

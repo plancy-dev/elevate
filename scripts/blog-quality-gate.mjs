@@ -78,6 +78,16 @@ function validateMarkdownLinks(content, file, errors) {
   }
 }
 
+function countInternalLinks(content) {
+  const linkRe = /\[[^\]]+\]\(([^)]+)\)/g;
+  let count = 0;
+  for (const match of content.matchAll(linkRe)) {
+    const href = match[1].trim();
+    if (href.startsWith("/")) count += 1;
+  }
+  return count;
+}
+
 async function run() {
   const changedPaths = parseGitStatusPaths();
   const candidates = findCandidateBlogFiles(changedPaths);
@@ -135,11 +145,23 @@ async function run() {
 
     validateMarkdownLinks(raw, relPath, hardErrors);
 
-    if (localeFromPath === "en" && !raw.includes("/#waitlist")) {
-      pushError(hardErrors, relPath, "English post must include waitlist CTA link '/#waitlist'.");
-    }
-    if (localeFromPath === "ko" && !raw.includes("/ko#waitlist")) {
-      pushError(hardErrors, relPath, "Korean post must include waitlist CTA link '/ko#waitlist'.");
+    const accessTier = String(meta.access_tier || "");
+    if (accessTier === "public") {
+      if (localeFromPath === "en" && !raw.includes("/#waitlist")) {
+        pushError(hardErrors, relPath, "Public English post must include waitlist CTA link '/#waitlist'.");
+      }
+      if (localeFromPath === "ko" && !raw.includes("/ko#waitlist")) {
+        pushError(hardErrors, relPath, "Public Korean post must include waitlist CTA link '/ko#waitlist'.");
+      }
+    } else {
+      const internalLinkCount = countInternalLinks(raw);
+      if (internalLinkCount < 1) {
+        pushError(
+          hardErrors,
+          relPath,
+          "Member/premium post must include at least one internal CTA/action link."
+        );
+      }
     }
 
     const softPhrases = localeFromPath === "en" ? SOFT_AI_PHRASES_EN : SOFT_AI_PHRASES_KO;
