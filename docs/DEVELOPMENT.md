@@ -50,6 +50,8 @@ To add a new surface (e.g. blog CTA), add the string to `WAITLIST_SOURCE_VALUES`
 
 Posts live under **`content/blog/<locale>/<slug>.mdx`** (e.g. `content/blog/en/the-prompt-is-your-product-surface.mdx`). Each supported locale (`en`, `ko`, `ja`, `zh-CN`, `zh-TW`) has its own files—there is **no** automatic fallback to English at runtime. Use YAML front matter: `title`, `description`, `date` (`YYYY-MM-DD`); optional **`ogImage`** (public path, e.g. `/blog/<slug>/hero.jpg`) for post-specific **Open Graph / Twitter** images. Slugs must match `^[a-z0-9]+(?:-[a-z0-9]+)*$`. Loading: `src/lib/blog/posts.ts`. Hero assets live under **`public/blog/<slug>/`** — avoid remote-only hero URLs (they can break). See [`docs/BLOG_POST_PIPELINE.md`](BLOG_POST_PIPELINE.md).
 
+Programmatic weekly generation (Cursor SDK): [`docs/BLOG_AUTOPUBLISH_SDK.md`](BLOG_AUTOPUBLISH_SDK.md).
+
 ## Scripts
 
 | Command | Purpose |

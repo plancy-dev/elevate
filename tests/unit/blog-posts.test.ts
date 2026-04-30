@@ -5,8 +5,9 @@ vi.mock("server-only", () => ({}));
 import { routing } from "@/i18n/routing";
 import { getAllPostMetaForLocale, getPostBySlug } from "@/lib/blog/posts";
 
-/** en+ko: release note + flagship + access-tier sample posts. ja/zh: flagship translation + legacy samples (no release MDX yet). */
+/** en+ko: release note + flagship + automation post + access-tier sample posts. ja/zh: flagship translation + legacy samples (no release MDX yet). */
 const EN_KO_SLUGS = [
+  "prompt-harness-beats-prompt-hacks",
   "release-0-2-0",
   "sample-member-account-required",
   "sample-premium-subscriber-only",

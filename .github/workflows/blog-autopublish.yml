@@ -1,0 +1,96 @@
+name: Blog Autopublish (Cursor SDK)
+
+on:
+  schedule:
+    # Every Monday 00:00 UTC
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+    inputs:
+      push_mode:
+        description: "main or pr"
+        required: false
+        default: "main"
+
+concurrency:
+  group: blog-autopublish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  autopublish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      BLOG_AUTOPUBLISH_ENABLED: "true"
+      BLOG_AUTOPUBLISH_TOPICS_PATH: docs/blog/automation/topics.json
+      CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+      CURSOR_MODEL: ${{ vars.CURSOR_MODEL || 'gpt-5.5' }}
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate SDK key is configured
+        run: |
+          if [ -z "$CURSOR_API_KEY" ]; then
+            echo "Missing required GitHub secret: CURSOR_API_KEY"
+            exit 1
+          fi
+
+      - name: Generate this week's post with Cursor SDK
+        run: pnpm run blog:autopublish
+
+      - name: Verify changed files are build-safe
+        run: pnpm run lint && pnpm run typecheck
+
+      - name: Check for content changes
+        id: changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push directly to main
+        if: steps.changes.outputs.has_changes == 'true' && (github.event_name == 'schedule' || github.event.inputs.push_mode == 'main')
+        run: |
+          git add content/blog docs/blog/distribution docs/blog/automation/topics.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(blog): auto-publish weekly post via Cursor SDK"
+          git push origin HEAD:main
+
+      - name: Create pull request (manual run)
+        if: steps.changes.outputs.has_changes == 'true' && github.event_name == 'workflow_dispatch' && github.event.inputs.push_mode == 'pr'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore(blog): auto-publish weekly post via Cursor SDK"
+          title: "chore(blog): auto-publish weekly post via Cursor SDK"
+          body: |
+            Automated weekly blog generation using Cursor SDK.
+            - Generated EN/KO MDX post from queued topic
+            - Generated distribution pack
+            - Updated topic queue status
+          branch: chore/blog-autopublish-${{ github.run_id }}
+          delete-branch: true
