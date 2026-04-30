@@ -25,6 +25,7 @@ jobs:
       BLOG_AUTOPUBLISH_ENABLED: "true"
       BLOG_AUTOPUBLISH_TOPICS_PATH: docs/blog/automation/topics.json
       CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+      AUTOMATION_GH_TOKEN: ${{ secrets.AUTOMATION_GH_TOKEN }}
       CURSOR_MODEL: ${{ vars.CURSOR_MODEL || 'gpt-5.5' }}
       NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
@@ -85,6 +86,7 @@ jobs:
         if: steps.changes.outputs.has_changes == 'true' && github.event_name == 'workflow_dispatch' && github.event.inputs.push_mode == 'pr'
         uses: peter-evans/create-pull-request@v7
         with:
+          token: ${{ env.AUTOMATION_GH_TOKEN }}
           commit-message: "chore(blog): auto-publish weekly post via Cursor SDK"
           title: "chore(blog): auto-publish weekly post via Cursor SDK"
           body: |
