@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { BookOpen, Cable, ListChecks, Mail, Shield } from "lucide-react";
+import { Activity, BookOpen, Cable, ListChecks, Mail, Newspaper, Shield, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -35,6 +35,30 @@ export default async function ElevateServiceAdminHomePage() {
       title: t("cards.purchaseAllowlist.title"),
       desc: t("cards.purchaseAllowlist.desc"),
       icon: ListChecks,
+    },
+    {
+      href: "/admin/content-queue",
+      title: "Content queue",
+      desc: "Review, approve, schedule, and publish blog/newsletter drafts.",
+      icon: ListChecks,
+    },
+    {
+      href: "/admin/news-sources",
+      title: "News sources",
+      desc: "Manage RSS/blog sources and trust weights for ingestion.",
+      icon: Newspaper,
+    },
+    {
+      href: "/admin/runs",
+      title: "Automation runs",
+      desc: "Inspect run logs and queue manual ingest/generate/publish runs.",
+      icon: Activity,
+    },
+    {
+      href: "/admin/subscribers",
+      title: "Subscribers",
+      desc: "Operate newsletter subscriber lifecycle separately from waitlist.",
+      icon: Users,
     },
   ];
 

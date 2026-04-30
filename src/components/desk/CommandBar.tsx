@@ -65,6 +65,30 @@ export function CommandBar({
           href: "/admin/waitlist",
           index: "03",
         },
+        {
+          id: "admin-content-queue",
+          label: tx("routes.contentQueue", "Content queue"),
+          href: "/admin/content-queue",
+          index: "04",
+        },
+        {
+          id: "admin-news-sources",
+          label: tx("routes.newsSources", "News sources"),
+          href: "/admin/news-sources",
+          index: "05",
+        },
+        {
+          id: "admin-runs",
+          label: tx("routes.runs", "Runs"),
+          href: "/admin/runs",
+          index: "06",
+        },
+        {
+          id: "admin-subscribers",
+          label: tx("routes.subscribers", "Subscribers"),
+          href: "/admin/subscribers",
+          index: "07",
+        },
       ];
     }
     return [
