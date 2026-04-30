@@ -203,6 +203,15 @@ Document the **exact query strings** in the pack so schedulers don’t invent ad
 - [ ] Front matter includes **`ogImage`** when you want post-specific link previews (see §3).
 - [ ] **Voice:** §**2.5** pass done—read aloud once per locale; KO does not read like English translated line-by-line.
 
+### 7.1 Automation quality gate (SDK workflow)
+
+For SDK automation runs, quality is enforced by `pnpm run blog:quality-gate`:
+
+- **Hard fail** (blocks auto PR): frontmatter/schema/link/locale mismatches.
+- **Soft warning** (non-blocking): repetitive AI boilerplate phrase patterns.
+
+Gate status artifact path: `artifacts/blog-quality-gate.json`.
+
 ---
 
 ## 8. SemVer release posts (product “we ship” narrative)
