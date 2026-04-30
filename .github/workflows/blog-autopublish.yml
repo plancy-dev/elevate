@@ -24,9 +24,11 @@ jobs:
     env:
       BLOG_AUTOPUBLISH_ENABLED: "true"
       BLOG_AUTOPUBLISH_TOPICS_PATH: docs/blog/automation/topics.json
+      BLOG_AUTOPUBLISH_STATUS_PATH: artifacts/blog-autopublish-status.json
       CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
       AUTOMATION_GH_TOKEN: ${{ secrets.AUTOMATION_GH_TOKEN }}
       CURSOR_MODEL: ${{ vars.CURSOR_MODEL || 'gpt-5.5' }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
       NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
       NEXT_PUBLIC_APP_URL: http://localhost:3000
@@ -58,8 +60,58 @@ jobs:
             exit 1
           fi
 
-      - name: Generate this week's post with Cursor SDK
+      - name: Generate this week's post with Cursor SDK (attempt 1)
+        id: generate_attempt_1
+        continue-on-error: true
+        timeout-minutes: 12
         run: pnpm run blog:autopublish
+
+      - name: Retry generation once on failure
+        id: generate_attempt_2
+        if: steps.generate_attempt_1.outcome == 'failure'
+        continue-on-error: true
+        timeout-minutes: 12
+        run: pnpm run blog:autopublish
+
+      - name: Write autopublish run summary
+        if: always()
+        env:
+          ATTEMPT_1_OUTCOME: ${{ steps.generate_attempt_1.outcome }}
+          ATTEMPT_2_OUTCOME: ${{ steps.generate_attempt_2.outcome }}
+        run: |
+          node <<'EOF'
+          const fs = require("node:fs");
+          const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+          const statusPath = process.env.BLOG_AUTOPUBLISH_STATUS_PATH || "artifacts/blog-autopublish-status.json";
+          let status = { status: "unknown", message: `Status artifact not found at ${statusPath}` };
+          if (fs.existsSync(statusPath)) {
+            try {
+              status = JSON.parse(fs.readFileSync(statusPath, "utf8"));
+            } catch (error) {
+              status = { status: "unknown", message: `Could not parse status artifact: ${error.message}` };
+            }
+          }
+
+          const lines = [
+            "## Blog Autopublish Summary",
+            "",
+            `- Attempt 1 outcome: ${process.env.ATTEMPT_1_OUTCOME || "unknown"}`,
+            `- Attempt 2 outcome: ${process.env.ATTEMPT_2_OUTCOME || "not-run"}`,
+            `- Status: ${status.status || "unknown"}`,
+            `- Topic: ${status.topic_slug || "-"}`,
+            `- Failure type: ${status.failure_type || "-"}`,
+            `- Message: ${status.message || "-"}`,
+            `- Next action: ${status.next_action || "-"}`,
+            `- Status artifact: \`${statusPath}\``
+          ];
+          fs.appendFileSync(summaryPath, `${lines.join("\n")}\n`);
+          EOF
+
+      - name: Stop workflow if generation failed twice
+        if: steps.generate_attempt_1.outcome == 'failure' && steps.generate_attempt_2.outcome == 'failure'
+        run: |
+          echo "Generation failed on both attempts."
+          exit 1
 
       - name: Verify changed files are build-safe
         run: pnpm run lint && pnpm run typecheck

@@ -18,6 +18,10 @@ const dryRun = process.env.BLOG_AUTOPUBLISH_DRY_RUN === "true";
 const enabled = process.env.BLOG_AUTOPUBLISH_ENABLED === "true";
 const modelId = process.env.CURSOR_MODEL || "gpt-5.5";
 const apiKey = process.env.CURSOR_API_KEY;
+const statusPath = path.resolve(
+  cwd,
+  process.env.BLOG_AUTOPUBLISH_STATUS_PATH || "artifacts/blog-autopublish-status.json"
+);
 
 function configureRipgrep() {
   if (typeof configureRipgrepPath !== "function") return;
@@ -136,33 +140,117 @@ async function assertOutputFiles(topic) {
   }
 }
 
+function classifyFailure(error) {
+  const message = String(error?.message || error || "");
+  if (message.includes("Missing required environment variable: CURSOR_API_KEY")) return "auth";
+  if (message.includes("Missing required environment variable")) return "env";
+  if (message.includes("Invalid queue format") || message.includes("Missing expected output file")) {
+    return "content_validation";
+  }
+  if (
+    message.includes("sqlite3") ||
+    message.includes("Ripgrep path not configured") ||
+    message.includes("SDK run emitted error event")
+  ) {
+    return "sdk_runtime";
+  }
+  return "unknown";
+}
+
+function nextActionForFailureType(failureType) {
+  if (failureType === "auth") {
+    return "Check CURSOR_API_KEY and AUTOMATION_GH_TOKEN secrets in repository settings.";
+  }
+  if (failureType === "env") {
+    return "Check required env vars and workflow env mapping for autopublish steps.";
+  }
+  if (failureType === "sdk_runtime") {
+    return "Check sdk runtime dependencies (sqlite3 build, ripgrep path) and retry once.";
+  }
+  if (failureType === "content_validation") {
+    return "Review queue schema/output files and rerun after fixing topic payload.";
+  }
+  return "Inspect workflow logs and rerun manually with push_mode=pr.";
+}
+
+async function emitStatus(statusPayload) {
+  await fs.mkdir(path.dirname(statusPath), { recursive: true });
+  await fs.writeFile(statusPath, `${JSON.stringify(statusPayload, null, 2)}\n`, "utf8");
+  console.log(`[blog-autopublish] Status artifact: ${path.relative(cwd, statusPath)}`);
+  console.log(`[blog-autopublish][status] ${JSON.stringify(statusPayload)}`);
+}
+
 async function main() {
   configureRipgrep();
-  if (!enabled && !dryRun) {
-    console.log("[blog-autopublish] BLOG_AUTOPUBLISH_ENABLED is not true. Exiting.");
-    return;
+  const startedAt = new Date().toISOString();
+  let topicSlug = null;
+  try {
+    if (!enabled && !dryRun) {
+      const statusPayload = {
+        status: "skipped",
+        reason: "BLOG_AUTOPUBLISH_ENABLED is not true",
+        started_at_utc: startedAt,
+        ended_at_utc: new Date().toISOString()
+      };
+      await emitStatus(statusPayload);
+      return;
+    }
+
+    const queue = await readTopicsQueue();
+    const index = queue.topics.findIndex((t) => t.status === "pending");
+    if (index < 0) {
+      const statusPayload = {
+        status: "skipped",
+        reason: "No pending topic found",
+        started_at_utc: startedAt,
+        ended_at_utc: new Date().toISOString()
+      };
+      await emitStatus(statusPayload);
+      return;
+    }
+
+    const topic = sanitizeTopic(queue.topics[index]);
+    topicSlug = topic.slug;
+    const prompt = buildPrompt(topic);
+
+    if (dryRun) {
+      console.log("[blog-autopublish] Dry run enabled. Prompt preview:");
+      console.log(prompt);
+      const statusPayload = {
+        status: "dry_run",
+        topic_slug: topic.slug,
+        started_at_utc: startedAt,
+        ended_at_utc: new Date().toISOString()
+      };
+      await emitStatus(statusPayload);
+      return;
+    }
+
+    console.log(`[blog-autopublish] Running SDK agent for topic: ${topic.slug}`);
+    await runAgent(prompt);
+    await assertOutputFiles(topic);
+    console.log(`[blog-autopublish] Completed topic: ${topic.slug}`);
+    const statusPayload = {
+      status: "success",
+      topic_slug: topic.slug,
+      started_at_utc: startedAt,
+      ended_at_utc: new Date().toISOString()
+    };
+    await emitStatus(statusPayload);
+  } catch (error) {
+    const failureType = classifyFailure(error);
+    const statusPayload = {
+      status: "failed",
+      topic_slug: topicSlug,
+      failure_type: failureType,
+      message: String(error?.message || error || "Unknown error"),
+      next_action: nextActionForFailureType(failureType),
+      started_at_utc: startedAt,
+      ended_at_utc: new Date().toISOString()
+    };
+    await emitStatus(statusPayload);
+    throw error;
   }
-
-  const queue = await readTopicsQueue();
-  const index = queue.topics.findIndex((t) => t.status === "pending");
-  if (index < 0) {
-    console.log("[blog-autopublish] No pending topic found. Exiting.");
-    return;
-  }
-
-  const topic = sanitizeTopic(queue.topics[index]);
-  const prompt = buildPrompt(topic);
-
-  if (dryRun) {
-    console.log("[blog-autopublish] Dry run enabled. Prompt preview:");
-    console.log(prompt);
-    return;
-  }
-
-  console.log(`[blog-autopublish] Running SDK agent for topic: ${topic.slug}`);
-  await runAgent(prompt);
-  await assertOutputFiles(topic);
-  console.log(`[blog-autopublish] Completed topic: ${topic.slug}`);
 }
 
 main().catch((error) => {
