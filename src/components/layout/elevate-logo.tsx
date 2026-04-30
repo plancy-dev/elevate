@@ -8,9 +8,9 @@ interface ElevateLogoProps {
 }
 
 const sizeMap = {
-  sm: { box: "h-7 w-7", text: "text-sm", px: 28 },
-  md: { box: "h-8 w-8", text: "text-base", px: 32 },
-  lg: { box: "h-10 w-10", text: "text-lg", px: 40 },
+  sm: { box: "h-6 w-6", text: "text-sm", px: 24, gap: "gap-1.5" },
+  md: { box: "h-8 w-8", text: "text-base", px: 32, gap: "gap-2" },
+  lg: { box: "h-10 w-10", text: "text-lg", px: 40, gap: "gap-2.5" },
 };
 
 export function ElevateLogo({
@@ -21,19 +21,14 @@ export function ElevateLogo({
   const s = sizeMap[size];
 
   return (
-    <div className={cn("flex items-center gap-2.5", className)}>
-      <div
-        className={cn(
-          s.box,
-          "relative shrink-0 overflow-hidden border border-ink-100 bg-transparent",
-        )}
-      >
+    <div className={cn("flex items-center", s.gap, className)}>
+      <div className={cn(s.box, "relative shrink-0 overflow-hidden")}>
         <Image
-          src="/brand/elevate-mark-192.png"
+          src="/brand/elevate-mark-brand-192.png"
           alt=""
           width={s.px}
           height={s.px}
-          className="object-cover"
+          className="object-contain"
           priority
         />
       </div>
@@ -41,8 +36,9 @@ export function ElevateLogo({
         <span
           className={cn(
             s.text,
-            "font-semibold tracking-[-0.02em] text-ink-900",
+            "leading-none font-semibold tracking-[-0.015em] text-ink-900",
           )}
+          style={{ fontFamily: "var(--font-editorial)" }}
         >
           Elevate
         </span>

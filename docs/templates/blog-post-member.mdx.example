@@ -1,0 +1,41 @@
+---
+title: "TITLE: Member post"
+description: "Member-only practical guide. Full article available to signed-in users."
+date: "YYYY-MM-DD"
+access_tier: "member"
+ogImage: "/blog/your-slug/hero.jpg"
+---
+
+> Audience: signed-in free users (mid-funnel education).
+> Goal: increase account creation and return visits.
+
+## Problem framing
+
+Summarize the pain point and why generic advice fails.
+
+## Working model
+
+Describe the mental model readers should use.
+
+## Step-by-step playbook
+
+1. Step 1 with concrete example.
+2. Step 2 with concrete example.
+3. Step 3 with concrete example.
+
+## Common implementation pitfalls
+
+- Pitfall A and fix
+- Pitfall B and fix
+
+## Practical checklist
+
+- [ ] Checklist item 1
+- [ ] Checklist item 2
+- [ ] Checklist item 3
+
+## Close
+
+Invite readers to test this framework and come back with results.
+
+**Already have an account? [Sign in](/login)**

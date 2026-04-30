@@ -27,6 +27,7 @@
     "og:default:webp": "node scripts/build-og-default.mjs --webp",
     "db:types": "node scripts/gen-db-types.mjs",
     "buffer:retry-step4": "node scripts/retry-buffer-step4.mjs",
+    "blog:autopublish": "node scripts/blog-autopublish-sdk.mjs",
     "worker:assembly": "tsx workers/video-assembly/run.ts",
     "prepare": "husky"
   },
@@ -63,6 +64,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@cursor/sdk": "^1.0.10",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@types/jsdom": "^28.0.1",
@@ -90,6 +92,9 @@
       "minimatch@3>brace-expansion": "1.1.12",
       "vite@>=7.0.0 <=7.3.1": ">=7.3.2",
       "vite@>=7.1.0 <=7.3.1": ">=7.3.2"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "sqlite3"
+    ]
   }
 }

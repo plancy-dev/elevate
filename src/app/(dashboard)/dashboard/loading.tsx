@@ -2,6 +2,8 @@
  * Shown while a `/dashboard/*` route segment loads (RSC + client navigation).
  * Pairs with link-level `useLinkStatus` spinners on Sidebar / ButtonLink.
  */
+import { ElevateSpinner } from "@/components/ui/elevate-spinner";
+
 export default function DashboardSegmentLoading() {
   return (
     <div
@@ -9,11 +11,7 @@ export default function DashboardSegmentLoading() {
       aria-busy="true"
       aria-live="polite"
     >
-      <div
-        className="h-9 w-9 animate-spin rounded-[var(--radius-1)] border-2 border-primary border-t-transparent"
-        role="status"
-      />
-      <span className="sr-only">Loading</span>
+      <ElevateSpinner size="md" label="Loading" forceMotion tempo="lively" />
     </div>
   );
 }

@@ -12,6 +12,10 @@ Root **`DESIGN.md`** is the discovery entry (Stitch / [awesome-design-md](https:
 
 Before large feature work, align with **`memory-bank/creative-elevate-ai-pivot.md`** (North Star) and **`memory-bank/tasks.md`** (roadmap SoT). Legacy MICE modules remain in the repo but are not the default story for new work.
 
+## Blog authoring (public/member/premium)
+
+When creating blog content, use **`docs/templates/blog-authoring-templates.md`** plus the three MDX templates in **`docs/templates/`** (`blog-post-public.mdx.example`, `blog-post-member.mdx.example`, `blog-post-premium.mdx.example`). Treat these as the default contract for `access_tier` and CTA structure.
+
 ## AI orchestration (how tools fit together)
 
 **Single hub:** [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) — layers (repo rules → memory-bank → gstack), decision table, and prompt contract. Bug/feature prompts work without manual paste: `.cursor/rules/ai-session-bootstrap.mdc`. Optional user formats: [`docs/AI_USER_TEMPLATES.md`](docs/AI_USER_TEMPLATES.md). Forking the workflow: [`docs/AI_WORKFLOW_PORTABILITY.md`](docs/AI_WORKFLOW_PORTABILITY.md).

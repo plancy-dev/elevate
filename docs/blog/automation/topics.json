@@ -1,0 +1,45 @@
+{
+  "topics": [
+    {
+      "slug": "prompt-harness-beats-prompt-hacks",
+      "status": "done",
+      "completed_at_utc": "2026-04-30T02:14:26Z",
+      "locale": ["en", "ko"],
+      "access_tier": "public",
+      "title_hint": "Prompt hacks die fast. Harnesses compound.",
+      "target_reader": "AI product managers, growth operators, and technical founders",
+      "core_claims": [
+        "Prompt quality is a system problem, not a writing trick.",
+        "Without a harness, teams cannot reproduce wins or debug failures.",
+        "The team that ships checklists and feedback loops beats the team with clever prompts."
+      ],
+      "references": [
+        "https://cursor.com/blog/typescript-sdk",
+        "https://cursor.com/learn/customizing-agents",
+        "https://github.com/cursor/cookbook"
+      ],
+      "cta_en": "[Join the waitlist ->](/#waitlist)",
+      "cta_ko": "[대기명단에 참여하기 ->](/ko#waitlist)"
+    },
+    {
+      "slug": "weekly-agent-ops-scorecard",
+      "status": "pending",
+      "locale": ["en", "ko"],
+      "access_tier": "public",
+      "title_hint": "If you cannot measure your agent loop, you cannot improve it.",
+      "target_reader": "AI product managers, growth operators, and technical founders",
+      "core_claims": [
+        "Most teams over-index on generation quality and under-invest in operator metrics.",
+        "A weekly scorecard aligns product, growth, and engineering around reproducible outcomes.",
+        "Simple operational metrics outperform model hype when prioritizing agent improvements."
+      ],
+      "references": [
+        "https://cursor.com/blog/typescript-sdk",
+        "https://cursor.com/learn/customizing-agents",
+        "https://github.com/cursor/cookbook"
+      ],
+      "cta_en": "[Join the waitlist ->](/#waitlist)",
+      "cta_ko": "[대기명단에 참여하기 ->](/ko#waitlist)"
+    }
+  ]
+}

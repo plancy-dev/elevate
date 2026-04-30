@@ -1,0 +1,51 @@
+---
+title: "TITLE: Premium post"
+description: "Premium deep dive with advanced framework and implementation details."
+date: "YYYY-MM-DD"
+access_tier: "premium"
+ogImage: "/blog/your-slug/hero.jpg"
+---
+
+> Audience: paying subscribers.
+> Goal: deliver strong practical value that justifies renewal.
+
+## Executive summary
+
+State the outcome readers will get and who this is for.
+
+## Full framework
+
+Explain the complete method end-to-end.
+
+## Implementation blueprint
+
+### Phase 1
+
+Detailed instructions, examples, and decision criteria.
+
+### Phase 2
+
+Detailed instructions, examples, and decision criteria.
+
+### Phase 3
+
+Detailed instructions, examples, and decision criteria.
+
+## Assets and templates
+
+- Template A
+- Template B
+- Template C
+
+## KPI / validation plan
+
+Define measurable signals readers should track after applying this post.
+
+## Troubleshooting
+
+- Symptom -> likely cause -> fix
+- Symptom -> likely cause -> fix
+
+## Close
+
+Add one next step and mention the related premium/member/public posts in the series.

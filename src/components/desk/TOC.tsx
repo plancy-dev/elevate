@@ -5,6 +5,19 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import { useMessages } from "next-intl";
+import {
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  CircleHelp,
+  Clapperboard,
+  CreditCard,
+  Shield,
+  Sparkles,
+  UserRound,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
 import { SignOutButton } from "@/components/auth/sign-out-button";
@@ -12,10 +25,15 @@ import type { DeskShellUser } from "@/components/desk/shell-user";
 import { getNestedMessage } from "@/lib/i18n/safe-message";
 
 type TocMode = "dashboard" | "admin";
+export type SidebarIconTonePreset = "calm" | "focus";
 
 type TocItem = {
   href: string;
   label: string;
+};
+
+type CollapsedNavItem = TocItem & {
+  icon: LucideIcon;
 };
 
 type TocSection = {
@@ -31,6 +49,7 @@ type TOCProps = {
   isServiceAdmin: boolean;
   collapsed: boolean;
   onToggleCollapsed: () => void;
+  iconTonePreset?: SidebarIconTonePreset;
 };
 
 function findActiveHref(pathname: string, sections: TocSection[]): string | null {
@@ -54,6 +73,7 @@ export function TOC({
   isServiceAdmin,
   collapsed,
   onToggleCollapsed,
+  iconTonePreset = "focus",
 }: TOCProps) {
   const messages = useMessages();
   const tx = useCallback(
@@ -114,18 +134,6 @@ export function TOC({
             href: "/dashboard/productions",
             label: tx("studio.productions", "Productions"),
           },
-          {
-            href: "/dashboard/productions/projects",
-            label: tx("studio.projects", "Projects"),
-          },
-          {
-            href: "/dashboard/productions/integrations",
-            label: tx("studio.integrations", "Integrations"),
-          },
-          {
-            href: "/dashboard/productions/channels",
-            label: tx("studio.channels", "Channels"),
-          },
         ],
       },
       {
@@ -157,6 +165,49 @@ export function TOC({
   }, [isOrgAdmin, isServiceAdmin, mode, tx]);
 
   const activeHref = findActiveHref(pathname, sections);
+  const iconTone = useMemo(
+    () =>
+      iconTonePreset === "calm"
+        ? {
+            base:
+              "border border-transparent bg-transparent text-ink-500 hover:border-ink-200 hover:bg-paper-0 hover:text-ink-900",
+            active:
+              "border-ink-300 bg-paper-0 text-ink-900 shadow-[inset_0_0_0_1px_var(--ink-100)]",
+            indicator: "bg-ink-500",
+          }
+        : {
+            base:
+              "border border-transparent bg-transparent text-ink-500 hover:border-ink-200 hover:bg-paper-0 hover:text-ink-900",
+            active:
+              "border-vermilion-100 bg-vermilion-100/35 text-vermilion-600 shadow-[inset_0_0_0_1px_var(--vermilion-100)]",
+            indicator: "bg-vermilion-600",
+          },
+    [iconTonePreset],
+  );
+  const collapsedNavItems = useMemo<CollapsedNavItem[]>(() => {
+    const iconByHref: Record<string, LucideIcon> = {
+      "/dashboard/productions": Clapperboard,
+      "/dashboard/studio": Sparkles,
+      "/dashboard/library": BookOpen,
+      "/dashboard/team": Users,
+      "/dashboard/organization/audit": Shield,
+      "/dashboard/admin": Shield,
+      "/dashboard/settings": UserRound,
+      "/dashboard/billing": CreditCard,
+      "/dashboard/help": CircleHelp,
+      "/admin": Shield,
+      "/admin/content": BookOpen,
+      "/admin/waitlist": Users,
+      "/admin/purchase-allowlist": Shield,
+      "/admin/prompt-studio-allowlist": Sparkles,
+    };
+
+    const items = sections.flatMap((section) => section.items);
+    return items.map((item) => ({
+      ...item,
+      icon: iconByHref[item.href] ?? BookOpen,
+    }));
+  }, [sections]);
   const syncCollapsedToQuery = (nextCollapsed: boolean) => {
     const next = new URLSearchParams(searchParams.toString());
     if (nextCollapsed) next.set("toc", "collapsed");
@@ -176,51 +227,78 @@ export function TOC({
       <aside
         className={cn(
           "hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:flex-col lg:border-r lg:border-ink-100 lg:bg-paper-100",
-          collapsed ? "lg:w-[48px]" : "lg:w-[240px]",
+          collapsed ? "lg:w-[68px]" : "lg:w-[240px]",
         )}
       >
-        <div className="flex h-12 items-center border-b border-ink-100 px-3">
+        <div className="flex h-12 items-center justify-between border-b border-ink-100 px-3">
           {!collapsed ? (
             <Link href={mode === "admin" ? "/admin" : "/dashboard"} className="shrink-0">
               <ElevateLogo size="sm" />
             </Link>
           ) : (
-            <button
-              type="button"
-              onClick={toggleCollapsed}
-              className="font-mono text-xs uppercase tracking-[0.04em] text-ink-700"
-              aria-label={tx("expand", "Expand")}
-            >
-              I
-            </button>
+            <Link href={mode === "admin" ? "/admin" : "/dashboard"} className="mx-auto">
+              <span className="sr-only">Elevate</span>
+              <div className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-0/90 p-1.5">
+                <ElevateLogo size="sm" showText={false} />
+              </div>
+            </Link>
           )}
+          <button
+            type="button"
+            onClick={toggleCollapsed}
+            className={cn(
+              "inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-1)] border border-transparent bg-transparent text-ink-500 transition-all duration-100 ease-(--ease-editorial) hover:border-ink-200 hover:bg-paper-0 hover:text-ink-900",
+              collapsed &&
+                "mx-auto transition-[opacity,color,background-color,border-color] duration-120 ease-(--ease-editorial) opacity-80 hover:opacity-100",
+            )}
+            aria-label={collapsed ? tx("expand", "Expand") : tx("collapse", "Collapse")}
+            title={collapsed ? tx("expand", "Expand") : tx("collapse", "Collapse")}
+          >
+            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+          </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto p-3">
-          <div className={cn("space-y-5", collapsed && "space-y-4 px-0")}>
+        <nav className={cn("flex-1 overflow-y-auto p-3", collapsed && "px-2.5 pb-4 pt-3")}>
+          <div className={cn("space-y-5", collapsed && "space-y-3 px-0")}>
             {sections.map((section) => {
-              const sectionActive = section.items.some((item) => item.href === activeHref);
               if (collapsed) {
                 return (
-                  <button
-                    key={section.numeral}
-                    type="button"
-                    onClick={toggleCollapsed}
-                    className={cn(
-                      "relative flex w-full justify-center py-3 [font-family:var(--font-display)] text-lg text-ink-700",
-                      sectionActive && "text-ink-900",
-                    )}
-                    aria-label={section.ariaLabel}
-                  >
-                    {sectionActive ? (
-                      <span className="absolute left-1.5 top-1/2 h-2 w-2 -translate-y-1/2 text-vermilion-600">
-                        •
-                      </span>
-                    ) : null}
-                    <span className="font-mono text-[11px] uppercase tracking-[0.04em]">
-                      {section.ariaLabel.slice(0, 1)}
-                    </span>
-                  </button>
+                  <section key={section.numeral} aria-label={section.ariaLabel}>
+                    <ul className="space-y-2">
+                      {section.items.map((item) => {
+                        const active = item.href === activeHref;
+                        const collapsedItem = collapsedNavItems.find(
+                          (collapsedNavItem) => collapsedNavItem.href === item.href,
+                        );
+                        const Icon = collapsedItem?.icon ?? BookOpen;
+                        return (
+                          <li key={item.href}>
+                            <Link
+                              href={item.href}
+                              aria-label={item.label}
+                              title={item.label}
+                              className={cn(
+                                "group relative flex h-9 w-9 items-center justify-center rounded-[var(--radius-1)] transition-[opacity,color,background-color,border-color] duration-120 ease-(--ease-editorial) opacity-80 hover:opacity-100",
+                                iconTone.base,
+                                active && cn(iconTone.active, "opacity-100"),
+                              )}
+                            >
+                              {active ? (
+                                <span
+                                  className={cn(
+                                    "absolute -left-1.5 top-1/2 h-3 w-[2px] -translate-y-1/2 rounded-full",
+                                    iconTone.indicator,
+                                  )}
+                                  aria-hidden
+                                />
+                              ) : null}
+                              <Icon size={16} strokeWidth={2} />
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </section>
                 );
               }
 
@@ -237,15 +315,11 @@ export function TOC({
                           <Link
                             href={item.href}
                             className={cn(
-                              "relative block pl-4 text-[13px] uppercase tracking-[0.08em] text-ink-500 transition-colors duration-80 ease-(--ease-editorial)",
-                              active && "font-medium text-ink-900",
+                              "relative block rounded-[var(--radius-1)] px-3 py-1.5 text-[13px] uppercase tracking-[0.08em] text-ink-500 transition-all duration-100 ease-(--ease-editorial) hover:bg-paper-0 hover:text-ink-900",
+                              active &&
+                                "border border-ink-100 bg-paper-0 font-medium text-ink-900 shadow-[inset_2px_0_0_var(--vermilion-600)]",
                             )}
                           >
-                            {active ? (
-                              <span className="absolute left-0 top-1/2 -translate-y-1/2 text-vermilion-600">
-                                •
-                              </span>
-                            ) : null}
                             {item.label}
                           </Link>
                         </li>
@@ -259,20 +333,12 @@ export function TOC({
         </nav>
 
         {!collapsed ? (
-          <div className="border-t border-ink-100 px-3 py-3">
-            <div className="mb-2 text-xs text-ink-500">
+          <div className="border-t border-ink-100 px-3 py-4">
+            <div className="mb-3 space-y-1 text-[11px] leading-4 text-ink-500">
               <p className="truncate font-medium text-ink-900">{user.displayName}</p>
               <p className="truncate">{user.email}</p>
               <p className="truncate">{user.orgName}</p>
             </div>
-            <button
-              type="button"
-              onClick={toggleCollapsed}
-              data-shortcut="cmd+\\"
-              className="mb-2 inline-flex border border-ink-300 px-2 py-1 font-mono text-[11px] uppercase tracking-[0.04em] text-ink-700 hover:border-ink-900 hover:text-ink-900"
-            >
-              {tx("collapse", "Collapse")}
-            </button>
             <SignOutButton />
           </div>
         ) : null}
@@ -311,6 +377,12 @@ export function TOC({
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-70 bg-ink-900/30 lg:hidden" />
           <Dialog.Content className="fixed inset-x-0 bottom-0 z-70 border-t border-ink-700 bg-paper-50 p-4 lg:hidden">
+            <Dialog.Title className="sr-only">
+              {tx("mobile.menuTitle", "Navigation menu")}
+            </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              {tx("mobile.menuDescription", "Choose a section to navigate.")}
+            </Dialog.Description>
             <ul className="space-y-2">
               {(sections.find((section) => section.numeral === mobileOpenSection)?.items ?? []).map(
                 (item) => (

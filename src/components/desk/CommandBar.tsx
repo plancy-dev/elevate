@@ -83,23 +83,16 @@ export function CommandBar({
         index: "02",
       },
       {
-        id: "publish",
-        label: tx("routes.publish", "Publish"),
-        href: "/dashboard/productions/channels",
-        shortcut: ["G", "P"],
-        index: "03",
-      },
-      {
         id: "library",
         label: tx("routes.library", "Library"),
         href: "/dashboard/library",
-        index: "04",
+        index: "03",
       },
       {
         id: "settings",
         label: tx("routes.settings", "Settings"),
         href: "/dashboard/settings",
-        index: "05",
+        index: "04",
       },
     ];
   }, [mode, tx]);
@@ -139,6 +132,12 @@ export function CommandBar({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-90 bg-ink-900/35" />
         <Dialog.Content className="fixed inset-x-0 bottom-0 z-90 max-h-[50vh] border-t border-ink-700 bg-paper-50 p-3 outline-none">
+          <Dialog.Title className="sr-only">
+            {tx("title", "Command menu")}
+          </Dialog.Title>
+          <Dialog.Description className="sr-only">
+            {tx("description", "Search routes and actions, then press Enter to navigate.")}
+          </Dialog.Description>
           <Command className="mx-auto flex w-full max-w-5xl flex-col-reverse gap-3">
             <div className="max-h-[38vh] overflow-y-auto border border-ink-100 bg-paper-0">
               <Command.List>

@@ -17,7 +17,7 @@ export function LibraryReadOnlineButton({ productId, slug, children }: Props) {
   return (
     <Link
       href={`/dashboard/library/${encodeURIComponent(slug)}/read`}
-      className="text-sm font-medium text-primary hover:underline mt-2 inline-block"
+      className="mt-2 inline-block whitespace-nowrap text-sm font-medium text-primary hover:underline"
       onClick={() => {
         posthog?.capture(PostHogEvent.ELEVATE_FUNNEL_EBOOK_READER_LINK_CLICK, {
           product_id: productId,

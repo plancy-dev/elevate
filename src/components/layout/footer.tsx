@@ -44,8 +44,8 @@ export async function Footer() {
       <div className="mx-auto max-w-[1584px] px-4 py-10 lg:px-8">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div className="col-span-2 md:col-span-1">
-            <ElevateLogo size="sm" />
-            <p className="mt-4 max-w-[220px] text-xs leading-relaxed text-ink-500">
+            <ElevateLogo size="md" />
+            <p className="mt-3 max-w-[240px] text-xs leading-relaxed text-ink-500">
               {t("tagline")}
             </p>
           </div>

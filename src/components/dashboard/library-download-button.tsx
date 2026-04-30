@@ -28,7 +28,7 @@ export function LibraryPdfDownloadActions({ productId }: Props) {
     <div className="mt-2 flex flex-col items-end gap-1 sm:flex-row sm:items-center sm:gap-2">
       <a
         href={base}
-        className="text-sm font-medium text-primary hover:underline"
+        className="text-sm font-medium whitespace-nowrap text-primary hover:underline"
         onClick={() => capture("download")}
       >
         {t("download")}
@@ -38,7 +38,7 @@ export function LibraryPdfDownloadActions({ productId }: Props) {
       </span>
       <a
         href={`${base}?disposition=inline`}
-        className="text-sm font-medium text-ink-700 hover:text-primary hover:underline"
+        className="text-sm font-medium whitespace-nowrap text-ink-700 hover:text-primary hover:underline"
         target="_blank"
         rel="noreferrer"
         onClick={() => capture("inline")}

@@ -6,6 +6,10 @@ import {
   updateProfileAndNotifications,
   type SettingsActionState,
 } from "@/actions/settings";
+import type {
+  SidebarIconTonePreference,
+  SpinnerTempoPreference,
+} from "@/lib/settings-validation";
 import { translateActionErrorMessage } from "@/lib/i18n/translate-action-error";
 import { toast } from "@/lib/ui/app-toast";
 import { Button } from "@/components/ui/button";
@@ -13,9 +17,13 @@ import { Button } from "@/components/ui/button";
 export function SettingsProfileForm({
   defaultDisplayName,
   defaultEmailMilestoneDigest,
+  defaultLoadingSpinnerTempo,
+  defaultSidebarIconTone,
 }: {
   defaultDisplayName: string;
   defaultEmailMilestoneDigest: boolean;
+  defaultLoadingSpinnerTempo: SpinnerTempoPreference;
+  defaultSidebarIconTone: SidebarIconTonePreference;
 }) {
   const t = useTranslations("Dashboard.settingsProfile");
   const tAction = useTranslations("Dashboard.actionErrors");
@@ -74,6 +82,44 @@ export function SettingsProfileForm({
           {t("digestLabel")}
         </label>
         <p className="mt-2 text-xs text-ink-500">{t("digestHint")}</p>
+      </div>
+
+      <div>
+        <h3 className="text-xs font-medium text-ink-500 uppercase tracking-wider">
+          {t("loadingTempoHeading")}
+        </h3>
+        <label htmlFor="loading_spinner_tempo" className="mt-3 block text-sm text-ink-700">
+          {t("loadingTempoLabel")}
+        </label>
+        <select
+          id="loading_spinner_tempo"
+          name="loading_spinner_tempo"
+          defaultValue={defaultLoadingSpinnerTempo}
+          className="mt-1 h-10 w-full border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 focus:border-focus focus:outline-none"
+        >
+          <option value="calm">{t("loadingTempoCalm")}</option>
+          <option value="lively">{t("loadingTempoLively")}</option>
+        </select>
+        <p className="mt-2 text-xs text-ink-500">{t("loadingTempoHint")}</p>
+      </div>
+
+      <div>
+        <h3 className="text-xs font-medium text-ink-500 uppercase tracking-wider">
+          {t("sidebarToneHeading")}
+        </h3>
+        <label htmlFor="sidebar_icon_tone" className="mt-3 block text-sm text-ink-700">
+          {t("sidebarToneLabel")}
+        </label>
+        <select
+          id="sidebar_icon_tone"
+          name="sidebar_icon_tone"
+          defaultValue={defaultSidebarIconTone}
+          className="mt-1 h-10 w-full border border-ink-100 bg-paper-0 px-3 text-sm text-ink-900 focus:border-focus focus:outline-none"
+        >
+          <option value="calm">{t("sidebarToneCalm")}</option>
+          <option value="focus">{t("sidebarToneFocus")}</option>
+        </select>
+        <p className="mt-2 text-xs text-ink-500">{t("sidebarToneHint")}</p>
       </div>
 
       <Button variant="primary" size="md" type="submit" isLoading={pending}>

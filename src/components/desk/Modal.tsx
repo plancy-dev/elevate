@@ -2,7 +2,7 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
-import { type ReactNode } from "react";
+import { type ReactNode, useId } from "react";
 import { ShortcutBadge } from "@/components/desk/ShortcutBadge";
 
 export type ModalProps = {
@@ -35,7 +35,12 @@ export function Modal({
   stackClassName,
   titleId: titleIdProp,
 }: ModalProps) {
-  const titleId = titleIdProp ?? "modal-title";
+  const generatedTitleId = useId();
+  const generatedDescriptionId = useId();
+  const titleId = titleIdProp ?? generatedTitleId;
+  const descriptionId = generatedDescriptionId;
+  const normalizedTitle = title.trim() || "Dialog";
+  const normalizedDescription = description?.trim() || "Dialog content";
   const layerClassName = stackClassName ?? "z-80";
 
   return (
@@ -54,15 +59,14 @@ export function Modal({
         />
         <Dialog.Content
           className={cn(
-            "fixed inset-x-0 bottom-0 max-h-[85vh] w-full border-t border-ink-700 bg-paper-50 text-ink-900 p-4 pb-5 outline-none",
-            "data-[state=open]:translate-y-0 data-[state=closed]:translate-y-full transition-transform duration-[160ms] [transition-timing-function:var(--ease-editorial)]",
-            "sm:left-1/2 sm:top-1/2 sm:bottom-auto sm:inset-x-auto sm:w-[min(100vw-2rem,56rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:border sm:border-ink-700 sm:p-6",
-            "sm:data-[state=open]:translate-y-0 sm:data-[state=closed]:translate-y-0",
+            "fixed left-1/2 top-1/2 max-h-[85vh] w-[min(100vw-2rem,56rem)] -translate-x-1/2 -translate-y-1/2 border border-ink-700 bg-paper-50 p-6 text-ink-900 outline-none",
+            "max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:w-full max-sm:translate-x-0 max-sm:translate-y-0 max-sm:border-x-0 max-sm:border-b-0 max-sm:border-t max-sm:p-4 max-sm:pb-5",
+            "max-sm:data-[state=open]:translate-y-0 max-sm:data-[state=closed]:translate-y-full max-sm:transition-transform max-sm:duration-160 max-sm:ease-(--ease-editorial)",
             sizeClass[size],
             layerClassName,
             className,
           )}
-          aria-describedby={description ? "modal-desc" : undefined}
+          aria-describedby={descriptionId}
           onEscapeKeyDown={onClose}
           onPointerDownOutside={onClose}
         >
@@ -72,21 +76,22 @@ export function Modal({
                 id={titleId}
                 className="text-[1.5rem] leading-[1.1] [font-family:var(--font-display)] [font-variation-settings:'opsz'_144]"
               >
-                {title}
+                {normalizedTitle}
               </Dialog.Title>
-              {description ? (
-                <Dialog.Description
-                  id="modal-desc"
-                  className="text-sm leading-relaxed text-ink-700"
-                >
-                  {description}
-                </Dialog.Description>
-              ) : null}
+              <Dialog.Description
+                id={descriptionId}
+                className={cn(
+                  "leading-relaxed",
+                  description ? "text-sm text-ink-700" : "sr-only",
+                )}
+              >
+                {normalizedDescription}
+              </Dialog.Description>
             </div>
             <Dialog.Close asChild>
               <button
                 type="button"
-                className="inline-flex items-center gap-2 border border-ink-300 bg-paper-0 px-2 py-1 text-ink-700 transition-colors duration-[80ms] [transition-timing-function:var(--ease-editorial)] hover:border-ink-900 hover:text-ink-900"
+                className="inline-flex items-center gap-2 border border-ink-300 bg-paper-0 px-2 py-1 text-ink-700 transition-colors duration-80 ease-(--ease-editorial) hover:border-ink-900 hover:text-ink-900"
                 aria-label="Close modal"
               >
                 <span className="font-mono text-xs uppercase tracking-[0.04em]">

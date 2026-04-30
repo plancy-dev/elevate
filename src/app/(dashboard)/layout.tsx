@@ -3,12 +3,17 @@ import { setRequestLocale } from "next-intl/server";
 import { PostHogIdentify } from "@/components/analytics/posthog-identify";
 import { AppShellIntlProvider } from "@/components/dashboard/app-shell-intl-provider";
 import { DeskShell } from "@/components/desk";
+import { ElevateSpinnerTempoProvider } from "@/components/ui/elevate-spinner";
 import { ensureDefaultOrganization } from "@/actions/onboarding";
 import { ActionErrorMessage } from "@/components/i18n/action-error-message";
 import { loadSidebarUser } from "@/lib/dashboard/load-sidebar-user";
 import { getPosthogPublicConfig } from "@/lib/env/posthog-public";
 import { getAppLocale } from "@/lib/i18n/app-locale";
 import { loadMessagesForLocale } from "@/lib/i18n/app-messages";
+import {
+  normalizeSidebarIconTonePreference,
+  normalizeSpinnerTempoPreference,
+} from "@/lib/settings-validation";
 import { createClient } from "@/lib/supabase/server";
 import {
   canAccessElevateServiceAdmin,
@@ -32,7 +37,7 @@ export default async function DashboardLayout({
 
   const { data: prof } = await supabase
     .from("profiles")
-    .select("organization_id, role")
+    .select("organization_id, role, loading_spinner_tempo, sidebar_icon_tone")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -88,15 +93,22 @@ export default async function DashboardLayout({
           role={prof.role ?? "viewer"}
         />
       ) : null}
-      <DeskShell
-        mode="dashboard"
-        user={sidebarUser}
-        isOrgAdmin={showOrganizationHub}
-        isServiceAdmin={showServiceAdmin}
-        recentEpisodes={recentEpisodes}
+      <ElevateSpinnerTempoProvider
+        tempo={normalizeSpinnerTempoPreference(prof?.loading_spinner_tempo ?? null)}
       >
-        {children}
-      </DeskShell>
+        <DeskShell
+          mode="dashboard"
+          user={sidebarUser}
+          isOrgAdmin={showOrganizationHub}
+          isServiceAdmin={showServiceAdmin}
+          sidebarIconTonePreset={normalizeSidebarIconTonePreference(
+            prof?.sidebar_icon_tone ?? null,
+          )}
+          recentEpisodes={recentEpisodes}
+        >
+          {children}
+        </DeskShell>
+      </ElevateSpinnerTempoProvider>
     </AppShellIntlProvider>
   );
 }
