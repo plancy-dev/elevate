@@ -139,3 +139,86 @@ Live scripts (write mode):
 
 - `pnpm content-ops:smoke`
 - `pnpm content-ops:cleanup`
+
+## Autoloop Operations (Cursor Automations Primary)
+
+Autoloop objective:
+
+- continuously validate repo health and content quality signals
+- optionally merge only policy-safe PR candidates
+- fail closed when any critical condition is violated
+
+Execution modes:
+
+- `rehearsal`: no merge/write actions, safe rehearsal
+- `production`: bounded checks with optional low-risk auto-merge
+
+Standard commands:
+
+- Rehearsal:
+  - `pnpm autoloop:rehearsal`
+- Production (merge disabled):
+  - `pnpm autoloop:production`
+- Production (low-risk auto-merge enabled):
+  - `pnpm autoloop:poc --mode=production --max-cycles=48 --max-hours=24 --interval-minutes=30 --required-secrets=CONTENT_OPS_AUTOMATION_TOKEN --merge-enabled=true`
+
+Policy gate for automated merge:
+
+- required label: `low-risk`
+- base branch: `main`
+- allowlist paths only:
+  - `docs/**`
+  - `messages/**`
+  - `memory-bank/**`
+  - `tests/unit/admin-i18n-hardcoded.test.ts`
+
+### Cursor Automations schedule contract
+
+Recommended schedule:
+
+- rehearsal: once per day
+- production: weekdays 2-4 times/day (bounded 30-60 minutes per invocation)
+
+Each run should pass a unique run id:
+
+- `--cursor-run-id=<automation_run_id>`
+
+Concurrency guard:
+
+- lock file path: `reports/autoloop/.lock`
+- if lock exists, run must fail fast and report lock owner metadata
+
+### Stop Conditions (Fail-Closed)
+
+Hard stop:
+
+- required check failure (`clean-tree`, `typecheck`, `test:i18n`)
+- missing required secrets (default: `CONTENT_OPS_AUTOMATION_TOKEN` in production)
+- policy/merge gate failure for candidate PR
+- emergency stop switch file present (`reports/autoloop/.automerge-stop`)
+
+Soft stop:
+
+- optional quality checks fail (`content-packs`, `quality-monitor`)
+- merge is disabled for that cycle and loop halts with warning report
+
+### Emergency stop switch
+
+To immediately pause merge-capable runs:
+
+1. create file `reports/autoloop/.automerge-stop`
+2. rerun or wait for next autoloop invocation (it will halt with stop reason)
+3. remove the file only after issue triage is complete
+
+### Report interpretation
+
+Autoloop report path:
+
+- `reports/autoloop/*.json`
+
+Key report fields:
+
+- `runMode`, `policyVersion`, `cursorRunId`
+- `candidatePrs`, `mergedPrs`
+- `stopReason`, `elapsedMs`
+- `steps[]` with `ok/skipped/error`
