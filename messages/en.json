@@ -899,6 +899,11 @@
       },
       "admin": {
         "content": "Content",
+        "contentQueue": "Content queue",
+        "newsSources": "News sources",
+        "runs": "Runs",
+        "subscribers": "Subscribers",
+        "contentQuality": "Content quality",
         "waitlist": "Waitlist",
         "purchaseAllowlist": "Checkout allowlist",
         "promptStudioAllowlist": "Prompt Studio beta"
@@ -1148,6 +1153,39 @@
       "colTime": "Signed up (UTC)",
       "errors": {
         "invalidEmail": "Enter a valid email address."
+      }
+    },
+    "adminSubscribers": {
+      "metaTitle": "Subscribers",
+      "title": "Subscribers",
+      "backToAdmin": "Back to admin",
+      "intro": "Manage newsletter subscription lifecycle independently from waitlist leads.",
+      "addHeading": "Add subscriber",
+      "emailPlaceholder": "name@company.com",
+      "localePlaceholder": "en",
+      "save": "Save subscriber",
+      "empty": "No subscribers yet.",
+      "columns": {
+        "email": "Email",
+        "status": "Status",
+        "frequency": "Frequency",
+        "locale": "Locale",
+        "source": "Source",
+        "actions": "Actions"
+      },
+      "actions": {
+        "subscribe": "Subscribe",
+        "unsubscribe": "Unsubscribe",
+        "markBounced": "Mark bounced"
+      },
+      "status": {
+        "subscribed": "Subscribed",
+        "unsubscribed": "Unsubscribed",
+        "bounced": "Bounced"
+      },
+      "frequency": {
+        "daily": "Daily",
+        "weekly": "Weekly"
       }
     },
     "adminPurchaseAllowlist": {

@@ -891,6 +891,11 @@
       },
       "admin": {
         "content": "内容",
+        "contentQueue": "内容队列",
+        "newsSources": "新闻来源",
+        "runs": "运行记录",
+        "subscribers": "订阅者",
+        "contentQuality": "内容质量监控",
         "waitlist": "候补名单",
         "purchaseAllowlist": "结账许可名单",
         "promptStudioAllowlist": "Prompt Studio 测试版"
@@ -1140,6 +1145,39 @@
       "colTime": "报名时间（UTC）",
       "errors": {
         "invalidEmail": "请输入有效的邮箱地址。"
+      }
+    },
+    "adminSubscribers": {
+      "metaTitle": "订阅者",
+      "title": "订阅者",
+      "backToAdmin": "返回管理首页",
+      "intro": "独立于候补名单，管理新闻简报订阅生命周期。",
+      "addHeading": "添加订阅者",
+      "emailPlaceholder": "name@company.com",
+      "localePlaceholder": "en",
+      "save": "保存订阅者",
+      "empty": "暂无订阅者。",
+      "columns": {
+        "email": "邮箱",
+        "status": "状态",
+        "frequency": "频率",
+        "locale": "语言",
+        "source": "来源",
+        "actions": "操作"
+      },
+      "actions": {
+        "subscribe": "设为订阅",
+        "unsubscribe": "取消订阅",
+        "markBounced": "标记退信"
+      },
+      "status": {
+        "subscribed": "已订阅",
+        "unsubscribed": "已取消",
+        "bounced": "退信"
+      },
+      "frequency": {
+        "daily": "每日",
+        "weekly": "每周"
       }
     },
     "adminPurchaseAllowlist": {

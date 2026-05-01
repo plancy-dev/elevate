@@ -891,6 +891,11 @@
       },
       "admin": {
         "content": "內容",
+        "contentQueue": "內容佇列",
+        "newsSources": "新聞來源",
+        "runs": "執行紀錄",
+        "subscribers": "訂閱者",
+        "contentQuality": "內容品質監控",
         "waitlist": "候補名單",
         "purchaseAllowlist": "結帳許可名單",
         "promptStudioAllowlist": "Prompt Studio 測試版"
@@ -1140,6 +1145,39 @@
       "colTime": "報名時間（UTC）",
       "errors": {
         "invalidEmail": "請輸入有效的電子郵件地址。"
+      }
+    },
+    "adminSubscribers": {
+      "metaTitle": "訂閱者",
+      "title": "訂閱者",
+      "backToAdmin": "返回管理首頁",
+      "intro": "獨立於候補名單，管理電子報訂閱生命週期。",
+      "addHeading": "新增訂閱者",
+      "emailPlaceholder": "name@company.com",
+      "localePlaceholder": "en",
+      "save": "儲存訂閱者",
+      "empty": "目前沒有訂閱者。",
+      "columns": {
+        "email": "電子郵件",
+        "status": "狀態",
+        "frequency": "頻率",
+        "locale": "語系",
+        "source": "來源",
+        "actions": "操作"
+      },
+      "actions": {
+        "subscribe": "設為訂閱",
+        "unsubscribe": "取消訂閱",
+        "markBounced": "標記退信"
+      },
+      "status": {
+        "subscribed": "已訂閱",
+        "unsubscribed": "已取消",
+        "bounced": "退信"
+      },
+      "frequency": {
+        "daily": "每日",
+        "weekly": "每週"
       }
     },
     "adminPurchaseAllowlist": {

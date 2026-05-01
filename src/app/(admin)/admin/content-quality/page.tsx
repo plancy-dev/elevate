@@ -80,6 +80,9 @@ export default async function AdminContentQualityPage() {
             tone={snapshot.freshMinQualityScore < 12 ? "danger" : "success"}
           />
         </div>
+        <p className="text-[11px] text-ink-500">
+          Fresh 24h metrics는 <code>generate.mode=pack_registry</code> 인 신규 생성분만 집계합니다.
+        </p>
 
         <div className="grid gap-4 md:grid-cols-2">
           <section className="border border-ink-100 bg-paper-0 p-4">

@@ -899,6 +899,11 @@
       },
       "admin": {
         "content": "콘텐츠",
+        "contentQueue": "콘텐츠 큐",
+        "newsSources": "뉴스 소스",
+        "runs": "실행 이력",
+        "subscribers": "구독자",
+        "contentQuality": "콘텐츠 품질 모니터",
         "waitlist": "대기명단",
         "purchaseAllowlist": "결제 허용 목록",
         "promptStudioAllowlist": "Prompt Studio 베타"
@@ -1148,6 +1153,39 @@
       "colTime": "가입 시각(UTC)",
       "errors": {
         "invalidEmail": "유효한 이메일을 입력하세요."
+      }
+    },
+    "adminSubscribers": {
+      "metaTitle": "구독자",
+      "title": "구독자",
+      "backToAdmin": "관리 홈으로",
+      "intro": "대기명단과 분리된 뉴스레터 구독 수명주기를 관리합니다.",
+      "addHeading": "구독자 추가",
+      "emailPlaceholder": "name@company.com",
+      "localePlaceholder": "en",
+      "save": "구독자 저장",
+      "empty": "등록된 구독자가 없습니다.",
+      "columns": {
+        "email": "이메일",
+        "status": "상태",
+        "frequency": "주기",
+        "locale": "로케일",
+        "source": "출처",
+        "actions": "작업"
+      },
+      "actions": {
+        "subscribe": "구독 처리",
+        "unsubscribe": "구독 해지",
+        "markBounced": "반송 처리"
+      },
+      "status": {
+        "subscribed": "구독 중",
+        "unsubscribed": "해지됨",
+        "bounced": "반송"
+      },
+      "frequency": {
+        "daily": "매일",
+        "weekly": "매주"
       }
     },
     "adminPurchaseAllowlist": {

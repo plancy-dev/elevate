@@ -891,6 +891,11 @@
       },
       "admin": {
         "content": "コンテンツ",
+        "contentQueue": "コンテンツキュー",
+        "newsSources": "ニュースソース",
+        "runs": "実行履歴",
+        "subscribers": "購読者",
+        "contentQuality": "コンテンツ品質モニター",
         "waitlist": "ウェイトリスト",
         "purchaseAllowlist": "チェックアウト許可リスト",
         "promptStudioAllowlist": "Prompt Studio ベータ"
@@ -1140,6 +1145,39 @@
       "colTime": "登録日時（UTC）",
       "errors": {
         "invalidEmail": "有効なメールアドレスを入力してください。"
+      }
+    },
+    "adminSubscribers": {
+      "metaTitle": "購読者",
+      "title": "購読者",
+      "backToAdmin": "管理ホームへ",
+      "intro": "ウェイトリストとは別にニュースレター購読ライフサイクルを管理します。",
+      "addHeading": "購読者を追加",
+      "emailPlaceholder": "name@company.com",
+      "localePlaceholder": "en",
+      "save": "購読者を保存",
+      "empty": "購読者はまだいません。",
+      "columns": {
+        "email": "メール",
+        "status": "状態",
+        "frequency": "頻度",
+        "locale": "ロケール",
+        "source": "ソース",
+        "actions": "操作"
+      },
+      "actions": {
+        "subscribe": "購読",
+        "unsubscribe": "購読解除",
+        "markBounced": "バウンスにする"
+      },
+      "status": {
+        "subscribed": "購読中",
+        "unsubscribed": "解除済み",
+        "bounced": "バウンス"
+      },
+      "frequency": {
+        "daily": "毎日",
+        "weekly": "毎週"
       }
     },
     "adminPurchaseAllowlist": {
