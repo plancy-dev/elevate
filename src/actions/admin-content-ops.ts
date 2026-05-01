@@ -8,6 +8,7 @@ import {
   runDraftGeneratePipeline,
   runIngestPipeline,
   runPublishPipeline,
+  runReviewGatePipeline,
 } from "@/lib/content-ops/pipeline-runner";
 import type { Json } from "@/types/database.types";
 
@@ -23,6 +24,7 @@ export type AdminContentItemRow = {
   source_quality_score: number | null;
   fact_check_score: number | null;
   scheduled_at: string | null;
+  metadata: Json | null;
   updated_at: string;
 };
 
@@ -92,7 +94,7 @@ export async function listAdminContentQueue(filters?: {
     let query = admin
       .from("content_items")
       .select(
-        "id, type, title, locale, status, source_quality_score, fact_check_score, scheduled_at, updated_at",
+        "id, type, title, locale, status, source_quality_score, fact_check_score, scheduled_at, metadata, updated_at",
       )
       .order("updated_at", { ascending: false })
       .limit(300);
@@ -297,8 +299,10 @@ async function executeAdminRunType(runType: string): Promise<void> {
         metadata = await runDraftGeneratePipeline(runRow.id);
       } else if (runType === "publish") {
         metadata = await runPublishPipeline();
+      } else if (runType === "publish_retry_failed") {
+        metadata = await runPublishPipeline({ retryFailedOnly: true });
       } else if (runType === "review_gate") {
-        metadata = { skipped: true, reason: "build1_scaffold_no_rule_engine_yet" };
+        metadata = await runReviewGatePipeline(runRow.id);
       } else {
         metadata = { skipped: true, reason: "unknown_run_type" };
       }
@@ -309,7 +313,7 @@ async function executeAdminRunType(runType: string): Promise<void> {
 
     if (!errorSummary && metadata && typeof metadata === "object" && !Array.isArray(metadata)) {
       if (
-        runType === "publish" &&
+        (runType === "publish" || runType === "publish_retry_failed") &&
         typeof (metadata as Record<string, unknown>).failedCount === "number" &&
         ((metadata as Record<string, unknown>).failedCount as number) > 0
       ) {
@@ -360,6 +364,12 @@ export async function runAdminContentOpsScenario(): Promise<void> {
   } catch (e) {
     console.error("[runAdminContentOpsScenario] failed", e);
   }
+}
+
+export async function runRetryFailedPublishOnly(): Promise<void> {
+  const gate = await assertPlatformAdmin();
+  if (!gate.ok) return;
+  await executeAdminRunType("publish_retry_failed");
 }
 
 export async function listAdminNewsletterSubscribers(): Promise<

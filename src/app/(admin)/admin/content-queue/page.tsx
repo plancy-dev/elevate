@@ -3,8 +3,10 @@ import type { Metadata } from "next";
 import { ListChecks } from "lucide-react";
 import {
   listAdminContentQueue,
+  runRetryFailedPublishOnly,
   updateContentItemStatus,
 } from "@/actions/admin-content-ops";
+import type { Json } from "@/types/database.types";
 
 export const metadata: Metadata = {
   title: "Admin | Content Queue",
@@ -105,6 +107,13 @@ export default async function AdminContentQueuePage(props: {
           >
             Apply filters
           </button>
+          <button
+            type="submit"
+            formAction={runRetryFailedPublishOnly}
+            className="border border-ink-100 bg-vermilion-100/40 px-3 py-1.5 text-xs text-ink-900 hover:bg-vermilion-100"
+          >
+            Retry failed only
+          </button>
         </form>
 
         {!listRes.ok ? <p className="text-xs text-danger">{listRes.error}</p> : null}
@@ -120,6 +129,7 @@ export default async function AdminContentQueuePage(props: {
                   <th className="p-2 font-medium text-ink-700">Type</th>
                   <th className="p-2 font-medium text-ink-700">Status</th>
                   <th className="p-2 font-medium text-ink-700">Quality</th>
+                  <th className="p-2 font-medium text-ink-700">Gate</th>
                   <th className="p-2 font-medium text-ink-700">Updated</th>
                   <th className="p-2 font-medium text-ink-700">Actions</th>
                 </tr>
@@ -135,6 +145,9 @@ export default async function AdminContentQueuePage(props: {
                     <td className="p-2 text-ink-700">{row.status}</td>
                     <td className="p-2 text-ink-700">
                       {row.source_quality_score ?? "-"} / {row.fact_check_score ?? "-"}
+                    </td>
+                    <td className="p-2 text-ink-700">
+                      <ReviewGateCell metadata={row.metadata} />
                     </td>
                     <td className="p-2 whitespace-nowrap text-ink-500">
                       {new Date(row.updated_at).toISOString().replace("T", " ").slice(0, 19)} UTC
@@ -202,4 +215,57 @@ export default async function AdminContentQueuePage(props: {
       </div>
     </div>
   );
+}
+
+function ReviewGateCell({ metadata }: { metadata: Json | null }) {
+  const latest = readLatestReviewGate(metadata);
+  if (!latest) {
+    return <span className="text-ink-500">-</span>;
+  }
+  if (latest.passed) {
+    return (
+      <span className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
+        pass
+      </span>
+    );
+  }
+  return (
+    <div className="flex flex-wrap gap-1">
+      {latest.reasons.length === 0 ? (
+        <span className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+          fail
+        </span>
+      ) : (
+        latest.reasons.map((reason) => (
+          <span
+            key={reason}
+            className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-amber-700"
+          >
+            {reason}
+          </span>
+        ))
+      )}
+    </div>
+  );
+}
+
+function readLatestReviewGate(metadata: Json | null): {
+  passed: boolean;
+  reasons: string[];
+} | null {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
+  const reviewGate = (metadata as Record<string, unknown>).review_gate;
+  if (!reviewGate || typeof reviewGate !== "object" || Array.isArray(reviewGate)) {
+    return null;
+  }
+  const latest = (reviewGate as Record<string, unknown>).latest;
+  if (!latest || typeof latest !== "object" || Array.isArray(latest)) return null;
+  const passed = (latest as Record<string, unknown>).passed;
+  const reasons = (latest as Record<string, unknown>).reasons;
+  return {
+    passed: passed === true,
+    reasons: Array.isArray(reasons)
+      ? reasons.filter((v): v is string => typeof v === "string")
+      : [],
+  };
 }

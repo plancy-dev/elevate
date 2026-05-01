@@ -30,7 +30,9 @@
     "blog:autopublish": "node scripts/blog-autopublish-sdk.mjs",
     "blog:quality-gate": "node scripts/blog-quality-gate.mjs",
     "content-ops:smoke": "pnpm tsx scripts/content-ops-smoke.ts",
+    "content-ops:smoke:dry-run": "pnpm tsx scripts/content-ops-smoke.ts --dry-run",
     "content-ops:cleanup": "pnpm tsx scripts/content-ops-cleanup.ts",
+    "content-ops:cleanup:dry-run": "pnpm tsx scripts/content-ops-cleanup.ts --dry-run",
     "worker:assembly": "tsx workers/video-assembly/run.ts",
     "prepare": "husky"
   },

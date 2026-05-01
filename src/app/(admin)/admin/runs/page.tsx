@@ -5,6 +5,7 @@ import {
   createManualContentRun,
   listAdminContentRuns,
   runAdminContentOpsScenario,
+  runRetryFailedPublishOnly,
 } from "@/actions/admin-content-ops";
 import type { Json } from "@/types/database.types";
 
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 export default async function AdminRunsPage() {
   const listRes = await listAdminContentRuns();
   const rows = listRes.ok ? listRes.rows : [];
+  const summary = buildRunSummary(rows);
 
   return (
     <div className="min-h-screen bg-paper-50">
@@ -35,6 +37,16 @@ export default async function AdminRunsPage() {
         <p className="text-sm leading-relaxed text-ink-700">
           Inspect ingestion/generation/publish run history and trigger manual runs.
         </p>
+        <div className="grid gap-2 md:grid-cols-4">
+          <SummaryCard label="Created" value={summary.createdCount} tone="neutral" />
+          <SummaryCard label="Sent" value={summary.sentCount} tone="success" />
+          <SummaryCard label="Failed" value={summary.failedCount} tone="danger" />
+          <SummaryCard
+            label="Top failure reason"
+            value={summary.topFailureReason ?? "-"}
+            tone="warning"
+          />
+        </div>
         <div className="border border-ink-100 bg-paper-0 p-3 text-xs leading-relaxed text-ink-700">
           <p className="font-medium text-ink-900">Recommended 1-pass scenario</p>
           <p className="mt-1">
@@ -59,6 +71,7 @@ export default async function AdminRunsPage() {
               <option value="draft_generate">draft_generate</option>
               <option value="review_gate">review_gate</option>
               <option value="publish">publish</option>
+              <option value="publish_retry_failed">publish_retry_failed</option>
             </select>
           </div>
           <button
@@ -73,6 +86,13 @@ export default async function AdminRunsPage() {
             className="border border-ink-100 bg-vermilion-100/40 px-3 py-1.5 text-xs text-ink-900 hover:bg-vermilion-100"
           >
             Run ingest → generate → publish
+          </button>
+          <button
+            type="submit"
+            formAction={runRetryFailedPublishOnly}
+            className="border border-ink-100 bg-paper-50 px-3 py-1.5 text-xs text-ink-900 hover:bg-highlight"
+          >
+            Retry failed only
           </button>
         </form>
 
@@ -129,13 +149,38 @@ export default async function AdminRunsPage() {
   );
 }
 
+function SummaryCard({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number | string;
+  tone: "neutral" | "success" | "danger" | "warning";
+}) {
+  const toneClass =
+    tone === "success"
+      ? "text-emerald-700"
+      : tone === "danger"
+        ? "text-danger"
+        : tone === "warning"
+          ? "text-amber-700"
+          : "text-ink-900";
+  return (
+    <div className="border border-ink-100 bg-paper-0 p-3">
+      <p className="text-[11px] uppercase tracking-wide text-ink-500">{label}</p>
+      <p className={`mt-1 text-sm font-medium ${toneClass}`}>{String(value)}</p>
+    </div>
+  );
+}
+
 function renderRunResultBadge(
   status: string,
   errorSummary: string | null,
   metadata: Json | null,
 ) {
   const result = getRunResult(status, errorSummary, metadata);
-  const failureHint = getFirstFailureMessage(errorSummary, metadata);
+  const failureHint = getFailureHint(errorSummary, metadata);
   if (result === "failure") {
     return (
       <span
@@ -204,17 +249,21 @@ function arrayLength(value: unknown): number {
   return Array.isArray(value) ? value.length : 0;
 }
 
-function getFirstFailureMessage(
+function getFailureHint(
   errorSummary: string | null,
   metadata: Json | null,
 ): string | null {
-  if (errorSummary?.trim()) return errorSummary.trim();
+  const firstFromError = errorSummary?.trim() ? errorSummary.trim() : null;
+  const count = getFailureCount(errorSummary, metadata);
+  if (firstFromError) {
+    return count > 1 ? `${firstFromError} (+${count - 1})` : firstFromError;
+  }
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) {
     return null;
   }
   const obj = metadata as Record<string, unknown>;
   const direct = firstStringInFailureMessages(obj.failureMessages);
-  if (direct) return direct;
+  if (direct) return count > 1 ? `${direct} (+${count - 1})` : direct;
   const nestedResult = obj.result;
   if (
     nestedResult &&
@@ -223,7 +272,7 @@ function getFirstFailureMessage(
   ) {
     const nested = nestedResult as Record<string, unknown>;
     const nestedMsg = firstStringInFailureMessages(nested.failureMessages);
-    if (nestedMsg) return nestedMsg;
+    if (nestedMsg) return count > 1 ? `${nestedMsg} (+${count - 1})` : nestedMsg;
   }
   return null;
 }
@@ -232,4 +281,97 @@ function firstStringInFailureMessages(value: unknown): string | null {
   if (!Array.isArray(value) || value.length === 0) return null;
   const first = value.find((item) => typeof item === "string");
   return typeof first === "string" ? first : null;
+}
+
+function getFailureCount(errorSummary: string | null, metadata: Json | null): number {
+  if (errorSummary?.startsWith("warning:")) {
+    return 1;
+  }
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) {
+    return errorSummary?.trim() ? 1 : 0;
+  }
+
+  const obj = metadata as Record<string, unknown>;
+  const failedCount = numericValue(obj.failedCount);
+  if (failedCount > 0) return failedCount;
+
+  const directMsgs = Array.isArray(obj.failureMessages) ? obj.failureMessages.length : 0;
+  if (directMsgs > 0) return directMsgs;
+
+  const nestedResult = obj.result;
+  if (
+    nestedResult &&
+    typeof nestedResult === "object" &&
+    !Array.isArray(nestedResult)
+  ) {
+    const nested = nestedResult as Record<string, unknown>;
+    const nestedFailedCount = numericValue(nested.failedCount);
+    if (nestedFailedCount > 0) return nestedFailedCount;
+    const nestedMsgs = Array.isArray(nested.failureMessages)
+      ? nested.failureMessages.length
+      : 0;
+    if (nestedMsgs > 0) return nestedMsgs;
+  }
+  return errorSummary?.trim() ? 1 : 0;
+}
+
+function buildRunSummary(rows: Array<{ error_summary: string | null; metadata: Json | null }>) {
+  let createdCount = 0;
+  let sentCount = 0;
+  let failedCount = 0;
+  const reasonCounts = new Map<string, number>();
+
+  for (const row of rows.slice(0, 100)) {
+    const payload = normalizeRunMetadata(row.metadata);
+    createdCount += numericValue(payload.createdItems);
+    sentCount += numericValue(payload.sentCount);
+    failedCount += numericValue(payload.failedCount);
+    for (const reason of parseFailureReasons(row.error_summary, payload.failureMessages)) {
+      reasonCounts.set(reason, (reasonCounts.get(reason) ?? 0) + 1);
+    }
+  }
+
+  let topFailureReason: string | null = null;
+  let topCount = 0;
+  for (const [reason, count] of reasonCounts.entries()) {
+    if (count > topCount) {
+      topCount = count;
+      topFailureReason = `${reason} (${count})`;
+    }
+  }
+
+  return { createdCount, sentCount, failedCount, topFailureReason };
+}
+
+function normalizeRunMetadata(metadata: Json | null): Record<string, unknown> {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) {
+    return {};
+  }
+  const obj = metadata as Record<string, unknown>;
+  const nested = obj.result;
+  if (nested && typeof nested === "object" && !Array.isArray(nested)) {
+    return nested as Record<string, unknown>;
+  }
+  return obj;
+}
+
+function parseFailureReasons(
+  errorSummary: string | null,
+  failureMessagesRaw: unknown,
+): string[] {
+  const parsed: string[] = [];
+  if (errorSummary?.trim()) {
+    parsed.push(errorSummary.replace(/^warning:/, "").trim());
+  }
+  if (Array.isArray(failureMessagesRaw)) {
+    for (const message of failureMessagesRaw) {
+      if (typeof message !== "string") continue;
+      const cleaned = message
+        .replace(/^\[[^\]]+\]\s*/, "")
+        .replace(/^warning:/, "")
+        .trim();
+      if (cleaned) parsed.push(cleaned);
+    }
+  }
+  return parsed;
 }

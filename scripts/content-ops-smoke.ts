@@ -9,7 +9,12 @@ import type { Json } from "@/types/database.types";
 
 dotenv.config({ path: ".env.local" });
 
+const DRY_RUN = process.argv.includes("--dry-run");
+
 async function createRun(runType: string): Promise<string> {
+  if (DRY_RUN) {
+    return `dry-run-${runType}-${Date.now()}`;
+  }
   const admin = createAdminClient();
   const { data, error } = await admin
     .from("content_runs")
@@ -36,6 +41,7 @@ async function finishRun(params: {
   metadata: Json;
   errorSummary: string | null;
 }) {
+  if (DRY_RUN) return;
   const admin = createAdminClient();
   await admin
     .from("content_runs")
@@ -53,6 +59,23 @@ async function finishRun(params: {
 
 async function seedScenarioFixtures() {
   const admin = createAdminClient();
+  if (DRY_RUN) {
+    const [{ count: sourceCount }, { count: subscriberCount }] = await Promise.all([
+      admin
+        .from("content_sources")
+        .select("id", { count: "exact", head: true })
+        .eq("is_active", true),
+      admin
+        .from("newsletter_subscribers")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "subscribed"),
+    ]);
+    return {
+      activeSources: sourceCount ?? 0,
+      subscribers: subscriberCount ?? 0,
+      wouldSeed: true,
+    };
+  }
 
   const sourceFixtures = [
     {
@@ -115,10 +138,32 @@ async function seedScenarioFixtures() {
       smoke_fixture: true,
     },
   });
+
+  return {
+    activeSources: sourceFixtures.length,
+    subscribers: 1,
+    wouldSeed: true,
+  };
 }
 
 async function main() {
-  await seedScenarioFixtures();
+  const seedInfo = await seedScenarioFixtures();
+  if (DRY_RUN) {
+    console.log(
+      JSON.stringify(
+        {
+          mode: "dry-run",
+          check: "content-ops-smoke",
+          seedInfo,
+          plannedRuns: ["ingest", "draft_generate", "publish"],
+          note: "No DB writes or email sends were executed.",
+        },
+        null,
+        2,
+      ),
+    );
+    return;
+  }
 
   const ingestRunId = await createRun("ingest");
   const ingest = await runIngestPipeline(ingestRunId);
