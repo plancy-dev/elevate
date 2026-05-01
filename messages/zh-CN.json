@@ -1258,7 +1258,10 @@
         "runTypeLabel": "运行类型",
         "queueManualRun": "加入手动运行",
         "runScenario": "运行 ingest -> generate -> publish",
-        "retryFailedOnly": "仅重试失败项"
+        "retryFailedOnly": "仅重试失败项",
+        "pendingManualRun": "正在加入运行...",
+        "pendingScenario": "正在执行场景...",
+        "pendingRetryFailedOnly": "正在重试失败项..."
       },
       "runType": {
         "ingest": "ingest",
@@ -1293,7 +1296,13 @@
         "failure": "失败",
         "partialHint": "部分失败（详情见 metadata）"
       },
-      "empty": "暂无运行日志。"
+      "empty": "暂无运行日志。",
+      "metadata": {
+        "open": "查看",
+        "modalTitle": "运行元数据",
+        "modalDescription": "该运行结果的完整 metadata JSON。",
+        "close": "关闭"
+      }
     },
     "adminContentQueue": {
       "metaTitle": "内容队列",
@@ -1434,7 +1443,9 @@
         "step1": "Check /admin/runs for success/partial-failure/failure and first failure reason.",
         "step2": "Check /admin/content-quality for freshAvgQualityScore and top recurring issues.",
         "step3": "Check /admin/content-queue for review_required backlog and low-quality drafts.",
-        "step4": "Choose go, adjust, or stop and issue direction to the automation agent."
+        "step4": "Choose go, adjust, or stop and issue direction to the automation agent.",
+        "fixedOrderPrefix": "Keep daily operator decisions in this order:",
+        "fixedOrderSuffix": "."
       },
       "decision": {
         "title": "Decision matrix",

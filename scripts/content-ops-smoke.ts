@@ -14,6 +14,7 @@ import type { Json } from "@/types/database.types";
 dotenv.config({ path: ".env.local" });
 
 const DRY_RUN = process.argv.includes("--dry-run");
+const INCLUDE_BROKEN_RSS_FIXTURE = process.argv.includes("--include-broken-rss-fixture");
 
 async function createRun(runType: string): Promise<string> {
   if (DRY_RUN) {
@@ -92,17 +93,18 @@ async function seedScenarioFixtures() {
       fetch_interval_minutes: 60,
       updated_at: new Date().toISOString(),
     },
-    {
-      name: "[SMOKE] Broken RSS Fixture",
-      kind: "rss",
-      base_url: "https://example.invalid/rss",
-      rss_url: "https://example.invalid/rss",
-      is_active: true,
-      trust_weight: 80,
-      fetch_interval_minutes: 60,
-      updated_at: new Date().toISOString(),
-    },
   ] as const;
+
+  const brokenFixture = {
+    name: "[SMOKE] Broken RSS Fixture",
+    kind: "rss",
+    base_url: "https://example.invalid/rss",
+    rss_url: "https://example.invalid/rss",
+    is_active: INCLUDE_BROKEN_RSS_FIXTURE,
+    trust_weight: 80,
+    fetch_interval_minutes: 60,
+    updated_at: new Date().toISOString(),
+  } as const;
 
   for (const fixture of sourceFixtures) {
     const { data: existing } = await admin
@@ -116,6 +118,17 @@ async function seedScenarioFixtures() {
     } else {
       await admin.from("content_sources").insert(fixture);
     }
+  }
+
+  const { data: existingBroken } = await admin
+    .from("content_sources")
+    .select("id")
+    .eq("base_url", brokenFixture.base_url)
+    .maybeSingle();
+  if (existingBroken?.id) {
+    await admin.from("content_sources").update(brokenFixture).eq("id", existingBroken.id);
+  } else if (INCLUDE_BROKEN_RSS_FIXTURE) {
+    await admin.from("content_sources").insert(brokenFixture);
   }
 
   await admin.from("newsletter_subscribers").upsert(
@@ -144,7 +157,7 @@ async function seedScenarioFixtures() {
   });
 
   return {
-    activeSources: sourceFixtures.length,
+    activeSources: sourceFixtures.length + (INCLUDE_BROKEN_RSS_FIXTURE ? 1 : 0),
     subscribers: 1,
     wouldSeed: true,
   };

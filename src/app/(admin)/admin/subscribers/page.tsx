@@ -7,6 +7,7 @@ import {
   listAdminNewsletterSubscribers,
   updateAdminNewsletterSubscriberStatus,
 } from "@/actions/admin-content-ops";
+import { FieldSelect } from "@/components/ui/field-select";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.adminSubscribers");
@@ -56,14 +57,17 @@ export default async function AdminSubscribersPage() {
               placeholder={t("localePlaceholder")}
               className="border border-ink-100 bg-paper-50 px-2.5 py-2 text-xs text-ink-900"
             />
-            <select
+            <FieldSelect
               name="frequency_pref"
               defaultValue="weekly"
-              className="border border-ink-100 bg-paper-50 px-2.5 py-2 text-xs text-ink-900"
-            >
-              <option value="daily">{t("frequency.daily")}</option>
-              <option value="weekly">{t("frequency.weekly")}</option>
-            </select>
+              variant="boxed"
+              controlSize="sm"
+              className="py-2 text-xs"
+              options={[
+                { value: "daily", label: t("frequency.daily") },
+                { value: "weekly", label: t("frequency.weekly") },
+              ]}
+            />
           </div>
           <button
             type="submit"

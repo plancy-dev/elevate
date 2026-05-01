@@ -3,6 +3,7 @@ import {
   NEWSLETTER_TEMPLATE_VERSION,
   resolveLocaleTemplateConfig,
 } from "@/lib/content-ops/locale-template-config";
+import { resolveResendSendConfig } from "@/lib/email/resend-config";
 
 type NewsletterLocaleTemplate = {
   preheader: string;
@@ -81,25 +82,24 @@ export async function sendNewsletterEmail(params: {
   | { ok: true; providerMessageId?: string; templateVersion: string }
   | { ok: false; error: string; templateVersion: string }
 > {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  const from = process.env.RESEND_FROM_EMAIL?.trim();
-  if (!apiKey || !from) {
+  const resendConfig = resolveResendSendConfig();
+  if (!resendConfig.ok) {
     return {
       ok: false,
-      error: "resend_not_configured",
+      error: resendConfig.reason,
       templateVersion: NEWSLETTER_TEMPLATE_VERSION,
     };
   }
 
   try {
-    const resend = new Resend(apiKey);
+    const resend = new Resend(resendConfig.apiKey);
     const html = buildBrandedNewsletterHtml({
       locale: params.locale,
       subject: params.subject,
       markdownBody: params.markdownBody,
     });
     const result = await resend.emails.send({
-      from,
+      from: resendConfig.from,
       to: params.to.trim(),
       subject: params.subject.trim(),
       html,

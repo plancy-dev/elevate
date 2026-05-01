@@ -28,6 +28,12 @@ const INGEST_MIN_TRUST_WEIGHT = 60;
 const INGEST_MAX_SOURCES = 15;
 const DRAFT_MIN_TRUST_WEIGHT = 70;
 const DRAFT_MAX_SOURCE_BULLETS = 8;
+const DEFAULT_PUBLISH_BATCH_SIZE = 20;
+const DEFAULT_RETRY_FAILED_BATCH_SIZE = 5;
+const BROKEN_FIXTURE_SOURCE_PATTERNS = [
+  "example.invalid/rss",
+  "broken rss fixture",
+] as const;
 
 type FetchSourceResult =
   | { ok: true; entries: FeedEntry[]; fetchUrl: string }
@@ -81,12 +87,53 @@ function addMinutesIso(date: Date, minutes: number): string {
   return new Date(date.getTime() + minutes * 60 * 1000).toISOString();
 }
 
+function clampInt(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function parseBatchSize(
+  raw: string | undefined,
+  fallback: number,
+  min = 1,
+  max = 100,
+): number {
+  const parsed = Number.parseInt(raw ?? "", 10);
+  if (!Number.isFinite(parsed)) return fallback;
+  return clampInt(parsed, min, max);
+}
+
+function resolvePublishBatchSize(retryFailedOnly: boolean): number {
+  if (retryFailedOnly) {
+    return parseBatchSize(
+      process.env.CONTENT_OPS_RETRY_FAILED_BATCH_SIZE,
+      DEFAULT_RETRY_FAILED_BATCH_SIZE,
+    );
+  }
+  return parseBatchSize(
+    process.env.CONTENT_OPS_PUBLISH_BATCH_SIZE,
+    DEFAULT_PUBLISH_BATCH_SIZE,
+  );
+}
+
 function parseNextRetryAt(metadata: unknown): string | null {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
   const retry = (metadata as Record<string, unknown>).retry;
   if (!retry || typeof retry !== "object" || Array.isArray(retry)) return null;
   const nextRetryAt = (retry as Record<string, unknown>).next_retry_at;
   return typeof nextRetryAt === "string" && nextRetryAt.trim() ? nextRetryAt : null;
+}
+
+function isBrokenFixtureSource(source: ContentSourceRow): boolean {
+  const searchable = [
+    source.name,
+    source.base_url,
+    source.rss_url ?? "",
+  ]
+    .join(" ")
+    .toLowerCase();
+  return BROKEN_FIXTURE_SOURCE_PATTERNS.some((pattern) =>
+    searchable.includes(pattern),
+  );
 }
 
 async function getRetryState(
@@ -224,7 +271,10 @@ async function fetchSourceEntries(source: ContentSourceRow): Promise<FetchSource
 }
 
 function pickSourcesForIngest(sources: ContentSourceRow[]): ContentSourceRow[] {
-  const sorted = [...sources].sort((a, b) => (b.trust_weight ?? 0) - (a.trust_weight ?? 0));
+  const filtered = sources.filter((source) => !isBrokenFixtureSource(source));
+  const sorted = [...filtered].sort(
+    (a, b) => (b.trust_weight ?? 0) - (a.trust_weight ?? 0),
+  );
   const preferred = sorted.filter((source) => (source.trust_weight ?? 0) >= INGEST_MIN_TRUST_WEIGHT);
   if (preferred.length > 0) {
     return preferred.slice(0, INGEST_MAX_SOURCES);
@@ -757,17 +807,19 @@ export async function runPublishPipeline(params?: {
   failureMessages: string[];
 }> {
   const admin = createAdminClient();
+  const retryFailedOnly = Boolean(params?.retryFailedOnly);
+  const batchSize = params?.contentItemId ? 1 : resolvePublishBatchSize(retryFailedOnly);
   let query = admin
     .from("content_items")
     .select("*")
     .in(
       "status",
-      params?.retryFailedOnly
+      retryFailedOnly
         ? ["send_failed", "publishing"]
         : ["approved", "scheduled", "publishing"],
     )
     .order("updated_at", { ascending: true })
-    .limit(50);
+    .limit(batchSize);
 
   if (params?.contentItemId) {
     query = query.eq("id", params.contentItemId);

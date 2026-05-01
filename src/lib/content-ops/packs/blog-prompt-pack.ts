@@ -1,6 +1,6 @@
 import type { TopicStrategyEntry } from "@/lib/content-ops/packs/topic-strategy-pack";
 
-export const BLOG_PROMPT_PACK_VERSION = "v1.2.0";
+export const BLOG_PROMPT_PACK_VERSION = "v1.2.1";
 
 export function buildBlogDraftFromPack(params: {
   topic: TopicStrategyEntry;
@@ -16,7 +16,7 @@ export function buildBlogDraftFromPack(params: {
       : "- No source items were ingested in this cycle.";
 
   const bodyMarkdown = [
-    "## Context",
+    "## Why now context",
     params.topic.whyNowPattern,
     "",
     "## Core question",

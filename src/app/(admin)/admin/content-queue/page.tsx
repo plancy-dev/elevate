@@ -7,6 +7,7 @@ import {
   runRetryFailedPublishOnly,
   updateContentItemStatus,
 } from "@/actions/admin-content-ops";
+import { FieldSelect } from "@/components/ui/field-select";
 import type { Json } from "@/types/database.types";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -82,35 +83,35 @@ export default async function AdminContentQueuePage(props: {
             <label htmlFor="type" className="text-xs text-ink-500">
               {t("filters.type")}
             </label>
-            <select
+            <FieldSelect
               id="type"
               name="type"
               defaultValue={typeFilter}
-              className="min-w-[140px] border border-ink-100 bg-paper-50 px-2 py-1.5 text-xs text-ink-900"
-            >
-              {TYPE_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {toTypeLabel(t, opt)}
-                </option>
-              ))}
-            </select>
+              variant="boxed"
+              controlSize="sm"
+              className="min-w-[140px] text-xs"
+              options={TYPE_OPTIONS.map((opt) => ({
+                value: opt,
+                label: toTypeLabel(t, opt),
+              }))}
+            />
           </div>
           <div className="space-y-1">
             <label htmlFor="status" className="text-xs text-ink-500">
               {t("filters.status")}
             </label>
-            <select
+            <FieldSelect
               id="status"
               name="status"
               defaultValue={statusFilter}
-              className="min-w-[170px] border border-ink-100 bg-paper-50 px-2 py-1.5 text-xs text-ink-900"
-            >
-              {STATUS_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {toStatusFilterLabel(t, opt)}
-                </option>
-              ))}
-            </select>
+              variant="boxed"
+              controlSize="sm"
+              className="min-w-[170px] text-xs"
+              options={STATUS_OPTIONS.map((opt) => ({
+                value: opt,
+                label: toStatusFilterLabel(t, opt),
+              }))}
+            />
           </div>
           <button
             type="submit"

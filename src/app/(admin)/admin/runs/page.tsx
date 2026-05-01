@@ -3,12 +3,11 @@ import type { Metadata } from "next";
 import { Activity } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import {
-  createManualContentRun,
   listAdminContentQueue,
   listAdminContentRuns,
-  runAdminContentOpsScenario,
-  runRetryFailedPublishOnly,
 } from "@/actions/admin-content-ops";
+import { AdminRunMetadataCell } from "@/components/admin/admin-run-metadata-cell";
+import { AdminRunsActionsForm } from "@/components/admin/admin-runs-actions-form";
 import type { Json } from "@/types/database.types";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -68,45 +67,24 @@ export default async function AdminRunsPage() {
           </p>
         </div>
 
-        <form action={createManualContentRun} className="flex flex-wrap items-end gap-2 border border-ink-100 bg-paper-0 p-3">
-          <div className="space-y-1">
-            <label htmlFor="run_type" className="text-xs text-ink-500">
-              {t("form.runTypeLabel")}
-            </label>
-            <select
-              id="run_type"
-              name="run_type"
-              defaultValue="ingest"
-              className="min-w-[180px] border border-ink-100 bg-paper-50 px-2 py-1.5 text-xs text-ink-900"
-            >
-              <option value="ingest">{t("runType.ingest")}</option>
-              <option value="draft_generate">{t("runType.draftGenerate")}</option>
-              <option value="review_gate">{t("runType.reviewGate")}</option>
-              <option value="publish">{t("runType.publish")}</option>
-              <option value="publish_retry_failed">{t("runType.publishRetryFailed")}</option>
-            </select>
-          </div>
-          <button
-            type="submit"
-            className="border border-ink-100 bg-paper-50 px-3 py-1.5 text-xs text-ink-900 hover:bg-highlight"
-          >
-            {t("form.queueManualRun")}
-          </button>
-          <button
-            type="submit"
-            formAction={runAdminContentOpsScenario}
-            className="border border-ink-100 bg-vermilion-100/40 px-3 py-1.5 text-xs text-ink-900 hover:bg-vermilion-100"
-          >
-            {t("form.runScenario")}
-          </button>
-          <button
-            type="submit"
-            formAction={runRetryFailedPublishOnly}
-            className="border border-ink-100 bg-paper-50 px-3 py-1.5 text-xs text-ink-900 hover:bg-highlight"
-          >
-            {t("form.retryFailedOnly")}
-          </button>
-        </form>
+        <AdminRunsActionsForm
+          labels={{
+            runTypeLabel: t("form.runTypeLabel"),
+            queueManualRun: t("form.queueManualRun"),
+            runScenario: t("form.runScenario"),
+            retryFailedOnly: t("form.retryFailedOnly"),
+            pendingManualRun: t("form.pendingManualRun"),
+            pendingScenario: t("form.pendingScenario"),
+            pendingRetryFailedOnly: t("form.pendingRetryFailedOnly"),
+          }}
+          runTypeOptions={[
+            { value: "ingest", label: t("runType.ingest") },
+            { value: "draft_generate", label: t("runType.draftGenerate") },
+            { value: "review_gate", label: t("runType.reviewGate") },
+            { value: "publish", label: t("runType.publish") },
+            { value: "publish_retry_failed", label: t("runType.publishRetryFailed") },
+          ]}
+        />
 
         {!listRes.ok ? <p className="text-xs text-danger">{listRes.error}</p> : null}
 
@@ -114,28 +92,28 @@ export default async function AdminRunsPage() {
           <p className="text-xs text-ink-500">{t("empty")}</p>
         ) : (
           <div className="overflow-x-auto border border-ink-100">
-            <table className="w-full text-left text-xs">
+            <table className="w-full min-w-[980px] text-left text-xs">
               <thead>
                 <tr className="border-b border-ink-100 bg-paper-50">
-                  <th className="p-2 font-medium text-ink-700">{t("columns.type")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.result")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.status")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.trigger")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.started")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.ended")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.error")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.metadata")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.type")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.result")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.status")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.trigger")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.started")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.ended")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.error")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.metadata")}</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.id} className="border-b border-ink-100/80">
-                    <td className="p-2 text-ink-900">{toRunTypeLabel(t, row.run_type)}</td>
-                    <td className="p-2">
+                    <td className="p-2 text-ink-900 whitespace-nowrap">{toRunTypeLabel(t, row.run_type)}</td>
+                    <td className="p-2 whitespace-nowrap">
                       {renderRunResultBadge(t, row.status, row.error_summary, row.metadata)}
                     </td>
-                    <td className="p-2 text-ink-700">{toRunStatusLabel(t, row.status)}</td>
-                    <td className="p-2 text-ink-700">{toTriggerLabel(t, row.trigger_type)}</td>
+                    <td className="p-2 text-ink-700 whitespace-nowrap">{toRunStatusLabel(t, row.status)}</td>
+                    <td className="p-2 text-ink-700 whitespace-nowrap">{toTriggerLabel(t, row.trigger_type)}</td>
                     <td className="p-2 whitespace-nowrap text-ink-500">
                       {row.started_at
                         ? `${new Date(row.started_at).toISOString().replace("T", " ").slice(0, 19)} UTC`
@@ -146,11 +124,20 @@ export default async function AdminRunsPage() {
                         ? `${new Date(row.ended_at).toISOString().replace("T", " ").slice(0, 19)} UTC`
                         : "-"}
                     </td>
-                    <td className="p-2 text-danger">{row.error_summary ?? "-"}</td>
+                    <td className="p-2 text-danger">
+                      <CompactSingleLine value={row.error_summary} maxWidthClass="max-w-[320px]" />
+                    </td>
                     <td className="p-2 text-ink-500">
-                      <pre className="max-w-[340px] overflow-x-auto whitespace-pre-wrap wrap-break-word text-[11px] leading-relaxed">
-                        {row.metadata ? JSON.stringify(row.metadata) : "-"}
-                      </pre>
+                      <AdminRunMetadataCell
+                        metadata={row.metadata}
+                        labels={{
+                          empty: "-",
+                          open: t("metadata.open"),
+                          modalTitle: t("metadata.modalTitle"),
+                          modalDescription: t("metadata.modalDescription"),
+                          close: t("metadata.close"),
+                        }}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -199,7 +186,7 @@ function renderRunResultBadge(
   if (result === "failure") {
     return (
       <span
-        className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-danger"
+        className="inline-flex whitespace-nowrap border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-danger"
         title={failureHint ?? undefined}
       >
         {t("result.failure")}
@@ -209,7 +196,7 @@ function renderRunResultBadge(
   if (result === "partial") {
     return (
       <span
-        className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-amber-700"
+        className="inline-flex whitespace-nowrap border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-amber-700"
         title={failureHint ?? t("result.partialHint")}
       >
         {t("result.partial")}
@@ -217,7 +204,7 @@ function renderRunResultBadge(
     );
   }
   return (
-    <span className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
+    <span className="inline-flex whitespace-nowrap border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
       {t("result.success")}
     </span>
   );
@@ -442,4 +429,19 @@ function toTriggerLabel(t: (key: string) => string, triggerType: string) {
   if (triggerType === "manual") return t("trigger.manual");
   if (triggerType === "automation") return t("trigger.automation");
   return triggerType;
+}
+
+function CompactSingleLine({
+  value,
+  maxWidthClass,
+}: {
+  value: string | null;
+  maxWidthClass: string;
+}) {
+  if (!value?.trim()) return <span>-</span>;
+  return (
+    <span className={`block truncate ${maxWidthClass}`} title={value}>
+      {value}
+    </span>
+  );
 }

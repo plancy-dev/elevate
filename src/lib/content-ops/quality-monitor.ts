@@ -194,7 +194,9 @@ export function buildContentQualitySnapshot(params: {
 
   const improvementFocus: string[] = [];
   if (freshTopQualityIssues.some((issue) => issue.reason === "low_novelty")) {
-    improvementFocus.push("topic-strategy-pack에서 반례/비교 프레임을 늘려 novelty 점수를 끌어올리세요.");
+    improvementFocus.push(
+      "low_novelty 우세 시 topic/newsletter/blog pack의 why-now+비교+반례 프레임을 조정하고 1사이클 후 재검증하세요.",
+    );
   }
   if (freshTopQualityIssues.some((issue) => issue.reason === "low_relevance")) {
     improvementFocus.push("source trust_weight 상위 소스만 우선 사용하도록 ingest 필터를 강화하세요.");

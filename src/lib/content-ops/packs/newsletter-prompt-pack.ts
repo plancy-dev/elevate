@@ -1,6 +1,6 @@
 import type { TopicStrategyEntry } from "@/lib/content-ops/packs/topic-strategy-pack";
 
-export const NEWSLETTER_PROMPT_PACK_VERSION = "v1.2.0";
+export const NEWSLETTER_PROMPT_PACK_VERSION = "v1.2.1";
 
 export function buildNewsletterDraftFromPack(params: {
   topic: TopicStrategyEntry;
@@ -19,7 +19,7 @@ export function buildNewsletterDraftFromPack(params: {
     "## Hook",
     params.topic.questionPattern,
     "",
-    "## Why this matters now",
+    "## Why now (why this matters now)",
     params.topic.whyNowPattern,
     "",
     "## Trade-off vs default approach",

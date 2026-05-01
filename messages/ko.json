@@ -1266,7 +1266,10 @@
         "runTypeLabel": "실행 타입",
         "queueManualRun": "수동 실행 등록",
         "runScenario": "ingest -> generate -> publish 실행",
-        "retryFailedOnly": "실패 건만 재시도"
+        "retryFailedOnly": "실패 건만 재시도",
+        "pendingManualRun": "실행 등록 중...",
+        "pendingScenario": "시나리오 실행 중...",
+        "pendingRetryFailedOnly": "재시도 실행 중..."
       },
       "runType": {
         "ingest": "ingest",
@@ -1301,7 +1304,13 @@
         "failure": "실패",
         "partialHint": "부분실패 (상세는 metadata 확인)"
       },
-      "empty": "실행 로그가 없습니다."
+      "empty": "실행 로그가 없습니다.",
+      "metadata": {
+        "open": "보기",
+        "modalTitle": "실행 메타데이터",
+        "modalDescription": "실행 결과의 전체 metadata JSON입니다.",
+        "close": "닫기"
+      }
     },
     "adminContentQueue": {
       "metaTitle": "콘텐츠 큐",
@@ -1442,7 +1451,9 @@
         "step1": "/admin/runs에서 성공/부분실패/실패와 첫 실패 원인을 확인합니다.",
         "step2": "/admin/content-quality에서 freshAvgQualityScore와 반복 이슈를 확인합니다.",
         "step3": "/admin/content-queue에서 review_required 적체와 저품질 초안을 확인합니다.",
-        "step4": "go, adjust, stop 중 하나를 선택하고 자동화 에이전트에 방향을 지시합니다."
+        "step4": "go, adjust, stop 중 하나를 선택하고 자동화 에이전트에 방향을 지시합니다.",
+        "fixedOrderPrefix": "운영 판단은 매일",
+        "fixedOrderSuffix": "순서로 고정합니다."
       },
       "decision": {
         "title": "판단 매트릭스",

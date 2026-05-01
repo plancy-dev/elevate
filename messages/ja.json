@@ -1258,7 +1258,10 @@
         "runTypeLabel": "実行タイプ",
         "queueManualRun": "手動実行を登録",
         "runScenario": "ingest -> generate -> publish を実行",
-        "retryFailedOnly": "失敗のみ再試行"
+        "retryFailedOnly": "失敗のみ再試行",
+        "pendingManualRun": "実行を登録中...",
+        "pendingScenario": "シナリオ実行中...",
+        "pendingRetryFailedOnly": "失敗項目を再試行中..."
       },
       "runType": {
         "ingest": "ingest",
@@ -1293,7 +1296,13 @@
         "failure": "失敗",
         "partialHint": "部分失敗（詳細は metadata を確認）"
       },
-      "empty": "実行ログはまだありません。"
+      "empty": "実行ログはまだありません。",
+      "metadata": {
+        "open": "表示",
+        "modalTitle": "実行メタデータ",
+        "modalDescription": "この実行結果の metadata JSON 全文です。",
+        "close": "閉じる"
+      }
     },
     "adminContentQueue": {
       "metaTitle": "コンテンツキュー",
@@ -1434,7 +1443,9 @@
         "step1": "Check /admin/runs for success/partial-failure/failure and first failure reason.",
         "step2": "Check /admin/content-quality for freshAvgQualityScore and top recurring issues.",
         "step3": "Check /admin/content-queue for review_required backlog and low-quality drafts.",
-        "step4": "Choose go, adjust, or stop and issue direction to the automation agent."
+        "step4": "Choose go, adjust, or stop and issue direction to the automation agent.",
+        "fixedOrderPrefix": "Keep daily operator decisions in this order:",
+        "fixedOrderSuffix": "."
       },
       "decision": {
         "title": "Decision matrix",
