@@ -56,7 +56,23 @@
 
 ---
 
-## INIT — Blog Subscription (Lemon, Phase 1) — 활성
+## INIT — AI Newsletter/Blog Content Ops (Admin Queue) — 활성
+
+**SoT:** [`docs/features/INIT-ai-newsletter-blog-content-ops.md`](../docs/features/INIT-ai-newsletter-blog-content-ops.md)  
+**복잡도:** **L4** — 신규 구독자 도메인 + 콘텐츠 큐/검수 상태 머신 + 발행 채널(blog/email) + 운영 UI 동시 설계.
+
+### 체크리스트
+
+- [x] **INIT 문서:** 목표/범위/앵커/성공 기준 고정 — [`INIT-ai-newsletter-blog-content-ops.md`](../docs/features/INIT-ai-newsletter-blog-content-ops.md)
+- [x] **스키마 초안:** subscribers/sources/content/runs/publications/source-map — [`SCHEMA-ai-newsletter-blog-content-ops.md`](../docs/features/SCHEMA-ai-newsletter-blog-content-ops.md)
+- [x] **Admin IA:** `/admin/content-queue`, `/admin/news-sources`, `/admin/runs`, `/admin/subscribers` — [`IA-admin-content-ops.md`](../docs/features/IA-admin-content-ops.md)
+- [x] **워크플로 고정:** 수집→생성→검수→발행 상태 머신 — [`WORKFLOW-ai-content-ops.md`](../docs/features/WORKFLOW-ai-content-ops.md)
+- [x] **2주 MVP 계획:** Week1(기반)·Week2(운영) + waitlist→subscriber 전환 — [`PLAN-ai-content-ops-2week-mvp.md`](../docs/features/PLAN-ai-content-ops-2week-mvp.md)
+- [ ] **다음 단계 (BUILD):** 마이그레이션 초안 SQL + 서버 액션/API + `/admin/content-queue` 최소 구현 착수
+
+---
+
+## INIT — Blog Subscription (Lemon, Phase 1) — 보류
 
 **SoT:** [`docs/features/INIT-blog-subscription-lemon-phase1.md`](../docs/features/INIT-blog-subscription-lemon-phase1.md)  
 **복잡도:** **L4** — 구독 스키마/웹훅/블로그 접근제어/페이월 UI/가격 페이지 동시 변경.

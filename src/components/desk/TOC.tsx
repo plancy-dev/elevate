@@ -12,6 +12,7 @@ import {
   CircleHelp,
   Clapperboard,
   CreditCard,
+  ListChecks,
   Shield,
   Sparkles,
   UserRound,
@@ -95,7 +96,20 @@ export function TOC({
           items: [
             { href: "/admin", label: tx("house.admin", "Admin") },
             { href: "/admin/content", label: tx("admin.content", "Content") },
+            {
+              href: "/admin/content-queue",
+              label: tx("admin.contentQueue", "Content queue"),
+            },
             { href: "/admin/waitlist", label: tx("admin.waitlist", "Waitlist") },
+            {
+              href: "/admin/news-sources",
+              label: tx("admin.newsSources", "News sources"),
+            },
+            { href: "/admin/runs", label: tx("admin.runs", "Runs") },
+            {
+              href: "/admin/subscribers",
+              label: tx("admin.subscribers", "Subscribers"),
+            },
             {
               href: "/admin/purchase-allowlist",
               label: tx("admin.purchaseAllowlist", "Checkout allowlist"),
@@ -197,7 +211,11 @@ export function TOC({
       "/dashboard/help": CircleHelp,
       "/admin": Shield,
       "/admin/content": BookOpen,
+      "/admin/content-queue": ListChecks,
       "/admin/waitlist": Users,
+      "/admin/news-sources": Sparkles,
+      "/admin/runs": CircleHelp,
+      "/admin/subscribers": Users,
       "/admin/purchase-allowlist": Shield,
       "/admin/prompt-studio-allowlist": Sparkles,
     };

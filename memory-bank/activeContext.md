@@ -2,24 +2,28 @@
 
 ## 현재 페이즈 (활성)
 
-**INIT (2026-04-30) — Automations Stabilization + Blog Quality Uplift**
+**INIT (2026-04-30) — AI Newsletter/Blog Content Ops (Admin Queue)**
 
 **브랜치:** `main`  
-**SoT:** [`docs/features/INIT-automations-blog-quality-2026-04-30.md`](../docs/features/INIT-automations-blog-quality-2026-04-30.md)
+**SoT:** [`docs/features/INIT-ai-newsletter-blog-content-ops.md`](../docs/features/INIT-ai-newsletter-blog-content-ops.md)
 
-**복잡도:** **L3** — Cloud/GitHub 자동화 신뢰성 보강 + 콘텐츠 품질 게이트 + 운영 가시성 표준화.
+**복잡도:** **L4** — 신규 구독자 도메인 + 콘텐츠 큐/검수 상태 머신 + 발행 채널(blog/email) + `/admin` 운영 화면 동시 설계.
 
 **핵심 목표:**
-- Slack/Linear 없이 GitHub 중심으로 automations 운영 안정화
-- 블로그 자동 생성 결과물에 품질 게이트(정합/톤/CTA/링크) 적용
-- Cloud Agent Automations 샘플을 Elevate 운영 플로우에 맞게 PoC
+- 자동 생성 + 사람 검수 + 딸깍 배포 구조를 `/admin` 중심으로 고정
+- 블로그/뉴스레터를 공통 `content_items` 큐로 관리
+- `waitlist_signups`와 분리된 `newsletter_subscribers` 도메인 확립
+- 장기적으로 전자책 패키징 재사용이 가능한 콘텐츠 원장 구축
 
-**다음 단계:** **PLAN** (신뢰성/품질 게이트/운영 가시성 3슬라이스 상세 계획 및 fail 정책 확정).
+**다음 단계:** **BUILD** (마이그레이션 초안 SQL + 서버 액션/API + `/admin/content-queue` 최소 구현 착수).
 
----
+**INIT 산출물 (완료):**
+- [`SCHEMA-ai-newsletter-blog-content-ops.md`](../docs/features/SCHEMA-ai-newsletter-blog-content-ops.md)
+- [`IA-admin-content-ops.md`](../docs/features/IA-admin-content-ops.md)
+- [`WORKFLOW-ai-content-ops.md`](../docs/features/WORKFLOW-ai-content-ops.md)
+- [`PLAN-ai-content-ops-2week-mvp.md`](../docs/features/PLAN-ai-content-ops-2week-mvp.md)
 
-**직전 활성 페이즈 (2026-04-28) — Blog Subscription (Lemon Squeezy, Phase 1)**
-**SoT:** [`docs/features/INIT-blog-subscription-lemon-phase1.md`](../docs/features/INIT-blog-subscription-lemon-phase1.md)
+**기존 INIT 상태:** `INIT-blog-subscription-lemon-phase1.md`는 보류로 전환 (tasks.md 기준).
 
 **04-24 학습(반드시 회피):**
 - L1: PostCSS 8.4.31 + Turbopack은 CSS 주석의 em-dash(`U+2014`)에 `Unknown word` 에러 → tokens.css/globals.css 주석 ASCII-only.

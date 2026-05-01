@@ -184,6 +184,163 @@ export type Database = {
           },
         ]
       }
+      content_item_source_map: {
+        Row: {
+          content_item_id: string
+          created_at: string
+          excerpt: string | null
+          id: string
+          metadata: Json
+          snippet_hash: string
+          source_id: string
+          source_published_at: string | null
+          source_title: string | null
+          source_url: string
+        }
+        Insert: {
+          content_item_id: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          metadata?: Json
+          snippet_hash: string
+          source_id: string
+          source_published_at?: string | null
+          source_title?: string | null
+          source_url: string
+        }
+        Update: {
+          content_item_id?: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          metadata?: Json
+          snippet_hash?: string
+          source_id?: string
+          source_published_at?: string | null
+          source_title?: string | null
+          source_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_item_source_map_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_item_source_map_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "content_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_items: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          body_markdown: string
+          created_at: string
+          created_by: string | null
+          cta_variant: string | null
+          fact_check_score: number | null
+          generation_model: string | null
+          generation_prompt_version: string | null
+          id: string
+          locale: string
+          metadata: Json
+          published_at: string | null
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          scheduled_at: string | null
+          slug: string | null
+          source_quality_score: number | null
+          status: string
+          summary: string | null
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          body_markdown?: string
+          created_at?: string
+          created_by?: string | null
+          cta_variant?: string | null
+          fact_check_score?: number | null
+          generation_model?: string | null
+          generation_prompt_version?: string | null
+          id?: string
+          locale?: string
+          metadata?: Json
+          published_at?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scheduled_at?: string | null
+          slug?: string | null
+          source_quality_score?: number | null
+          status?: string
+          summary?: string | null
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          body_markdown?: string
+          created_at?: string
+          created_by?: string | null
+          cta_variant?: string | null
+          fact_check_score?: number | null
+          generation_model?: string | null
+          generation_prompt_version?: string | null
+          id?: string
+          locale?: string
+          metadata?: Json
+          published_at?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scheduled_at?: string | null
+          slug?: string | null
+          source_quality_score?: number | null
+          status?: string
+          summary?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_items_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_items_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_items_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_product_lemon_links: {
         Row: {
           content_product_id: string
@@ -258,6 +415,160 @@ export type Database = {
           slug?: string
           storage_object_path?: string | null
           title?: string
+        }
+        Relationships: []
+      }
+      content_publications: {
+        Row: {
+          attempt_count: number
+          channel: string
+          content_item_id: string
+          created_at: string
+          id: string
+          last_error: string | null
+          metadata: Json
+          processed_at: string | null
+          provider: string
+          provider_message_id: string | null
+          scheduled_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attempt_count?: number
+          channel: string
+          content_item_id: string
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          metadata?: Json
+          processed_at?: string | null
+          provider?: string
+          provider_message_id?: string | null
+          scheduled_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attempt_count?: number
+          channel?: string
+          content_item_id?: string
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          metadata?: Json
+          processed_at?: string | null
+          provider?: string
+          provider_message_id?: string | null
+          scheduled_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_publications_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_runs: {
+        Row: {
+          created_at: string
+          ended_at: string | null
+          error_details: Json | null
+          error_summary: string | null
+          id: string
+          initiated_by: string | null
+          metadata: Json
+          run_type: string
+          started_at: string | null
+          status: string
+          trigger_type: string
+        }
+        Insert: {
+          created_at?: string
+          ended_at?: string | null
+          error_details?: Json | null
+          error_summary?: string | null
+          id?: string
+          initiated_by?: string | null
+          metadata?: Json
+          run_type: string
+          started_at?: string | null
+          status?: string
+          trigger_type?: string
+        }
+        Update: {
+          created_at?: string
+          ended_at?: string | null
+          error_details?: Json | null
+          error_summary?: string | null
+          id?: string
+          initiated_by?: string | null
+          metadata?: Json
+          run_type?: string
+          started_at?: string | null
+          status?: string
+          trigger_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_runs_initiated_by_fkey"
+            columns: ["initiated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_sources: {
+        Row: {
+          base_url: string
+          created_at: string
+          fetch_interval_minutes: number
+          id: string
+          is_active: boolean
+          kind: string
+          locale: string | null
+          metadata: Json
+          name: string
+          rss_url: string | null
+          topic_tags: string[]
+          trust_weight: number
+          updated_at: string
+        }
+        Insert: {
+          base_url: string
+          created_at?: string
+          fetch_interval_minutes?: number
+          id?: string
+          is_active?: boolean
+          kind: string
+          locale?: string | null
+          metadata?: Json
+          name: string
+          rss_url?: string | null
+          topic_tags?: string[]
+          trust_weight?: number
+          updated_at?: string
+        }
+        Update: {
+          base_url?: string
+          created_at?: string
+          fetch_interval_minutes?: number
+          id?: string
+          is_active?: boolean
+          kind?: string
+          locale?: string | null
+          metadata?: Json
+          name?: string
+          rss_url?: string | null
+          topic_tags?: string[]
+          trust_weight?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -399,6 +710,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      newsletter_subscribers: {
+        Row: {
+          consent_at: string | null
+          created_at: string
+          email: string
+          email_normalized: string | null
+          frequency_pref: string
+          id: string
+          locale: string
+          metadata: Json
+          source: string
+          source_ref: string | null
+          status: string
+          tags: string[]
+          unsubscribe_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          consent_at?: string | null
+          created_at?: string
+          email: string
+          email_normalized?: string | null
+          frequency_pref?: string
+          id?: string
+          locale?: string
+          metadata?: Json
+          source?: string
+          source_ref?: string | null
+          status?: string
+          tags?: string[]
+          unsubscribe_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          consent_at?: string | null
+          created_at?: string
+          email?: string
+          email_normalized?: string | null
+          frequency_pref?: string
+          id?: string
+          locale?: string
+          metadata?: Json
+          source?: string
+          source_ref?: string | null
+          status?: string
+          tags?: string[]
+          unsubscribe_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       organization_content_entitlements: {
         Row: {
@@ -545,9 +907,9 @@ export type Database = {
           email_milestone_digest: boolean
           id: string
           loading_spinner_tempo: string
-          sidebar_icon_tone: string
           organization_id: string | null
           role: Database["public"]["Enums"]["user_role"]
+          sidebar_icon_tone: string
           ui_locale: string | null
           updated_at: string
         }
@@ -560,9 +922,9 @@ export type Database = {
           email_milestone_digest?: boolean
           id: string
           loading_spinner_tempo?: string
-          sidebar_icon_tone?: string
           organization_id?: string | null
           role?: Database["public"]["Enums"]["user_role"]
+          sidebar_icon_tone?: string
           ui_locale?: string | null
           updated_at?: string
         }
@@ -575,9 +937,9 @@ export type Database = {
           email_milestone_digest?: boolean
           id?: string
           loading_spinner_tempo?: string
-          sidebar_icon_tone?: string
           organization_id?: string | null
           role?: Database["public"]["Enums"]["user_role"]
+          sidebar_icon_tone?: string
           ui_locale?: string | null
           updated_at?: string
         }
@@ -1264,8 +1626,8 @@ export type Database = {
           notes?: string
           organization_id?: string
           pipeline_prefs?: Json
-          publish_url?: string | null
           project_id?: string | null
+          publish_url?: string | null
           status?: string
           studio_distribution_channel_id?: string | null
           studio_format_template_id?: string | null
@@ -1428,6 +1790,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "studio_scheduled_posts_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "studio_scheduled_posts_episode_id_fkey"
             columns: ["episode_id"]
             isOneToOne: false
@@ -1589,89 +1958,6 @@ export type Database = {
           },
         ]
       }
-      user_blog_subscription_webhook_events: {
-        Row: {
-          event_id: string
-          event_name: string
-          lemon_squeezy_subscription_id: string | null
-          payment_provider: string | null
-          payment_subscription_id: string | null
-          payload: Json
-          processed_at: string
-        }
-        Insert: {
-          event_id: string
-          event_name: string
-          lemon_squeezy_subscription_id?: string | null
-          payment_provider?: string | null
-          payment_subscription_id?: string | null
-          payload?: Json
-          processed_at?: string
-        }
-        Update: {
-          event_id?: string
-          event_name?: string
-          lemon_squeezy_subscription_id?: string | null
-          payment_provider?: string | null
-          payment_subscription_id?: string | null
-          payload?: Json
-          processed_at?: string
-        }
-        Relationships: []
-      }
-      user_blog_subscriptions: {
-        Row: {
-          created_at: string
-          current_period_end: string | null
-          lemon_squeezy_subscription_id: string | null
-          lemon_squeezy_variant_id: number | null
-          manage_subscription_url: string | null
-          payment_product_id: string | null
-          payment_provider: string | null
-          payment_subscription_id: string | null
-          subscription_status: Database["public"]["Enums"]["blog_subscription_status"] | null
-          subscription_tier: Database["public"]["Enums"]["blog_subscription_tier"]
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          current_period_end?: string | null
-          lemon_squeezy_subscription_id?: string | null
-          lemon_squeezy_variant_id?: number | null
-          manage_subscription_url?: string | null
-          payment_product_id?: string | null
-          payment_provider?: string | null
-          payment_subscription_id?: string | null
-          subscription_status?: Database["public"]["Enums"]["blog_subscription_status"] | null
-          subscription_tier?: Database["public"]["Enums"]["blog_subscription_tier"]
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          current_period_end?: string | null
-          lemon_squeezy_subscription_id?: string | null
-          lemon_squeezy_variant_id?: number | null
-          manage_subscription_url?: string | null
-          payment_product_id?: string | null
-          payment_provider?: string | null
-          payment_subscription_id?: string | null
-          subscription_status?: Database["public"]["Enums"]["blog_subscription_status"] | null
-          subscription_tier?: Database["public"]["Enums"]["blog_subscription_tier"]
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_blog_subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       toss_payment_intents: {
         Row: {
           amount_krw: number
@@ -1735,6 +2021,95 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_blog_subscription_webhook_events: {
+        Row: {
+          event_id: string
+          event_name: string
+          lemon_squeezy_subscription_id: string | null
+          payload: Json
+          payment_provider: string | null
+          payment_subscription_id: string | null
+          processed_at: string
+        }
+        Insert: {
+          event_id: string
+          event_name: string
+          lemon_squeezy_subscription_id?: string | null
+          payload?: Json
+          payment_provider?: string | null
+          payment_subscription_id?: string | null
+          processed_at?: string
+        }
+        Update: {
+          event_id?: string
+          event_name?: string
+          lemon_squeezy_subscription_id?: string | null
+          payload?: Json
+          payment_provider?: string | null
+          payment_subscription_id?: string | null
+          processed_at?: string
+        }
+        Relationships: []
+      }
+      user_blog_subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          lemon_squeezy_subscription_id: string | null
+          lemon_squeezy_variant_id: number | null
+          manage_subscription_url: string | null
+          payment_product_id: string | null
+          payment_provider: string | null
+          payment_subscription_id: string | null
+          subscription_status:
+            | Database["public"]["Enums"]["blog_subscription_status"]
+            | null
+          subscription_tier: Database["public"]["Enums"]["blog_subscription_tier"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          lemon_squeezy_subscription_id?: string | null
+          lemon_squeezy_variant_id?: number | null
+          manage_subscription_url?: string | null
+          payment_product_id?: string | null
+          payment_provider?: string | null
+          payment_subscription_id?: string | null
+          subscription_status?:
+            | Database["public"]["Enums"]["blog_subscription_status"]
+            | null
+          subscription_tier?: Database["public"]["Enums"]["blog_subscription_tier"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          lemon_squeezy_subscription_id?: string | null
+          lemon_squeezy_variant_id?: number | null
+          manage_subscription_url?: string | null
+          payment_product_id?: string | null
+          payment_provider?: string | null
+          payment_subscription_id?: string | null
+          subscription_status?:
+            | Database["public"]["Enums"]["blog_subscription_status"]
+            | null
+          subscription_tier?: Database["public"]["Enums"]["blog_subscription_tier"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_blog_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1816,11 +2191,33 @@ export type Database = {
     }
     Functions: {
       claim_studio_video_assembly_job: {
-        Args: Record<PropertyKey, never>
-        Returns: Database["public"]["Tables"]["studio_video_assembly_jobs"]["Row"][]
+        Args: never
+        Returns: {
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          episode_id: string
+          error_message: string | null
+          id: string
+          input: Json
+          max_retries: number
+          organization_id: string
+          output_artifact_id: string | null
+          processing_started_at: string | null
+          retry_count: number
+          started_at: string | null
+          status: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "studio_video_assembly_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       reset_stale_studio_video_assembly_jobs: {
-        Args: { stale_before?: unknown }
+        Args: { stale_before?: string }
         Returns: {
           failed_count: number
           requeued_count: number
