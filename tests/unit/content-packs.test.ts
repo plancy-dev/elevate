@@ -20,7 +20,9 @@ describe("content ops pack registry", () => {
     });
     expect(drafts.newsletter.bodyMarkdown).toContain("## Sources");
     expect(drafts.newsletter.bodyMarkdown).toContain("[Alpha]");
+    expect(drafts.newsletter.bodyMarkdown).toContain("## Evidence snapshot");
     expect(drafts.blog.bodyMarkdown).toContain("## Execution checklist (this week)");
+    expect(drafts.blog.bodyMarkdown).toContain("## Evidence ladder");
     expect(drafts.blog.title.length).toBeGreaterThan(20);
   });
 });

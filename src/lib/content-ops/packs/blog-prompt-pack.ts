@@ -1,6 +1,6 @@
 import type { TopicStrategyEntry } from "@/lib/content-ops/packs/topic-strategy-pack";
 
-export const BLOG_PROMPT_PACK_VERSION = "v1.1.0";
+export const BLOG_PROMPT_PACK_VERSION = "v1.2.0";
 
 export function buildBlogDraftFromPack(params: {
   topic: TopicStrategyEntry;
@@ -29,6 +29,12 @@ export function buildBlogDraftFromPack(params: {
     params.topic.contrarianPattern,
     "- Why this contrarian view changes decision quality for operators.",
     "",
+    "## Evidence ladder",
+    params.topic.evidencePattern,
+    "- Evidence A: runtime/ops signal from recent execution.",
+    "- Evidence B: external source or field report that validates the direction.",
+    "- Add one caveat where this pattern may not hold.",
+    "",
     "## What the latest signals suggest",
     sourceSection,
     "",
@@ -44,12 +50,18 @@ export function buildBlogDraftFromPack(params: {
     "### 3) Editorial and ops loop",
     "- Separate generation from approval for trust-critical channels.",
     "- Keep templates versioned so quality can improve without rewiring the pipeline.",
+    `- Weekly operator outcome to validate: ${params.topic.operatorOutcomePattern}`,
+    "",
+    "## Customer relevance checkpoint",
+    "- Which target customer profile feels this pain first?",
+    "- What outcome would make that reader forward this article to their team lead?",
     "",
     "## Execution checklist (this week)",
     "1. Pick one pipeline stage to harden and define SLO.",
     "2. Run a side-by-side comparison vs the current baseline process.",
     "3. Add one observable metric for quality and one for reliability.",
     "4. Capture one reusable lesson in the runbook.",
+    "5. Document one concrete decision made from this week's evidence.",
     "",
     "## Sources",
     sourceSection,
