@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   evaluateReviewGate,
   MIN_REVIEW_BODY_CHARS,
+  MIN_REVIEW_QUALITY_SCORE,
 } from "@/lib/content-ops/review-gate";
 
 describe("evaluateReviewGate", () => {
@@ -38,8 +39,16 @@ describe("evaluateReviewGate", () => {
   it("passes for valid content with source and enough narrative", () => {
     const result = evaluateReviewGate({
       bodyMarkdown: `
-## Summary
-${"This draft summarizes trends and adds operator-focused interpretation. ".repeat(10)}
+## Why now
+${"This draft summarizes trends and adds operator-focused interpretation for workflow operators. ".repeat(8)}
+
+## Comparison
+Teams usually optimize speed first vs reliability. This post highlights the trade-off.
+
+## Action checklist
+1. Add one rollback owner.
+2. Add one failure-class dashboard.
+3. Implement one weekly review ritual.
 
 ## Source
 - [Example source](https://example.com/article)
@@ -48,5 +57,17 @@ ${"This draft summarizes trends and adds operator-focused interpretation. ".repe
     });
     expect(result.passed).toBe(true);
     expect(result.reasons).toEqual([]);
+    expect(result.metrics.qualityScore).toBeGreaterThanOrEqual(MIN_REVIEW_QUALITY_SCORE);
+    expect(result.metrics.rubric.actionability).toBeGreaterThan(1);
+  });
+
+  it("fails when rubric quality is too low even with links", () => {
+    const result = evaluateReviewGate({
+      bodyMarkdown: "## Note\n\n- [Source](https://example.com)\n\nThis happened.",
+      sourceLinkCount: 1,
+    });
+    expect(result.passed).toBe(false);
+    expect(result.metrics.qualityScore).toBeLessThan(MIN_REVIEW_QUALITY_SCORE);
+    expect(result.reasons).toContain("low_specificity");
   });
 });

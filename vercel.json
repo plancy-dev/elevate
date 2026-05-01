@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/content-ops/automation-run?scenario=daily_generation&source=vercel-cron",
+      "schedule": "30 12 * * 1-5"
+    },
+    {
+      "path": "/api/content-ops/automation-run?scenario=publish_window&source=vercel-cron",
+      "schedule": "0 15 * * 1-5"
+    },
+    {
+      "path": "/api/content-ops/automation-run?scenario=retry_window&source=vercel-cron",
+      "schedule": "30 18 * * 1-5"
+    }
+  ]
+}

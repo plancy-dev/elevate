@@ -6,6 +6,7 @@ import {
   BLOG_TEMPLATE_VERSION,
   NEWSLETTER_TEMPLATE_VERSION,
 } from "@/lib/content-ops/locale-template-config";
+import { buildDraftsFromActivePacks } from "@/lib/content-ops/packs/pack-registry";
 import { evaluateReviewGate } from "@/lib/content-ops/review-gate";
 import type { Database } from "@/types/database.types";
 
@@ -305,28 +306,23 @@ export async function runDraftGeneratePipeline(runId: string): Promise<{
     return `${index + 1}. [${title}](${m.source_url})`;
   });
 
-  const digestBody = [
-    "## Daily AI Digest",
-    "",
-    "Curated updates from active sources:",
-    "",
-    ...digestLines,
-  ].join("\n");
-
-  const digestTitle = `Daily AI Digest — ${new Date().toISOString().slice(0, 10)}`;
+  const generated = buildDraftsFromActivePacks({ sourceBullets: digestLines });
   const { data: newsletterItem, error: nErr } = await admin
     .from("content_items")
     .insert({
       type: "newsletter",
-      title: digestTitle,
+      title: generated.newsletter.title,
       locale: "en",
-      summary: "Auto-generated digest draft from recent source ingest.",
-      body_markdown: digestBody,
+      summary: generated.newsletter.summary,
+      body_markdown: generated.newsletter.bodyMarkdown,
       status: "draft",
       metadata: {
         generate: {
           run_id: runId,
-          mode: "digest",
+          mode: "pack_registry",
+          pack_version: generated.resolved.activeVersion,
+          pack_versions: generated.resolved.versions,
+          topic_strategy_id: generated.resolved.topic.id,
         },
       },
     })
@@ -334,6 +330,28 @@ export async function runDraftGeneratePipeline(runId: string): Promise<{
     .single();
 
   if (nErr || !newsletterItem?.id) return { createdItems: 0 };
+
+  const { data: blogItem, error: bErr } = await admin
+    .from("content_items")
+    .insert({
+      type: "blog",
+      title: generated.blog.title,
+      locale: "en",
+      summary: generated.blog.summary,
+      body_markdown: generated.blog.bodyMarkdown,
+      status: "draft",
+      metadata: {
+        generate: {
+          run_id: runId,
+          mode: "pack_registry",
+          pack_version: generated.resolved.activeVersion,
+          pack_versions: generated.resolved.versions,
+          topic_strategy_id: generated.resolved.topic.id,
+        },
+      },
+    })
+    .select("id")
+    .single();
 
   for (const map of latestMaps) {
     await admin.from("content_item_source_map").insert({
@@ -346,9 +364,21 @@ export async function runDraftGeneratePipeline(runId: string): Promise<{
         `generated:${newsletterItem.id}:${map.source_id}:${map.source_url}`,
       ),
     });
+    if (!bErr && blogItem?.id) {
+      await admin.from("content_item_source_map").insert({
+        content_item_id: blogItem.id,
+        source_id: map.source_id,
+        source_url: map.source_url,
+        source_title: map.source_title,
+        source_published_at: map.source_published_at,
+        snippet_hash: hashSnippet(
+          `generated:${blogItem.id}:${map.source_id}:${map.source_url}`,
+        ),
+      });
+    }
   }
 
-  return { createdItems: 1 };
+  return { createdItems: bErr || !blogItem?.id ? 1 : 2 };
 }
 
 export async function runReviewGatePipeline(runId: string): Promise<{

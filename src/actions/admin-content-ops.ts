@@ -5,11 +5,14 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { canAccessElevateServiceAdmin } from "@/lib/auth/platform-admin";
 import {
-  runDraftGeneratePipeline,
-  runIngestPipeline,
-  runPublishPipeline,
-  runReviewGatePipeline,
-} from "@/lib/content-ops/pipeline-runner";
+  CONTENT_OPS_RUN_SEQUENCE,
+  type ContentOpsRunType,
+} from "@/lib/content-ops/automation-config";
+import { runPublishPipeline } from "@/lib/content-ops/pipeline-runner";
+import {
+  executeContentOpsRun,
+  runContentOpsScenario,
+} from "@/lib/content-ops/run-orchestrator";
 import type { Json } from "@/types/database.types";
 
 const EMAIL_RE =
@@ -25,6 +28,8 @@ export type AdminContentItemRow = {
   fact_check_score: number | null;
   scheduled_at: string | null;
   metadata: Json | null;
+  review_notes: string | null;
+  created_at: string;
   updated_at: string;
 };
 
@@ -63,8 +68,6 @@ export type AdminNewsletterSubscriberRow = {
   created_at: string;
 };
 
-const RUN_SEQUENCE = ["ingest", "draft_generate", "publish"] as const;
-
 async function assertPlatformAdmin(): Promise<
   { ok: true } | { ok: false; error: string }
 > {
@@ -94,7 +97,7 @@ export async function listAdminContentQueue(filters?: {
     let query = admin
       .from("content_items")
       .select(
-        "id, type, title, locale, status, source_quality_score, fact_check_score, scheduled_at, metadata, updated_at",
+        "id, type, title, locale, status, source_quality_score, fact_check_score, scheduled_at, metadata, review_notes, created_at, updated_at",
       )
       .order("updated_at", { ascending: false })
       .limit(300);
@@ -267,82 +270,17 @@ export async function createManualContentRun(formData: FormData): Promise<void> 
   const gate = await assertPlatformAdmin();
   if (!gate.ok) return;
 
-  const runType = String(formData.get("run_type") ?? "").trim();
+  const runType = String(formData.get("run_type") ?? "").trim() as ContentOpsRunType;
   if (!runType) return;
   await executeAdminRunType(runType);
 }
 
-async function executeAdminRunType(runType: string): Promise<void> {
+async function executeAdminRunType(runType: ContentOpsRunType): Promise<void> {
   try {
-    const nowIso = new Date().toISOString();
-    const admin = createAdminClient();
-    const { data: runRow, error } = await admin
-      .from("content_runs")
-      .insert({
-        run_type: runType,
-        status: "running",
-        trigger_type: "manual",
-        started_at: nowIso,
-      })
-      .select("id")
-      .single();
-    if (error || !runRow?.id) return;
-
-    let status: "succeeded" | "failed" = "succeeded";
-    let metadata: Json | null = null;
-    let errorSummary: string | null = null;
-
-    try {
-      if (runType === "ingest") {
-        metadata = await runIngestPipeline(runRow.id);
-      } else if (runType === "draft_generate") {
-        metadata = await runDraftGeneratePipeline(runRow.id);
-      } else if (runType === "publish") {
-        metadata = await runPublishPipeline();
-      } else if (runType === "publish_retry_failed") {
-        metadata = await runPublishPipeline({ retryFailedOnly: true });
-      } else if (runType === "review_gate") {
-        metadata = await runReviewGatePipeline(runRow.id);
-      } else {
-        metadata = { skipped: true, reason: "unknown_run_type" };
-      }
-    } catch (e) {
-      status = "failed";
-      errorSummary = e instanceof Error ? e.message : "unknown";
-    }
-
-    if (!errorSummary && metadata && typeof metadata === "object" && !Array.isArray(metadata)) {
-      if (
-        (runType === "publish" || runType === "publish_retry_failed") &&
-        typeof (metadata as Record<string, unknown>).failedCount === "number" &&
-        ((metadata as Record<string, unknown>).failedCount as number) > 0
-      ) {
-        status = "failed";
-      }
-      const maybeFailures = (metadata as Record<string, unknown>).failureMessages;
-      if (Array.isArray(maybeFailures) && maybeFailures.length > 0) {
-        const first = maybeFailures.find((v) => typeof v === "string");
-        errorSummary = typeof first === "string" ? `warning:${first}` : "warning:partial_failures";
-      }
-      const maybeFailedSources = (metadata as Record<string, unknown>).failedSources;
-      if (!errorSummary && typeof maybeFailedSources === "number" && maybeFailedSources > 0) {
-        errorSummary = `warning:${maybeFailedSources}_sources_failed`;
-      }
-      const maybeFailedCount = (metadata as Record<string, unknown>).failedCount;
-      if (!errorSummary && typeof maybeFailedCount === "number" && maybeFailedCount > 0) {
-        errorSummary = `warning:${maybeFailedCount}_items_failed`;
-      }
-    }
-
-    await admin
-      .from("content_runs")
-      .update({
-        status,
-        ended_at: new Date().toISOString(),
-        metadata: (metadata ?? {}) as Json,
-        error_summary: errorSummary,
-      })
-      .eq("id", runRow.id);
+    await executeContentOpsRun({
+      runType,
+      triggerType: "manual",
+    });
 
     revalidatePath("/admin/runs");
     revalidatePath("/admin/content-queue");
@@ -358,9 +296,10 @@ export async function runAdminContentOpsScenario(): Promise<void> {
   if (!gate.ok) return;
 
   try {
-    for (const runType of RUN_SEQUENCE) {
-      await executeAdminRunType(runType);
-    }
+    await runContentOpsScenario({
+      triggerType: "manual",
+      sequence: CONTENT_OPS_RUN_SEQUENCE,
+    });
   } catch (e) {
     console.error("[runAdminContentOpsScenario] failed", e);
   }
