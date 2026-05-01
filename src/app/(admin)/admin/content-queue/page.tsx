@@ -134,35 +134,37 @@ export default async function AdminContentQueuePage(props: {
           <p className="text-xs text-ink-500">{t("empty")}</p>
         ) : (
           <div className="overflow-x-auto border border-ink-100">
-            <table className="w-full text-left text-xs">
+            <table className="w-full min-w-[1220px] text-left text-xs">
               <thead>
                 <tr className="border-b border-ink-100 bg-paper-50">
                   <th className="p-2 font-medium text-ink-700">{t("columns.title")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.type")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.status")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.quality")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.gate")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.opsSignal")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.updated")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.actions")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.type")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.status")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.quality")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.gate")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.opsSignal")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.updated")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.actions")}</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.id} className="border-b border-ink-100/80">
                     <td className="p-2 text-ink-900">
-                      <div className="font-medium">{row.title}</div>
+                      <div className="max-w-[360px] overflow-hidden text-ellipsis whitespace-nowrap font-medium" title={row.title}>
+                        {row.title}
+                      </div>
                       <div className="mt-0.5 text-[11px] text-ink-500">{row.locale}</div>
                     </td>
-                    <td className="p-2 text-ink-700">{toTypeLabel(t, row.type)}</td>
-                    <td className="p-2 text-ink-700">{toItemStatusLabel(t, row.status)}</td>
-                    <td className="p-2 text-ink-700">
+                    <td className="p-2 text-ink-700 whitespace-nowrap">{toTypeLabel(t, row.type)}</td>
+                    <td className="p-2 text-ink-700 whitespace-nowrap">{toItemStatusLabel(t, row.status)}</td>
+                    <td className="p-2 text-ink-700 whitespace-nowrap">
                       {row.source_quality_score ?? "-"} / {row.fact_check_score ?? "-"}
                     </td>
-                    <td className="p-2 text-ink-700">
+                    <td className="p-2 text-ink-700 whitespace-nowrap">
                       <ReviewGateCell t={t} metadata={row.metadata} />
                     </td>
-                    <td className="p-2 text-ink-700">
+                    <td className="p-2 text-ink-700 whitespace-nowrap">
                       <OpsSignalCell
                         t={t}
                         status={row.status}
@@ -176,7 +178,7 @@ export default async function AdminContentQueuePage(props: {
                       {new Date(row.updated_at).toISOString().replace("T", " ").slice(0, 19)} UTC
                     </td>
                     <td className="p-2">
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap gap-1.5 whitespace-nowrap">
                         <form action={updateContentItemStatus}>
                           <input type="hidden" name="id" value={row.id} />
                           <input type="hidden" name="status" value="approved" />
