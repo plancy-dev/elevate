@@ -22,6 +22,8 @@ type FeedEntry = {
 
 const MAX_PUBLICATION_ATTEMPTS = 3;
 const RETRY_DELAY_MINUTES = 30;
+const RESEND_MIN_SEND_INTERVAL_MS = 600;
+const RESEND_RATE_LIMIT_RETRY_DELAY_MS = 1200;
 
 type FetchSourceResult =
   | { ok: true; entries: FeedEntry[]; fetchUrl: string }
@@ -58,6 +60,17 @@ function classifyFailureReason(reason: string): string {
 
 function dedupeReasons(reasons: string[]): string[] {
   return Array.from(new Set(reasons.map((reason) => classifyFailureReason(reason))));
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+function isResendRateLimitError(reason: string): boolean {
+  const normalized = reason.toLowerCase();
+  return normalized.includes("too many requests") || normalized.includes("rate limit");
 }
 
 function addMinutesIso(date: Date, minutes: number): string {
@@ -526,13 +539,34 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
     };
   }
 
-  for (const subscriber of (subscribers ?? []) as SubscriberRow[]) {
-    const send = await sendNewsletterEmail({
+  const subscriberRows = (subscribers ?? []) as SubscriberRow[];
+  let previousSendAt: number | null = null;
+  for (const subscriber of subscriberRows) {
+    if (previousSendAt) {
+      const elapsed = Date.now() - previousSendAt;
+      if (elapsed < RESEND_MIN_SEND_INTERVAL_MS) {
+        await sleep(RESEND_MIN_SEND_INTERVAL_MS - elapsed);
+      }
+    }
+
+    let send = await sendNewsletterEmail({
       to: subscriber.email,
       subject: item.title,
       markdownBody: item.body_markdown,
       locale: subscriber.locale,
     });
+    previousSendAt = Date.now();
+    if (!send.ok && isResendRateLimitError(send.error)) {
+      await sleep(RESEND_RATE_LIMIT_RETRY_DELAY_MS);
+      send = await sendNewsletterEmail({
+        to: subscriber.email,
+        subject: item.title,
+        markdownBody: item.body_markdown,
+        locale: subscriber.locale,
+      });
+      previousSendAt = Date.now();
+    }
+
     if (send.ok) {
       sentCount += 1;
     } else {

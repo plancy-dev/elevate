@@ -19,6 +19,12 @@ type ExecuteContentOpsRunParams = {
   metadata?: Record<string, unknown>;
 };
 
+function resolvePersistedRunType(runType: ContentOpsRunType): "ingest" | "draft_generate" | "review_gate" | "publish" {
+  // Backward-compatible persistence until migration 050 is applied in all environments.
+  if (runType === "publish_retry_failed") return "publish";
+  return runType;
+}
+
 function getWarningSummary(metadata: Json | null): string | null {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
   const obj = metadata as Record<string, unknown>;
@@ -50,15 +56,20 @@ export async function executeContentOpsRun(
 ): Promise<{ runId: string; status: "succeeded" | "failed"; metadata: Json | null }> {
   const nowIso = new Date().toISOString();
   const admin = createAdminClient();
+  const persistedRunType = resolvePersistedRunType(params.runType);
   const { data: runRow, error } = await admin
     .from("content_runs")
     .insert({
-      run_type: params.runType,
+      run_type: persistedRunType,
       status: "running",
       trigger_type: params.triggerType,
       initiated_by: params.initiatedBy ?? null,
       started_at: nowIso,
-      metadata: (params.metadata ?? {}) as Json,
+      metadata: ({
+        ...(params.metadata ?? {}),
+        requested_run_type: params.runType,
+        persisted_run_type: persistedRunType,
+      } as Record<string, unknown>) as Json,
     })
     .select("id")
     .single();
@@ -101,10 +112,15 @@ export async function executeContentOpsRun(
     status,
     metadata,
   });
+  const baseRunMetadata = {
+    ...(params.metadata ?? {}),
+    requested_run_type: params.runType,
+    persisted_run_type: persistedRunType,
+  } as Record<string, unknown>;
   const finalMetadata =
     metadata && typeof metadata === "object" && !Array.isArray(metadata)
-      ? ({ ...(metadata as Record<string, unknown>), alert } as Json)
-      : ({ result: metadata, alert } as Json);
+      ? ({ ...baseRunMetadata, ...(metadata as Record<string, unknown>), alert } as Json)
+      : ({ ...baseRunMetadata, result: metadata, alert } as Json);
 
   await admin
     .from("content_runs")
