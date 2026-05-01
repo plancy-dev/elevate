@@ -36,6 +36,8 @@
     "content-ops:quality:monitor": "pnpm tsx scripts/content-ops-quality-monitor.ts",
     "pr:automerge:safe": "pnpm tsx scripts/pr-automerge-safe.ts",
     "autoloop:poc": "pnpm tsx scripts/continuous-improvement-loop.ts",
+    "autoloop:rehearsal": "pnpm autoloop:poc --mode=rehearsal --allow-dirty-tree --max-cycles=3 --max-hours=1 --interval-minutes=5",
+    "autoloop:production": "pnpm autoloop:poc --mode=production --max-cycles=48 --max-hours=24 --interval-minutes=30 --required-secrets=CONTENT_OPS_AUTOMATION_TOKEN --merge-enabled=false",
     "worker:assembly": "tsx workers/video-assembly/run.ts",
     "prepare": "husky"
   },
