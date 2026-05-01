@@ -891,6 +891,11 @@
       },
       "admin": {
         "content": "内容",
+        "contentQueue": "内容队列",
+        "newsSources": "新闻来源",
+        "runs": "运行记录",
+        "subscribers": "订阅者",
+        "contentQuality": "内容质量监控",
         "waitlist": "候补名单",
         "purchaseAllowlist": "结账许可名单",
         "promptStudioAllowlist": "Prompt Studio 测试版"
@@ -1078,6 +1083,26 @@
         "lemonWebhook": {
           "title": "Lemon Squeezy（Webhook 测试）",
           "desc": "复制组织 ID、目录 slug、custom_data JSON 与 Webhook URL，验证全球结账 → 资料库权限。"
+        },
+        "contentQueue": {
+          "title": "内容队列",
+          "desc": "审核、批准、排期并发布博客/新闻简报草稿。"
+        },
+        "newsSources": {
+          "title": "新闻来源",
+          "desc": "管理采集用 RSS/博客来源及可信权重。"
+        },
+        "runs": {
+          "title": "自动化运行记录",
+          "desc": "检查运行日志并加入手动 ingest/generate/publish 运行。"
+        },
+        "contentQuality": {
+          "title": "内容质量监控",
+          "desc": "在一个页面追踪质量信号、失败趋势和改进重点。"
+        },
+        "subscribers": {
+          "title": "订阅者",
+          "desc": "独立于候补名单运营新闻简报订阅生命周期。"
         }
       }
     },
@@ -1140,6 +1165,250 @@
       "colTime": "报名时间（UTC）",
       "errors": {
         "invalidEmail": "请输入有效的邮箱地址。"
+      }
+    },
+    "adminSubscribers": {
+      "metaTitle": "订阅者",
+      "title": "订阅者",
+      "backToAdmin": "返回管理首页",
+      "intro": "独立于候补名单，管理新闻简报订阅生命周期。",
+      "addHeading": "添加订阅者",
+      "emailPlaceholder": "name@company.com",
+      "localePlaceholder": "en",
+      "save": "保存订阅者",
+      "empty": "暂无订阅者。",
+      "columns": {
+        "email": "邮箱",
+        "status": "状态",
+        "frequency": "频率",
+        "locale": "语言",
+        "source": "来源",
+        "actions": "操作"
+      },
+      "actions": {
+        "subscribe": "设为订阅",
+        "unsubscribe": "取消订阅",
+        "markBounced": "标记退信"
+      },
+      "status": {
+        "subscribed": "已订阅",
+        "unsubscribed": "已取消",
+        "bounced": "退信"
+      },
+      "frequency": {
+        "daily": "每日",
+        "weekly": "每周"
+      }
+    },
+    "adminNewsSources": {
+      "metaTitle": "新闻来源",
+      "title": "新闻来源",
+      "backToAdmin": "返回管理首页",
+      "intro": "注册用于自动采集的可信来源，并管理其可信权重。",
+      "addHeading": "添加来源",
+      "sourceNamePlaceholder": "来源名称",
+      "baseUrlPlaceholder": "https://example.com",
+      "save": "保存来源",
+      "empty": "暂无来源。",
+      "columns": {
+        "name": "名称",
+        "kind": "类型",
+        "url": "URL",
+        "trust": "可信度",
+        "active": "启用",
+        "actions": "操作"
+      },
+      "kind": {
+        "rss": "RSS",
+        "blog": "博客",
+        "api": "API",
+        "manual": "手动"
+      },
+      "actions": {
+        "enable": "启用",
+        "disable": "停用"
+      },
+      "yes": "是",
+      "no": "否"
+    },
+    "adminRuns": {
+      "metaTitle": "自动化运行记录",
+      "title": "自动化运行记录",
+      "backToAdmin": "返回管理首页",
+      "intro": "查看 ingest/generate/publish 运行历史，并触发手动运行。",
+      "cards": {
+        "created": "创建",
+        "sent": "发送",
+        "failed": "失败",
+        "topFailureReason": "主要失败原因",
+        "reviewQueue": "审核队列",
+        "mustReviewNow": "需立即审核",
+        "oldestReviewAgeHours": "最久审核等待(h)"
+      },
+      "scenario": {
+        "title": "推荐单次流程",
+        "description": "按顺序运行 ingest -> draft_generate -> publish。若 Error 显示 warning:，请在本表 metadata 中查看失败详情。"
+      },
+      "form": {
+        "runTypeLabel": "运行类型",
+        "queueManualRun": "加入手动运行",
+        "runScenario": "运行 ingest -> generate -> publish",
+        "retryFailedOnly": "仅重试失败项"
+      },
+      "runType": {
+        "ingest": "ingest",
+        "draftGenerate": "draft_generate",
+        "reviewGate": "review_gate",
+        "publish": "publish",
+        "publishRetryFailed": "publish_retry_failed"
+      },
+      "columns": {
+        "type": "类型",
+        "result": "结果",
+        "status": "状态",
+        "trigger": "触发方式",
+        "started": "开始",
+        "ended": "结束",
+        "error": "错误",
+        "metadata": "元数据"
+      },
+      "status": {
+        "queued": "排队中",
+        "running": "运行中",
+        "succeeded": "成功",
+        "failed": "失败"
+      },
+      "trigger": {
+        "manual": "手动",
+        "automation": "自动化"
+      },
+      "result": {
+        "success": "成功",
+        "partial": "部分失败",
+        "failure": "失败",
+        "partialHint": "部分失败（详情见 metadata）"
+      },
+      "empty": "暂无运行日志。"
+    },
+    "adminContentQueue": {
+      "metaTitle": "内容队列",
+      "title": "内容队列",
+      "backToAdmin": "返回管理首页",
+      "intro": "审核生成的博客/新闻简报草稿，并将已批准项转为定时或立即发布。",
+      "cards": {
+        "pendingApproval": "待批准",
+        "staleOver24h": "超过24小时未处理",
+        "mustReviewNow": "需立即审核"
+      },
+      "filters": {
+        "type": "类型",
+        "status": "状态",
+        "apply": "应用筛选",
+        "retryFailedOnly": "仅重试失败项"
+      },
+      "type": {
+        "all": "全部",
+        "blog": "博客",
+        "newsletter": "新闻简报"
+      },
+      "status": {
+        "all": "全部",
+        "draft": "草稿",
+        "reviewRequired": "需审核",
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "scheduled": "已定时",
+        "publishing": "发布中",
+        "published": "已发布",
+        "sendFailed": "发送失败"
+      },
+      "columns": {
+        "title": "标题",
+        "type": "类型",
+        "status": "状态",
+        "quality": "质量",
+        "gate": "门禁",
+        "opsSignal": "运营信号",
+        "updated": "更新时间",
+        "actions": "操作"
+      },
+      "actions": {
+        "approve": "批准",
+        "requestChanges": "请求修改",
+        "schedule": "定时",
+        "publishNow": "立即发布",
+        "retryMark": "标记重试"
+      },
+      "gate": {
+        "pass": "通过",
+        "fail": "失败"
+      },
+      "opsSignal": {
+        "slaRisk": "SLA 风险 ({hours}h)",
+        "qualityRework": "质量返工",
+        "reviewNeeded": "需要审核",
+        "manualReviewRequired": "manual_review_required"
+      },
+      "empty": "未找到队列项。"
+    },
+    "adminContentQuality": {
+      "metaTitle": "内容质量监控",
+      "title": "内容质量监控",
+      "intro": "基于周度质量与发送指标运营“生成-审核-改进”循环。请据此决定 pack 调整、审核优先级与发布稳定化动作。",
+      "links": {
+        "runs": "运行记录",
+        "backToAdmin": "返回管理首页"
+      },
+      "metrics": {
+        "generated7d": "7天生成",
+        "published7d": "7天发布",
+        "reviewRequired7d": "7天 review_required",
+        "sendFailed7d": "7天 send_failed",
+        "avgQuality": "平均质量分",
+        "generated24h": "24小时生成",
+        "reviewed24h": "24小时已审核",
+        "reviewRequired24h": "24小时 review_required",
+        "avgQuality24h": "24小时平均质量",
+        "minQuality24h": "24小时最低质量"
+      },
+      "freshNote": {
+        "prefix": "Fresh 24h 指标仅统计",
+        "suffix": "条件下的新生成内容。"
+      },
+      "sections": {
+        "topQualityIssues7d": "主要质量问题（7天）",
+        "topPublishFailures7d": "主要发布失败（7天）",
+        "topQualityIssuesFresh24h": "主要质量问题（仅 Fresh 24h）",
+        "improvementFocus": "改进重点（自动建议）"
+      },
+      "empty": {
+        "topQualityIssues7d": "此时间窗内未检测到质量问题。",
+        "topPublishFailures7d": "此时间窗内未检测到发布失败。",
+        "topQualityIssuesFresh24h": "Fresh 新生成内容中未检测到质量问题。",
+        "lowQualityCandidates": "未找到低质量候选项。"
+      },
+      "table": {
+        "columns": {
+          "type": "类型",
+          "status": "状态",
+          "quality": "质量",
+          "reasons": "原因",
+          "title": "标题"
+        }
+      },
+      "type": {
+        "blog": "博客",
+        "newsletter": "新闻简报"
+      },
+      "status": {
+        "draft": "草稿",
+        "reviewRequired": "需审核",
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "scheduled": "已定时",
+        "publishing": "发布中",
+        "published": "已发布",
+        "sendFailed": "发送失败"
       }
     },
     "adminPurchaseAllowlist": {

@@ -111,6 +111,10 @@ export function TOC({
               label: tx("admin.subscribers", "Subscribers"),
             },
             {
+              href: "/admin/content-quality",
+              label: tx("admin.contentQuality", "Content quality monitor"),
+            },
+            {
               href: "/admin/purchase-allowlist",
               label: tx("admin.purchaseAllowlist", "Checkout allowlist"),
             },
@@ -216,6 +220,7 @@ export function TOC({
       "/admin/news-sources": Sparkles,
       "/admin/runs": CircleHelp,
       "/admin/subscribers": Users,
+      "/admin/content-quality": Sparkles,
       "/admin/purchase-allowlist": Shield,
       "/admin/prompt-studio-allowlist": Sparkles,
     };
@@ -256,7 +261,7 @@ export function TOC({
           ) : (
             <Link href={mode === "admin" ? "/admin" : "/dashboard"} className="mx-auto">
               <span className="sr-only">Elevate</span>
-              <div className="rounded-[var(--radius-1)] border border-ink-100 bg-paper-0/90 p-1.5">
+              <div className="rounded-(--radius-1) border border-ink-100 bg-paper-0/90 p-1.5">
                 <ElevateLogo size="sm" showText={false} />
               </div>
             </Link>
@@ -265,7 +270,7 @@ export function TOC({
             type="button"
             onClick={toggleCollapsed}
             className={cn(
-              "inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-1)] border border-transparent bg-transparent text-ink-500 transition-all duration-100 ease-(--ease-editorial) hover:border-ink-200 hover:bg-paper-0 hover:text-ink-900",
+              "inline-flex h-8 w-8 items-center justify-center rounded-(--radius-1) border border-transparent bg-transparent text-ink-500 transition-all duration-100 ease-(--ease-editorial) hover:border-ink-200 hover:bg-paper-0 hover:text-ink-900",
               collapsed &&
                 "mx-auto transition-[opacity,color,background-color,border-color] duration-120 ease-(--ease-editorial) opacity-80 hover:opacity-100",
             )}
@@ -296,7 +301,7 @@ export function TOC({
                               aria-label={item.label}
                               title={item.label}
                               className={cn(
-                                "group relative flex h-9 w-9 items-center justify-center rounded-[var(--radius-1)] transition-[opacity,color,background-color,border-color] duration-120 ease-(--ease-editorial) opacity-80 hover:opacity-100",
+                                "group relative flex h-9 w-9 items-center justify-center rounded-(--radius-1) transition-[opacity,color,background-color,border-color] duration-120 ease-(--ease-editorial) opacity-80 hover:opacity-100",
                                 iconTone.base,
                                 active && cn(iconTone.active, "opacity-100"),
                               )}
@@ -322,7 +327,7 @@ export function TOC({
 
               return (
                 <section key={section.numeral} aria-label={section.ariaLabel}>
-                  <h2 className="mb-2 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-500">
+                  <h2 className="mb-2 font-mono text-[10px] tracking-[0.04em] text-ink-500">
                     {section.ariaLabel}
                   </h2>
                   <ul className="space-y-1">
@@ -333,7 +338,7 @@ export function TOC({
                           <Link
                             href={item.href}
                             className={cn(
-                              "relative block rounded-[var(--radius-1)] px-3 py-1.5 text-[13px] uppercase tracking-[0.08em] text-ink-500 transition-all duration-100 ease-(--ease-editorial) hover:bg-paper-0 hover:text-ink-900",
+                              "relative block rounded-(--radius-1) px-3 py-1.5 text-[13px] tracking-[0.01em] text-ink-500 transition-all duration-100 ease-(--ease-editorial) hover:bg-paper-0 hover:text-ink-900",
                               active &&
                                 "border border-ink-100 bg-paper-0 font-medium text-ink-900 shadow-[inset_2px_0_0_var(--vermilion-600)]",
                             )}
@@ -372,7 +377,7 @@ export function TOC({
                 type="button"
                 onClick={() => setMobileOpenSection(section.numeral)}
                 className={cn(
-                  "relative whitespace-nowrap px-2 py-1 font-mono text-[11px] uppercase tracking-[0.04em] text-ink-700",
+                  "relative whitespace-nowrap px-2 py-1 font-mono text-[11px] tracking-[0.02em] text-ink-700",
                   active && "text-ink-900",
                 )}
               >

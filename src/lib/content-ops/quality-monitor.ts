@@ -69,6 +69,14 @@ function extractRunPayload(metadata: Json | null): Record<string, unknown> {
   return nested ?? root ?? {};
 }
 
+function isGeneratedItem(item: MonitorContentItem): boolean {
+  const root = asObject(item.metadata);
+  const generate = asObject(root?.generate);
+  if (!generate) return false;
+  const mode = String(generate.mode ?? "");
+  return mode === "pack_registry";
+}
+
 function parseFailureReasons(run: MonitorRun): string[] {
   const payload = extractRunPayload(run.metadata);
   const failureMessages = payload.failureMessages;
@@ -117,6 +125,7 @@ export function buildContentQualitySnapshot(params: {
     const createdMs = new Date(item.created_at).getTime();
     return Number.isFinite(createdMs) && createdMs >= freshCutoffMs;
   });
+  const freshGeneratedItems = freshItems.filter((item) => isGeneratedItem(item));
 
   const qualityScores: number[] = [];
   const qualityReasonCounts = new Map<string, number>();
@@ -156,16 +165,20 @@ export function buildContentQualitySnapshot(params: {
   const topPublishFailureReasons = toCountList(publishFailureCounts);
   const freshQualityScores: number[] = [];
   const freshQualityReasonCounts = new Map<string, number>();
-  for (const item of freshItems) {
+  for (const item of freshGeneratedItems) {
     const score = extractQualityScore(item.metadata);
     if (typeof score === "number") freshQualityScores.push(score);
     for (const reason of extractQualityReasons(item.metadata)) {
       freshQualityReasonCounts.set(reason, (freshQualityReasonCounts.get(reason) ?? 0) + 1);
     }
   }
-  const freshGeneratedCount = freshItems.filter((item) => asObject(item.metadata)?.generate).length;
-  const freshReviewedCount = freshItems.filter((item) => asObject(asObject(item.metadata)?.review_gate)?.latest).length;
-  const freshReviewRequiredCount = freshItems.filter((item) => item.status === "review_required").length;
+  const freshGeneratedCount = freshGeneratedItems.length;
+  const freshReviewedCount = freshGeneratedItems.filter((item) =>
+    Boolean(asObject(asObject(item.metadata)?.review_gate)?.latest),
+  ).length;
+  const freshReviewRequiredCount = freshGeneratedItems.filter(
+    (item) => item.status === "review_required",
+  ).length;
   const freshAvgQualityScore =
     freshQualityScores.length > 0
       ? Number(

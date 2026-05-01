@@ -899,6 +899,11 @@
       },
       "admin": {
         "content": "콘텐츠",
+        "contentQueue": "콘텐츠 큐",
+        "newsSources": "뉴스 소스",
+        "runs": "실행 이력",
+        "subscribers": "구독자",
+        "contentQuality": "콘텐츠 품질 모니터",
         "waitlist": "대기명단",
         "purchaseAllowlist": "결제 허용 목록",
         "promptStudioAllowlist": "Prompt Studio 베타"
@@ -1086,6 +1091,26 @@
         "lemonWebhook": {
           "title": "Lemon Squeezy (웹훅 테스트)",
           "desc": "조직 ID·카탈로그 slug·custom_data JSON·웹훅 URL을 복사해 글로벌 결제 → 라이브러리 권한을 검증합니다."
+        },
+        "contentQueue": {
+          "title": "콘텐츠 큐",
+          "desc": "블로그/뉴스레터 초안을 검토, 승인, 예약, 발행합니다."
+        },
+        "newsSources": {
+          "title": "뉴스 소스",
+          "desc": "수집용 RSS/블로그 소스와 신뢰 가중치를 관리합니다."
+        },
+        "runs": {
+          "title": "자동화 실행 이력",
+          "desc": "실행 로그를 점검하고 수동 ingest/generate/publish를 등록합니다."
+        },
+        "contentQuality": {
+          "title": "콘텐츠 품질 모니터",
+          "desc": "품질 신호, 실패 추세, 개선 포인트를 한 곳에서 추적합니다."
+        },
+        "subscribers": {
+          "title": "구독자",
+          "desc": "대기명단과 별도로 뉴스레터 구독 수명주기를 운영합니다."
         }
       }
     },
@@ -1148,6 +1173,250 @@
       "colTime": "가입 시각(UTC)",
       "errors": {
         "invalidEmail": "유효한 이메일을 입력하세요."
+      }
+    },
+    "adminSubscribers": {
+      "metaTitle": "구독자",
+      "title": "구독자",
+      "backToAdmin": "관리 홈으로",
+      "intro": "대기명단과 분리된 뉴스레터 구독 수명주기를 관리합니다.",
+      "addHeading": "구독자 추가",
+      "emailPlaceholder": "name@company.com",
+      "localePlaceholder": "en",
+      "save": "구독자 저장",
+      "empty": "등록된 구독자가 없습니다.",
+      "columns": {
+        "email": "이메일",
+        "status": "상태",
+        "frequency": "주기",
+        "locale": "로케일",
+        "source": "출처",
+        "actions": "작업"
+      },
+      "actions": {
+        "subscribe": "구독 처리",
+        "unsubscribe": "구독 해지",
+        "markBounced": "반송 처리"
+      },
+      "status": {
+        "subscribed": "구독 중",
+        "unsubscribed": "해지됨",
+        "bounced": "반송"
+      },
+      "frequency": {
+        "daily": "매일",
+        "weekly": "매주"
+      }
+    },
+    "adminNewsSources": {
+      "metaTitle": "뉴스 소스",
+      "title": "뉴스 소스",
+      "backToAdmin": "관리 홈으로",
+      "intro": "자동 수집에 사용할 신뢰 소스를 등록하고 신뢰 가중치를 관리합니다.",
+      "addHeading": "소스 추가",
+      "sourceNamePlaceholder": "소스 이름",
+      "baseUrlPlaceholder": "https://example.com",
+      "save": "소스 저장",
+      "empty": "등록된 소스가 없습니다.",
+      "columns": {
+        "name": "이름",
+        "kind": "종류",
+        "url": "URL",
+        "trust": "신뢰도",
+        "active": "활성",
+        "actions": "작업"
+      },
+      "kind": {
+        "rss": "RSS",
+        "blog": "블로그",
+        "api": "API",
+        "manual": "수동"
+      },
+      "actions": {
+        "enable": "활성화",
+        "disable": "비활성화"
+      },
+      "yes": "예",
+      "no": "아니오"
+    },
+    "adminRuns": {
+      "metaTitle": "자동화 실행 이력",
+      "title": "자동화 실행 이력",
+      "backToAdmin": "관리 홈으로",
+      "intro": "ingest/generate/publish 실행 이력을 확인하고 수동 실행을 트리거합니다.",
+      "cards": {
+        "created": "생성",
+        "sent": "발송",
+        "failed": "실패",
+        "topFailureReason": "최다 실패 원인",
+        "reviewQueue": "리뷰 큐",
+        "mustReviewNow": "즉시 검토 필요",
+        "oldestReviewAgeHours": "가장 오래된 리뷰 대기(h)"
+      },
+      "scenario": {
+        "title": "권장 1회전 시나리오",
+        "description": "순서대로 ingest -> draft_generate -> publish 실행. Error에 warning: 이 보이면 이 표의 metadata 요약에서 실패 상세를 확인하세요."
+      },
+      "form": {
+        "runTypeLabel": "실행 타입",
+        "queueManualRun": "수동 실행 등록",
+        "runScenario": "ingest -> generate -> publish 실행",
+        "retryFailedOnly": "실패 건만 재시도"
+      },
+      "runType": {
+        "ingest": "ingest",
+        "draftGenerate": "draft_generate",
+        "reviewGate": "review_gate",
+        "publish": "publish",
+        "publishRetryFailed": "publish_retry_failed"
+      },
+      "columns": {
+        "type": "타입",
+        "result": "결과",
+        "status": "상태",
+        "trigger": "트리거",
+        "started": "시작",
+        "ended": "종료",
+        "error": "에러",
+        "metadata": "메타데이터"
+      },
+      "status": {
+        "queued": "대기",
+        "running": "실행 중",
+        "succeeded": "성공",
+        "failed": "실패"
+      },
+      "trigger": {
+        "manual": "수동",
+        "automation": "자동화"
+      },
+      "result": {
+        "success": "성공",
+        "partial": "부분실패",
+        "failure": "실패",
+        "partialHint": "부분실패 (상세는 metadata 확인)"
+      },
+      "empty": "실행 로그가 없습니다."
+    },
+    "adminContentQueue": {
+      "metaTitle": "콘텐츠 큐",
+      "title": "콘텐츠 큐",
+      "backToAdmin": "관리 홈으로",
+      "intro": "생성된 블로그/뉴스레터 초안을 검토하고 승인된 항목을 예약 또는 즉시 발행으로 전환합니다.",
+      "cards": {
+        "pendingApproval": "승인 대기",
+        "staleOver24h": "24시간 초과 대기",
+        "mustReviewNow": "즉시 검토 필요"
+      },
+      "filters": {
+        "type": "유형",
+        "status": "상태",
+        "apply": "필터 적용",
+        "retryFailedOnly": "실패 건만 재시도"
+      },
+      "type": {
+        "all": "전체",
+        "blog": "블로그",
+        "newsletter": "뉴스레터"
+      },
+      "status": {
+        "all": "전체",
+        "draft": "초안",
+        "reviewRequired": "검토 필요",
+        "approved": "승인됨",
+        "rejected": "반려됨",
+        "scheduled": "예약됨",
+        "publishing": "발행 중",
+        "published": "발행 완료",
+        "sendFailed": "발송 실패"
+      },
+      "columns": {
+        "title": "제목",
+        "type": "유형",
+        "status": "상태",
+        "quality": "품질",
+        "gate": "게이트",
+        "opsSignal": "운영 신호",
+        "updated": "업데이트",
+        "actions": "작업"
+      },
+      "actions": {
+        "approve": "승인",
+        "requestChanges": "수정 요청",
+        "schedule": "예약",
+        "publishNow": "즉시 발행",
+        "retryMark": "재시도 표시"
+      },
+      "gate": {
+        "pass": "통과",
+        "fail": "실패"
+      },
+      "opsSignal": {
+        "slaRisk": "SLA 위험 ({hours}h)",
+        "qualityRework": "품질 재작업",
+        "reviewNeeded": "검토 필요",
+        "manualReviewRequired": "manual_review_required"
+      },
+      "empty": "큐 항목이 없습니다."
+    },
+    "adminContentQuality": {
+      "metaTitle": "콘텐츠 품질 모니터",
+      "title": "콘텐츠 품질 모니터",
+      "intro": "주간 품질/발송 지표를 기준으로 생성-검수-개선 루프를 운영합니다. 이 화면을 기준으로 팩 수정, 리뷰 우선순위, 발행 안정화 액션을 결정하세요.",
+      "links": {
+        "runs": "실행 이력",
+        "backToAdmin": "관리 홈으로"
+      },
+      "metrics": {
+        "generated7d": "7일 생성",
+        "published7d": "7일 발행",
+        "reviewRequired7d": "7일 review_required",
+        "sendFailed7d": "7일 send_failed",
+        "avgQuality": "평균 품질 점수",
+        "generated24h": "24시간 생성",
+        "reviewed24h": "24시간 검토 완료",
+        "reviewRequired24h": "24시간 review_required",
+        "avgQuality24h": "24시간 평균 품질",
+        "minQuality24h": "24시간 최소 품질"
+      },
+      "freshNote": {
+        "prefix": "Fresh 24h 지표는",
+        "suffix": "조건의 신규 생성분만 집계합니다."
+      },
+      "sections": {
+        "topQualityIssues7d": "상위 품질 이슈 (7일)",
+        "topPublishFailures7d": "상위 발행 실패 원인 (7일)",
+        "topQualityIssuesFresh24h": "상위 품질 이슈 (Fresh 24시간만)",
+        "improvementFocus": "개선 포인트 (자동 제안)"
+      },
+      "empty": {
+        "topQualityIssues7d": "이 기간에는 품질 이슈가 없습니다.",
+        "topPublishFailures7d": "이 기간에는 발행 실패가 없습니다.",
+        "topQualityIssuesFresh24h": "신규 생성분에서 품질 이슈가 없습니다.",
+        "lowQualityCandidates": "저품질 후보를 찾지 못했습니다."
+      },
+      "table": {
+        "columns": {
+          "type": "유형",
+          "status": "상태",
+          "quality": "품질",
+          "reasons": "사유",
+          "title": "제목"
+        }
+      },
+      "type": {
+        "blog": "블로그",
+        "newsletter": "뉴스레터"
+      },
+      "status": {
+        "draft": "초안",
+        "reviewRequired": "검토 필요",
+        "approved": "승인됨",
+        "rejected": "반려됨",
+        "scheduled": "예약됨",
+        "publishing": "발행 중",
+        "published": "발행 완료",
+        "sendFailed": "발송 실패"
       }
     },
     "adminPurchaseAllowlist": {

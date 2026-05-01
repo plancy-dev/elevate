@@ -899,6 +899,11 @@
       },
       "admin": {
         "content": "Content",
+        "contentQueue": "Content queue",
+        "newsSources": "News sources",
+        "runs": "Runs",
+        "subscribers": "Subscribers",
+        "contentQuality": "Content quality",
         "waitlist": "Waitlist",
         "purchaseAllowlist": "Checkout allowlist",
         "promptStudioAllowlist": "Prompt Studio beta"
@@ -1086,6 +1091,26 @@
         "lemonWebhook": {
           "title": "Lemon Squeezy (webhook test)",
           "desc": "Copy org ID, catalog slugs, custom_data JSON, and webhook URL to verify global checkout → Library."
+        },
+        "contentQueue": {
+          "title": "Content queue",
+          "desc": "Review, approve, schedule, and publish blog/newsletter drafts."
+        },
+        "newsSources": {
+          "title": "News sources",
+          "desc": "Manage RSS/blog sources and trust weights for ingestion."
+        },
+        "runs": {
+          "title": "Automation runs",
+          "desc": "Inspect run logs and queue manual ingest/generate/publish runs."
+        },
+        "contentQuality": {
+          "title": "Content quality monitor",
+          "desc": "Track quality signals, failure trends, and improvement focus in one place."
+        },
+        "subscribers": {
+          "title": "Subscribers",
+          "desc": "Operate newsletter subscriber lifecycle separately from waitlist."
         }
       }
     },
@@ -1148,6 +1173,250 @@
       "colTime": "Signed up (UTC)",
       "errors": {
         "invalidEmail": "Enter a valid email address."
+      }
+    },
+    "adminSubscribers": {
+      "metaTitle": "Subscribers",
+      "title": "Subscribers",
+      "backToAdmin": "Back to admin",
+      "intro": "Manage newsletter subscription lifecycle independently from waitlist leads.",
+      "addHeading": "Add subscriber",
+      "emailPlaceholder": "name@company.com",
+      "localePlaceholder": "en",
+      "save": "Save subscriber",
+      "empty": "No subscribers yet.",
+      "columns": {
+        "email": "Email",
+        "status": "Status",
+        "frequency": "Frequency",
+        "locale": "Locale",
+        "source": "Source",
+        "actions": "Actions"
+      },
+      "actions": {
+        "subscribe": "Subscribe",
+        "unsubscribe": "Unsubscribe",
+        "markBounced": "Mark bounced"
+      },
+      "status": {
+        "subscribed": "Subscribed",
+        "unsubscribed": "Unsubscribed",
+        "bounced": "Bounced"
+      },
+      "frequency": {
+        "daily": "Daily",
+        "weekly": "Weekly"
+      }
+    },
+    "adminNewsSources": {
+      "metaTitle": "News sources",
+      "title": "News sources",
+      "backToAdmin": "Back to admin",
+      "intro": "Register trusted sources for automated ingestion and control trust weighting.",
+      "addHeading": "Add source",
+      "sourceNamePlaceholder": "Source name",
+      "baseUrlPlaceholder": "https://example.com",
+      "save": "Save source",
+      "empty": "No sources yet.",
+      "columns": {
+        "name": "Name",
+        "kind": "Kind",
+        "url": "URL",
+        "trust": "Trust",
+        "active": "Active",
+        "actions": "Actions"
+      },
+      "kind": {
+        "rss": "RSS",
+        "blog": "Blog",
+        "api": "API",
+        "manual": "Manual"
+      },
+      "actions": {
+        "enable": "Enable",
+        "disable": "Disable"
+      },
+      "yes": "Yes",
+      "no": "No"
+    },
+    "adminRuns": {
+      "metaTitle": "Automation runs",
+      "title": "Automation runs",
+      "backToAdmin": "Back to admin",
+      "intro": "Inspect ingestion/generation/publish run history and trigger manual runs.",
+      "cards": {
+        "created": "Created",
+        "sent": "Sent",
+        "failed": "Failed",
+        "topFailureReason": "Top failure reason",
+        "reviewQueue": "Review queue",
+        "mustReviewNow": "Must-review now",
+        "oldestReviewAgeHours": "Oldest review age (h)"
+      },
+      "scenario": {
+        "title": "Recommended 1-pass scenario",
+        "description": "Run in order: ingest -> draft_generate -> publish. If Error shows warning:, open the metadata summary in this table for failure details."
+      },
+      "form": {
+        "runTypeLabel": "Run type",
+        "queueManualRun": "Queue manual run",
+        "runScenario": "Run ingest -> generate -> publish",
+        "retryFailedOnly": "Retry failed only"
+      },
+      "runType": {
+        "ingest": "Ingest",
+        "draftGenerate": "Draft generate",
+        "reviewGate": "Review gate",
+        "publish": "Publish",
+        "publishRetryFailed": "Publish retry failed"
+      },
+      "columns": {
+        "type": "Type",
+        "result": "Result",
+        "status": "Status",
+        "trigger": "Trigger",
+        "started": "Started",
+        "ended": "Ended",
+        "error": "Error",
+        "metadata": "Metadata"
+      },
+      "status": {
+        "queued": "Queued",
+        "running": "Running",
+        "succeeded": "Succeeded",
+        "failed": "Failed"
+      },
+      "trigger": {
+        "manual": "Manual",
+        "automation": "Automation"
+      },
+      "result": {
+        "success": "Success",
+        "partial": "Partial",
+        "failure": "Failure",
+        "partialHint": "Partial failure (check metadata for details)"
+      },
+      "empty": "No run logs yet."
+    },
+    "adminContentQueue": {
+      "metaTitle": "Content queue",
+      "title": "Content queue",
+      "backToAdmin": "Back to admin",
+      "intro": "Review generated blog/newsletter drafts and move approved items to schedule or immediate publish.",
+      "cards": {
+        "pendingApproval": "Pending approval",
+        "staleOver24h": "Stale >24h",
+        "mustReviewNow": "Must-review now"
+      },
+      "filters": {
+        "type": "Type",
+        "status": "Status",
+        "apply": "Apply filters",
+        "retryFailedOnly": "Retry failed only"
+      },
+      "type": {
+        "all": "All",
+        "blog": "Blog",
+        "newsletter": "Newsletter"
+      },
+      "status": {
+        "all": "All",
+        "draft": "Draft",
+        "reviewRequired": "Review required",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "scheduled": "Scheduled",
+        "publishing": "Publishing",
+        "published": "Published",
+        "sendFailed": "Send failed"
+      },
+      "columns": {
+        "title": "Title",
+        "type": "Type",
+        "status": "Status",
+        "quality": "Quality",
+        "gate": "Gate",
+        "opsSignal": "Ops signal",
+        "updated": "Updated",
+        "actions": "Actions"
+      },
+      "actions": {
+        "approve": "Approve",
+        "requestChanges": "Request changes",
+        "schedule": "Schedule",
+        "publishNow": "Publish now",
+        "retryMark": "Retry mark"
+      },
+      "gate": {
+        "pass": "Pass",
+        "fail": "Fail"
+      },
+      "opsSignal": {
+        "slaRisk": "SLA risk ({hours}h)",
+        "qualityRework": "Quality rework",
+        "reviewNeeded": "Review needed",
+        "manualReviewRequired": "manual_review_required"
+      },
+      "empty": "No queue items found."
+    },
+    "adminContentQuality": {
+      "metaTitle": "Content quality monitor",
+      "title": "Content quality monitor",
+      "intro": "Operate the generate-review-improve loop based on weekly quality and delivery metrics. Use this page to prioritize pack updates, review focus, and publishing stability actions.",
+      "links": {
+        "runs": "Runs",
+        "backToAdmin": "Back to admin"
+      },
+      "metrics": {
+        "generated7d": "7d generated",
+        "published7d": "7d published",
+        "reviewRequired7d": "7d review_required",
+        "sendFailed7d": "7d send_failed",
+        "avgQuality": "avg quality score",
+        "generated24h": "24h generated",
+        "reviewed24h": "24h reviewed",
+        "reviewRequired24h": "24h review_required",
+        "avgQuality24h": "24h avg quality",
+        "minQuality24h": "24h min quality"
+      },
+      "freshNote": {
+        "prefix": "Fresh 24h metrics aggregate only newly generated items with",
+        "suffix": "."
+      },
+      "sections": {
+        "topQualityIssues7d": "Top Quality Issues (7d)",
+        "topPublishFailures7d": "Top Publish Failures (7d)",
+        "topQualityIssuesFresh24h": "Top Quality Issues (Fresh 24h only)",
+        "improvementFocus": "Improvement Focus (Auto Suggestions)"
+      },
+      "empty": {
+        "topQualityIssues7d": "No quality issues detected in this window.",
+        "topPublishFailures7d": "No publish failures detected in this window.",
+        "topQualityIssuesFresh24h": "No quality issues detected in fresh generated content.",
+        "lowQualityCandidates": "Low-quality candidates not found."
+      },
+      "table": {
+        "columns": {
+          "type": "Type",
+          "status": "Status",
+          "quality": "Quality",
+          "reasons": "Reasons",
+          "title": "Title"
+        }
+      },
+      "type": {
+        "blog": "Blog",
+        "newsletter": "Newsletter"
+      },
+      "status": {
+        "draft": "Draft",
+        "reviewRequired": "Review required",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "scheduled": "Scheduled",
+        "publishing": "Publishing",
+        "published": "Published",
+        "sendFailed": "Send failed"
       }
     },
     "adminPurchaseAllowlist": {
