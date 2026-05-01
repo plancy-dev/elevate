@@ -1,4 +1,8 @@
 import dotenv from "dotenv";
+import {
+  CONTENT_OPS_RUNTIME,
+  CONTENT_OPS_US_ET_SCHEDULE,
+} from "@/lib/content-ops/automation-config";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   runDraftGeneratePipeline,
@@ -156,6 +160,8 @@ async function main() {
           check: "content-ops-smoke",
           seedInfo,
           plannedRuns: ["ingest", "draft_generate", "publish"],
+          runtime: CONTENT_OPS_RUNTIME,
+          etSchedule: CONTENT_OPS_US_ET_SCHEDULE,
           note: "No DB writes or email sends were executed.",
         },
         null,

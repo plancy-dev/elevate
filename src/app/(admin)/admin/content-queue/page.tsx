@@ -44,6 +44,8 @@ export default async function AdminContentQueuePage(props: {
     status: statusFilter,
   });
   const rows = listRes.ok ? listRes.rows : [];
+  const nowMs = new Date().getTime();
+  const queueSummary = summarizeQueue(rows, nowMs);
 
   return (
     <div className="min-h-screen bg-paper-50">
@@ -65,6 +67,11 @@ export default async function AdminContentQueuePage(props: {
           Review generated blog/newsletter drafts and move approved items to schedule
           or immediate publish.
         </p>
+        <div className="grid gap-2 md:grid-cols-3">
+          <QueueSummaryCard label="Pending approval" value={queueSummary.pendingApproval} />
+          <QueueSummaryCard label="Stale >24h" value={queueSummary.staleOver24h} tone="warning" />
+          <QueueSummaryCard label="Must-review now" value={queueSummary.mustReviewNow} tone="danger" />
+        </div>
 
         <form className="flex flex-wrap items-end gap-3 border border-ink-100 bg-paper-0 p-3">
           <div className="space-y-1">
@@ -130,6 +137,7 @@ export default async function AdminContentQueuePage(props: {
                   <th className="p-2 font-medium text-ink-700">Status</th>
                   <th className="p-2 font-medium text-ink-700">Quality</th>
                   <th className="p-2 font-medium text-ink-700">Gate</th>
+                  <th className="p-2 font-medium text-ink-700">Ops signal</th>
                   <th className="p-2 font-medium text-ink-700">Updated</th>
                   <th className="p-2 font-medium text-ink-700">Actions</th>
                 </tr>
@@ -148,6 +156,15 @@ export default async function AdminContentQueuePage(props: {
                     </td>
                     <td className="p-2 text-ink-700">
                       <ReviewGateCell metadata={row.metadata} />
+                    </td>
+                    <td className="p-2 text-ink-700">
+                      <OpsSignalCell
+                        status={row.status}
+                        createdAt={row.created_at}
+                        nowMs={nowMs}
+                        metadata={row.metadata}
+                        reviewNotes={row.review_notes}
+                      />
                     </td>
                     <td className="p-2 whitespace-nowrap text-ink-500">
                       {new Date(row.updated_at).toISOString().replace("T", " ").slice(0, 19)} UTC
@@ -217,6 +234,29 @@ export default async function AdminContentQueuePage(props: {
   );
 }
 
+function QueueSummaryCard({
+  label,
+  value,
+  tone = "neutral",
+}: {
+  label: string;
+  value: number;
+  tone?: "neutral" | "warning" | "danger";
+}) {
+  const toneClass =
+    tone === "warning"
+      ? "text-amber-700"
+      : tone === "danger"
+        ? "text-danger"
+        : "text-ink-900";
+  return (
+    <div className="border border-ink-100 bg-paper-0 p-3">
+      <p className="text-[11px] uppercase tracking-wide text-ink-500">{label}</p>
+      <p className={`mt-1 text-sm font-medium ${toneClass}`}>{value}</p>
+    </div>
+  );
+}
+
 function ReviewGateCell({ metadata }: { metadata: Json | null }) {
   const latest = readLatestReviewGate(metadata);
   if (!latest) {
@@ -252,6 +292,7 @@ function ReviewGateCell({ metadata }: { metadata: Json | null }) {
 function readLatestReviewGate(metadata: Json | null): {
   passed: boolean;
   reasons: string[];
+  qualityScore: number;
 } | null {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
   const reviewGate = (metadata as Record<string, unknown>).review_gate;
@@ -262,10 +303,85 @@ function readLatestReviewGate(metadata: Json | null): {
   if (!latest || typeof latest !== "object" || Array.isArray(latest)) return null;
   const passed = (latest as Record<string, unknown>).passed;
   const reasons = (latest as Record<string, unknown>).reasons;
+  const metrics = (latest as Record<string, unknown>).metrics;
+  const qualityScore =
+    metrics && typeof metrics === "object" && !Array.isArray(metrics)
+      ? Number((metrics as Record<string, unknown>).qualityScore ?? 0)
+      : 0;
   return {
     passed: passed === true,
     reasons: Array.isArray(reasons)
       ? reasons.filter((v): v is string => typeof v === "string")
       : [],
+    qualityScore: Number.isFinite(qualityScore) ? qualityScore : 0,
   };
+}
+
+function summarizeQueue(
+  rows: Array<{ status: string; created_at: string; metadata: Json | null; review_notes: string | null }>,
+  nowMs: number,
+) {
+  let pendingApproval = 0;
+  let staleOver24h = 0;
+  let mustReviewNow = 0;
+  for (const row of rows) {
+    const isPending = row.status === "draft" || row.status === "review_required";
+    if (isPending) pendingApproval += 1;
+    if (isPending && nowMs - new Date(row.created_at).getTime() >= 24 * 60 * 60 * 1000) {
+      staleOver24h += 1;
+    }
+    if (isMustReviewNow(row, nowMs)) {
+      mustReviewNow += 1;
+    }
+  }
+  return { pendingApproval, staleOver24h, mustReviewNow };
+}
+
+function isMustReviewNow(row: {
+  status: string;
+  created_at: string;
+  metadata: Json | null;
+  review_notes: string | null;
+}, nowMs: number): boolean {
+  if (row.status !== "review_required") return false;
+  const latest = readLatestReviewGate(row.metadata);
+  const oldEnough = nowMs - new Date(row.created_at).getTime() >= 24 * 60 * 60 * 1000;
+  if (oldEnough) return true;
+  if (!latest) return true;
+  if (latest.qualityScore < 12) return true;
+  if (latest.reasons.some((reason) => reason.startsWith("low_"))) return true;
+  return Boolean(row.review_notes?.includes("review_gate:"));
+}
+
+function OpsSignalCell({
+  status,
+  createdAt,
+  nowMs,
+  metadata,
+  reviewNotes,
+}: {
+  status: string;
+  createdAt: string;
+  nowMs: number;
+  metadata: Json | null;
+  reviewNotes: string | null;
+}) {
+  if (status !== "review_required") {
+    return <span className="text-ink-500">-</span>;
+  }
+
+  const latest = readLatestReviewGate(metadata);
+  const ageHours = Math.floor((nowMs - new Date(createdAt).getTime()) / (60 * 60 * 1000));
+  const isSlaRisk = ageHours >= 24;
+  const hasLowQuality = latest ? latest.qualityScore < 12 : true;
+  const label = isSlaRisk ? `SLA risk (${ageHours}h)` : hasLowQuality ? "Quality rework" : "Review needed";
+  const details = latest?.reasons.join(",") || reviewNotes || "manual_review_required";
+  return (
+    <span
+      className={`inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium ${isSlaRisk ? "text-danger" : "text-amber-700"}`}
+      title={details}
+    >
+      {label}
+    </span>
+  );
 }

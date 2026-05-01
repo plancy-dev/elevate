@@ -1,4 +1,8 @@
 import dotenv from "dotenv";
+import {
+  CONTENT_OPS_RUNTIME,
+  CONTENT_OPS_US_ET_SCHEDULE,
+} from "@/lib/content-ops/automation-config";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 dotenv.config({ path: ".env.local" });
@@ -97,6 +101,8 @@ async function cleanupSmokeFixtures() {
         {
           mode: "dry-run",
           check: "content-ops-cleanup",
+          runtime: CONTENT_OPS_RUNTIME,
+          etSchedule: CONTENT_OPS_US_ET_SCHEDULE,
           wouldDelete: {
             deletedSources: sourceRows.count ?? 0,
             deletedMapRows: mappedRows.count ?? 0,

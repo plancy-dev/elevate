@@ -7,6 +7,24 @@ This runbook covers daily operation of the content pipeline:
 - `ingest` -> `draft_generate` -> `review_gate` -> `publish`
 - Admin dashboards: `/admin/content-queue`, `/admin/runs`, `/admin/news-sources`, `/admin/subscribers`
 
+## Automation Runtime (A/B)
+
+- Primary runtime: `cursor` (`CONTENT_OPS_AUTOMATION_RUNTIME=cursor`)
+- Fallback runtime: `vercel-cron` (`CONTENT_OPS_AUTOMATION_RUNTIME=vercel-cron`)
+- Trigger endpoint: `/api/content-ops/automation-run`
+
+Required secrets/env:
+
+- `CONTENT_OPS_AUTOMATION_TOKEN` (API trigger token for non-Vercel callers)
+- `CONTENT_OPS_ALERT_WEBHOOK_URL` (optional alert hook)
+- `CURSOR_API_KEY` (for Cursor automation workflows)
+
+US ET schedule source-of-truth:
+
+- Daily generation: 08:30 `ingest`, 08:40 `draft_generate`, 08:50 `review_gate`
+- Publish window: 11:00 `publish`
+- Retry window: 14:30 `publish_retry_failed`
+
 ## Daily Operation Order
 
 1. Open `/admin/runs` and check latest run summary cards.
@@ -34,6 +52,17 @@ This runbook covers daily operation of the content pipeline:
    - Ensure new run is `성공` or `부분실패` with expected warning only.
    - Confirm queue items move from `send_failed` to `published`.
 
+## Escalation Ownership / Response Window
+
+- Primary owner: Content Ops on-call (admin operator)
+- Secondary owner: Engineering on-call (automation reliability)
+
+SLA:
+
+- `review_required` queue item older than 24h: acknowledge within 4h
+- alert webhook failure events: acknowledge within 1h
+- repeated `resend_not_configured`: fix or disable publish window same business day
+
 ## Minimum Checklist
 
 - [ ] `ingest` completed today (or intentionally skipped)
@@ -43,6 +72,7 @@ This runbook covers daily operation of the content pipeline:
 - [ ] `/admin/runs` top failure reason acknowledged
 - [ ] No repeated `resend_not_configured` warnings
 - [ ] No stale `send_failed` item older than 24h without owner
+- [ ] No `review_required` backlog over threshold without escalation note
 
 ## CI / Script Operations
 

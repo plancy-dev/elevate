@@ -23,6 +23,8 @@ jobs:
       pull-requests: write
     env:
       BLOG_AUTOPUBLISH_ENABLED: "true"
+      CONTENT_OPS_AUTOMATION_RUNTIME: ${{ vars.CONTENT_OPS_AUTOMATION_RUNTIME || 'cursor' }}
+      CONTENT_OPS_AUTOMATION_TOKEN: ${{ secrets.CONTENT_OPS_AUTOMATION_TOKEN }}
       BLOG_AUTOPUBLISH_TOPICS_PATH: docs/blog/automation/topics.json
       BLOG_AUTOPUBLISH_STATUS_PATH: artifacts/blog-autopublish-status.json
       BLOG_QUALITY_GATE_STATUS_PATH: artifacts/blog-quality-gate.json

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Activity } from "lucide-react";
 import {
   createManualContentRun,
+  listAdminContentQueue,
   listAdminContentRuns,
   runAdminContentOpsScenario,
   runRetryFailedPublishOnly,
@@ -15,8 +16,11 @@ export const metadata: Metadata = {
 
 export default async function AdminRunsPage() {
   const listRes = await listAdminContentRuns();
+  const queueRes = await listAdminContentQueue({ status: "review_required" });
   const rows = listRes.ok ? listRes.rows : [];
+  const reviewQueueRows = queueRes.ok ? queueRes.rows : [];
   const summary = buildRunSummary(rows);
+  const ops = buildOpsSummary(reviewQueueRows);
 
   return (
     <div className="min-h-screen bg-paper-50">
@@ -46,6 +50,11 @@ export default async function AdminRunsPage() {
             value={summary.topFailureReason ?? "-"}
             tone="warning"
           />
+        </div>
+        <div className="grid gap-2 md:grid-cols-3">
+          <SummaryCard label="Review queue" value={ops.reviewQueueCount} tone="neutral" />
+          <SummaryCard label="Must-review now" value={ops.mustReviewCount} tone="danger" />
+          <SummaryCard label="Oldest review age (h)" value={ops.oldestReviewAgeHours} tone="warning" />
         </div>
         <div className="border border-ink-100 bg-paper-0 p-3 text-xs leading-relaxed text-ink-700">
           <p className="font-medium text-ink-900">Recommended 1-pass scenario</p>
@@ -374,4 +383,34 @@ function parseFailureReasons(
     }
   }
   return parsed;
+}
+
+function buildOpsSummary(rows: Array<{ created_at: string; metadata: Json | null }>) {
+  let mustReviewCount = 0;
+  let oldestReviewAgeHours = 0;
+  for (const row of rows) {
+    const ageHours = Math.floor((Date.now() - new Date(row.created_at).getTime()) / (60 * 60 * 1000));
+    if (ageHours > oldestReviewAgeHours) oldestReviewAgeHours = ageHours;
+    const qualityScore = readQualityScore(row.metadata);
+    if (ageHours >= 24 || qualityScore < 12) {
+      mustReviewCount += 1;
+    }
+  }
+  return {
+    reviewQueueCount: rows.length,
+    mustReviewCount,
+    oldestReviewAgeHours,
+  };
+}
+
+function readQualityScore(metadata: Json | null): number {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return 0;
+  const gate = (metadata as Record<string, unknown>).review_gate;
+  if (!gate || typeof gate !== "object" || Array.isArray(gate)) return 0;
+  const latest = (gate as Record<string, unknown>).latest;
+  if (!latest || typeof latest !== "object" || Array.isArray(latest)) return 0;
+  const metrics = (latest as Record<string, unknown>).metrics;
+  if (!metrics || typeof metrics !== "object" || Array.isArray(metrics)) return 0;
+  const raw = Number((metrics as Record<string, unknown>).qualityScore ?? 0);
+  return Number.isFinite(raw) ? raw : 0;
 }
