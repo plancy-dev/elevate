@@ -8,7 +8,7 @@ export type TopicStrategyEntry = {
   whyNowPattern: string;
 };
 
-export const TOPIC_STRATEGY_PACK_VERSION = "v1.0.0";
+export const TOPIC_STRATEGY_PACK_VERSION = "v1.0.1";
 
 export const TOPIC_STRATEGY_PACK: readonly TopicStrategyEntry[] = [
   {
@@ -28,9 +28,9 @@ export const TOPIC_STRATEGY_PACK: readonly TopicStrategyEntry[] = [
   {
     id: "execution-advantage",
     audience: "founder",
-    titlePattern: "Execution moat for AI-enabled teams",
-    questionPattern: "How do small teams turn AI speed into compounding advantage?",
-    whyNowPattern: "The market is shifting from model novelty to execution quality.",
+    titlePattern: "Operator-grade execution moat for AI-enabled teams",
+    questionPattern: "How can a small team turn AI speed into a weekly execution flywheel?",
+    whyNowPattern: "Winning teams now differentiate on operator rhythm, not model novelty.",
   },
 ];
 
