@@ -87,6 +87,21 @@
 
 ---
 
+## INIT — Automations Stabilization + Blog Quality Uplift (2026-04-30)
+
+**SoT:** [`docs/features/INIT-automations-blog-quality-2026-04-30.md`](../docs/features/INIT-automations-blog-quality-2026-04-30.md)  
+**복잡도:** **L3** — GitHub 중심 자동화 안정화 + 블로그 품질 게이트 + 운영 가시성 정렬.
+
+### 체크리스트 (PLAN 입력용)
+
+- [ ] **Automation reliability:** `blog-autopublish` 실패 분기/timeout/재시도/요약 강화 + Node 20 deprecation 대응
+- [ ] **Secrets & permissions:** `CURSOR_API_KEY`/`AUTOMATION_GH_TOKEN` 최소 권한 운영 가이드 확정
+- [ ] **Quality gate:** frontmatter/CTA/locale/slug/링크 정합 + AI 템플릿 냄새 탐지 기준 확정
+- [ ] **No-Slack automation PoC:** Critical bug finder -> GitHub Issue, Docs drift guard -> docs-only PR
+- [ ] **Success metrics:** 2주 연속 성공률/초안 merge-ready 비율/실패 원인 분류 체계 정의
+
+---
+
 ## AI 피벗 — Phase A (문서·랜딩·도구)
 
 | # | 항목 | 상태 |
