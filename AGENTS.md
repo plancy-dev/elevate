@@ -33,3 +33,30 @@ This repo can include **[gstack](https://github.com/garrytan/gstack)** under `.a
 - **Memory** = project state lives in **`memory-bank/`**; gstack does not replace it.
 
 If gstack is not installed locally, follow `CLAUDE.md` install commands; do not assume skills exist.
+
+## Cursor Cloud specific instructions
+
+### Environment
+
+- **Node.js 20** via nvm (`.nvmrc`), **pnpm 9+** (global install).
+- Secrets are injected as environment variables. A `.env.local` must be created (gitignored) so Next.js picks up `NEXT_PUBLIC_*` vars at build/dev time. Use a script or copy from `.env.local.example` and fill from env.
+- The update script runs `pnpm install` only. nvm/node/pnpm must already be on PATH from the VM snapshot.
+
+### Running services
+
+| Service | Command | Notes |
+|---------|---------|-------|
+| Next.js dev | `pnpm dev` | Port 3000, webpack mode. Use `--webpack` flag (already in script). |
+| Lint | `pnpm lint` | ESLint 9 flat config |
+| Typecheck | `pnpm typecheck` | `tsc --noEmit` |
+| Unit tests | `pnpm test` | Vitest, `tests/unit/`. 2 tests fail when `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POLAR_CHECKOUT_LINK` are set (they test absent-env behavior). |
+| Full CI check | `pnpm verify` | lint + typecheck + test + build |
+| Build | `pnpm build` | Next.js production build |
+
+### Gotchas
+
+- **Unit test env leakage**: `posthog-public.test.ts` and `blog-subscription.test.ts` expect certain env vars to be unset. These 2 tests will fail in Cloud Agent environments where secrets are injected. This is a known env-specific issue, not a code bug.
+- **Husky pre-commit**: runs `lint-staged` (ESLint on staged files). Never use `--no-verify`.
+- **Supabase**: No local Supabase needed — the app connects to a remote Supabase project via env vars. Integration tests (`pnpm test:integration`) require `SUPABASE_INTEGRATION_TEST=1`.
+- **sharp rebuild**: After `pnpm install`, sharp may warn about ignored build scripts. Run `pnpm rebuild sharp` if image optimization breaks. The `pnpm.onlyBuiltDependencies` in `package.json` lists `sqlite3`; sharp is handled by its prebuilt binaries.
+- **Next.js 16**: Read docs in `node_modules/next/dist/docs/` for API differences from training data.
