@@ -1,6 +1,6 @@
 import type { TopicStrategyEntry } from "@/lib/content-ops/packs/topic-strategy-pack";
 
-export const NEWSLETTER_PROMPT_PACK_VERSION = "v1.1.0";
+export const NEWSLETTER_PROMPT_PACK_VERSION = "v1.2.0";
 
 export function buildNewsletterDraftFromPack(params: {
   topic: TopicStrategyEntry;
@@ -30,6 +30,11 @@ export function buildNewsletterDraftFromPack(params: {
     "## Counter-signal (what most teams miss)",
     params.topic.contrarianPattern,
     "",
+    "## Evidence snapshot",
+    params.topic.evidencePattern,
+    "- Add one quantitative cue (count, rate, delta, or time window).",
+    "- Add one source-backed causal explanation, not just correlation.",
+    "",
     "## What changed in the last 24h",
     sourceSection,
     "",
@@ -37,12 +42,18 @@ export function buildNewsletterDraftFromPack(params: {
     "- Identify one workflow where failure cost is non-trivial.",
     "- Add one guardrail that catches high-impact mistakes early.",
     "- Assign one owner for retry and rollback decisions.",
+    `- Outcome target: ${params.topic.operatorOutcomePattern}`,
+    "",
+    "## What this means for target customers",
+    "- Explain why this decision matters for teams operating AI in production this week.",
+    "- Describe one curiosity hook that would make a reader share this brief internally.",
     "",
     "## This week action checklist",
     "1. Audit one fragile automation path end-to-end.",
     "2. Compare current process vs safer alternative and document trade-offs.",
     "3. Add run-level visibility for failure classes.",
     "4. Define manual override policy before scaling frequency.",
+    "5. Record one measurable before/after signal to validate impact.",
     "",
     "## Sources",
     sourceSection,
