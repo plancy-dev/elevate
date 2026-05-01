@@ -1180,6 +1180,157 @@
         "weekly": "每週"
       }
     },
+    "adminNewsSources": {
+      "metaTitle": "新聞來源",
+      "title": "新聞來源",
+      "backToAdmin": "返回管理首頁",
+      "intro": "註冊自動擷取使用的可信來源，並管理其信任權重。",
+      "addHeading": "新增來源",
+      "sourceNamePlaceholder": "來源名稱",
+      "baseUrlPlaceholder": "https://example.com",
+      "save": "儲存來源",
+      "empty": "目前沒有來源。",
+      "columns": {
+        "name": "名稱",
+        "kind": "類型",
+        "url": "URL",
+        "trust": "信任度",
+        "active": "啟用",
+        "actions": "操作"
+      },
+      "kind": {
+        "rss": "RSS",
+        "blog": "部落格",
+        "api": "API",
+        "manual": "手動"
+      },
+      "actions": {
+        "enable": "啟用",
+        "disable": "停用"
+      },
+      "yes": "是",
+      "no": "否"
+    },
+    "adminRuns": {
+      "metaTitle": "自動化執行紀錄",
+      "title": "自動化執行紀錄",
+      "backToAdmin": "返回管理首頁",
+      "intro": "檢視 ingest/generate/publish 執行歷史，並觸發手動執行。",
+      "cards": {
+        "created": "建立",
+        "sent": "發送",
+        "failed": "失敗",
+        "topFailureReason": "主要失敗原因",
+        "reviewQueue": "審核佇列",
+        "mustReviewNow": "需立即審核",
+        "oldestReviewAgeHours": "最久審核等待(h)"
+      },
+      "scenario": {
+        "title": "建議單次流程",
+        "description": "依序執行 ingest -> draft_generate -> publish。若 Error 顯示 warning:，請在此表 metadata 查看失敗細節。"
+      },
+      "form": {
+        "runTypeLabel": "執行類型",
+        "queueManualRun": "加入手動執行",
+        "runScenario": "執行 ingest -> generate -> publish",
+        "retryFailedOnly": "僅重試失敗項"
+      },
+      "runType": {
+        "ingest": "ingest",
+        "draftGenerate": "draft_generate",
+        "reviewGate": "review_gate",
+        "publish": "publish",
+        "publishRetryFailed": "publish_retry_failed"
+      },
+      "columns": {
+        "type": "類型",
+        "result": "結果",
+        "status": "狀態",
+        "trigger": "觸發方式",
+        "started": "開始",
+        "ended": "結束",
+        "error": "錯誤",
+        "metadata": "中繼資料"
+      },
+      "status": {
+        "queued": "排隊中",
+        "running": "執行中",
+        "succeeded": "成功",
+        "failed": "失敗"
+      },
+      "trigger": {
+        "manual": "手動",
+        "automation": "自動化"
+      },
+      "result": {
+        "success": "成功",
+        "partial": "部分失敗",
+        "failure": "失敗",
+        "partialHint": "部分失敗（詳情請看 metadata）"
+      },
+      "empty": "目前沒有執行紀錄。"
+    },
+    "adminContentQueue": {
+      "metaTitle": "內容佇列",
+      "title": "內容佇列",
+      "backToAdmin": "返回管理首頁",
+      "intro": "審核生成的部落格/電子報草稿，並將已核准項目移至排程或立即發佈。",
+      "cards": {
+        "pendingApproval": "待核准",
+        "staleOver24h": "超過24小時未處理",
+        "mustReviewNow": "需立即審核"
+      },
+      "filters": {
+        "type": "類型",
+        "status": "狀態",
+        "apply": "套用篩選",
+        "retryFailedOnly": "僅重試失敗項"
+      },
+      "type": {
+        "all": "全部",
+        "blog": "部落格",
+        "newsletter": "電子報"
+      },
+      "status": {
+        "all": "全部",
+        "draft": "草稿",
+        "reviewRequired": "需審核",
+        "approved": "已核准",
+        "rejected": "已退回",
+        "scheduled": "已排程",
+        "publishing": "發佈中",
+        "published": "已發佈",
+        "sendFailed": "發送失敗"
+      },
+      "columns": {
+        "title": "標題",
+        "type": "類型",
+        "status": "狀態",
+        "quality": "品質",
+        "gate": "閘門",
+        "opsSignal": "營運訊號",
+        "updated": "更新時間",
+        "actions": "操作"
+      },
+      "actions": {
+        "approve": "核准",
+        "requestChanges": "要求修改",
+        "schedule": "排程",
+        "publishNow": "立即發佈",
+        "retryMark": "標記重試"
+      },
+      "gate": {
+        "pass": "通過",
+        "fail": "失敗"
+      },
+      "opsSignal": {
+        "slaRisk": "SLA 風險 ({hours}h)",
+        "qualityRework": "品質返工",
+        "reviewNeeded": "需要審核",
+        "manualReviewRequired": "manual_review_required"
+      },
+      "empty": "找不到佇列項目。"
+    },
     "adminPurchaseAllowlist": {
       "metaTitle": "結帳許可名單",
       "title": "結帳許可名單",

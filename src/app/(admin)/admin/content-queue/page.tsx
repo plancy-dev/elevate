@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ListChecks } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import {
   listAdminContentQueue,
   runRetryFailedPublishOnly,
@@ -8,9 +9,12 @@ import {
 } from "@/actions/admin-content-ops";
 import type { Json } from "@/types/database.types";
 
-export const metadata: Metadata = {
-  title: "Admin | Content Queue",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Dashboard.adminContentQueue");
+  return {
+    title: t("metaTitle"),
+  };
+}
 
 type SearchParams = Promise<{
   type?: string;
@@ -33,6 +37,7 @@ const STATUS_OPTIONS = [
 export default async function AdminContentQueuePage(props: {
   searchParams: SearchParams;
 }) {
+  const t = await getTranslations("Dashboard.adminContentQueue");
   const searchParams = await props.searchParams;
   const typeFilter =
     TYPE_OPTIONS.find((v) => v === searchParams.type) ?? "all";
@@ -52,31 +57,30 @@ export default async function AdminContentQueuePage(props: {
       <div className="sticky top-0 z-30 flex h-12 items-center justify-between border-b border-ink-100 bg-paper-50 px-6">
         <div className="flex min-w-0 items-center gap-2">
           <ListChecks className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-          <h1 className="truncate text-sm font-medium text-ink-900">Content Queue</h1>
+          <h1 className="truncate text-sm font-medium text-ink-900">{t("title")}</h1>
         </div>
         <Link
           href="/admin"
           className="text-xs text-vermilion-600 transition-colors hover:text-vermilion-700"
         >
-          Back to admin
+          {t("backToAdmin")}
         </Link>
       </div>
 
       <div className="max-w-6xl space-y-4 p-6">
         <p className="text-sm leading-relaxed text-ink-700">
-          Review generated blog/newsletter drafts and move approved items to schedule
-          or immediate publish.
+          {t("intro")}
         </p>
         <div className="grid gap-2 md:grid-cols-3">
-          <QueueSummaryCard label="Pending approval" value={queueSummary.pendingApproval} />
-          <QueueSummaryCard label="Stale >24h" value={queueSummary.staleOver24h} tone="warning" />
-          <QueueSummaryCard label="Must-review now" value={queueSummary.mustReviewNow} tone="danger" />
+          <QueueSummaryCard label={t("cards.pendingApproval")} value={queueSummary.pendingApproval} />
+          <QueueSummaryCard label={t("cards.staleOver24h")} value={queueSummary.staleOver24h} tone="warning" />
+          <QueueSummaryCard label={t("cards.mustReviewNow")} value={queueSummary.mustReviewNow} tone="danger" />
         </div>
 
         <form className="flex flex-wrap items-end gap-3 border border-ink-100 bg-paper-0 p-3">
           <div className="space-y-1">
             <label htmlFor="type" className="text-xs text-ink-500">
-              Type
+              {t("filters.type")}
             </label>
             <select
               id="type"
@@ -86,14 +90,14 @@ export default async function AdminContentQueuePage(props: {
             >
               {TYPE_OPTIONS.map((opt) => (
                 <option key={opt} value={opt}>
-                  {opt}
+                  {toTypeLabel(t, opt)}
                 </option>
               ))}
             </select>
           </div>
           <div className="space-y-1">
             <label htmlFor="status" className="text-xs text-ink-500">
-              Status
+              {t("filters.status")}
             </label>
             <select
               id="status"
@@ -103,7 +107,7 @@ export default async function AdminContentQueuePage(props: {
             >
               {STATUS_OPTIONS.map((opt) => (
                 <option key={opt} value={opt}>
-                  {opt}
+                  {toStatusFilterLabel(t, opt)}
                 </option>
               ))}
             </select>
@@ -112,34 +116,34 @@ export default async function AdminContentQueuePage(props: {
             type="submit"
             className="border border-ink-100 bg-paper-50 px-3 py-1.5 text-xs text-ink-900 hover:bg-highlight"
           >
-            Apply filters
+            {t("filters.apply")}
           </button>
           <button
             type="submit"
             formAction={runRetryFailedPublishOnly}
             className="border border-ink-100 bg-vermilion-100/40 px-3 py-1.5 text-xs text-ink-900 hover:bg-vermilion-100"
           >
-            Retry failed only
+            {t("filters.retryFailedOnly")}
           </button>
         </form>
 
         {!listRes.ok ? <p className="text-xs text-danger">{listRes.error}</p> : null}
 
         {rows.length === 0 ? (
-          <p className="text-xs text-ink-500">No queue items found.</p>
+          <p className="text-xs text-ink-500">{t("empty")}</p>
         ) : (
           <div className="overflow-x-auto border border-ink-100">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-ink-100 bg-paper-50">
-                  <th className="p-2 font-medium text-ink-700">Title</th>
-                  <th className="p-2 font-medium text-ink-700">Type</th>
-                  <th className="p-2 font-medium text-ink-700">Status</th>
-                  <th className="p-2 font-medium text-ink-700">Quality</th>
-                  <th className="p-2 font-medium text-ink-700">Gate</th>
-                  <th className="p-2 font-medium text-ink-700">Ops signal</th>
-                  <th className="p-2 font-medium text-ink-700">Updated</th>
-                  <th className="p-2 font-medium text-ink-700">Actions</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.title")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.type")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.status")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.quality")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.gate")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.opsSignal")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.updated")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -149,16 +153,17 @@ export default async function AdminContentQueuePage(props: {
                       <div className="font-medium">{row.title}</div>
                       <div className="mt-0.5 text-[11px] text-ink-500">{row.locale}</div>
                     </td>
-                    <td className="p-2 text-ink-700">{row.type}</td>
-                    <td className="p-2 text-ink-700">{row.status}</td>
+                    <td className="p-2 text-ink-700">{toTypeLabel(t, row.type)}</td>
+                    <td className="p-2 text-ink-700">{toItemStatusLabel(t, row.status)}</td>
                     <td className="p-2 text-ink-700">
                       {row.source_quality_score ?? "-"} / {row.fact_check_score ?? "-"}
                     </td>
                     <td className="p-2 text-ink-700">
-                      <ReviewGateCell metadata={row.metadata} />
+                      <ReviewGateCell t={t} metadata={row.metadata} />
                     </td>
                     <td className="p-2 text-ink-700">
                       <OpsSignalCell
+                        t={t}
                         status={row.status}
                         createdAt={row.created_at}
                         nowMs={nowMs}
@@ -178,7 +183,7 @@ export default async function AdminContentQueuePage(props: {
                             type="submit"
                             className="border border-ink-100 px-2 py-1 text-[11px] text-ink-700 hover:bg-highlight"
                           >
-                            Approve
+                            {t("actions.approve")}
                           </button>
                         </form>
                         <form action={updateContentItemStatus}>
@@ -188,7 +193,7 @@ export default async function AdminContentQueuePage(props: {
                             type="submit"
                             className="border border-ink-100 px-2 py-1 text-[11px] text-ink-700 hover:bg-highlight"
                           >
-                            Request changes
+                            {t("actions.requestChanges")}
                           </button>
                         </form>
                         <form action={updateContentItemStatus}>
@@ -198,7 +203,7 @@ export default async function AdminContentQueuePage(props: {
                             type="submit"
                             className="border border-ink-100 px-2 py-1 text-[11px] text-ink-700 hover:bg-highlight"
                           >
-                            Schedule
+                            {t("actions.schedule")}
                           </button>
                         </form>
                         <form action={updateContentItemStatus}>
@@ -208,7 +213,7 @@ export default async function AdminContentQueuePage(props: {
                             type="submit"
                             className="border border-ink-100 px-2 py-1 text-[11px] text-ink-700 hover:bg-highlight"
                           >
-                            Publish now
+                            {t("actions.publishNow")}
                           </button>
                         </form>
                         <form action={updateContentItemStatus}>
@@ -218,7 +223,7 @@ export default async function AdminContentQueuePage(props: {
                             type="submit"
                             className="border border-ink-100 px-2 py-1 text-[11px] text-ink-700 hover:bg-highlight"
                           >
-                            Retry mark
+                            {t("actions.retryMark")}
                           </button>
                         </form>
                       </div>
@@ -257,7 +262,13 @@ function QueueSummaryCard({
   );
 }
 
-function ReviewGateCell({ metadata }: { metadata: Json | null }) {
+function ReviewGateCell({
+  t,
+  metadata,
+}: {
+  t: (key: string, values?: Record<string, string | number | Date>) => string;
+  metadata: Json | null;
+}) {
   const latest = readLatestReviewGate(metadata);
   if (!latest) {
     return <span className="text-ink-500">-</span>;
@@ -265,7 +276,7 @@ function ReviewGateCell({ metadata }: { metadata: Json | null }) {
   if (latest.passed) {
     return (
       <span className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
-        pass
+        {t("gate.pass")}
       </span>
     );
   }
@@ -273,7 +284,7 @@ function ReviewGateCell({ metadata }: { metadata: Json | null }) {
     <div className="flex flex-wrap gap-1">
       {latest.reasons.length === 0 ? (
         <span className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
-          fail
+          {t("gate.fail")}
         </span>
       ) : (
         latest.reasons.map((reason) => (
@@ -354,12 +365,14 @@ function isMustReviewNow(row: {
 }
 
 function OpsSignalCell({
+  t,
   status,
   createdAt,
   nowMs,
   metadata,
   reviewNotes,
 }: {
+  t: (key: string, values?: Record<string, string | number | Date>) => string;
   status: string;
   createdAt: string;
   nowMs: number;
@@ -374,8 +387,12 @@ function OpsSignalCell({
   const ageHours = Math.floor((nowMs - new Date(createdAt).getTime()) / (60 * 60 * 1000));
   const isSlaRisk = ageHours >= 24;
   const hasLowQuality = latest ? latest.qualityScore < 12 : true;
-  const label = isSlaRisk ? `SLA risk (${ageHours}h)` : hasLowQuality ? "Quality rework" : "Review needed";
-  const details = latest?.reasons.join(",") || reviewNotes || "manual_review_required";
+  const label = isSlaRisk
+    ? t("opsSignal.slaRisk", { hours: ageHours })
+    : hasLowQuality
+      ? t("opsSignal.qualityRework")
+      : t("opsSignal.reviewNeeded");
+  const details = latest?.reasons.join(",") || reviewNotes || t("opsSignal.manualReviewRequired");
   return (
     <span
       className={`inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium ${isSlaRisk ? "text-danger" : "text-amber-700"}`}
@@ -384,4 +401,28 @@ function OpsSignalCell({
       {label}
     </span>
   );
+}
+
+function toTypeLabel(t: (key: string) => string, type: string) {
+  if (type === "all") return t("type.all");
+  if (type === "blog") return t("type.blog");
+  if (type === "newsletter") return t("type.newsletter");
+  return type;
+}
+
+function toStatusFilterLabel(t: (key: string) => string, status: string) {
+  if (status === "all") return t("status.all");
+  return toItemStatusLabel(t, status);
+}
+
+function toItemStatusLabel(t: (key: string) => string, status: string) {
+  if (status === "draft") return t("status.draft");
+  if (status === "review_required") return t("status.reviewRequired");
+  if (status === "approved") return t("status.approved");
+  if (status === "rejected") return t("status.rejected");
+  if (status === "scheduled") return t("status.scheduled");
+  if (status === "publishing") return t("status.publishing");
+  if (status === "published") return t("status.published");
+  if (status === "send_failed") return t("status.sendFailed");
+  return status;
 }

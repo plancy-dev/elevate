@@ -1180,6 +1180,157 @@
         "weekly": "毎週"
       }
     },
+    "adminNewsSources": {
+      "metaTitle": "ニュースソース",
+      "title": "ニュースソース",
+      "backToAdmin": "管理ホームへ",
+      "intro": "自動取り込み用の信頼できるソースを登録し、信頼度を管理します。",
+      "addHeading": "ソースを追加",
+      "sourceNamePlaceholder": "ソース名",
+      "baseUrlPlaceholder": "https://example.com",
+      "save": "ソースを保存",
+      "empty": "ソースはまだありません。",
+      "columns": {
+        "name": "名前",
+        "kind": "種別",
+        "url": "URL",
+        "trust": "信頼度",
+        "active": "有効",
+        "actions": "操作"
+      },
+      "kind": {
+        "rss": "RSS",
+        "blog": "ブログ",
+        "api": "API",
+        "manual": "手動"
+      },
+      "actions": {
+        "enable": "有効化",
+        "disable": "無効化"
+      },
+      "yes": "はい",
+      "no": "いいえ"
+    },
+    "adminRuns": {
+      "metaTitle": "自動実行履歴",
+      "title": "自動実行履歴",
+      "backToAdmin": "管理ホームへ",
+      "intro": "ingest/generate/publish の実行履歴を確認し、手動実行を起動します。",
+      "cards": {
+        "created": "作成",
+        "sent": "送信",
+        "failed": "失敗",
+        "topFailureReason": "主要な失敗理由",
+        "reviewQueue": "レビューキュー",
+        "mustReviewNow": "今すぐレビュー",
+        "oldestReviewAgeHours": "最古レビュー待機(h)"
+      },
+      "scenario": {
+        "title": "推奨 1 パスシナリオ",
+        "description": "順番に ingest -> draft_generate -> publish を実行します。Error に warning: が表示された場合は、この表の metadata で詳細を確認してください。"
+      },
+      "form": {
+        "runTypeLabel": "実行タイプ",
+        "queueManualRun": "手動実行を登録",
+        "runScenario": "ingest -> generate -> publish を実行",
+        "retryFailedOnly": "失敗のみ再試行"
+      },
+      "runType": {
+        "ingest": "ingest",
+        "draftGenerate": "draft_generate",
+        "reviewGate": "review_gate",
+        "publish": "publish",
+        "publishRetryFailed": "publish_retry_failed"
+      },
+      "columns": {
+        "type": "タイプ",
+        "result": "結果",
+        "status": "状態",
+        "trigger": "トリガー",
+        "started": "開始",
+        "ended": "終了",
+        "error": "エラー",
+        "metadata": "メタデータ"
+      },
+      "status": {
+        "queued": "待機中",
+        "running": "実行中",
+        "succeeded": "成功",
+        "failed": "失敗"
+      },
+      "trigger": {
+        "manual": "手動",
+        "automation": "自動"
+      },
+      "result": {
+        "success": "成功",
+        "partial": "部分失敗",
+        "failure": "失敗",
+        "partialHint": "部分失敗（詳細は metadata を確認）"
+      },
+      "empty": "実行ログはまだありません。"
+    },
+    "adminContentQueue": {
+      "metaTitle": "コンテンツキュー",
+      "title": "コンテンツキュー",
+      "backToAdmin": "管理ホームへ",
+      "intro": "生成されたブログ/ニュースレター下書きを確認し、承認済み項目を予約または即時公開へ進めます。",
+      "cards": {
+        "pendingApproval": "承認待ち",
+        "staleOver24h": "24時間超過",
+        "mustReviewNow": "今すぐレビュー"
+      },
+      "filters": {
+        "type": "タイプ",
+        "status": "状態",
+        "apply": "フィルター適用",
+        "retryFailedOnly": "失敗のみ再試行"
+      },
+      "type": {
+        "all": "すべて",
+        "blog": "ブログ",
+        "newsletter": "ニュースレター"
+      },
+      "status": {
+        "all": "すべて",
+        "draft": "下書き",
+        "reviewRequired": "レビュー要",
+        "approved": "承認済み",
+        "rejected": "却下",
+        "scheduled": "予約済み",
+        "publishing": "公開中",
+        "published": "公開済み",
+        "sendFailed": "送信失敗"
+      },
+      "columns": {
+        "title": "タイトル",
+        "type": "タイプ",
+        "status": "状態",
+        "quality": "品質",
+        "gate": "ゲート",
+        "opsSignal": "運用シグナル",
+        "updated": "更新",
+        "actions": "操作"
+      },
+      "actions": {
+        "approve": "承認",
+        "requestChanges": "修正依頼",
+        "schedule": "予約",
+        "publishNow": "今すぐ公開",
+        "retryMark": "再試行マーク"
+      },
+      "gate": {
+        "pass": "合格",
+        "fail": "不合格"
+      },
+      "opsSignal": {
+        "slaRisk": "SLA リスク ({hours}h)",
+        "qualityRework": "品質再作業",
+        "reviewNeeded": "レビュー要",
+        "manualReviewRequired": "manual_review_required"
+      },
+      "empty": "キュー項目がありません。"
+    },
     "adminPurchaseAllowlist": {
       "metaTitle": "チェックアウト許可リスト",
       "title": "チェックアウト許可リスト",

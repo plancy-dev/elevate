@@ -1188,6 +1188,157 @@
         "weekly": "Weekly"
       }
     },
+    "adminNewsSources": {
+      "metaTitle": "News sources",
+      "title": "News sources",
+      "backToAdmin": "Back to admin",
+      "intro": "Register trusted sources for automated ingestion and control trust weighting.",
+      "addHeading": "Add source",
+      "sourceNamePlaceholder": "Source name",
+      "baseUrlPlaceholder": "https://example.com",
+      "save": "Save source",
+      "empty": "No sources yet.",
+      "columns": {
+        "name": "Name",
+        "kind": "Kind",
+        "url": "URL",
+        "trust": "Trust",
+        "active": "Active",
+        "actions": "Actions"
+      },
+      "kind": {
+        "rss": "RSS",
+        "blog": "Blog",
+        "api": "API",
+        "manual": "Manual"
+      },
+      "actions": {
+        "enable": "Enable",
+        "disable": "Disable"
+      },
+      "yes": "Yes",
+      "no": "No"
+    },
+    "adminRuns": {
+      "metaTitle": "Automation runs",
+      "title": "Automation runs",
+      "backToAdmin": "Back to admin",
+      "intro": "Inspect ingestion/generation/publish run history and trigger manual runs.",
+      "cards": {
+        "created": "Created",
+        "sent": "Sent",
+        "failed": "Failed",
+        "topFailureReason": "Top failure reason",
+        "reviewQueue": "Review queue",
+        "mustReviewNow": "Must-review now",
+        "oldestReviewAgeHours": "Oldest review age (h)"
+      },
+      "scenario": {
+        "title": "Recommended 1-pass scenario",
+        "description": "Run in order: ingest -> draft_generate -> publish. If Error shows warning:, open the metadata summary in this table for failure details."
+      },
+      "form": {
+        "runTypeLabel": "Run type",
+        "queueManualRun": "Queue manual run",
+        "runScenario": "Run ingest -> generate -> publish",
+        "retryFailedOnly": "Retry failed only"
+      },
+      "runType": {
+        "ingest": "Ingest",
+        "draftGenerate": "Draft generate",
+        "reviewGate": "Review gate",
+        "publish": "Publish",
+        "publishRetryFailed": "Publish retry failed"
+      },
+      "columns": {
+        "type": "Type",
+        "result": "Result",
+        "status": "Status",
+        "trigger": "Trigger",
+        "started": "Started",
+        "ended": "Ended",
+        "error": "Error",
+        "metadata": "Metadata"
+      },
+      "status": {
+        "queued": "Queued",
+        "running": "Running",
+        "succeeded": "Succeeded",
+        "failed": "Failed"
+      },
+      "trigger": {
+        "manual": "Manual",
+        "automation": "Automation"
+      },
+      "result": {
+        "success": "Success",
+        "partial": "Partial",
+        "failure": "Failure",
+        "partialHint": "Partial failure (check metadata for details)"
+      },
+      "empty": "No run logs yet."
+    },
+    "adminContentQueue": {
+      "metaTitle": "Content queue",
+      "title": "Content queue",
+      "backToAdmin": "Back to admin",
+      "intro": "Review generated blog/newsletter drafts and move approved items to schedule or immediate publish.",
+      "cards": {
+        "pendingApproval": "Pending approval",
+        "staleOver24h": "Stale >24h",
+        "mustReviewNow": "Must-review now"
+      },
+      "filters": {
+        "type": "Type",
+        "status": "Status",
+        "apply": "Apply filters",
+        "retryFailedOnly": "Retry failed only"
+      },
+      "type": {
+        "all": "All",
+        "blog": "Blog",
+        "newsletter": "Newsletter"
+      },
+      "status": {
+        "all": "All",
+        "draft": "Draft",
+        "reviewRequired": "Review required",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "scheduled": "Scheduled",
+        "publishing": "Publishing",
+        "published": "Published",
+        "sendFailed": "Send failed"
+      },
+      "columns": {
+        "title": "Title",
+        "type": "Type",
+        "status": "Status",
+        "quality": "Quality",
+        "gate": "Gate",
+        "opsSignal": "Ops signal",
+        "updated": "Updated",
+        "actions": "Actions"
+      },
+      "actions": {
+        "approve": "Approve",
+        "requestChanges": "Request changes",
+        "schedule": "Schedule",
+        "publishNow": "Publish now",
+        "retryMark": "Retry mark"
+      },
+      "gate": {
+        "pass": "Pass",
+        "fail": "Fail"
+      },
+      "opsSignal": {
+        "slaRisk": "SLA risk ({hours}h)",
+        "qualityRework": "Quality rework",
+        "reviewNeeded": "Review needed",
+        "manualReviewRequired": "manual_review_required"
+      },
+      "empty": "No queue items found."
+    },
     "adminPurchaseAllowlist": {
       "metaTitle": "Checkout allowlist",
       "title": "Checkout allowlist",

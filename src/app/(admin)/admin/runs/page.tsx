@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Activity } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import {
   createManualContentRun,
   listAdminContentQueue,
@@ -10,11 +11,15 @@ import {
 } from "@/actions/admin-content-ops";
 import type { Json } from "@/types/database.types";
 
-export const metadata: Metadata = {
-  title: "Admin | Automation Runs",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Dashboard.adminRuns");
+  return {
+    title: t("metaTitle"),
+  };
+}
 
 export default async function AdminRunsPage() {
+  const t = await getTranslations("Dashboard.adminRuns");
   const listRes = await listAdminContentRuns();
   const queueRes = await listAdminContentQueue({ status: "review_required" });
   const rows = listRes.ok ? listRes.rows : [];
@@ -27,48 +32,46 @@ export default async function AdminRunsPage() {
       <div className="sticky top-0 z-30 flex h-12 items-center justify-between border-b border-ink-100 bg-paper-50 px-6">
         <div className="flex min-w-0 items-center gap-2">
           <Activity className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-          <h1 className="truncate text-sm font-medium text-ink-900">Automation Runs</h1>
+          <h1 className="truncate text-sm font-medium text-ink-900">{t("title")}</h1>
         </div>
         <Link
           href="/admin"
           className="text-xs text-vermilion-600 transition-colors hover:text-vermilion-700"
         >
-          Back to admin
+          {t("backToAdmin")}
         </Link>
       </div>
 
       <div className="max-w-5xl space-y-5 p-6">
         <p className="text-sm leading-relaxed text-ink-700">
-          Inspect ingestion/generation/publish run history and trigger manual runs.
+          {t("intro")}
         </p>
         <div className="grid gap-2 md:grid-cols-4">
-          <SummaryCard label="Created" value={summary.createdCount} tone="neutral" />
-          <SummaryCard label="Sent" value={summary.sentCount} tone="success" />
-          <SummaryCard label="Failed" value={summary.failedCount} tone="danger" />
+          <SummaryCard label={t("cards.created")} value={summary.createdCount} tone="neutral" />
+          <SummaryCard label={t("cards.sent")} value={summary.sentCount} tone="success" />
+          <SummaryCard label={t("cards.failed")} value={summary.failedCount} tone="danger" />
           <SummaryCard
-            label="Top failure reason"
+            label={t("cards.topFailureReason")}
             value={summary.topFailureReason ?? "-"}
             tone="warning"
           />
         </div>
         <div className="grid gap-2 md:grid-cols-3">
-          <SummaryCard label="Review queue" value={ops.reviewQueueCount} tone="neutral" />
-          <SummaryCard label="Must-review now" value={ops.mustReviewCount} tone="danger" />
-          <SummaryCard label="Oldest review age (h)" value={ops.oldestReviewAgeHours} tone="warning" />
+          <SummaryCard label={t("cards.reviewQueue")} value={ops.reviewQueueCount} tone="neutral" />
+          <SummaryCard label={t("cards.mustReviewNow")} value={ops.mustReviewCount} tone="danger" />
+          <SummaryCard label={t("cards.oldestReviewAgeHours")} value={ops.oldestReviewAgeHours} tone="warning" />
         </div>
         <div className="border border-ink-100 bg-paper-0 p-3 text-xs leading-relaxed text-ink-700">
-          <p className="font-medium text-ink-900">Recommended 1-pass scenario</p>
+          <p className="font-medium text-ink-900">{t("scenario.title")}</p>
           <p className="mt-1">
-            Run in order: <code>ingest</code> {"->"} <code>draft_generate</code> {"->"}{" "}
-            <code>publish</code>. If <code>Error</code> shows <code>warning:</code>,
-            open the metadata summary in this table for failure details.
+            {t("scenario.description")}
           </p>
         </div>
 
         <form action={createManualContentRun} className="flex flex-wrap items-end gap-2 border border-ink-100 bg-paper-0 p-3">
           <div className="space-y-1">
             <label htmlFor="run_type" className="text-xs text-ink-500">
-              Run type
+              {t("form.runTypeLabel")}
             </label>
             <select
               id="run_type"
@@ -76,61 +79,63 @@ export default async function AdminRunsPage() {
               defaultValue="ingest"
               className="min-w-[180px] border border-ink-100 bg-paper-50 px-2 py-1.5 text-xs text-ink-900"
             >
-              <option value="ingest">ingest</option>
-              <option value="draft_generate">draft_generate</option>
-              <option value="review_gate">review_gate</option>
-              <option value="publish">publish</option>
-              <option value="publish_retry_failed">publish_retry_failed</option>
+              <option value="ingest">{t("runType.ingest")}</option>
+              <option value="draft_generate">{t("runType.draftGenerate")}</option>
+              <option value="review_gate">{t("runType.reviewGate")}</option>
+              <option value="publish">{t("runType.publish")}</option>
+              <option value="publish_retry_failed">{t("runType.publishRetryFailed")}</option>
             </select>
           </div>
           <button
             type="submit"
             className="border border-ink-100 bg-paper-50 px-3 py-1.5 text-xs text-ink-900 hover:bg-highlight"
           >
-            Queue manual run
+            {t("form.queueManualRun")}
           </button>
           <button
             type="submit"
             formAction={runAdminContentOpsScenario}
             className="border border-ink-100 bg-vermilion-100/40 px-3 py-1.5 text-xs text-ink-900 hover:bg-vermilion-100"
           >
-            Run ingest → generate → publish
+            {t("form.runScenario")}
           </button>
           <button
             type="submit"
             formAction={runRetryFailedPublishOnly}
             className="border border-ink-100 bg-paper-50 px-3 py-1.5 text-xs text-ink-900 hover:bg-highlight"
           >
-            Retry failed only
+            {t("form.retryFailedOnly")}
           </button>
         </form>
 
         {!listRes.ok ? <p className="text-xs text-danger">{listRes.error}</p> : null}
 
         {rows.length === 0 ? (
-          <p className="text-xs text-ink-500">No run logs yet.</p>
+          <p className="text-xs text-ink-500">{t("empty")}</p>
         ) : (
           <div className="overflow-x-auto border border-ink-100">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-ink-100 bg-paper-50">
-                  <th className="p-2 font-medium text-ink-700">Type</th>
-                  <th className="p-2 font-medium text-ink-700">Result</th>
-                  <th className="p-2 font-medium text-ink-700">Status</th>
-                  <th className="p-2 font-medium text-ink-700">Trigger</th>
-                  <th className="p-2 font-medium text-ink-700">Started</th>
-                  <th className="p-2 font-medium text-ink-700">Ended</th>
-                  <th className="p-2 font-medium text-ink-700">Error</th>
-                  <th className="p-2 font-medium text-ink-700">Metadata</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.type")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.result")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.status")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.trigger")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.started")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.ended")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.error")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("columns.metadata")}</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.id} className="border-b border-ink-100/80">
-                    <td className="p-2 text-ink-900">{row.run_type}</td>
-                    <td className="p-2">{renderRunResultBadge(row.status, row.error_summary, row.metadata)}</td>
-                    <td className="p-2 text-ink-700">{row.status}</td>
-                    <td className="p-2 text-ink-700">{row.trigger_type}</td>
+                    <td className="p-2 text-ink-900">{toRunTypeLabel(t, row.run_type)}</td>
+                    <td className="p-2">
+                      {renderRunResultBadge(t, row.status, row.error_summary, row.metadata)}
+                    </td>
+                    <td className="p-2 text-ink-700">{toRunStatusLabel(t, row.status)}</td>
+                    <td className="p-2 text-ink-700">{toTriggerLabel(t, row.trigger_type)}</td>
                     <td className="p-2 whitespace-nowrap text-ink-500">
                       {row.started_at
                         ? `${new Date(row.started_at).toISOString().replace("T", " ").slice(0, 19)} UTC`
@@ -184,6 +189,7 @@ function SummaryCard({
 }
 
 function renderRunResultBadge(
+  t: (key: string) => string,
   status: string,
   errorSummary: string | null,
   metadata: Json | null,
@@ -196,7 +202,7 @@ function renderRunResultBadge(
         className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-danger"
         title={failureHint ?? undefined}
       >
-        실패
+        {t("result.failure")}
       </span>
     );
   }
@@ -204,15 +210,15 @@ function renderRunResultBadge(
     return (
       <span
         className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-amber-700"
-        title={failureHint ?? "부분실패 (상세는 metadata 확인)"}
+        title={failureHint ?? t("result.partialHint")}
       >
-        부분실패
+        {t("result.partial")}
       </span>
     );
   }
   return (
     <span className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
-      성공
+      {t("result.success")}
     </span>
   );
 }
@@ -413,4 +419,27 @@ function readQualityScore(metadata: Json | null): number {
   if (!metrics || typeof metrics !== "object" || Array.isArray(metrics)) return 0;
   const raw = Number((metrics as Record<string, unknown>).qualityScore ?? 0);
   return Number.isFinite(raw) ? raw : 0;
+}
+
+function toRunTypeLabel(t: (key: string) => string, runType: string) {
+  if (runType === "ingest") return t("runType.ingest");
+  if (runType === "draft_generate") return t("runType.draftGenerate");
+  if (runType === "review_gate") return t("runType.reviewGate");
+  if (runType === "publish") return t("runType.publish");
+  if (runType === "publish_retry_failed") return t("runType.publishRetryFailed");
+  return runType;
+}
+
+function toRunStatusLabel(t: (key: string) => string, status: string) {
+  if (status === "queued") return t("status.queued");
+  if (status === "running") return t("status.running");
+  if (status === "succeeded") return t("status.succeeded");
+  if (status === "failed") return t("status.failed");
+  return status;
+}
+
+function toTriggerLabel(t: (key: string) => string, triggerType: string) {
+  if (triggerType === "manual") return t("trigger.manual");
+  if (triggerType === "automation") return t("trigger.automation");
+  return triggerType;
 }
