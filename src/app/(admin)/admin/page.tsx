@@ -1,6 +1,16 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Activity, BookOpen, Cable, ListChecks, Mail, Newspaper, Shield, Users } from "lucide-react";
+import {
+  Activity,
+  BookOpen,
+  Cable,
+  ListChecks,
+  Mail,
+  Newspaper,
+  Shield,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -53,6 +63,12 @@ export default async function ElevateServiceAdminHomePage() {
       title: "Automation runs",
       desc: "Inspect run logs and queue manual ingest/generate/publish runs.",
       icon: Activity,
+    },
+    {
+      href: "/admin/content-quality",
+      title: "Content quality monitor",
+      desc: "Track quality signals, failure trends, and improvement focus in one place.",
+      icon: Sparkles,
     },
     {
       href: "/admin/subscribers",

@@ -1,6 +1,6 @@
 import type { TopicStrategyEntry } from "@/lib/content-ops/packs/topic-strategy-pack";
 
-export const BLOG_PROMPT_PACK_VERSION = "v1.0.0";
+export const BLOG_PROMPT_PACK_VERSION = "v1.1.0";
 
 export function buildBlogDraftFromPack(params: {
   topic: TopicStrategyEntry;
@@ -22,6 +22,13 @@ export function buildBlogDraftFromPack(params: {
     "## Core question",
     params.topic.questionPattern,
     "",
+    "## Compare two paths (vs)",
+    params.topic.comparisonPattern,
+    "",
+    "## Contrarian view",
+    params.topic.contrarianPattern,
+    "- Why this contrarian view changes decision quality for operators.",
+    "",
     "## What the latest signals suggest",
     sourceSection,
     "",
@@ -40,8 +47,9 @@ export function buildBlogDraftFromPack(params: {
     "",
     "## Execution checklist (this week)",
     "1. Pick one pipeline stage to harden and define SLO.",
-    "2. Add one observable metric for quality and one for reliability.",
-    "3. Capture one reusable lesson in the runbook.",
+    "2. Run a side-by-side comparison vs the current baseline process.",
+    "3. Add one observable metric for quality and one for reliability.",
+    "4. Capture one reusable lesson in the runbook.",
     "",
     "## Sources",
     sourceSection,

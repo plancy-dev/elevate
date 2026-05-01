@@ -11,7 +11,7 @@ import {
   resolveTopicStrategyByWeekday,
 } from "@/lib/content-ops/packs/topic-strategy-pack";
 
-export const ACTIVE_CONTENT_PACK_VERSION = "v1.0.0";
+export const ACTIVE_CONTENT_PACK_VERSION = "v1.1.0";
 
 export function resolveActiveContentPacks(date = new Date()) {
   const topic = resolveTopicStrategyByWeekday(date);

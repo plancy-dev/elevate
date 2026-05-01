@@ -33,6 +33,7 @@
     "content-ops:smoke:dry-run": "pnpm tsx scripts/content-ops-smoke.ts --dry-run",
     "content-ops:cleanup": "pnpm tsx scripts/content-ops-cleanup.ts",
     "content-ops:cleanup:dry-run": "pnpm tsx scripts/content-ops-cleanup.ts --dry-run",
+    "content-ops:quality:monitor": "pnpm tsx scripts/content-ops-quality-monitor.ts",
     "worker:assembly": "tsx workers/video-assembly/run.ts",
     "prepare": "husky"
   },

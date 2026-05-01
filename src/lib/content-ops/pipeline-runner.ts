@@ -24,6 +24,10 @@ const MAX_PUBLICATION_ATTEMPTS = 3;
 const RETRY_DELAY_MINUTES = 30;
 const RESEND_MIN_SEND_INTERVAL_MS = 600;
 const RESEND_RATE_LIMIT_RETRY_DELAY_MS = 1200;
+const INGEST_MIN_TRUST_WEIGHT = 60;
+const INGEST_MAX_SOURCES = 15;
+const DRAFT_MIN_TRUST_WEIGHT = 70;
+const DRAFT_MAX_SOURCE_BULLETS = 8;
 
 type FetchSourceResult =
   | { ok: true; entries: FeedEntry[]; fetchUrl: string }
@@ -219,6 +223,15 @@ async function fetchSourceEntries(source: ContentSourceRow): Promise<FetchSource
   }
 }
 
+function pickSourcesForIngest(sources: ContentSourceRow[]): ContentSourceRow[] {
+  const sorted = [...sources].sort((a, b) => (b.trust_weight ?? 0) - (a.trust_weight ?? 0));
+  const preferred = sorted.filter((source) => (source.trust_weight ?? 0) >= INGEST_MIN_TRUST_WEIGHT);
+  if (preferred.length > 0) {
+    return preferred.slice(0, INGEST_MAX_SOURCES);
+  }
+  return sorted.slice(0, Math.min(INGEST_MAX_SOURCES, sorted.length));
+}
+
 export async function runIngestPipeline(runId: string): Promise<{
   createdItems: number;
   scannedSources: number;
@@ -231,13 +244,15 @@ export async function runIngestPipeline(runId: string): Promise<{
     .select("*")
     .eq("is_active", true)
     .order("trust_weight", { ascending: false })
-    .limit(25);
+    .limit(40);
+
+  const selectedSources = pickSourcesForIngest((sources ?? []) as ContentSourceRow[]);
 
   let createdItems = 0;
   let scannedSources = 0;
   let failedSources = 0;
   const failureMessages: string[] = [];
-  for (const source of (sources ?? []) as ContentSourceRow[]) {
+  for (const source of selectedSources) {
     scannedSources += 1;
     const fetchResult = await fetchSourceEntries(source);
     if (!fetchResult.ok) {
@@ -304,11 +319,33 @@ export async function runDraftGeneratePipeline(runId: string): Promise<{
   createdItems: number;
 }> {
   const admin = createAdminClient();
-  const { data: latestMaps } = await admin
+  const { data: highTrustSources } = await admin
+    .from("content_sources")
+    .select("id")
+    .eq("is_active", true)
+    .gte("trust_weight", DRAFT_MIN_TRUST_WEIGHT)
+    .order("trust_weight", { ascending: false })
+    .limit(40);
+  const highTrustIds = (highTrustSources ?? []).map((source) => source.id);
+
+  let latestMapsQuery = admin
     .from("content_item_source_map")
     .select("source_id, source_url, source_title, source_published_at")
     .order("created_at", { ascending: false })
-    .limit(8);
+    .limit(DRAFT_MAX_SOURCE_BULLETS);
+
+  if (highTrustIds.length > 0) {
+    latestMapsQuery = latestMapsQuery.in("source_id", highTrustIds);
+  }
+  let { data: latestMaps } = await latestMapsQuery;
+  if (!latestMaps || latestMaps.length === 0) {
+    const fallback = await admin
+      .from("content_item_source_map")
+      .select("source_id, source_url, source_title, source_published_at")
+      .order("created_at", { ascending: false })
+      .limit(DRAFT_MAX_SOURCE_BULLETS);
+    latestMaps = fallback.data ?? [];
+  }
 
   if (!latestMaps || latestMaps.length === 0) {
     return { createdItems: 0 };
@@ -336,6 +373,11 @@ export async function runDraftGeneratePipeline(runId: string): Promise<{
           pack_version: generated.resolved.activeVersion,
           pack_versions: generated.resolved.versions,
           topic_strategy_id: generated.resolved.topic.id,
+          source_policy: {
+            min_trust_weight: DRAFT_MIN_TRUST_WEIGHT,
+            source_bullets: latestMaps.length,
+            high_trust_filter_applied: highTrustIds.length > 0,
+          },
         },
       },
     })
@@ -360,6 +402,11 @@ export async function runDraftGeneratePipeline(runId: string): Promise<{
           pack_version: generated.resolved.activeVersion,
           pack_versions: generated.resolved.versions,
           topic_strategy_id: generated.resolved.topic.id,
+          source_policy: {
+            min_trust_weight: DRAFT_MIN_TRUST_WEIGHT,
+            source_bullets: latestMaps.length,
+            high_trust_filter_applied: highTrustIds.length > 0,
+          },
         },
       },
     })

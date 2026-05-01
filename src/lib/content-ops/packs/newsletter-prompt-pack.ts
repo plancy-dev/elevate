@@ -1,6 +1,6 @@
 import type { TopicStrategyEntry } from "@/lib/content-ops/packs/topic-strategy-pack";
 
-export const NEWSLETTER_PROMPT_PACK_VERSION = "v1.0.0";
+export const NEWSLETTER_PROMPT_PACK_VERSION = "v1.1.0";
 
 export function buildNewsletterDraftFromPack(params: {
   topic: TopicStrategyEntry;
@@ -22,6 +22,14 @@ export function buildNewsletterDraftFromPack(params: {
     "## Why this matters now",
     params.topic.whyNowPattern,
     "",
+    "## Trade-off vs default approach",
+    params.topic.comparisonPattern,
+    "- Compare the short-term win against long-term operational drag.",
+    "- Name one trade-off your team is currently underestimating.",
+    "",
+    "## Counter-signal (what most teams miss)",
+    params.topic.contrarianPattern,
+    "",
     "## What changed in the last 24h",
     sourceSection,
     "",
@@ -32,8 +40,9 @@ export function buildNewsletterDraftFromPack(params: {
     "",
     "## This week action checklist",
     "1. Audit one fragile automation path end-to-end.",
-    "2. Add run-level visibility for failure classes.",
-    "3. Define manual override policy before scaling frequency.",
+    "2. Compare current process vs safer alternative and document trade-offs.",
+    "3. Add run-level visibility for failure classes.",
+    "4. Define manual override policy before scaling frequency.",
     "",
     "## Sources",
     sourceSection,
