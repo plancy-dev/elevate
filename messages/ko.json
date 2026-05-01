@@ -1091,6 +1091,26 @@
         "lemonWebhook": {
           "title": "Lemon Squeezy (웹훅 테스트)",
           "desc": "조직 ID·카탈로그 slug·custom_data JSON·웹훅 URL을 복사해 글로벌 결제 → 라이브러리 권한을 검증합니다."
+        },
+        "contentQueue": {
+          "title": "콘텐츠 큐",
+          "desc": "블로그/뉴스레터 초안을 검토, 승인, 예약, 발행합니다."
+        },
+        "newsSources": {
+          "title": "뉴스 소스",
+          "desc": "수집용 RSS/블로그 소스와 신뢰 가중치를 관리합니다."
+        },
+        "runs": {
+          "title": "자동화 실행 이력",
+          "desc": "실행 로그를 점검하고 수동 ingest/generate/publish를 등록합니다."
+        },
+        "contentQuality": {
+          "title": "콘텐츠 품질 모니터",
+          "desc": "품질 신호, 실패 추세, 개선 포인트를 한 곳에서 추적합니다."
+        },
+        "subscribers": {
+          "title": "구독자",
+          "desc": "대기명단과 별도로 뉴스레터 구독 수명주기를 운영합니다."
         }
       }
     },
@@ -1338,6 +1358,66 @@
         "manualReviewRequired": "manual_review_required"
       },
       "empty": "큐 항목이 없습니다."
+    },
+    "adminContentQuality": {
+      "metaTitle": "콘텐츠 품질 모니터",
+      "title": "콘텐츠 품질 모니터",
+      "intro": "주간 품질/발송 지표를 기준으로 생성-검수-개선 루프를 운영합니다. 이 화면을 기준으로 팩 수정, 리뷰 우선순위, 발행 안정화 액션을 결정하세요.",
+      "links": {
+        "runs": "실행 이력",
+        "backToAdmin": "관리 홈으로"
+      },
+      "metrics": {
+        "generated7d": "7일 생성",
+        "published7d": "7일 발행",
+        "reviewRequired7d": "7일 review_required",
+        "sendFailed7d": "7일 send_failed",
+        "avgQuality": "평균 품질 점수",
+        "generated24h": "24시간 생성",
+        "reviewed24h": "24시간 검토 완료",
+        "reviewRequired24h": "24시간 review_required",
+        "avgQuality24h": "24시간 평균 품질",
+        "minQuality24h": "24시간 최소 품질"
+      },
+      "freshNote": {
+        "prefix": "Fresh 24h 지표는",
+        "suffix": "조건의 신규 생성분만 집계합니다."
+      },
+      "sections": {
+        "topQualityIssues7d": "상위 품질 이슈 (7일)",
+        "topPublishFailures7d": "상위 발행 실패 원인 (7일)",
+        "topQualityIssuesFresh24h": "상위 품질 이슈 (Fresh 24시간만)",
+        "improvementFocus": "개선 포인트 (자동 제안)"
+      },
+      "empty": {
+        "topQualityIssues7d": "이 기간에는 품질 이슈가 없습니다.",
+        "topPublishFailures7d": "이 기간에는 발행 실패가 없습니다.",
+        "topQualityIssuesFresh24h": "신규 생성분에서 품질 이슈가 없습니다.",
+        "lowQualityCandidates": "저품질 후보를 찾지 못했습니다."
+      },
+      "table": {
+        "columns": {
+          "type": "유형",
+          "status": "상태",
+          "quality": "품질",
+          "reasons": "사유",
+          "title": "제목"
+        }
+      },
+      "type": {
+        "blog": "블로그",
+        "newsletter": "뉴스레터"
+      },
+      "status": {
+        "draft": "초안",
+        "reviewRequired": "검토 필요",
+        "approved": "승인됨",
+        "rejected": "반려됨",
+        "scheduled": "예약됨",
+        "publishing": "발행 중",
+        "published": "발행 완료",
+        "sendFailed": "발송 실패"
+      }
     },
     "adminPurchaseAllowlist": {
       "metaTitle": "결제 허용 목록",

@@ -1083,6 +1083,26 @@
         "lemonWebhook": {
           "title": "Lemon Squeezy（Webhook 测试）",
           "desc": "复制组织 ID、目录 slug、custom_data JSON 与 Webhook URL，验证全球结账 → 资料库权限。"
+        },
+        "contentQueue": {
+          "title": "内容队列",
+          "desc": "审核、批准、排期并发布博客/新闻简报草稿。"
+        },
+        "newsSources": {
+          "title": "新闻来源",
+          "desc": "管理采集用 RSS/博客来源及可信权重。"
+        },
+        "runs": {
+          "title": "自动化运行记录",
+          "desc": "检查运行日志并加入手动 ingest/generate/publish 运行。"
+        },
+        "contentQuality": {
+          "title": "内容质量监控",
+          "desc": "在一个页面追踪质量信号、失败趋势和改进重点。"
+        },
+        "subscribers": {
+          "title": "订阅者",
+          "desc": "独立于候补名单运营新闻简报订阅生命周期。"
         }
       }
     },
@@ -1330,6 +1350,66 @@
         "manualReviewRequired": "manual_review_required"
       },
       "empty": "未找到队列项。"
+    },
+    "adminContentQuality": {
+      "metaTitle": "内容质量监控",
+      "title": "内容质量监控",
+      "intro": "基于周度质量与发送指标运营“生成-审核-改进”循环。请据此决定 pack 调整、审核优先级与发布稳定化动作。",
+      "links": {
+        "runs": "运行记录",
+        "backToAdmin": "返回管理首页"
+      },
+      "metrics": {
+        "generated7d": "7天生成",
+        "published7d": "7天发布",
+        "reviewRequired7d": "7天 review_required",
+        "sendFailed7d": "7天 send_failed",
+        "avgQuality": "平均质量分",
+        "generated24h": "24小时生成",
+        "reviewed24h": "24小时已审核",
+        "reviewRequired24h": "24小时 review_required",
+        "avgQuality24h": "24小时平均质量",
+        "minQuality24h": "24小时最低质量"
+      },
+      "freshNote": {
+        "prefix": "Fresh 24h 指标仅统计",
+        "suffix": "条件下的新生成内容。"
+      },
+      "sections": {
+        "topQualityIssues7d": "主要质量问题（7天）",
+        "topPublishFailures7d": "主要发布失败（7天）",
+        "topQualityIssuesFresh24h": "主要质量问题（仅 Fresh 24h）",
+        "improvementFocus": "改进重点（自动建议）"
+      },
+      "empty": {
+        "topQualityIssues7d": "此时间窗内未检测到质量问题。",
+        "topPublishFailures7d": "此时间窗内未检测到发布失败。",
+        "topQualityIssuesFresh24h": "Fresh 新生成内容中未检测到质量问题。",
+        "lowQualityCandidates": "未找到低质量候选项。"
+      },
+      "table": {
+        "columns": {
+          "type": "类型",
+          "status": "状态",
+          "quality": "质量",
+          "reasons": "原因",
+          "title": "标题"
+        }
+      },
+      "type": {
+        "blog": "博客",
+        "newsletter": "新闻简报"
+      },
+      "status": {
+        "draft": "草稿",
+        "reviewRequired": "需审核",
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "scheduled": "已定时",
+        "publishing": "发布中",
+        "published": "已发布",
+        "sendFailed": "发送失败"
+      }
     },
     "adminPurchaseAllowlist": {
       "metaTitle": "结账许可名单",

@@ -1083,6 +1083,26 @@
         "lemonWebhook": {
           "title": "Lemon Squeezy（Webhook 測試）",
           "desc": "複製組織 ID、目錄 slug、custom_data JSON 與 Webhook URL，驗證全球結帳 → 資料庫權限。"
+        },
+        "contentQueue": {
+          "title": "內容佇列",
+          "desc": "審核、核准、排程並發佈部落格/電子報草稿。"
+        },
+        "newsSources": {
+          "title": "新聞來源",
+          "desc": "管理擷取用 RSS/部落格來源與信任權重。"
+        },
+        "runs": {
+          "title": "自動化執行紀錄",
+          "desc": "檢查執行日誌並加入手動 ingest/generate/publish 執行。"
+        },
+        "contentQuality": {
+          "title": "內容品質監控",
+          "desc": "在單一頁面追蹤品質訊號、失敗趨勢與改善重點。"
+        },
+        "subscribers": {
+          "title": "訂閱者",
+          "desc": "獨立於候補名單營運電子報訂閱生命週期。"
         }
       }
     },
@@ -1330,6 +1350,66 @@
         "manualReviewRequired": "manual_review_required"
       },
       "empty": "找不到佇列項目。"
+    },
+    "adminContentQuality": {
+      "metaTitle": "內容品質監控",
+      "title": "內容品質監控",
+      "intro": "以每週品質/發送指標運作「生成-審核-改善」循環。請依此決定 pack 調整、審核優先順序與發佈穩定化動作。",
+      "links": {
+        "runs": "執行紀錄",
+        "backToAdmin": "返回管理首頁"
+      },
+      "metrics": {
+        "generated7d": "7天生成",
+        "published7d": "7天發佈",
+        "reviewRequired7d": "7天 review_required",
+        "sendFailed7d": "7天 send_failed",
+        "avgQuality": "平均品質分數",
+        "generated24h": "24小時生成",
+        "reviewed24h": "24小時已審核",
+        "reviewRequired24h": "24小時 review_required",
+        "avgQuality24h": "24小時平均品質",
+        "minQuality24h": "24小時最低品質"
+      },
+      "freshNote": {
+        "prefix": "Fresh 24h 指標僅統計",
+        "suffix": "條件的新生成內容。"
+      },
+      "sections": {
+        "topQualityIssues7d": "主要品質問題（7天）",
+        "topPublishFailures7d": "主要發佈失敗（7天）",
+        "topQualityIssuesFresh24h": "主要品質問題（僅 Fresh 24h）",
+        "improvementFocus": "改善重點（自動建議）"
+      },
+      "empty": {
+        "topQualityIssues7d": "此時間窗內未偵測到品質問題。",
+        "topPublishFailures7d": "此時間窗內未偵測到發佈失敗。",
+        "topQualityIssuesFresh24h": "Fresh 新生成內容中未偵測到品質問題。",
+        "lowQualityCandidates": "找不到低品質候選項目。"
+      },
+      "table": {
+        "columns": {
+          "type": "類型",
+          "status": "狀態",
+          "quality": "品質",
+          "reasons": "原因",
+          "title": "標題"
+        }
+      },
+      "type": {
+        "blog": "部落格",
+        "newsletter": "電子報"
+      },
+      "status": {
+        "draft": "草稿",
+        "reviewRequired": "需審核",
+        "approved": "已核准",
+        "rejected": "已退回",
+        "scheduled": "已排程",
+        "publishing": "發佈中",
+        "published": "已發佈",
+        "sendFailed": "發送失敗"
+      }
     },
     "adminPurchaseAllowlist": {
       "metaTitle": "結帳許可名單",

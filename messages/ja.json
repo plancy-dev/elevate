@@ -1083,6 +1083,26 @@
         "lemonWebhook": {
           "title": "Lemon Squeezy（Webhook テスト）",
           "desc": "組織ID・カタログslug・custom_data JSON・Webhook URLをコピーして検証します。"
+        },
+        "contentQueue": {
+          "title": "コンテンツキュー",
+          "desc": "ブログ/ニュースレター下書きをレビュー、承認、予約、公開します。"
+        },
+        "newsSources": {
+          "title": "ニュースソース",
+          "desc": "取り込み用のRSS/ブログソースと信頼重みを管理します。"
+        },
+        "runs": {
+          "title": "自動実行履歴",
+          "desc": "実行ログを確認し、手動 ingest/generate/publish を登録します。"
+        },
+        "contentQuality": {
+          "title": "コンテンツ品質モニター",
+          "desc": "品質シグナル、失敗傾向、改善フォーカスを一か所で追跡します。"
+        },
+        "subscribers": {
+          "title": "購読者",
+          "desc": "ウェイトリストとは別にニュースレター購読ライフサイクルを運用します。"
         }
       }
     },
@@ -1330,6 +1350,66 @@
         "manualReviewRequired": "manual_review_required"
       },
       "empty": "キュー項目がありません。"
+    },
+    "adminContentQuality": {
+      "metaTitle": "コンテンツ品質モニター",
+      "title": "コンテンツ品質モニター",
+      "intro": "週次の品質/配信指標をもとに、生成-レビュー-改善ループを運用します。この画面を基準に、パック調整、レビュー優先度、公開安定化アクションを決めます。",
+      "links": {
+        "runs": "実行履歴",
+        "backToAdmin": "管理ホームへ"
+      },
+      "metrics": {
+        "generated7d": "7日生成",
+        "published7d": "7日公開",
+        "reviewRequired7d": "7日 review_required",
+        "sendFailed7d": "7日 send_failed",
+        "avgQuality": "平均品質スコア",
+        "generated24h": "24時間生成",
+        "reviewed24h": "24時間レビュー完了",
+        "reviewRequired24h": "24時間 review_required",
+        "avgQuality24h": "24時間平均品質",
+        "minQuality24h": "24時間最低品質"
+      },
+      "freshNote": {
+        "prefix": "Fresh 24h 指標は",
+        "suffix": "条件の新規生成分のみ集計します。"
+      },
+      "sections": {
+        "topQualityIssues7d": "主要品質課題 (7日)",
+        "topPublishFailures7d": "主要公開失敗要因 (7日)",
+        "topQualityIssuesFresh24h": "主要品質課題 (Fresh 24h のみ)",
+        "improvementFocus": "改善フォーカス (自動提案)"
+      },
+      "empty": {
+        "topQualityIssues7d": "この期間では品質課題は検出されませんでした。",
+        "topPublishFailures7d": "この期間では公開失敗は検出されませんでした。",
+        "topQualityIssuesFresh24h": "Fresh 生成分で品質課題は検出されませんでした。",
+        "lowQualityCandidates": "低品質候補は見つかりませんでした。"
+      },
+      "table": {
+        "columns": {
+          "type": "タイプ",
+          "status": "状態",
+          "quality": "品質",
+          "reasons": "理由",
+          "title": "タイトル"
+        }
+      },
+      "type": {
+        "blog": "ブログ",
+        "newsletter": "ニュースレター"
+      },
+      "status": {
+        "draft": "下書き",
+        "reviewRequired": "レビュー要",
+        "approved": "承認済み",
+        "rejected": "却下",
+        "scheduled": "予約済み",
+        "publishing": "公開中",
+        "published": "公開済み",
+        "sendFailed": "送信失敗"
+      }
     },
     "adminPurchaseAllowlist": {
       "metaTitle": "チェックアウト許可リスト",
