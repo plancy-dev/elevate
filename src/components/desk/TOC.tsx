@@ -115,6 +115,10 @@ export function TOC({
               label: tx("admin.contentQuality", "Content quality monitor"),
             },
             {
+              href: "/admin/morning-ops",
+              label: tx("admin.morningOps", "Morning Ops Playbook"),
+            },
+            {
               href: "/admin/purchase-allowlist",
               label: tx("admin.purchaseAllowlist", "Checkout allowlist"),
             },
@@ -221,6 +225,7 @@ export function TOC({
       "/admin/runs": CircleHelp,
       "/admin/subscribers": Users,
       "/admin/content-quality": Sparkles,
+      "/admin/morning-ops": ListChecks,
       "/admin/purchase-allowlist": Shield,
       "/admin/prompt-studio-allowlist": Sparkles,
     };

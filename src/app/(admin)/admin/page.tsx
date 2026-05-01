@@ -71,6 +71,12 @@ export default async function ElevateServiceAdminHomePage() {
       icon: Sparkles,
     },
     {
+      href: "/admin/morning-ops",
+      title: t("cards.morningOps.title"),
+      desc: t("cards.morningOps.desc"),
+      icon: ListChecks,
+    },
+    {
       href: "/admin/subscribers",
       title: t("cards.subscribers.title"),
       desc: t("cards.subscribers.desc"),

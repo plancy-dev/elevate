@@ -904,6 +904,7 @@
         "runs": "실행 이력",
         "subscribers": "구독자",
         "contentQuality": "콘텐츠 품질 모니터",
+        "morningOps": "모닝 운영 플레이북",
         "waitlist": "대기명단",
         "purchaseAllowlist": "결제 허용 목록",
         "promptStudioAllowlist": "Prompt Studio 베타"
@@ -1107,6 +1108,10 @@
         "contentQuality": {
           "title": "콘텐츠 품질 모니터",
           "desc": "품질 신호, 실패 추세, 개선 포인트를 한 곳에서 추적합니다."
+        },
+        "morningOps": {
+          "title": "모닝 운영 플레이북",
+          "desc": "밤사이 작업을 점검하고 방향 전환 지시를 내리는 일일 운영 가이드입니다."
         },
         "subscribers": {
           "title": "구독자",
@@ -1417,6 +1422,78 @@
         "publishing": "발행 중",
         "published": "발행 완료",
         "sendFailed": "발송 실패"
+      }
+    },
+    "adminMorningOps": {
+      "metaTitle": "모닝 운영 플레이북",
+      "title": "모닝 운영 플레이북",
+      "backToAdmin": "관리 홈으로",
+      "intro": "이 페이지를 매일 운영 콘솔처럼 사용하세요. 밤사이 자동화 결과를 점검하고, go/adjust/stop 결정을 내린 뒤 에이전트에 방향 지시를 보냅니다.",
+      "quickLinks": {
+        "title": "빠른 이동",
+        "runs": "실행 이력 열기",
+        "contentQuality": "품질 모니터 열기",
+        "contentQueue": "콘텐츠 큐 열기",
+        "newsSources": "뉴스 소스 열기",
+        "subscribers": "구독자 열기"
+      },
+      "morningRoutine": {
+        "title": "출근 후 10분 루틴",
+        "step1": "/admin/runs에서 성공/부분실패/실패와 첫 실패 원인을 확인합니다.",
+        "step2": "/admin/content-quality에서 freshAvgQualityScore와 반복 이슈를 확인합니다.",
+        "step3": "/admin/content-queue에서 review_required 적체와 저품질 초안을 확인합니다.",
+        "step4": "go, adjust, stop 중 하나를 선택하고 자동화 에이전트에 방향을 지시합니다."
+      },
+      "decision": {
+        "title": "판단 매트릭스",
+        "go": {
+          "title": "Go",
+          "desc": "치명적 실패가 없고 품질 추세가 안정적이거나 개선 중입니다."
+        },
+        "adjust": {
+          "title": "Adjust",
+          "desc": "실행은 대체로 정상이나 품질 이슈가 증가하거나 결과가 만족스럽지 않습니다."
+        },
+        "stop": {
+          "title": "Stop",
+          "desc": "반복 실패, 정책 위반, 이상 동작이 의심되면 자동화를 먼저 정지합니다."
+        }
+      },
+      "templates": {
+        "title": "Direction templates",
+        "newsletter": {
+          "title": "템플릿 A - 뉴스레터 품질 개선",
+          "body": "지난 밤 결과 기준으로 뉴스레터 품질 개선을 우선합니다.\\n목표:\\n- low_novelty 감소\\n- 근거 밀도(evidence) 증가\\n- 고객 실행가능성(actionability) 강화\\n\\n제약:\\n- low-risk 정책 유지\\n- 자동머지 비활성 유지\\n- 24시간 내 /admin/content-quality에서 효과 확인\\n\\n실행:\\n- pack/prompt 조정\\n- 1회 사이클 실행\\n- before/after 지표와 변경 요약 보고"
+        },
+        "blogPivot": {
+          "title": "템플릿 B - 블로그 중심 피봇",
+          "body": "오늘은 뉴스레터보다 블로그 품질과 CTA 임팩트를 우선합니다.\\n성공 기준:\\n- freshAvgQualityScore 상승\\n- freshReviewRequiredCount 악화 없음\\n- body_too_short 빈도 감소\\n\\n보고:\\n- 변경한 내용\\n- 기대 효과\\n- 내일 아침 /admin에서 확인할 포인트"
+        },
+        "incident": {
+          "title": "템플릿 C - 장애 대응",
+          "body": "감지된 실패 클래스: <여기에 입력>.\\n자동화는 안전모드로 유지하고 원인 수정부터 수행하세요.\\n이후 retry window만 실행하고 아래를 보고하세요:\\n- 근본 원인\\n- 수정 요약\\n- 재실행 결과\\n- 재발 방지 체크리스트"
+        }
+      },
+      "monitoring": {
+        "title": "서비스 개선 여부 확인법",
+        "item1": "자동화 실행 ID와 /admin/runs, autoloop 리포트를 매칭해 확인합니다.",
+        "item2": "/admin/content-quality의 freshAvgQualityScore, freshTopQualityIssues 추세를 확인합니다.",
+        "item3": "review_required 적체량과 send_failed 수치를 함께 확인합니다.",
+        "item4": "/admin/news-sources, /admin/subscribers에서 입력/대상 이상 유무를 점검합니다."
+      },
+      "emergency": {
+        "title": "긴급 정지",
+        "item1": "merge 가능 실행을 즉시 멈추려면 stop-switch 파일을 생성합니다.",
+        "item2": "다음 사이클이 stopReason과 함께 중단되는지 확인합니다.",
+        "item3": "원인 분석과 정책 확인 후에만 stop-switch를 제거합니다.",
+        "windowsHint": "Windows (PowerShell):",
+        "windowsCommand": "New-Item -Path reports/autoloop/.automerge-stop -ItemType File -Force",
+        "macHint": "macOS/Linux:",
+        "macCommand": "mkdir -p reports/autoloop && touch reports/autoloop/.automerge-stop"
+      },
+      "actions": {
+        "copy": "복사",
+        "copied": "복사됨"
       }
     },
     "adminPurchaseAllowlist": {

@@ -896,6 +896,7 @@
         "runs": "実行履歴",
         "subscribers": "購読者",
         "contentQuality": "コンテンツ品質モニター",
+        "morningOps": "Morning Ops Playbook",
         "waitlist": "ウェイトリスト",
         "purchaseAllowlist": "チェックアウト許可リスト",
         "promptStudioAllowlist": "Prompt Studio ベータ"
@@ -1099,6 +1100,10 @@
         "contentQuality": {
           "title": "コンテンツ品質モニター",
           "desc": "品質シグナル、失敗傾向、改善フォーカスを一か所で追跡します。"
+        },
+        "morningOps": {
+          "title": "Morning Ops Playbook",
+          "desc": "Daily operator guide to review overnight work and issue direction pivots."
         },
         "subscribers": {
           "title": "購読者",
@@ -1409,6 +1414,78 @@
         "publishing": "公開中",
         "published": "公開済み",
         "sendFailed": "送信失敗"
+      }
+    },
+    "adminMorningOps": {
+      "metaTitle": "Morning Ops Playbook",
+      "title": "Morning Ops Playbook",
+      "backToAdmin": "Back to admin",
+      "intro": "Use this page as your daily operator console: review overnight automation, decide go/adjust/stop, and send clear direction templates to the automation agent.",
+      "quickLinks": {
+        "title": "Quick navigation",
+        "runs": "Open runs",
+        "contentQuality": "Open content quality",
+        "contentQueue": "Open content queue",
+        "newsSources": "Open news sources",
+        "subscribers": "Open subscribers"
+      },
+      "morningRoutine": {
+        "title": "10-minute morning routine",
+        "step1": "Check /admin/runs for success/partial-failure/failure and first failure reason.",
+        "step2": "Check /admin/content-quality for freshAvgQualityScore and top recurring issues.",
+        "step3": "Check /admin/content-queue for review_required backlog and low-quality drafts.",
+        "step4": "Choose go, adjust, or stop and issue direction to the automation agent."
+      },
+      "decision": {
+        "title": "Decision matrix",
+        "go": {
+          "title": "Go",
+          "desc": "No critical failures and quality trend is stable or improving."
+        },
+        "adjust": {
+          "title": "Adjust",
+          "desc": "Runs are mostly healthy but quality issues are rising or output is unsatisfying."
+        },
+        "stop": {
+          "title": "Stop",
+          "desc": "Repeated failures, policy violations, or suspicious behavior; pause automation first."
+        }
+      },
+      "templates": {
+        "title": "Direction templates",
+        "newsletter": {
+          "title": "Template A - Newsletter quality improvement",
+          "body": "Based on last night's results, prioritize newsletter quality improvement.\\nGoals:\\n- reduce low_novelty\\n- increase evidence density\\n- improve customer actionability\\n\\nConstraints:\\n- keep low-risk policy\\n- keep auto-merge disabled\\n- make impact visible in /admin/content-quality within 24h\\n\\nExecute:\\n- tune pack/prompt\\n- run one full cycle\\n- report before/after metrics and change summary"
+        },
+        "blogPivot": {
+          "title": "Template B - Blog-first pivot",
+          "body": "Today, pivot toward blog quality and CTA impact over newsletter volume.\\nSuccess criteria:\\n- freshAvgQualityScore up\\n- no regression in freshReviewRequiredCount\\n- reduce body_too_short frequency\\n\\nReturn:\\n- what changed\\n- why it should work\\n- what to verify in /admin tomorrow morning"
+        },
+        "incident": {
+          "title": "Template C - Failure response",
+          "body": "Failure class detected: <fill_this>.\\nKeep automation in safe mode and run root-cause fix first.\\nThen execute retry window only and provide:\\n- root cause\\n- fix diff summary\\n- retry result\\n- recurrence prevention checklist"
+        }
+      },
+      "monitoring": {
+        "title": "How to confirm service is improving",
+        "item1": "Match automation run IDs with /admin/runs entries and recent autoloop reports.",
+        "item2": "Track freshAvgQualityScore and freshTopQualityIssues trend in /admin/content-quality.",
+        "item3": "Track queue health via review_required backlog and send_failed count.",
+        "item4": "Review source/subscriber integrity in /admin/news-sources and /admin/subscribers."
+      },
+      "emergency": {
+        "title": "Emergency pause",
+        "item1": "Create the stop-switch file to halt merge-capable runs.",
+        "item2": "Confirm next cycle stops with stopReason in autoloop report.",
+        "item3": "Remove stop-switch only after triage and policy confirmation.",
+        "windowsHint": "Windows (PowerShell):",
+        "windowsCommand": "New-Item -Path reports/autoloop/.automerge-stop -ItemType File -Force",
+        "macHint": "macOS/Linux:",
+        "macCommand": "mkdir -p reports/autoloop && touch reports/autoloop/.automerge-stop"
+      },
+      "actions": {
+        "copy": "Copy",
+        "copied": "Copied"
       }
     },
     "adminPurchaseAllowlist": {
