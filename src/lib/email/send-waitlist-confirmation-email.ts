@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { resolveWaitlistEmailLocale } from "@/lib/email/waitlist-locale";
+import { resolveResendSendConfig } from "@/lib/email/resend-config";
 import { getWaitlistConfirmationEmail } from "@/lib/email/waitlist-templates";
 
 const EMAIL_RE =
@@ -20,22 +21,21 @@ export async function sendWaitlistConfirmationEmail(params: {
   locale: string | null | undefined;
   bcc: string | null | undefined;
 }): Promise<{ ok: true } | { ok: false; reason: string }> {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  const from = process.env.RESEND_FROM_EMAIL?.trim();
-  if (!apiKey || !from) {
+  const resendConfig = resolveResendSendConfig();
+  if (!resendConfig.ok) {
     console.warn(
-      "[waitlist-email] RESEND_API_KEY or RESEND_FROM_EMAIL missing; skip send",
+      `[waitlist-email] Resend sender check failed (${resendConfig.reason}); skip send`,
     );
-    return { ok: false, reason: "not_configured" };
+    return { ok: false, reason: resendConfig.reason };
   }
 
   const loc = resolveWaitlistEmailLocale(params.locale);
   const { subject, html } = getWaitlistConfirmationEmail(loc);
   const bcc = normalizeBcc(params.bcc);
 
-  const resend = new Resend(apiKey);
+  const resend = new Resend(resendConfig.apiKey);
   const { error } = await resend.emails.send({
-    from,
+    from: resendConfig.from,
     to: params.to.trim(),
     subject,
     html,

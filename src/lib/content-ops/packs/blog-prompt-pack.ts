@@ -1,10 +1,31 @@
 import type { TopicStrategyEntry } from "@/lib/content-ops/packs/topic-strategy-pack";
+import type { AutotuneStrategy } from "@/lib/content-ops/packs/pack-registry";
 
-export const BLOG_PROMPT_PACK_VERSION = "v1.2.0";
+export const BLOG_PROMPT_PACK_VERSION = "v1.3.0";
+
+function strategyGuide(strategy: AutotuneStrategy): string[] {
+  if (strategy === "novelty_boost") {
+    return [
+      "- Surface one non-obvious risk or opportunity most teams miss this week.",
+      "- Emphasize differentiated framing over generic recap.",
+    ];
+  }
+  if (strategy === "overcopy_mitigate") {
+    return [
+      "- Reframe source material into original synthesis with explicit operator implications.",
+      "- Avoid long quote-like passages and add your own decision rationale.",
+    ];
+  }
+  return [
+    "- Balance originality with operational clarity and reproducibility.",
+    "- Keep claims evidence-backed with explicit caveats.",
+  ];
+}
 
 export function buildBlogDraftFromPack(params: {
   topic: TopicStrategyEntry;
   sourceBullets: string[];
+  autotuneStrategy: AutotuneStrategy;
 }): { title: string; summary: string; bodyMarkdown: string } {
   const title = `${params.topic.titlePattern}: from signal to operating advantage`;
   const summary =
@@ -16,7 +37,7 @@ export function buildBlogDraftFromPack(params: {
       : "- No source items were ingested in this cycle.";
 
   const bodyMarkdown = [
-    "## Context",
+    "## Why now context",
     params.topic.whyNowPattern,
     "",
     "## Core question",
@@ -28,6 +49,10 @@ export function buildBlogDraftFromPack(params: {
     "## Contrarian view",
     params.topic.contrarianPattern,
     "- Why this contrarian view changes decision quality for operators.",
+    "",
+    "## Autotune strategy",
+    `- Active strategy: ${params.autotuneStrategy}`,
+    ...strategyGuide(params.autotuneStrategy),
     "",
     "## Evidence ladder",
     params.topic.evidencePattern,

@@ -34,6 +34,7 @@
     "content-ops:cleanup": "pnpm tsx scripts/content-ops-cleanup.ts",
     "content-ops:cleanup:dry-run": "pnpm tsx scripts/content-ops-cleanup.ts --dry-run",
     "content-ops:quality:monitor": "pnpm tsx scripts/content-ops-quality-monitor.ts",
+    "content-ops:daily-snapshot": "pnpm tsx scripts/content-ops-daily-snapshot.ts",
     "pr:automerge:safe": "pnpm tsx scripts/pr-automerge-safe.ts",
     "autoloop:poc": "pnpm tsx scripts/continuous-improvement-loop.ts",
     "autoloop:rehearsal": "pnpm autoloop:poc --mode=rehearsal --allow-dirty-tree --max-cycles=3 --max-hours=1 --interval-minutes=5",

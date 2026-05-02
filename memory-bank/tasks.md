@@ -1,44 +1,37 @@
-# Elevate — Tasks (Reset 2026-05-01)
+# Elevate — Tasks (INIT Issue Execution SoT)
 
 ## Current Mission (SoT)
 
-### Continuous Improvement Autoloop POC
+### INIT Backlog Execution from GitHub Issues
 
-Goal: automate repetitive operator loops safely, without harming core product flows.
+Goal: execute INIT backlog sequentially from remote issues, starting with `#38`.
 
-## Phase 0 — Done
+## Execution Queue
 
-- [x] Merge PR #32 and PR #33.
-- [x] Sync local `main` with `origin/main`.
-- [x] Ensure clean working tree.
+### Week 1 (P0 -> P1)
 
-## Phase 1 — Autoloop POC Implementation
+- [x] #38 `[INIT][P0] quality-delta-window-contract`
+- [x] #39 `[INIT][P0] publish-outcome-taxonomy`
+- [x] #40 `[INIT][P1] autotune-strategy-tagging`
+- [x] #41 `[INIT][P1] autotune-strategy-scoreboard`
+- [x] #42 `[INIT][P1] review-gate-structural-guards`
 
-- [ ] Add safe PR monitor/automerge helper (`checks green + explicit confirm flag`).
-- [ ] Add bounded continuous-improvement loop runner (`max hours/cycles`, stop-on-fail).
-- [ ] Emit machine-readable run reports under a dedicated reports directory.
-- [ ] Keep default mode dry-run / non-destructive.
+### Week 2 (P1 -> P2)
 
-## Phase 2 — Safety & Quality Guardrails
+- [x] #43 `[INIT][P1] citation-coverage-metric`
+- [x] #44 `[INIT][P2] newsletter-retry-policy-matrix`
+- [x] #45 `[INIT][P2] ops-alert-hardening`
+- [x] #46 `[INIT][P2] daily-ops-snapshot`
+- [x] #47 `[INIT][P2] three-day-regression-escalation`
 
-- [ ] Enforce admin i18n hardcoded-text guard in CI path (`pnpm test:i18n`).
-- [ ] Add preflight checks for clean tree and branch safety before automated actions.
-- [ ] Define hard-stop conditions (failing tests, dirty tree, missing secrets).
+## Immediate Next Step
 
-## Phase 3 — Operations Prep
-
-- [ ] Update runbook for multilingual smoke QA + quality monitor interpretation.
-- [ ] Document unattended operation contract (required env vars, allowed actions).
-- [ ] Prepare a Cursor Automations trigger/sequence for scheduled bounded runs.
-
-## Phase 4 — Content Quality v1.2 Experiment
-
-- [ ] Upgrade topic/prompt packs to v1.2.0.
-- [ ] Add evidence/outcome/customer-relevance sections in generated drafts.
-- [ ] Validate with targeted unit tests and monitor fresh 24h quality metrics.
+- [x] Start implementation from issue `#38`.
+- [x] Before coding, pull latest remote issue body and acceptance criteria.
+- [x] Keep `#38` -> `#39` ordering strict because both are P0 blockers.
 
 ## Exit Criteria
 
-- [ ] All new scripts/tests/docs are merged.
-- [ ] Autoloop POC can run for bounded windows without manual intervention.
-- [ ] No destructive operation is possible without explicit opt-in flag.
+- [x] All INIT issues (#38-#47) are closed or moved with explicit rationale.
+- [ ] `/admin/runs` and `/admin/content-quality` metrics remain trustworthy after each step.
+- [ ] Every issue has evidence: query output, UI check, and final note.

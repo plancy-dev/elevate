@@ -80,6 +80,25 @@ If authentication blocks automated checks, perform manual browser verification a
    - Ensure new run is `성공` or `부분실패` with expected warning only.
    - Confirm queue items move from `send_failed` to `published`.
 
+## Newsletter Retry Policy Matrix
+
+Email publication failures are mapped to a policy key and action so retry behavior is predictable:
+
+| Failure class example | Policy key | Action | Delay |
+|---|---|---|---|
+| `Too many requests`, rate-limit style transient | `policy.rate_limit.delayed` | delayed retry | 30m |
+| Unknown transient send failures | `policy.transient.delayed` | delayed retry | 30m |
+| `resend_not_configured`, sender/domain mismatch | `policy.config.stop` | stop retry | - |
+| `newsletter_no_subscribers` | `policy.no_subscribers.stop` | stop retry | - |
+| `retry_exhausted` | `policy.exhausted.stop` | stop retry | - |
+| `frequency_window_deferred` | `policy.frequency_window.delayed` | delayed to next window | 24h |
+
+Recorded metadata fields (email publication row):
+
+- `retry_policy_key`
+- `retry_action`
+- `retry.next_retry_at`
+
 ## Escalation Ownership / Response Window
 
 - Primary owner: Content Ops on-call (admin operator)
@@ -127,6 +146,24 @@ Operational loop:
 3. Run one full cycle (`ingest` -> `draft_generate` -> `review_gate` -> `publish`).
 4. Compare fresh 24h metrics before/after.
 5. Keep changes only if `freshAvgQualityScore` improves and `freshReviewRequiredCount` does not regress.
+
+### Delta window contract (Issue #38)
+
+`/admin/content-quality` delta metrics use fixed non-overlapping windows:
+
+- Current 24h: `[now-24h, now)`
+- Previous 24h: `[now-48h, now-24h)`
+- Current 7d: `[now-7d, now)`
+- Previous 7d: `[now-14d, now-7d)`
+
+Rules:
+
+- Never mix current-window rows into previous-window aggregates.
+- Window start is inclusive, end is exclusive (`>= start` and `< end`).
+- Delta formula: `((current - previous) / previous) * 100`.
+- Denominator-zero handling:
+  - `previous = 0` and `current = 0` -> delta `0%`
+  - `previous = 0` and `current > 0` -> delta `n/a` (undefined growth)
 
 ## CI / Script Operations
 
