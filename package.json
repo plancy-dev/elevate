@@ -29,6 +29,7 @@
     "buffer:retry-step4": "node scripts/retry-buffer-step4.mjs",
     "blog:autopublish": "node scripts/blog-autopublish-sdk.mjs",
     "blog:quality-gate": "node scripts/blog-quality-gate.mjs",
+    "blog:sample-production-gate": "node scripts/blog-sample-production-gate.mjs",
     "content-ops:smoke": "pnpm tsx scripts/content-ops-smoke.ts",
     "content-ops:smoke:dry-run": "pnpm tsx scripts/content-ops-smoke.ts --dry-run",
     "content-ops:cleanup": "pnpm tsx scripts/content-ops-cleanup.ts",

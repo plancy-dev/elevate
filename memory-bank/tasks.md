@@ -113,6 +113,7 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
   - Evidence: first `scheduled` rows persisted (`source=cursor` success + `source=vercel-cron` mismatch failure) on 2026-05-02.
 - [x] Lock executor strategy before `#53`: Cursor Cloud Agent first, Vercel cron emergency fallback only.
 - [x] Start INIT queue automation implementation in order: `#55 -> #56 -> #57 -> #58 -> #59`.
+- [x] Fix sample blog post leak to production (2026-05-02 Claude audit, reports/2026-05-02-claude-audit.md §0 #1 / §3.2 D).
 
 ## Stabilization Gate Evidence Contract (`#49/#50/#51`)
 

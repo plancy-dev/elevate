@@ -47,5 +47,10 @@ jobs:
       - name: Unit tests (Vitest)
         run: pnpm run test
 
+      - name: Sample post production gate
+        run: pnpm run blog:sample-production-gate
+        env:
+          VERCEL_ENV: production
+
       - name: Next.js build
         run: pnpm run build

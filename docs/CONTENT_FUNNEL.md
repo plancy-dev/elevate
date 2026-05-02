@@ -40,6 +40,16 @@ This document aligns **Elevate AI**’s first MVP (**prompt improvement / Prompt
 | **Blog** | MDX under `content/blog/<locale>/…` | Public marketing routes; share link = normal web page (no paywall). |
 | **Catalog / ebooks** | `content_products` + Library / Billing | Account + `profiles.organization_id`; read = **subscription OR entitlement**; `web_only` uses dashboard MDX reader (`content/ebooks/<slug>/index.mdx`), **no** signed Storage URL for that SKU. |
 
+### Sample blog posts (QA fixtures)
+
+Sample posts (slugs starting with `sample-`) are **QA/staging fixtures** for testing blog access gates (`public`, `member`, `premium`). These posts:
+
+- **Are excluded from production** (`VERCEL_ENV=production`) in all surfaces: `/blog` index, sitemap, RSS, OG meta, direct URL access (404).
+- **Remain accessible in preview/staging** environments (`VERCEL_ENV=preview` or `development`) for regression testing.
+- **Are protected by CI gate** (`pnpm blog:sample-production-gate`) that fails production builds if sample posts are present, preventing accidental deployment.
+
+**Implementation:** Environment-aware filtering in `src/lib/blog/posts.ts` (`getAllPostMetaForLocale`, `getPostBySlug`) checks `process.env.VERCEL_ENV` and excludes `sample-*` slugs when `production`.
+
 **Waitlist (`waitlist_signups`, `#waitlist`)** captures email for Prompt Studio / marketing. It does **not** gate signup or checkout in the codebase—if you need “whitelist-only purchase,” that would be a separate allowlist table + checks in billing routes (not implemented here).
 
 **“No export” for web-only ebooks** means: no file download API path for the SKU; HTML is still rendered in the browser (copy, print, screenshots are not cryptographically prevented—policy + audit `content_ebook_first_opens`, not hard DRM).
