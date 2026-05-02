@@ -227,7 +227,7 @@
   "Blog": {
     "metaTitle": "블로그",
     "title": "블로그",
-    "description": "프롬프트 개선과 행사·현장 커뮤니케이션에 바로 쓸 만한 인사이트, 그리고 Elevate 팀의 제품 소식을 모았습니다.",
+    "description": "매주 한 통, 회사가 그대로 쓸 수 있는 AI 운영 매뉴얼. Elevate 팀의 제품 소식도 함께.",
     "empty": "아직 게시물이 없습니다.",
     "published": "게시 {date}",
     "readMore": "글 읽기",
