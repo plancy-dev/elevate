@@ -4,7 +4,7 @@
 
 ### IMPLEMENT (INIT Stabilization P0/P1 kickoff)
 
-**Branch:** `feat/init-issues-38-47-content-ops`  
+**Branch:** `main`  
 **Focus SoT:** `memory-bank/tasks.md`  
 **Completed issue:** `#38`~`#47` + `#49`/`#50`/`#51` + `#52` + `#53` + `#54` code/test implementation  
 **Next issue:** `INIT queue automation completed (#55~#59)`
@@ -23,12 +23,12 @@
 - INIT issues `#38`~`#47` are closed.
 - Stabilization issues created: `#49`~`#54` (`[STAB][P0/P1]`).
 - Baseline report captured: `reports/stabilization-baseline-2026-05-02.md`.
-- Current bottlenecks: publish failure ratio, `resend_not_configured`, `low_novelty`, citation coverage inertia.
+- Current bottlenecks: `#51` novelty trend confirmation and queue quality threshold calibration.
 
 ## Next Immediate Execution Anchors
 
 1. Run `pnpm run content-ops:gate-check` for strict 24h/previous24h deterministic verdicts.
-2. Keep `#49`/`#50`/`#51` operational gates open until checker status reaches `PASS`.
+2. Keep `#51` operational gate open until multi-day trend status reaches `PASS`.
 3. Executor strategy is fixed to Cursor-first (`source=cursor`) with `vercel-cron` emergency fallback only.
 4. Queue automation build (`#55`~`#59`) is complete; start operational calibration loop.
 5. Continue daily evidence loop with priority on unresolved gates (`#49`, `#50`, `#51`) and queue quality uplift rate.

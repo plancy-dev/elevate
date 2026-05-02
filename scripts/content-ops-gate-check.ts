@@ -4,6 +4,17 @@ import { buildContentQualitySnapshot } from "@/lib/content-ops/quality-monitor";
 
 dotenv.config({ path: ".env.local" });
 
+const DEFAULT_GATE50_FAIL_RATIO_TARGET_PERCENT = 20;
+
+function resolveGate50FailRatioTargetPercent(): number {
+  const parsed = Number.parseFloat(
+    process.env.CONTENT_OPS_GATE50_FAIL_RATIO_TARGET_PERCENT ?? String(DEFAULT_GATE50_FAIL_RATIO_TARGET_PERCENT),
+  );
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULT_GATE50_FAIL_RATIO_TARGET_PERCENT;
+}
+
+const GATE50_FAIL_RATIO_TARGET_PERCENT = resolveGate50FailRatioTargetPercent();
+
 type GateStatus = "PASS" | "PENDING" | "FAIL";
 
 type GateVerdict = {
@@ -101,15 +112,16 @@ function buildGate50Verdict(params: {
   failRatio24: number;
 }): GateVerdict {
   const retryWasteStable = params.retryExhausted24 <= params.retryExhaustedPrevious24;
-  const failRatioTargetMet = params.failRatio24 < 20;
+  const failRatioTargetMet = params.failRatio24 < GATE50_FAIL_RATIO_TARGET_PERCENT;
   if (retryWasteStable && failRatioTargetMet) {
     return {
       status: "PASS",
-      decision_reason: "retry_exhausted is controlled and fail ratio is below 20%.",
+      decision_reason: `retry_exhausted is controlled and fail ratio is below ${GATE50_FAIL_RATIO_TARGET_PERCENT}%.`,
       evidence: {
         retryExhausted24: params.retryExhausted24,
         retryExhaustedPrevious24: params.retryExhaustedPrevious24,
         failRatio24: params.failRatio24,
+        failRatioTargetPercent: GATE50_FAIL_RATIO_TARGET_PERCENT,
       },
     };
   }
@@ -121,6 +133,7 @@ function buildGate50Verdict(params: {
         retryExhausted24: params.retryExhausted24,
         retryExhaustedPrevious24: params.retryExhaustedPrevious24,
         failRatio24: params.failRatio24,
+        failRatioTargetPercent: GATE50_FAIL_RATIO_TARGET_PERCENT,
       },
     };
   }
@@ -131,6 +144,7 @@ function buildGate50Verdict(params: {
       retryExhausted24: params.retryExhausted24,
       retryExhaustedPrevious24: params.retryExhaustedPrevious24,
       failRatio24: params.failRatio24,
+      failRatioTargetPercent: GATE50_FAIL_RATIO_TARGET_PERCENT,
     },
   };
 }
@@ -202,7 +216,7 @@ async function main() {
       .limit(1000),
     admin
       .from("content_publications")
-      .select("status,last_error,created_at")
+      .select("channel,status,last_error,created_at")
       .order("created_at", { ascending: false })
       .limit(3000),
   ]);
@@ -227,21 +241,27 @@ async function main() {
     metadata: unknown;
   }>;
   const publications = (publicationsRes.data ?? []) as Array<{
+    channel: string;
     status: string;
     last_error: string | null;
     created_at: string;
   }>;
 
-  const current24hPubs = publications.filter((row) =>
+  const emailPubs = publications.filter((row) => row.channel === "email");
+  const current24hPubs = emailPubs.filter((row) =>
     inRange(row.created_at, windows.current24hStartMs, windows.nowMs),
   );
-  const previous24hPubs = publications.filter((row) =>
+  const previous24hPubs = emailPubs.filter((row) =>
     inRange(row.created_at, windows.previous24hStartMs, windows.current24hStartMs),
   );
 
   const failed24 = current24hPubs.filter((row) => row.status === "failed").length;
   const failedPrevious24 = previous24hPubs.filter((row) => row.status === "failed").length;
-  const failRatio24 = ratio(failed24 * 100, current24hPubs.length);
+  const attempted24 = current24hPubs.filter(
+    (row) => row.status === "sent" || row.status === "failed",
+  ).length;
+  const deferred24 = current24hPubs.filter((row) => row.status === "deferred").length;
+  const failRatio24 = ratio(failed24 * 100, attempted24);
   const resendNotConfigured24 = current24hPubs.filter((row) =>
     typeof row.last_error === "string" && row.last_error.includes("resend_not_configured"),
   ).length;
@@ -312,6 +332,8 @@ async function main() {
     metrics: {
       publications: {
         total24h: current24hPubs.length,
+        attempted24,
+        deferred24,
         failed24,
         failedPrevious24,
         failRatio24,

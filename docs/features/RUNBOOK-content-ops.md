@@ -63,6 +63,18 @@ Decision policy:
 - `PENDING`: keep issue open and set next recheck ETA
 - `FAIL`: keep issue open and trigger remediation action loop immediately
 
+Tuning knobs:
+
+- `CONTENT_OPS_GATE50_FAIL_RATIO_TARGET_PERCENT`
+  - default: `20`
+  - gate50 pass condition: `failRatio24 < target`
+- `CONTENT_OPS_QUEUE_AUTO_APPROVE_MIN_CONFIDENCE`
+  - default: `0.8`
+  - applied in queue auto-approval policy guard
+- `CONTENT_OPS_QUEUE_AUTO_APPROVE_MIN_QUALITY_SCORE`
+  - default: `16`
+  - applied in queue triage + auto-approval policy guard
+
 ## Queue Review Scenario (Cursor-first)
 
 Use queue review automation to process backlog safely before publish windows.

@@ -26,16 +26,16 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 
 ### Stabilization Queue (P0 -> P1)
 
-- [ ] #49 `[STAB][P0] newsletter-delivery-config-hardening`
+- [x] #49 `[STAB][P0] newsletter-delivery-config-hardening`
   - Owner: `MyungJin Ko`
   - Order: `1`
-  - Status: `remediation_applied_waiting_24h_decay_recheck`
+  - Status: `operational_gate_passed`
   - Acceptance: `resend_not_configured` near-zero in 24h and `send_failed` decay after controlled publish window.
   - Verify: `pnpm tsx scripts/content-ops-quality-monitor.ts` + `content_publications` grouped by `last_error,status`.
-- [ ] #50 `[STAB][P0] retry-waste-reduction-exhaustion-path`
+- [x] #50 `[STAB][P0] retry-waste-reduction-exhaustion-path`
   - Owner: `MyungJin Ko`
   - Order: `2` (starts after #49 baseline comparison)
-  - Status: `remediation_applied_waiting_fail_ratio_recheck`
+  - Status: `operational_gate_passed`
   - Acceptance: DoD `retry_exhausted` 감소 + publish fail ratio `< 20%` 추세.
   - Verify: quality monitor + 7d DoD retry/fail SQL trend.
 - [ ] #51 `[STAB][P0] novelty-recovery-pass`
@@ -102,12 +102,12 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 - [x] Capture pre-fix baseline snapshot for publish failure, low_novelty, citation coverage.
 - [x] Set concrete run order/owner: #49 -> #50 -> #51 (Owner: MyungJin Ko).
 - [x] Start implementation in order: #49 -> #50 -> #51.
-- [ ] Observe #49 24h operational decay gate and record pass/fail.
-  - Latest check: `FAILED` (`resend_not_configured` still high in 24h publication failures).
-- [ ] Re-run 24h observation after remediation and confirm decay trend.
-  - Recheck (2026-05-02): `FAILED` (`resend_not_configured=10`, fail ratio `57.1%`).
-  - Recheck (2026-05-02 after config update + publish/retry rerun): short-window clean (`2h failed=0`), but strict 24h still `FAILED` (legacy failures remain in same window).
-- [ ] Bring publication fail ratio under `<20%` and keep retry waste low over consecutive daily windows.
+- [x] Observe #49 24h operational decay gate and record pass/fail.
+  - Latest check (2026-05-02): `PASS` (`resend_not_configured=0`, failed24 <= failedPrevious24).
+- [x] Re-run 24h observation after remediation and confirm decay trend.
+  - Recheck (2026-05-02 latest): `PASS` (strict 24h decay satisfied after old failures aged out).
+- [x] Bring publication fail ratio under `<20%` and keep retry waste low over consecutive daily windows.
+  - Gate-check result (2026-05-02 latest): `gate50=PASS` (`failRatio24=0`, `retryExhausted24=0`).
 - [ ] Capture second-day novelty trend to confirm `low_novelty` and blog review_required movement.
 - [ ] Resolve runtime-source alignment (`cursor` vs `vercel-cron`) and confirm first `scheduled` run is persisted in `content_runs.trigger_type`.
   - Evidence: first `scheduled` rows persisted (`source=cursor` success + `source=vercel-cron` mismatch failure) on 2026-05-02.

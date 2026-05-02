@@ -338,6 +338,25 @@ Result:
 - INIT queue automation scope is implementation-complete and verification-complete.
 - Next phase can move to operational tuning (thresholds, rewrite quality uplift rate, approval policy calibration).
 
+## Post-merge Operational Tuning (main)
+
+- Branch normalized to `main` and synced from remote (`checkout main && pull`).
+- `#50` gate tuning applied:
+  - gate checker now supports configurable target via:
+    - `CONTENT_OPS_GATE50_FAIL_RATIO_TARGET_PERCENT` (default `20`)
+  - latest gate-check evidence:
+    - `gate49=PASS`
+    - `gate50=PASS` (`failRatio24=0`, `retryExhausted24=0`)
+    - `gate51=PENDING`
+- Queue quality threshold tuning applied:
+  - `CONTENT_OPS_QUEUE_AUTO_APPROVE_MIN_CONFIDENCE` (default `0.8`)
+  - `CONTENT_OPS_QUEUE_AUTO_APPROVE_MIN_QUALITY_SCORE` (default `16`)
+  - triage metadata now records applied threshold snapshot in `ai_review.latest.policy_thresholds`.
+- Verification:
+  - `pnpm run typecheck` (pass)
+  - `pnpm exec vitest run tests/unit/content-ops-queue-triage.test.ts tests/unit/content-ops-config-stop-policy.test.ts` (pass)
+  - `pnpm run content-ops:gate-check` (pass, latest gate output recorded)
+
 ## Gate Close Protocol (Deterministic)
 
 - Command contract:

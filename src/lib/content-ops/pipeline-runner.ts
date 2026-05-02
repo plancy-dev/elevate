@@ -37,6 +37,8 @@ const DRAFT_MAX_SOURCE_BULLETS = 8;
 const DEFAULT_PUBLISH_BATCH_SIZE = 20;
 const DEFAULT_RETRY_FAILED_BATCH_SIZE = 5;
 const CONFIG_BLOCK_RESCHEDULE_MINUTES = 360;
+const DEFAULT_QUEUE_AUTO_APPROVE_MIN_CONFIDENCE = 0.8;
+const DEFAULT_QUEUE_AUTO_APPROVE_MIN_QUALITY_SCORE = 16;
 const BROKEN_FIXTURE_SOURCE_PATTERNS = [
   "example.invalid/rss",
   "broken rss fixture",
@@ -87,6 +89,11 @@ type ReviewGateLite = {
   passed: boolean;
   reasons: string[];
   qualityScore: number;
+};
+
+type QueueAutoApproveThresholds = {
+  minConfidence: number;
+  minQualityScore: number;
 };
 
 function hashSnippet(input: string): string {
@@ -160,6 +167,7 @@ function extractLatestReviewGate(
 export function resolveQueueTriageAssessment(params: {
   reviewGate: ReviewGateLite | null;
 }): QueueTriageAssessment {
+  const thresholds = resolveQueueAutoApproveThresholds();
   const reviewGate = params.reviewGate;
   if (!reviewGate) {
     return {
@@ -204,7 +212,7 @@ export function resolveQueueTriageAssessment(params: {
     };
   }
 
-  if (reviewGate.passed && reviewGate.qualityScore >= 16) {
+  if (reviewGate.passed && reviewGate.qualityScore >= thresholds.minQualityScore) {
     return {
       decision: "auto_approve_candidate",
       confidence: 0.86,
@@ -225,6 +233,7 @@ export function resolveAutoApprovalPolicy(params: {
   assessment: QueueTriageAssessment;
   reviewGate: ReviewGateLite | null;
 }): AutoApprovalPolicyResult {
+  const thresholds = resolveQueueAutoApproveThresholds();
   const scheduleModeEnabled = process.env.CONTENT_OPS_QUEUE_AUTO_APPROVE_SCHEDULED === "true";
   const nextAllowedStatus: AutoApprovalPolicyResult["nextStatus"] = scheduleModeEnabled
     ? "scheduled"
@@ -236,7 +245,7 @@ export function resolveAutoApprovalPolicy(params: {
       nextStatus: "review_required",
     };
   }
-  if (params.assessment.confidence < 0.8) {
+  if (params.assessment.confidence < thresholds.minConfidence) {
     return {
       allowed: false,
       reason: "confidence_below_threshold",
@@ -250,7 +259,7 @@ export function resolveAutoApprovalPolicy(params: {
       nextStatus: "review_required",
     };
   }
-  if ((params.reviewGate.qualityScore ?? 0) < 16) {
+  if ((params.reviewGate.qualityScore ?? 0) < thresholds.minQualityScore) {
     return {
       allowed: false,
       reason: "quality_score_below_threshold",
@@ -413,6 +422,34 @@ function parseBatchSize(
   const parsed = Number.parseInt(raw ?? "", 10);
   if (!Number.isFinite(parsed)) return fallback;
   return clampInt(parsed, min, max);
+}
+
+function parseNumericThreshold(
+  raw: string | undefined,
+  fallback: number,
+  min: number,
+  max: number,
+): number {
+  const parsed = Number.parseFloat(raw ?? "");
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.max(min, Math.min(max, parsed));
+}
+
+function resolveQueueAutoApproveThresholds(): QueueAutoApproveThresholds {
+  return {
+    minConfidence: parseNumericThreshold(
+      process.env.CONTENT_OPS_QUEUE_AUTO_APPROVE_MIN_CONFIDENCE,
+      DEFAULT_QUEUE_AUTO_APPROVE_MIN_CONFIDENCE,
+      0,
+      1,
+    ),
+    minQualityScore: parseNumericThreshold(
+      process.env.CONTENT_OPS_QUEUE_AUTO_APPROVE_MIN_QUALITY_SCORE,
+      DEFAULT_QUEUE_AUTO_APPROVE_MIN_QUALITY_SCORE,
+      1,
+      25,
+    ),
+  };
 }
 
 function resolvePublishBatchSize(retryFailedOnly: boolean): number {
@@ -1009,6 +1046,7 @@ export async function runQueueTriagePipeline(runId: string): Promise<{
   failureMessages: string[];
 }> {
   const admin = createAdminClient();
+  const thresholds = resolveQueueAutoApproveThresholds();
   const { data: candidates } = await admin
     .from("content_items")
     .select("id, type, status, metadata, updated_at")
@@ -1056,6 +1094,10 @@ export async function runQueueTriagePipeline(runId: string): Promise<{
           policy_allowed: policy.allowed,
           policy_reason: policy.reason,
           policy_next_status: policy.nextStatus,
+          policy_thresholds: {
+            min_confidence: thresholds.minConfidence,
+            min_quality_score: thresholds.minQualityScore,
+          },
           status_at_evaluation: item.status,
           review_gate_passed: reviewGate?.passed ?? false,
           review_gate_quality_score: reviewGate?.qualityScore ?? 0,
