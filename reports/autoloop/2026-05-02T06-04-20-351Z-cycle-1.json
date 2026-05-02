@@ -1,0 +1,47 @@
+{
+  "cycle": 1,
+  "runMode": "production",
+  "policyVersion": "v1-low-risk",
+  "cursorRunId": "autoloop-prod-kst-0600-20260502T060404Z",
+  "startedAt": "2026-05-02T06:04:05.156Z",
+  "endedAt": "2026-05-02T06:04:20.351Z",
+  "ok": true,
+  "elapsedMs": 15195,
+  "candidatePrs": [],
+  "mergedPrs": [],
+  "steps": [
+    {
+      "id": "health.clean-tree",
+      "ok": true,
+      "command": "git diff --quiet && git diff --cached --quiet",
+      "output": ""
+    },
+    {
+      "id": "health.typecheck",
+      "ok": true,
+      "command": "pnpm typecheck",
+      "output": "> elevate@0.2.0 typecheck /workspace\n> tsc --noEmit"
+    },
+    {
+      "id": "health.i18n",
+      "ok": true,
+      "command": "pnpm test:i18n",
+      "output": "> elevate@0.2.0 test:i18n /workspace\n> vitest run tests/unit/messages-locale-parity.test.ts tests/unit/admin-i18n-hardcoded.test.ts\n\n\n RUN  v3.2.4 /workspace\n\n ✓ tests/unit/admin-i18n-hardcoded.test.ts (1 test) 3ms\n ✓ tests/unit/messages-locale-parity.test.ts (8 tests) 27ms\n\n Test Files  2 passed (2)\n      Tests  9 passed (9)\n   Start at  06:04:16\n   Duration  243ms (transform 54ms, setup 0ms, collect 73ms, tests 30ms, environment 0ms, prepare 128ms)"
+    },
+    {
+      "id": "health.content-packs",
+      "ok": true,
+      "command": "pnpm vitest run tests/unit/content-packs.test.ts",
+      "output": "RUN  v3.2.4 /workspace\n\n ✓ tests/unit/content-packs.test.ts (3 tests) 3ms\n\n Test Files  1 passed (1)\n      Tests  3 passed (3)\n   Start at  06:04:17\n   Duration  201ms (transform 40ms, setup 0ms, collect 46ms, tests 3ms, environment 0ms, prepare 46ms)"
+    },
+    {
+      "id": "health.quality-monitor",
+      "ok": true,
+      "command": "pnpm content-ops:quality:monitor",
+      "output": "> elevate@0.2.0 content-ops:quality:monitor /workspace\n> pnpm tsx scripts/content-ops-quality-monitor.ts\n\n[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit\n{\n  \"windowDays\": 7,\n  \"freshWindowHours\": 24,\n  \"generatedCount\": 24,\n  \"publishedCount\": 9,\n  \"reviewRequiredCount\": 17,\n  \"sendFailedCount\": 0,\n  \"deferredCount\": 24,\n  \"citationCoverage7dAvg\": 0.7826,\n  \"avgQualityScore\": 19.7,\n  \"minQualityScore\": 8,\n  \"topQualityIssues\": [\n    {\n      \"reason\": \"low_novelty\",\n      \"count\": 11\n    },\n    {\n      \"reason\": \"possible_overcopy_detected\",\n      \"count\": 6\n    },\n    {\n      \"reason\": \"comparison_missing\",\n      \"count\": 6\n    },\n    {\n      \"reason\": \"counterargument_missing\",\n      \"count\": 6\n    },\n    {\n      \"reason\": \"citation_coverage_low\",\n      \"count\": 5\n    }\n  ],\n  \"topPublishFailureReasons\": [\n    {\n      \"reason\": \"retry_exhausted\",\n      \"count\": 54\n    },\n    {\n      \"reason\": \"resend_not_configured\",\n      \"count\": 21\n    },\n    {\n      \"reason\": \"frequency_window_deferred\",\n      \"count\": 8\n    },\n    {\n      \"reason\": \"[newsletter:2db5ef7f-7df4-436f-9e92-7e4fb7bead24] retry_exhausted\",\n      \"count\": 5\n    },\n    {\n      \"reason\": \"[newsletter:4339a97e-913d-47ef-8d8a-65f998d80a47] frequency_window_deferred\",\n      \"count\": 2\n    }\n  ],\n  \"freshGeneratedCount\": 22,\n  \"freshReviewedCount\": 21,\n  \"freshReviewRequiredCount\": 11,\n  \"citationCoverage24hAvg\": 1,\n  \"freshAvgQualityScore\": 20.5,\n  \"freshMinQualityScore\": 17,\n  \"freshTopQualityIssues\": [\n    {\n      \"reason\": \"low_novelty\",\n      \"count\": 9\n    },\n    {\n      \"reason\": \"possible_overcopy_detected\",\n      \"count\": 6\n    },\n    {\n      \"reason\": \"comparison_missing\",\n      \"count\": 5\n    },\n    {\n      \"reason\": \"counterargument_missing\",\n      \"count\": 5\n    }\n  ],\n  \"generated7dDelta\": {\n    \"current\": 24,\n    \"previous\": 0,\n    \"deltaPercent\": null\n  },\n  \"generated24hDelta\": {\n    \"current\": 22,\n    \"previous\": 0,\n    \"deltaPercent\": null\n  },\n  \"strategyScoreboard\": [\n    {\n      \"strategy\": \"novelty_boost\",\n      \"sampleCount\": 0,\n      \"avgQualityScore\": 0,\n      \"reviewRequiredRatio\": 0\n    },\n    {\n      \"strategy\": \"overcopy_mitigate\",\n      \"sampleCount\": 0,\n      \"avgQualityScore\": 0,\n      \"reviewRequiredRatio\": 0\n    },\n    {\n      \"strategy\": \"balanced\",\n      \"sampleCount\": 0,\n      \"avgQualityScore\": 0,\n      \"reviewRequiredRatio\": 0\n    }\n  ],\n  \"winnerStrategy\": null,\n  \"strategyMinSampleSize\": 20,\n  \"hasInsufficientStrategySample\": true,\n  \"threeDayRegression\": {\n    \"triggered\": false,\n    \"metric\": null,\n    \"series\": [\n      {\n        \"day\": \"2026-05-01\",\n        \"reviewRequiredCount\": 17,\n        \"sendFailedCount\": 0\n      }\n    ],\n    \"reason\": null,\n    \"nextAction\": null\n  },\n  \"improvementFocus\": [\n    \"low_novelty 우세 시 topic/newsletter/blog pack의 why-now+비교+반례 프레임을 조정하고 1사이클 후 재검증하세요.\",\n    \"comparison_missing 빈도가 높으면 vs/trade-off 단락을 템플릿 필수 블록으로 강제하세요.\",\n    \"counterargument_missing이 반복되면 counter-signal/objection 섹션을 생성 프롬프트에 고정하세요.\",\n    \"publish 배치 간격과 retry 윈도우를 운영 트래픽에 맞게 조정하세요.\",\n    \"review_required backlog SLA를 설정하고 must-review 항목을 우선 처리하세요.\",\n    \"구조 가드 탐지가 고품질 점수와 함께 증가하면 false-positive 모니터링 대상으로 분리해 수동 샘플 리뷰를 병행하세요.\"\n  ]\n}"
+    }
+  ],
+  "recommendations": [
+    "All loop checks passed. Safe to continue next cycle."
+  ]
+}
