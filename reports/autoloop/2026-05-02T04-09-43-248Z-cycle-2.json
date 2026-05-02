@@ -1,0 +1,51 @@
+{
+  "cycle": 2,
+  "runMode": "rehearsal",
+  "policyVersion": "v1-low-risk",
+  "cursorRunId": "autoloop-rehearsal-2026-05-02T04-01-01Z",
+  "startedAt": "2026-05-02T04:09:43.240Z",
+  "endedAt": "2026-05-02T04:09:43.248Z",
+  "ok": true,
+  "elapsedMs": 8,
+  "candidatePrs": [],
+  "mergedPrs": [],
+  "steps": [
+    {
+      "id": "health.clean-tree",
+      "ok": true,
+      "command": "git diff --quiet && git diff --cached --quiet",
+      "output": ""
+    },
+    {
+      "id": "health.typecheck",
+      "ok": true,
+      "command": "pnpm typecheck",
+      "output": "[rehearsal] skipped command execution",
+      "skipped": true
+    },
+    {
+      "id": "health.i18n",
+      "ok": true,
+      "command": "pnpm test:i18n",
+      "output": "[rehearsal] skipped command execution",
+      "skipped": true
+    },
+    {
+      "id": "health.content-packs",
+      "ok": true,
+      "command": "pnpm vitest run tests/unit/content-packs.test.ts",
+      "output": "[rehearsal] skipped command execution",
+      "skipped": true
+    },
+    {
+      "id": "health.quality-monitor",
+      "ok": true,
+      "command": "pnpm content-ops:quality:monitor",
+      "output": "[rehearsal] skipped command execution",
+      "skipped": true
+    }
+  ],
+  "recommendations": [
+    "All loop checks passed. Safe to continue next cycle."
+  ]
+}
