@@ -1343,6 +1343,7 @@
         "status": "狀態",
         "quality": "品質",
         "gate": "閘門",
+        "aiAudit": "AI 審核",
         "opsSignal": "營運訊號",
         "updated": "更新時間",
         "actions": "操作"
@@ -1363,6 +1364,28 @@
         "qualityRework": "品質返工",
         "reviewNeeded": "需要審核",
         "manualReviewRequired": "manual_review_required"
+      },
+      "aiAudit": {
+        "confidence": "信心值 {value}%",
+        "policyReason": "政策",
+        "rewriteDecision": "改寫",
+        "decision": {
+          "autoApproveCandidate": "自動核准候選",
+          "needsRewrite": "需要改寫",
+          "holdManual": "維持人工審核"
+        },
+        "rewrite": {
+          "readyForApproval": "可進入核准",
+          "needsManualReview": "需要人工複核"
+        },
+        "policy": {
+          "autoApprovalPolicyPassed": "自動核准政策通過",
+          "decisionNotAutoApproveCandidate": "目前不屬於自動核准候選",
+          "confidenceBelowThreshold": "信心值低於門檻",
+          "reviewGateNotPassed": "審核閘門未通過",
+          "qualityScoreBelowThreshold": "品質分數低於門檻",
+          "hardBlockReasonDetected": "偵測到硬性阻擋原因"
+        }
       },
       "empty": "找不到佇列項目。"
     },

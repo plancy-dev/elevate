@@ -15,6 +15,13 @@ type AlertPayload = {
   run_type: string;
   reason: string;
   next_action: string;
+  action_checklist: string[];
+  owner_assignment: {
+    team: string;
+    path: string;
+    field: string;
+    suggested_owner: string;
+  };
   operator_links: {
     runs: string;
     content_quality: string;
@@ -27,10 +34,19 @@ type AlertPayload = {
   triggeredAt: string;
 };
 
+const CONFIG_STOP_REASON_PREFIXES = [
+  "resend_not_configured",
+  "resend_from_invalid_format",
+  "resend_sandbox_sender",
+  "resend_from_domain_mismatch",
+] as const;
+
 export type StructuredContentOpsAlert = {
   run_type: string;
   reason: string;
   next_action: string;
+  action_checklist?: string[];
+  owner_assignment?: AlertPayload["owner_assignment"];
   operator_links: AlertPayload["operator_links"];
   triggeredAt: string;
   metadata?: Record<string, unknown>;
@@ -129,11 +145,77 @@ async function notifyWebhook(payload: AlertPayload): Promise<void> {
   });
 }
 
+function hasConfigStopFailure(reasons: string[]): boolean {
+  return reasons.some((reason) =>
+    CONFIG_STOP_REASON_PREFIXES.some((prefix) => reason.includes(prefix)),
+  );
+}
+
 function defaultOperatorLinks() {
   return {
     runs: "/admin/runs",
     content_quality: "/admin/content-quality",
     morning_ops: "/admin/morning-ops",
+  };
+}
+
+export function resolveEscalationActionLoop(params: {
+  reason: string;
+  runType: string;
+  nextAction: string;
+  threeDayRegressionTriggered: boolean;
+  configStopFailureDetected: boolean;
+}): Pick<AlertPayload, "next_action" | "action_checklist" | "owner_assignment"> {
+  if (params.threeDayRegressionTriggered) {
+    return {
+      next_action: params.nextAction,
+      action_checklist: [
+        "Open /admin/morning-ops and lock today's go/adjust/stop decision.",
+        "Assign one owner for backlog burn-down and one owner for failure-class triage.",
+        "Run one controlled cycle only after owner assignment is recorded.",
+        "Log outcome in /admin/runs and verify trend movement in /admin/content-quality.",
+      ],
+      owner_assignment: {
+        team: "content_ops_oncall",
+        path: "/admin/morning-ops",
+        field: "escalation.owner",
+        suggested_owner: "content-ops-oncall",
+      },
+    };
+  }
+
+  if (params.configStopFailureDetected) {
+    return {
+      next_action: params.nextAction,
+      action_checklist: [
+        "Fix RESEND_API_KEY/RESEND_FROM_EMAIL/RESEND_VERIFIED_DOMAIN configuration mismatch.",
+        "Record the owner in morning ops before retrying publish.",
+        "Execute retry window with reduced batch size after config validation.",
+        "Verify send_failed decrease in /admin/content-quality and /admin/runs.",
+      ],
+      owner_assignment: {
+        team: "automation_reliability_oncall",
+        path: "/admin/morning-ops",
+        field: "escalation.owner",
+        suggested_owner: "automation-reliability-oncall",
+      },
+    };
+  }
+
+  return {
+    next_action: params.nextAction,
+    action_checklist: [
+      `Review failure classes for ${params.runType} in /admin/runs.`,
+      "Assign one execution owner in morning ops for this alert class.",
+      "Run class-specific recovery checklist and keep batch scope controlled.",
+      "Confirm next cycle trend movement before returning to normal schedule.",
+    ],
+    owner_assignment: {
+      team: "content_ops_oncall",
+      path: "/admin/morning-ops",
+      field: "escalation.owner",
+      suggested_owner: "content-ops-oncall",
+    },
   };
 }
 
@@ -161,6 +243,7 @@ export async function maybeEmitContentOpsAlert(params: {
     failedCount >= FAILED_COUNT_ALERT_THRESHOLD ||
     reviewBacklogCount >= REVIEW_BACKLOG_ALERT_THRESHOLD;
   const threeDayRegression = await detectThreeDayRegression();
+  const configStopFailureDetected = hasConfigStopFailure(reasons);
   const finalShouldAlert = shouldAlert || threeDayRegression.triggered;
 
   if (!finalShouldAlert) return { emitted: false };
@@ -171,17 +254,36 @@ export async function maybeEmitContentOpsAlert(params: {
     reason:
       threeDayRegression.triggered && threeDayRegression.reason
         ? threeDayRegression.reason
+        : configStopFailureDetected
+        ? "newsletter_config_stop_detected"
         : params.status === "failed"
         ? "run_failed"
         : failedCount >= FAILED_COUNT_ALERT_THRESHOLD
           ? "failed_count_threshold_exceeded"
           : "review_backlog_threshold_exceeded",
-    next_action:
+    ...resolveEscalationActionLoop({
+      reason:
+        threeDayRegression.triggered && threeDayRegression.reason
+          ? threeDayRegression.reason
+          : configStopFailureDetected
+          ? "newsletter_config_stop_detected"
+          : params.status === "failed"
+          ? "run_failed"
+          : failedCount >= FAILED_COUNT_ALERT_THRESHOLD
+            ? "failed_count_threshold_exceeded"
+            : "review_backlog_threshold_exceeded",
+      runType: params.runType,
+      nextAction:
       threeDayRegression.triggered && threeDayRegression.nextAction
         ? threeDayRegression.nextAction
+        : configStopFailureDetected
+        ? "Fix RESEND_API_KEY/RESEND_FROM_EMAIL/RESEND_VERIFIED_DOMAIN first, then rerun controlled publish window."
         : params.status === "failed"
         ? "Open /admin/runs and /admin/content-quality, then execute class-specific recovery in morning-ops."
         : "Review failure classes and backlog owners before the next publish/retry window.",
+      threeDayRegressionTriggered: threeDayRegression.triggered,
+      configStopFailureDetected,
+    }),
     operator_links: defaultOperatorLinks(),
     status: params.status,
     failedCount,

@@ -75,25 +75,29 @@ function asObject(value: unknown): Record<string, unknown> | null {
   return value as Record<string, unknown>;
 }
 
+function extractReviewGateLatest(metadata: Json | null): Record<string, unknown> | null {
+  const root = asObject(metadata);
+  const snakeLatest = asObject(asObject(root?.review_gate)?.latest);
+  if (snakeLatest) return snakeLatest;
+  return asObject(asObject(root?.reviewGate)?.latest);
+}
+
 function extractQualityScore(metadata: Json | null): number | null {
-  const gate = asObject(asObject(metadata)?.review_gate);
-  const latest = asObject(gate?.latest);
+  const latest = extractReviewGateLatest(metadata);
   const metrics = asObject(latest?.metrics);
   const score = Number(metrics?.qualityScore ?? NaN);
   return Number.isFinite(score) ? score : null;
 }
 
 function extractCitationCoverage(metadata: Json | null): number | null {
-  const gate = asObject(asObject(metadata)?.review_gate);
-  const latest = asObject(gate?.latest);
+  const latest = extractReviewGateLatest(metadata);
   const metrics = asObject(latest?.metrics);
   const coverage = Number(metrics?.citationCoverage ?? NaN);
   return Number.isFinite(coverage) ? coverage : null;
 }
 
 function extractQualityReasons(metadata: Json | null): string[] {
-  const gate = asObject(asObject(metadata)?.review_gate);
-  const latest = asObject(gate?.latest);
+  const latest = extractReviewGateLatest(metadata);
   const raw = latest?.reasons;
   if (!Array.isArray(raw)) return [];
   return raw.filter((v): v is string => typeof v === "string" && v.trim().length > 0);
@@ -131,6 +135,7 @@ function parseFailureReasons(run: MonitorRun): string[] {
 
 function extractAutotuneStrategy(
   metadata: Json | null,
+  createdAtIso?: string,
 ): StrategyScoreRow["strategy"] | null {
   const generate = asObject(asObject(metadata)?.generate);
   const mode = String(generate?.mode ?? "");
@@ -143,6 +148,13 @@ function extractAutotuneStrategy(
     strategy === "balanced"
   ) {
     return strategy;
+  }
+  if (createdAtIso) {
+    const created = new Date(createdAtIso);
+    const weekday = created.getUTCDay();
+    if (weekday === 1 || weekday === 3) return "novelty_boost";
+    if (weekday === 2 || weekday === 5) return "overcopy_mitigate";
+    return "balanced";
   }
   return null;
 }
@@ -354,7 +366,7 @@ export function buildContentQualitySnapshot(params: {
   }
   const freshGeneratedCount = freshGeneratedItems.length;
   const freshReviewedCount = freshGeneratedItems.filter((item) =>
-    Boolean(asObject(asObject(item.metadata)?.review_gate)?.latest),
+    Boolean(extractReviewGateLatest(item.metadata)),
   ).length;
   const freshReviewRequiredCount = freshGeneratedItems.filter(
     (item) => item.status === "review_required",
@@ -395,7 +407,7 @@ export function buildContentQualitySnapshot(params: {
     { sampleCount: number; qualityScoreSum: number; reviewRequiredCount: number }
   >();
   for (const item of scopedItems) {
-    const strategy = extractAutotuneStrategy(item.metadata);
+    const strategy = extractAutotuneStrategy(item.metadata, item.created_at);
     if (!strategy) continue;
     const prev = strategyBuckets.get(strategy) ?? {
       sampleCount: 0,

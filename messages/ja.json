@@ -1343,6 +1343,7 @@
         "status": "状態",
         "quality": "品質",
         "gate": "ゲート",
+        "aiAudit": "AI監査",
         "opsSignal": "運用シグナル",
         "updated": "更新",
         "actions": "操作"
@@ -1363,6 +1364,28 @@
         "qualityRework": "品質再作業",
         "reviewNeeded": "レビュー要",
         "manualReviewRequired": "manual_review_required"
+      },
+      "aiAudit": {
+        "confidence": "信頼度 {value}%",
+        "policyReason": "ポリシー",
+        "rewriteDecision": "リライト",
+        "decision": {
+          "autoApproveCandidate": "自動承認候補",
+          "needsRewrite": "リライト必要",
+          "holdManual": "手動レビュー維持"
+        },
+        "rewrite": {
+          "readyForApproval": "承認準備完了",
+          "needsManualReview": "手動レビュー必要"
+        },
+        "policy": {
+          "autoApprovalPolicyPassed": "自動承認ポリシー通過",
+          "decisionNotAutoApproveCandidate": "自動承認候補条件ではない",
+          "confidenceBelowThreshold": "信頼度しきい値未満",
+          "reviewGateNotPassed": "レビューゲート未通過",
+          "qualityScoreBelowThreshold": "品質スコアしきい値未満",
+          "hardBlockReasonDetected": "ハードブロック理由を検出"
+        }
       },
       "empty": "キュー項目がありません。"
     },

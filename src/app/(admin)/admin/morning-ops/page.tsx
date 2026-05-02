@@ -11,6 +11,49 @@ import {
   type MorningOpsTemplate,
 } from "@/components/admin/morning-ops-playbook-client";
 import { buildContentQualitySnapshot } from "@/lib/content-ops/quality-monitor";
+import type { Json } from "@/types/database.types";
+
+type AlertPayloadView = {
+  reason: string;
+  next_action: string;
+  action_checklist: string[];
+  owner_assignment?: {
+    team?: string;
+    path?: string;
+    field?: string;
+    suggested_owner?: string;
+  };
+  operator_links?: {
+    runs?: string;
+    content_quality?: string;
+    morning_ops?: string;
+  };
+};
+
+function asObject(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  return value as Record<string, unknown>;
+}
+
+function parseAlertPayload(metadata: Json | null): AlertPayloadView | null {
+  const root = asObject(metadata);
+  const alertRoot = asObject(root?.alert);
+  const payload = asObject(alertRoot?.payload) ?? alertRoot;
+  if (!payload) return null;
+  const reason = typeof payload.reason === "string" ? payload.reason : null;
+  const nextAction = typeof payload.next_action === "string" ? payload.next_action : null;
+  if (!reason || !nextAction) return null;
+  const actionChecklist = Array.isArray(payload.action_checklist)
+    ? payload.action_checklist.filter((entry): entry is string => typeof entry === "string")
+    : [];
+  return {
+    reason,
+    next_action: nextAction,
+    action_checklist: actionChecklist,
+    owner_assignment: asObject(payload.owner_assignment) ?? undefined,
+    operator_links: asObject(payload.operator_links) ?? undefined,
+  };
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.adminMorningOps");
@@ -27,6 +70,9 @@ export default async function AdminMorningOpsPage() {
     windowDays: 7,
     freshWindowHours: 24,
   });
+  const latestAlert = (runsRes.ok ? runsRes.rows : [])
+    .map((row) => parseAlertPayload(row.metadata))
+    .find((payload): payload is AlertPayloadView => Boolean(payload));
 
   const quickLinks = [
     { href: "/admin/runs", label: t("quickLinks.runs") },
@@ -154,7 +200,7 @@ export default async function AdminMorningOpsPage() {
           </ul>
         </section>
 
-        {snapshot.threeDayRegression.triggered ? (
+        {snapshot.threeDayRegression.triggered || latestAlert ? (
           <section className="space-y-2 border border-amber-300 bg-amber-50 p-4">
             <h2 className="text-xs font-medium uppercase tracking-wide text-amber-800">
               {t("escalation.title")}
@@ -168,8 +214,41 @@ export default async function AdminMorningOpsPage() {
               })}
             </p>
             <p className="text-xs leading-relaxed text-amber-900">
-              {snapshot.threeDayRegression.nextAction ?? t("escalation.defaultAction")}
+              {latestAlert?.next_action ?? snapshot.threeDayRegression.nextAction ?? t("escalation.defaultAction")}
             </p>
+            {latestAlert?.action_checklist?.length ? (
+              <ol className="space-y-1 pt-1 text-xs leading-relaxed text-amber-900">
+                {latestAlert.action_checklist.map((item, index) => (
+                  <li key={`${latestAlert.reason}-${index}`}>
+                    {index + 1}. {item}
+                  </li>
+                ))}
+              </ol>
+            ) : null}
+            {latestAlert?.owner_assignment ? (
+              <div className="space-y-1 border border-amber-200 bg-amber-100/70 p-2 text-[11px] text-amber-900">
+                {latestAlert.owner_assignment.suggested_owner ? (
+                  <p>
+                    <code>{latestAlert.owner_assignment.suggested_owner}</code>
+                  </p>
+                ) : null}
+                {latestAlert.owner_assignment.team ? (
+                  <p>
+                    <code>{latestAlert.owner_assignment.team}</code>
+                  </p>
+                ) : null}
+                {latestAlert.owner_assignment.path ? (
+                  <p>
+                    <code>{latestAlert.owner_assignment.path}</code>
+                  </p>
+                ) : null}
+                {latestAlert.owner_assignment.field ? (
+                  <p>
+                    <code>{latestAlert.owner_assignment.field}</code>
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
           </section>
         ) : null}
 

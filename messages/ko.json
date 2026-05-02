@@ -1351,6 +1351,7 @@
         "status": "상태",
         "quality": "품질",
         "gate": "게이트",
+        "aiAudit": "AI 심사",
         "opsSignal": "운영 신호",
         "updated": "업데이트",
         "actions": "작업"
@@ -1371,6 +1372,28 @@
         "qualityRework": "품질 재작업",
         "reviewNeeded": "검토 필요",
         "manualReviewRequired": "manual_review_required"
+      },
+      "aiAudit": {
+        "confidence": "신뢰도 {value}%",
+        "policyReason": "정책",
+        "rewriteDecision": "리라이트",
+        "decision": {
+          "autoApproveCandidate": "자동 승인 후보",
+          "needsRewrite": "리라이트 필요",
+          "holdManual": "수동 검토 유지"
+        },
+        "rewrite": {
+          "readyForApproval": "승인 준비 완료",
+          "needsManualReview": "수동 검토 필요"
+        },
+        "policy": {
+          "autoApprovalPolicyPassed": "자동 승인 정책 통과",
+          "decisionNotAutoApproveCandidate": "자동 승인 후보 조건이 아님",
+          "confidenceBelowThreshold": "신뢰도 임계치 미달",
+          "reviewGateNotPassed": "리뷰 게이트 미통과",
+          "qualityScoreBelowThreshold": "품질 점수 임계치 미달",
+          "hardBlockReasonDetected": "하드 블록 사유 감지"
+        }
       },
       "empty": "큐 항목이 없습니다."
     },

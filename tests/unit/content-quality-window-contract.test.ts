@@ -247,6 +247,37 @@ describe("content quality delta window contract", () => {
     expect(snapshot.hasInsufficientStrategySample).toBe(true);
   });
 
+  it("falls back to weekday strategy when legacy metadata lacks autotune strategy", () => {
+    const nowMs = Date.parse("2026-01-16T00:00:00.000Z");
+    const items: MonitorItem[] = [
+      {
+        id: "legacy-friday",
+        type: "newsletter",
+        title: "legacy tagged by weekday",
+        status: "published",
+        created_at: "2026-01-09T09:00:00.000Z",
+        updated_at: "2026-01-09T09:00:00.000Z",
+        review_notes: null,
+        metadata: {
+          generate: { mode: "pack_registry", pack_version: "v1.2.0" },
+          review_gate: { latest: { metrics: { qualityScore: 21 } } },
+        },
+      },
+    ];
+
+    const snapshot = buildContentQualitySnapshot({
+      items: items as never[],
+      runs: [] as never[],
+      nowMs,
+      windowDays: 14,
+      freshWindowHours: 24,
+    });
+
+    const overcopy = snapshot.strategyScoreboard.find((row) => row.strategy === "overcopy_mitigate");
+    expect(overcopy?.sampleCount).toBe(1);
+    expect(snapshot.winnerStrategy).toBe("overcopy_mitigate");
+  });
+
   it("aggregates citation coverage for 7d and fresh 24h", () => {
     const nowMs = Date.parse("2026-01-15T00:00:00.000Z");
     const items: MonitorItem[] = [

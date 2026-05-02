@@ -3,6 +3,8 @@ import {
   runDraftGeneratePipeline,
   runIngestPipeline,
   runPublishPipeline,
+  runQueueRewritePipeline,
+  runQueueTriagePipeline,
   runReviewGatePipeline,
 } from "@/lib/content-ops/pipeline-runner";
 import {
@@ -19,9 +21,13 @@ type ExecuteContentOpsRunParams = {
   metadata?: Record<string, unknown>;
 };
 
-function resolvePersistedRunType(runType: ContentOpsRunType): "ingest" | "draft_generate" | "review_gate" | "publish" {
+function resolvePersistedRunType(
+  runType: ContentOpsRunType,
+): "ingest" | "draft_generate" | "review_gate" | "publish" {
   // Backward-compatible persistence until migration 050 is applied in all environments.
   if (runType === "publish_retry_failed") return "publish";
+  if (runType === "queue_triage") return "review_gate";
+  if (runType === "queue_rewrite") return "review_gate";
   return runType;
 }
 
@@ -89,6 +95,10 @@ export async function executeContentOpsRun(
       metadata = await runDraftGeneratePipeline(runRow.id);
     } else if (params.runType === "review_gate") {
       metadata = await runReviewGatePipeline(runRow.id);
+    } else if (params.runType === "queue_triage") {
+      metadata = await runQueueTriagePipeline(runRow.id);
+    } else if (params.runType === "queue_rewrite") {
+      metadata = await runQueueRewritePipeline(runRow.id);
     } else if (params.runType === "publish") {
       metadata = await runPublishPipeline();
     } else if (params.runType === "publish_retry_failed") {

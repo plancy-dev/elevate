@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import {
+  CONTENT_OPS_EXECUTOR_POLICY,
   CONTENT_OPS_RUN_SEQUENCE,
   CONTENT_OPS_RUNTIME,
+  type ContentOpsAutomationSource,
   type ContentOpsRunType,
   resolveRuntimeMismatchRule,
 } from "@/lib/content-ops/automation-config";
@@ -14,15 +16,29 @@ import {
 
 type AutomationRunRequest = {
   runType?: ContentOpsRunType;
-  scenario?: "daily_generation" | "publish_window" | "retry_window" | "full_sequence";
-  source?: "cursor" | "vercel-cron";
+  scenario?:
+    | "daily_generation"
+    | "publish_window"
+    | "retry_window"
+    | "queue_review_window"
+    | "full_sequence";
+  source?: ContentOpsAutomationSource;
 };
+
+function toPersistedRunType(runType: ContentOpsRunType): "ingest" | "draft_generate" | "review_gate" | "publish" {
+  if (runType === "publish_retry_failed") return "publish";
+  if (runType === "queue_triage") return "review_gate";
+  if (runType === "queue_rewrite") return "review_gate";
+  return runType;
+}
 
 function isValidRunType(value: unknown): value is ContentOpsRunType {
   return (
     value === "ingest" ||
     value === "draft_generate" ||
     value === "review_gate" ||
+    value === "queue_triage" ||
+    value === "queue_rewrite" ||
     value === "publish" ||
     value === "publish_retry_failed"
   );
@@ -40,12 +56,15 @@ function resolveScenarioSequence(
   if (scenario === "retry_window") {
     return ["publish_retry_failed"];
   }
+  if (scenario === "queue_review_window") {
+    return ["queue_triage", "queue_rewrite", "review_gate"];
+  }
   return CONTENT_OPS_RUN_SEQUENCE;
 }
 
 async function recordRuntimeMismatchAlert(params: {
   triggerType: "api" | "scheduled";
-  source: "cursor" | "vercel-cron";
+  source: ContentOpsAutomationSource;
   runType?: ContentOpsRunType;
   scenario?: AutomationRunRequest["scenario"];
 }) {
@@ -65,11 +84,12 @@ async function recordRuntimeMismatchAlert(params: {
     metadata: {
       source: params.source,
       runtime: CONTENT_OPS_RUNTIME,
+      executor_policy: CONTENT_OPS_EXECUTOR_POLICY,
       scenario: params.scenario ?? "single",
     },
   } as const;
   await admin.from("content_runs").insert({
-    run_type: params.runType ?? "automation_runtime_guard",
+    run_type: params.runType ? toPersistedRunType(params.runType) : "automation_runtime_guard",
     status: "failed",
     trigger_type: params.triggerType,
     started_at: new Date().toISOString(),
@@ -78,6 +98,7 @@ async function recordRuntimeMismatchAlert(params: {
     metadata: {
       automation_source: params.source,
       runtime: CONTENT_OPS_RUNTIME,
+      executor_policy: CONTENT_OPS_EXECUTOR_POLICY,
       scenario: params.scenario ?? "single",
       alert: alertPayload,
     },
@@ -129,6 +150,7 @@ export async function POST(req: Request) {
         metadata: {
           automation_source: source,
           runtime: CONTENT_OPS_RUNTIME,
+          executor_policy: CONTENT_OPS_EXECUTOR_POLICY,
         },
       });
       return NextResponse.json({ ok: true, mode: "single", result });
@@ -142,6 +164,7 @@ export async function POST(req: Request) {
       metadata: {
         automation_source: source,
         runtime: CONTENT_OPS_RUNTIME,
+        executor_policy: CONTENT_OPS_EXECUTOR_POLICY,
         scenario,
       },
     });
@@ -180,6 +203,7 @@ export async function GET(req: Request) {
         scenarioRaw === "daily_generation" ||
         scenarioRaw === "publish_window" ||
         scenarioRaw === "retry_window" ||
+        scenarioRaw === "queue_review_window" ||
         scenarioRaw === "full_sequence"
           ? scenarioRaw
           : "full_sequence",
@@ -203,6 +227,7 @@ export async function GET(req: Request) {
         metadata: {
           automation_source: source,
           runtime: CONTENT_OPS_RUNTIME,
+          executor_policy: CONTENT_OPS_EXECUTOR_POLICY,
         },
       });
       return NextResponse.json({ ok: true, mode: "single", result });
@@ -212,6 +237,7 @@ export async function GET(req: Request) {
       scenarioRaw === "daily_generation" ||
       scenarioRaw === "publish_window" ||
       scenarioRaw === "retry_window" ||
+      scenarioRaw === "queue_review_window" ||
       scenarioRaw === "full_sequence"
         ? scenarioRaw
         : "full_sequence"
@@ -223,6 +249,7 @@ export async function GET(req: Request) {
       metadata: {
         automation_source: source,
         runtime: CONTENT_OPS_RUNTIME,
+        executor_policy: CONTENT_OPS_EXECUTOR_POLICY,
         scenario,
       },
     });
