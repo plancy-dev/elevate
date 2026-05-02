@@ -19,6 +19,13 @@ export type BlogPostMeta = {
 };
 
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const SAMPLE_SLUG_RE = /^sample-/;
+
+function shouldExcludeSlug(slug: string): boolean {
+  if (!SAMPLE_SLUG_RE.test(slug)) return false;
+  const env = process.env.VERCEL_ENV ?? process.env.NODE_ENV;
+  return env === "production";
+}
 
 /** Public URL path only — blocks `..` and protocol-relative URLs. */
 function parseOgImage(value: unknown): string | undefined {
@@ -71,6 +78,7 @@ function listMdxFiles(dir: string): string[] {
 /**
  * Blog posts live under `content/blog/<locale>/<slug>.mdx` (e.g. `content/blog/en/the-prompt-is-your-product-surface.mdx`).
  * Each locale has its own files—no fallback to English at runtime.
+ * Sample posts (slug starting with "sample-") are excluded in production builds.
  */
 export function getAllPostMetaForLocale(locale: string): BlogPostMeta[] {
   if (!ALLOWED_LOCALES.has(locale)) return [];
@@ -78,6 +86,7 @@ export function getAllPostMetaForLocale(locale: string): BlogPostMeta[] {
   const posts: BlogPostMeta[] = [];
   for (const file of listMdxFiles(dir)) {
     const slug = file.replace(/\.mdx$/i, "");
+    if (shouldExcludeSlug(slug)) continue;
     const raw = fs.readFileSync(path.join(dir, file), "utf8");
     const { data } = matter(raw);
     const meta = parseFrontmatter(data as Record<string, unknown>, slug);
@@ -92,6 +101,7 @@ export function getPostBySlug(
   locale: string,
 ): { meta: BlogPostMeta; body: string } | null {
   if (!SLUG_RE.test(slug) || !ALLOWED_LOCALES.has(locale)) return null;
+  if (shouldExcludeSlug(slug)) return null;
   const filePath = path.join(BLOG_ROOT, locale, `${slug}.mdx`);
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf8");
