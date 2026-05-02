@@ -3,8 +3,10 @@ import {
   CONTENT_OPS_RUN_SEQUENCE,
   CONTENT_OPS_RUNTIME,
   type ContentOpsRunType,
-  isRuntimeEnabledForSource,
+  resolveRuntimeMismatchRule,
 } from "@/lib/content-ops/automation-config";
+import { emitStructuredContentOpsAlert } from "@/lib/content-ops/alerting";
+import { createAdminClient } from "@/lib/supabase/admin";
 import {
   executeContentOpsRun,
   runContentOpsScenario,
@@ -41,6 +43,48 @@ function resolveScenarioSequence(
   return CONTENT_OPS_RUN_SEQUENCE;
 }
 
+async function recordRuntimeMismatchAlert(params: {
+  triggerType: "api" | "scheduled";
+  source: "cursor" | "vercel-cron";
+  runType?: ContentOpsRunType;
+  scenario?: AutomationRunRequest["scenario"];
+}) {
+  const mismatch = resolveRuntimeMismatchRule(params.source);
+  if (!mismatch.mismatched) return;
+  const admin = createAdminClient();
+  const alertPayload = {
+    run_type: params.runType ?? "automation_runtime_guard",
+    reason: mismatch.reason,
+    next_action: mismatch.nextAction,
+    operator_links: {
+      runs: "/admin/runs",
+      content_quality: "/admin/content-quality",
+      morning_ops: "/admin/morning-ops",
+    },
+    triggeredAt: new Date().toISOString(),
+    metadata: {
+      source: params.source,
+      runtime: CONTENT_OPS_RUNTIME,
+      scenario: params.scenario ?? "single",
+    },
+  } as const;
+  await admin.from("content_runs").insert({
+    run_type: params.runType ?? "automation_runtime_guard",
+    status: "failed",
+    trigger_type: params.triggerType,
+    started_at: new Date().toISOString(),
+    ended_at: new Date().toISOString(),
+    error_summary: mismatch.reason,
+    metadata: {
+      automation_source: params.source,
+      runtime: CONTENT_OPS_RUNTIME,
+      scenario: params.scenario ?? "single",
+      alert: alertPayload,
+    },
+  });
+  await emitStructuredContentOpsAlert(alertPayload);
+}
+
 export async function POST(req: Request) {
   const automationToken = process.env.CONTENT_OPS_AUTOMATION_TOKEN?.trim();
   if (!automationToken) {
@@ -57,11 +101,19 @@ export async function POST(req: Request) {
 
   const body = (await req.json().catch(() => ({}))) as AutomationRunRequest;
   const source = body.source ?? "cursor";
-  if (!isRuntimeEnabledForSource(source)) {
+  const mismatch = resolveRuntimeMismatchRule(source);
+  if (mismatch.mismatched) {
+    await recordRuntimeMismatchAlert({
+      triggerType: "api",
+      source,
+      runType: body.runType,
+      scenario: body.scenario,
+    });
     return NextResponse.json({
       ok: true,
       skipped: true,
-      reason: `runtime_mismatch:${CONTENT_OPS_RUNTIME}`,
+      reason: mismatch.reason,
+      next_action: mismatch.nextAction,
     });
   }
 
@@ -118,11 +170,25 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
-  if (!isRuntimeEnabledForSource(source)) {
+  const mismatch = resolveRuntimeMismatchRule(source);
+  if (mismatch.mismatched) {
+    await recordRuntimeMismatchAlert({
+      triggerType: "scheduled",
+      source,
+      runType: isValidRunType(runTypeRaw) ? runTypeRaw : undefined,
+      scenario:
+        scenarioRaw === "daily_generation" ||
+        scenarioRaw === "publish_window" ||
+        scenarioRaw === "retry_window" ||
+        scenarioRaw === "full_sequence"
+          ? scenarioRaw
+          : "full_sequence",
+    });
     return NextResponse.json({
       ok: true,
       skipped: true,
-      reason: `runtime_mismatch:${CONTENT_OPS_RUNTIME}`,
+      reason: mismatch.reason,
+      next_action: mismatch.nextAction,
     });
   }
 

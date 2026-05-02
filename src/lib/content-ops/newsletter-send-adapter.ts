@@ -10,6 +10,44 @@ type NewsletterLocaleTemplate = {
   heading: string;
 };
 
+export type NewsletterRetryPolicyAction = "immediate" | "delayed" | "stop";
+export type NewsletterRetryPolicyKey =
+  | "policy.rate_limit.delayed"
+  | "policy.transient.delayed"
+  | "policy.config.stop"
+  | "policy.no_subscribers.stop"
+  | "policy.exhausted.stop"
+  | "policy.frequency_window.delayed";
+
+export function resolveNewsletterRetryPolicy(reason: string): {
+  policyKey: NewsletterRetryPolicyKey;
+  action: NewsletterRetryPolicyAction;
+  delayMinutes: number | null;
+} {
+  const normalized = reason.toLowerCase();
+  if (normalized.includes("retry_exhausted")) {
+    return { policyKey: "policy.exhausted.stop", action: "stop", delayMinutes: null };
+  }
+  if (normalized.includes("newsletter_no_subscribers")) {
+    return { policyKey: "policy.no_subscribers.stop", action: "stop", delayMinutes: null };
+  }
+  if (normalized.includes("frequency_window_deferred")) {
+    return { policyKey: "policy.frequency_window.delayed", action: "delayed", delayMinutes: 1440 };
+  }
+  if (
+    normalized.includes("resend_not_configured") ||
+    normalized.includes("resend_from_invalid_format") ||
+    normalized.includes("resend_sandbox_sender") ||
+    normalized.includes("resend_from_domain_mismatch")
+  ) {
+    return { policyKey: "policy.config.stop", action: "stop", delayMinutes: null };
+  }
+  if (normalized.includes("too many requests") || normalized.includes("rate limit")) {
+    return { policyKey: "policy.rate_limit.delayed", action: "delayed", delayMinutes: 30 };
+  }
+  return { policyKey: "policy.transient.delayed", action: "delayed", delayMinutes: 30 };
+}
+
 const LOCALE_TEMPLATES: Record<string, NewsletterLocaleTemplate> = {
   en: {
     preheader: "Daily AI signal for operators",

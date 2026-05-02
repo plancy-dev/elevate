@@ -1,7 +1,10 @@
 import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { publishContentItemToBlog } from "@/lib/content-ops/blog-publish-adapter";
-import { sendNewsletterEmail } from "@/lib/content-ops/newsletter-send-adapter";
+import {
+  resolveNewsletterRetryPolicy,
+  sendNewsletterEmail,
+} from "@/lib/content-ops/newsletter-send-adapter";
 import {
   BLOG_TEMPLATE_VERSION,
   NEWSLETTER_TEMPLATE_VERSION,
@@ -9,6 +12,7 @@ import {
 import { buildDraftsFromActivePacks } from "@/lib/content-ops/packs/pack-registry";
 import { evaluateReviewGate } from "@/lib/content-ops/review-gate";
 import type { Database } from "@/types/database.types";
+import type { Json } from "@/types/database.types";
 
 type ContentItemRow = Database["public"]["Tables"]["content_items"]["Row"];
 type ContentSourceRow = Database["public"]["Tables"]["content_sources"]["Row"];
@@ -52,6 +56,8 @@ type PublicationAttempt = {
   nextRetryAt: string | null;
 };
 
+type NewsletterPublishOutcome = "sent" | "failed" | "deferred";
+
 function hashSnippet(input: string): string {
   return createHash("sha256").update(input).digest("hex");
 }
@@ -85,6 +91,46 @@ function isResendRateLimitError(reason: string): boolean {
 
 function addMinutesIso(date: Date, minutes: number): string {
   return new Date(date.getTime() + minutes * 60 * 1000).toISOString();
+}
+
+function asObject(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  return value as Record<string, unknown>;
+}
+
+function resolveSubscriberFrequencyWindowMs(frequencyPref: string): number | null {
+  if (frequencyPref === "daily") return 24 * 60 * 60 * 1000;
+  if (frequencyPref === "weekly") return 7 * 24 * 60 * 60 * 1000;
+  return null;
+}
+
+function readLastNewsletterSentAtMs(subscriber: SubscriberRow): number | null {
+  const root = asObject(subscriber.metadata);
+  const newsletter = asObject(root?.newsletter);
+  const lastSentAt = newsletter?.last_sent_at;
+  if (typeof lastSentAt !== "string" || !lastSentAt.trim()) return null;
+  const parsed = Date.parse(lastSentAt);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function shouldDeferByFrequencyWindow(subscriber: SubscriberRow, nowMs: number): boolean {
+  const windowMs = resolveSubscriberFrequencyWindowMs(subscriber.frequency_pref);
+  if (!windowMs) return false;
+  const lastSentAtMs = readLastNewsletterSentAtMs(subscriber);
+  if (!lastSentAtMs) return false;
+  return nowMs - lastSentAtMs < windowMs;
+}
+
+function withLastNewsletterSentAt(metadata: unknown, sentAtIso: string): Record<string, unknown> {
+  const root = asObject(metadata) ?? {};
+  const newsletter = asObject(root.newsletter) ?? {};
+  return {
+    ...root,
+    newsletter: {
+      ...newsletter,
+      last_sent_at: sentAtIso,
+    },
+  };
 }
 
 function clampInt(value: number, min: number, max: number): number {
@@ -189,11 +235,13 @@ function buildRetryMetadata(params: {
   attemptCount: number;
   nowIso: string;
   maxAttempts?: number;
+  retryDelayMinutes?: number;
 }): { max_attempts: number; next_retry_at: string | null } {
   const maxAttempts = params.maxAttempts ?? MAX_PUBLICATION_ATTEMPTS;
+  const retryDelayMinutes = params.retryDelayMinutes ?? RETRY_DELAY_MINUTES;
   const nextRetryAt =
     params.attemptCount < maxAttempts
-      ? addMinutesIso(new Date(params.nowIso), RETRY_DELAY_MINUTES)
+      ? addMinutesIso(new Date(params.nowIso), retryDelayMinutes)
       : null;
   return {
     max_attempts: maxAttempts,
@@ -445,6 +493,10 @@ export async function runDraftGeneratePipeline(runId: string): Promise<{
           pack_version: generated.resolved.activeVersion,
           pack_versions: generated.resolved.versions,
           topic_strategy_id: generated.resolved.topic.id,
+          autotune: {
+            strategy: generated.resolved.autotune.strategy,
+            selection: generated.resolved.autotune.selection,
+          },
           source_policy: {
             min_trust_weight: DRAFT_MIN_TRUST_WEIGHT,
             source_bullets: latestMaps.length,
@@ -474,6 +526,10 @@ export async function runDraftGeneratePipeline(runId: string): Promise<{
           pack_version: generated.resolved.activeVersion,
           pack_versions: generated.resolved.versions,
           topic_strategy_id: generated.resolved.topic.id,
+          autotune: {
+            strategy: generated.resolved.autotune.strategy,
+            selection: generated.resolved.autotune.selection,
+          },
           source_policy: {
             min_trust_weight: DRAFT_MIN_TRUST_WEIGHT,
             source_bullets: latestMaps.length,
@@ -596,9 +652,11 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
   ok: boolean;
   sentCount: number;
   failedCount: number;
+  deferredCount: number;
   failedReasons: string[];
   attemptCount: number;
   skipped: boolean;
+  outcome: NewsletterPublishOutcome;
 }> {
   const admin = createAdminClient();
   const nowIso = new Date().toISOString();
@@ -613,9 +671,11 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
       ok: false,
       sentCount: 0,
       failedCount: 0,
+      deferredCount: 0,
       failedReasons: ["retry_exhausted"],
       attemptCount: attempt.attemptCount,
       skipped: true,
+      outcome: "failed",
     };
   }
 
@@ -628,10 +688,16 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
 
   let sentCount = 0;
   let failedCount = 0;
+  let deferredCount = 0;
   const failedReasons: string[] = [];
   if (!subscribers || subscribers.length === 0) {
     const classified = "newsletter_no_subscribers";
-    const retry = buildRetryMetadata({ attemptCount: attempt.attemptCount, nowIso });
+    const policy = resolveNewsletterRetryPolicy(classified);
+    const retry = buildRetryMetadata({
+      attemptCount: attempt.attemptCount,
+      nowIso,
+      retryDelayMinutes: policy.delayMinutes ?? RETRY_DELAY_MINUTES,
+    });
     await admin.from("content_publications").insert({
       content_item_id: item.id,
       channel: "email",
@@ -644,6 +710,8 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
         sent_count: 0,
         failed_count: 1,
         failed_reasons: [classified],
+        retry_policy_key: policy.policyKey,
+        retry_action: policy.action,
         template_version: NEWSLETTER_TEMPLATE_VERSION,
         retry,
       },
@@ -652,15 +720,24 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
       ok: false,
       sentCount,
       failedCount: 1,
+      deferredCount,
       failedReasons: [classified],
       attemptCount: attempt.attemptCount,
       skipped: false,
+      outcome: "failed",
     };
   }
 
   const subscriberRows = (subscribers ?? []) as SubscriberRow[];
+  const nowMs = Date.now();
+  const nowIsoFromMs = new Date(nowMs).toISOString();
   let previousSendAt: number | null = null;
   for (const subscriber of subscriberRows) {
+    if (shouldDeferByFrequencyWindow(subscriber, nowMs)) {
+      deferredCount += 1;
+      continue;
+    }
+
     if (previousSendAt) {
       const elapsed = Date.now() - previousSendAt;
       if (elapsed < RESEND_MIN_SEND_INTERVAL_MS) {
@@ -688,6 +765,13 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
 
     if (send.ok) {
       sentCount += 1;
+      await admin
+        .from("newsletter_subscribers")
+        .update({
+          metadata: withLastNewsletterSentAt(subscriber.metadata, nowIsoFromMs) as Json,
+          updated_at: nowIsoFromMs,
+        })
+        .eq("id", subscriber.id);
     } else {
       const classified = classifyFailureReason(send.error);
       failedCount += 1;
@@ -700,38 +784,62 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
   }
 
   const dedupedReasons = dedupeReasons(failedReasons);
-  const publicationStatus = failedCount > 0 ? "failed" : "sent";
+  const publicationStatus: NewsletterPublishOutcome =
+    failedCount > 0 ? "failed" : sentCount > 0 ? "sent" : "deferred";
+  const consumedAttemptCount = publicationStatus === "deferred" ? retryState.previousAttemptCount : attempt.attemptCount;
+  const dominantReason =
+    publicationStatus === "deferred"
+      ? "frequency_window_deferred"
+      : dedupedReasons[0] ?? "publish_failed";
+  const policy = resolveNewsletterRetryPolicy(dominantReason);
   const retry =
     failedCount > 0
-      ? buildRetryMetadata({ attemptCount: attempt.attemptCount, nowIso })
+      ? buildRetryMetadata({
+          attemptCount: consumedAttemptCount,
+          nowIso,
+          retryDelayMinutes: policy.delayMinutes ?? RETRY_DELAY_MINUTES,
+        })
       : { max_attempts: MAX_PUBLICATION_ATTEMPTS, next_retry_at: null };
+  const deferredReasons =
+    deferredCount > 0
+      ? ["frequency_window_deferred"]
+      : [];
   await admin.from("content_publications").insert({
     content_item_id: item.id,
     channel: "email",
     status: publicationStatus,
     provider: "resend",
-    attempt_count: attempt.attemptCount,
+    attempt_count: consumedAttemptCount,
     last_error:
       failedCount > 0
         ? `newsletter_send_failed:${dedupedReasons.slice(0, 3).join("|")}`
-        : null,
+        : publicationStatus === "deferred"
+          ? "frequency_window_deferred"
+          : null,
     processed_at: nowIso,
     metadata: {
       sent_count: sentCount,
       failed_count: failedCount,
+      deferred_count: deferredCount,
       failed_reasons: dedupedReasons.slice(0, 10),
+      deferred_reasons: deferredReasons,
+      retry_policy_key: policy.policyKey,
+      retry_action: policy.action,
+      publish_outcome: publicationStatus,
       template_version: NEWSLETTER_TEMPLATE_VERSION,
       retry,
     },
   });
 
   return {
-    ok: failedCount === 0,
+    ok: publicationStatus === "sent",
     sentCount,
     failedCount,
+    deferredCount,
     failedReasons: dedupedReasons,
-    attemptCount: attempt.attemptCount,
+    attemptCount: consumedAttemptCount,
     skipped: false,
+    outcome: publicationStatus,
   };
 }
 
@@ -804,6 +912,7 @@ export async function runPublishPipeline(params?: {
   processedCount: number;
   failedCount: number;
   sentCount: number;
+  deferredCount: number;
   failureMessages: string[];
 }> {
   const admin = createAdminClient();
@@ -829,6 +938,7 @@ export async function runPublishPipeline(params?: {
   let processedCount = 0;
   let failedCount = 0;
   let sentCount = 0;
+  let deferredCount = 0;
   const failureMessages: string[] = [];
   const now = Date.now();
 
@@ -866,35 +976,47 @@ export async function runPublishPipeline(params?: {
     if (newsletterResult?.ok) {
       sentCount += newsletterResult.sentCount;
     }
+    if (newsletterResult?.deferredCount) {
+      deferredCount += newsletterResult.deferredCount;
+    }
+    const isDeferredOnlyNewsletter =
+      item.type === "newsletter" &&
+      newsletterResult?.outcome === "deferred";
     if (!success) {
       if (blogResult && !blogResult.ok) {
         failureMessages.push(`[blog:${item.id}] ${classifyFailureReason(blogResult.error ?? "publish_failed")}`);
       }
       if (newsletterResult && !newsletterResult.ok) {
-        const classified = dedupeReasons(newsletterResult.failedReasons);
-        failureMessages.push(
-          `[newsletter:${item.id}] ${classified.slice(0, 3).join("|") || "send_failed"}`,
-        );
+        if (newsletterResult.outcome === "deferred") {
+          failureMessages.push(`[newsletter:${item.id}] frequency_window_deferred`);
+        } else {
+          const classified = dedupeReasons(newsletterResult.failedReasons);
+          failureMessages.push(
+            `[newsletter:${item.id}] ${classified.slice(0, 3).join("|") || "send_failed"}`,
+          );
+        }
       }
     }
 
     await admin
       .from("content_items")
       .update({
-        status: success ? "published" : "send_failed",
-        published_at: success ? new Date().toISOString() : item.published_at,
+        status: isDeferredOnlyNewsletter ? "scheduled" : success ? "published" : "send_failed",
+        scheduled_at: isDeferredOnlyNewsletter ? new Date().toISOString() : item.scheduled_at,
+        published_at: success && !isDeferredOnlyNewsletter ? new Date().toISOString() : item.published_at,
         updated_at: new Date().toISOString(),
       })
       .eq("id", item.id);
 
     processedCount += 1;
-    if (!success) failedCount += 1;
+    if (!success && !isDeferredOnlyNewsletter) failedCount += 1;
   }
 
   return {
     processedCount,
     failedCount,
     sentCount,
+    deferredCount,
     failureMessages: failureMessages.slice(0, 20),
   };
 }

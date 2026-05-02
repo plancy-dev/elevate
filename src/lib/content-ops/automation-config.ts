@@ -33,3 +33,22 @@ export function isRuntimeEnabledForSource(source: "cursor" | "vercel-cron"): boo
   }
   return source === "vercel-cron";
 }
+
+export function resolveRuntimeMismatchRule(source: "cursor" | "vercel-cron"): {
+  mismatched: boolean;
+  reason: string;
+  nextAction: string;
+} {
+  const enabled = isRuntimeEnabledForSource(source);
+  if (enabled) {
+    return { mismatched: false, reason: "runtime_match", nextAction: "continue" };
+  }
+  return {
+    mismatched: true,
+    reason: `runtime_secret_mismatch:${CONTENT_OPS_RUNTIME}:source=${source}`,
+    nextAction:
+      CONTENT_OPS_RUNTIME === "cursor"
+        ? "Use source=cursor and verify CONTENT_OPS_AUTOMATION_RUNTIME/caller token alignment."
+        : "Use source=vercel-cron and verify cron token/header/runtime alignment.",
+  };
+}
