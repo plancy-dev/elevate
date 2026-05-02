@@ -46,7 +46,10 @@ Sample posts (slugs starting with `sample-`) are **QA/staging fixtures** for tes
 
 - **Are excluded from production** (`VERCEL_ENV=production`) in all surfaces: `/blog` index, sitemap, RSS, OG meta, direct URL access (404).
 - **Remain accessible in preview/staging** environments (`VERCEL_ENV=preview` or `development`) for regression testing.
-- **Are protected by CI gate** (`pnpm blog:sample-production-gate`) that fails production builds if sample posts are present, preventing accidental deployment.
+- **Are protected by Vitest unit tests** (`tests/unit/blog-sample-production-gate.test.ts`) that verify:
+  - Production filtering excludes all `sample-*` posts across all locales
+  - Preview/staging environments keep sample posts accessible
+  - Runs automatically in CI via `pnpm test` (part of `pnpm verify`)
 
 **Implementation:** Environment-aware filtering in `src/lib/blog/posts.ts` (`getAllPostMetaForLocale`, `getPostBySlug`) checks `process.env.VERCEL_ENV` and excludes `sample-*` slugs when `production`.
 
