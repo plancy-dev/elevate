@@ -3,9 +3,14 @@ import type { Metadata } from "next";
 import { ClipboardList } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import {
+  listAdminContentQueue,
+  listAdminContentRuns,
+} from "@/actions/admin-content-ops";
+import {
   MorningOpsPlaybookClient,
   type MorningOpsTemplate,
 } from "@/components/admin/morning-ops-playbook-client";
+import { buildContentQualitySnapshot } from "@/lib/content-ops/quality-monitor";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.adminMorningOps");
@@ -14,6 +19,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AdminMorningOpsPage() {
   const t = await getTranslations("Dashboard.adminMorningOps");
+  const queueRes = await listAdminContentQueue({ type: "all", status: "all" });
+  const runsRes = await listAdminContentRuns();
+  const snapshot = buildContentQualitySnapshot({
+    items: queueRes.ok ? queueRes.rows : [],
+    runs: runsRes.ok ? runsRes.rows : [],
+    windowDays: 7,
+    freshWindowHours: 24,
+  });
 
   const quickLinks = [
     { href: "/admin/runs", label: t("quickLinks.runs") },
@@ -140,6 +153,25 @@ export default async function AdminMorningOpsPage() {
             </li>
           </ul>
         </section>
+
+        {snapshot.threeDayRegression.triggered ? (
+          <section className="space-y-2 border border-amber-300 bg-amber-50 p-4">
+            <h2 className="text-xs font-medium uppercase tracking-wide text-amber-800">
+              {t("escalation.title")}
+            </h2>
+            <p className="text-xs leading-relaxed text-amber-900">
+              {t("escalation.metric", {
+                metric:
+                  snapshot.threeDayRegression.metric === "review_required"
+                    ? t("escalation.metricReviewRequired")
+                    : t("escalation.metricSendFailed"),
+              })}
+            </p>
+            <p className="text-xs leading-relaxed text-amber-900">
+              {snapshot.threeDayRegression.nextAction ?? t("escalation.defaultAction")}
+            </p>
+          </section>
+        ) : null}
 
         <MorningOpsPlaybookClient
           heading={t("templates.title")}
