@@ -1253,6 +1253,7 @@
         "created": "Created",
         "sent": "Sent",
         "failed": "Failed",
+        "deferred": "Deferred",
         "topFailureReason": "Top failure reason",
         "reviewQueue": "Review queue",
         "mustReviewNow": "Must-review now",
@@ -1384,14 +1385,17 @@
       "metrics": {
         "generated7d": "7d generated",
         "published7d": "7d published",
+        "deferred7d": "7d deferred",
         "reviewRequired7d": "7d review_required",
         "sendFailed7d": "7d send_failed",
         "avgQuality": "avg quality score",
+        "citationCoverage7d": "7d citation coverage",
         "generated24h": "24h generated",
         "reviewed24h": "24h reviewed",
         "reviewRequired24h": "24h review_required",
         "avgQuality24h": "24h avg quality",
-        "minQuality24h": "24h min quality"
+        "minQuality24h": "24h min quality",
+        "citationCoverage24h": "24h citation coverage"
       },
       "freshNote": {
         "prefix": "Fresh 24h metrics aggregate only newly generated items with",
@@ -1401,7 +1405,20 @@
         "topQualityIssues7d": "Top Quality Issues (7d)",
         "topPublishFailures7d": "Top Publish Failures (7d)",
         "topQualityIssuesFresh24h": "Top Quality Issues (Fresh 24h only)",
+        "strategyScoreboard": "Autotune Strategy Scoreboard",
         "improvementFocus": "Improvement Focus (Auto Suggestions)"
+      },
+      "scoreboard": {
+        "winner": "Winner strategy: {strategy}",
+        "winnerNone": "Winner strategy: not enough tagged samples yet",
+        "criteria": "Winner rule: highest avg quality, then lower review_required ratio, then larger sample.",
+        "sampleWarning": "Warning: at least {min} samples per strategy are recommended for stable comparison.",
+        "columns": {
+          "strategy": "Strategy",
+          "sampleCount": "Sample",
+          "avgQuality": "Avg quality",
+          "reviewRequiredRatio": "Review required ratio"
+        }
       },
       "empty": {
         "topQualityIssues7d": "No quality issues detected in this window.",
@@ -1431,6 +1448,11 @@
         "publishing": "Publishing",
         "published": "Published",
         "sendFailed": "Send failed"
+      },
+      "strategy": {
+        "noveltyBoost": "Novelty boost",
+        "overcopyMitigate": "Overcopy mitigate",
+        "balanced": "Balanced"
       }
     },
     "adminMorningOps": {
@@ -1484,6 +1506,13 @@
           "title": "Template C - Failure response",
           "body": "Failure class detected: <fill_this>.\\nKeep automation in safe mode and run root-cause fix first.\\nThen execute retry window only and provide:\\n- root cause\\n- fix diff summary\\n- retry result\\n- recurrence prevention checklist"
         }
+      },
+      "escalation": {
+        "title": "Three-day regression escalation",
+        "metric": "Detected 3-day worsening on: {metric}",
+        "metricReviewRequired": "review_required",
+        "metricSendFailed": "send_failed",
+        "defaultAction": "Open /admin/runs and /admin/content-quality, then execute the incident template."
       },
       "monitoring": {
         "title": "How to confirm service is improving",

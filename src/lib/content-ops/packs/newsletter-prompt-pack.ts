@@ -1,10 +1,31 @@
 import type { TopicStrategyEntry } from "@/lib/content-ops/packs/topic-strategy-pack";
+import type { AutotuneStrategy } from "@/lib/content-ops/packs/pack-registry";
 
-export const NEWSLETTER_PROMPT_PACK_VERSION = "v1.2.1";
+export const NEWSLETTER_PROMPT_PACK_VERSION = "v1.3.0";
+
+function strategyGuide(strategy: AutotuneStrategy): string[] {
+  if (strategy === "novelty_boost") {
+    return [
+      "- Prioritize new signal combinations and avoid repeating last cycle's framing.",
+      "- Add one counter-intuitive implication backed by source evidence.",
+    ];
+  }
+  if (strategy === "overcopy_mitigate") {
+    return [
+      "- Rewrite source-derived claims into original operator guidance language.",
+      "- Keep direct source phrasing minimal and explicitly add interpretation.",
+    ];
+  }
+  return [
+    "- Keep novelty and reliability balanced with one concrete outcome target.",
+    "- Prefer concise evidence-backed claims over broad speculation.",
+  ];
+}
 
 export function buildNewsletterDraftFromPack(params: {
   topic: TopicStrategyEntry;
   sourceBullets: string[];
+  autotuneStrategy: AutotuneStrategy;
 }): { title: string; summary: string; bodyMarkdown: string } {
   const today = new Date().toISOString().slice(0, 10);
   const title = `Daily AI Brief: ${params.topic.titlePattern} (${today})`;
@@ -34,6 +55,10 @@ export function buildNewsletterDraftFromPack(params: {
     params.topic.evidencePattern,
     "- Add one quantitative cue (count, rate, delta, or time window).",
     "- Add one source-backed causal explanation, not just correlation.",
+    "",
+    "## Autotune strategy",
+    `- Active strategy: ${params.autotuneStrategy}`,
+    ...strategyGuide(params.autotuneStrategy),
     "",
     "## What changed in the last 24h",
     sourceSection,

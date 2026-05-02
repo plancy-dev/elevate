@@ -1245,6 +1245,7 @@
         "created": "建立",
         "sent": "發送",
         "failed": "失敗",
+        "deferred": "延後",
         "topFailureReason": "主要失敗原因",
         "reviewQueue": "審核佇列",
         "mustReviewNow": "需立即審核",
@@ -1376,14 +1377,17 @@
       "metrics": {
         "generated7d": "7天生成",
         "published7d": "7天發佈",
+        "deferred7d": "7天延後",
         "reviewRequired7d": "7天 review_required",
         "sendFailed7d": "7天 send_failed",
         "avgQuality": "平均品質分數",
+        "citationCoverage7d": "7天 citation coverage",
         "generated24h": "24小時生成",
         "reviewed24h": "24小時已審核",
         "reviewRequired24h": "24小時 review_required",
         "avgQuality24h": "24小時平均品質",
-        "minQuality24h": "24小時最低品質"
+        "minQuality24h": "24小時最低品質",
+        "citationCoverage24h": "24小時 citation coverage"
       },
       "freshNote": {
         "prefix": "Fresh 24h 指標僅統計",
@@ -1393,7 +1397,20 @@
         "topQualityIssues7d": "主要品質問題（7天）",
         "topPublishFailures7d": "主要發佈失敗（7天）",
         "topQualityIssuesFresh24h": "主要品質問題（僅 Fresh 24h）",
+        "strategyScoreboard": "Autotune 策略計分板",
         "improvementFocus": "改善重點（自動建議）"
+      },
+      "scoreboard": {
+        "winner": "勝出策略：{strategy}",
+        "winnerNone": "勝出策略：標記樣本仍不足",
+        "criteria": "勝出規則：先看平均品質；若同分則 review_required 比率較低者優先；再比較樣本數。",
+        "sampleWarning": "警告：建議每個策略至少有 {min} 筆樣本，以利穩定比較。",
+        "columns": {
+          "strategy": "策略",
+          "sampleCount": "樣本",
+          "avgQuality": "平均品質",
+          "reviewRequiredRatio": "review_required 比率"
+        }
       },
       "empty": {
         "topQualityIssues7d": "此時間窗內未偵測到品質問題。",
@@ -1423,6 +1440,11 @@
         "publishing": "發佈中",
         "published": "已發佈",
         "sendFailed": "發送失敗"
+      },
+      "strategy": {
+        "noveltyBoost": "新穎性強化",
+        "overcopyMitigate": "過度拷貝抑制",
+        "balanced": "平衡型"
       }
     },
     "adminMorningOps": {
@@ -1476,6 +1498,13 @@
           "title": "Template C - Failure response",
           "body": "Failure class detected: <fill_this>.\\nKeep automation in safe mode and run root-cause fix first.\\nThen execute retry window only and provide:\\n- root cause\\n- fix diff summary\\n- retry result\\n- recurrence prevention checklist"
         }
+      },
+      "escalation": {
+        "title": "連續3天惡化升級",
+        "metric": "偵測到連續3天惡化的指標：{metric}",
+        "metricReviewRequired": "review_required",
+        "metricSendFailed": "send_failed",
+        "defaultAction": "請先檢查 /admin/runs 與 /admin/content-quality，並依 incident 模板立即處置。"
       },
       "monitoring": {
         "title": "How to confirm service is improving",

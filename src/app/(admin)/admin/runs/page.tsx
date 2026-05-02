@@ -49,6 +49,9 @@ export default async function AdminRunsPage() {
           <SummaryCard label={t("cards.created")} value={summary.createdCount} tone="neutral" />
           <SummaryCard label={t("cards.sent")} value={summary.sentCount} tone="success" />
           <SummaryCard label={t("cards.failed")} value={summary.failedCount} tone="danger" />
+          <SummaryCard label={t("cards.deferred")} value={summary.deferredCount} tone="warning" />
+        </div>
+        <div className="grid gap-2 md:grid-cols-1">
           <SummaryCard
             label={t("cards.topFailureReason")}
             value={summary.topFailureReason ?? "-"}
@@ -225,6 +228,7 @@ function getRunResult(
 
   const obj = metadata as Record<string, unknown>;
   if (numericValue(obj.failedCount) > 0) return "partial";
+  if (numericValue(obj.deferredCount) > 0) return "partial";
   if (numericValue(obj.failedSources) > 0) return "partial";
   if (arrayLength(obj.failureMessages) > 0) return "partial";
 
@@ -236,6 +240,7 @@ function getRunResult(
   ) {
     const nested = nestedResult as Record<string, unknown>;
     if (numericValue(nested.failedCount) > 0) return "partial";
+    if (numericValue(nested.deferredCount) > 0) return "partial";
     if (numericValue(nested.failedSources) > 0) return "partial";
     if (arrayLength(nested.failureMessages) > 0) return "partial";
   }
@@ -296,6 +301,8 @@ function getFailureCount(errorSummary: string | null, metadata: Json | null): nu
   const obj = metadata as Record<string, unknown>;
   const failedCount = numericValue(obj.failedCount);
   if (failedCount > 0) return failedCount;
+  const deferredCount = numericValue(obj.deferredCount);
+  if (deferredCount > 0) return deferredCount;
 
   const directMsgs = Array.isArray(obj.failureMessages) ? obj.failureMessages.length : 0;
   if (directMsgs > 0) return directMsgs;
@@ -309,6 +316,8 @@ function getFailureCount(errorSummary: string | null, metadata: Json | null): nu
     const nested = nestedResult as Record<string, unknown>;
     const nestedFailedCount = numericValue(nested.failedCount);
     if (nestedFailedCount > 0) return nestedFailedCount;
+    const nestedDeferredCount = numericValue(nested.deferredCount);
+    if (nestedDeferredCount > 0) return nestedDeferredCount;
     const nestedMsgs = Array.isArray(nested.failureMessages)
       ? nested.failureMessages.length
       : 0;
@@ -321,6 +330,7 @@ function buildRunSummary(rows: Array<{ error_summary: string | null; metadata: J
   let createdCount = 0;
   let sentCount = 0;
   let failedCount = 0;
+  let deferredCount = 0;
   const reasonCounts = new Map<string, number>();
 
   for (const row of rows.slice(0, 100)) {
@@ -328,6 +338,7 @@ function buildRunSummary(rows: Array<{ error_summary: string | null; metadata: J
     createdCount += numericValue(payload.createdItems);
     sentCount += numericValue(payload.sentCount);
     failedCount += numericValue(payload.failedCount);
+    deferredCount += numericValue(payload.deferredCount);
     for (const reason of parseFailureReasons(row.error_summary, payload.failureMessages)) {
       reasonCounts.set(reason, (reasonCounts.get(reason) ?? 0) + 1);
     }
@@ -342,7 +353,7 @@ function buildRunSummary(rows: Array<{ error_summary: string | null; metadata: J
     }
   }
 
-  return { createdCount, sentCount, failedCount, topFailureReason };
+  return { createdCount, sentCount, failedCount, deferredCount, topFailureReason };
 }
 
 function normalizeRunMetadata(metadata: Json | null): Record<string, unknown> {

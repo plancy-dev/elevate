@@ -1,5 +1,6 @@
 export const MIN_REVIEW_BODY_CHARS = 320;
 export const MIN_REVIEW_QUALITY_SCORE = 12;
+export const MIN_REVIEW_CITATION_COVERAGE = 0.6;
 
 export type ReviewGateInput = {
   bodyMarkdown: string;
@@ -10,6 +11,10 @@ export type ReviewGateReason =
   | "source_links_missing"
   | "body_too_short"
   | "possible_overcopy_detected"
+  | "comparison_missing"
+  | "counterargument_missing"
+  | "evidence_count_insufficient"
+  | "citation_coverage_low"
   | "low_relevance"
   | "low_novelty"
   | "low_specificity"
@@ -33,6 +38,10 @@ export type ReviewGateResult = {
     longLineCount: number;
     codeFenceLargeBlockDetected: boolean;
     linkOnlyPatternDetected: boolean;
+    comparisonSignalCount: number;
+    counterSignalCount: number;
+    evidenceAnchorCount: number;
+    citationCoverage: number;
     qualityScore: number;
     rubric: ReviewGateRubric;
   };
@@ -68,6 +77,37 @@ function detectLinkOnlyPattern(markdown: string, sourceLinkCount: number): boole
 
 function countMatches(text: string, regex: RegExp): number {
   return (text.match(regex) ?? []).length;
+}
+
+function inspectStructuralGuards(markdown: string, sourceLinkCount: number): {
+  comparisonSignalCount: number;
+  counterSignalCount: number;
+  evidenceAnchorCount: number;
+} {
+  const normalized = markdown.toLowerCase();
+  const comparisonSignalCount = countMatches(
+    normalized,
+    /\b(vs|versus|trade-off|tradeoff|compare|comparison)\b/g,
+  );
+  const counterSignalCount = countMatches(
+    normalized,
+    /\b(contrarian|counter-signal|counter signal|counterargument|counter argument|objection|rebuttal)\b/g,
+  );
+  const linkCount = countMatches(markdown, /\[[^\]]+]\([^)]+\)/g);
+  const evidenceKeywordCount = countMatches(
+    normalized,
+    /\b(evidence|source|according|report|dataset|benchmark|metric|delta)\b/g,
+  );
+  const evidenceAnchorCount = Math.max(linkCount, sourceLinkCount) + evidenceKeywordCount;
+  return { comparisonSignalCount, counterSignalCount, evidenceAnchorCount };
+}
+
+function computeCitationCoverage(markdown: string, sourceLinkCount: number): number {
+  const markdownLinkCount = countMatches(markdown, /\[[^\]]+]\([^)]+\)/g);
+  const bareUrlCount = countMatches(markdown, /\bhttps?:\/\/[^\s)]+/g);
+  const citationAnchorCount = Math.max(markdownLinkCount, bareUrlCount);
+  if (sourceLinkCount <= 0) return 0;
+  return Number(Math.min(1, citationAnchorCount / sourceLinkCount).toFixed(4));
 }
 
 function scoreRubric(markdown: string, sourceLinkCount: number): ReviewGateRubric {
@@ -113,6 +153,11 @@ export function evaluateReviewGate(input: ReviewGateInput): ReviewGateResult {
     input.bodyMarkdown,
     input.sourceLinkCount,
   );
+  const structural = inspectStructuralGuards(input.bodyMarkdown, input.sourceLinkCount);
+  const citationCoverage = computeCitationCoverage(
+    input.bodyMarkdown,
+    input.sourceLinkCount,
+  );
   const rubric = scoreRubric(input.bodyMarkdown, input.sourceLinkCount);
   const qualityScore =
     rubric.relevance +
@@ -129,6 +174,21 @@ export function evaluateReviewGate(input: ReviewGateInput): ReviewGateResult {
   }
   if (codeFenceLargeBlockDetected || longLineCount >= 4 || linkOnlyPatternDetected) {
     reasons.push("possible_overcopy_detected");
+  }
+  if (structural.comparisonSignalCount < 1) {
+    reasons.push("comparison_missing");
+  }
+  if (structural.counterSignalCount < 1) {
+    reasons.push("counterargument_missing");
+  }
+  if (structural.evidenceAnchorCount < 2) {
+    reasons.push("evidence_count_insufficient");
+  }
+  if (
+    input.sourceLinkCount > 0 &&
+    citationCoverage < MIN_REVIEW_CITATION_COVERAGE
+  ) {
+    reasons.push("citation_coverage_low");
   }
   if (rubric.relevance < 2) reasons.push("low_relevance");
   if (rubric.novelty < 2) reasons.push("low_novelty");
@@ -148,6 +208,10 @@ export function evaluateReviewGate(input: ReviewGateInput): ReviewGateResult {
       longLineCount,
       codeFenceLargeBlockDetected,
       linkOnlyPatternDetected,
+      comparisonSignalCount: structural.comparisonSignalCount,
+      counterSignalCount: structural.counterSignalCount,
+      evidenceAnchorCount: structural.evidenceAnchorCount,
+      citationCoverage,
       qualityScore,
       rubric,
     },

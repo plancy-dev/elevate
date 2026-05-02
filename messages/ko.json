@@ -1253,6 +1253,7 @@
         "created": "생성",
         "sent": "발송",
         "failed": "실패",
+        "deferred": "보류",
         "topFailureReason": "최다 실패 원인",
         "reviewQueue": "리뷰 큐",
         "mustReviewNow": "즉시 검토 필요",
@@ -1384,14 +1385,17 @@
       "metrics": {
         "generated7d": "7일 생성",
         "published7d": "7일 발행",
+        "deferred7d": "7일 보류",
         "reviewRequired7d": "7일 review_required",
         "sendFailed7d": "7일 send_failed",
         "avgQuality": "평균 품질 점수",
+        "citationCoverage7d": "7일 citation coverage",
         "generated24h": "24시간 생성",
         "reviewed24h": "24시간 검토 완료",
         "reviewRequired24h": "24시간 review_required",
         "avgQuality24h": "24시간 평균 품질",
-        "minQuality24h": "24시간 최소 품질"
+        "minQuality24h": "24시간 최소 품질",
+        "citationCoverage24h": "24시간 citation coverage"
       },
       "freshNote": {
         "prefix": "Fresh 24h 지표는",
@@ -1401,7 +1405,20 @@
         "topQualityIssues7d": "상위 품질 이슈 (7일)",
         "topPublishFailures7d": "상위 발행 실패 원인 (7일)",
         "topQualityIssuesFresh24h": "상위 품질 이슈 (Fresh 24시간만)",
+        "strategyScoreboard": "Autotune 전략 스코어보드",
         "improvementFocus": "개선 포인트 (자동 제안)"
+      },
+      "scoreboard": {
+        "winner": "승자 전략: {strategy}",
+        "winnerNone": "승자 전략: 태그 표본이 아직 부족합니다",
+        "criteria": "승자 기준: 평균 품질 우선, 동점이면 review_required 비율이 낮은 전략, 그다음 표본 수가 큰 전략입니다.",
+        "sampleWarning": "경고: 안정적인 비교를 위해 전략당 최소 {min}건 이상이 권장됩니다.",
+        "columns": {
+          "strategy": "전략",
+          "sampleCount": "표본",
+          "avgQuality": "평균 품질",
+          "reviewRequiredRatio": "review_required 비율"
+        }
       },
       "empty": {
         "topQualityIssues7d": "이 기간에는 품질 이슈가 없습니다.",
@@ -1431,6 +1448,11 @@
         "publishing": "발행 중",
         "published": "발행 완료",
         "sendFailed": "발송 실패"
+      },
+      "strategy": {
+        "noveltyBoost": "신규성 강화",
+        "overcopyMitigate": "과복사 완화",
+        "balanced": "균형형"
       }
     },
     "adminMorningOps": {
@@ -1484,6 +1506,13 @@
           "title": "템플릿 C - 장애 대응",
           "body": "감지된 실패 클래스: <여기에 입력>.\\n자동화는 안전모드로 유지하고 원인 수정부터 수행하세요.\\n이후 retry window만 실행하고 아래를 보고하세요:\\n- 근본 원인\\n- 수정 요약\\n- 재실행 결과\\n- 재발 방지 체크리스트"
         }
+      },
+      "escalation": {
+        "title": "3일 연속 악화 에스컬레이션",
+        "metric": "3일 연속 악화 감지 지표: {metric}",
+        "metricReviewRequired": "review_required",
+        "metricSendFailed": "send_failed",
+        "defaultAction": "/admin/runs와 /admin/content-quality를 확인하고 incident 템플릿으로 즉시 조치하세요."
       },
       "monitoring": {
         "title": "서비스 개선 여부 확인법",

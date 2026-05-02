@@ -1245,6 +1245,7 @@
         "created": "作成",
         "sent": "送信",
         "failed": "失敗",
+        "deferred": "保留",
         "topFailureReason": "主要な失敗理由",
         "reviewQueue": "レビューキュー",
         "mustReviewNow": "今すぐレビュー",
@@ -1376,14 +1377,17 @@
       "metrics": {
         "generated7d": "7日生成",
         "published7d": "7日公開",
+        "deferred7d": "7日保留",
         "reviewRequired7d": "7日 review_required",
         "sendFailed7d": "7日 send_failed",
         "avgQuality": "平均品質スコア",
+        "citationCoverage7d": "7日 citation coverage",
         "generated24h": "24時間生成",
         "reviewed24h": "24時間レビュー完了",
         "reviewRequired24h": "24時間 review_required",
         "avgQuality24h": "24時間平均品質",
-        "minQuality24h": "24時間最低品質"
+        "minQuality24h": "24時間最低品質",
+        "citationCoverage24h": "24時間 citation coverage"
       },
       "freshNote": {
         "prefix": "Fresh 24h 指標は",
@@ -1393,7 +1397,20 @@
         "topQualityIssues7d": "主要品質課題 (7日)",
         "topPublishFailures7d": "主要公開失敗要因 (7日)",
         "topQualityIssuesFresh24h": "主要品質課題 (Fresh 24h のみ)",
+        "strategyScoreboard": "Autotune 戦略スコアボード",
         "improvementFocus": "改善フォーカス (自動提案)"
+      },
+      "scoreboard": {
+        "winner": "勝者戦略: {strategy}",
+        "winnerNone": "勝者戦略: まだタグ付きサンプルが不足しています",
+        "criteria": "勝者基準: 平均品質を優先し、同点時は review_required 比率が低い戦略、次にサンプル数が多い戦略です。",
+        "sampleWarning": "警告: 安定した比較には戦略ごとに最低 {min} 件以上のサンプルが推奨されます。",
+        "columns": {
+          "strategy": "戦略",
+          "sampleCount": "サンプル",
+          "avgQuality": "平均品質",
+          "reviewRequiredRatio": "review_required 比率"
+        }
       },
       "empty": {
         "topQualityIssues7d": "この期間では品質課題は検出されませんでした。",
@@ -1423,6 +1440,11 @@
         "publishing": "公開中",
         "published": "公開済み",
         "sendFailed": "送信失敗"
+      },
+      "strategy": {
+        "noveltyBoost": "新規性強化",
+        "overcopyMitigate": "過剰コピー抑制",
+        "balanced": "バランス型"
       }
     },
     "adminMorningOps": {
@@ -1476,6 +1498,13 @@
           "title": "Template C - Failure response",
           "body": "Failure class detected: <fill_this>.\\nKeep automation in safe mode and run root-cause fix first.\\nThen execute retry window only and provide:\\n- root cause\\n- fix diff summary\\n- retry result\\n- recurrence prevention checklist"
         }
+      },
+      "escalation": {
+        "title": "3日連続悪化エスカレーション",
+        "metric": "3日連続悪化を検知した指標: {metric}",
+        "metricReviewRequired": "review_required",
+        "metricSendFailed": "send_failed",
+        "defaultAction": "/admin/runs と /admin/content-quality を確認し、incident テンプレートで即時対応してください。"
       },
       "monitoring": {
         "title": "How to confirm service is improving",

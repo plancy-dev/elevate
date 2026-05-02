@@ -52,19 +52,37 @@ export default async function AdminContentQualityPage() {
         <p className="text-sm leading-relaxed text-ink-700">{t("intro")}</p>
 
         <div className="grid gap-2 md:grid-cols-5">
-          <MetricCard label={t("metrics.generated7d")} value={snapshot.generatedCount} tone="neutral" />
+          <MetricCard
+            label={t("metrics.generated7d")}
+            value={snapshot.generatedCount}
+            tone="neutral"
+            hint={toDeltaHint(snapshot.generated7dDelta)}
+          />
           <MetricCard label={t("metrics.published7d")} value={snapshot.publishedCount} tone="success" />
+          <MetricCard label={t("metrics.deferred7d")} value={snapshot.deferredCount} tone="warning" />
           <MetricCard label={t("metrics.reviewRequired7d")} value={snapshot.reviewRequiredCount} tone="warning" />
           <MetricCard label={t("metrics.sendFailed7d")} value={snapshot.sendFailedCount} tone="danger" />
+        </div>
+        <div className="grid gap-2 md:grid-cols-2">
           <MetricCard
             label={t("metrics.avgQuality")}
             value={`${snapshot.avgQualityScore} / 25`}
             tone="neutral"
           />
+          <MetricCard
+            label={t("metrics.citationCoverage7d")}
+            value={`${(snapshot.citationCoverage7dAvg * 100).toFixed(1)}%`}
+            tone={snapshot.citationCoverage7dAvg < 0.6 ? "danger" : "success"}
+          />
         </div>
 
-        <div className="grid gap-2 md:grid-cols-5">
-          <MetricCard label={t("metrics.generated24h")} value={snapshot.freshGeneratedCount} tone="neutral" />
+        <div className="grid gap-2 md:grid-cols-6">
+          <MetricCard
+            label={t("metrics.generated24h")}
+            value={snapshot.freshGeneratedCount}
+            tone="neutral"
+            hint={toDeltaHint(snapshot.generated24hDelta)}
+          />
           <MetricCard label={t("metrics.reviewed24h")} value={snapshot.freshReviewedCount} tone="success" />
           <MetricCard
             label={t("metrics.reviewRequired24h")}
@@ -80,6 +98,11 @@ export default async function AdminContentQualityPage() {
             label={t("metrics.minQuality24h")}
             value={snapshot.freshMinQualityScore}
             tone={snapshot.freshMinQualityScore < 12 ? "danger" : "success"}
+          />
+          <MetricCard
+            label={t("metrics.citationCoverage24h")}
+            value={`${(snapshot.citationCoverage24hAvg * 100).toFixed(1)}%`}
+            tone={snapshot.citationCoverage24hAvg < 0.6 ? "danger" : "success"}
           />
         </div>
         <p className="text-[11px] text-ink-500">
@@ -144,6 +167,49 @@ export default async function AdminContentQualityPage() {
 
         <section className="border border-ink-100 bg-paper-0 p-4">
           <h2 className="text-xs font-medium uppercase tracking-wide text-ink-700">
+            {t("sections.strategyScoreboard")}
+          </h2>
+          <p className="mt-2 text-xs text-ink-700">
+            {snapshot.winnerStrategy
+              ? t("scoreboard.winner", {
+                  strategy: toStrategyLabel(t, snapshot.winnerStrategy),
+                })
+              : t("scoreboard.winnerNone")}
+          </p>
+          <p className="mt-1 text-[11px] text-ink-500">{t("scoreboard.criteria")}</p>
+          {snapshot.hasInsufficientStrategySample ? (
+            <p className="mt-1 text-xs text-amber-700">
+              {t("scoreboard.sampleWarning", { min: snapshot.strategyMinSampleSize })}
+            </p>
+          ) : null}
+          <div className="mt-3 overflow-x-auto border border-ink-100">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-ink-100 bg-paper-50">
+                  <th className="p-2 font-medium text-ink-700">{t("scoreboard.columns.strategy")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("scoreboard.columns.sampleCount")}</th>
+                  <th className="p-2 font-medium text-ink-700">{t("scoreboard.columns.avgQuality")}</th>
+                  <th className="p-2 font-medium text-ink-700">
+                    {t("scoreboard.columns.reviewRequiredRatio")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {snapshot.strategyScoreboard.map((row) => (
+                  <tr key={row.strategy} className="border-b border-ink-100/80">
+                    <td className="p-2 text-ink-900">{toStrategyLabel(t, row.strategy)}</td>
+                    <td className="p-2 text-ink-700">{row.sampleCount}</td>
+                    <td className="p-2 text-ink-700">{row.avgQualityScore}</td>
+                    <td className="p-2 text-ink-700">{(row.reviewRequiredRatio * 100).toFixed(1)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="border border-ink-100 bg-paper-0 p-4">
+          <h2 className="text-xs font-medium uppercase tracking-wide text-ink-700">
             {t("sections.improvementFocus")}
           </h2>
           <ul className="mt-2 space-y-1 text-xs leading-relaxed text-ink-700">
@@ -194,10 +260,12 @@ function MetricCard({
   label,
   value,
   tone,
+  hint,
 }: {
   label: string;
   value: string | number;
   tone: "neutral" | "success" | "warning" | "danger";
+  hint?: string;
 }) {
   const toneClass =
     tone === "success"
@@ -211,8 +279,17 @@ function MetricCard({
     <div className="border border-ink-100 bg-paper-0 p-3">
       <p className="text-[11px] uppercase tracking-wide text-ink-500">{label}</p>
       <p className={`mt-1 text-sm font-medium ${toneClass}`}>{String(value)}</p>
+      {hint ? <p className="mt-1 text-[10px] text-ink-500">{hint}</p> : null}
     </div>
   );
+}
+
+function toDeltaHint(delta: { previous: number; deltaPercent: number | null }) {
+  if (delta.deltaPercent === null) {
+    return `prev ${delta.previous} · n/a`;
+  }
+  const sign = delta.deltaPercent > 0 ? "+" : "";
+  return `prev ${delta.previous} · ${sign}${delta.deltaPercent}%`;
 }
 
 function buildLowQualityItems(
@@ -276,5 +353,12 @@ function toStatusLabel(t: (key: string) => string, status: string) {
   if (status === "published") return t("status.published");
   if (status === "send_failed") return t("status.sendFailed");
   return status;
+}
+
+function toStrategyLabel(t: (key: string) => string, strategy: string) {
+  if (strategy === "novelty_boost") return t("strategy.noveltyBoost");
+  if (strategy === "overcopy_mitigate") return t("strategy.overcopyMitigate");
+  if (strategy === "balanced") return t("strategy.balanced");
+  return strategy;
 }
 
