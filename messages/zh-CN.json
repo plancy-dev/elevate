@@ -1343,6 +1343,7 @@
         "status": "状态",
         "quality": "质量",
         "gate": "门禁",
+        "aiAudit": "AI 审核",
         "opsSignal": "运营信号",
         "updated": "更新时间",
         "actions": "操作"
@@ -1363,6 +1364,28 @@
         "qualityRework": "质量返工",
         "reviewNeeded": "需要审核",
         "manualReviewRequired": "manual_review_required"
+      },
+      "aiAudit": {
+        "confidence": "置信度 {value}%",
+        "policyReason": "策略",
+        "rewriteDecision": "改写",
+        "decision": {
+          "autoApproveCandidate": "自动批准候选",
+          "needsRewrite": "需要改写",
+          "holdManual": "保持人工审核"
+        },
+        "rewrite": {
+          "readyForApproval": "可进入批准",
+          "needsManualReview": "需要人工复核"
+        },
+        "policy": {
+          "autoApprovalPolicyPassed": "自动批准策略通过",
+          "decisionNotAutoApproveCandidate": "当前不是自动批准候选",
+          "confidenceBelowThreshold": "置信度低于阈值",
+          "reviewGateNotPassed": "审核门禁未通过",
+          "qualityScoreBelowThreshold": "质量分低于阈值",
+          "hardBlockReasonDetected": "检测到硬阻断原因"
+        }
       },
       "empty": "未找到队列项。"
     },

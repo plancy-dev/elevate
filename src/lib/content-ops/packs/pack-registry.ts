@@ -13,7 +13,7 @@ import {
 
 export type AutotuneStrategy = "novelty_boost" | "overcopy_mitigate" | "balanced";
 
-export const ACTIVE_CONTENT_PACK_VERSION = "v1.3.0";
+export const ACTIVE_CONTENT_PACK_VERSION = "v1.5.0";
 
 function resolveAutotuneStrategy(date: Date): AutotuneStrategy {
   const weekday = date.getUTCDay();

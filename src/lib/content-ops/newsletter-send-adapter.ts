@@ -19,6 +19,46 @@ export type NewsletterRetryPolicyKey =
   | "policy.exhausted.stop"
   | "policy.frequency_window.delayed";
 
+const KNOWN_SEND_REASONS = new Set([
+  "resend_not_configured",
+  "resend_from_invalid_format",
+  "resend_sandbox_sender",
+  "resend_from_domain_mismatch",
+]);
+
+export function normalizeNewsletterSendErrorReason(reason: string): string {
+  const normalized = reason.trim().toLowerCase();
+  if (!normalized) return "unknown";
+  if (KNOWN_SEND_REASONS.has(normalized)) return normalized;
+  if (
+    (normalized.includes("resend") && normalized.includes("api key")) ||
+    normalized.includes("missing resend")
+  ) {
+    return "resend_not_configured";
+  }
+  if (
+    normalized.includes("invalid from") ||
+    (normalized.includes("from") && normalized.includes("invalid"))
+  ) {
+    return "resend_from_invalid_format";
+  }
+  if (
+    normalized.includes("sandbox") ||
+    normalized.includes("resend.dev") ||
+    normalized.includes("only send testing emails to your own email address")
+  ) {
+    return "resend_sandbox_sender";
+  }
+  if (
+    (normalized.includes("domain") && normalized.includes("mismatch")) ||
+    normalized.includes("verified domain") ||
+    normalized.includes("verify a domain at resend.com/domains")
+  ) {
+    return "resend_from_domain_mismatch";
+  }
+  return reason;
+}
+
 export function resolveNewsletterRetryPolicy(reason: string): {
   policyKey: NewsletterRetryPolicyKey;
   action: NewsletterRetryPolicyAction;
@@ -124,7 +164,7 @@ export async function sendNewsletterEmail(params: {
   if (!resendConfig.ok) {
     return {
       ok: false,
-      error: resendConfig.reason,
+      error: normalizeNewsletterSendErrorReason(resendConfig.reason),
       templateVersion: NEWSLETTER_TEMPLATE_VERSION,
     };
   }
@@ -146,7 +186,7 @@ export async function sendNewsletterEmail(params: {
     if (result.error) {
       return {
         ok: false,
-        error: result.error.message,
+        error: normalizeNewsletterSendErrorReason(result.error.message),
         templateVersion: NEWSLETTER_TEMPLATE_VERSION,
       };
     }
@@ -158,7 +198,9 @@ export async function sendNewsletterEmail(params: {
   } catch (e) {
     return {
       ok: false,
-      error: e instanceof Error ? e.message : "unknown",
+      error: normalizeNewsletterSendErrorReason(
+        e instanceof Error ? e.message : "unknown",
+      ),
       templateVersion: NEWSLETTER_TEMPLATE_VERSION,
     };
   }

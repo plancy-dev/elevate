@@ -2,9 +2,11 @@ import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { publishContentItemToBlog } from "@/lib/content-ops/blog-publish-adapter";
 import {
+  normalizeNewsletterSendErrorReason,
   resolveNewsletterRetryPolicy,
   sendNewsletterEmail,
 } from "@/lib/content-ops/newsletter-send-adapter";
+import { resolveResendSendConfig } from "@/lib/email/resend-config";
 import {
   BLOG_TEMPLATE_VERSION,
   NEWSLETTER_TEMPLATE_VERSION,
@@ -34,6 +36,7 @@ const DRAFT_MIN_TRUST_WEIGHT = 70;
 const DRAFT_MAX_SOURCE_BULLETS = 8;
 const DEFAULT_PUBLISH_BATCH_SIZE = 20;
 const DEFAULT_RETRY_FAILED_BATCH_SIZE = 5;
+const CONFIG_BLOCK_RESCHEDULE_MINUTES = 360;
 const BROKEN_FIXTURE_SOURCE_PATTERNS = [
   "example.invalid/rss",
   "broken rss fixture",
@@ -54,9 +57,37 @@ type PublicationAttempt = {
   attemptCount: number;
   shouldSkip: boolean;
   nextRetryAt: string | null;
+  skipReason: "retry_window_not_open" | "max_attempts_exhausted" | null;
 };
 
 type NewsletterPublishOutcome = "sent" | "failed" | "deferred";
+
+type PublicationHealthWindow = {
+  totalCount24h: number;
+  failedCount24h: number;
+  configStopCount24h: number;
+};
+
+type QueueTriageDecision = "auto_approve_candidate" | "needs_rewrite" | "hold_manual";
+
+type QueueTriageAssessment = {
+  decision: QueueTriageDecision;
+  confidence: number;
+  reasons: string[];
+  suggestedAction: "recommend_approve" | "recommend_rewrite" | "recommend_manual_review";
+};
+
+type AutoApprovalPolicyResult = {
+  allowed: boolean;
+  reason: string;
+  nextStatus: "approved" | "scheduled" | "review_required";
+};
+
+type ReviewGateLite = {
+  passed: boolean;
+  reasons: string[];
+  qualityScore: number;
+};
 
 function hashSnippet(input: string): string {
   return createHash("sha256").update(input).digest("hex");
@@ -78,6 +109,12 @@ function dedupeReasons(reasons: string[]): string[] {
   return Array.from(new Set(reasons.map((reason) => classifyFailureReason(reason))));
 }
 
+function isConfigStopReason(reason: string): boolean {
+  const policy = resolveNewsletterRetryPolicy(reason);
+  if (policy.action !== "stop") return false;
+  return reason.startsWith("resend_") || reason === "newsletter_no_subscribers";
+}
+
 function sleep(ms: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
@@ -96,6 +133,236 @@ function addMinutesIso(date: Date, minutes: number): string {
 function asObject(value: unknown): Record<string, unknown> | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   return value as Record<string, unknown>;
+}
+
+function extractLatestReviewGate(
+  metadata: unknown,
+): ReviewGateLite | null {
+  const root = asObject(metadata);
+  const latest =
+    asObject(asObject(root?.review_gate)?.latest) ??
+    asObject(asObject(root?.reviewGate)?.latest);
+  if (!latest) return null;
+  const passed = latest.passed === true;
+  const reasonsRaw = latest.reasons;
+  const reasons = Array.isArray(reasonsRaw)
+    ? reasonsRaw.filter((entry): entry is string => typeof entry === "string")
+    : [];
+  const metrics = asObject(latest.metrics);
+  const qualityScore = Number(metrics?.qualityScore ?? 0);
+  return {
+    passed,
+    reasons,
+    qualityScore: Number.isFinite(qualityScore) ? qualityScore : 0,
+  };
+}
+
+export function resolveQueueTriageAssessment(params: {
+  reviewGate: ReviewGateLite | null;
+}): QueueTriageAssessment {
+  const reviewGate = params.reviewGate;
+  if (!reviewGate) {
+    return {
+      decision: "hold_manual",
+      confidence: 0.35,
+      reasons: ["review_gate_missing"],
+      suggestedAction: "recommend_manual_review",
+    };
+  }
+
+  const hardBlockReasons = new Set([
+    "possible_overcopy_detected",
+    "comparison_missing",
+    "counterargument_missing",
+    "evidence_count_insufficient",
+    "source_links_missing",
+  ]);
+  const fixableReasons = new Set([
+    "citation_coverage_low",
+    "body_too_short",
+    "low_novelty",
+    "low_relevance",
+  ]);
+
+  const hasHardBlock = reviewGate.reasons.some((reason) => hardBlockReasons.has(reason));
+  if (hasHardBlock) {
+    return {
+      decision: "hold_manual",
+      confidence: 0.8,
+      reasons: reviewGate.reasons.filter((reason) => hardBlockReasons.has(reason)),
+      suggestedAction: "recommend_manual_review",
+    };
+  }
+
+  const hasFixableReason = reviewGate.reasons.some((reason) => fixableReasons.has(reason));
+  if (hasFixableReason) {
+    return {
+      decision: "needs_rewrite",
+      confidence: 0.74,
+      reasons: reviewGate.reasons.filter((reason) => fixableReasons.has(reason)),
+      suggestedAction: "recommend_rewrite",
+    };
+  }
+
+  if (reviewGate.passed && reviewGate.qualityScore >= 16) {
+    return {
+      decision: "auto_approve_candidate",
+      confidence: 0.86,
+      reasons: ["review_gate_passed", "quality_threshold_met"],
+      suggestedAction: "recommend_approve",
+    };
+  }
+
+  return {
+    decision: "hold_manual",
+    confidence: 0.55,
+    reasons: reviewGate.reasons.length > 0 ? reviewGate.reasons : ["quality_threshold_not_met"],
+    suggestedAction: "recommend_manual_review",
+  };
+}
+
+export function resolveAutoApprovalPolicy(params: {
+  assessment: QueueTriageAssessment;
+  reviewGate: ReviewGateLite | null;
+}): AutoApprovalPolicyResult {
+  const scheduleModeEnabled = process.env.CONTENT_OPS_QUEUE_AUTO_APPROVE_SCHEDULED === "true";
+  const nextAllowedStatus: AutoApprovalPolicyResult["nextStatus"] = scheduleModeEnabled
+    ? "scheduled"
+    : "approved";
+  if (params.assessment.decision !== "auto_approve_candidate") {
+    return {
+      allowed: false,
+      reason: "decision_not_auto_approve_candidate",
+      nextStatus: "review_required",
+    };
+  }
+  if (params.assessment.confidence < 0.8) {
+    return {
+      allowed: false,
+      reason: "confidence_below_threshold",
+      nextStatus: "review_required",
+    };
+  }
+  if (!params.reviewGate?.passed) {
+    return {
+      allowed: false,
+      reason: "review_gate_not_passed",
+      nextStatus: "review_required",
+    };
+  }
+  if ((params.reviewGate.qualityScore ?? 0) < 16) {
+    return {
+      allowed: false,
+      reason: "quality_score_below_threshold",
+      nextStatus: "review_required",
+    };
+  }
+  const hardBlockReasons = new Set([
+    "possible_overcopy_detected",
+    "comparison_missing",
+    "counterargument_missing",
+    "evidence_count_insufficient",
+    "source_links_missing",
+  ]);
+  if (params.reviewGate.reasons.some((reason) => hardBlockReasons.has(reason))) {
+    return {
+      allowed: false,
+      reason: "hard_block_reason_detected",
+      nextStatus: "review_required",
+    };
+  }
+  return {
+    allowed: true,
+    reason: "auto_approval_policy_passed",
+    nextStatus: nextAllowedStatus,
+  };
+}
+
+function extractLatestAiReviewDecision(metadata: unknown): QueueTriageDecision | null {
+  const root = asObject(metadata);
+  const aiReviewLatest = asObject(asObject(root?.ai_review)?.latest);
+  const decision = aiReviewLatest?.decision;
+  if (
+    decision === "auto_approve_candidate" ||
+    decision === "needs_rewrite" ||
+    decision === "hold_manual"
+  ) {
+    return decision;
+  }
+  return null;
+}
+
+type RewriteDirective = {
+  focusNotes: string[];
+  citationAnchors: string[];
+};
+
+function buildRewriteDirective(params: {
+  reasons: string[];
+  sourceLinks: Array<{ title: string; url: string }>;
+}): RewriteDirective {
+  const reasonSet = new Set(params.reasons);
+  const focusNotes: string[] = [];
+  if (reasonSet.has("citation_coverage_low")) {
+    focusNotes.push("Add explicit inline source anchors in core body paragraphs, not only appendix.");
+  }
+  if (reasonSet.has("body_too_short")) {
+    focusNotes.push("Expand with concrete operator impact, implementation constraints, and rollout steps.");
+  }
+  if (reasonSet.has("low_novelty")) {
+    focusNotes.push("Add a clear 'why now' contrast against last-cycle baseline assumptions.");
+  }
+  if (reasonSet.has("low_relevance")) {
+    focusNotes.push("Tie recommendations to concrete owner/team workflows and measurable outcomes.");
+  }
+  if (focusNotes.length === 0) {
+    focusNotes.push("Strengthen comparison, evidence, and actionability for operator execution quality.");
+  }
+  const citationAnchors = params.sourceLinks.slice(0, 3).map((source) => {
+    const safeTitle = source.title.trim() || source.url;
+    return `[${safeTitle}](${source.url})`;
+  });
+  return { focusNotes, citationAnchors };
+}
+
+function applyRewritePatch(params: {
+  bodyMarkdown: string;
+  directive: RewriteDirective;
+}): string {
+  const rewriteBlock = [
+    "## AI Rewrite Pass",
+    "",
+    "### Why now",
+    "- This update closes the execution gap observed in the latest review gate window.",
+    "- It prioritizes measurable operator outcomes over generic commentary.",
+    "",
+    "### Comparison (vs current approach)",
+    "- vs status quo: this rewrite adds explicit trade-off framing for rollout decisions.",
+    "",
+    "### Counterargument and rebuttal",
+    "- Contrarian view: adding more structure can slow writing throughput.",
+    "- Rebuttal: structured evidence and action blocks reduce downstream review churn.",
+    "",
+    "### Focus updates",
+    ...params.directive.focusNotes.map((note) => `- ${note}`),
+    "",
+    "### Evidence anchors",
+    ...(params.directive.citationAnchors.length > 0
+      ? params.directive.citationAnchors.map((anchor) => `- ${anchor}`)
+      : ["- Source anchor unavailable in current map; manual citation fill required."]),
+    "",
+    "### Operator next steps",
+    "1. Assign owner and rollback criteria before publish.",
+    "2. Run one-cycle validation and compare quality monitor delta.",
+    "3. Keep escalation path visible in morning-ops panel.",
+  ].join("\n");
+
+  const trimmed = params.bodyMarkdown.trim();
+  const withoutPreviousRewrite = trimmed.replace(
+    /\n{0,2}## AI Rewrite Pass[\s\S]*$/m,
+    "",
+  ).trim();
+  return `${withoutPreviousRewrite}\n\n${rewriteBlock}\n`;
 }
 
 function resolveSubscriberFrequencyWindowMs(frequencyPref: string): number | null {
@@ -161,6 +428,48 @@ function resolvePublishBatchSize(retryFailedOnly: boolean): number {
   );
 }
 
+export function computeAdaptivePublishBatchSize(params: {
+  baseBatchSize: number;
+  retryFailedOnly: boolean;
+  failRatio24h: number;
+  configStopCount24h: number;
+}): number {
+  const base = clampInt(params.baseBatchSize, 1, 100);
+  if (params.retryFailedOnly) return Math.min(base, 3);
+  if (params.configStopCount24h >= 3) return Math.min(base, 2);
+  if (params.failRatio24h >= 0.8) return 1;
+  if (params.failRatio24h >= 0.5) return Math.min(base, 3);
+  return base;
+}
+
+async function readPublicationHealthWindow24h(): Promise<PublicationHealthWindow> {
+  const admin = createAdminClient();
+  const sinceIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const { data } = await admin
+    .from("content_publications")
+    .select("status,last_error,created_at")
+    .gte("created_at", sinceIso)
+    .order("created_at", { ascending: false })
+    .limit(500);
+  const rows = (data ?? []) as Array<{ status: string; last_error: string | null }>;
+  const totalCount24h = rows.length;
+  const failedCount24h = rows.filter((row) => row.status === "failed").length;
+  const configStopCount24h = rows.filter((row) =>
+    typeof row.last_error === "string" &&
+    (row.last_error.includes("resend_not_configured") ||
+      row.last_error.includes("resend_from_invalid_format") ||
+      row.last_error.includes("resend_sandbox_sender") ||
+      row.last_error.includes("resend_from_domain_mismatch")),
+  ).length;
+  return { totalCount24h, failedCount24h, configStopCount24h };
+}
+
+function resolveNewsletterConfigStopReason(): string | null {
+  const config = resolveResendSendConfig();
+  if (config.ok) return null;
+  return normalizeNewsletterSendErrorReason(config.reason);
+}
+
 function parseNextRetryAt(metadata: unknown): string | null {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
   const retry = (metadata as Record<string, unknown>).retry;
@@ -205,7 +514,7 @@ async function getRetryState(
   };
 }
 
-function computePublicationAttempt(
+export function computePublicationAttempt(
   retryState: RetryState,
   nowIso: string,
   retryFailedOnly: boolean,
@@ -219,6 +528,7 @@ function computePublicationAttempt(
       attemptCount: retryState.previousAttemptCount,
       shouldSkip: true,
       nextRetryAt: retryState.nextRetryAt,
+      skipReason: "retry_window_not_open",
     };
   }
   if (retryState.previousAttemptCount >= MAX_PUBLICATION_ATTEMPTS) {
@@ -226,9 +536,15 @@ function computePublicationAttempt(
       attemptCount: retryState.previousAttemptCount,
       shouldSkip: true,
       nextRetryAt: retryState.nextRetryAt,
+      skipReason: "max_attempts_exhausted",
     };
   }
-  return { attemptCount: nextAttempt, shouldSkip: false, nextRetryAt: null };
+  return {
+    attemptCount: nextAttempt,
+    shouldSkip: false,
+    nextRetryAt: null,
+    skipReason: null,
+  };
 }
 
 function buildRetryMetadata(params: {
@@ -246,6 +562,31 @@ function buildRetryMetadata(params: {
   return {
     max_attempts: maxAttempts,
     next_retry_at: nextRetryAt,
+  };
+}
+
+export function resolveNewsletterPublicationRetryForReason(params: {
+  reason: string;
+  attemptCount: number;
+  nowIso: string;
+}): {
+  retry: { max_attempts: number; next_retry_at: string | null };
+  policy: ReturnType<typeof resolveNewsletterRetryPolicy>;
+} {
+  const policy = resolveNewsletterRetryPolicy(params.reason);
+  if (policy.action === "stop") {
+    return {
+      retry: { max_attempts: MAX_PUBLICATION_ATTEMPTS, next_retry_at: null },
+      policy,
+    };
+  }
+  return {
+    retry: buildRetryMetadata({
+      attemptCount: params.attemptCount,
+      nowIso: params.nowIso,
+      retryDelayMinutes: policy.delayMinutes ?? RETRY_DELAY_MINUTES,
+    }),
+    policy,
   };
 }
 
@@ -602,6 +943,15 @@ export async function runReviewGatePipeline(runId: string): Promise<{
 
     const nextMetadata = {
       ...((item.metadata ?? {}) as Record<string, unknown>),
+      reviewGate: {
+        latest: {
+          run_id: runId,
+          checked_at: new Date().toISOString(),
+          passed: gate.passed,
+          reasons: gate.reasons,
+          metrics: gate.metrics,
+        },
+      },
       review_gate: {
         latest: {
           run_id: runId,
@@ -648,6 +998,207 @@ export async function runReviewGatePipeline(runId: string): Promise<{
   };
 }
 
+export async function runQueueTriagePipeline(runId: string): Promise<{
+  scannedCount: number;
+  autoApproveCandidateCount: number;
+  autoApprovedCount: number;
+  policyDeniedCount: number;
+  needsRewriteCount: number;
+  holdManualCount: number;
+  failedCount: number;
+  failureMessages: string[];
+}> {
+  const admin = createAdminClient();
+  const { data: candidates } = await admin
+    .from("content_items")
+    .select("id, type, status, metadata, updated_at")
+    .in("status", ["draft", "review_required"])
+    .order("updated_at", { ascending: true })
+    .limit(200);
+
+  let scannedCount = 0;
+  let autoApproveCandidateCount = 0;
+  let autoApprovedCount = 0;
+  let policyDeniedCount = 0;
+  let needsRewriteCount = 0;
+  let holdManualCount = 0;
+  const failureMessages: string[] = [];
+
+  for (const item of (candidates ?? []) as ContentItemRow[]) {
+    scannedCount += 1;
+    const reviewGate = extractLatestReviewGate(item.metadata);
+    const assessment = resolveQueueTriageAssessment({ reviewGate });
+
+    if (assessment.decision === "auto_approve_candidate") autoApproveCandidateCount += 1;
+    if (assessment.decision === "needs_rewrite") needsRewriteCount += 1;
+    if (assessment.decision === "hold_manual") holdManualCount += 1;
+    const policy = resolveAutoApprovalPolicy({ assessment, reviewGate });
+    if (policy.allowed) autoApprovedCount += 1;
+    if (!policy.allowed && assessment.decision === "auto_approve_candidate") {
+      policyDeniedCount += 1;
+      failureMessages.push(`[${item.id}] auto_approval_denied:${policy.reason}`);
+    }
+
+    const root = asObject(item.metadata) ?? {};
+    const aiReviewRoot = asObject(root.ai_review) ?? {};
+    const previousLatest = asObject(aiReviewRoot.latest);
+    const nextMetadata = {
+      ...root,
+      ai_review: {
+        ...aiReviewRoot,
+        latest: {
+          run_id: runId,
+          checked_at: new Date().toISOString(),
+          decision: assessment.decision,
+          confidence: assessment.confidence,
+          reasons: assessment.reasons,
+          suggested_action: assessment.suggestedAction,
+          policy_allowed: policy.allowed,
+          policy_reason: policy.reason,
+          policy_next_status: policy.nextStatus,
+          status_at_evaluation: item.status,
+          review_gate_passed: reviewGate?.passed ?? false,
+          review_gate_quality_score: reviewGate?.qualityScore ?? 0,
+        },
+        previous: previousLatest ?? null,
+      },
+    };
+
+    const { error } = await admin
+      .from("content_items")
+      .update({
+        status: policy.nextStatus,
+        metadata: nextMetadata as Json,
+        updated_at: new Date().toISOString(),
+        approved_at: policy.allowed ? new Date().toISOString() : null,
+      })
+      .eq("id", item.id);
+
+    if (error) {
+      failureMessages.push(`[${item.id}] triage_metadata_update_failed:${error.message}`);
+    }
+  }
+
+  return {
+    scannedCount,
+    autoApproveCandidateCount,
+    autoApprovedCount,
+    policyDeniedCount,
+    needsRewriteCount,
+    holdManualCount,
+    failedCount: policyDeniedCount,
+    failureMessages: failureMessages.slice(0, 20),
+  };
+}
+
+export async function runQueueRewritePipeline(runId: string): Promise<{
+  scannedCount: number;
+  rewrittenCount: number;
+  gatePassedAfterRewriteCount: number;
+  needsManualAfterRewriteCount: number;
+  failureMessages: string[];
+}> {
+  const admin = createAdminClient();
+  const { data: candidates } = await admin
+    .from("content_items")
+    .select("id, type, status, title, body_markdown, metadata, updated_at")
+    .in("status", ["draft", "review_required"])
+    .order("updated_at", { ascending: true })
+    .limit(120);
+
+  let scannedCount = 0;
+  let rewrittenCount = 0;
+  let gatePassedAfterRewriteCount = 0;
+  let needsManualAfterRewriteCount = 0;
+  const failureMessages: string[] = [];
+
+  for (const item of (candidates ?? []) as ContentItemRow[]) {
+    const triageDecision = extractLatestAiReviewDecision(item.metadata);
+    if (triageDecision !== "needs_rewrite") continue;
+    scannedCount += 1;
+
+    const reviewBefore = extractLatestReviewGate(item.metadata);
+    const reviewReasons = reviewBefore?.reasons ?? [];
+    const { data: sourceRows } = await admin
+      .from("content_item_source_map")
+      .select("source_title,source_url")
+      .eq("content_item_id", item.id)
+      .order("created_at", { ascending: false })
+      .limit(5);
+    const sourceLinks = (sourceRows ?? [])
+      .map((row) => ({
+        title: String(row.source_title ?? "").trim(),
+        url: String(row.source_url ?? "").trim(),
+      }))
+      .filter((row) => row.url.length > 0);
+    const directive = buildRewriteDirective({ reasons: reviewReasons, sourceLinks });
+    const rewrittenBody = applyRewritePatch({
+      bodyMarkdown: item.body_markdown ?? "",
+      directive,
+    });
+
+    const gateAfter = evaluateReviewGate({
+      bodyMarkdown: rewrittenBody,
+      sourceLinkCount: sourceLinks.length,
+    });
+    if (gateAfter.passed) gatePassedAfterRewriteCount += 1;
+    else needsManualAfterRewriteCount += 1;
+
+    const root = asObject(item.metadata) ?? {};
+    const aiRewriteRoot = asObject(root.ai_rewrite) ?? {};
+    const previousLatest = asObject(aiRewriteRoot.latest);
+    const nextMetadata = {
+      ...root,
+      ai_rewrite: {
+        ...aiRewriteRoot,
+        latest: {
+          run_id: runId,
+          rewritten_at: new Date().toISOString(),
+          source_link_count: sourceLinks.length,
+          reason_focus: reviewReasons,
+          gate_before: reviewBefore
+            ? {
+                passed: reviewBefore.passed,
+                reasons: reviewBefore.reasons,
+                quality_score: reviewBefore.qualityScore,
+              }
+            : null,
+          gate_after: {
+            passed: gateAfter.passed,
+            reasons: gateAfter.reasons,
+            quality_score: gateAfter.metrics.qualityScore,
+          },
+          decision_after: gateAfter.passed ? "ready_for_approval" : "needs_manual_review",
+        },
+        previous: previousLatest ?? null,
+      },
+    };
+
+    const { error } = await admin
+      .from("content_items")
+      .update({
+        body_markdown: rewrittenBody,
+        metadata: nextMetadata as Json,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", item.id);
+
+    if (error) {
+      failureMessages.push(`[${item.id}] rewrite_update_failed:${error.message}`);
+      continue;
+    }
+    rewrittenCount += 1;
+  }
+
+  return {
+    scannedCount,
+    rewrittenCount,
+    gatePassedAfterRewriteCount,
+    needsManualAfterRewriteCount,
+    failureMessages: failureMessages.slice(0, 20),
+  };
+}
+
 async function publishNewsletterItem(item: ContentItemRow): Promise<{
   ok: boolean;
   sentCount: number;
@@ -656,6 +1207,7 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
   failedReasons: string[];
   attemptCount: number;
   skipped: boolean;
+  skipReason: PublicationAttempt["skipReason"];
   outcome: NewsletterPublishOutcome;
 }> {
   const admin = createAdminClient();
@@ -675,6 +1227,7 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
       failedReasons: ["retry_exhausted"],
       attemptCount: attempt.attemptCount,
       skipped: true,
+      skipReason: attempt.skipReason,
       outcome: "failed",
     };
   }
@@ -690,13 +1243,13 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
   let failedCount = 0;
   let deferredCount = 0;
   const failedReasons: string[] = [];
+  let configStopTriggered = false;
   if (!subscribers || subscribers.length === 0) {
     const classified = "newsletter_no_subscribers";
-    const policy = resolveNewsletterRetryPolicy(classified);
-    const retry = buildRetryMetadata({
+    const { retry, policy } = resolveNewsletterPublicationRetryForReason({
+      reason: classified,
       attemptCount: attempt.attemptCount,
       nowIso,
-      retryDelayMinutes: policy.delayMinutes ?? RETRY_DELAY_MINUTES,
     });
     await admin.from("content_publications").insert({
       content_item_id: item.id,
@@ -724,6 +1277,7 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
       failedReasons: [classified],
       attemptCount: attempt.attemptCount,
       skipped: false,
+      skipReason: null,
       outcome: "failed",
     };
   }
@@ -776,8 +1330,13 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
       const classified = classifyFailureReason(send.error);
       failedCount += 1;
       failedReasons.push(classified);
-      if (classified === "resend_not_configured") {
-        failedCount += subscribers.length - sentCount - failedCount;
+      if (isConfigStopReason(classified)) {
+        configStopTriggered = true;
+        const remainingSubscribers = Math.max(
+          0,
+          subscriberRows.length - sentCount - failedCount - deferredCount,
+        );
+        deferredCount += remainingSubscribers;
         break;
       }
     }
@@ -785,24 +1344,34 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
 
   const dedupedReasons = dedupeReasons(failedReasons);
   const publicationStatus: NewsletterPublishOutcome =
-    failedCount > 0 ? "failed" : sentCount > 0 ? "sent" : "deferred";
+    configStopTriggered && sentCount === 0
+      ? "deferred"
+      : failedCount > 0
+      ? "failed"
+      : sentCount > 0
+      ? "sent"
+      : "deferred";
   const consumedAttemptCount = publicationStatus === "deferred" ? retryState.previousAttemptCount : attempt.attemptCount;
   const dominantReason =
-    publicationStatus === "deferred"
+    configStopTriggered
+      ? dedupedReasons[0] ?? "resend_not_configured"
+      : publicationStatus === "deferred"
       ? "frequency_window_deferred"
       : dedupedReasons[0] ?? "publish_failed";
-  const policy = resolveNewsletterRetryPolicy(dominantReason);
-  const retry =
+  const { retry, policy } =
     failedCount > 0
-      ? buildRetryMetadata({
+      ? resolveNewsletterPublicationRetryForReason({
+          reason: dominantReason,
           attemptCount: consumedAttemptCount,
           nowIso,
-          retryDelayMinutes: policy.delayMinutes ?? RETRY_DELAY_MINUTES,
         })
-      : { max_attempts: MAX_PUBLICATION_ATTEMPTS, next_retry_at: null };
+      : {
+          retry: { max_attempts: MAX_PUBLICATION_ATTEMPTS, next_retry_at: null },
+          policy: resolveNewsletterRetryPolicy("publish_success"),
+        };
   const deferredReasons =
     deferredCount > 0
-      ? ["frequency_window_deferred"]
+      ? [configStopTriggered ? dominantReason : "frequency_window_deferred"]
       : [];
   await admin.from("content_publications").insert({
     content_item_id: item.id,
@@ -839,6 +1408,7 @@ async function publishNewsletterItem(item: ContentItemRow): Promise<{
     failedReasons: dedupedReasons,
     attemptCount: consumedAttemptCount,
     skipped: false,
+    skipReason: null,
     outcome: publicationStatus,
   };
 }
@@ -848,6 +1418,7 @@ async function publishBlogItem(item: ContentItemRow): Promise<{
   error?: string;
   attemptCount: number;
   skipped: boolean;
+  skipReason: PublicationAttempt["skipReason"];
 }> {
   const admin = createAdminClient();
   const nowIso = new Date().toISOString();
@@ -858,7 +1429,13 @@ async function publishBlogItem(item: ContentItemRow): Promise<{
     item.status === "send_failed",
   );
   if (attempt.shouldSkip) {
-    return { ok: false, error: "retry_exhausted", attemptCount: attempt.attemptCount, skipped: true };
+    return {
+      ok: false,
+      error: "retry_exhausted",
+      attemptCount: attempt.attemptCount,
+      skipped: true,
+      skipReason: attempt.skipReason,
+    };
   }
 
   const published = await publishContentItemToBlog({
@@ -885,7 +1462,13 @@ async function publishBlogItem(item: ContentItemRow): Promise<{
         template_version: BLOG_TEMPLATE_VERSION,
       },
     });
-    return { ok: false, error: classified, attemptCount: attempt.attemptCount, skipped: false };
+    return {
+      ok: false,
+      error: classified,
+      attemptCount: attempt.attemptCount,
+      skipped: false,
+      skipReason: null,
+    };
   }
 
   await admin.from("content_items").update({ slug: published.slug }).eq("id", item.id);
@@ -902,7 +1485,7 @@ async function publishBlogItem(item: ContentItemRow): Promise<{
       retry: { max_attempts: MAX_PUBLICATION_ATTEMPTS, next_retry_at: null },
     },
   });
-  return { ok: true, attemptCount: attempt.attemptCount, skipped: false };
+  return { ok: true, attemptCount: attempt.attemptCount, skipped: false, skipReason: null };
 }
 
 export async function runPublishPipeline(params?: {
@@ -917,7 +1500,17 @@ export async function runPublishPipeline(params?: {
 }> {
   const admin = createAdminClient();
   const retryFailedOnly = Boolean(params?.retryFailedOnly);
-  const batchSize = params?.contentItemId ? 1 : resolvePublishBatchSize(retryFailedOnly);
+  const baseBatchSize = params?.contentItemId ? 1 : resolvePublishBatchSize(retryFailedOnly);
+  const health24h = await readPublicationHealthWindow24h();
+  const failRatio24h =
+    health24h.totalCount24h > 0 ? health24h.failedCount24h / health24h.totalCount24h : 0;
+  const batchSize = computeAdaptivePublishBatchSize({
+    baseBatchSize,
+    retryFailedOnly,
+    failRatio24h,
+    configStopCount24h: health24h.configStopCount24h,
+  });
+  const newsletterConfigStopReason = resolveNewsletterConfigStopReason();
   let query = admin
     .from("content_items")
     .select("*")
@@ -941,6 +1534,7 @@ export async function runPublishPipeline(params?: {
   let deferredCount = 0;
   const failureMessages: string[] = [];
   const now = Date.now();
+  let configBlockedCount = 0;
 
   for (const item of (items ?? []) as ContentItemRow[]) {
     if (
@@ -948,6 +1542,59 @@ export async function runPublishPipeline(params?: {
       item.status === "scheduled" &&
       (!item.scheduled_at || new Date(item.scheduled_at).getTime() > now)
     ) {
+      continue;
+    }
+
+    if (item.type === "newsletter" && newsletterConfigStopReason) {
+      const nowIso = new Date().toISOString();
+      const retry = {
+        max_attempts: MAX_PUBLICATION_ATTEMPTS,
+        next_retry_at: addMinutesIso(new Date(nowIso), CONFIG_BLOCK_RESCHEDULE_MINUTES),
+      };
+      await admin.from("content_publications").insert({
+        content_item_id: item.id,
+        channel: "email",
+        status: "deferred",
+        provider: "resend",
+        attempt_count: 0,
+        last_error: `config_stop_blocked:${newsletterConfigStopReason}`,
+        processed_at: nowIso,
+        metadata: {
+          sent_count: 0,
+          failed_count: 0,
+          deferred_count: 1,
+          failed_reasons: [],
+          deferred_reasons: [newsletterConfigStopReason],
+          retry_policy_key: "policy.config.stop",
+          retry_action: "stop",
+          publish_outcome: "deferred",
+          template_version: NEWSLETTER_TEMPLATE_VERSION,
+          retry,
+          config_blocked: true,
+          config_block_reason: newsletterConfigStopReason,
+        },
+      });
+      await admin
+        .from("content_items")
+        .update({
+          status: "scheduled",
+          scheduled_at: retry.next_retry_at,
+          metadata: {
+            ...((item.metadata ?? {}) as Record<string, unknown>),
+            publish: {
+              ...((((item.metadata ?? {}) as Record<string, unknown>).publish as
+                | Record<string, unknown>
+                | undefined) ?? {}),
+              config_blocked: true,
+              config_block_reason: newsletterConfigStopReason,
+            },
+          } as Json,
+          updated_at: nowIso,
+        })
+        .eq("id", item.id);
+      processedCount += 1;
+      deferredCount += 1;
+      configBlockedCount += 1;
       continue;
     }
 
@@ -961,14 +1608,30 @@ export async function runPublishPipeline(params?: {
       item.type === "newsletter" ? await publishNewsletterItem(item) : null;
 
     if (blogResult?.skipped || newsletterResult?.skipped) {
-      const skipReason = blogResult?.error ?? newsletterResult?.failedReasons[0] ?? "retry_exhausted";
-      failureMessages.push(`[${item.type}:${item.id}] ${skipReason}`);
+      const skipReason = blogResult?.skipReason ?? newsletterResult?.skipReason;
+      if (skipReason === "max_attempts_exhausted") {
+        failureMessages.push(`[${item.type}:${item.id}] retry_exhausted`);
+      }
       await admin
         .from("content_items")
-        .update({ status: "send_failed", updated_at: new Date().toISOString() })
+        .update({
+          status: "send_failed",
+          metadata: {
+            ...((item.metadata ?? {}) as Record<string, unknown>),
+            publish: {
+              ...((((item.metadata ?? {}) as Record<string, unknown>).publish as
+                | Record<string, unknown>
+                | undefined) ?? {}),
+              retry_skip_reason: skipReason,
+            },
+          } as Json,
+          updated_at: new Date().toISOString(),
+        })
         .eq("id", item.id);
       processedCount += 1;
-      failedCount += 1;
+      if (skipReason === "max_attempts_exhausted") {
+        failedCount += 1;
+      }
       continue;
     }
 
@@ -1017,6 +1680,11 @@ export async function runPublishPipeline(params?: {
     failedCount,
     sentCount,
     deferredCount,
-    failureMessages: failureMessages.slice(0, 20),
+    failureMessages: [
+      ...failureMessages.slice(0, 19),
+      ...(configBlockedCount > 0
+        ? [`config_stop_blocked:${newsletterConfigStopReason ?? "unknown"}:${configBlockedCount}`]
+        : []),
+    ].slice(0, 20),
   };
 }

@@ -24,10 +24,16 @@ describe("content ops pack registry", () => {
     expect(drafts.newsletter.bodyMarkdown).toContain("## Sources");
     expect(drafts.newsletter.bodyMarkdown).toContain("[Alpha]");
     expect(drafts.newsletter.bodyMarkdown).toContain("## Evidence snapshot");
+    expect(drafts.newsletter.bodyMarkdown).toContain("## Citation anchors used in this brief");
     expect(drafts.newsletter.bodyMarkdown).toContain("## Autotune strategy");
+    expect(drafts.newsletter.bodyMarkdown).toContain("## Novelty recovery checklist (must pass)");
+    expect(drafts.newsletter.bodyMarkdown).toContain("## Anti-repetition guard");
     expect(drafts.blog.bodyMarkdown).toContain("## Execution checklist (this week)");
     expect(drafts.blog.bodyMarkdown).toContain("## Evidence ladder");
+    expect(drafts.blog.bodyMarkdown).toContain("## Citation anchors used in this brief");
     expect(drafts.blog.bodyMarkdown).toContain("## Autotune strategy");
+    expect(drafts.blog.bodyMarkdown).toContain("## Novelty recovery checklist (must pass)");
+    expect(drafts.blog.bodyMarkdown).toContain("## Anti-repetition guard");
     expect(drafts.blog.title.length).toBeGreaterThan(20);
   });
 

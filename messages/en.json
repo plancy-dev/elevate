@@ -1351,6 +1351,7 @@
         "status": "Status",
         "quality": "Quality",
         "gate": "Gate",
+        "aiAudit": "AI audit",
         "opsSignal": "Ops signal",
         "updated": "Updated",
         "actions": "Actions"
@@ -1371,6 +1372,28 @@
         "qualityRework": "Quality rework",
         "reviewNeeded": "Review needed",
         "manualReviewRequired": "manual_review_required"
+      },
+      "aiAudit": {
+        "confidence": "Confidence {value}%",
+        "policyReason": "Policy",
+        "rewriteDecision": "Rewrite",
+        "decision": {
+          "autoApproveCandidate": "Auto-approve candidate",
+          "needsRewrite": "Needs rewrite",
+          "holdManual": "Hold manual"
+        },
+        "rewrite": {
+          "readyForApproval": "Ready for approval",
+          "needsManualReview": "Needs manual review"
+        },
+        "policy": {
+          "autoApprovalPolicyPassed": "Auto-approval policy passed",
+          "decisionNotAutoApproveCandidate": "Decision is not auto-approve candidate",
+          "confidenceBelowThreshold": "Confidence below threshold",
+          "reviewGateNotPassed": "Review gate not passed",
+          "qualityScoreBelowThreshold": "Quality score below threshold",
+          "hardBlockReasonDetected": "Hard-block reason detected"
+        }
       },
       "empty": "No queue items found."
     },

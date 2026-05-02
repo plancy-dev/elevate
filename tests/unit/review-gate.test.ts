@@ -54,6 +54,9 @@ Most teams assume retries always improve outcomes, but hidden queue contention c
 2. Add one failure-class dashboard.
 3. Implement one weekly review ritual.
 
+## Evidence link used in analysis
+- Runtime rollback risk appears in [Example source](https://example.com/article) and should be tracked before scaling.
+
 ## Source
 - [Example source](https://example.com/article)
       `.trim(),
@@ -139,6 +142,30 @@ Contrarian teams warn that retries can hide deeper reliability debt.
     });
     expect(result.passed).toBe(false);
     expect(result.metrics.citationCoverage).toBeLessThan(MIN_REVIEW_CITATION_COVERAGE);
+    expect(result.reasons).toContain("citation_coverage_low");
+  });
+
+  it("does not count appendix-only source links as citation coverage", () => {
+    const result = evaluateReviewGate({
+      bodyMarkdown: `
+## Why now
+${"Operators need source-grounded decisions under uncertainty. ".repeat(12)}
+
+## Comparison
+Compare staged rollout vs direct rollout in terms of rollback speed.
+
+## Counter-signal
+Contrarian teams warn that retries can hide deeper reliability debt.
+
+## Sources
+- [One source](https://example.com/one)
+- [Two source](https://example.com/two)
+- [Three source](https://example.com/three)
+      `.trim(),
+      sourceLinkCount: 3,
+    });
+    expect(result.passed).toBe(false);
+    expect(result.metrics.citationCoverage).toBe(0);
     expect(result.reasons).toContain("citation_coverage_low");
   });
 

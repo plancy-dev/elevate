@@ -103,11 +103,20 @@ function inspectStructuralGuards(markdown: string, sourceLinkCount: number): {
 }
 
 function computeCitationCoverage(markdown: string, sourceLinkCount: number): number {
-  const markdownLinkCount = countMatches(markdown, /\[[^\]]+]\([^)]+\)/g);
-  const bareUrlCount = countMatches(markdown, /\bhttps?:\/\/[^\s)]+/g);
-  const citationAnchorCount = Math.max(markdownLinkCount, bareUrlCount);
+  const nonAppendixMarkdown = markdown.replace(
+    /^##\s+(sources?|references?)\b[\s\S]*$/im,
+    "",
+  );
+  const markdownLinkTargets = Array.from(
+    nonAppendixMarkdown.matchAll(/\[[^\]]+]\((https?:\/\/[^)\s]+)\)/g),
+  ).map((match) => match[1]);
+  const bareUrls = Array.from(
+    nonAppendixMarkdown.matchAll(/\bhttps?:\/\/[^\s)]+/g),
+  ).map((match) => match[0]);
+  const uniqueAnchors = new Set([...markdownLinkTargets, ...bareUrls]);
+  const expectedAnchorCount = Math.max(1, Math.min(sourceLinkCount, 3));
   if (sourceLinkCount <= 0) return 0;
-  return Number(Math.min(1, citationAnchorCount / sourceLinkCount).toFixed(4));
+  return Number(Math.min(1, uniqueAnchors.size / expectedAnchorCount).toFixed(4));
 }
 
 function scoreRubric(markdown: string, sourceLinkCount: number): ReviewGateRubric {
