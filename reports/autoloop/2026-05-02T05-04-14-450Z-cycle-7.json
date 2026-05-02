@@ -1,0 +1,47 @@
+{
+  "cycle": 7,
+  "runMode": "production",
+  "policyVersion": "v1-low-risk",
+  "cursorRunId": "autoloop-prod-kst-0200-2026-05-02T02-01-27Z",
+  "startedAt": "2026-05-02T05:04:07.983Z",
+  "endedAt": "2026-05-02T05:04:14.450Z",
+  "ok": true,
+  "elapsedMs": 6467,
+  "candidatePrs": [],
+  "mergedPrs": [],
+  "steps": [
+    {
+      "id": "health.clean-tree",
+      "ok": true,
+      "command": "git diff --quiet && git diff --cached --quiet",
+      "output": ""
+    },
+    {
+      "id": "health.typecheck",
+      "ok": true,
+      "command": "pnpm typecheck",
+      "output": "> elevate@0.2.0 typecheck /workspace\n> tsc --noEmit"
+    },
+    {
+      "id": "health.i18n",
+      "ok": true,
+      "command": "pnpm test:i18n",
+      "output": "> elevate@0.2.0 test:i18n /workspace\n> vitest run tests/unit/messages-locale-parity.test.ts tests/unit/admin-i18n-hardcoded.test.ts\n\n\n RUN  v3.2.4 /workspace\n\n ✓ tests/unit/admin-i18n-hardcoded.test.ts (1 test) 3ms\n ✓ tests/unit/messages-locale-parity.test.ts (8 tests) 27ms\n\n Test Files  2 passed (2)\n      Tests  9 passed (9)\n   Start at  05:04:11\n   Duration  220ms (transform 42ms, setup 0ms, collect 53ms, tests 29ms, environment 0ms, prepare 99ms)"
+    },
+    {
+      "id": "health.content-packs",
+      "ok": true,
+      "command": "pnpm vitest run tests/unit/content-packs.test.ts",
+      "output": "RUN  v3.2.4 /workspace\n\n ✓ tests/unit/content-packs.test.ts (2 tests) 2ms\n\n Test Files  1 passed (1)\n      Tests  2 passed (2)\n   Start at  05:04:12\n   Duration  199ms (transform 42ms, setup 0ms, collect 42ms, tests 2ms, environment 0ms, prepare 48ms)"
+    },
+    {
+      "id": "health.quality-monitor",
+      "ok": true,
+      "command": "pnpm content-ops:quality:monitor",
+      "output": "> elevate@0.2.0 content-ops:quality:monitor /workspace\n> pnpm tsx scripts/content-ops-quality-monitor.ts\n\n[dotenv@17.3.1] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }\n{\n  \"windowDays\": 7,\n  \"freshWindowHours\": 24,\n  \"generatedCount\": 24,\n  \"publishedCount\": 8,\n  \"reviewRequiredCount\": 12,\n  \"sendFailedCount\": 7,\n  \"avgQualityScore\": 19.7,\n  \"minQualityScore\": 8,\n  \"topQualityIssues\": [\n    {\n      \"reason\": \"low_novelty\",\n      \"count\": 11\n    },\n    {\n      \"reason\": \"possible_overcopy_detected\",\n      \"count\": 6\n    },\n    {\n      \"reason\": \"comparison_missing\",\n      \"count\": 6\n    },\n    {\n      \"reason\": \"counterargument_missing\",\n      \"count\": 6\n    },\n    {\n      \"reason\": \"body_too_short\",\n      \"count\": 2\n    }\n  ],\n  \"topPublishFailureReasons\": [\n    {\n      \"reason\": \"retry_exhausted\",\n      \"count\": 54\n    },\n    {\n      \"reason\": \"resend_not_configured\",\n      \"count\": 21\n    },\n    {\n      \"reason\": \"[newsletter:2db5ef7f-7df4-436f-9e92-7e4fb7bead24] retry_exhausted\",\n      \"count\": 5\n    },\n    {\n      \"reason\": \"[newsletter:a413de65-b1d3-4c5d-bc57-582df91fbb7b] Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit.\",\n      \"count\": 1\n    },\n    {\n      \"reason\": \"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit.\",\n      \"count\": 1\n    }\n  ],\n  \"freshGeneratedCount\": 22,\n  \"freshReviewedCount\": 21,\n  \"freshReviewRequiredCount\": 11,\n  \"freshAvgQualityScore\": 20.5,\n  \"freshMinQualityScore\": 17,\n  \"freshTopQualityIssues\": [\n    {\n      \"reason\": \"low_novelty\",\n      \"count\": 9\n    },\n    {\n      \"reason\": \"possible_overcopy_detected\",\n      \"count\": 6\n    },\n    {\n      \"reason\": \"comparison_missing\",\n      \"count\": 5\n    },\n    {\n      \"reason\": \"counterargument_missing\",\n      \"count\": 5\n    }\n  ],\n  \"improvementFocus\": [\n    \"topic-strategy-pack에서 반례/비교 프레임을 늘려 novelty 점수를 끌어올리세요.\",\n    \"publish 배치 간격과 retry 윈도우를 운영 트래픽에 맞게 조정하세요.\",\n    \"review_required backlog SLA를 설정하고 must-review 항목을 우선 처리하세요.\"\n  ]\n}"
+    }
+  ],
+  "recommendations": [
+    "All loop checks passed. Safe to continue next cycle."
+  ]
+}
