@@ -38,7 +38,7 @@ When creating blog content, use **`docs/templates/blog-authoring-templates.md`**
 | **INIT** | Ask / short Agent | Declared **L1–L4**, touched paths, SoT refs [`memory-bank/tasks.md`](memory-bank/tasks.md), [`memory-bank/activeContext.md`](memory-bank/activeContext.md) |
 | **PLAN** | **Plan** | Plan + risks + verification idea (in chat or linked notes); align with [`memory-bank/tasks.md`](memory-bank/tasks.md) |
 | **CREATIVE** | **Plan** | Decision logged [`memory-bank/creative-*.md`](memory-bank/), ADR, or `docs/features/…` as appropriate |
-| **BUILD** | **Agent** | Code + **`pnpm verify`** whenever the repo changes materially |
+| **BUILD** | **Agent** | Code + **`pnpm verify`** when material changes apply — gate: [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) **§2b** |
 | **REFLECT** | Ask / **Debug** | What shipped, gaps, follow-ups → [`memory-bank/progress.md`](memory-bank/progress.md) / `tasks.md` |
 | **ARCHIVE** | Agent | Durable summaries → [`memory-bank/archive/`](memory-bank/archive/) per `.cursor/rules/archive-and-cleanup.mdc` |
 

@@ -102,6 +102,8 @@
 
 ### P1 — 정책·구조 (1~3 PR)
 
+**진행:** 베이스라인 감사 표 [`docs/CURSOR_RULES_AUDIT.md`](../CURSOR_RULES_AUDIT.md) · verify if/then은 [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) **§2b** + [`AGENTS.md`](../../AGENTS.md) BUILD 행.
+
 3. **`.cursor/rules` 감사 표**: 파일별 `alwaysApply` / glob / 줄 수 개요를 `docs/` 또는 `memory-bank/`에 **한 페이지**로 두고, **분할·축소 후보** 표시 ([Cursor agent best practices](https://cursor.com/blog/agent-best-practices)).
 4. **REFLECT 게이트 문구 표준화** (OpenAI OSS 패턴 차용):  
    `AGENTS.md` 또는 `AI_ORCHESTRATION.md`에 **“코드·테스트·예제·빌드 터치 시 REFLECT 전 `pnpm verify`”** if/then을 더 명시적 문자열로 (이미 있으면 **중복 제거**만).

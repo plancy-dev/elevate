@@ -30,6 +30,16 @@
 | PR 전 품질·리그레션 | **`/review`**; 브라우저 검증은 **`/qa`** 또는 **`/browse`** (설치 시) |
 | 출하 파이프라인 | **`/ship`** — 단, **이 저장소는 `pnpm verify`·커밋 규칙을 반드시 지킨다** (gstack 기본과 다를 수 있음) |
 
+### 2b. verify 게이트 (BUILD → REFLECT)
+
+**If** 아래 중 하나라도 해당하면 **then** “BUILD 완료”·REFLECT 시작·PR ready 선언 전에 **`pnpm verify`**를 통과시킨다(또는 팀이 합의한 **동등한 최소** 하위 집합: 예 lint+typecheck+관련 테스트만).
+
+- `src/**`, `tests/**`, `e2e/**`, `scripts/**`에서의 실행 코드·테스트·스냅샷 변경  
+- `package.json`, `pnpm-lock.yaml`, `next.config.*`, `vitest.config.*`, `tsconfig*.json`, `eslint.config.*`, CI 워크플로(`.github/**`) 변경  
+- **예외:** 순수 문서(`docs/**`만)·메모리뱅크 서술만·이 PR 가이드처럼 런타임에 영향 없는 마크다운만 바뀐 경우 — 그래도 팀이 요구하면 verify 유지.
+
+gstack **`/ship`** 등은 이 저장소의 **`pnpm verify`·훅을 대체하지 않는다.** 상세 표는 [`AGENTS.md`](../AGENTS.md) § Operating model.
+
 ---
 
 ## 3. 프롬프트 엔지니어링 계약 (에이전트에게 줄 맥락)
@@ -89,6 +99,7 @@
 | [`AI_USAGE.md`](./AI_USAGE.md) | 짧은 진입점 |
 | [`MEMORY_BANK_SKILL_GUIDE.md`](./MEMORY_BANK_SKILL_GUIDE.md) | `elevate-memory-bank-bootstrap` 스킬로 세션 시작 (팀 가이드) |
 | [`features/PLAN-ai-native-workflow-evolution-2026-05.md`](./features/PLAN-ai-native-workflow-evolution-2026-05.md) | 업계·커뮤니티·벤더 리서치 대비 갭·BUILD 백로그 (PLAN) |
+| [`CURSOR_RULES_AUDIT.md`](./CURSOR_RULES_AUDIT.md) | `.cursor/rules` 줄 수·alwaysApply·globs 스냅샷 + 분할 후보 (P1) |
 | [`GSTACK.md`](./GSTACK.md) | vendored gstack 설치 |
 | [`DEVELOPMENT.md`](./DEVELOPMENT.md) | 스크립트·CI·대시보드 접근 env |
 | [`design/SYSTEM.md`](./design/SYSTEM.md) | 디자인 토큰·마케팅/앱 셸 |

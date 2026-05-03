@@ -20,7 +20,7 @@
 
 ## PLAN — AI-native workflow evolution (2026-05-03)
 
-- **Epic (process, not product):** [`docs/features/PLAN-ai-native-workflow-evolution-2026-05.md`](../docs/features/PLAN-ai-native-workflow-evolution-2026-05.md) — 업계·SO·벤더·국내 MCP 사례 리서치 → Elevate 갭 → **P0–P2 BUILD 백로그**. **P0 문서 반영 완료(저장소). 다음: P1** — PLAN §4 P1(`.cursor/rules` 감사 표, REFLECT·verify if/then 정리, nested AGENTS 선택).
+- **Epic (process, not product):** [`docs/features/PLAN-ai-native-workflow-evolution-2026-05.md`](../docs/features/PLAN-ai-native-workflow-evolution-2026-05.md) — **P0 main 머지 완료.** **P1 준비:** [`docs/CURSOR_RULES_AUDIT.md`](../docs/CURSOR_RULES_AUDIT.md) · verify 게이트 [`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md) §2b · 잔여는 감사 표 하단 **복붙 블록** 또는 PLAN §4 P1.
 
 ## PLAN backlog — first slice (order TBD in PLAN session)
 
