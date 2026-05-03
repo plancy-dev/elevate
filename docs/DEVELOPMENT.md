@@ -56,6 +56,7 @@ Programmatic weekly generation (Cursor SDK): [`docs/BLOG_AUTOPUBLISH_SDK.md`](BL
 
 | Command | Purpose |
 |---------|---------|
+| `pnpm gstack:check` | Warn-only: vendored **gstack** present but `browse/dist/browse` missing (`docs/GSTACK.md` Step 1). Also runs at the start of **`pnpm verify`**. Set `GSTACK_CHECK=0` to skip. |
 | `pnpm dev` | Next.js dev server |
 | `pnpm lint` | ESLint |
 | `pnpm typecheck` | `tsc --noEmit` |
@@ -64,7 +65,7 @@ Programmatic weekly generation (Cursor SDK): [`docs/BLOG_AUTOPUBLISH_SDK.md`](BL
 | `pnpm test:integration` | Opt-in Supabase smoke — see [TESTING.md](TESTING.md) |
 | `pnpm test:e2e` | Playwright — see [TESTING.md](TESTING.md) |
 | `pnpm build` | Production build |
-| `pnpm verify` | lint + typecheck + unit test + build (local “CI dry run”) |
+| `pnpm verify` | `gstack:check` (warn-only) + lint + typecheck + unit test + build (local “CI dry run”) |
 | `pnpm db:types` | Regenerate `database.types.ts` from Supabase |
 
 ## Git hooks
@@ -73,7 +74,7 @@ Programmatic weekly generation (Cursor SDK): [`docs/BLOG_AUTOPUBLISH_SDK.md`](BL
 
 ## CI
 
-GitHub Actions (`.github/workflows/ci.yml`) runs lint, typecheck, unit tests, and build on pushes/PRs to `main`. Build uses placeholder `NEXT_PUBLIC_*` values; Vercel injects real env vars at deploy time.
+GitHub Actions (`.github/workflows/ci.yml`) runs **non-fatal** `pnpm run gstack:check` after install, then lint, typecheck, unit tests, and build on pushes/PRs to `main`. Build uses placeholder `NEXT_PUBLIC_*` values; Vercel injects real env vars at deploy time.
 
 Optional: **`.github/workflows/e2e.yml`** — manual Playwright run or PR label `run-e2e` (repository secrets required). See [TESTING.md](TESTING.md).
 
