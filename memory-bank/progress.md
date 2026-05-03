@@ -3,18 +3,19 @@
 **SoT for priority:** `memory-bank/tasks.md`  
 **Current focus:** `memory-bank/activeContext.md`
 
-## Latest Completed
+## Status snapshot (aligned with `tasks.md`, 2026-05-03)
 
-- INIT planning converted to GitHub issue queue (`#38`-`#47`).
-- Milestone/labels applied and issue templates standardized.
-- Working tree cleanup checkpoint created via git stash.
-- Memory Bank reset to issue-driven execution mode.
+- **INIT foundation (`#38`–`#47`):** done (quality gates, citation, retry matrix, alerts, daily snapshot, 3-day regression).
+- **Queue / admin automation (`#55`–`#59`):** done (triage, rewrite, auto-approval policy, Cursor scenario, `/admin/content-queue` signals).
+- **Stabilization P0:** `#49` · `#50` — **operational gates passed** (strict 24h / retry & fail-ratio posture per re-audit). `#51` — **open**: novelty/blog improvement needs **≥2 distinct day buckets** in `pnpm run content-ops:gate51-trend-check` (currently one bucket → cannot close statistically).
+- **Stabilization P1 (`#52`–`#54`):** done per `tasks.md` (scoreboard, citation enablement, escalation action loop).
+- **Post-cycle re-audit:** recorded in `reports/reaudit-post-cycle-2026-05-03.md`; exit criterion checked in `tasks.md`.
+- **Still tracked in `tasks.md` Immediate Next Step:** second-day novelty trend capture; **runtime alignment** — `scheduled` persistence and `cursor` vs `vercel-cron` source invariant in production (local evidence exists; prod routine not fully checked off).
+- **Three-pillar maturity (service ops / newsletter / blog):** gap list and remediation plan — `reports/automation-three-pillars-gap-analysis-2026-05-03.md`.
 
-## In Progress
+The **timeline below** is the stabilization implementation log (May 2026 sprint); it is **historical detail**, not the current “in progress” line.
 
-- Stabilization P0/P1 execution kickoff (`#49`~`#54`).
-
-## Latest Completed (This Run)
+## Latest Completed (historical — stabilization sprint log)
 
 - `#43` implemented: citation coverage metric added across review-gate, quality-monitor, and content-quality UI.
 - `review-gate` metrics now include `citationCoverage` and threshold gate (`MIN_REVIEW_CITATION_COVERAGE=0.6`).
