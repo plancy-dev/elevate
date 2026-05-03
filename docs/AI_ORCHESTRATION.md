@@ -100,6 +100,9 @@ gstack **`/ship`** 등은 이 저장소의 **`pnpm verify`·훅을 대체하지 
 | [`MEMORY_BANK_SKILL_GUIDE.md`](./MEMORY_BANK_SKILL_GUIDE.md) | `elevate-memory-bank-bootstrap` 스킬로 세션 시작 (팀 가이드) |
 | [`features/PLAN-ai-native-workflow-evolution-2026-05.md`](./features/PLAN-ai-native-workflow-evolution-2026-05.md) | 업계·커뮤니티·벤더 리서치 대비 갭·BUILD 백로그 (PLAN) |
 | [`CURSOR_RULES_AUDIT.md`](./CURSOR_RULES_AUDIT.md) | `.cursor/rules` 줄 수·alwaysApply·globs 스냅샷 + 분할 후보 (P1) |
+| [`adr/README.md`](./adr/README.md) | ADR 작성 시 AWS 권장 ADR 프로세스 링크·요지 |
+| [`features/PLAN-ai-native-workflow-p2-rfc.md`](./features/PLAN-ai-native-workflow-p2-rfc.md) | P2 RFC — Hooks·Docs MCP·CI (문서) |
+| [`features/PLAN-ai-native-workflow-doc-gate.md`](./features/PLAN-ai-native-workflow-doc-gate.md) | P0–P2 **문서 게이트** — 구현 전 경로 검수·다음 PR 경계 |
 | [`GSTACK.md`](./GSTACK.md) | vendored gstack 설치 |
 | [`DEVELOPMENT.md`](./DEVELOPMENT.md) | 스크립트·CI·대시보드 접근 env |
 | [`design/SYSTEM.md`](./design/SYSTEM.md) | 디자인 토큰·마케팅/앱 셸 |

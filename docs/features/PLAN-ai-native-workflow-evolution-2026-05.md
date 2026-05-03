@@ -2,7 +2,8 @@
 
 **목적:** 업계·커뮤니티·벤더 기술 블로그에서 확인되는 **2026년 초 기준** AI-assisted / agentic 개발 관행을 정리하고, Elevate의 **Memory Bank + Cursor + gstack** 스택과 비교해 **합리적·효율적인** 개선안을 **구현 준비(PLAN)** 수준으로 고정한다.  
 **범위:** 문서·규칙·스킬·훅·CI·팀 루틴. 코드베이스 대규모 리팩터는 포함하지 않는다.  
-**다음 단계:** 이 PLAN 승인 후 **BUILD**에서 우선순위(P0→P2)대로 이슈/PR로 쪼갠다.
+**다음 단계:** 이 PLAN 승인 후 **BUILD**에서 우선순위(P0→P2)대로 이슈/PR로 쪼갠다.  
+**구현 전 문서 검증:** [`PLAN-ai-native-workflow-doc-gate.md`](./PLAN-ai-native-workflow-doc-gate.md) — P0–P2 문서가 PR에 올라왔는지 한 페이지에서 확인한다.
 
 ---
 
@@ -104,6 +105,11 @@
 
 **진행:** 베이스라인 감사 표 [`docs/CURSOR_RULES_AUDIT.md`](../CURSOR_RULES_AUDIT.md) · verify if/then은 [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) **§2b** + [`AGENTS.md`](../../AGENTS.md) BUILD 행.
 
+**P1 잔여 처리(저장소):**
+
+- [x] `posthog-integration.mdc` / `completion-and-commit.mdc` — `globs: []` 명시
+- [x] nested `AGENTS.md` — 팀 합의 전 스킵([`CURSOR_RULES_AUDIT.md`](../CURSOR_RULES_AUDIT.md) §)
+
 3. **`.cursor/rules` 감사 표**: 파일별 `alwaysApply` / glob / 줄 수 개요를 `docs/` 또는 `memory-bank/`에 **한 페이지**로 두고, **분할·축소 후보** 표시 ([Cursor agent best practices](https://cursor.com/blog/agent-best-practices)).
 4. **REFLECT 게이트 문구 표준화** (OpenAI OSS 패턴 차용):  
    `AGENTS.md` 또는 `AI_ORCHESTRATION.md`에 **“코드·테스트·예제·빌드 터치 시 REFLECT 전 `pnpm verify`”** if/then을 더 명시적 문자열로 (이미 있으면 **중복 제거**만).
@@ -114,7 +120,10 @@
 
 ### P2 — 도구·자동화 (별도 이슈)
 
-6. **Cursor Hooks** ([create-hook 스킬](https://github.com/cursor) 경로는 로컬) — 예: Agent 시작 전 “working tree clean 또는 의도된 WIP” 알림. **보안·정책** 검토 후 적용.  
+**RFC 문서:** [`docs/features/PLAN-ai-native-workflow-p2-rfc.md`](./PLAN-ai-native-workflow-p2-rfc.md) — Hooks / Docs MCP / CI 이중 하네스 범위·수용 기준·결정 질문·**문서/구현 PR 경계**.  
+**문서 게이트:** [`PLAN-ai-native-workflow-doc-gate.md`](./PLAN-ai-native-workflow-doc-gate.md) — 머지 전 경로 검수·구현 준비 조건.
+
+6. **Cursor Hooks** — 예: Agent 시작 전 “working tree clean 또는 의도된 WIP” 알림. **보안·정책** 검토 후 적용.  
 7. **Context7 또는 공식 Docs MCP** — 새 외부 SDK 도입 시만 켜는 **문서 스킬** (토큰 비용 고려).  
 8. **Codex GitHub Action** 수준의 **CI 이중 하네스**는 비용·유지보수 큼 → **gstack + 기존 CI**로 충분한지 분기 판단 후 결정.
 
