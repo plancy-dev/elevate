@@ -17,6 +17,10 @@
 5. **검증 일원화** — 이 저장소는 변경 후 **`pnpm verify`**(또는 작업에 맞는 최소 하위 집합)로 맞춘다. ([`AGENTS.md`](../AGENTS.md) · 커밋 규칙 우선.)
 6. **비밀 금지** — 키·토큰·`.env.local` 내용을 프롬프트나 PR 본문에 넣지 않는다.
 
+### 1b. 긴 디버그·세션 리셋
+
+같은 스레드에서 디버그가 **길어지면**(가이드: 사용자 메시지 **약 20턴** 초과) 컨텍스트 오염 위험이 커진다. **새 채팅**을 열고, `memory-bank/tasks.md`·`activeContext.md`에서 **목표·범위만** 인용한 뒤 **블록 A**를 맨 위에 다시 붙여 세션을 재고정한다. 단계별 설명·근거 링크는 [`MEMORY_BANK_SKILL_GUIDE.md`](./MEMORY_BANK_SKILL_GUIDE.md) **§ 긴 디버그·세션 리셋**에 둔다(여기서는 중복하지 않음).
+
 제안만 하고 끝내지 말고, 사용자가 **다음 세션에 그대로 재사용**할 수 있도록 아래 **블록 A~C** 중 하나를 함께 넘긴다. (저장소 에이전트 규약: **`AGENTS.md`** § Session handoff · **`CLAUDE.md`** § AI orchestration · `.cursor/rules/ai-session-bootstrap.mdc` §4.)
 
 ---

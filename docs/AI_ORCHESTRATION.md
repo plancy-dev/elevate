@@ -44,6 +44,8 @@
 
 불필요한 전체 붙여넣기 대신 **파일 경로를 주고 읽게 한다** — 컨텍스트 비용과 드리프트를 줄인다.
 
+**결제·외부 API·PII**가 걸리는 작업에서는, 채팅에 스펙 요약만 던지고 끝내지 말고 **공식 문서 MCP**(또는 저장소에 이미 연결된 동등한 도구)로 최신 스펙·플로우를 가져오게 한다. 문서만으로 생성할 때 흔한 **SDK 경로 오류·결제 플로우 위반·시크릿의 클라이언트 노출**을 줄이려는 실무 패턴이다([토스페이먼츠 MCP 서버 구현기](https://toss.tech/article/37777)). 세부 비밀·금지 사항은 아래 **§6**과 동일하다. 관련 PLAN: [`features/PLAN-ai-native-workflow-evolution-2026-05.md`](./features/PLAN-ai-native-workflow-evolution-2026-05.md) §4 P0.
+
 **제안·로드맵·“다음 작업” 응답 시:** 한 가지 **최선안**을 먼저 제시하고, [`AI_EXPERT_PROMPTS.md`](./AI_EXPERT_PROMPTS.md) §1 의사결정 바를 따른다. 가능하면 사용자가 다음 탭에 붙여 넣을 **블록 B/C 형태의 완성 프롬프트**를 함께 출력한다.
 
 ---
@@ -85,6 +87,8 @@
 | 문서 | 용도 |
 |------|------|
 | [`AI_USAGE.md`](./AI_USAGE.md) | 짧은 진입점 |
+| [`MEMORY_BANK_SKILL_GUIDE.md`](./MEMORY_BANK_SKILL_GUIDE.md) | `elevate-memory-bank-bootstrap` 스킬로 세션 시작 (팀 가이드) |
+| [`features/PLAN-ai-native-workflow-evolution-2026-05.md`](./features/PLAN-ai-native-workflow-evolution-2026-05.md) | 업계·커뮤니티·벤더 리서치 대비 갭·BUILD 백로그 (PLAN) |
 | [`GSTACK.md`](./GSTACK.md) | vendored gstack 설치 |
 | [`DEVELOPMENT.md`](./DEVELOPMENT.md) | 스크립트·CI·대시보드 접근 env |
 | [`design/SYSTEM.md`](./design/SYSTEM.md) | 디자인 토큰·마케팅/앱 셸 |
@@ -99,6 +103,7 @@
 ## 8. 자동화 (버그·기능 요청도 동일 동작)
 
 - **Cursor**: `.cursor/rules/ai-session-bootstrap.mdc` (`alwaysApply: true`) — 구현·버그·기능 요청 시 **`memory-bank/tasks.md`·`activeContext.md`**를 도구로 읽고, **`docs/AI_ORCHESTRATION.md`** 레이어를 확인한 뒤 진행. 사용자가 템플릿을 쓰지 않아도 동작한다.
+- **명시 세션 시작 (선택)**: 프로젝트 스킬 **`.cursor/skills/elevate-memory-bank-bootstrap`** — “INIT 모드에서…” 장문 대신 스킬 지명으로 **INIT 산출 형식·L1–L4·다음 모드**를 한 턴에 고정. 팀 가이드: [`MEMORY_BANK_SKILL_GUIDE.md`](./MEMORY_BANK_SKILL_GUIDE.md).
 - **사용자 권장 형식** (재현·범위 명확화): [`AI_USER_TEMPLATES.md`](./AI_USER_TEMPLATES.md).
 - **전문가 기준·복붙 세션**: [`AI_EXPERT_PROMPTS.md`](./AI_EXPERT_PROMPTS.md).
 
