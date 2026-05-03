@@ -38,6 +38,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: gstack setup reminder (non-fatal)
+        run: pnpm run gstack:check
+
       - name: ESLint
         run: pnpm run lint
 

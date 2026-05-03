@@ -1,0 +1,7 @@
+
+> elevate@0.2.0 gstack:check /Users/rayleighko/Development/elevate
+> node scripts/check-gstack.mjs
+
+
+⚠️  gstack: `.agents/skills/gstack` is vendored but `./setup` was not run (missing `browse/dist/browse`). Slash skills will not register. Non-fatal — see docs/GSTACK.md (Generate skills).
+

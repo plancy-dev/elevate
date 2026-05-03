@@ -14,7 +14,7 @@ cd .agents/skills/gstack
 
 `--host auto` picks Codex/Cursor-compatible skills when those tools are present. See upstream README for `--host codex`, `--host factory`, and troubleshooting.
 
-**If `setup` has not been run:** slash skills are not registered; **`CLAUDE.md`** still documents the intended workflow. CI does not require gstack.
+**If `setup` has not been run:** slash skills are not registered; **`CLAUDE.md`** still documents the intended workflow. CI does not require gstack. **`pnpm verify`** runs a **non-fatal** check (`pnpm gstack:check` → `scripts/check-gstack.mjs`): if the vendored tree exists but `browse/dist/browse` is missing, it prints a short warning (exit code 0). Opt out locally with `GSTACK_CHECK=0`.
 
 ## Elevate에서 권장하는 쿼런스 (예시)
 
