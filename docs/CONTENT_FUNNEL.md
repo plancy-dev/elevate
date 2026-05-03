@@ -1,5 +1,7 @@
 # Content funnel — Prompt Studio first (Elevate AI)
 
+> **2026-Q2 GTM:** 대외 **히어로·CTA·가격 페이지 스토리**는 **시나리오 A / 미디어 우선**([`docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md`](./adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md), GitHub **#60**). 본 문서의 **Prompt Studio first**·**카탈로그 병행** 서술은 **제품 퍼널·대시보드 IA** 관점에서 유지된다. “first”가 **홈페이지 한 줄**을 의미하는지 **로그인 후 제품 중심**을 의미하는지 혼동하지 않도록 ADR-012를 우선한다.
+
 This document aligns **Elevate AI**’s first MVP (**prompt improvement / Prompt Studio**), **whitelist capture** (`#waitlist`), and **growth channels** (blog, newsletter, SEO, paid) with **catalog & e-books** as a parallel commercial layer—not the homepage headline. North Star: [`memory-bank/creative-elevate-ai-pivot.md`](../memory-bank/creative-elevate-ai-pivot.md).
 
 ## Funnel stages

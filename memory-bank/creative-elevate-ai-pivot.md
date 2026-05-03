@@ -3,13 +3,19 @@
 **Single source of truth** for product narrative (Gemini/VC 플라이휠·듀얼 GTM과 정합).  
 구현 세부는 `memory-bank/tasks.md`와 ADR로 갱신한다.
 
+## GTM vs 제품 계층 (2026-Q2, ADR-012)
+
+**방문자에게 보이는 이야기(GTM)** 는 GitHub **#60**에서 채택한 **시나리오 A — 미디어 우선**이 우선한다([`docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md`](../docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md)). 블로그·뉴스레터·구독 약속이 히어로/카피의 **1순위 축**이 될 수 있다.
+
+아래 **Phase 0 킬러(Prompt Studio)**·**전자책 트로이 목마**는 **제품·수익 구조**에서 여전히 유효하다. 즉 “랜딩 한 줄”과 “대시보드 중심 기능”은 **같은 회사의 다른 층**이며, ADR-012가 **마케팅 서사의 우선순위**를 정의한다. 이전에 “Prompt Studio first”만 읽고 **미디어 우선 결정과 모순**될 수 있는 해석은 ADR-012·#60 코멘트가 권위를 가진다.
+
 ## 한 줄 포지셔닝
 
 콘텐츠(가이드·프롬프트)는 **고객 획득용 트로이 목마**이고, 장기 목표는 **AI 기반 B2B 업무 자동화·에이전트 워크스페이스**로 락인(Lock-in)과 반복 매출(MRR)을 만든다.
 
 ## Phase 0 킬러 — Prompt Studio (프롬프트 품질 UX)
 
-초기 **마케팅·제품 스토리의 중심**은 **Prompt Studio**: 사용자가 **대상 AI 모델**을 고르고, 작성한 프롬프트를 **분석·개선 제안**하며, **Cursor에 가까운 UX**(검토·자동완성·수락/유지)로 **개선된 프롬프트**를 얻는 경험이다. (구현 단계는 [`docs/adr/ADR-002-prompt-studio-mvp.md`](../docs/adr/ADR-002-prompt-studio-mvp.md) 참고.)
+초기 **제품 스토리의 중심**(로그인 후 경험·대시보드)은 **Prompt Studio**: 사용자가 **대상 AI 모델**을 고르고, 작성한 프롬프트를 **분석·개선 제안**하며, **Cursor에 가까운 UX**(검토·자동완성·수락/유지)로 **개선된 프롬프트**를 얻는 경험이다. (구현 단계는 [`docs/adr/ADR-002-prompt-studio-mvp.md`](../docs/adr/ADR-002-prompt-studio-mvp.md) 참고.)
 
 전자책·디지털 가이드 판매는 **동시에** 현금 흐름·신뢰 확보용 **트로이 목마**로 유지한다(아래 Phase 0 상업).
 
