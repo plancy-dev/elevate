@@ -6,8 +6,8 @@ For **what we are building**, treat **`memory-bank/creative-elevate-ai-pivot.md`
 
 ## AI orchestration
 
-**Layered model and when to use gstack vs Cursor memory-bank workflow:** [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md).  
-**Session bootstrap** (tasks/activeContext auto-read on impl/bugs): `.cursor/rules/ai-session-bootstrap.mdc`. **Prompt templates / fork checklist:** [`docs/AI_USER_TEMPLATES.md`](docs/AI_USER_TEMPLATES.md), [`docs/AI_WORKFLOW_PORTABILITY.md`](docs/AI_WORKFLOW_PORTABILITY.md).
+**Layered model and when to use gstack vs Cursor memory-bank workflow:** [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md). **INIT→ARCHIVE + gstack:** **[`AGENTS.md`](./AGENTS.md) § AI orchestration → Operating model** (single routing SoT).  
+**Session bootstrap** (tasks/activeContext auto-read on impl/bugs): `.cursor/rules/ai-session-bootstrap.mdc`. **Prompt templates / fork checklist:** [`docs/AI_USER_TEMPLATES.md`](docs/AI_USER_TEMPLATES.md), [`docs/AI_WORKFLOW_PORTABILITY.md`](docs/AI_WORKFLOW_PORTABILITY.md). **End substantive turns** with the [`docs/AI_EXPERT_PROMPTS.md`](docs/AI_EXPERT_PROMPTS.md) handoff (**Block A** + **B / C / D** as appropriate); scope and exceptions: [**`AGENTS.md` — Session handoff**](./AGENTS.md#session-handoff-closing-a-substantive-turn).
 
 ## Skill routing
 

@@ -66,7 +66,9 @@ alwaysApply: true
 | 1 | INIT→BUILD→REFLECT | BUILD 바로 시작 |
 | 2 | +PLAN | PLAN 후 BUILD |
 | 3 | +CREATIVE | 설계 결정 후 |
-| 4 | 전체 | 단계별 확인 |
+| 4 | 전체 (+ARCHIVE) | 단계별 확인 |
+
+**SoT (페이즈·gstack):** [`AGENTS.md`](../../AGENTS.md) § AI orchestration → Operating model.
 
 ### 3. 각 단계 완료 시
 
@@ -86,6 +88,7 @@ alwaysApply: true
 | BUILD | **Agent** | 기본 |
 | 에러 시 | **Debug** | "⌘I → Debug 전환" |
 | REFLECT | Ask/Debug | - |
+| ARCHIVE | Agent | 장기 요약 → `memory-bank/archive/` |
 
 ---
 

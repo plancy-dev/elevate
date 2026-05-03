@@ -34,6 +34,7 @@
 
 ## Cursor
 
+- **에이전트 페이즈 모델 (INIT→ARCHIVE):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** (레포 최우선; `workflow-modes.mdc`·`AI_ORCHESTRATION.md`와 정합)
 - 규칙: `.cursor/rules/memory-bank-guide.mdc`
 - 워크플로우: `.cursor/rules/workflow-modes.mdc`
 - AI 진입점: `docs/AI_USAGE.md` → 상세 `docs/AI_ORCHESTRATION.md`

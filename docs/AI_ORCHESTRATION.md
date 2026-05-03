@@ -22,7 +22,7 @@
 
 | 상황 | 권장 |
 |------|------|
-| 일반 구현·버그 수정 | Cursor **INIT→PLAN→BUILD** (`workflow-modes.mdc`) + `memory-bank/tasks.md` |
+| 일반 구현·버그 수정 | **INIT→ARCHIVE** 전체를 복잡도(L1–L4)에 맞게 수행 — **무단으로 PLAN/CREATIVE 생략 금지**; 사용자가 명시한 fast path만 예외. 상세·gstack 매핑: **[`AGENTS.md`](../AGENTS.md) § AI orchestration → Operating model**. Cursor: `workflow-modes.mdc` |
 | 아이디어·제품 방향을 압축하고 싶음 | gstack **`/office-hours`** 또는 **`/plan-ceo-review`** → 결과를 North Star·`tasks.md`에 반영 |
 | 아키텍처·엣지 케이스 확정 | **`/plan-eng-review`** (또는 Cursor Plan) → ADR·`creative-architecture.md` |
 | 랜딩·UI 품질 | **`/plan-design-review`** + 필요 시 `ui-ux-pro-max` 스킬 |
@@ -55,14 +55,20 @@
 
 ---
 
-## 5. Cursor 워크플로와의 매핑 (비파괴)
+## 5. Cursor 모드·페이즈 ↔ gstack (비파괴)
 
-| Cursor 모드 | gstack과의 관계 |
-|---------------|-----------------|
-| INIT | 스코프·복잡도 파악; 필요 시 이후 `/plan-*`로 심화 |
-| PLAN | `/plan-eng-review`와 **경쟁이 아니라 보완** — Plan 모드로 초안 → 엔지 리뷰 스킬로 구멍 찾기 가능 |
-| BUILD | 구현; 완료 후 `pnpm verify` |
-| REFLECT | 문서·체크리스트; gstack **`/retro`**는 팀 습관용으로 선택 |
+**SoT:** [`AGENTS.md`](../AGENTS.md) **§ AI orchestration → Operating model** (INIT → PLAN → CREATIVE → BUILD → REFLECT → ARCHIVE, L1–L4 전체). 아래는 요약.
+
+| Phase | Cursor (typical) | gstack 보강 (선택, `.agents/skills/gstack` 설치 시) |
+|--------|------------------|------------------------------------------------------|
+| **INIT** | Ask / Agent — 복잡도 L1–L4 선언 | `/office-hours` (아이디어·웨지), 탐색은 Cursor `explorer` Task 등 |
+| **PLAN** | **Plan** | `/plan-eng-review`, `/autoplan`, `/plan-ceo-review` |
+| **CREATIVE** | **Plan** | `/plan-design-review`, `/plan-ceo-review` |
+| **BUILD** | **Agent** | Cursor `implementer` / `frontend-engineer` / `debugger`; gstack `/ship`는 **저장소 `pnpm verify`·훅에 종속** |
+| **REFLECT** | Ask / **Debug** | `/review`, `/qa`·`/qa-only`, `/investigate`, `/retro` |
+| **ARCHIVE** | Agent | `/document-release`, `memory-bank/archive/` 규약 |
+
+**측정·개선 루프:** [`AI_AGENT_MATURITY_REPORT.md`](./AI_AGENT_MATURITY_REPORT.md) (P1–P5, T1–T2) + REFLECT에서 리뷰·QA 산출물을 증거로 남김.
 
 ---
 

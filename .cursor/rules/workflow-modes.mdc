@@ -18,6 +18,8 @@ INIT(VAN) → PLAN → CREATIVE → BUILD → REFLECT → ARCHIVE
    Ask      Plan     Plan      Agent   Ask/Debug  Agent
 ```
 
+**gstack (선택):** 페이즈별 권장 슬래시 스킬은 **[`AGENTS.md`](../../AGENTS.md) § AI orchestration → Operating model** 와 [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) §5. Memory Bank를 먼저 로드한 뒤 **1~2개**만 골라 쓴다.
+
 | 모드 | Cursor | 목적 | 다음 단계 |
 |------|--------|------|-----------|
 | **INIT** | Ask→Agent | 분석, 복잡도 판단 | L1→BUILD / L2+→PLAN |

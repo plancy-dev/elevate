@@ -20,15 +20,54 @@ When creating blog content, use **`docs/templates/blog-authoring-templates.md`**
 
 **Single hub:** [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) — layers (repo rules → memory-bank → gstack), decision table, and prompt contract. Bug/feature prompts work without manual paste: `.cursor/rules/ai-session-bootstrap.mdc`. Optional user formats: [`docs/AI_USER_TEMPLATES.md`](docs/AI_USER_TEMPLATES.md). **Expert default + copy-paste blocks (Memory Bank–first):** [`docs/AI_EXPERT_PROMPTS.md`](docs/AI_EXPERT_PROMPTS.md). Forking the workflow: [`docs/AI_WORKFLOW_PORTABILITY.md`](docs/AI_WORKFLOW_PORTABILITY.md).
 
+### Operating model: INIT → PLAN → CREATIVE → BUILD → REFLECT → ARCHIVE
+
+**Principle:** These phases are **mandatory by default** and scale with **complexity** (see `.cursor/rules/workflow-modes.mdc`). Skipping PLAN for **L2+**, or CREATIVE for **L3+** (when UX, data shape, or cross-cutting behavior changes), is wrong **unless the user explicitly opts into a fast path** (“L1 only”, “skip to BUILD”, hotfix with stated risk).
+
+| Level | Default phase chain |
+|------|----------------------|
+| **L1** | INIT → BUILD → REFLECT |
+| **L2** | INIT → PLAN → BUILD → REFLECT |
+| **L3** | INIT → PLAN → CREATIVE → BUILD → REFLECT |
+| **L4** | Full chain **+ ARCHIVE** (and often ADR / migration notes) |
+
+**Phase → Cursor mode → minimum artifact**
+
+| Phase | Cursor (typical) | Minimum artifact |
+|-------|------------------|-------------------|
+| **INIT** | Ask / short Agent | Declared **L1–L4**, touched paths, SoT refs [`memory-bank/tasks.md`](memory-bank/tasks.md), [`memory-bank/activeContext.md`](memory-bank/activeContext.md) |
+| **PLAN** | **Plan** | Plan + risks + verification idea (in chat or linked notes); align with [`memory-bank/tasks.md`](memory-bank/tasks.md) |
+| **CREATIVE** | **Plan** | Decision logged [`memory-bank/creative-*.md`](memory-bank/), ADR, or `docs/features/…` as appropriate |
+| **BUILD** | **Agent** | Code + **`pnpm verify`** whenever the repo changes materially |
+| **REFLECT** | Ask / **Debug** | What shipped, gaps, follow-ups → [`memory-bank/progress.md`](memory-bank/progress.md) / `tasks.md` |
+| **ARCHIVE** | Agent | Durable summaries → [`memory-bank/archive/`](memory-bank/archive/) per `.cursor/rules/archive-and-cleanup.mdc` |
+
+**gstack (layer C — optional):** Load Memory Bank **first**; then use **one or two** slash skills per phase — do **not** substitute gstack for `AGENTS.md`, hooks, or `pnpm verify`. Install: [`docs/GSTACK.md`](docs/GSTACK.md). Inventory: [`CLAUDE.md`](CLAUDE.md) § gstack.
+
+| Phase | Suggested gstack skills (pick sparingly) |
+|-------|------------------------------------------|
+| INIT | `/office-hours` (new idea / wedge), repo exploration via vendored browse/explore patterns where useful |
+| PLAN | `/plan-eng-review`, `/autoplan` (full plan gauntlet), `/plan-ceo-review` (scope / ambition) |
+| CREATIVE | `/plan-design-review` (UI/UX plan), `/plan-ceo-review` (product tradeoffs) |
+| BUILD | Cursor **Task** subagents (`implementer`, `frontend-engineer`, `debugger`) align with BUILD intent; gstack `/ship` does **not** override repo verify (see below) |
+| REFLECT | `/review` (pre-merge diff), `/qa` or `/qa-only` (live site), `/investigate` (RCA), `/retro` (periodic) |
+| ARCHIVE | `/document-release` (post-ship doc sync) |
+
+**Performance / maturity loop:** Use [`docs/AI_AGENT_MATURITY_REPORT.md`](docs/AI_AGENT_MATURITY_REPORT.md) (P1–P5, T1–T2) as the **scorecard**; attach gstack review or QA output to REFLECT as **evidence**, not as a substitute for CI or `pnpm verify`.
+
+### Session handoff (closing a substantive turn)
+
+When you **implemented or changed code**, **ran ops/gates**, or **updated Memory Bank / GitHub evidence**, end the reply with a **copy-paste bundle** from [`docs/AI_EXPERT_PROMPTS.md`](docs/AI_EXPERT_PROMPTS.md): paste **Block A** in full, plus **Block B** (next concrete task), **Block C** (if the user asked “what next”), or **Block D** (ops-only follow-up). Do not substitute with “see the doc” alone. **Skip** for trivial one-off Q&A (definitions, single-line nits, no repo impact). Full block text stays in the doc so this file does not go stale.
+
 ## GitHub Issues · remote task queue
 
 **Process (issues ↔ PR ↔ gstack):** [`docs/DEV_PROCESS_GITHUB.md`](docs/DEV_PROCESS_GITHUB.md). **Studio scene render epic pointer:** [`.github/DESIGN.md`](.github/DESIGN.md). List open Studio-tagged issues locally: `pnpm issues:studio` (requires [GitHub CLI](https://cli.github.com/) `gh auth login`).
 
 ## gstack (optional dev workflow)
 
-This repo can include **[gstack](https://github.com/garrytan/gstack)** under `.agents/skills/gstack` for Claude Code / Cursor skills. **Install:** [`docs/GSTACK.md`](docs/GSTACK.md). **Skill list:** `CLAUDE.md` § gstack.
+This repo can include **[gstack](https://github.com/garrytan/gstack)** under `.agents/skills/gstack` for Claude Code / Cursor skills. **Install:** [`docs/GSTACK.md`](docs/GSTACK.md). **Skill list:** `CLAUDE.md` § gstack. **Phase → skill hints** are in **§ AI orchestration → Operating model** above (avoid duplicate routing tables here).
 
-- **AGENTS.md / Memory Bank / `.cursor/rules`** = implementation process (INIT→BUILD), commit rules, Next.js notes — **cannot be overridden by skills**.
+- **AGENTS.md / Memory Bank / `.cursor/rules`** = implementation process (INIT→ARCHIVE), commit rules, Next.js notes — **cannot be overridden by skills**.
 - **gstack slash skills** = structured strategy and review (`/plan-ceo-review`, `/office-hours`, `/qa`, …). Use for framing and review loops — **not** as a substitute for repository rules.
 - **Memory** = project state lives in **`memory-bank/`**; gstack does not replace it.
 
