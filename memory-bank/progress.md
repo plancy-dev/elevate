@@ -7,13 +7,15 @@
 
 - **INIT foundation (`#38`–`#47`):** done (quality gates, citation, retry matrix, alerts, daily snapshot, 3-day regression).
 - **Queue / admin automation (`#55`–`#59`):** done (triage, rewrite, auto-approval policy, Cursor scenario, `/admin/content-queue` signals).
-- **Stabilization P0:** `#49` · `#50` — **operational gates passed** (strict 24h / retry & fail-ratio posture per re-audit). `#51` — **open**: novelty/blog improvement needs **≥2 distinct day buckets** in `pnpm run content-ops:gate51-trend-check` (currently one bucket → cannot close statistically).
+- **Stabilization P0:** `#49` · `#50` — **operational gates passed** (strict 24h / retry & fail-ratio posture per re-audit). `#51` — **open**: novelty/blog improvement needs **≥2 distinct day buckets** in `pnpm run content-ops:gate51-trend-check` (BUILD 2026-05-03: still **one** bucket; snapshots in `reports/gate51-snapshots/2026-05-03-build-*.json`).
 - **Stabilization P1 (`#52`–`#54`):** done per `tasks.md` (scoreboard, citation enablement, escalation action loop).
 - **Post-cycle re-audit:** recorded in `reports/reaudit-post-cycle-2026-05-03.md`; exit criterion checked in `tasks.md`.
 - **Still tracked in `tasks.md` Immediate Next Step:** second-day novelty trend capture; **runtime alignment** — `scheduled` persistence and `cursor` vs `vercel-cron` source invariant in production (local evidence exists; prod routine not fully checked off).
 - **Three-pillar maturity (service ops / newsletter / blog):** gap list and remediation plan — `reports/automation-three-pillars-gap-analysis-2026-05-03.md`; **prioritized backlog (P0–P3)** — `reports/prioritized-backlog-expert-2026-05-03.md`. **INIT (P0 #1, `#51`):** `memory-bank/init-p0-1-gate51-operational-closeout.md`.
 
 The **timeline below** is the stabilization implementation log (May 2026 sprint); it is **historical detail**, not the current “in progress” line.
+
+- **gate51 operational BUILD (2026-05-03 UTC):** `pnpm run content-ops:gate51-trend-check` → `PENDING`, `insufficient multi-day trend buckets` (single day `2026-05-01` in `trend`). Artifacts: `reports/gate51-snapshots/2026-05-03-build-gate51.json` (+ gate-check + quality-monitor JSON). Same-window `content-ops:gate-check`: `#49`/`#50` PASS, `#51` PENDING (24h novelty sample).
 
 ## Latest Completed (historical — stabilization sprint log)
 

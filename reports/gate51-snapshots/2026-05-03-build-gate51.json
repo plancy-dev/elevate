@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-05-03T07:12:55.228Z",
+  "lookbackDays": 7,
+  "minDayBuckets": 2,
+  "status": "PENDING",
+  "decisionReason": "insufficient multi-day trend buckets",
+  "trend": [
+    {
+      "day": "2026-05-01",
+      "total": 38,
+      "lowNovelty": 11,
+      "lowNoveltyRatio": 0.2895,
+      "blogTotal": 12,
+      "blogReviewRequired": 8,
+      "blogReviewRequiredRatio": 0.6667
+    }
+  ]
+}

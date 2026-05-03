@@ -1,0 +1,113 @@
+{
+  "windowDays": 7,
+  "freshWindowHours": 24,
+  "generatedCount": 24,
+  "publishedCount": 9,
+  "reviewRequiredCount": 17,
+  "sendFailedCount": 0,
+  "deferredCount": 24,
+  "citationCoverage7dAvg": 0.7826,
+  "avgQualityScore": 20.2,
+  "minQualityScore": 8,
+  "topQualityIssues": [
+    {
+      "reason": "low_novelty",
+      "count": 11
+    },
+    {
+      "reason": "possible_overcopy_detected",
+      "count": 6
+    },
+    {
+      "reason": "comparison_missing",
+      "count": 6
+    },
+    {
+      "reason": "counterargument_missing",
+      "count": 6
+    },
+    {
+      "reason": "citation_coverage_low",
+      "count": 5
+    }
+  ],
+  "topPublishFailureReasons": [
+    {
+      "reason": "retry_exhausted",
+      "count": 54
+    },
+    {
+      "reason": "resend_not_configured",
+      "count": 21
+    },
+    {
+      "reason": "frequency_window_deferred",
+      "count": 8
+    },
+    {
+      "reason": "[newsletter:2db5ef7f-7df4-436f-9e92-7e4fb7bead24] retry_exhausted",
+      "count": 5
+    },
+    {
+      "reason": "[newsletter:4339a97e-913d-47ef-8d8a-65f998d80a47] frequency_window_deferred",
+      "count": 2
+    }
+  ],
+  "freshGeneratedCount": 0,
+  "freshReviewedCount": 0,
+  "freshReviewRequiredCount": 0,
+  "citationCoverage24hAvg": 0,
+  "freshAvgQualityScore": 0,
+  "freshMinQualityScore": 0,
+  "freshTopQualityIssues": [],
+  "generated7dDelta": {
+    "current": 24,
+    "previous": 0,
+    "deltaPercent": null
+  },
+  "generated24hDelta": {
+    "current": 0,
+    "previous": 8,
+    "deltaPercent": -100
+  },
+  "strategyScoreboard": [
+    {
+      "strategy": "novelty_boost",
+      "sampleCount": 0,
+      "avgQualityScore": 0,
+      "reviewRequiredRatio": 0
+    },
+    {
+      "strategy": "overcopy_mitigate",
+      "sampleCount": 22,
+      "avgQualityScore": 19.5,
+      "reviewRequiredRatio": 0.5
+    },
+    {
+      "strategy": "balanced",
+      "sampleCount": 0,
+      "avgQualityScore": 0,
+      "reviewRequiredRatio": 0
+    }
+  ],
+  "winnerStrategy": "overcopy_mitigate",
+  "strategyMinSampleSize": 20,
+  "hasInsufficientStrategySample": true,
+  "threeDayRegression": {
+    "triggered": false,
+    "metric": null,
+    "series": [
+      {
+        "day": "2026-05-01",
+        "reviewRequiredCount": 17,
+        "sendFailedCount": 0
+      }
+    ],
+    "reason": null,
+    "nextAction": null
+  },
+  "improvementFocus": [
+    "publish 배치 간격과 retry 윈도우를 운영 트래픽에 맞게 조정하세요.",
+    "review_required backlog SLA를 설정하고 must-review 항목을 우선 처리하세요."
+  ]
+}

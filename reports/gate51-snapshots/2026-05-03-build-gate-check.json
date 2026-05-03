@@ -1,0 +1,71 @@
+{
+  "generatedAt": "2026-05-03T07:13:05.455Z",
+  "windows": {
+    "current24hStart": "2026-05-02T07:13:05.455Z",
+    "previous24hStart": "2026-05-01T07:13:05.455Z",
+    "now": "2026-05-03T07:13:05.455Z"
+  },
+  "metrics": {
+    "publications": {
+      "total24h": 0,
+      "attempted24": 0,
+      "deferred24": 0,
+      "failed24": 0,
+      "failedPrevious24": 0,
+      "failRatio24": 0,
+      "resendNotConfigured24": 0,
+      "retryExhausted24": 0,
+      "retryExhaustedPrevious24": 0
+    },
+    "novelty": {
+      "sampleCount24": 0,
+      "lowNoveltyRatio24": 0,
+      "lowNoveltyRatioPrevious24": 0,
+      "blogReviewRequiredRatio24": 0,
+      "blogReviewRequiredRatioPrevious24": 0.75
+    },
+    "qualitySnapshot": {
+      "sendFailedCount7d": 0,
+      "deferredCount7d": 24,
+      "citationCoverage7dAvg": 0.7826
+    }
+  },
+  "gates": {
+    "gate49": {
+      "status": "PASS",
+      "decision_reason": "resend_not_configured is near-zero and failed publications are not increasing.",
+      "evidence": {
+        "resendNotConfigured24": 0,
+        "failed24": 0,
+        "failedPrevious24": 0,
+        "sendFailedDecayed": true
+      }
+    },
+    "gate50": {
+      "status": "PASS",
+      "decision_reason": "retry_exhausted is controlled and fail ratio is below 20%.",
+      "evidence": {
+        "retryExhausted24": 0,
+        "retryExhaustedPrevious24": 0,
+        "failRatio24": 0,
+        "failRatioTargetPercent": 20
+      }
+    },
+    "gate51": {
+      "status": "PENDING",
+      "decision_reason": "insufficient 24h sample size for novelty closure decision.",
+      "evidence": {
+        "lowNoveltyRatio24": 0,
+        "lowNoveltyRatioPrevious24": 0,
+        "blogReviewRequiredRatio24": 0,
+        "blogReviewRequiredRatioPrevious24": 0.75,
+        "sampleCount24": 0
+      }
+    }
+  }
+}
+
+# Gate Summary
+- #49: PASS — resend_not_configured is near-zero and failed publications are not increasing.
+- #50: PASS — retry_exhausted is controlled and fail ratio is below 20%.
+- #51: PENDING — insufficient 24h sample size for novelty closure decision.

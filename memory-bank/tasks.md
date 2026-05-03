@@ -97,7 +97,7 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 
 ## Immediate Next Step
 
-- **INIT (active — P0 backlog #1):** Operational closeout for `#51` — `memory-bank/init-p0-1-gate51-operational-closeout.md` (`pnpm run content-ops:gate51-trend-check`, ≥2 day buckets, evidence on issue + tasks).
+- **INIT (active — P0 backlog #1):** `#51` operational gate — **BUILD snap 2026-05-03** still `PENDING` (insufficient multi-day buckets). Evidence under `reports/gate51-snapshots/`. Ops: generate content across **≥2 UTC dates** then rerun `pnpm run content-ops:gate51-trend-check`.
 
 - [x] Create P0 stabilization tickets (#49-#51) with acceptance/verification.
 - [x] Create P1 stabilization tickets (#52-#54) with P0 dependency.
@@ -111,7 +111,7 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 - [x] Bring publication fail ratio under `<20%` and keep retry waste low over consecutive daily windows.
   - Gate-check result (2026-05-02 latest): `gate50=PASS` (`failRatio24=0`, `retryExhausted24=0`).
 - [ ] Capture second-day novelty trend to confirm `low_novelty` and blog review_required movement.
-  - Latest check (2026-05-03): `PENDING` (`pnpm run content-ops:gate51-trend-check` — **≥2 day buckets required**; currently only one day present, so **statistical closure of #51 is not possible yet**).
+  - Latest check (2026-05-03 BUILD): `PENDING` — `generatedAt=2026-05-03T07:12:55.228Z`, `pnpm run content-ops:gate51-trend-check`, `decisionReason=insufficient multi-day trend buckets`, `trend` buckets=1 (`2026-05-01` only: `lowNoveltyRatio=0.2895`, `blogReviewRequiredRatio=0.6667`). Snapshot: `reports/gate51-snapshots/2026-05-03-build-gate51.json`. Corroboration: `2026-05-03-build-gate-check.json`, `2026-05-03-build-quality-monitor.json`. **Next:** run pipeline so **≥2 UTC day buckets** exist in 7d lookback, then rerun gate51.
 - [ ] Resolve runtime-source alignment (`cursor` vs `vercel-cron`) and confirm first `scheduled` run is persisted in `content_runs.trigger_type`.
   - Evidence: first `scheduled` rows persisted (`source=cursor` success + `source=vercel-cron` mismatch failure) on 2026-05-02.
 - [x] Lock executor strategy before `#53`: Cursor Cloud Agent first, Vercel cron emergency fallback only.
