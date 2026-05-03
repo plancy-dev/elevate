@@ -219,7 +219,7 @@
   "Blog": {
     "metaTitle": "ブログ",
     "title": "ブログ",
-    "description": "プロンプト改善とイベント・現場コミュニケーションに役立つヒント、そして Elevate チームからの製品ニュースをお届けします。",
+    "description": "毎週配信、すぐに使える AI 運用マニュアル—学習不要。Elevate チームの製品情報も。",
     "empty": "まだ記事がありません。",
     "published": "公開日 {date}",
     "readMore": "記事を読む",

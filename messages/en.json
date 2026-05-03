@@ -227,7 +227,7 @@
   "Blog": {
     "metaTitle": "Blog",
     "title": "Blog",
-    "description": "Practical ideas on prompt improvement and event communications—plus product news from the Elevate team.",
+    "description": "Weekly AI workflow guides your company can use right away—no training required. Product updates from the Elevate team.",
     "empty": "No posts yet.",
     "published": "Published {date}",
     "readMore": "Read article",
