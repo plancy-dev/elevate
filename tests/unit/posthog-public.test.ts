@@ -8,6 +8,7 @@ describe("getPosthogPublicConfig", () => {
   });
 
   it("returns null when PROJECT_TOKEN is unset", () => {
+    vi.stubEnv(POSTHOG_PUBLIC_ENV.PROJECT_TOKEN, "");
     expect(getPosthogPublicConfig()).toBeNull();
   });
 

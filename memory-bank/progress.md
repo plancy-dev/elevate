@@ -1,9 +1,13 @@
-# Progress — Elevate (INIT stabilization execution)
+# Progress — Elevate (stabilization + PLAN handoff)
 
 **SoT for priority:** `memory-bank/tasks.md`  
-**Current focus:** `memory-bank/activeContext.md`
+**Current focus:** `memory-bank/activeContext.md` (**PLAN**; INIT wave closed 2026-05-04)
 
-## Status snapshot (aligned with `tasks.md`, 2026-05-03)
+## Status snapshot (aligned with `tasks.md`, 2026-05-04)
+
+- **INIT wave:** closed for handoff — see `tasks.md` **INIT closeout** + morning report [`reports/content-ops-morning-handoff-2026-05-03.md`](../reports/content-ops-morning-handoff-2026-05-03.md); gate51 one-shot brief archived to `memory-bank/archive/work-history/init-p0-1-gate51-operational-closeout.md`.
+- **Vercel / runtime:** document-only alignment — unset `CONTENT_OPS_AUTOMATION_RUNTIME` ≡ `cursor` in code; operator should **set explicit `cursor`** in Vercel (RUNBOOK + `.env.local.example` updated).
+- **BUILD 2026-05-04 (ADR-013 Phase 1b):** `ELEVATE_MARKETING_CTA_CLICK` wired at 8 surfaces + `locale`/`referrer_path` contract; `tests/unit/marketing-cta-instrumentation.test.ts`; `pnpm verify` green. Evidence + notes: [`reports/2026-05-03-runs-invariant-build-handoff.json`](../reports/2026-05-03-runs-invariant-build-handoff.json). Archive brief: [`memory-bank/archive/work-history/build-adr013-phase1b-2026-05-04.md`](archive/work-history/build-adr013-phase1b-2026-05-04.md). **REFLECT:** PostHog 7d cta_id non-zero check still open per ADR.
 
 - **INIT foundation (`#38`–`#47`):** done (quality gates, citation, retry matrix, alerts, daily snapshot, 3-day regression).
 - **Queue / admin automation (`#55`–`#59`):** done (triage, rewrite, auto-approval policy, Cursor scenario, `/admin/content-queue` signals).
@@ -12,7 +16,7 @@
 - **Post-cycle re-audit:** recorded in `reports/reaudit-post-cycle-2026-05-03.md`; exit criterion checked in `tasks.md`.
 - **Still tracked in `tasks.md` Immediate Next Step:** **7 consecutive UTC days** with `scheduled` `content_runs` (or automation-off); latest invariant [`reports/2026-05-03-runs-invariant-recheck.json`](reports/2026-05-03-runs-invariant-recheck.json) (**PASS**; streak **2**).
 - **BUILD / Refs #62 + #63:** TOC i18n — library section vs item label distinct (en/ko/ja/zh-CN/zh-TW). **CI** — `gstack:check` step in `.github/workflows/ci.yml`. CREATIVE: `memory-bank/creative-dashboard-sidebar.md`. Sample warn log: `reports/gstack-check-sample.log`. **#60** positioning PR still blocked until scenario comment.
-- **Three-pillar maturity (service ops / newsletter / blog):** gap list and remediation plan — `reports/automation-three-pillars-gap-analysis-2026-05-03.md`; **prioritized backlog (P0–P3)** — `reports/prioritized-backlog-expert-2026-05-03.md`. **Historical gate51 ops brief:** `memory-bank/init-p0-1-gate51-operational-closeout.md`.
+- **Three-pillar maturity (service ops / newsletter / blog):** gap list and remediation plan — `reports/automation-three-pillars-gap-analysis-2026-05-03.md`; **prioritized backlog (P0–P3)** — `reports/prioritized-backlog-expert-2026-05-03.md`. **Historical gate51 ops brief:** [`memory-bank/archive/work-history/init-p0-1-gate51-operational-closeout.md`](archive/work-history/init-p0-1-gate51-operational-closeout.md).
 
 The **timeline below** is the stabilization implementation log (May 2026 sprint); it is **historical detail**, not the current “in progress” line.
 

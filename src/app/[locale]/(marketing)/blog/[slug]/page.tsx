@@ -4,6 +4,10 @@ import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Link, getPathname } from "@/i18n/navigation";
+import {
+  MarketingTrackedLocaleLink,
+} from "@/components/analytics/marketing-tracked-links";
+import { MarketingCtaId } from "@/lib/analytics/posthog-events";
 import { blogMdxComponents } from "@/components/blog/mdx-components";
 import { getAllPostMetaForLocale, getPostBySlug } from "@/lib/blog/posts";
 import { routing } from "@/i18n/routing";
@@ -94,6 +98,8 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   const t = await getTranslations("Blog");
+  const tWaitlist = await getTranslations("Waitlist");
+  const tNav = await getTranslations("Nav");
   const supabase = await createClient();
   const {
     data: { user },
@@ -203,12 +209,30 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         <div className="mt-14 border-t border-ink-100 pt-8">
-          <Link
-            href="/blog"
-            className="text-sm font-medium text-vermilion-600 hover:underline"
-          >
-            {t("backToBlog")}
-          </Link>
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-2">
+            <MarketingTrackedLocaleLink
+              href="/#waitlist"
+              ctaId={MarketingCtaId.BLOG_POST_FOOTER_WAITLIST}
+              eventProperties={{ slug }}
+              className="text-sm font-medium text-vermilion-600 hover:underline"
+            >
+              {tWaitlist("submit")}
+            </MarketingTrackedLocaleLink>
+            <MarketingTrackedLocaleLink
+              href="/pricing"
+              ctaId={MarketingCtaId.BLOG_POST_FOOTER_PRICING}
+              eventProperties={{ slug }}
+              className="text-sm font-medium text-vermilion-600 hover:underline"
+            >
+              {tNav("pricing")}
+            </MarketingTrackedLocaleLink>
+            <Link
+              href="/blog"
+              className="text-sm font-medium text-vermilion-600 hover:underline"
+            >
+              {t("backToBlog")}
+            </Link>
+          </div>
         </div>
       </article>
     </div>

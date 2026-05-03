@@ -6,6 +6,8 @@
 
 | Document | Description |
 |----------|-------------|
+| [`build-adr013-phase1b-2026-05-04.md`](work-history/build-adr013-phase1b-2026-05-04.md) | BUILD: ADR-013 Phase 1b wiring + invariant handoff snapshot (2026-05-04) |
+| [`init-p0-1-gate51-operational-closeout.md`](work-history/init-p0-1-gate51-operational-closeout.md) | INIT one-shot: `#51` gate51 operational closeout brief (2026-05-03); superseded by streak + `tasks.md` SoT |
 | [`archive-pipeline-draft-dialog-2026-04.md`](work-history/archive-pipeline-draft-dialog-2026-04.md) | G3.1.2 파이프라인 「초안 저장됨」→ 다이얼로그 — 요약·수동 스모크 체크리스트; CREATIVE/REFLECT는 동일 폴더 `creative-*` / `reflect-*` (2026-04) |
 | [`reflect-dashboard-access-pkce-2026-04.md`](work-history/reflect-dashboard-access-pkce-2026-04.md) | `/dashboard` = `profiles.dashboard_access`만 허용; PKCE 콜백 verifier 누락 시 세션 복구 금지 (2026-04) |
 | [`reflect-init-upstream-draft-quality-2026-04.md`](work-history/reflect-init-upstream-draft-quality-2026-04.md) | INIT Runway 이전 품질 1차: sticky 맥락 + 브랜드 가이드 생성 주입 + 워크벤치 UI (2026-04) |

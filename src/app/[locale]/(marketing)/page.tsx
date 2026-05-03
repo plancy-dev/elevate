@@ -63,6 +63,7 @@ export default async function Home({ params, searchParams }: Props) {
   const query = await searchParams;
   setRequestLocale(locale);
   const t = await getTranslations("Home");
+  const tNav = await getTranslations("Nav");
   const cookieStore = await cookies();
   const queryHeroVariant = parseHeroVariant(
     Array.isArray(query.hero_variant) ? query.hero_variant[0] : query.hero_variant,
@@ -192,6 +193,18 @@ export default async function Home({ params, searchParams }: Props) {
                 >
                   <Button variant="tertiary" size="lg">
                     {t("ctaEbooks")}
+                  </Button>
+                </MarketingTrackedLocaleLink>
+                <MarketingTrackedLocaleLink
+                  href="/pricing"
+                  ctaId={MarketingCtaId.HERO_PRICING}
+                  eventProperties={{
+                    hero_variant: heroVariant,
+                    intent: "view_pricing",
+                  }}
+                >
+                  <Button variant="tertiary" size="lg">
+                    {tNav("pricing")}
                   </Button>
                 </MarketingTrackedLocaleLink>
               </div>
@@ -362,6 +375,16 @@ export default async function Home({ params, searchParams }: Props) {
             </h2>
             <p className="mt-2 text-(length:--elevate-marketing-lead-size) leading(--elevate-prose-body-leading) text-paper-100 dark:text-ink-700">
               {t("ctaBandSub")}
+            </p>
+            <p className="mt-4 text-(length:--elevate-prose-body-size) leading(--elevate-prose-body-leading) text-paper-100 dark:text-ink-700">
+              <MarketingTrackedLocaleLink
+                href="/#waitlist"
+                ctaId={MarketingCtaId.BAND_WAITLIST}
+                eventProperties={{ hero_variant: heroVariant, intent: "band_waitlist_anchor" }}
+                className="font-medium text-paper-50 underline decoration-paper-50/50 underline-offset-4 transition-colors duration-80 ease-(--ease-editorial) hover:text-paper-50 hover:decoration-paper-50 dark:text-vermilion-600 dark:decoration-vermilion-600/40 dark:hover:text-vermilion-700"
+              >
+                {t("ctaWaitlist")}
+              </MarketingTrackedLocaleLink>
             </p>
             <WaitlistForm
               source="band"

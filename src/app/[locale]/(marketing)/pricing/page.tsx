@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import NextLink from "next/link";
+import { MarketingTrackedExternalAnchor } from "@/components/analytics/marketing-tracked-links";
 import { createClient } from "@/lib/supabase/server";
+import { MarketingCtaId } from "@/lib/analytics/posthog-events";
 import {
   buildBlogSubscriptionCheckoutUrl,
   getBlogSubscriptionByUserId,
@@ -140,10 +142,9 @@ export default async function PricingPage({ params }: Props) {
               {effectiveTier === "monthly" ? (
                 <CurrentPlanBadge planLabel="Monthly" />
               ) : (
-                <a
+                <MarketingTrackedExternalAnchor
                   href={monthlyCheckoutUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  ctaId={MarketingCtaId.PRICING_CARD_MONTHLY}
                   className="inline-flex min-h-12 w-full min-w-0 items-center justify-center border border-ink-900 bg-ink-900 px-4 py-2.5 text-center text-[13px] leading-snug font-medium whitespace-normal text-paper-50 transition-colors duration-80 ease-(--ease-editorial) hover:bg-ink-700 sm:text-sm"
                 >
                   <span className="sm:hidden">Monthly - $5.99/mo</span>
@@ -152,7 +153,7 @@ export default async function PricingPage({ params }: Props) {
                       ? "Switch to Monthly - $5.99/mo"
                       : "Subscribe Monthly - $5.99/mo"}
                   </span>
-                </a>
+                </MarketingTrackedExternalAnchor>
               )}
             </div>
           </article>
@@ -176,10 +177,9 @@ export default async function PricingPage({ params }: Props) {
               {effectiveTier === "annual" ? (
                 <CurrentPlanBadge planLabel="Annual" tone="vermilion" />
               ) : (
-                <a
+                <MarketingTrackedExternalAnchor
                   href={annualCheckoutUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  ctaId={MarketingCtaId.PRICING_CARD_ANNUAL}
                   className="inline-flex min-h-12 w-full min-w-0 items-center justify-center border border-vermilion-600 bg-vermilion-600 px-4 py-2.5 text-center text-[13px] leading-snug font-medium whitespace-normal text-paper-50 transition-colors duration-80 ease-(--ease-editorial) hover:bg-vermilion-700 sm:text-sm"
                 >
                   <span className="sm:hidden">Annual - $47.99/yr</span>
@@ -193,7 +193,7 @@ export default async function PricingPage({ params }: Props) {
                       ? "Upgrade to Annual - $47.99/yr (Save 33%)"
                       : "Subscribe Annually - $47.99/yr (Save 33%)"}
                   </span>
-                </a>
+                </MarketingTrackedExternalAnchor>
               )}
             </div>
           </article>

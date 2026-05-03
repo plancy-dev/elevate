@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildBlogSubscriptionCheckoutUrl,
   canReadBlogPost,
@@ -21,6 +21,10 @@ describe("mapVariantIdToBlogTier", () => {
 });
 
 describe("buildBlogSubscriptionCheckoutUrl", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("adds Polar checkout params when email is provided", () => {
     const url = buildBlogSubscriptionCheckoutUrl({
       productId: POLAR_MONTHLY_PRODUCT_ID,
@@ -31,6 +35,8 @@ describe("buildBlogSubscriptionCheckoutUrl", () => {
   });
 
   it("returns Polar checkout url for guest users", () => {
+    vi.stubEnv("NEXT_PUBLIC_POLAR_CHECKOUT_LINK", "");
+    vi.stubEnv("POLAR_CHECKOUT_LINK", "");
     const url = buildBlogSubscriptionCheckoutUrl({
       productId: POLAR_ANNUAL_PRODUCT_ID,
       email: null,

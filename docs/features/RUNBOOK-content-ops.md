@@ -22,6 +22,10 @@ Policy notes:
 - Keep `CONTENT_OPS_AUTOMATION_RUNTIME=cursor` unless there is a verified Cursor runtime incident.
 - After any fallback window, revert runtime to `cursor` immediately.
 
+**Vercel Project env:** If `CONTENT_OPS_AUTOMATION_RUNTIME` does not appear in the dashboard, the app still defaults to **`cursor`** (anything other than the exact string `vercel-cron` resolves to cursor). **Recommended:** create the variable explicitly (`cursor`) so preflight checks and on-call runbooks match production config. While runtime is `cursor`, `vercel.json` schedules that call `source=vercel-cron` will return `skipped: true` (`runtime_secret_mismatch:*`) by design — that is the emergency-only path, not the primary scheduler.
+
+**Vercel cron “noise” (expected):** With `CONTENT_OPS_AUTOMATION_RUNTIME=cursor`, Mon–Fri crons still invoke `source=vercel-cron`; each hit records a **skipped** run (`runtime_secret_mismatch:cursor:source=vercel-cron`) in `content_runs`. That can appear in `scheduledByAutomationSource` breakdowns as a small `vercel-cron` count. **Treat as normal** unless you intended dual-active execution. Remediation options (PLAN): leave as-is (dormant fallback), remove cron entries until an incident, or temporarily flip runtime to `vercel-cron` per incident policy. **Do not** page on mismatch alone when cursor-first is the declared policy.
+
 Required secrets/env:
 
 - `CONTENT_OPS_AUTOMATION_TOKEN` (API trigger token for non-Vercel callers)

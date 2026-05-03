@@ -1,5 +1,30 @@
 # Elevate — Tasks (Stabilization SoT)
 
+## BUILD track (active) — 2026-05-04
+
+- **Scope:** ADR-013 PR2 — wire [`PostHogEvent.ELEVATE_MARKETING_CTA_CLICK`](../src/lib/analytics/posthog-events.ts) at 8 surfaces per [`docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md`](../docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md) Decisions #2–#3; required props `cta_id` + `locale`; optional `slug` (blog footer), `referrer_path` where useful.
+- **Verify:** `pnpm verify`; `tests/unit/marketing-cta-instrumentation.test.ts` + stable-values test (**done** in repo).
+- **Ops:** Local SoT snapshot saved as [`reports/2026-05-03-runs-invariant-build-handoff.json`](../reports/2026-05-03-runs-invariant-build-handoff.json). **Prod GET** `automation-run?scenario=daily_generation&source=cursor&token=…` remains operator-owned (Vercel token, no secret in git).
+
+## INIT closeout — handoff to PLAN (2026-05-04)
+
+**INIT (this wave):** Stabilization + queue automation foundation in repo is **complete** for handoff purposes. **Next mode:** BUILD (see **BUILD track** above) then REFLECT.
+
+| Artifact | Role |
+|----------|------|
+| [`reports/content-ops-morning-handoff-2026-05-03.md`](../reports/content-ops-morning-handoff-2026-05-03.md) | Operator morning checklist, newsletter locale truth, cron vs runtime |
+| [`docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md`](../docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md) | Positioning / morning-ops Phase 1 SoT |
+| [`docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md`](../docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md) | PR1 merged → in-tree plan for PR2 (8 surfaces + 5-locale Vitest); **PR2 prompt after merge** (short: ADR-013 Decisions #2/#3 + file paths) |
+
+**Expert decision — `CONTENT_OPS_AUTOMATION_RUNTIME` missing in Vercel:** Unset env **equals `cursor`** in code (`automation-config.ts`). Vercel “no results” for the name is **implicit default**, not a different runtime. **P0 ops (no deploy code required):** add **`CONTENT_OPS_AUTOMATION_RUNTIME=cursor`** in Vercel Production so dashboards match RUNBOOK preflight and on-call mental model. **While `cursor`:** `vercel.json` crons that use `source=vercel-cron` **will skip** (`runtime_secret_mismatch`) — intentional cursor-first policy; PLAN may choose to trim cron noise or keep as dormant fallback.
+
+## PLAN backlog — first slice (order TBD in PLAN session)
+
+1. **Ops:** Vercel explicit `CONTENT_OPS_AUTOMATION_RUNTIME=cursor` + redeploy note in RUNBOOK (done in repo doc / `.env.local.example`; operator applies in dashboard).
+2. **Optional engineering:** Reduce `vercel-cron` mismatch **noise** (document-only vs remove/disable crons until fallback vs other) — decide in PLAN with cost of losing one-click fallback.
+3. **Newsletter product (from morning handoff §6):** per-locale body strategy; subscriber self-serve locale + optional `profiles.ui_locale` sync; optional aggregate PostHog send event (no PII).
+4. **Product:** After ADR-013 PR1 **merge**, PR2 wiring prompt (user: separate short prompt).
+
 ## Current Mission (SoT)
 
 ### INIT Stabilization Execution from GitHub Issues
@@ -60,9 +85,9 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 - [ ] [STAB][P1] marketing-cta-instrumentation-phase-1
   - Owner: rayleighko
   - Order: after #60 hero PR / parallel-safe with #61, #62
-  - Status: proposed
+  - Status: pr2_wiring_in_progress
   - Acceptance: 14 cta_id 모두 PostHog 7d 데이터에 non-zero, locale 분해 가능
-  - Verify: pnpm verify + tests/unit/marketing-cta-id-stable-values.test.ts PASS + PostHog dashboard segment by cta_id
+  - Verify: pnpm verify + `tests/unit/marketing-cta-id-stable-values.test.ts` + `tests/unit/marketing-cta-instrumentation.test.ts` PASS + PostHog dashboard segment by cta_id
   - Refs: docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md, docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md
 
 ### Next INIT Queue (`#55` -> `#59`)

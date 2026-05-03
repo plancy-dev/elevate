@@ -1,31 +1,16 @@
 # Active Context — Elevate
 
-**Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외). 아래 블록은 **운영 서브트랙**(7일 `scheduled` 불변)에 대한 앵커.
+**Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## INIT session — 다음 착수 (ops streak + 증거 마감)
+## Current Phase — **REFLECT** (BUILD ADR-013 Phase 1b merged in working tree, 2026-05-04)
 
-**전제 (이미 한 일):** Vercel Production에 `CONTENT_OPS_AUTOMATION_TOKEN` 등록. 토큰 검증 로직은 [`src/lib/content-ops/automation-auth.ts`](../src/lib/content-ops/automation-auth.ts)로 공통화됨 (`automation-run` · `daily-snapshot`).
+**방금 BUILD에서 끝낸 것:** ADR-013 Decisions #2–#3 **8 표면** wiring + `locale`/`referrer_path` 계약 (`marketing-cta-click-properties.ts`, `marketing-tracked-links.tsx`, home/header/pricing/blog). `pnpm verify` green. Runs invariant 스냅샷: [`reports/2026-05-03-runs-invariant-build-handoff.json`](../reports/2026-05-03-runs-invariant-build-handoff.json). RUNBOOK **vercel-cron 노이즈** 절 추가. 아카이브: [`memory-bank/archive/work-history/build-adr013-phase1b-2026-05-04.md`](archive/work-history/build-adr013-phase1b-2026-05-04.md).
 
-| 항목 | 내용 |
-|------|------|
-| **목표** | (1) **재배포 후** prod `automation-run` **스모크** (401 아님) (2) SoT DB에서 **연속 7 UTC일** `trigger_type=scheduled` ≥1건/일 (3) `pnpm run content-ops:runs-invariant-check` 스냅샷 + `tasks.md` 런타임 체크리스트 정리 **또는** automation-off 명시 |
-| **복잡도** | **L1** — 운영·증거·선택적 커밋(리팩터 PR 미푸시면 `pnpm verify` 후 푸시). 인바리언트 스크립트/라우트 결함만 **L2 → PLAN → BUILD** |
-| **터치 경로** | Vercel **Redeploy** · 운영 base URL · [`src/lib/content-ops/automation-auth.ts`](../src/lib/content-ops/automation-auth.ts) · [`scripts/content-ops-runs-invariant-check.ts`](../scripts/content-ops-runs-invariant-check.ts) · `memory-bank/tasks.md` · `reports/*-runs-invariant-check.json` · [`docs/features/RUNBOOK-content-ops.md`](../docs/features/RUNBOOK-content-ops.md) · [`.env.local.example`](../.env.local.example) (문서) |
-| **SoT** | [`memory-bank/tasks.md`](tasks.md) Immediate Next Step · RUNBOOK |
+**REFLECT 남은 한 줄:** PostHog 7d에서 **14개 cta_id** non-zero(또는 ≥12) 확인 후 ADR-013 체크리스트 마지막 `[ ]` 해제 · `[STAB] marketing-cta…` 상태를 `shipped` 등으로 갱신.
 
-**프리플라이트 (이번 INIT → 실행 순서):**
+**운영 앵커 (지속):** prod `automation-run` GET은 **Vercel 토큰**으로 operator 실행 · 7 UTC일 스트릭은 [`memory-bank/tasks.md`](tasks.md) Immediate Next Step.
 
-1. **배포 반영:** env 변경만 했다면 Vercel **재배포** 후 진행.
-2. **Prod GET 스모크:** `GET …/api/content-ops/automation-run?scenario=daily_generation&source=cursor&token=<Vercel에 넣은 값>` — **401 금지** (런타임 mismatch면 `skipped` + `next_action` — RUNBOOK대로 `CONTENT_OPS_AUTOMATION_RUNTIME`·`source` 정합).
-3. **일별 scheduled:** 크론/Cursor 정책 유지해 **UTC 일**마다 `scheduled` 행 누적 (`2026-05-02` 시작 스트릭이면 **7일째까지** 관측).
-4. **증거:** SoT DB cred로 `pnpm run content-ops:runs-invariant-check` → `maxConsecutiveUtcDaysWithScheduled ≥ 7`이면 `reports/*-runs-invariant-check.json` 저장, `tasks.md` 해당 `[ ]` 해소.
-5. **부가 큐 (스트릭 후·병렬 가능):** content-ops auth 리팩터 **커밋/PR** 미반영이면 main 반영 · GitHub **#62** 나머지(사이드바)는 CREATIVE 갱신 후 착수 · **#60** 코멘트 전 히어로/포지셔닝 PR 없음.
-
-**INIT 체크리스트:** `memory-bank/` · `tasks.md` 확인 완료 · 복잡도 **L1** · **다음: 운영 실행(BUILD 생략) → REFLECT(증거·tasks)** / 예외 시에만 PLAN→BUILD.
-
-## Current Phase
-
-### REFLECT — 증거 로그 (2026-05-03)
+## Prior REFLECT — 증거 로그 (2026-05-03)
 
 **Runs invariant:** [`reports/2026-05-03-runs-invariant-recheck.json`](../reports/2026-05-03-runs-invariant-recheck.json) — `PASS`, `maxConsecutiveUtcDaysWithScheduled=2`. **Prod 스모크:** elevate.ai.kr + `.env.local` 토큰 → **401** (Vercel 시크릿과 다를 때 예상). **BUILD:** `947cff1` / `8b17591` — content-ops auth + invariant recheck. **Positioning:** [`docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md`](../docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md); #60 [retract/reframe](https://github.com/plancy-dev/elevate/issues/60#issuecomment-4365916803).
 

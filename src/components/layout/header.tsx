@@ -4,6 +4,10 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import {
+  MarketingTrackedLocaleLink,
+} from "@/components/analytics/marketing-tracked-links";
+import { MarketingCtaId } from "@/lib/analytics/posthog-events";
 import { IntlButtonLink } from "@/components/layout/intl-button-link";
 import { ElevateLogo } from "@/components/layout/elevate-logo";
 import { HeaderAuthCluster } from "@/components/layout/header-auth-cluster";
@@ -25,9 +29,9 @@ export function Header() {
   const showDashboardLink = useDashboardEntitlement(authUser) === true;
   const showLeadGen = authUser === null;
 
-  const navEntries: NavLinkDef[] = [
-    { label: t("blog"), href: "/blog" },
-    { label: t("pricing"), href: "/pricing" },
+  const navEntries: (NavLinkDef & { ctaId: (typeof MarketingCtaId)[keyof typeof MarketingCtaId] })[] = [
+    { label: t("blog"), href: "/blog", ctaId: MarketingCtaId.HEADER_NAV_BLOG },
+    { label: t("pricing"), href: "/pricing", ctaId: MarketingCtaId.HEADER_NAV_PRICING },
   ];
 
   return (
@@ -40,16 +44,17 @@ export function Header() {
 
           <nav className="hidden lg:flex items-center">
             {navEntries.map((entry) => (
-              <Link
+              <MarketingTrackedLocaleLink
                 key={entry.href}
                 href={entry.href}
+                ctaId={entry.ctaId}
                 className={cn(
                   "flex min-h-12 items-center px-4 text-sm text-ink-600 transition-colors duration-80 ease-(--ease-editorial)",
                   "hover:bg-paper-100 hover:text-ink-900",
                 )}
               >
                 {entry.label}
-              </Link>
+              </MarketingTrackedLocaleLink>
             ))}
           </nav>
         </div>
@@ -104,14 +109,15 @@ export function Header() {
           </div>
           <nav className="flex flex-col">
             {navEntries.map((entry) => (
-              <Link
+              <MarketingTrackedLocaleLink
                 key={entry.href}
                 href={entry.href}
+                ctaId={entry.ctaId}
                 className="px-4 py-3 text-sm text-ink-600 hover:bg-paper-100 hover:text-ink-900"
                 onClick={() => setMobileOpen(false)}
               >
                 {entry.label}
-              </Link>
+              </MarketingTrackedLocaleLink>
             ))}
             <div className="flex flex-col gap-2 border-t border-ink-100 p-4">
               {showLeadGen ? (

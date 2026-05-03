@@ -78,10 +78,10 @@ BAND_WAITLIST and BLOG_POST_FOOTER_* assume those surfaces exist or will exist i
 
 ## Implementation checklist (BUILD exit)
 
-[ ] PR 1 merged: MarketingCtaId extended with 8 keys exactly per Decision #2 (no rename of existing 6).
-[ ] PR 1 merged: tests/unit/marketing-cta-id-stable-values.test.ts added; CI green via pnpm verify.
-[ ] PR 2 merged: 8 surfaces emit ELEVATE_MARKETING_CTA_CLICK with { cta_id, locale } per the contract; tests/unit/marketing-cta-instrumentation.test.ts covers each surface.
-[ ] memory-bank/tasks.md updated with [STAB][P1] marketing-cta-instrumentation-phase-1 entry (Owner / Order / Acceptance / Verify).
+[x] PR 1 merged: MarketingCtaId extended with 8 keys exactly per Decision #2 (no rename of existing 6).
+[x] PR 1 merged: tests/unit/marketing-cta-id-stable-values.test.ts added; CI green via pnpm verify.
+[x] PR 2 merged: 8 surfaces emit ELEVATE_MARKETING_CTA_CLICK with { cta_id, locale } per the contract; tests/unit/marketing-cta-instrumentation.test.ts covers each surface.
+[x] memory-bank/tasks.md updated with [STAB][P1] marketing-cta-instrumentation-phase-1 entry (Owner / Order / Acceptance / Verify).
 [ ] REFLECT note in memory-bank/progress.md after PR 2: confirm 7d PostHog data has non-zero hits for ≥ 12 of 14 cta_id values (allowance for low-traffic surfaces).
 
 ## Cursor handoff
