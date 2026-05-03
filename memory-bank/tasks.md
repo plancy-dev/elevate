@@ -38,10 +38,10 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
   - Status: `operational_gate_passed`
   - Acceptance: DoD `retry_exhausted` 감소 + publish fail ratio `< 20%` 추세.
   - Verify: quality monitor + 7d DoD retry/fail SQL trend.
-- [ ] #51 `[STAB][P0] novelty-recovery-pass`
+- [x] #51 `[STAB][P0] novelty-recovery-pass`
   - Owner: `MyungJin Ko`
   - Order: `3` (starts after #49/#50 publish-path stabilization)
-  - Status: `operational_gate_pending_multiday_trend_required`
+  - Status: `operational_gate_passed`
   - Acceptance: one full cycle after change shows lower `low_novelty` share and better blog review-required trend.
   - Verify: `pnpm run content-ops:gate51-trend-check` + quality monitor + `content_items` low_novelty/review_required SQL.
 - [x] #52 `[STAB][P1] strategy-scoreboard-activation-quality`
@@ -97,8 +97,38 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 
 ## Immediate Next Step
 
-- **INIT (active — P0 backlog #1):** `#51` operational gate — **BUILD snap 2026-05-03** still `PENDING` (insufficient multi-day buckets). Evidence under `reports/gate51-snapshots/`. Ops: generate content across **≥2 UTC dates** then rerun `pnpm run content-ops:gate51-trend-check`.
-- **P0 backlog #2–#3 (partial BUILD 2026-05-03):** `content-ops:runs-invariant-check` + morning-ops **Automation heartbeat** strip; prod 7d confirmation still on ops.
+- **P0 stabilization (#49–#51):** `#51` gate51 **PASS** (see `reports/gate51-snapshots/2026-05-03-gate51-pass-multiday.json`). **Runs invariant (재확인 `2026-05-03T09:34:49.631Z`):** [`reports/2026-05-03-runs-invariant-recheck.json`](reports/2026-05-03-runs-invariant-recheck.json) — `runsInvariant.status=PASS`, `maxConsecutiveUtcDaysWithScheduled=2`, `meetsSevenConsecutiveCalendarDays=false`. **Prod 스모크:** `https://elevate.ai.kr/.../automation-run?scenario=daily_generation&source=cursor&token=<.env.local>` → **HTTP 401** (로컬 시크릿 ≠ Vercel이면 예상됨). **7 UTC일 스트릭:** 아직 미달; 운영 스모크는 **Vercel Production과 동일한** `CONTENT_OPS_AUTOMATION_TOKEN`으로 재시도·재배포 확인.
+- **Follow-on:** After **7** consecutive UTC days with ≥1 `scheduled` `content_runs`, write new `reports/*-runs-invariant-check.json` (same schema as `2026-05-03` file) and [x] the runtime line; **or** automation-off one-liner in `tasks.md`.
+- **GitHub #62 / #63 (Refs):** #62 선행 — `Dashboard.toc.library` 그룹/항목 라벨 분리(5 locale); CREATIVE [`memory-bank/creative-dashboard-sidebar.md`](memory-bank/creative-dashboard-sidebar.md). #63 — CI에 `pnpm run gstack:check` 단계 추가; 샘플 로그 [`reports/gstack-check-sample.log`](reports/gstack-check-sample.log).
+
+## PLAN snapshot (2026-05-03)
+
+**전제:** `activeContext.md` INIT · Vercel `CONTENT_OPS_AUTOMATION_TOKEN` · 선택적 `automation-auth` 리팩터.
+
+| 항목 | 내용 |
+|------|------|
+| **복잡도** | **L1** — 운영·증거·Memory Bank 갱신. 저장소 코드 반영이 필요하면 **L2**(`pnpm verify`). |
+| **최우선 목표** | SoT DB 기준 **연속 7 UTC일** `trigger_type=scheduled` ≥1건/일 **또는** `tasks.md`에 automation-off(일시·담당·사유) 명시. |
+| **성공 기준** | `pnpm run content-ops:runs-invariant-check`에서 `runsInvariant.status=PASS` 유지 + `maxConsecutiveUtcDaysWithScheduled ≥ 7`(또는 off 명시) + 새 `reports/*-runs-invariant-check.json`·`tasks.md` 미해결 `[ ]` 정리. |
+| **리스크** | 토큰·런타임 불일치 시 `401`/`skipped`; `CONTENT_OPS_AUTOMATION_RUNTIME`·`source=cursor` RUNBOOK 정합 필수. 게이트 조작·임계 하향 금지(activeContext § Non-Negotiable). |
+
+**작업 분해 (순서)**
+
+1. **배포:** Vercel env 변경 후 **재배포**로 런타임에 토큰 반영 확인.
+2. **스모크:** prod `GET /api/content-ops/automation-run?scenario=daily_generation&source=cursor&token=…` — 401 아님(비밀은 로그/PR에 금지).
+3. **스케줄 유지:** cursor-first 정책에 맞게 일별 `scheduled` 행 유입(크론/외부 스케줄 문서: `docs/features/RUNBOOK-content-ops.md`).
+4. **증거:** SoT Supabase cred로 `pnpm run content-ops:runs-invariant-check` → JSON 스냅샷 규칙(`reports/2026-05-03-…`와 동일 스키마)으로 저장.
+5. **Memory Bank:** `tasks.md` 해당 체크리스트·Immediate Next Step bullet 갱신; `progress.md`에 날짜·PASS 한 줄; `activeContext.md` Current State 스트릭 수·파일 경로 반영.
+6. **코드 트랙 (미반영 시):** `automation-auth`·테스트 diff가 워킹트리에만 있으면 **BUILD**에서 `pnpm verify` 후 커밋·푸시. 범위 밖 리팩터 금지.
+7. **병렬 제약 (SoT):** #60 시나리오 코멘트 전 **히어로/포지셔닝 PR 없음**; #62 나머지는 `creative-dashboard-sidebar.md` CREATIVE 갱신 후 별 BUILD.
+
+**검증 명령**
+
+- `pnpm run content-ops:runs-invariant-check` (필수)
+- 필요 시 `pnpm run content-ops:gate-check` (퍼블리시 경로 의심 시만)
+- 코드 변경 시 `pnpm verify`
+
+**다음 모드:** 운영 중심이면 **블록 D**(`docs/AI_EXPERT_PROMPTS.md`)로 게이트/스크립트 실행; 코드 ship 포함 시 **블록 B** 후 BUILD → REFLECT.
 
 - [x] Create P0 stabilization tickets (#49-#51) with acceptance/verification.
 - [x] Create P1 stabilization tickets (#52-#54) with P0 dependency.
@@ -111,11 +141,14 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
   - Recheck (2026-05-02 latest): `PASS` (strict 24h decay satisfied after old failures aged out).
 - [x] Bring publication fail ratio under `<20%` and keep retry waste low over consecutive daily windows.
   - Gate-check result (2026-05-02 latest): `gate50=PASS` (`failRatio24=0`, `retryExhausted24=0`).
-- [ ] Capture second-day novelty trend to confirm `low_novelty` and blog review_required movement.
-  - Latest check (2026-05-03 BUILD): `PENDING` — `generatedAt=2026-05-03T07:12:55.228Z`, `pnpm run content-ops:gate51-trend-check`, `decisionReason=insufficient multi-day trend buckets`, `trend` buckets=1 (`2026-05-01` only: `lowNoveltyRatio=0.2895`, `blogReviewRequiredRatio=0.6667`). Snapshot: `reports/gate51-snapshots/2026-05-03-build-gate51.json`. Corroboration: `2026-05-03-build-gate-check.json`, `2026-05-03-build-quality-monitor.json`. **Next:** run pipeline so **≥2 UTC day buckets** exist in 7d lookback, then rerun gate51.
+- [x] Capture second-day novelty trend to confirm `low_novelty` and blog review_required movement.
+  - Latest check (2026-05-03): `PASS` — `generatedAt=2026-05-03T07:39:27.547Z`, `pnpm run content-ops:gate51-trend-check`, `decisionReason=latest daily trend improved for low_novelty and blog review_required ratio`, `trend` buckets=2 (`2026-05-01` → `2026-05-03`). Snapshot: `reports/gate51-snapshots/2026-05-03-gate51-pass-multiday.json`. Prior `PENDING`: `2026-05-03-build-gate51.json` (single-day bucket).
 - [ ] Resolve runtime-source alignment (`cursor` vs `vercel-cron`) and confirm first `scheduled` run is persisted in `content_runs.trigger_type`.
   - Evidence: first `scheduled` rows persisted (`source=cursor` success + `source=vercel-cron` mismatch failure) on 2026-05-02.
-  - **Implemented (2026-05-03):** `pnpm run content-ops:runs-invariant-check` + `/admin/morning-ops` **Automation heartbeat** (7d `trigger_type` / `automation_source` facts). **Remaining:** operator confirms prod over **7 consecutive days** or files explicit automation-off; attach JSON snapshot to close checkbox.
+  - **Invariant snapshot (2026-05-03):** `pnpm run content-ops:runs-invariant-check` at `2026-05-03T07:45:52.536Z` → `runsInvariant.status=PASS`, `heartbeat.level=green`, 168h window `scheduled=9` / `manual=64`, `scheduledByAutomationSource` `{cursor:8,vercel-cron:1}`, `scheduledWithoutAutomationSource=0` (alignment: no scheduled row missing `metadata.automation_source`). File: `reports/2026-05-03-runs-invariant-check.json`.
+  - **Invariant recheck (2026-05-03 UTC):** `pnpm run content-ops:runs-invariant-check` → **PASS** @ `generatedAt=2026-05-03T09:34:49.631Z`; evidence: [`reports/2026-05-03-runs-invariant-recheck.json`](../reports/2026-05-03-runs-invariant-recheck.json) (`maxConsecutiveUtcDaysWithScheduled=2`). **Prod GET smoke (elevate.ai.kr, token from local env):** **HTTP 401** — Vercel에 둔 값과 **동일한** 토큰으로 재시도할 것(로컬·운영 불일치 시 정상).
+  - **Prod manual trigger (ops):** `curl`/브라우저는 **Vercel에 설정한 토큰**과 동일한 `token=` 사용(로컬 `.env.local`과 다를 수 있음). 재배포 후에도 401이면 값·공백·환경(Production) 재확인.
+  - **7 consecutive UTC days:** `maxConsecutiveUtcDaysWithScheduled=2` — **does not yet** meet the 7-day bar; **Remaining:** daily `scheduled` through **`2026-05-08` UTC** (streak from `2026-05-02`) on SoT DB **or** explicit **automation-off** (date + owner + reason) in this checklist **or** new evidence JSON when ≥7.
 - [x] Lock executor strategy before `#53`: Cursor Cloud Agent first, Vercel cron emergency fallback only.
 - [x] Start INIT queue automation implementation in order: `#55 -> #56 -> #57 -> #58 -> #59`.
 - [x] Fix sample blog post leak to production (2026-05-02 Claude audit, reports/2026-05-02-claude-audit.md §0 #1 / §3.2 D).
@@ -139,6 +172,6 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 ## Exit Criteria
 
 - [x] All INIT issues (#38-#47) are closed with explicit rationale.
-- [ ] P0 stabilization issues (#49-#51) complete with verified metric movement.
+- [x] P0 stabilization issues (#49-#51) complete with verified metric movement.
 - [x] P1 stabilization issues (#52-#54) complete with operational action loop.
 - [x] Re-audit report after one business-day cycle is recorded (`reports/reaudit-post-cycle-2026-05-03.md`, 2026-05-03 UTC).

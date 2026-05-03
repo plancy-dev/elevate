@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 import {
+  checkAutomationPostBearer,
+  isAutomationQueryTokenAuthorized,
+  jsonPostAuthFailure,
+  readContentOpsAutomationToken,
+} from "@/lib/content-ops/automation-auth";
+import {
   CONTENT_OPS_EXECUTOR_POLICY,
   CONTENT_OPS_RUN_SEQUENCE,
   CONTENT_OPS_RUNTIME,
@@ -42,6 +48,21 @@ function isValidRunType(value: unknown): value is ContentOpsRunType {
     value === "publish" ||
     value === "publish_retry_failed"
   );
+}
+
+const SCENARIO_QUERY_VALUES = new Set<string>([
+  "daily_generation",
+  "publish_window",
+  "retry_window",
+  "queue_review_window",
+  "full_sequence",
+]);
+
+function scenarioFromSearchParam(raw: string | null): AutomationRunRequest["scenario"] {
+  if (raw && SCENARIO_QUERY_VALUES.has(raw)) {
+    return raw as NonNullable<AutomationRunRequest["scenario"]>;
+  }
+  return "full_sequence";
 }
 
 function resolveScenarioSequence(
@@ -107,17 +128,9 @@ async function recordRuntimeMismatchAlert(params: {
 }
 
 export async function POST(req: Request) {
-  const automationToken = process.env.CONTENT_OPS_AUTOMATION_TOKEN?.trim();
-  if (!automationToken) {
-    return NextResponse.json(
-      { ok: false, error: "automation_token_not_configured" },
-      { status: 500 },
-    );
-  }
-
-  const auth = req.headers.get("authorization")?.trim() ?? "";
-  if (auth !== `Bearer ${automationToken}`) {
-    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  const auth = checkAutomationPostBearer(req, "strict_config");
+  if (auth !== true) {
+    return jsonPostAuthFailure(auth);
   }
 
   const body = (await req.json().catch(() => ({}))) as AutomationRunRequest;
@@ -178,7 +191,7 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-  const automationToken = process.env.CONTENT_OPS_AUTOMATION_TOKEN?.trim();
+  const automationToken = readContentOpsAutomationToken();
 
   const url = new URL(req.url);
   const runTypeRaw = url.searchParams.get("runType");
@@ -187,7 +200,7 @@ export async function GET(req: Request) {
   const source = sourceRaw === "vercel-cron" ? "vercel-cron" : "cursor";
   const cronHeader = req.headers.get("x-vercel-cron");
   const token = url.searchParams.get("token")?.trim() ?? "";
-  const tokenAuthorized = automationToken ? token === automationToken : false;
+  const tokenAuthorized = isAutomationQueryTokenAuthorized(token, automationToken);
   const isTrustedVercelCron = source === "vercel-cron" && Boolean(cronHeader);
   if (!tokenAuthorized && !isTrustedVercelCron) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
@@ -199,14 +212,7 @@ export async function GET(req: Request) {
       triggerType: "scheduled",
       source,
       runType: isValidRunType(runTypeRaw) ? runTypeRaw : undefined,
-      scenario:
-        scenarioRaw === "daily_generation" ||
-        scenarioRaw === "publish_window" ||
-        scenarioRaw === "retry_window" ||
-        scenarioRaw === "queue_review_window" ||
-        scenarioRaw === "full_sequence"
-          ? scenarioRaw
-          : "full_sequence",
+      scenario: scenarioFromSearchParam(scenarioRaw),
     });
     return NextResponse.json({
       ok: true,
@@ -233,15 +239,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ ok: true, mode: "single", result });
     }
 
-    const scenario = (
-      scenarioRaw === "daily_generation" ||
-      scenarioRaw === "publish_window" ||
-      scenarioRaw === "retry_window" ||
-      scenarioRaw === "queue_review_window" ||
-      scenarioRaw === "full_sequence"
-        ? scenarioRaw
-        : "full_sequence"
-    ) as AutomationRunRequest["scenario"];
+    const scenario = scenarioFromSearchParam(scenarioRaw);
     const sequence = resolveScenarioSequence(scenario);
     await runContentOpsScenario({
       triggerType: "scheduled",

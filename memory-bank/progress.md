@@ -7,15 +7,17 @@
 
 - **INIT foundation (`#38`–`#47`):** done (quality gates, citation, retry matrix, alerts, daily snapshot, 3-day regression).
 - **Queue / admin automation (`#55`–`#59`):** done (triage, rewrite, auto-approval policy, Cursor scenario, `/admin/content-queue` signals).
-- **Stabilization P0:** `#49` · `#50` — **operational gates passed** (strict 24h / retry & fail-ratio posture per re-audit). `#51` — **open**: novelty/blog improvement needs **≥2 distinct day buckets** in `pnpm run content-ops:gate51-trend-check` (BUILD 2026-05-03: still **one** bucket; snapshots in `reports/gate51-snapshots/2026-05-03-build-*.json`).
+- **Stabilization P0:** `#49` · `#50` · `#51` — **operational gates passed** (`tasks.md` / `reports/gate51-snapshots/2026-05-03-gate51-pass-multiday.json`). **Runtime:** [`reports/2026-05-03-runs-invariant-recheck.json`](reports/2026-05-03-runs-invariant-recheck.json) (`2026-05-03T09:34:49.631Z`) — invariant **PASS**, **7 consecutive UTC `scheduled` days** not met (**2**).
 - **Stabilization P1 (`#52`–`#54`):** done per `tasks.md` (scoreboard, citation enablement, escalation action loop).
 - **Post-cycle re-audit:** recorded in `reports/reaudit-post-cycle-2026-05-03.md`; exit criterion checked in `tasks.md`.
-- **Still tracked in `tasks.md` Immediate Next Step:** second-day novelty trend capture; **runtime alignment** — tooling shipped (`content-ops:runs-invariant-check`, morning-ops heartbeat); **7d prod confirmation** still on ops.
-- **Three-pillar maturity (service ops / newsletter / blog):** gap list and remediation plan — `reports/automation-three-pillars-gap-analysis-2026-05-03.md`; **prioritized backlog (P0–P3)** — `reports/prioritized-backlog-expert-2026-05-03.md`. **INIT (P0 #1, `#51`):** `memory-bank/init-p0-1-gate51-operational-closeout.md`.
+- **Still tracked in `tasks.md` Immediate Next Step:** **7 consecutive UTC days** with `scheduled` `content_runs` (or automation-off); latest invariant [`reports/2026-05-03-runs-invariant-recheck.json`](reports/2026-05-03-runs-invariant-recheck.json) (**PASS**; streak **2**).
+- **BUILD / Refs #62 + #63:** TOC i18n — library section vs item label distinct (en/ko/ja/zh-CN/zh-TW). **CI** — `gstack:check` step in `.github/workflows/ci.yml`. CREATIVE: `memory-bank/creative-dashboard-sidebar.md`. Sample warn log: `reports/gstack-check-sample.log`. **#60** positioning PR still blocked until scenario comment.
+- **Three-pillar maturity (service ops / newsletter / blog):** gap list and remediation plan — `reports/automation-three-pillars-gap-analysis-2026-05-03.md`; **prioritized backlog (P0–P3)** — `reports/prioritized-backlog-expert-2026-05-03.md`. **Historical gate51 ops brief:** `memory-bank/init-p0-1-gate51-operational-closeout.md`.
 
 The **timeline below** is the stabilization implementation log (May 2026 sprint); it is **historical detail**, not the current “in progress” line.
 
-- **gate51 operational BUILD (2026-05-03 UTC):** `pnpm run content-ops:gate51-trend-check` → `PENDING`, `insufficient multi-day trend buckets` (single day `2026-05-01` in `trend`). Artifacts: `reports/gate51-snapshots/2026-05-03-build-gate51.json` (+ gate-check + quality-monitor JSON). Same-window `content-ops:gate-check`: `#49`/`#50` PASS, `#51` PENDING (24h novelty sample).
+- **gate51 follow-up (2026-05-03 UTC):** `pnpm run content-ops:gate51-trend-check` → **PASS** (`2026-05-03T07:39:27.547Z`); `reports/gate51-snapshots/2026-05-03-gate51-pass-multiday.json`. Prior BUILD `PENDING` snapshot: `2026-05-03-build-gate51.json`.
+- **runs invariant (2026-05-03 UTC 재확인):** `pnpm run content-ops:runs-invariant-check` → **PASS** @ `2026-05-03T09:34:49.631Z`; [`reports/2026-05-03-runs-invariant-recheck.json`](reports/2026-05-03-runs-invariant-recheck.json). **Prod smoke:** elevate.ai.kr + 로컬 env 토큰 → HTTP **401** (Vercel 시크릿과 불일치 시 정상). 스크립트 출력에 `consecutiveScheduledDaysUtc`·`command` 필드 복원·`dotenv` quiet 적용(BUILD).
 
 ### BUILD (2026-05-03) — P0 backlog #2 / #3
 

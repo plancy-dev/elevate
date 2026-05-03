@@ -1,4 +1,10 @@
 import { NextResponse } from "next/server";
+import {
+  checkAutomationPostBearer,
+  isAutomationQueryTokenAuthorized,
+  jsonPostAuthFailure,
+  readContentOpsAutomationToken,
+} from "@/lib/content-ops/automation-auth";
 import { buildContentQualitySnapshot } from "@/lib/content-ops/quality-monitor";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -88,10 +94,9 @@ async function createDailySnapshotRun(triggerType: "api" | "scheduled") {
 }
 
 export async function POST(req: Request) {
-  const automationToken = process.env.CONTENT_OPS_AUTOMATION_TOKEN?.trim();
-  const auth = req.headers.get("authorization")?.trim() ?? "";
-  if (!automationToken || auth !== `Bearer ${automationToken}`) {
-    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  const auth = checkAutomationPostBearer(req, "missing_token_unauthorized");
+  if (auth !== true) {
+    return jsonPostAuthFailure(auth);
   }
   try {
     const result = await createDailySnapshotRun("api");
@@ -105,11 +110,11 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-  const automationToken = process.env.CONTENT_OPS_AUTOMATION_TOKEN?.trim();
+  const automationToken = readContentOpsAutomationToken();
   const url = new URL(req.url);
   const token = url.searchParams.get("token")?.trim() ?? "";
   const cronHeader = req.headers.get("x-vercel-cron");
-  const tokenAuthorized = automationToken ? token === automationToken : false;
+  const tokenAuthorized = isAutomationQueryTokenAuthorized(token, automationToken);
   const trustedCron = Boolean(cronHeader);
   if (!tokenAuthorized && !trustedCron) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
