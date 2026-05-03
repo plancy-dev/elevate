@@ -57,6 +57,14 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
   - Acceptance: regression alert path includes owner-assigned next-action loop.
   - Verify: `content_runs.metadata.alert` payload usability + `/admin/morning-ops` action flow.
 
+- [ ] [STAB][P1] marketing-cta-instrumentation-phase-1
+  - Owner: rayleighko
+  - Order: after #60 hero PR / parallel-safe with #61, #62
+  - Status: proposed
+  - Acceptance: 14 cta_id 모두 PostHog 7d 데이터에 non-zero, locale 분해 가능
+  - Verify: pnpm verify + tests/unit/marketing-cta-id-stable-values.test.ts PASS + PostHog dashboard segment by cta_id
+  - Refs: docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md, docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md
+
 ### Next INIT Queue (`#55` -> `#59`)
 
 - [x] #55 `[INIT][P0] queue-triage-runner`

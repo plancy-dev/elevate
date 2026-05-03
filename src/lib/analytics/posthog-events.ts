@@ -48,4 +48,13 @@ export const MarketingCtaId = {
   HERO_PROMPT_STUDIO: "hero_prompt_studio",
   HERO_SIGNUP: "hero_signup",
   BAND_CONTACT: "band_contact",
+  /** Phase 1 — ADR-013 (Marketing CTA instrumentation) */
+  HERO_PRICING: "hero_pricing",
+  HEADER_NAV_PRICING: "header_nav_pricing",
+  HEADER_NAV_BLOG: "header_nav_blog",
+  BAND_WAITLIST: "band_waitlist",
+  BLOG_POST_FOOTER_WAITLIST: "blog_post_footer_waitlist",
+  BLOG_POST_FOOTER_PRICING: "blog_post_footer_pricing",
+  PRICING_CARD_MONTHLY: "pricing_card_monthly",
+  PRICING_CARD_ANNUAL: "pricing_card_annual",
 } as const;
