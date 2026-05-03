@@ -18,6 +18,10 @@
 
 **Expert decision — `CONTENT_OPS_AUTOMATION_RUNTIME` missing in Vercel:** Unset env **equals `cursor`** in code (`automation-config.ts`). Vercel “no results” for the name is **implicit default**, not a different runtime. **P0 ops (no deploy code required):** add **`CONTENT_OPS_AUTOMATION_RUNTIME=cursor`** in Vercel Production so dashboards match RUNBOOK preflight and on-call mental model. **While `cursor`:** `vercel.json` crons that use `source=vercel-cron` **will skip** (`runtime_secret_mismatch`) — intentional cursor-first policy; PLAN may choose to trim cron noise or keep as dormant fallback.
 
+## PLAN — AI-native workflow evolution (2026-05-03)
+
+- **Epic (process, not product):** [`docs/features/PLAN-ai-native-workflow-evolution-2026-05.md`](../docs/features/PLAN-ai-native-workflow-evolution-2026-05.md) — 업계·SO·벤더·국내 MCP 사례 리서치 → Elevate 갭 → **P0–P2 BUILD 백로그**. **P0 문서 반영 완료(저장소). 다음: P1** — PLAN §4 P1(`.cursor/rules` 감사 표, REFLECT·verify if/then 정리, nested AGENTS 선택).
+
 ## PLAN backlog — first slice (order TBD in PLAN session)
 
 1. **Ops:** Vercel explicit `CONTENT_OPS_AUTOMATION_RUNTIME=cursor` + redeploy note in RUNBOOK (done in repo doc / `.env.local.example`; operator applies in dashboard).
