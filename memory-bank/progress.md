@@ -10,12 +10,17 @@
 - **Stabilization P0:** `#49` · `#50` — **operational gates passed** (strict 24h / retry & fail-ratio posture per re-audit). `#51` — **open**: novelty/blog improvement needs **≥2 distinct day buckets** in `pnpm run content-ops:gate51-trend-check` (BUILD 2026-05-03: still **one** bucket; snapshots in `reports/gate51-snapshots/2026-05-03-build-*.json`).
 - **Stabilization P1 (`#52`–`#54`):** done per `tasks.md` (scoreboard, citation enablement, escalation action loop).
 - **Post-cycle re-audit:** recorded in `reports/reaudit-post-cycle-2026-05-03.md`; exit criterion checked in `tasks.md`.
-- **Still tracked in `tasks.md` Immediate Next Step:** second-day novelty trend capture; **runtime alignment** — `scheduled` persistence and `cursor` vs `vercel-cron` source invariant in production (local evidence exists; prod routine not fully checked off).
+- **Still tracked in `tasks.md` Immediate Next Step:** second-day novelty trend capture; **runtime alignment** — tooling shipped (`content-ops:runs-invariant-check`, morning-ops heartbeat); **7d prod confirmation** still on ops.
 - **Three-pillar maturity (service ops / newsletter / blog):** gap list and remediation plan — `reports/automation-three-pillars-gap-analysis-2026-05-03.md`; **prioritized backlog (P0–P3)** — `reports/prioritized-backlog-expert-2026-05-03.md`. **INIT (P0 #1, `#51`):** `memory-bank/init-p0-1-gate51-operational-closeout.md`.
 
 The **timeline below** is the stabilization implementation log (May 2026 sprint); it is **historical detail**, not the current “in progress” line.
 
 - **gate51 operational BUILD (2026-05-03 UTC):** `pnpm run content-ops:gate51-trend-check` → `PENDING`, `insufficient multi-day trend buckets` (single day `2026-05-01` in `trend`). Artifacts: `reports/gate51-snapshots/2026-05-03-build-gate51.json` (+ gate-check + quality-monitor JSON). Same-window `content-ops:gate-check`: `#49`/`#50` PASS, `#51` PENDING (24h novelty sample).
+
+### BUILD (2026-05-03) — P0 backlog #2 / #3
+
+- Added [`src/lib/content-ops/automation-heartbeat.ts`](src/lib/content-ops/automation-heartbeat.ts) and [`scripts/content-ops-runs-invariant-check.ts`](scripts/content-ops-runs-invariant-check.ts) (`pnpm run content-ops:runs-invariant-check`).
+- [`fetchContentOpsAutomationHeartbeat`](src/actions/admin-content-ops.ts) + **Automation heartbeat** panel on [`/admin/morning-ops`](src/app/(admin)/admin/morning-ops/page.tsx); i18n for all locales; [`tests/unit/automation-heartbeat.test.ts`](tests/unit/automation-heartbeat.test.ts). Runbook: [`docs/features/RUNBOOK-content-ops.md`](docs/features/RUNBOOK-content-ops.md).
 
 ## Latest Completed (historical — stabilization sprint log)
 

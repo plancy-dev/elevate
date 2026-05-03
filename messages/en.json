@@ -1530,6 +1530,26 @@
           "body": "Failure class detected: <fill_this>.\\nKeep automation in safe mode and run root-cause fix first.\\nThen execute retry window only and provide:\\n- root cause\\n- fix diff summary\\n- retry result\\n- recurrence prevention checklist"
         }
       },
+      "heartbeat": {
+        "title": "Automation heartbeat (7d)",
+        "subtitle": "Separate healthy idle from missing telemetry. Green: a run in the last 72h. Yellow: stale 72–168h, or manual-only path. Red: no runs or longer than 168h.",
+        "levelGreen": "Green — recent pipeline activity",
+        "levelYellow": "Yellow — review schedule vs actual runs",
+        "levelRed": "Red — no or very stale telemetry",
+        "lastAny": "Last run (any trigger)",
+        "lastScheduled": "Last scheduled run",
+        "never": "None in lookback window",
+        "hoursAgo": "{hours} h ago",
+        "runsInWindowLabel": "Rows sampled",
+        "runsInWindow": "{count} runs in 7d lookback",
+        "countsTitle": "Runs by trigger_type",
+        "scheduledSourcesTitle": "Scheduled runs by automation_source",
+        "manualOnlyNote": "No scheduled runs in this window. If you expect Vercel cron ticks, verify CONTENT_OPS_AUTOMATION_RUNTIME and caller source=vercel-cron. Cursor-first / manual-only is often expected.",
+        "missingSourceNote": "{count} scheduled run(s) missing metadata.automation_source (legacy).",
+        "runtime": "CONTENT_OPS_AUTOMATION_RUNTIME",
+        "runtimeUnset": "(unset)",
+        "cli": "CLI snapshot: pnpm run content-ops:runs-invariant-check"
+      },
       "escalation": {
         "title": "Three-day regression escalation",
         "metric": "Detected 3-day worsening on: {metric}",

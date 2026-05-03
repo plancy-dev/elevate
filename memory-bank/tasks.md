@@ -98,6 +98,7 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 ## Immediate Next Step
 
 - **INIT (active — P0 backlog #1):** `#51` operational gate — **BUILD snap 2026-05-03** still `PENDING` (insufficient multi-day buckets). Evidence under `reports/gate51-snapshots/`. Ops: generate content across **≥2 UTC dates** then rerun `pnpm run content-ops:gate51-trend-check`.
+- **P0 backlog #2–#3 (partial BUILD 2026-05-03):** `content-ops:runs-invariant-check` + morning-ops **Automation heartbeat** strip; prod 7d confirmation still on ops.
 
 - [x] Create P0 stabilization tickets (#49-#51) with acceptance/verification.
 - [x] Create P1 stabilization tickets (#52-#54) with P0 dependency.
@@ -114,6 +115,7 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
   - Latest check (2026-05-03 BUILD): `PENDING` — `generatedAt=2026-05-03T07:12:55.228Z`, `pnpm run content-ops:gate51-trend-check`, `decisionReason=insufficient multi-day trend buckets`, `trend` buckets=1 (`2026-05-01` only: `lowNoveltyRatio=0.2895`, `blogReviewRequiredRatio=0.6667`). Snapshot: `reports/gate51-snapshots/2026-05-03-build-gate51.json`. Corroboration: `2026-05-03-build-gate-check.json`, `2026-05-03-build-quality-monitor.json`. **Next:** run pipeline so **≥2 UTC day buckets** exist in 7d lookback, then rerun gate51.
 - [ ] Resolve runtime-source alignment (`cursor` vs `vercel-cron`) and confirm first `scheduled` run is persisted in `content_runs.trigger_type`.
   - Evidence: first `scheduled` rows persisted (`source=cursor` success + `source=vercel-cron` mismatch failure) on 2026-05-02.
+  - **Implemented (2026-05-03):** `pnpm run content-ops:runs-invariant-check` + `/admin/morning-ops` **Automation heartbeat** (7d `trigger_type` / `automation_source` facts). **Remaining:** operator confirms prod over **7 consecutive days** or files explicit automation-off; attach JSON snapshot to close checkbox.
 - [x] Lock executor strategy before `#53`: Cursor Cloud Agent first, Vercel cron emergency fallback only.
 - [x] Start INIT queue automation implementation in order: `#55 -> #56 -> #57 -> #58 -> #59`.
 - [x] Fix sample blog post leak to production (2026-05-02 Claude audit, reports/2026-05-02-claude-audit.md §0 #1 / §3.2 D).

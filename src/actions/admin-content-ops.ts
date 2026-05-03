@@ -14,6 +14,13 @@ import {
   runContentOpsScenario,
 } from "@/lib/content-ops/run-orchestrator";
 import type { Json } from "@/types/database.types";
+import {
+  computeAutomationHeartbeat,
+  type AutomationHeartbeatInputRow,
+  type AutomationHeartbeatResult,
+} from "@/lib/content-ops/automation-heartbeat";
+
+const CONTENT_OPS_HEARTBEAT_LOOKBACK_HOURS = 168;
 
 const EMAIL_RE =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
@@ -241,6 +248,34 @@ export async function setAdminNewsSourceActive(formData: FormData): Promise<void
     revalidatePath("/admin/news-sources");
   } catch (e) {
     console.error("[setAdminNewsSourceActive] failed", e);
+  }
+}
+
+export async function fetchContentOpsAutomationHeartbeat(): Promise<
+  { ok: true; heartbeat: AutomationHeartbeatResult } | { ok: false; error: string }
+> {
+  const gate = await assertPlatformAdmin();
+  if (!gate.ok) return { ok: false, error: gate.error };
+
+  try {
+    const admin = createAdminClient();
+    const since = new Date(
+      Date.now() - CONTENT_OPS_HEARTBEAT_LOOKBACK_HOURS * 60 * 60 * 1000,
+    ).toISOString();
+    const { data, error } = await admin
+      .from("content_runs")
+      .select("trigger_type, created_at, metadata")
+      .gte("created_at", since)
+      .order("created_at", { ascending: false })
+      .limit(5000);
+    if (error) return { ok: false, error: error.message };
+    const rows = (data ?? []) as AutomationHeartbeatInputRow[];
+    const heartbeat = computeAutomationHeartbeat(rows, Date.now(), {
+      lookbackHours: CONTENT_OPS_HEARTBEAT_LOOKBACK_HOURS,
+    });
+    return { ok: true, heartbeat };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "unknown" };
   }
 }
 

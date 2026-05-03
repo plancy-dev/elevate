@@ -21,8 +21,9 @@
 
 - Code path for novelty recovery and gate51 script **already shipped**; blocker is **sample / multi-day buckets** (see re-audit).
 - **BUILD 2026-05-03:** Evidence captured in `reports/gate51-snapshots/` (`2026-05-03-build-gate51.json` etc.) — gate51 `PENDING` (`insufficient multi-day trend buckets`); same run gate-check `#49`/`#50` PASS.
+- **P0 #2 / #3 (partial):** `pnpm run content-ops:runs-invariant-check` + `/admin/morning-ops` **Automation heartbeat** — use for `trigger_type` / `automation_source` facts; **7 consecutive days** prod check still operator-owned.
 - Queue automation `#55`–`#59` complete; stabilization `#49`/`#50` operational gates passed in recent strict windows.
-- **Open:** `#51` operational gate; `tasks.md` Immediate Next Step — **ops:** create `content_items` activity on a **second UTC day** in lookback, then rerun gate51; trigger_type prod invariant (P0 #2, separate).
+- **Open:** `#51` operational gate; `tasks.md` Immediate Next Step — **ops:** create `content_items` activity on a **second UTC day** in lookback, then rerun gate51; **ops:** close runtime checkbox after 7d invariant evidence.
 
 ## Next Immediate Execution Anchors
 

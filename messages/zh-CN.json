@@ -1522,6 +1522,26 @@
           "body": "Failure class detected: <fill_this>.\\nKeep automation in safe mode and run root-cause fix first.\\nThen execute retry window only and provide:\\n- root cause\\n- fix diff summary\\n- retry result\\n- recurrence prevention checklist"
         }
       },
+      "heartbeat": {
+        "title": "自动化心跳（7 天）",
+        "subtitle": "区分正常空闲与遥测缺失。绿：72 小时内有运行。黄：72–168 小时或仅手动路径。红：无运行或超过 168 小时。",
+        "levelGreen": "绿 — 近期流水线有活动",
+        "levelYellow": "黄 — 对照排期与实际运行",
+        "levelRed": "红 — 无遥测或过于陈旧",
+        "lastAny": "上次运行（任意触发类型）",
+        "lastScheduled": "上次定时（scheduled）运行",
+        "never": "窗口期内无",
+        "hoursAgo": "{hours} 小时前",
+        "runsInWindowLabel": "采样行数",
+        "runsInWindow": "7 天窗口内 {count} 次运行",
+        "countsTitle": "按 trigger_type",
+        "scheduledSourcesTitle": "scheduled 按 automation_source",
+        "manualOnlyNote": "本窗口无 scheduled 运行。若预期 Vercel cron，请检查 CONTENT_OPS_AUTOMATION_RUNTIME 与 source=vercel-cron。",
+        "missingSourceNote": "{count} 次 scheduled 缺少 metadata.automation_source（遗留）。",
+        "runtime": "CONTENT_OPS_AUTOMATION_RUNTIME",
+        "runtimeUnset": "（未设置）",
+        "cli": "CLI：pnpm run content-ops:runs-invariant-check"
+      },
       "escalation": {
         "title": "连续3天恶化升级",
         "metric": "检测到连续3天恶化的指标：{metric}",

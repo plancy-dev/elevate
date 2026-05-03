@@ -1522,6 +1522,26 @@
           "body": "Failure class detected: <fill_this>.\\nKeep automation in safe mode and run root-cause fix first.\\nThen execute retry window only and provide:\\n- root cause\\n- fix diff summary\\n- retry result\\n- recurrence prevention checklist"
         }
       },
+      "heartbeat": {
+        "title": "自動化ハートビート（7日）",
+        "subtitle": "正常な休止とテレメトリ欠落を区別します。緑: 過去72時間以内に実行。黄: 72〜168時間の遅延、または手動のみ。赤: 実行なし、または168時間超。",
+        "levelGreen": "緑 — 直近パイプライン活動あり",
+        "levelYellow": "黄 — スケジュールと実実行を照合",
+        "levelRed": "赤 — テレメトリなしまたは非常に古い",
+        "lastAny": "最終実行（全トリガー）",
+        "lastScheduled": "最終スケジュール実行",
+        "never": "期間内なし",
+        "hoursAgo": "{hours} 時間前",
+        "runsInWindowLabel": "サンプル行数",
+        "runsInWindow": "7日ウィンドウ内 {count} 件",
+        "countsTitle": "trigger_type 別",
+        "scheduledSourcesTitle": "automation_source 別（scheduled）",
+        "manualOnlyNote": "この期間に scheduled がありません。Vercel cron を想定する場合は CONTENT_OPS_AUTOMATION_RUNTIME と source=vercel-cron を確認してください。",
+        "missingSourceNote": "metadata.automation_source 欠落の scheduled {count} 件（レガシー）。",
+        "runtime": "CONTENT_OPS_AUTOMATION_RUNTIME",
+        "runtimeUnset": "（未設定）",
+        "cli": "CLI: pnpm run content-ops:runs-invariant-check"
+      },
       "escalation": {
         "title": "3日連続悪化エスカレーション",
         "metric": "3日連続悪化を検知した指標: {metric}",

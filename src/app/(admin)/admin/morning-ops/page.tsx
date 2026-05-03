@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import {
   listAdminContentQueue,
   listAdminContentRuns,
+  fetchContentOpsAutomationHeartbeat,
 } from "@/actions/admin-content-ops";
 import {
   MorningOpsPlaybookClient,
@@ -73,6 +74,9 @@ export default async function AdminMorningOpsPage() {
   const latestAlert = (runsRes.ok ? runsRes.rows : [])
     .map((row) => parseAlertPayload(row.metadata))
     .find((payload): payload is AlertPayloadView => Boolean(payload));
+
+  const automationRuntime = process.env.CONTENT_OPS_AUTOMATION_RUNTIME?.trim() || "";
+  const hbRes = await fetchContentOpsAutomationHeartbeat();
 
   const quickLinks = [
     { href: "/admin/runs", label: t("quickLinks.runs") },
@@ -153,6 +157,78 @@ export default async function AdminMorningOpsPage() {
 
       <div className="max-w-5xl space-y-5 p-6">
         <p className="text-sm leading-relaxed text-ink-700">{t("intro")}</p>
+
+        {hbRes.ok ? (
+          <section
+            className={
+              hbRes.heartbeat.level === "green"
+                ? "space-y-2 border border-emerald-300 bg-emerald-50 p-4"
+                : hbRes.heartbeat.level === "yellow"
+                  ? "space-y-2 border border-amber-300 bg-amber-50 p-4"
+                  : "space-y-2 border border-red-300 bg-red-50 p-4"
+            }
+          >
+            <h2 className="text-xs font-medium uppercase tracking-wide text-ink-800">
+              {t("heartbeat.title")}
+            </h2>
+            <p className="text-[11px] leading-relaxed text-ink-700">{t("heartbeat.subtitle")}</p>
+            <p className="text-xs font-medium text-ink-900">
+              {hbRes.heartbeat.level === "green"
+                ? t("heartbeat.levelGreen")
+                : hbRes.heartbeat.level === "yellow"
+                  ? t("heartbeat.levelYellow")
+                  : t("heartbeat.levelRed")}
+            </p>
+            <ul className="space-y-1 text-xs leading-relaxed text-ink-800">
+              <li>
+                <span className="font-medium">{t("heartbeat.lastAny")}:</span>{" "}
+                {hbRes.heartbeat.lastAnyRunAt
+                  ? `${hbRes.heartbeat.lastAnyRunAt} (${t("heartbeat.hoursAgo", { hours: hbRes.heartbeat.hoursSinceAny ?? 0 })})`
+                  : t("heartbeat.never")}
+              </li>
+              <li>
+                <span className="font-medium">{t("heartbeat.lastScheduled")}:</span>{" "}
+                {hbRes.heartbeat.lastScheduledRunAt
+                  ? `${hbRes.heartbeat.lastScheduledRunAt} (${t("heartbeat.hoursAgo", { hours: hbRes.heartbeat.hoursSinceScheduled ?? 0 })})`
+                  : t("heartbeat.never")}
+              </li>
+              <li>
+                <span className="font-medium">{t("heartbeat.runsInWindowLabel")}:</span>{" "}
+                {t("heartbeat.runsInWindow", { count: hbRes.heartbeat.rowCount })}
+              </li>
+            </ul>
+            <div className="text-[11px] text-ink-700">
+              <p className="font-medium text-ink-800">{t("heartbeat.countsTitle")}</p>
+              <pre className="mt-1 whitespace-pre-wrap border border-ink-100 bg-paper-0 p-2 text-[11px]">
+                {JSON.stringify(hbRes.heartbeat.countsByTrigger, null, 2)}
+              </pre>
+              <p className="mt-2 font-medium text-ink-800">{t("heartbeat.scheduledSourcesTitle")}</p>
+              <pre className="mt-1 whitespace-pre-wrap border border-ink-100 bg-paper-0 p-2 text-[11px]">
+                {JSON.stringify(hbRes.heartbeat.scheduledByAutomationSource, null, 2)}
+              </pre>
+            </div>
+            {hbRes.heartbeat.manualOnlyPath ? (
+              <p className="text-[11px] leading-relaxed text-ink-800">{t("heartbeat.manualOnlyNote")}</p>
+            ) : null}
+            {hbRes.heartbeat.scheduledWithoutAutomationSource > 0 ? (
+              <p className="text-[11px] leading-relaxed text-ink-800">
+                {t("heartbeat.missingSourceNote", {
+                  count: hbRes.heartbeat.scheduledWithoutAutomationSource,
+                })}
+              </p>
+            ) : null}
+            <p className="text-[11px] text-ink-600">
+              <span className="font-medium">{t("heartbeat.runtime")}:</span>{" "}
+              {automationRuntime || t("heartbeat.runtimeUnset")}
+            </p>
+            <p className="text-[11px] text-ink-600">{t("heartbeat.cli")}</p>
+          </section>
+        ) : (
+          <section className="space-y-2 border border-ink-100 bg-paper-0 p-4">
+            <h2 className="text-xs font-medium uppercase tracking-wide text-ink-700">{t("heartbeat.title")}</h2>
+            <p className="text-xs text-red-700">{hbRes.error}</p>
+          </section>
+        )}
 
         <section className="space-y-3 border border-ink-100 bg-paper-0 p-4">
           <h2 className="text-xs font-medium uppercase tracking-wide text-ink-700">{t("quickLinks.title")}</h2>

@@ -1530,6 +1530,26 @@
           "body": "감지된 실패 클래스: <여기에 입력>.\\n자동화는 안전모드로 유지하고 원인 수정부터 수행하세요.\\n이후 retry window만 실행하고 아래를 보고하세요:\\n- 근본 원인\\n- 수정 요약\\n- 재실행 결과\\n- 재발 방지 체크리스트"
         }
       },
+      "heartbeat": {
+        "title": "자동화 하트비트(7일)",
+        "subtitle": "정상 유휴와 텔레메트리 누락을 구분합니다. 녹색: 최근 72시간 내 실행. 노랑: 72–168시간 지연 또는 수동 전용 경로. 빨강: 실행 없음 또는 168시간 초과.",
+        "levelGreen": "녹색 — 최근 파이프라인 활동",
+        "levelYellow": "노랑 — 일정 대비 실행 여부 확인",
+        "levelRed": "빨강 — 텔레메트리 없음 또는 매우 오래됨",
+        "lastAny": "마지막 실행(모든 트리거)",
+        "lastScheduled": "마지막 예약(scheduled) 실행",
+        "never": "조회 구간 내 없음",
+        "hoursAgo": "{hours}시간 전",
+        "runsInWindowLabel": "표본 행 수",
+        "runsInWindow": "7일 구간 내 실행 {count}건",
+        "countsTitle": "trigger_type별 실행 수",
+        "scheduledSourcesTitle": "automation_source별 scheduled 실행",
+        "manualOnlyNote": "이 구간에 scheduled 실행이 없습니다. Vercel cron을 기대한다면 CONTENT_OPS_AUTOMATION_RUNTIME과 source=vercel-cron 호출을 확인하세요. Cursor 우선·수동만인 경우도 흔합니다.",
+        "missingSourceNote": "metadata.automation_source가 없는 scheduled 실행 {count}건(레거시).",
+        "runtime": "CONTENT_OPS_AUTOMATION_RUNTIME",
+        "runtimeUnset": "(미설정)",
+        "cli": "CLI 스냅샷: pnpm run content-ops:runs-invariant-check"
+      },
       "escalation": {
         "title": "3일 연속 악화 에스컬레이션",
         "metric": "3일 연속 악화 감지 지표: {metric}",
