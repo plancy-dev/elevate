@@ -27,7 +27,7 @@
 
 ### REFLECT — 증거 로그 (2026-05-03)
 
-**Runs invariant:** [`reports/2026-05-03-runs-invariant-recheck.json`](../reports/2026-05-03-runs-invariant-recheck.json) — `PASS`, `maxConsecutiveUtcDaysWithScheduled=2`. **Prod 스모크:** elevate.ai.kr + `.env.local` 토큰 → **401** (Vercel 시크릿과 다를 때 예상). **BUILD:** `automation-auth` 공통화·invariant 스크립트 `consecutiveScheduledDaysUtc`·`dotenv quiet` — 아래 커밋으로 main 반영.
+**Runs invariant:** [`reports/2026-05-03-runs-invariant-recheck.json`](../reports/2026-05-03-runs-invariant-recheck.json) — `PASS`, `maxConsecutiveUtcDaysWithScheduled=2`. **Prod 스모크:** elevate.ai.kr + `.env.local` 토큰 → **401** (Vercel 시크릿과 다를 때 예상). **BUILD:** `947cff1` — `automation-auth`, invariant 스크립트 확장, 증거 JSON·Memory Bank·`.env.local.example`.
 
 ### Stabilization ops — `trigger_type` / `automation_source` (7d calendar)
 
