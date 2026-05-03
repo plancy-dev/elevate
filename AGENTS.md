@@ -38,7 +38,7 @@ If gstack is not installed locally, follow `CLAUDE.md` install commands; do not 
 
 ### Environment
 
-- **Node.js 20** via nvm (`.nvmrc`), **pnpm 9+** (global install).
+- **Node.js 20** via nvm (`.nvmrc`), **pnpm 9+** (global install; CI uses the version pinned by `pnpm/action-setup` in GitHub Actions).
 - Secrets are injected as environment variables. A `.env.local` must be created (gitignored) so Next.js picks up `NEXT_PUBLIC_*` vars at build/dev time. Use a script or copy from `.env.local.example` and fill from env.
 - The update script runs `pnpm install` only. nvm/node/pnpm must already be on PATH from the VM snapshot.
 
@@ -49,13 +49,13 @@ If gstack is not installed locally, follow `CLAUDE.md` install commands; do not 
 | Next.js dev | `pnpm dev` | Port 3000, webpack mode. Use `--webpack` flag (already in script). |
 | Lint | `pnpm lint` | ESLint 9 flat config |
 | Typecheck | `pnpm typecheck` | `tsc --noEmit` |
-| Unit tests | `pnpm test` | Vitest, `tests/unit/`. 2 tests fail when `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POLAR_CHECKOUT_LINK` are set (they test absent-env behavior). |
+| Unit tests | `pnpm test` | Vitest, `tests/unit/`. Some suites assert **absent** `NEXT_PUBLIC_*` defaults; if the cloud VM injects `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` / checkout link vars, those cases can fail—run `pnpm verify` with a clean env slice if needed. |
 | Full CI check | `pnpm verify` | lint + typecheck + test + build |
 | Build | `pnpm build` | Next.js production build |
 
 ### Gotchas
 
-- **Unit test env leakage**: `posthog-public.test.ts` and `blog-subscription.test.ts` expect certain env vars to be unset. These 2 tests will fail in Cloud Agent environments where secrets are injected. This is a known env-specific issue, not a code bug.
+- **Unit test env leakage**: `posthog-public.test.ts` and `blog-subscription.test.ts` include branches that assume env vars are unset. Full secret injection in Cloud Agent can flip those branches—prefer comparing against CI (fixed env) or unsetting only the conflicting `NEXT_PUBLIC_*` keys for a test run.
 - **Husky pre-commit**: runs `lint-staged` (ESLint on staged files). Never use `--no-verify`.
 - **Supabase**: No local Supabase needed — the app connects to a remote Supabase project via env vars. Integration tests (`pnpm test:integration`) require `SUPABASE_INTEGRATION_TEST=1`.
 - **sharp rebuild**: After `pnpm install`, sharp may warn about ignored build scripts. Run `pnpm rebuild sharp` if image optimization breaks. The `pnpm.onlyBuiltDependencies` in `package.json` lists `sqlite3`; sharp is handled by its prebuilt binaries.
