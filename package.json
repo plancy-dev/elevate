@@ -36,6 +36,7 @@
     "content-ops:quality:monitor": "pnpm tsx scripts/content-ops-quality-monitor.ts",
     "content-ops:daily-snapshot": "pnpm tsx scripts/content-ops-daily-snapshot.ts",
     "content-ops:gate-check": "pnpm tsx scripts/content-ops-gate-check.ts",
+    "content-ops:gate51-trend-check": "pnpm tsx scripts/content-ops-gate51-trend-check.ts",
     "pr:automerge:safe": "pnpm tsx scripts/pr-automerge-safe.ts",
     "autoloop:poc": "pnpm tsx scripts/continuous-improvement-loop.ts",
     "autoloop:rehearsal": "pnpm autoloop:poc --mode=rehearsal --allow-dirty-tree --max-cycles=3 --max-hours=1 --interval-minutes=5",
