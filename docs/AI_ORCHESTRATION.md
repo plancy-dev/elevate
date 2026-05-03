@@ -40,8 +40,11 @@
 2. **`memory-bank/tasks.md`에서 해당 체크박스** 또는 인용  
 3. **`memory-bank/activeContext.md`의 “다음 앵커”** (있다면)  
 4. 제품 방향이 흔들리면 **`memory-bank/creative-elevate-ai-pivot.md`** 한 단락 인용  
+5. **전문가 세션·복붙 프롬프트** — [`AI_EXPERT_PROMPTS.md`](./AI_EXPERT_PROMPTS.md) 블록 A~D (우선순위·실행 세션에 특히 유효)
 
 불필요한 전체 붙여넣기 대신 **파일 경로를 주고 읽게 한다** — 컨텍스트 비용과 드리프트를 줄인다.
+
+**제안·로드맵·“다음 작업” 응답 시:** 한 가지 **최선안**을 먼저 제시하고, [`AI_EXPERT_PROMPTS.md`](./AI_EXPERT_PROMPTS.md) §1 의사결정 바를 따른다. 가능하면 사용자가 다음 탭에 붙여 넣을 **블록 B/C 형태의 완성 프롬프트**를 함께 출력한다.
 
 ---
 
@@ -80,6 +83,7 @@
 | [`DEVELOPMENT.md`](./DEVELOPMENT.md) | 스크립트·CI·대시보드 접근 env |
 | [`design/SYSTEM.md`](./design/SYSTEM.md) | 디자인 토큰·마케팅/앱 셸 |
 | [`memory-bank/README.md`](../memory-bank/README.md) | Memory Bank 파일 역할 |
+| [`AI_EXPERT_PROMPTS.md`](./AI_EXPERT_PROMPTS.md) | 전문가 의사결정 바 + 복붙 프롬프트 A~D |
 | [`AI_AGENT_MATURITY_REPORT.md`](./AI_AGENT_MATURITY_REPORT.md) | 성숙도 리포트·벤치마크·점수 |
 | [`design/QUALITY_PIPELINE.md`](./design/QUALITY_PIPELINE.md) | gstack 디자인·엔지 리뷰 순서 + repo 게이트 |
 | [`DEV_PROCESS_GITHUB.md`](./DEV_PROCESS_GITHUB.md) | **GitHub Issues / PR / gh CLI** — 원격 작업 추적·에픽·`pnpm issues:studio` |
@@ -90,6 +94,7 @@
 
 - **Cursor**: `.cursor/rules/ai-session-bootstrap.mdc` (`alwaysApply: true`) — 구현·버그·기능 요청 시 **`memory-bank/tasks.md`·`activeContext.md`**를 도구로 읽고, **`docs/AI_ORCHESTRATION.md`** 레이어를 확인한 뒤 진행. 사용자가 템플릿을 쓰지 않아도 동작한다.
 - **사용자 권장 형식** (재현·범위 명확화): [`AI_USER_TEMPLATES.md`](./AI_USER_TEMPLATES.md).
+- **전문가 기준·복붙 세션**: [`AI_EXPERT_PROMPTS.md`](./AI_EXPERT_PROMPTS.md).
 
 ---
 

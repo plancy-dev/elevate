@@ -1,6 +1,7 @@
 # AI 요청 템플릿 — Elevate
 
 에이전트는 `.cursor/rules/ai-session-bootstrap.mdc`에 따라 **`tasks.md`·`activeContext.md`**를 자동으로 로드한다.  
+**전문가 기준·복붙 프롬프트 블록(A~D)** — [`AI_EXPERT_PROMPTS.md`](./AI_EXPERT_PROMPTS.md).  
 아래는 **재현·범위**를 명확히 하기 위한 권장 형식이다. 그대로 복사해 빈칸만 채우면 된다.
 
 ---

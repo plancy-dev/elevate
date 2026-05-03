@@ -13,9 +13,10 @@
 6. **PostHog 퍼널 (UI에서 구성)** — [`POSTHOG_FUNNELS.md`](./POSTHOG_FUNNELS.md)  
 7. **원격 이슈·PR 큐** — [`DEV_PROCESS_GITHUB.md`](./DEV_PROCESS_GITHUB.md) · `pnpm issues:studio`
 8. **Slack 없는 운영 자동화** — [`AUTOMATIONS_NO_SLACK_OPS.md`](./AUTOMATIONS_NO_SLACK_OPS.md)
+9. **전문가 의사결정·복붙 프롬프트** — [`AI_EXPERT_PROMPTS.md`](./AI_EXPERT_PROMPTS.md)
 
 **자동**: 구현·버그·기능 요청은 `.cursor/rules/ai-session-bootstrap.mdc`가 위 컨텍스트를 로드한다.  
-**권장 입력 형식**: [`AI_USER_TEMPLATES.md`](./AI_USER_TEMPLATES.md) · **타 프로젝트 이식**: [`AI_WORKFLOW_PORTABILITY.md`](./AI_WORKFLOW_PORTABILITY.md).
+**권장 입력 형식**: [`AI_USER_TEMPLATES.md`](./AI_USER_TEMPLATES.md) · **전문가 세션**: [`AI_EXPERT_PROMPTS.md`](./AI_EXPERT_PROMPTS.md) · **타 프로젝트 이식**: [`AI_WORKFLOW_PORTABILITY.md`](./AI_WORKFLOW_PORTABILITY.md).
 
 ## 폴더
 

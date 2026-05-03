@@ -121,7 +121,8 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 - [x] Fix sample blog post leak to production (2026-05-02 Claude audit, reports/2026-05-02-claude-audit.md §0 #1 / §3.2 D).
 
 **Reference (automation maturity):** `reports/automation-three-pillars-gap-analysis-2026-05-03.md` — service / newsletter / blog pillars: gap list and remediation plan.  
-**Reference (prioritized work):** `reports/prioritized-backlog-expert-2026-05-03.md` — P0–P3 backlog and sprint-shaped order.
+**Reference (prioritized work):** `reports/prioritized-backlog-expert-2026-05-03.md` — P0–P3 backlog and sprint-shaped order.  
+**Reference (expert session prompts):** `docs/AI_EXPERT_PROMPTS.md` — Memory Bank 강제 로드 + 복붙 블록 A~D.
 
 ## Stabilization Gate Evidence Contract (`#49/#50/#51`)
 

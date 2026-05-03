@@ -31,6 +31,14 @@ alwaysApply: false
 | 4 | domainKnowledge.md | MICE 용어 |
 | 5 | creative-architecture.md | 스키마·라우트·결정 |
 | 6 | techStack.md | 스택·환경 변수 |
+| 7 | `docs/AI_EXPERT_PROMPTS.md` | 전문가 의사결정·Memory Bank 강제 로드 복붙 블록 |
+
+---
+
+## 에이전트 제안·우선순위 시
+
+- **최선안 1개**를 먼저 제시하고 `tasks.md` / `activeContext.md`와 맞춘다.
+- 사용자가 다음 세션에 재사용하도록 **`docs/AI_EXPERT_PROMPTS.md`** 블록 B 또는 C를 채운 프롬프트를 함께 넘긴다.
 
 ---
 
@@ -50,4 +58,4 @@ alwaysApply: false
 2. **Archive = 읽기 전용 참조** — 단일 위치: `memory-bank/archive/` (인덱스: `memory-bank/archive/index.md`)
 3. **중복 문서 금지** — 기존 문서 재사용
 
-→ 워크플로우: `workflow-modes.mdc` | 아카이브·정리: `archive-and-cleanup.mdc` | AI: `docs/AI_ORCHESTRATION.md`
+→ 워크플로우: `workflow-modes.mdc` | 아카이브·정리: `archive-and-cleanup.mdc` | AI: `docs/AI_ORCHESTRATION.md` · **전문가 복붙 프롬프트:** `docs/AI_EXPERT_PROMPTS.md`
