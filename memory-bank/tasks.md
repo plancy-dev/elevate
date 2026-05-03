@@ -43,17 +43,17 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
   - Order: `3` (starts after #49/#50 publish-path stabilization)
   - Status: `operational_gate_pending_multiday_trend_required`
   - Acceptance: one full cycle after change shows lower `low_novelty` share and better blog review-required trend.
-  - Verify: quality monitor + `content_items` low_novelty/review_required SQL.
-- [ ] #52 `[STAB][P1] strategy-scoreboard-activation-quality`
-  - Status: `operational_gate_passed`
+  - Verify: `pnpm run content-ops:gate51-trend-check` + quality monitor + `content_items` low_novelty/review_required SQL.
+- [x] #52 `[STAB][P1] strategy-scoreboard-activation-quality`
+  - Status: `operational_gate_passed` (GitHub closed 2026-05-03)
   - Acceptance: strategy scoreboard sample non-zero and winner selection meaningful.
   - Verify: snapshot output + `/admin/content-quality` scoreboard state.
-- [ ] #53 `[STAB][P1] citation-coverage-enablement`
-  - Status: `operational_gate_passed_initial_trend`
+- [x] #53 `[STAB][P1] citation-coverage-enablement`
+  - Status: `operational_gate_passed_initial_trend` (GitHub closed 2026-05-03)
   - Acceptance: `citationCoverage7dAvg` becomes non-zero and trendable.
   - Verify: quality monitor 24h/7d citation cards + reason distribution.
-- [ ] #54 `[STAB][P1] escalation-action-loop-hardening`
-  - Status: `operational_gate_passed_simulated_e2e`
+- [x] #54 `[STAB][P1] escalation-action-loop-hardening`
+  - Status: `operational_gate_passed_simulated_e2e` (GitHub closed 2026-05-03)
   - Acceptance: regression alert path includes owner-assigned next-action loop.
   - Verify: `content_runs.metadata.alert` payload usability + `/admin/morning-ops` action flow.
 
@@ -109,6 +109,7 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 - [x] Bring publication fail ratio under `<20%` and keep retry waste low over consecutive daily windows.
   - Gate-check result (2026-05-02 latest): `gate50=PASS` (`failRatio24=0`, `retryExhausted24=0`).
 - [ ] Capture second-day novelty trend to confirm `low_novelty` and blog review_required movement.
+  - Latest check (2026-05-03): `PENDING` (`pnpm run content-ops:gate51-trend-check` — multi-day bucket insufficient; only `2026-05-01` bucket present).
 - [ ] Resolve runtime-source alignment (`cursor` vs `vercel-cron`) and confirm first `scheduled` run is persisted in `content_runs.trigger_type`.
   - Evidence: first `scheduled` rows persisted (`source=cursor` success + `source=vercel-cron` mismatch failure) on 2026-05-02.
 - [x] Lock executor strategy before `#53`: Cursor Cloud Agent first, Vercel cron emergency fallback only.
@@ -131,5 +132,5 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 
 - [x] All INIT issues (#38-#47) are closed with explicit rationale.
 - [ ] P0 stabilization issues (#49-#51) complete with verified metric movement.
-- [ ] P1 stabilization issues (#52-#54) complete with operational action loop.
+- [x] P1 stabilization issues (#52-#54) complete with operational action loop.
 - [ ] Re-audit report after one business-day cycle is recorded.

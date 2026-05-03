@@ -356,6 +356,16 @@ Result:
   - `pnpm run typecheck` (pass)
   - `pnpm exec vitest run tests/unit/content-ops-queue-triage.test.ts tests/unit/content-ops-config-stop-policy.test.ts` (pass)
   - `pnpm run content-ops:gate-check` (pass, latest gate output recorded)
+- `#51` closeout routine update:
+  - Added script: `scripts/content-ops-gate51-trend-check.ts`
+  - Added command: `pnpm run content-ops:gate51-trend-check`
+  - Latest output (2026-05-02):
+    - `status=PENDING`
+    - `decisionReason=insufficient multi-day trend buckets`
+    - available bucket: `2026-05-01` only
+  - Closure is deferred until at least 2 day buckets exist and latest day improves for both:
+    - `lowNoveltyRatio`
+    - `blogReviewRequiredRatio`
 
 ## Gate Close Protocol (Deterministic)
 
