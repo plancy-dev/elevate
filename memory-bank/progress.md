@@ -5,6 +5,7 @@
 
 ## Status snapshot (aligned with `tasks.md`, 2026-05-04)
 
+- **REFLECT (AI-native workflow docs, post–PR #74):** RFC·doc-gate가 `main`에 올라갔고 doc-gate §5 경로 확인 완료; RFC 기본안 유지(verify+기존 CI, MCP 조건부, Hooks는 팀 합의 후). 다음: [#73](https://github.com/plancy-dev/elevate/issues/73)에서 Hooks·MCP·CI 세 결정 합의 → 구현 PR.
 - **INIT wave:** closed for handoff — see `tasks.md` **INIT closeout** + morning report [`reports/content-ops-morning-handoff-2026-05-03.md`](../reports/content-ops-morning-handoff-2026-05-03.md); gate51 one-shot brief archived to `memory-bank/archive/work-history/init-p0-1-gate51-operational-closeout.md`.
 - **Vercel / runtime:** document-only alignment — unset `CONTENT_OPS_AUTOMATION_RUNTIME` ≡ `cursor` in code; operator should **set explicit `cursor`** in Vercel (RUNBOOK + `.env.local.example` updated).
 - **BUILD 2026-05-04 (ADR-013 Phase 1b):** `ELEVATE_MARKETING_CTA_CLICK` wired at 8 surfaces + `locale`/`referrer_path` contract; `tests/unit/marketing-cta-instrumentation.test.ts`; `pnpm verify` green. Evidence + notes: [`reports/2026-05-03-runs-invariant-build-handoff.json`](../reports/2026-05-03-runs-invariant-build-handoff.json). Archive brief: [`memory-bank/archive/work-history/build-adr013-phase1b-2026-05-04.md`](archive/work-history/build-adr013-phase1b-2026-05-04.md). **REFLECT:** PostHog 7d cta_id non-zero check still open per ADR.
