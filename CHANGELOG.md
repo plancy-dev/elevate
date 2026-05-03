@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Library: `getLibraryProductBySlug` loads a single `content_products` row by slug + shared entitlement context (avoids full-catalog query on detail pages); ebook reader no longer shows internal slug under the title.
 - Blog: dedicated editorial hero for the v0.2.0 release post (`public/blog/release-0-2-0/hero.jpg`) — no longer reuses the flagship post image.
 - Blog: v0.2.0 release copy (en/ko) rewritten for **customers only** — removed internal sections (migrations, ADRs, repo paths, roadmap codenames); templates and versioning docs updated so future release posts stay outward-facing.
+- Blog: strict Zod validation for blog frontmatter; regression test blocks hero/photo **builder memo** paragraphs after the hero image (closes #59).
 - [`docs/CONTENT_FUNNEL.md`](docs/CONTENT_FUNNEL.md): conversion row notes Lemon-first; G0 doc linked.
 
 <!-- New changes go here; move into a dated section when you cut the next release. -->
