@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-05-03T07:39:27.547Z",
+  "lookbackDays": 7,
+  "minDayBuckets": 2,
+  "status": "PASS",
+  "decisionReason": "latest daily trend improved for low_novelty and blog review_required ratio",
+  "trend": [
+    {
+      "day": "2026-05-01",
+      "total": 38,
+      "lowNovelty": 11,
+      "lowNoveltyRatio": 0.2895,
+      "blogTotal": 12,
+      "blogReviewRequired": 8,
+      "blogReviewRequiredRatio": 0.6667
+    },
+    {
+      "day": "2026-05-03",
+      "total": 42,
+      "lowNovelty": 0,
+      "lowNoveltyRatio": 0,
+      "blogTotal": 1,
+      "blogReviewRequired": 0,
+      "blogReviewRequiredRatio": 0
+    }
+  ]
+}
