@@ -11,7 +11,7 @@
 - **Stabilization P1 (`#52`–`#54`):** done per `tasks.md` (scoreboard, citation enablement, escalation action loop).
 - **Post-cycle re-audit:** recorded in `reports/reaudit-post-cycle-2026-05-03.md`; exit criterion checked in `tasks.md`.
 - **Still tracked in `tasks.md` Immediate Next Step:** second-day novelty trend capture; **runtime alignment** — `scheduled` persistence and `cursor` vs `vercel-cron` source invariant in production (local evidence exists; prod routine not fully checked off).
-- **Three-pillar maturity (service ops / newsletter / blog):** gap list and remediation plan — `reports/automation-three-pillars-gap-analysis-2026-05-03.md`; **prioritized backlog (P0–P3)** — `reports/prioritized-backlog-expert-2026-05-03.md`.
+- **Three-pillar maturity (service ops / newsletter / blog):** gap list and remediation plan — `reports/automation-three-pillars-gap-analysis-2026-05-03.md`; **prioritized backlog (P0–P3)** — `reports/prioritized-backlog-expert-2026-05-03.md`. **INIT (P0 #1, `#51`):** `memory-bank/init-p0-1-gate51-operational-closeout.md`.
 
 The **timeline below** is the stabilization implementation log (May 2026 sprint); it is **historical detail**, not the current “in progress” line.
 

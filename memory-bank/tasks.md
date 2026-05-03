@@ -97,6 +97,8 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 
 ## Immediate Next Step
 
+- **INIT (active — P0 backlog #1):** Operational closeout for `#51` — `memory-bank/init-p0-1-gate51-operational-closeout.md` (`pnpm run content-ops:gate51-trend-check`, ≥2 day buckets, evidence on issue + tasks).
+
 - [x] Create P0 stabilization tickets (#49-#51) with acceptance/verification.
 - [x] Create P1 stabilization tickets (#52-#54) with P0 dependency.
 - [x] Capture pre-fix baseline snapshot for publish failure, low_novelty, citation coverage.

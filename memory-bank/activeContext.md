@@ -2,38 +2,34 @@
 
 ## Current Phase
 
-### IMPLEMENT (INIT Stabilization P0/P1 kickoff)
+### INIT → next ops execution (P0 backlog #1, `#51` closeout)
 
 **Branch:** `main`  
 **Focus SoT:** `memory-bank/tasks.md`  
-**Completed issue:** `#38`~`#47` + `#49`/`#50`/`#51` + `#52` + `#53` + `#54` code/test implementation  
-**Next issue:** `INIT queue automation completed (#55~#59)`
+**INIT brief:** `memory-bank/init-p0-1-gate51-operational-closeout.md` (P0 prioritized backlog item 1 — operational measurement for `#51`)  
+**Prioritized backlog:** `reports/prioritized-backlog-expert-2026-05-03.md`
 
-**INIT handoff state:** `Implementation complete, stabilization residuals tracked by deterministic gate checker`
+**INIT handoff state:** Analysis complete — work is **ops + evidence**, not new feature code unless script contract fails in prod.
 
 ## Objective
 
-- Execute stabilization queue in strict order: `#49 -> #50 -> #51` then `#52 -> #53 -> #54`.
-- Preserve measurable evidence per ticket (query + UI verification + acceptance check).
-- Re-audit after one business-day cycle from first P0 rollout.
-- Execute next INIT queue automation in strict order: `#55 -> #56 -> #57 -> #58 -> #59`.
+- Run normal content automation so **≥2 UTC day buckets** appear in `content_items` within gate51 lookback.
+- Re-run `pnpm run content-ops:gate51-trend-check` until `status` is **PASS** (ratios non-worsening vs prior bucket) or document **FAIL/PENDING** with remediation (no metric gaming).
+- Record timestamps + JSON summary on GitHub `#51` and update `tasks.md` / exit criteria when done.
 
 ## Current State
 
-- INIT issues `#38`~`#47` are closed.
-- Stabilization issues created: `#49`~`#54` (`[STAB][P0/P1]`).
-- Baseline report captured: `reports/stabilization-baseline-2026-05-02.md`.
-- Current bottlenecks: `#51` novelty trend confirmation and queue quality threshold calibration.
+- Code path for novelty recovery and gate51 script **already shipped**; blocker is **sample / multi-day buckets** (see re-audit).
+- Queue automation `#55`–`#59` complete; stabilization `#49`/`#50` operational gates passed in recent strict windows.
+- **Open:** `#51` operational gate; `tasks.md` Immediate Next Step — second-day novelty trend; trigger_type prod invariant (P0 #2, separate).
 
 ## Next Immediate Execution Anchors
 
-1. Run `pnpm run content-ops:gate-check` for strict 24h/previous24h deterministic verdicts.
-2. Keep `#51` operational gate open until multi-day trend status reaches `PASS`.
-3. Executor strategy is fixed to Cursor-first (`source=cursor`) with `vercel-cron` emergency fallback only.
-4. Queue automation build (`#55`~`#59`) is complete; start operational calibration loop.
-5. Continue daily evidence loop with priority on unresolved gates (`#49`, `#50`, `#51`) and queue quality uplift rate.
+1. Follow **`memory-bank/init-p0-1-gate51-operational-closeout.md`** §4 execution sequence (baseline → operate → recheck → evidence).
+2. Keep `pnpm run content-ops:gate-check` on daily rhythm until `#51` closes.
+3. If script contract or metadata keys are wrong → **PLAN** then BUILD; else stay in **ops + REFLECT**.
 
 ## Non-Negotiable Safety Constraints
 
-- Do not treat metric deltas as valid unless windows are non-overlapping.
-- Keep runs/content-quality operational visibility intact after every issue.
+- Do not lower `CONTENT_OPS_GATE51_MIN_DAY_BUCKETS` in production to fake PASS without explicit design sign-off.
+- Do not treat metric deltas as valid without capturing full gate51 JSON (`trend`, `decisionReason`).
