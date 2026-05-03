@@ -1,7 +1,7 @@
 import type { TopicStrategyEntry } from "@/lib/content-ops/packs/topic-strategy-pack";
 import type { AutotuneStrategy } from "@/lib/content-ops/packs/pack-registry";
 
-export const NEWSLETTER_PROMPT_PACK_VERSION = "v1.5.0";
+export const NEWSLETTER_PROMPT_PACK_VERSION = "v1.6.0";
 
 type ParsedSourceBullet = { title: string; url: string };
 
@@ -111,6 +111,11 @@ export function buildNewsletterDraftFromPack(params: {
     "",
     "## Novelty recovery checklist (must pass)",
     ...noveltyRecoveryChecklist(params.autotuneStrategy),
+    "",
+    "## Unverified claims guard",
+    "- Every specific fact, date, statistic, or quote must trace to a citation anchor, an ingested source bullet, or explicit operator/runtime evidence in this cycle.",
+    "- If no source supports a tempting factual claim, either remove it, reframe as opinion/hypothesis, or add a visible caveat (e.g. \"unverified in this digest\").",
+    "- Do not present forum anecdotes, viral tips, or community hearsay as verified industry outcomes.",
     "",
     "## Anti-repetition guard",
     "- Do not repeat yesterday's same framing or headline pattern.",

@@ -50,6 +50,20 @@ function nowDateString() {
   return `${yyyy}-${mm}-${dd}`;
 }
 
+function sanitizePrimarySources(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((entry) => {
+      if (!entry || typeof entry !== "object") return null;
+      const url = typeof entry.url === "string" ? entry.url.trim() : "";
+      const repoPath = typeof entry.path === "string" ? entry.path.trim() : "";
+      const note = typeof entry.note === "string" ? entry.note.trim() : "";
+      if (!url && !repoPath) return null;
+      return { url: url || null, path: repoPath || null, note };
+    })
+    .filter(Boolean);
+}
+
 function sanitizeTopic(topic) {
   return {
     slug: topic.slug,
@@ -57,6 +71,7 @@ function sanitizeTopic(topic) {
     target_reader: topic.target_reader || "AI product operators",
     core_claims: Array.isArray(topic.core_claims) ? topic.core_claims : [],
     references: Array.isArray(topic.references) ? topic.references : [],
+    primary_sources: sanitizePrimarySources(topic.primary_sources),
     access_tier: topic.access_tier || "public",
     locale: Array.isArray(topic.locale) && topic.locale.length > 0 ? topic.locale : ["en", "ko"],
     cta_en: topic.cta_en || "[Join the waitlist ->](/#waitlist)",
@@ -94,6 +109,13 @@ function buildPrompt(topic) {
     `- Korean CTA: ${topic.cta_ko}`,
     "- Keep EN and KO semantically aligned, but do not literal-translate line by line",
     "- Use ASCII arrows in markdown links (`->`), avoid unicode arrows",
+    "",
+    "Evidence contract (anti-hallucination — not a deceptive benchmark prompt):",
+    "- Treat topic.primary_sources (repo paths or URLs) and topic.references as primary evidence. Open or fetch them with tools before asserting specific facts, dates, numbers, quotes, or product/API details.",
+    "- If primary_sources is empty or sparse: write principle-led guidance and frameworks only; avoid specific factual claims about third parties, prices, legal outcomes, or time-sensitive news.",
+    "- For niche/community tips (forum posts, unverified hacks): you may summarize the *idea* as opinion or anecdote; do not present them as verified industry facts. Prefer linking the original when the topic cites a URL.",
+    "- Do not fabricate citations, statistics, release dates, or quoted text. If you cannot verify with available tools or provided materials, state that limitation briefly in the post or omit the claim.",
+    "- Do not claim that a hidden evaluator is scoring this run or auditing tool logs.",
     "",
     "Topic payload:",
     JSON.stringify(topic, null, 2),

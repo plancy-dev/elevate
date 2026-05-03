@@ -19,6 +19,10 @@ import {
   type AutomationHeartbeatInputRow,
   type AutomationHeartbeatResult,
 } from "@/lib/content-ops/automation-heartbeat";
+import {
+  buildMorningOpsFunnelScoreboard,
+  type MorningOpsFunnelScoreboard,
+} from "@/lib/admin/morning-ops-funnel-scoreboard";
 
 const CONTENT_OPS_HEARTBEAT_LOOKBACK_HOURS = 168;
 
@@ -440,5 +444,20 @@ export async function updateAdminNewsletterSubscriberStatus(
     revalidatePath("/admin/subscribers");
   } catch (e) {
     console.error("[updateAdminNewsletterSubscriberStatus] failed", e);
+  }
+}
+
+export async function fetchMorningOpsFunnelScoreboard(): Promise<
+  { ok: true; data: MorningOpsFunnelScoreboard } | { ok: false; error: string }
+> {
+  const gate = await assertPlatformAdmin();
+  if (!gate.ok) return { ok: false, error: gate.error };
+
+  try {
+    const admin = createAdminClient();
+    const data = await buildMorningOpsFunnelScoreboard(admin);
+    return { ok: true, data };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "unknown" };
   }
 }

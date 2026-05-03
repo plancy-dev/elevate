@@ -1,7 +1,7 @@
 import type { TopicStrategyEntry } from "@/lib/content-ops/packs/topic-strategy-pack";
 import type { AutotuneStrategy } from "@/lib/content-ops/packs/pack-registry";
 
-export const BLOG_PROMPT_PACK_VERSION = "v1.5.0";
+export const BLOG_PROMPT_PACK_VERSION = "v1.6.0";
 
 type ParsedSourceBullet = { title: string; url: string };
 
@@ -101,6 +101,11 @@ export function buildBlogDraftFromPack(params: {
     "",
     "## Novelty recovery checklist (must pass)",
     ...noveltyRecoveryChecklist(params.autotuneStrategy),
+    "",
+    "## Unverified claims guard",
+    "- Tie factual assertions to citation anchors or source bullets below; avoid invented quotes, release dates, or metrics.",
+    "- When evidence is thin, keep the piece framework-first and flag limits instead of padding with plausible-sounding specifics.",
+    "- Community or social tips belong as \"reported idea\" with source, not as established fact.",
     "",
     "## Anti-repetition guard",
     "- Avoid recycled framing from previous cycle summaries.",

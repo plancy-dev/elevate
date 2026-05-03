@@ -153,7 +153,8 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 - [x] Start INIT queue automation implementation in order: `#55 -> #56 -> #57 -> #58 -> #59`.
 - [x] Fix sample blog post leak to production (2026-05-02 Claude audit, reports/2026-05-02-claude-audit.md §0 #1 / §3.2 D).
 
-- **Positioning / #60 (Scenario A):** in-tree ADR [`docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md`](docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md) — GTM media-first vs Prompt Studio **product** narrative layered; PostHog mapping table; Phase 1 morning-ops strip = Supabase-only. **#60** retract/reframe comment: https://github.com/plancy-dev/elevate/issues/60#issuecomment-4365916803
+- **Positioning / #60 (Scenario A):** in-tree ADR [`docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md`](docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md) — GTM media-first vs Prompt Studio **product** narrative layered; PostHog mapping table; Phase 1 morning-ops strip = Supabase-only (implemented: `/admin/morning-ops` funnel scoreboard). **#60** retract/reframe comment: https://github.com/plancy-dev/elevate/issues/60#issuecomment-4365916803
+- **Morning-ops Phase 2 (backlog):** PostHog funnel chips / HogQL or export mirror for scoreboard — explicit project API key env, rate limits, security review (out of scope for Phase 1).
 
 **Reference (automation maturity):** `reports/automation-three-pillars-gap-analysis-2026-05-03.md` — service / newsletter / blog pillars: gap list and remediation plan.  
 **Reference (prioritized work):** `reports/prioritized-backlog-expert-2026-05-03.md` — P0–P3 backlog and sprint-shaped order.  

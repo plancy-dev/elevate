@@ -1483,6 +1483,32 @@
       "title": "Morning Ops Playbook",
       "backToAdmin": "Back to admin",
       "intro": "Use this page as your daily operator console: review overnight automation, decide go/adjust/stop, and send clear direction templates to the automation agent.",
+      "scoreboard": {
+        "title": "Funnel scoreboard (Supabase)",
+        "subtitle": "Rolling waitlist signups, catalog entitlement rows, and Prompt Studio beta allowlist — Phase 1 per ADR-012 (no PostHog server API).",
+        "generatedAt": "Snapshot UTC: {iso}",
+        "window7d": "Last 7d",
+        "window30d": "Last 30d",
+        "allTime": "All time",
+        "rows7d": "Entitlement rows (7d)",
+        "rows30d": "Entitlement rows (30d)",
+        "rowsAll": "Entitlement rows (total)",
+        "allowlistTotal": "Allowlist total",
+        "phase2Note": "Phase 2 backlog: PostHog funnel chips / HogQL — requires explicit env and security review.",
+        "waitlist": {
+          "title": "Waitlist",
+          "link": "Open waitlist admin"
+        },
+        "entitlements": {
+          "title": "Catalog entitlements",
+          "hint": "Row counts from organization_content_entitlements (granted_at windows).",
+          "link": "Open content admin"
+        },
+        "beta": {
+          "title": "Prompt Studio beta",
+          "link": "Open beta allowlist"
+        }
+      },
       "quickLinks": {
         "title": "Quick navigation",
         "runs": "Open runs",

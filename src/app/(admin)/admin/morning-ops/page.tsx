@@ -6,6 +6,7 @@ import {
   listAdminContentQueue,
   listAdminContentRuns,
   fetchContentOpsAutomationHeartbeat,
+  fetchMorningOpsFunnelScoreboard,
 } from "@/actions/admin-content-ops";
 import {
   MorningOpsPlaybookClient,
@@ -77,6 +78,8 @@ export default async function AdminMorningOpsPage() {
 
   const automationRuntime = process.env.CONTENT_OPS_AUTOMATION_RUNTIME?.trim() || "";
   const hbRes = await fetchContentOpsAutomationHeartbeat();
+
+  const scoreboardRes = await fetchMorningOpsFunnelScoreboard();
 
   const quickLinks = [
     { href: "/admin/runs", label: t("quickLinks.runs") },
@@ -157,6 +160,108 @@ export default async function AdminMorningOpsPage() {
 
       <div className="max-w-5xl space-y-5 p-6">
         <p className="text-sm leading-relaxed text-ink-700">{t("intro")}</p>
+
+        {scoreboardRes.ok ? (
+          <section className="space-y-3 border border-ink-100 bg-paper-0 p-4">
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <div>
+                <h2 className="text-xs font-medium uppercase tracking-wide text-ink-800">
+                  {t("scoreboard.title")}
+                </h2>
+                <p className="text-[11px] leading-relaxed text-ink-600">{t("scoreboard.subtitle")}</p>
+                <p className="mt-1 text-[10px] text-ink-500">
+                  {t("scoreboard.generatedAt", { iso: scoreboardRes.data.generatedAtUtc })}
+                </p>
+              </div>
+            </div>
+            <div className="grid gap-3 md:grid-cols-3">
+              <div className="space-y-1 rounded border border-ink-100 bg-paper-50 p-3">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-ink-700">
+                  {t("scoreboard.waitlist.title")}
+                </p>
+                <ul className="space-y-0.5 text-xs text-ink-800">
+                  <li>
+                    <span className="text-ink-600">{t("scoreboard.window7d")}:</span>{" "}
+                    {scoreboardRes.data.waitlist.last7d}
+                  </li>
+                  <li>
+                    <span className="text-ink-600">{t("scoreboard.window30d")}:</span>{" "}
+                    {scoreboardRes.data.waitlist.last30d}
+                  </li>
+                  <li>
+                    <span className="text-ink-600">{t("scoreboard.allTime")}:</span>{" "}
+                    {scoreboardRes.data.waitlist.allTime}
+                  </li>
+                </ul>
+                <Link
+                  href="/admin/waitlist"
+                  className="inline-block text-[11px] text-vermilion-600 hover:text-vermilion-700"
+                >
+                  {t("scoreboard.waitlist.link")}
+                </Link>
+              </div>
+              <div className="space-y-1 rounded border border-ink-100 bg-paper-50 p-3">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-ink-700">
+                  {t("scoreboard.entitlements.title")}
+                </p>
+                <ul className="space-y-0.5 text-xs text-ink-800">
+                  <li>
+                    <span className="text-ink-600">{t("scoreboard.rows7d")}:</span>{" "}
+                    {scoreboardRes.data.catalogEntitlements.rowsLast7d}
+                  </li>
+                  <li>
+                    <span className="text-ink-600">{t("scoreboard.rows30d")}:</span>{" "}
+                    {scoreboardRes.data.catalogEntitlements.rowsLast30d}
+                  </li>
+                  <li>
+                    <span className="text-ink-600">{t("scoreboard.rowsAll")}:</span>{" "}
+                    {scoreboardRes.data.catalogEntitlements.allRows}
+                  </li>
+                </ul>
+                <p className="text-[10px] leading-relaxed text-ink-500">{t("scoreboard.entitlements.hint")}</p>
+                <Link
+                  href="/admin/content"
+                  className="inline-block text-[11px] text-vermilion-600 hover:text-vermilion-700"
+                >
+                  {t("scoreboard.entitlements.link")}
+                </Link>
+              </div>
+              <div className="space-y-1 rounded border border-ink-100 bg-paper-50 p-3">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-ink-700">
+                  {t("scoreboard.beta.title")}
+                </p>
+                <ul className="space-y-0.5 text-xs text-ink-800">
+                  <li>
+                    <span className="text-ink-600">{t("scoreboard.window7d")}:</span>{" "}
+                    {scoreboardRes.data.promptStudioBeta.addedLast7d}
+                  </li>
+                  <li>
+                    <span className="text-ink-600">{t("scoreboard.window30d")}:</span>{" "}
+                    {scoreboardRes.data.promptStudioBeta.addedLast30d}
+                  </li>
+                  <li>
+                    <span className="text-ink-600">{t("scoreboard.allowlistTotal")}:</span>{" "}
+                    {scoreboardRes.data.promptStudioBeta.allowlistTotal}
+                  </li>
+                </ul>
+                <Link
+                  href="/admin/prompt-studio-allowlist"
+                  className="inline-block text-[11px] text-vermilion-600 hover:text-vermilion-700"
+                >
+                  {t("scoreboard.beta.link")}
+                </Link>
+              </div>
+            </div>
+            <p className="text-[10px] text-ink-500">{t("scoreboard.phase2Note")}</p>
+          </section>
+        ) : (
+          <section className="space-y-2 border border-ink-100 bg-paper-0 p-4">
+            <h2 className="text-xs font-medium uppercase tracking-wide text-ink-700">
+              {t("scoreboard.title")}
+            </h2>
+            <p className="text-xs text-red-700">{scoreboardRes.error}</p>
+          </section>
+        )}
 
         {hbRes.ok ? (
           <section

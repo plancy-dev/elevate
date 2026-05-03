@@ -54,6 +54,7 @@ Hard requirements:
   - docs/blog/distribution/<slug>.md
 - Frontmatter keys required: title, description, date, slug, tags, access_tier, locale
 - Keep EN and KO semantically aligned (not literal translation)
+- Evidence contract: use topic.primary_sources and references as primary evidence; verify with tools before specific facts; no fabricated quotes/stats/dates; no deceptive hidden-benchmark claims
 - Update docs/blog/automation/topics.json: pending -> done, set completed_at_utc
 - Do not edit unrelated files.
 ```

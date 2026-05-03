@@ -84,6 +84,17 @@ Treat KO as a **second original**, not a localization line-by-line.
 
 ---
 
+## 2.6 Evidence and anti-hallucination (automation + humans)
+
+When a topic draws from **external posts** (forums, blogs, social threads):
+
+- **Link the original** when summarizing; distinguish **quoted fact** vs **your interpretation**.
+- **Community tips** (e.g. prompt hacks shared informally) are **anecdotes**, not peer-reviewed truth—present them as ideas to evaluate, not as guarantees.
+- Automated runs (`blog:autopublish`, content-ops drafts) should use **`primary_sources`** in the topic queue (URLs or repo paths) so the agent treats them as first-class evidence—see [`BLOG_AUTOPUBLISH_SDK.md`](BLOG_AUTOPUBLISH_SDK.md). Without sources, stay **principle-led** and avoid time-sensitive or precise third-party claims.
+- Do **not** document deceptive instructions (e.g. claiming a hidden evaluator scores the model). Prefer honest tool use and source grounding—see [`scripts/blog-autopublish-sdk.mjs`](../scripts/blog-autopublish-sdk.mjs) Evidence contract.
+
+---
+
 ## 3. Assets (before MDX freeze)
 
 | Asset | Notes |

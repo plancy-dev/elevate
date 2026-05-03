@@ -79,12 +79,18 @@ Use `docs/blog/automation/topics.json`:
       "target_reader": "AI product operators",
       "core_claims": ["Claim 1", "Claim 2", "Claim 3"],
       "references": ["https://..."],
+      "primary_sources": [
+        { "url": "https://...", "note": "optional operator note" },
+        { "path": "docs/some-internal.md", "note": "repo-relative path" }
+      ],
       "cta_en": "[Join the waitlist ->](/#waitlist)",
       "cta_ko": "[대기명단에 참여하기 ->](/ko#waitlist)"
     }
   ]
 }
 ```
+
+**`primary_sources` (optional):** Array of `{ "url"?: string, "path"?: string, "note"?: string }`. Each entry must include at least one of `url` or `path` (repo-relative). The autopublish agent treats these as **primary evidence**—see the Evidence contract in `scripts/blog-autopublish-sdk.mjs`. If omitted, the agent should avoid specific third-party factual claims and write framework-first copy.
 
 ## 4) Notes
 

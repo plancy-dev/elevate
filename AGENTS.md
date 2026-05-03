@@ -14,7 +14,7 @@ Before large feature work, align with **`memory-bank/creative-elevate-ai-pivot.m
 
 ## Blog authoring (public/member/premium)
 
-When creating blog content, use **`docs/templates/blog-authoring-templates.md`** plus the three MDX templates in **`docs/templates/`** (`blog-post-public.mdx.example`, `blog-post-member.mdx.example`, `blog-post-premium.mdx.example`). Treat these as the default contract for `access_tier` and CTA structure.
+When creating blog content, use **`docs/templates/blog-authoring-templates.md`** plus the three MDX templates in **`docs/templates/`** (`blog-post-public.mdx.example`, `blog-post-member.mdx.example`, `blog-post-premium.mdx.example`). Treat these as the default contract for `access_tier` and CTA structure. For **factual claims**, treat user-supplied links and repo paths as primary evidence (see **`docs/BLOG_POST_PIPELINE.md` §2.6** and autopublish **`primary_sources`** in **`docs/BLOG_AUTOPUBLISH_SDK.md`**); avoid presenting unverified community tips as established facts.
 
 ## AI orchestration (how tools fit together)
 
