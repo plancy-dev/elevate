@@ -3,11 +3,90 @@ import {
   NEWSLETTER_TEMPLATE_VERSION,
   resolveLocaleTemplateConfig,
 } from "@/lib/content-ops/locale-template-config";
+import { resolveResendSendConfig } from "@/lib/email/resend-config";
 
 type NewsletterLocaleTemplate = {
   preheader: string;
   heading: string;
 };
+
+export type NewsletterRetryPolicyAction = "immediate" | "delayed" | "stop";
+export type NewsletterRetryPolicyKey =
+  | "policy.rate_limit.delayed"
+  | "policy.transient.delayed"
+  | "policy.config.stop"
+  | "policy.no_subscribers.stop"
+  | "policy.exhausted.stop"
+  | "policy.frequency_window.delayed";
+
+const KNOWN_SEND_REASONS = new Set([
+  "resend_not_configured",
+  "resend_from_invalid_format",
+  "resend_sandbox_sender",
+  "resend_from_domain_mismatch",
+]);
+
+export function normalizeNewsletterSendErrorReason(reason: string): string {
+  const normalized = reason.trim().toLowerCase();
+  if (!normalized) return "unknown";
+  if (KNOWN_SEND_REASONS.has(normalized)) return normalized;
+  if (
+    (normalized.includes("resend") && normalized.includes("api key")) ||
+    normalized.includes("missing resend")
+  ) {
+    return "resend_not_configured";
+  }
+  if (
+    normalized.includes("invalid from") ||
+    (normalized.includes("from") && normalized.includes("invalid"))
+  ) {
+    return "resend_from_invalid_format";
+  }
+  if (
+    normalized.includes("sandbox") ||
+    normalized.includes("resend.dev") ||
+    normalized.includes("only send testing emails to your own email address")
+  ) {
+    return "resend_sandbox_sender";
+  }
+  if (
+    (normalized.includes("domain") && normalized.includes("mismatch")) ||
+    normalized.includes("verified domain") ||
+    normalized.includes("verify a domain at resend.com/domains")
+  ) {
+    return "resend_from_domain_mismatch";
+  }
+  return reason;
+}
+
+export function resolveNewsletterRetryPolicy(reason: string): {
+  policyKey: NewsletterRetryPolicyKey;
+  action: NewsletterRetryPolicyAction;
+  delayMinutes: number | null;
+} {
+  const normalized = reason.toLowerCase();
+  if (normalized.includes("retry_exhausted")) {
+    return { policyKey: "policy.exhausted.stop", action: "stop", delayMinutes: null };
+  }
+  if (normalized.includes("newsletter_no_subscribers")) {
+    return { policyKey: "policy.no_subscribers.stop", action: "stop", delayMinutes: null };
+  }
+  if (normalized.includes("frequency_window_deferred")) {
+    return { policyKey: "policy.frequency_window.delayed", action: "delayed", delayMinutes: 1440 };
+  }
+  if (
+    normalized.includes("resend_not_configured") ||
+    normalized.includes("resend_from_invalid_format") ||
+    normalized.includes("resend_sandbox_sender") ||
+    normalized.includes("resend_from_domain_mismatch")
+  ) {
+    return { policyKey: "policy.config.stop", action: "stop", delayMinutes: null };
+  }
+  if (normalized.includes("too many requests") || normalized.includes("rate limit")) {
+    return { policyKey: "policy.rate_limit.delayed", action: "delayed", delayMinutes: 30 };
+  }
+  return { policyKey: "policy.transient.delayed", action: "delayed", delayMinutes: 30 };
+}
 
 const LOCALE_TEMPLATES: Record<string, NewsletterLocaleTemplate> = {
   en: {
@@ -81,25 +160,24 @@ export async function sendNewsletterEmail(params: {
   | { ok: true; providerMessageId?: string; templateVersion: string }
   | { ok: false; error: string; templateVersion: string }
 > {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  const from = process.env.RESEND_FROM_EMAIL?.trim();
-  if (!apiKey || !from) {
+  const resendConfig = resolveResendSendConfig();
+  if (!resendConfig.ok) {
     return {
       ok: false,
-      error: "resend_not_configured",
+      error: normalizeNewsletterSendErrorReason(resendConfig.reason),
       templateVersion: NEWSLETTER_TEMPLATE_VERSION,
     };
   }
 
   try {
-    const resend = new Resend(apiKey);
+    const resend = new Resend(resendConfig.apiKey);
     const html = buildBrandedNewsletterHtml({
       locale: params.locale,
       subject: params.subject,
       markdownBody: params.markdownBody,
     });
     const result = await resend.emails.send({
-      from,
+      from: resendConfig.from,
       to: params.to.trim(),
       subject: params.subject.trim(),
       html,
@@ -108,7 +186,7 @@ export async function sendNewsletterEmail(params: {
     if (result.error) {
       return {
         ok: false,
-        error: result.error.message,
+        error: normalizeNewsletterSendErrorReason(result.error.message),
         templateVersion: NEWSLETTER_TEMPLATE_VERSION,
       };
     }
@@ -120,7 +198,9 @@ export async function sendNewsletterEmail(params: {
   } catch (e) {
     return {
       ok: false,
-      error: e instanceof Error ? e.message : "unknown",
+      error: normalizeNewsletterSendErrorReason(
+        e instanceof Error ? e.message : "unknown",
+      ),
       templateVersion: NEWSLETTER_TEMPLATE_VERSION,
     };
   }

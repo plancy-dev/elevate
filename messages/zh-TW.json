@@ -66,7 +66,7 @@
     "subhead": "選擇目標模型，獲得結構化分析，把粗糙提示打磨到可審查。Prompt Studio 測試版透過等候名單；隨著發布可在目錄瀏覽指南與範本。",
     "pretextLine1": "ROI you can",
     "pretextLine2": "show in a meeting.",
-    "pretextSub": "不同螢幕尺寸下標題仍保持平衡。拖曳視窗即可看到順暢重排（Pretext）。",
+    "pretextSub": "5分鐘內回答「我們用AI做了什麼」——隨時可向團隊展示的資料。",
     "ctaEbooks": "瀏覽目錄",
     "ctaWaitlist": "加入等候名單",
     "ctaWaitlistB": "Join the launch waitlist",
@@ -219,7 +219,7 @@
   "Blog": {
     "metaTitle": "部落格",
     "title": "部落格",
-    "description": "分享提示詞改進與活動／現場溝通的實用觀點，以及 Elevate 團隊的產品消息。",
+    "description": "每週一份，公司可直接使用的 AI 運營手冊—無需培訓。Elevate 團隊產品消息。",
     "empty": "尚無文章。",
     "published": "發布 {date}",
     "readMore": "閱讀全文",
@@ -1245,6 +1245,7 @@
         "created": "建立",
         "sent": "發送",
         "failed": "失敗",
+        "deferred": "延後",
         "topFailureReason": "主要失敗原因",
         "reviewQueue": "審核佇列",
         "mustReviewNow": "需立即審核",
@@ -1258,7 +1259,10 @@
         "runTypeLabel": "執行類型",
         "queueManualRun": "加入手動執行",
         "runScenario": "執行 ingest -> generate -> publish",
-        "retryFailedOnly": "僅重試失敗項"
+        "retryFailedOnly": "僅重試失敗項",
+        "pendingManualRun": "正在加入執行...",
+        "pendingScenario": "正在執行情境...",
+        "pendingRetryFailedOnly": "正在重試失敗項..."
       },
       "runType": {
         "ingest": "ingest",
@@ -1293,7 +1297,13 @@
         "failure": "失敗",
         "partialHint": "部分失敗（詳情請看 metadata）"
       },
-      "empty": "目前沒有執行紀錄。"
+      "empty": "目前沒有執行紀錄。",
+      "metadata": {
+        "open": "查看",
+        "modalTitle": "執行中繼資料",
+        "modalDescription": "此執行結果的完整 metadata JSON。",
+        "close": "關閉"
+      }
     },
     "adminContentQueue": {
       "metaTitle": "內容佇列",
@@ -1333,6 +1343,7 @@
         "status": "狀態",
         "quality": "品質",
         "gate": "閘門",
+        "aiAudit": "AI 審核",
         "opsSignal": "營運訊號",
         "updated": "更新時間",
         "actions": "操作"
@@ -1354,6 +1365,28 @@
         "reviewNeeded": "需要審核",
         "manualReviewRequired": "manual_review_required"
       },
+      "aiAudit": {
+        "confidence": "信心值 {value}%",
+        "policyReason": "政策",
+        "rewriteDecision": "改寫",
+        "decision": {
+          "autoApproveCandidate": "自動核准候選",
+          "needsRewrite": "需要改寫",
+          "holdManual": "維持人工審核"
+        },
+        "rewrite": {
+          "readyForApproval": "可進入核准",
+          "needsManualReview": "需要人工複核"
+        },
+        "policy": {
+          "autoApprovalPolicyPassed": "自動核准政策通過",
+          "decisionNotAutoApproveCandidate": "目前不屬於自動核准候選",
+          "confidenceBelowThreshold": "信心值低於門檻",
+          "reviewGateNotPassed": "審核閘門未通過",
+          "qualityScoreBelowThreshold": "品質分數低於門檻",
+          "hardBlockReasonDetected": "偵測到硬性阻擋原因"
+        }
+      },
       "empty": "找不到佇列項目。"
     },
     "adminContentQuality": {
@@ -1367,14 +1400,17 @@
       "metrics": {
         "generated7d": "7天生成",
         "published7d": "7天發佈",
+        "deferred7d": "7天延後",
         "reviewRequired7d": "7天 review_required",
         "sendFailed7d": "7天 send_failed",
         "avgQuality": "平均品質分數",
+        "citationCoverage7d": "7天 citation coverage",
         "generated24h": "24小時生成",
         "reviewed24h": "24小時已審核",
         "reviewRequired24h": "24小時 review_required",
         "avgQuality24h": "24小時平均品質",
-        "minQuality24h": "24小時最低品質"
+        "minQuality24h": "24小時最低品質",
+        "citationCoverage24h": "24小時 citation coverage"
       },
       "freshNote": {
         "prefix": "Fresh 24h 指標僅統計",
@@ -1384,7 +1420,20 @@
         "topQualityIssues7d": "主要品質問題（7天）",
         "topPublishFailures7d": "主要發佈失敗（7天）",
         "topQualityIssuesFresh24h": "主要品質問題（僅 Fresh 24h）",
+        "strategyScoreboard": "Autotune 策略計分板",
         "improvementFocus": "改善重點（自動建議）"
+      },
+      "scoreboard": {
+        "winner": "勝出策略：{strategy}",
+        "winnerNone": "勝出策略：標記樣本仍不足",
+        "criteria": "勝出規則：先看平均品質；若同分則 review_required 比率較低者優先；再比較樣本數。",
+        "sampleWarning": "警告：建議每個策略至少有 {min} 筆樣本，以利穩定比較。",
+        "columns": {
+          "strategy": "策略",
+          "sampleCount": "樣本",
+          "avgQuality": "平均品質",
+          "reviewRequiredRatio": "review_required 比率"
+        }
       },
       "empty": {
         "topQualityIssues7d": "此時間窗內未偵測到品質問題。",
@@ -1414,6 +1463,11 @@
         "publishing": "發佈中",
         "published": "已發佈",
         "sendFailed": "發送失敗"
+      },
+      "strategy": {
+        "noveltyBoost": "新穎性強化",
+        "overcopyMitigate": "過度拷貝抑制",
+        "balanced": "平衡型"
       }
     },
     "adminMorningOps": {
@@ -1434,7 +1488,9 @@
         "step1": "Check /admin/runs for success/partial-failure/failure and first failure reason.",
         "step2": "Check /admin/content-quality for freshAvgQualityScore and top recurring issues.",
         "step3": "Check /admin/content-queue for review_required backlog and low-quality drafts.",
-        "step4": "Choose go, adjust, or stop and issue direction to the automation agent."
+        "step4": "Choose go, adjust, or stop and issue direction to the automation agent.",
+        "fixedOrderPrefix": "Keep daily operator decisions in this order:",
+        "fixedOrderSuffix": "."
       },
       "decision": {
         "title": "Decision matrix",
@@ -1465,6 +1521,13 @@
           "title": "Template C - Failure response",
           "body": "Failure class detected: <fill_this>.\\nKeep automation in safe mode and run root-cause fix first.\\nThen execute retry window only and provide:\\n- root cause\\n- fix diff summary\\n- retry result\\n- recurrence prevention checklist"
         }
+      },
+      "escalation": {
+        "title": "連續3天惡化升級",
+        "metric": "偵測到連續3天惡化的指標：{metric}",
+        "metricReviewRequired": "review_required",
+        "metricSendFailed": "send_failed",
+        "defaultAction": "請先檢查 /admin/runs 與 /admin/content-quality，並依 incident 模板立即處置。"
       },
       "monitoring": {
         "title": "How to confirm service is improving",

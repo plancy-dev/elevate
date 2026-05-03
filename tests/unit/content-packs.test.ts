@@ -11,6 +11,9 @@ describe("content ops pack registry", () => {
     expect(resolved.activeVersion).toBe(ACTIVE_CONTENT_PACK_VERSION);
     expect(resolved.versions.blogPrompt).toMatch(/^v/);
     expect(resolved.topic.id.length).toBeGreaterThan(0);
+    expect(["novelty_boost", "overcopy_mitigate", "balanced"]).toContain(
+      resolved.autotune.strategy,
+    );
   });
 
   it("builds newsletter and blog drafts with source section", () => {
@@ -21,8 +24,26 @@ describe("content ops pack registry", () => {
     expect(drafts.newsletter.bodyMarkdown).toContain("## Sources");
     expect(drafts.newsletter.bodyMarkdown).toContain("[Alpha]");
     expect(drafts.newsletter.bodyMarkdown).toContain("## Evidence snapshot");
+    expect(drafts.newsletter.bodyMarkdown).toContain("## Citation anchors used in this brief");
+    expect(drafts.newsletter.bodyMarkdown).toContain("## Autotune strategy");
+    expect(drafts.newsletter.bodyMarkdown).toContain("## Novelty recovery checklist (must pass)");
+    expect(drafts.newsletter.bodyMarkdown).toContain("## Anti-repetition guard");
     expect(drafts.blog.bodyMarkdown).toContain("## Execution checklist (this week)");
     expect(drafts.blog.bodyMarkdown).toContain("## Evidence ladder");
+    expect(drafts.blog.bodyMarkdown).toContain("## Citation anchors used in this brief");
+    expect(drafts.blog.bodyMarkdown).toContain("## Autotune strategy");
+    expect(drafts.blog.bodyMarkdown).toContain("## Novelty recovery checklist (must pass)");
+    expect(drafts.blog.bodyMarkdown).toContain("## Anti-repetition guard");
     expect(drafts.blog.title.length).toBeGreaterThan(20);
+  });
+
+  it("records deterministic weekday strategy selection", () => {
+    const monday = resolveActiveContentPacks(new Date("2026-05-04T00:00:00.000Z"));
+    const tuesday = resolveActiveContentPacks(new Date("2026-05-05T00:00:00.000Z"));
+    const sunday = resolveActiveContentPacks(new Date("2026-05-03T00:00:00.000Z"));
+    expect(monday.autotune.strategy).toBe("novelty_boost");
+    expect(tuesday.autotune.strategy).toBe("overcopy_mitigate");
+    expect(sunday.autotune.strategy).toBe("balanced");
+    expect(monday.autotune.selection).toBe("weekday_contract_v1");
   });
 });

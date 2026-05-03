@@ -2,34 +2,38 @@
 
 ## Current Phase
 
-### INIT (2026-05-01 reset) — Continuous Improvement Autoloop POC
+### IMPLEMENT (INIT Stabilization P0/P1 kickoff)
 
 **Branch:** `main`  
-**Focus SoT:** `memory-bank/tasks.md` (autoloop track)
+**Focus SoT:** `memory-bank/tasks.md`  
+**Completed issue:** `#38`~`#47` + `#49`/`#50`/`#51` + `#52` + `#53` + `#54` code/test implementation  
+**Next issue:** `INIT queue automation completed (#55~#59)`
+
+**INIT handoff state:** `Implementation complete, stabilization residuals tracked by deterministic gate checker`
 
 ## Objective
 
-- Reduce repetitive “check PR -> merge -> next task” manual loops.
-- Add a safe automation layer that never bypasses critical checks.
-- Prepare a 24h continuous-improvement operation mode as a controlled POC.
+- Execute stabilization queue in strict order: `#49 -> #50 -> #51` then `#52 -> #53 -> #54`.
+- Preserve measurable evidence per ticket (query + UI verification + acceptance check).
+- Re-audit after one business-day cycle from first P0 rollout.
+- Execute next INIT queue automation in strict order: `#55 -> #56 -> #57 -> #58 -> #59`.
 
 ## Current State
 
-- PR #32 and PR #33 merged.
-- Local `main` synced with `origin/main`.
-- Working tree is clean.
-- Admin i18n coverage and quality-pack v1.2 are already shipped.
+- INIT issues `#38`~`#47` are closed.
+- Stabilization issues created: `#49`~`#54` (`[STAB][P0/P1]`).
+- Baseline report captured: `reports/stabilization-baseline-2026-05-02.md`.
+- Current bottlenecks: `#51` novelty trend confirmation and queue quality threshold calibration.
 
 ## Next Immediate Execution Anchors
 
-1. Implement safe PR-monitor/automerge helper script with explicit guard flags.
-2. Implement bounded continuous-improvement loop script (health checks + quality snapshot + report).
-3. Add runbook + config contract for unattended operation.
-4. Validate with `typecheck`, `test:i18n`, targeted unit tests.
+1. Run `pnpm run content-ops:gate-check` for strict 24h/previous24h deterministic verdicts.
+2. Keep `#51` operational gate open until multi-day trend status reaches `PASS`.
+3. Executor strategy is fixed to Cursor-first (`source=cursor`) with `vercel-cron` emergency fallback only.
+4. Queue automation build (`#55`~`#59`) is complete; start operational calibration loop.
+5. Continue daily evidence loop with priority on unresolved gates (`#49`, `#50`, `#51`) and queue quality uplift rate.
 
 ## Non-Negotiable Safety Constraints
 
-- Never merge when checks are not green.
-- Never run destructive git commands.
-- Default to dry-run / bounded cycles unless explicit enable flag is present.
-- Stop loop immediately on failing quality gate.
+- Do not treat metric deltas as valid unless windows are non-overlapping.
+- Keep runs/content-quality operational visibility intact after every issue.

@@ -7,11 +7,20 @@ This runbook covers daily operation of the content pipeline:
 - `ingest` -> `draft_generate` -> `review_gate` -> `publish`
 - Admin dashboards: `/admin/content-queue`, `/admin/runs`, `/admin/news-sources`, `/admin/subscribers`
 
-## Automation Runtime (A/B)
+## Automation Runtime Policy (Cursor-first)
 
-- Primary runtime: `cursor` (`CONTENT_OPS_AUTOMATION_RUNTIME=cursor`)
-- Fallback runtime: `vercel-cron` (`CONTENT_OPS_AUTOMATION_RUNTIME=vercel-cron`)
+- Primary executor: `cursor` (`CONTENT_OPS_AUTOMATION_RUNTIME=cursor`)
+- Emergency fallback executor: `vercel-cron` (`CONTENT_OPS_AUTOMATION_RUNTIME=vercel-cron`)
 - Trigger endpoint: `/api/content-ops/automation-run`
+- Source contract:
+  - normal operation: `source=cursor`
+  - fallback incident mode only: `source=vercel-cron`
+
+Policy notes:
+
+- Default operation is Cursor Cloud Agent-first, not dual-active.
+- Keep `CONTENT_OPS_AUTOMATION_RUNTIME=cursor` unless there is a verified Cursor runtime incident.
+- After any fallback window, revert runtime to `cursor` immediately.
 
 Required secrets/env:
 
@@ -24,6 +33,62 @@ US ET schedule source-of-truth:
 - Daily generation: 08:30 `ingest`, 08:40 `draft_generate`, 08:50 `review_gate`
 - Publish window: 11:00 `publish`
 - Retry window: 14:30 `publish_retry_failed`
+
+Preflight checks before enabling scheduled runs:
+
+1. Verify `CONTENT_OPS_AUTOMATION_RUNTIME=cursor`.
+2. Verify caller sends `source=cursor`.
+3. Verify `CONTENT_OPS_AUTOMATION_TOKEN` is present and current.
+4. Confirm one `trigger_type=scheduled` run is persisted with:
+   - `metadata.automation_source=cursor`
+   - `metadata.runtime=cursor`
+5. If mismatch alert appears (`runtime_secret_mismatch:*`), halt schedule and fix runtime/source first.
+
+## Stabilization Gate Check (`#49/#50/#51`)
+
+Primary command:
+
+- `pnpm run content-ops:gate-check`
+
+Output contract:
+
+- JSON object with:
+  - `gates.gate49`, `gates.gate50`, `gates.gate51`
+  - each gate includes `status`, `decision_reason`, `evidence`
+- Markdown summary with one-line verdicts per gate
+
+Decision policy:
+
+- `PASS`: eligible for issue close comment (attach evidence line and command timestamp)
+- `PENDING`: keep issue open and set next recheck ETA
+- `FAIL`: keep issue open and trigger remediation action loop immediately
+
+Tuning knobs:
+
+- `CONTENT_OPS_GATE50_FAIL_RATIO_TARGET_PERCENT`
+  - default: `20`
+  - gate50 pass condition: `failRatio24 < target`
+- `CONTENT_OPS_QUEUE_AUTO_APPROVE_MIN_CONFIDENCE`
+  - default: `0.8`
+  - applied in queue auto-approval policy guard
+- `CONTENT_OPS_QUEUE_AUTO_APPROVE_MIN_QUALITY_SCORE`
+  - default: `16`
+  - applied in queue triage + auto-approval policy guard
+
+## Queue Review Scenario (Cursor-first)
+
+Use queue review automation to process backlog safely before publish windows.
+
+- Endpoint:
+  - `GET /api/content-ops/automation-run?scenario=queue_review_window&source=cursor&token=...`
+- Scenario sequence:
+  - `queue_triage` -> `queue_rewrite` -> `review_gate`
+- Expected behavior:
+  - no direct publish/send action in this scenario
+  - queue items are triaged/reworked and remain operator-visible in `/admin/content-queue`
+- Runtime constraint:
+  - only `source=cursor` in normal operation
+  - if runtime mismatch is emitted, fix runtime/source alignment before retry
 
 ## Daily Operation Order
 
@@ -80,6 +145,25 @@ If authentication blocks automated checks, perform manual browser verification a
    - Ensure new run is `성공` or `부분실패` with expected warning only.
    - Confirm queue items move from `send_failed` to `published`.
 
+## Newsletter Retry Policy Matrix
+
+Email publication failures are mapped to a policy key and action so retry behavior is predictable:
+
+| Failure class example | Policy key | Action | Delay |
+| --- | --- | --- | --- |
+| `Too many requests`, rate-limit style transient | `policy.rate_limit.delayed` | delayed retry | 30m |
+| Unknown transient send failures | `policy.transient.delayed` | delayed retry | 30m |
+| `resend_not_configured`, sender/domain mismatch | `policy.config.stop` | stop retry | - |
+| `newsletter_no_subscribers` | `policy.no_subscribers.stop` | stop retry | - |
+| `retry_exhausted` | `policy.exhausted.stop` | stop retry | - |
+| `frequency_window_deferred` | `policy.frequency_window.delayed` | delayed to next window | 24h |
+
+Recorded metadata fields (email publication row):
+
+- `retry_policy_key`
+- `retry_action`
+- `retry.next_retry_at`
+
 ## Escalation Ownership / Response Window
 
 - Primary owner: Content Ops on-call (admin operator)
@@ -127,6 +211,24 @@ Operational loop:
 3. Run one full cycle (`ingest` -> `draft_generate` -> `review_gate` -> `publish`).
 4. Compare fresh 24h metrics before/after.
 5. Keep changes only if `freshAvgQualityScore` improves and `freshReviewRequiredCount` does not regress.
+
+### Delta window contract (Issue #38)
+
+`/admin/content-quality` delta metrics use fixed non-overlapping windows:
+
+- Current 24h: `[now-24h, now)`
+- Previous 24h: `[now-48h, now-24h)`
+- Current 7d: `[now-7d, now)`
+- Previous 7d: `[now-14d, now-7d)`
+
+Rules:
+
+- Never mix current-window rows into previous-window aggregates.
+- Window start is inclusive, end is exclusive (`>= start` and `< end`).
+- Delta formula: `((current - previous) / previous) * 100`.
+- Denominator-zero handling:
+  - `previous = 0` and `current = 0` -> delta `0%`
+  - `previous = 0` and `current > 0` -> delta `n/a` (undefined growth)
 
 ## CI / Script Operations
 

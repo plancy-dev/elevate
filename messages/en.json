@@ -74,7 +74,7 @@
     "subhead": "Choose a target model, get structured analysis, and turn rough prompts into review-ready changes. Join the waitlist for Prompt Studio beta—then explore guides and templates in the catalog as we ship.",
     "pretextLine1": "ROI you can",
     "pretextLine2": "show in a meeting.",
-    "pretextSub": "Headlines stay balanced on every screen size—resize the window to see smooth reflow (Pretext).",
+    "pretextSub": "Answer 'What have we done with AI?' in 5 minutes—ready to show your team.",
     "ctaEbooks": "Browse catalog",
     "ctaWaitlist": "Join the waitlist",
     "ctaWaitlistB": "Join the launch waitlist",
@@ -227,7 +227,7 @@
   "Blog": {
     "metaTitle": "Blog",
     "title": "Blog",
-    "description": "Practical ideas on prompt improvement and event communications—plus product news from the Elevate team.",
+    "description": "Weekly AI workflow guides your company can use right away—no training required. Product updates from the Elevate team.",
     "empty": "No posts yet.",
     "published": "Published {date}",
     "readMore": "Read article",
@@ -1253,6 +1253,7 @@
         "created": "Created",
         "sent": "Sent",
         "failed": "Failed",
+        "deferred": "Deferred",
         "topFailureReason": "Top failure reason",
         "reviewQueue": "Review queue",
         "mustReviewNow": "Must-review now",
@@ -1266,7 +1267,10 @@
         "runTypeLabel": "Run type",
         "queueManualRun": "Queue manual run",
         "runScenario": "Run ingest -> generate -> publish",
-        "retryFailedOnly": "Retry failed only"
+        "retryFailedOnly": "Retry failed only",
+        "pendingManualRun": "Queuing run...",
+        "pendingScenario": "Running scenario...",
+        "pendingRetryFailedOnly": "Retrying failed items..."
       },
       "runType": {
         "ingest": "Ingest",
@@ -1301,7 +1305,13 @@
         "failure": "Failure",
         "partialHint": "Partial failure (check metadata for details)"
       },
-      "empty": "No run logs yet."
+      "empty": "No run logs yet.",
+      "metadata": {
+        "open": "View",
+        "modalTitle": "Run metadata",
+        "modalDescription": "Full metadata JSON for this run result.",
+        "close": "Close"
+      }
     },
     "adminContentQueue": {
       "metaTitle": "Content queue",
@@ -1341,6 +1351,7 @@
         "status": "Status",
         "quality": "Quality",
         "gate": "Gate",
+        "aiAudit": "AI audit",
         "opsSignal": "Ops signal",
         "updated": "Updated",
         "actions": "Actions"
@@ -1362,6 +1373,28 @@
         "reviewNeeded": "Review needed",
         "manualReviewRequired": "manual_review_required"
       },
+      "aiAudit": {
+        "confidence": "Confidence {value}%",
+        "policyReason": "Policy",
+        "rewriteDecision": "Rewrite",
+        "decision": {
+          "autoApproveCandidate": "Auto-approve candidate",
+          "needsRewrite": "Needs rewrite",
+          "holdManual": "Hold manual"
+        },
+        "rewrite": {
+          "readyForApproval": "Ready for approval",
+          "needsManualReview": "Needs manual review"
+        },
+        "policy": {
+          "autoApprovalPolicyPassed": "Auto-approval policy passed",
+          "decisionNotAutoApproveCandidate": "Decision is not auto-approve candidate",
+          "confidenceBelowThreshold": "Confidence below threshold",
+          "reviewGateNotPassed": "Review gate not passed",
+          "qualityScoreBelowThreshold": "Quality score below threshold",
+          "hardBlockReasonDetected": "Hard-block reason detected"
+        }
+      },
       "empty": "No queue items found."
     },
     "adminContentQuality": {
@@ -1375,14 +1408,17 @@
       "metrics": {
         "generated7d": "7d generated",
         "published7d": "7d published",
+        "deferred7d": "7d deferred",
         "reviewRequired7d": "7d review_required",
         "sendFailed7d": "7d send_failed",
         "avgQuality": "avg quality score",
+        "citationCoverage7d": "7d citation coverage",
         "generated24h": "24h generated",
         "reviewed24h": "24h reviewed",
         "reviewRequired24h": "24h review_required",
         "avgQuality24h": "24h avg quality",
-        "minQuality24h": "24h min quality"
+        "minQuality24h": "24h min quality",
+        "citationCoverage24h": "24h citation coverage"
       },
       "freshNote": {
         "prefix": "Fresh 24h metrics aggregate only newly generated items with",
@@ -1392,7 +1428,20 @@
         "topQualityIssues7d": "Top Quality Issues (7d)",
         "topPublishFailures7d": "Top Publish Failures (7d)",
         "topQualityIssuesFresh24h": "Top Quality Issues (Fresh 24h only)",
+        "strategyScoreboard": "Autotune Strategy Scoreboard",
         "improvementFocus": "Improvement Focus (Auto Suggestions)"
+      },
+      "scoreboard": {
+        "winner": "Winner strategy: {strategy}",
+        "winnerNone": "Winner strategy: not enough tagged samples yet",
+        "criteria": "Winner rule: highest avg quality, then lower review_required ratio, then larger sample.",
+        "sampleWarning": "Warning: at least {min} samples per strategy are recommended for stable comparison.",
+        "columns": {
+          "strategy": "Strategy",
+          "sampleCount": "Sample",
+          "avgQuality": "Avg quality",
+          "reviewRequiredRatio": "Review required ratio"
+        }
       },
       "empty": {
         "topQualityIssues7d": "No quality issues detected in this window.",
@@ -1422,6 +1471,11 @@
         "publishing": "Publishing",
         "published": "Published",
         "sendFailed": "Send failed"
+      },
+      "strategy": {
+        "noveltyBoost": "Novelty boost",
+        "overcopyMitigate": "Overcopy mitigate",
+        "balanced": "Balanced"
       }
     },
     "adminMorningOps": {
@@ -1442,7 +1496,9 @@
         "step1": "Check /admin/runs for success/partial-failure/failure and first failure reason.",
         "step2": "Check /admin/content-quality for freshAvgQualityScore and top recurring issues.",
         "step3": "Check /admin/content-queue for review_required backlog and low-quality drafts.",
-        "step4": "Choose go, adjust, or stop and issue direction to the automation agent."
+        "step4": "Choose go, adjust, or stop and issue direction to the automation agent.",
+        "fixedOrderPrefix": "Keep daily operator decisions in this order:",
+        "fixedOrderSuffix": "."
       },
       "decision": {
         "title": "Decision matrix",
@@ -1473,6 +1529,13 @@
           "title": "Template C - Failure response",
           "body": "Failure class detected: <fill_this>.\\nKeep automation in safe mode and run root-cause fix first.\\nThen execute retry window only and provide:\\n- root cause\\n- fix diff summary\\n- retry result\\n- recurrence prevention checklist"
         }
+      },
+      "escalation": {
+        "title": "Three-day regression escalation",
+        "metric": "Detected 3-day worsening on: {metric}",
+        "metricReviewRequired": "review_required",
+        "metricSendFailed": "send_failed",
+        "defaultAction": "Open /admin/runs and /admin/content-quality, then execute the incident template."
       },
       "monitoring": {
         "title": "How to confirm service is improving",

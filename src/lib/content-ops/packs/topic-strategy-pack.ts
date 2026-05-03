@@ -12,7 +12,7 @@ export type TopicStrategyEntry = {
   operatorOutcomePattern: string;
 };
 
-export const TOPIC_STRATEGY_PACK_VERSION = "v1.2.0";
+export const TOPIC_STRATEGY_PACK_VERSION = "v1.2.1";
 
 export const TOPIC_STRATEGY_PACK: readonly TopicStrategyEntry[] = [
   {
@@ -20,8 +20,9 @@ export const TOPIC_STRATEGY_PACK: readonly TopicStrategyEntry[] = [
     audience: "operator",
     titlePattern: "AI automation reliability playbook",
     questionPattern: "What can break first when teams automate too quickly?",
-    whyNowPattern: "Model/tool release velocity is increasing faster than ops safeguards.",
-    comparisonPattern: "Speed-first rollout vs guardrail-first rollout: which fails slower and recovers faster?",
+    whyNowPattern: "Why now: model/tool release velocity is increasing faster than ops safeguards.",
+    comparisonPattern:
+      "Comparison (vs baseline): speed-first rollout vs guardrail-first rollout - which fails slower and recovers faster?",
     contrarianPattern:
       "Most teams think retries solve reliability. In practice, weak rollback ownership causes larger outages.",
     evidencePattern:
@@ -34,8 +35,9 @@ export const TOPIC_STRATEGY_PACK: readonly TopicStrategyEntry[] = [
     audience: "team_lead",
     titlePattern: "AI cost control without delivery slowdown",
     questionPattern: "Where does hidden AI spend usually leak first?",
-    whyNowPattern: "Teams are scaling usage before unit economics are stabilized.",
-    comparisonPattern: "Token caps vs workflow redesign: which option protects margin without slowing shipping?",
+    whyNowPattern: "Why now: teams are scaling usage before unit economics are stabilized.",
+    comparisonPattern:
+      "Comparison (vs baseline): token caps vs workflow redesign - which option protects margin without slowing shipping?",
     contrarianPattern:
       "Many teams cut model quality first. Better gains often come from reducing low-value invocation volume.",
     evidencePattern:
@@ -48,7 +50,8 @@ export const TOPIC_STRATEGY_PACK: readonly TopicStrategyEntry[] = [
     audience: "founder",
     titlePattern: "Operator-grade execution moat for AI-enabled teams",
     questionPattern: "How can a small team turn AI speed into a weekly execution flywheel?",
-    whyNowPattern: "Winning teams now differentiate on operator rhythm, not model novelty.",
+    whyNowPattern:
+      "Why now: winning teams now differentiate on operator rhythm, not model novelty.",
     comparisonPattern:
       "Model novelty vs execution cadence: which one compounds into a durable moat over 90 days?",
     contrarianPattern:

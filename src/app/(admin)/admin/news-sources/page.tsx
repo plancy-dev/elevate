@@ -7,6 +7,7 @@ import {
   setAdminNewsSourceActive,
   upsertAdminNewsSource,
 } from "@/actions/admin-content-ops";
+import { FieldSelect } from "@/components/ui/field-select";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.adminNewsSources");
@@ -49,16 +50,19 @@ export default async function AdminNewsSourcesPage() {
               placeholder={t("sourceNamePlaceholder")}
               className="border border-ink-100 bg-paper-50 px-2.5 py-2 text-xs text-ink-900"
             />
-            <select
+            <FieldSelect
               name="kind"
               defaultValue="rss"
-              className="border border-ink-100 bg-paper-50 px-2.5 py-2 text-xs text-ink-900"
-            >
-              <option value="rss">{t("kind.rss")}</option>
-              <option value="blog">{t("kind.blog")}</option>
-              <option value="api">{t("kind.api")}</option>
-              <option value="manual">{t("kind.manual")}</option>
-            </select>
+              variant="boxed"
+              controlSize="sm"
+              className="py-2 text-xs"
+              options={[
+                { value: "rss", label: t("kind.rss") },
+                { value: "blog", label: t("kind.blog") },
+                { value: "api", label: t("kind.api") },
+                { value: "manual", label: t("kind.manual") },
+              ]}
+            />
             <input
               name="base_url"
               required

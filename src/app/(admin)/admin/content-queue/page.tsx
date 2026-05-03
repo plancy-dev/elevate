@@ -7,6 +7,7 @@ import {
   runRetryFailedPublishOnly,
   updateContentItemStatus,
 } from "@/actions/admin-content-ops";
+import { FieldSelect } from "@/components/ui/field-select";
 import type { Json } from "@/types/database.types";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -82,35 +83,35 @@ export default async function AdminContentQueuePage(props: {
             <label htmlFor="type" className="text-xs text-ink-500">
               {t("filters.type")}
             </label>
-            <select
+            <FieldSelect
               id="type"
               name="type"
               defaultValue={typeFilter}
-              className="min-w-[140px] border border-ink-100 bg-paper-50 px-2 py-1.5 text-xs text-ink-900"
-            >
-              {TYPE_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {toTypeLabel(t, opt)}
-                </option>
-              ))}
-            </select>
+              variant="boxed"
+              controlSize="sm"
+              className="min-w-[140px] text-xs"
+              options={TYPE_OPTIONS.map((opt) => ({
+                value: opt,
+                label: toTypeLabel(t, opt),
+              }))}
+            />
           </div>
           <div className="space-y-1">
             <label htmlFor="status" className="text-xs text-ink-500">
               {t("filters.status")}
             </label>
-            <select
+            <FieldSelect
               id="status"
               name="status"
               defaultValue={statusFilter}
-              className="min-w-[170px] border border-ink-100 bg-paper-50 px-2 py-1.5 text-xs text-ink-900"
-            >
-              {STATUS_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {toStatusFilterLabel(t, opt)}
-                </option>
-              ))}
-            </select>
+              variant="boxed"
+              controlSize="sm"
+              className="min-w-[170px] text-xs"
+              options={STATUS_OPTIONS.map((opt) => ({
+                value: opt,
+                label: toStatusFilterLabel(t, opt),
+              }))}
+            />
           </div>
           <button
             type="submit"
@@ -133,35 +134,41 @@ export default async function AdminContentQueuePage(props: {
           <p className="text-xs text-ink-500">{t("empty")}</p>
         ) : (
           <div className="overflow-x-auto border border-ink-100">
-            <table className="w-full text-left text-xs">
+            <table className="w-full min-w-[1220px] text-left text-xs">
               <thead>
                 <tr className="border-b border-ink-100 bg-paper-50">
                   <th className="p-2 font-medium text-ink-700">{t("columns.title")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.type")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.status")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.quality")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.gate")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.opsSignal")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.updated")}</th>
-                  <th className="p-2 font-medium text-ink-700">{t("columns.actions")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.type")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.status")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.quality")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.gate")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.aiAudit")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.opsSignal")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.updated")}</th>
+                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.actions")}</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.id} className="border-b border-ink-100/80">
                     <td className="p-2 text-ink-900">
-                      <div className="font-medium">{row.title}</div>
+                      <div className="max-w-[360px] overflow-hidden text-ellipsis whitespace-nowrap font-medium" title={row.title}>
+                        {row.title}
+                      </div>
                       <div className="mt-0.5 text-[11px] text-ink-500">{row.locale}</div>
                     </td>
-                    <td className="p-2 text-ink-700">{toTypeLabel(t, row.type)}</td>
-                    <td className="p-2 text-ink-700">{toItemStatusLabel(t, row.status)}</td>
-                    <td className="p-2 text-ink-700">
+                    <td className="p-2 text-ink-700 whitespace-nowrap">{toTypeLabel(t, row.type)}</td>
+                    <td className="p-2 text-ink-700 whitespace-nowrap">{toItemStatusLabel(t, row.status)}</td>
+                    <td className="p-2 text-ink-700 whitespace-nowrap">
                       {row.source_quality_score ?? "-"} / {row.fact_check_score ?? "-"}
                     </td>
-                    <td className="p-2 text-ink-700">
+                    <td className="p-2 text-ink-700 whitespace-nowrap">
                       <ReviewGateCell t={t} metadata={row.metadata} />
                     </td>
-                    <td className="p-2 text-ink-700">
+                    <td className="p-2 text-ink-700 whitespace-nowrap">
+                      <AiAuditCell t={t} metadata={row.metadata} />
+                    </td>
+                    <td className="p-2 text-ink-700 whitespace-nowrap">
                       <OpsSignalCell
                         t={t}
                         status={row.status}
@@ -175,7 +182,7 @@ export default async function AdminContentQueuePage(props: {
                       {new Date(row.updated_at).toISOString().replace("T", " ").slice(0, 19)} UTC
                     </td>
                     <td className="p-2">
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap gap-1.5 whitespace-nowrap">
                         <form action={updateContentItemStatus}>
                           <input type="hidden" name="id" value={row.id} />
                           <input type="hidden" name="status" value="approved" />
@@ -300,6 +307,53 @@ function ReviewGateCell({
   );
 }
 
+function AiAuditCell({
+  t,
+  metadata,
+}: {
+  t: (key: string, values?: Record<string, string | number | Date>) => string;
+  metadata: Json | null;
+}) {
+  const review = readLatestAiReview(metadata);
+  const rewrite = readLatestAiRewrite(metadata);
+  if (!review && !rewrite) {
+    return <span className="text-ink-500">-</span>;
+  }
+
+  return (
+    <div className="flex max-w-[280px] flex-col gap-1">
+      {review ? (
+        <div className="flex flex-wrap items-center gap-1">
+          <span
+            className={`inline-flex border px-2 py-0.5 text-[11px] font-medium ${
+              review.decision === "auto_approve_candidate"
+                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                : review.decision === "needs_rewrite"
+                  ? "border-amber-200 bg-amber-50 text-amber-700"
+                  : "border-ink-200 bg-paper-50 text-ink-700"
+            }`}
+          >
+            {toAiDecisionLabel(t, review.decision)}
+          </span>
+          <span className="text-[11px] text-ink-500">
+            {t("aiAudit.confidence", { value: Math.round(review.confidence * 100) })}
+          </span>
+        </div>
+      ) : null}
+      {review?.policyReason ? (
+        <p className="truncate text-[11px] text-ink-500" title={review.policyReason}>
+          {t("aiAudit.policyReason")}: {toAiPolicyReasonLabel(t, review.policyReason)}
+        </p>
+      ) : null}
+      {rewrite ? (
+        <p className="text-[11px] text-ink-500">
+          {t("aiAudit.rewriteDecision")}: {toRewriteDecisionLabel(t, rewrite.decisionAfter)}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 function readLatestReviewGate(metadata: Json | null): {
   passed: boolean;
   reasons: string[];
@@ -326,6 +380,48 @@ function readLatestReviewGate(metadata: Json | null): {
       : [],
     qualityScore: Number.isFinite(qualityScore) ? qualityScore : 0,
   };
+}
+
+function readLatestAiReview(metadata: Json | null): {
+  decision: "auto_approve_candidate" | "needs_rewrite" | "hold_manual";
+  confidence: number;
+  policyReason: string | null;
+} | null {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
+  const aiReview = (metadata as Record<string, unknown>).ai_review;
+  if (!aiReview || typeof aiReview !== "object" || Array.isArray(aiReview)) return null;
+  const latest = (aiReview as Record<string, unknown>).latest;
+  if (!latest || typeof latest !== "object" || Array.isArray(latest)) return null;
+  const decision = (latest as Record<string, unknown>).decision;
+  if (
+    decision !== "auto_approve_candidate" &&
+    decision !== "needs_rewrite" &&
+    decision !== "hold_manual"
+  ) {
+    return null;
+  }
+  const confidenceRaw = Number((latest as Record<string, unknown>).confidence ?? 0);
+  const policyReasonRaw = (latest as Record<string, unknown>).policy_reason;
+  return {
+    decision,
+    confidence: Number.isFinite(confidenceRaw) ? confidenceRaw : 0,
+    policyReason: typeof policyReasonRaw === "string" ? policyReasonRaw : null,
+  };
+}
+
+function readLatestAiRewrite(metadata: Json | null): {
+  decisionAfter: "ready_for_approval" | "needs_manual_review";
+} | null {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
+  const aiRewrite = (metadata as Record<string, unknown>).ai_rewrite;
+  if (!aiRewrite || typeof aiRewrite !== "object" || Array.isArray(aiRewrite)) return null;
+  const latest = (aiRewrite as Record<string, unknown>).latest;
+  if (!latest || typeof latest !== "object" || Array.isArray(latest)) return null;
+  const decisionAfter = (latest as Record<string, unknown>).decision_after;
+  if (decisionAfter !== "ready_for_approval" && decisionAfter !== "needs_manual_review") {
+    return null;
+  }
+  return { decisionAfter };
 }
 
 function summarizeQueue(
@@ -425,4 +521,33 @@ function toItemStatusLabel(t: (key: string) => string, status: string) {
   if (status === "published") return t("status.published");
   if (status === "send_failed") return t("status.sendFailed");
   return status;
+}
+
+function toAiDecisionLabel(
+  t: (key: string) => string,
+  decision: "auto_approve_candidate" | "needs_rewrite" | "hold_manual",
+) {
+  if (decision === "auto_approve_candidate") return t("aiAudit.decision.autoApproveCandidate");
+  if (decision === "needs_rewrite") return t("aiAudit.decision.needsRewrite");
+  return t("aiAudit.decision.holdManual");
+}
+
+function toRewriteDecisionLabel(
+  t: (key: string) => string,
+  decision: "ready_for_approval" | "needs_manual_review",
+) {
+  if (decision === "ready_for_approval") return t("aiAudit.rewrite.readyForApproval");
+  return t("aiAudit.rewrite.needsManualReview");
+}
+
+function toAiPolicyReasonLabel(t: (key: string) => string, reason: string) {
+  if (reason === "auto_approval_policy_passed") return t("aiAudit.policy.autoApprovalPolicyPassed");
+  if (reason === "decision_not_auto_approve_candidate") {
+    return t("aiAudit.policy.decisionNotAutoApproveCandidate");
+  }
+  if (reason === "confidence_below_threshold") return t("aiAudit.policy.confidenceBelowThreshold");
+  if (reason === "review_gate_not_passed") return t("aiAudit.policy.reviewGateNotPassed");
+  if (reason === "quality_score_below_threshold") return t("aiAudit.policy.qualityScoreBelowThreshold");
+  if (reason === "hard_block_reason_detected") return t("aiAudit.policy.hardBlockReasonDetected");
+  return reason;
 }
