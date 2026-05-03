@@ -20,7 +20,7 @@
 
 ## PLAN — AI-native workflow evolution (2026-05-03)
 
-- **Epic (process, not product):** [`docs/features/PLAN-ai-native-workflow-evolution-2026-05.md`](../docs/features/PLAN-ai-native-workflow-evolution-2026-05.md) — **P0 main 머지 완료.** **P1 준비:** [`docs/CURSOR_RULES_AUDIT.md`](../docs/CURSOR_RULES_AUDIT.md) · verify 게이트 [`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md) §2b · 잔여는 감사 표 하단 **복붙 블록** 또는 PLAN §4 P1.
+- **Epic (process, not product):** [`docs/features/PLAN-ai-native-workflow-evolution-2026-05.md`](../docs/features/PLAN-ai-native-workflow-evolution-2026-05.md) — **P0/P1 + P2 RFC·문서 게이트 PR** 대기/머지 후 구현 세션. **검수 한 페이지:** [`docs/features/PLAN-ai-native-workflow-doc-gate.md`](../docs/features/PLAN-ai-native-workflow-doc-gate.md) · P2 RFC [`docs/features/PLAN-ai-native-workflow-p2-rfc.md`](../docs/features/PLAN-ai-native-workflow-p2-rfc.md). 원격 이슈·PR 번호: [`docs/DEV_PROCESS_GITHUB.md`](../docs/DEV_PROCESS_GITHUB.md). 머지 직후 REFLECT 한 줄은 doc-gate §4.
 
 ## PLAN backlog — first slice (order TBD in PLAN session)
 

@@ -9,8 +9,8 @@
 | 파일 | 줄 수 | alwaysApply | globs (요약) | 비고 |
 |------|------:|---------------|--------------|------|
 | [commit-verification.mdc](../.cursor/rules/commit-verification.mdc) | 12 | true | (비어 있음) | 커밋 게이트 — 유지 |
-| [posthog-integration.mdc](../.cursor/rules/posthog-integration.mdc) | 29 | true | (키만 있고 패턴 없음) | YAML `globs:` 값 없음 — 필요 시 `[]` 명시 권장 |
-| [completion-and-commit.mdc](../.cursor/rules/completion-and-commit.mdc) | 32 | false | (키만 있고 값 없음) | Agent-requested 성격 — YAML 정리 후보 |
+| [posthog-integration.mdc](../.cursor/rules/posthog-integration.mdc) | 29 | true | `[]` | YAML 정리 완료 |
+| [completion-and-commit.mdc](../.cursor/rules/completion-and-commit.mdc) | 32 | false | `[]` | YAML 정리 완료 |
 | [ai-session-bootstrap.mdc](../.cursor/rules/ai-session-bootstrap.mdc) | 43 | true | `[]` | 매 세션 부트스트랩 — 유지 |
 | [cursor-ai-context.mdc](../.cursor/rules/cursor-ai-context.mdc) | 48 | false | `[]` | 진입 링크 — 유지 |
 | [archive-and-cleanup.mdc](../.cursor/rules/archive-and-cleanup.mdc) | 58 | false | memory-bank, archive | 유지 |

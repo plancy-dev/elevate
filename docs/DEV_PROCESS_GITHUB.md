@@ -19,6 +19,15 @@ GitHub 웹에서 버튼을 누르는 것은 **필수가 아니다.** `gh`와 Cur
 
 **드라이런 완료 (기록):** Issue [#2](https://github.com/plancy-dev/elevate/issues/2) — 원격 이슈 → 브랜치 → PR (`Closes #2`) → `pnpm verify` 경로를 2026-04-17에 검증함.
 
+### 이슈 번호 vs PR 번호 (같은 카운터)
+
+GitHub는 **Issue와 Pull Request가 하나의 전역 번호 공간**을 쓴다. 그래서 **Issues 탭**에서 보이는 최대 번호(예: #63)보다 큰 번호(예: #64–#72)가 **PR에만** 붙어 있는 것이 정상이다. “이슈가 #64부터 없다”는 것은 대개 **해당 번호가 PR**이기 때문이다.
+
+- 열린/닫힌 **이슈만:** `gh issue list --state open` / `gh issue list --state closed`
+- **PR만:** `gh pr list --state merged` 또는 `gh search prs --repo OWNER/REPO`
+
+문서·프로세스 작업(P0/P1)을 **GitHub 이슈로도** 추적하려면 `gh issue create`로 별도 이슈를 만들고, PR 본문에 `Refs #N`을 달면 된다.
+
 ---
 
 ## 1. 레이어 (충돌 시 순서)

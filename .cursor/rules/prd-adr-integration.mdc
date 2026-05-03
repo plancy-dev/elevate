@@ -10,6 +10,10 @@ alwaysApply: false
 
 PLAN 모드에서 생성된 PRD(Product Requirements Document)와 CREATIVE 모드에서 생성된 ADR(Architecture Decision Records)을 IMPLEMENT 모드에서 효과적으로 활용하여 정확하고 일관된 구현을 보장합니다.
 
+### ADR 작성 프로세스 (Elevate 기본)
+
+`docs/adr/`에 새 ADR을 추가할 때는 **AWS 권장 ADR 프로세스**(상태·소유권·채택·대체)를 따른다: [ADR 프로세스 — AWS Prescriptive Guidance (한국어)](https://docs.aws.amazon.com/ko_kr/prescriptive-guidance/latest/architectural-decision-records/adr-process.html). 한 페이지 요약·목록: [`docs/adr/README.md`](../../docs/adr/README.md).
+
 ---
 
 ## Documentation Structure
