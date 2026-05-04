@@ -24,11 +24,18 @@
 - **Result:** **20** chunk sample, **`phc_` absent**.
 - **Machine:** [`posthog-prod-bundle-preflight-quick-2026-05-04T043414Z.json`](./posthog-prod-bundle-preflight-quick-2026-05-04T043414Z.json).
 
+### 1d) Recheck — new `dpl` (still no `phc_`)
+
+- **When:** `2026-05-04T04:35:52Z` (agent run, UTC).
+- **Deployment id:** `dpl_p81Vn5EvCdvUZr4ZHvHuP61vkcQw`.
+- **Result:** **20** chunk sample, **`phc_` absent**.
+- **Machine:** [`posthog-prod-bundle-preflight-quick-2026-05-04T043552Z.json`](./posthog-prod-bundle-preflight-quick-2026-05-04T043552Z.json).
+
 ## 2) PostHog MCP (project **358775**)
 
 | Query | Result |
 |--------|--------|
-| `elevate_marketing_cta_click` last **7d** | **0** (recheck **~04:34 UTC** same) |
+| `elevate_marketing_cta_click` last **7d** | **0** (recheck **~04:36 UTC** same) |
 | All events last **7d** | **0** |
 | All events last **30d** | **33** (`$autocapture` 15, `$pageview` 13, …) |
 | `elevate_marketing_cta_click` **all time** | **0** |
