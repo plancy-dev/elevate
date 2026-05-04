@@ -44,7 +44,7 @@
 
 ### 다음 작업 · 모드 (지금 막혔을 때)
 
-**상태:** **Ops O2** — 마지막 스모크 **PASS (`200`)** `04:41Z` ([`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json)); 이번 턴 스모크 **미재실행**(`daily_generation` 부작용 방지). PostHog **1–2** 미완 → **3번 FAIL** (**`dpl_83tum…`**, **`phc_` 없음**·[`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044346Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044346Z.json)). REFLECT §1i: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **4–6** 차단 유지.
+**상태:** **Ops O2** — 마지막 스모크 **PASS (`200`)** `04:41Z` ([`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json)); 이번 턴 스모크 **미재실행**(`daily_generation` 부작용 방지). PostHog **1–2** 미완 → **3번 FAIL** (**`dpl_CHnn…`**, **`phc_` 없음**·[`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044434Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044434Z.json)). REFLECT §1j: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **4–6** 차단 유지.
 
 | 우선순위 | 모드 | 작업 | 누가 |
 |----------|------|------|------|
@@ -52,7 +52,7 @@
 | **B** | **REFLECT** | **Ops O2** — 이미 PASS; 필요 시 `/admin/runs` 확인 | 운영자 |
 | **C** | **BUILD → REFLECT** | **Ops O1** — `pnpm run content-ops:runs-invariant-check` 스냅샷 | 에이전트 (병행) |
 
-**Ops O1 / Gate51 (병행):** [`reports/runs-invariant-recheck-latest.json`](../reports/runs-invariant-recheck-latest.json) — `PASS`, streak **2**. Gate51 trend: [`reports/content-ops-gate51-trend-recheck-2026-05-04.json`](../reports/content-ops-gate51-trend-recheck-2026-05-04.json) — **PASS**.
+**Ops O1 / Gate51 (병행):** [`reports/runs-invariant-recheck-latest.json`](../reports/runs-invariant-recheck-latest.json) — `PASS`, scheduled-day streak **3** (UTC `2026-05-02`–`04`); detail [`2026-05-04-runs-invariant-recheck-044434Z.json`](../reports/2026-05-04-runs-invariant-recheck-044434Z.json). Gate51 trend: [`reports/content-ops-gate51-trend-recheck-2026-05-04.json`](../reports/content-ops-gate51-trend-recheck-2026-05-04.json) — **PASS**.
 
 **이번 턴 권장:** **모드 `BUILD` — 트랙 A (PostHog)**. Ops 토큰은 정합 완료.
 

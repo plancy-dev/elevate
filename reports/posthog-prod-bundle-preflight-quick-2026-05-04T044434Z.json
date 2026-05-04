@@ -1,0 +1,10 @@
+{
+  "generatedAtUtc": "2026-05-04T04:44:34Z",
+  "host": "https://elevate.ai.kr",
+  "method": "fetch_home_html_then_sample_linked_chunk_scripts",
+  "chunksOnPage": 20,
+  "chunksScanned": 20,
+  "dplGuess": "dpl_CHnn5SZg8HNRz9RcAxTLEnnLoH3q",
+  "verdict_bundleContainsProjectKeyLiteral": false,
+  "note": "Tenth observed prod dpl; no phc_ in 20-chunk sample. Ops smoke not re-run (avoids daily_generation side effects)."
+}
