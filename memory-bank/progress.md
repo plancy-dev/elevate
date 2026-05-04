@@ -5,6 +5,7 @@
 
 ## Status snapshot (aligned with `tasks.md`, 2026-05-04)
 
+- **BUILD (runs invariant, 2026-05-04):** `content-ops:runs-invariant-check` → [`reports/2026-05-04-runs-invariant-check.json`](../reports/2026-05-04-runs-invariant-check.json) — PASS, `maxConsecutiveUtcDaysWithScheduled=2`. `tasks.md` / `activeContext.md` 동기화. **REFLECT:** PostHog cta_id · Vercel `CONTENT_OPS_AUTOMATION_RUNTIME` · prod automation-run 토큰 정합.
 - **REFLECT (AI-native workflow docs, post–PR #74):** RFC·doc-gate가 `main`에 올라갔고 doc-gate §5 경로 확인 완료; RFC 기본안 유지(verify+기존 CI, MCP 조건부, Hooks는 팀 합의 후). 다음: [#73](https://github.com/plancy-dev/elevate/issues/73)에서 Hooks·MCP·CI 세 결정 합의 → 구현 PR.
 - **INIT wave:** closed for handoff — see `tasks.md` **INIT closeout** + morning report [`reports/content-ops-morning-handoff-2026-05-03.md`](../reports/content-ops-morning-handoff-2026-05-03.md); gate51 one-shot brief archived to `memory-bank/archive/work-history/init-p0-1-gate51-operational-closeout.md`.
 - **Vercel / runtime:** document-only alignment — unset `CONTENT_OPS_AUTOMATION_RUNTIME` ≡ `cursor` in code; operator should **set explicit `cursor`** in Vercel (RUNBOOK + `.env.local.example` updated).

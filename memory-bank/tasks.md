@@ -2,9 +2,10 @@
 
 ## BUILD track (active) — 2026-05-04
 
-- **Scope:** ADR-013 PR2 — wire [`PostHogEvent.ELEVATE_MARKETING_CTA_CLICK`](../src/lib/analytics/posthog-events.ts) at 8 surfaces per [`docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md`](../docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md) Decisions #2–#3; required props `cta_id` + `locale`; optional `slug` (blog footer), `referrer_path` where useful.
+- **Scope (merged):** ADR-013 PR2 — wire [`PostHogEvent.ELEVATE_MARKETING_CTA_CLICK`](../src/lib/analytics/posthog-events.ts) at 8 surfaces per [`docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md`](../docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md) Decisions #2–#3; required props `cta_id` + `locale`; optional `slug` (blog footer), `referrer_path` where useful.
 - **Verify:** `pnpm verify`; `tests/unit/marketing-cta-instrumentation.test.ts` + stable-values test (**done** in repo).
 - **Ops:** Local SoT snapshot saved as [`reports/2026-05-03-runs-invariant-build-handoff.json`](../reports/2026-05-03-runs-invariant-build-handoff.json). **Prod GET** `automation-run?scenario=daily_generation&source=cursor&token=…` remains operator-owned (Vercel token, no secret in git).
+- **BUILD 2026-05-04 (증거만):** `pnpm run content-ops:runs-invariant-check` → [`reports/2026-05-04-runs-invariant-check.json`](../reports/2026-05-04-runs-invariant-check.json); `tasks.md` Immediate Next Step 갱신. **REFLECT:** PostHog cta_id + Vercel runtime·토큰 스모크.
 
 ## INIT closeout — handoff to PLAN (2026-05-04)
 
@@ -134,7 +135,7 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 
 ## Immediate Next Step
 
-- **P0 stabilization (#49–#51):** `#51` gate51 **PASS** (see `reports/gate51-snapshots/2026-05-03-gate51-pass-multiday.json`). **Runs invariant (재확인 `2026-05-03T09:34:49.631Z`):** [`reports/2026-05-03-runs-invariant-recheck.json`](reports/2026-05-03-runs-invariant-recheck.json) — `runsInvariant.status=PASS`, `maxConsecutiveUtcDaysWithScheduled=2`, `meetsSevenConsecutiveCalendarDays=false`. **Prod 스모크:** `https://elevate.ai.kr/.../automation-run?scenario=daily_generation&source=cursor&token=<.env.local>` → **HTTP 401** (로컬 시크릿 ≠ Vercel이면 예상됨). **7 UTC일 스트릭:** 아직 미달; 운영 스모크는 **Vercel Production과 동일한** `CONTENT_OPS_AUTOMATION_TOKEN`으로 재시도·재배포 확인.
+- **P0 stabilization (#49–#51):** `#51` gate51 **PASS** (see `reports/gate51-snapshots/2026-05-03-gate51-pass-multiday.json`). **Runs invariant (BUILD 재확인 `2026-05-04T02:16:16.229Z`):** [`reports/2026-05-04-runs-invariant-check.json`](reports/2026-05-04-runs-invariant-check.json) — `runsInvariant.status=PASS`, `maxConsecutiveUtcDaysWithScheduled=2`, `meetsSevenConsecutiveCalendarDays=false`, `scheduledDaysUtc`=`["2026-05-02","2026-05-03"]`. (이전 스냅샷: [`reports/2026-05-03-runs-invariant-recheck.json`](reports/2026-05-03-runs-invariant-recheck.json)). **Prod 스모크:** `https://elevate.ai.kr/.../automation-run?scenario=daily_generation&source=cursor&token=<.env.local>` → **HTTP 401** (로컬 시크릿 ≠ Vercel이면 예상됨). **7 UTC일 스트릭:** 아직 미달; 운영 스모크는 **Vercel Production과 동일한** `CONTENT_OPS_AUTOMATION_TOKEN`으로 재시도·재배포 확인.
 - **Follow-on:** After **7** consecutive UTC days with ≥1 `scheduled` `content_runs`, write new `reports/*-runs-invariant-check.json` (same schema as `2026-05-03` file) and [x] the runtime line; **or** automation-off one-liner in `tasks.md`.
 - **GitHub #62 / #63 (Refs):** #62 선행 — `Dashboard.toc.library` 그룹/항목 라벨 분리(5 locale); CREATIVE [`memory-bank/creative-dashboard-sidebar.md`](memory-bank/creative-dashboard-sidebar.md). #63 — CI에 `pnpm run gstack:check` 단계 추가; 샘플 로그 [`reports/gstack-check-sample.log`](reports/gstack-check-sample.log).
 
