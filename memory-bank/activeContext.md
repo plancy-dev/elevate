@@ -2,13 +2,40 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **BUILD** (#62 Phase 2 partial — aria-current + sidebar nav PostHog)
+## Current Phase — **INIT** (남은 작업 클로저 — 2026-05-05 부트스트랩)
 
-**이번 BUILD:** [`src/components/desk/TOC.tsx`](../src/components/desk/TOC.tsx) — 활성 링크 `aria-current="page"`; 클릭 시 `PostHogEvent.ELEVATE_DASHBOARD_SIDEBAR_NAV_CLICK` (`href`, `mode`, `collapsed`, `locale`). 이벤트 상수 [`posthog-events.ts`](../src/lib/analytics/posthog-events.ts). 계약 테스트 [`tests/unit/dashboard-sidebar-nav-analytics.test.ts`](../tests/unit/dashboard-sidebar-nav-analytics.test.ts).
+**목적:** 스태빌·INIT 큐는 완료; **오픈 체크포인트**만 정리하면 다음 PLAN/BUILD 세션에 바로 진입 가능하게 한다.
 
-**직전 REFLECT:** #62 Phase 1 — [`reports/reflect-github-62-sidebar-phase1.md`](../reports/reflect-github-62-sidebar-phase1.md). **여전히 미착수:** 13→4~5(안 B), 전면 키보드 스윕.
+### 남은 작업 인벤토리 (`tasks.md` SoT)
 
-**다음:** **REFLECT** 짧게 **또는** Pkg-O1/O2/R1. #60 히어로 PR 제약 유지.
+| 트랙 | 상태 | 복잡도·다음 모드 |
+|------|------|------------------|
+| **Ops — 7 UTC일 `scheduled` 스트릭** | `[ ]` 체크리스트 + invariant PASS, 연속일 7 미만 | **L1** — 증거·운영 → BUILD(스냅샷) 또는 automation-off 문서 → REFLECT |
+| **Ops — prod `automation-run` 401** | Vercel `CONTENT_OPS_AUTOMATION_TOKEN` 바이트 정합 | **L1** — BUILD 없음 선호, operator 스모크 |
+| **STAB — ADR-013 PostHog §5** | 코드 머지됨, HogQL 0건 REFLECT 기록 | **L1** — UI·키·프로젝트 정합 확인 → REFLECT → STAB 줄 갱신 |
+| **#62 사이드바** | Phase 1+2 partial 완료, DoD(4~5항·전면 a11y) 잔여 | **L2–L3** — CREATIVE(`creative-dashboard-sidebar.md`) 보강 후 PLAN → BUILD |
+| **#60 히어로/포지셔닝** | 시나리오 코멘트 게이트 | **L3** — PLAN → (#60 합의 후) CREATIVE/BUILD |
+| **#61 pricing** | 오픈 | **L2** — PLAN → BUILD (#62와 파일 충돌 시 순서) |
+| **#73 P2** | 구현 전 **합의** 필수 | **프로세스** — 이슈 체크만; 코드 INIT 아님 |
+
+### INIT 체크리스트 (세션 시작 시)
+
+- [x] `memory-bank/tasks.md` · `activeContext.md` 확인
+- [ ] `docs/AI_EXPERT_PROMPTS.md` — 이번 트랙에 맞는 블록(A~D) 1개 선택
+- [ ] 증거 파일 재확인: [`reports/2026-05-04-runs-invariant-check.json`](../reports/2026-05-04-runs-invariant-check.json), [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md), [`reports/reflect-github-62-sidebar-phase1.md`](../reports/reflect-github-62-sidebar-phase1.md)
+- [ ] **트랙 1개만** 다음 모드로 승격 (병렬 시에도 SoT는 한 줄로)
+
+### INIT 완료 판정 → 다음 모드
+
+```
+✅ INIT 준비 완료 (남은 작업)
+━━━━━━━━━━━━━━━━━━
+📁 SoT: tasks.md 체크박스 + 위 표
+📊 권장 분기: Ops/R1 → L1 → BUILD·REFLECT | #62 잔여 → PLAN→CREATIVE→BUILD
+➡️ 다음: 사용자가 고른 트랙에 대해 PLAN 또는 BUILD
+```
+
+**직전 BUILD 참고:** #62 — [`TOC.tsx`](../src/components/desk/TOC.tsx), `elevate_dashboard_sidebar_nav_click`, [`dashboard-sidebar-nav-analytics.test.ts`](../tests/unit/dashboard-sidebar-nav-analytics.test.ts).
 
 **직전 아카이브:** [`archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md`](archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md).
 

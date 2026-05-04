@@ -1,5 +1,18 @@
 # Elevate — Tasks (Stabilization SoT)
 
+## INIT — Remaining work bootstrap (2026-05-05)
+
+**세션 목적:** INIT·P0·P1·큐(#55–#59) 완료 이후 **남은 체크포인트**에 대한 진입 정리. 상세 표·체크리스트는 [`memory-bank/activeContext.md`](activeContext.md) **Current Phase — INIT**.
+
+| 우선 질문 (INIT에서 1개만 답하면 PLAN/BUILD로 넘어감) | 기본 증거/참조 |
+|------------------------------------------------------|----------------|
+| 오늘 트랙: **Ops** / **PostHog ADR-013** / **ENH #62·#60·#61** / **#73 합의** 중 무엇인가? | `activeContext` 인벤토리 표 |
+| Ops면: DB 스트릭 재측정 시점·`automation-off` 필요 여부? | `pnpm run content-ops:runs-invariant-check` → `reports/*.json` |
+| PostHog면: 프로젝트·브라우저 키·라이브 클릭으로 0건 원인 분기? | [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) |
+| #62 잔여면: 안 B 진행 vs #60 블로킹 코멘트 먼저? | [`memory-bank/creative-dashboard-sidebar.md`](creative-dashboard-sidebar.md) |
+
+**Non-negotiable:** `activeContext.md` § Non-Negotiable · #60 히어로 PR은 시나리오 코멘트 전 금지(`tasks.md` PLAN snapshot §7).
+
 ## BUILD track (active) — 2026-05-04
 
 - **Scope (merged):** ADR-013 PR2 — wire [`PostHogEvent.ELEVATE_MARKETING_CTA_CLICK`](../src/lib/analytics/posthog-events.ts) at 8 surfaces per [`docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md`](../docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md) Decisions #2–#3; required props `cta_id` + `locale`; optional `slug` (blog footer), `referrer_path` where useful.
