@@ -1,12 +1,12 @@
 # Progress — Elevate (stabilization + PLAN handoff)
 
 **SoT for priority:** `memory-bank/tasks.md`  
-**Current focus:** `memory-bank/activeContext.md` (**PLAN** — remaining closure 2026-05-05; INIT→PLAN 이행)
+**Current focus:** `memory-bank/activeContext.md` (**BUILD→REFLECT** — Ops O1 스냅샷 + 콘텐츠 큐 집계 2026-05-05)
 
 ## Status snapshot (aligned with `tasks.md`, 2026-05-05)
 
 - **PLAN (remaining closure, 2026-05-05):** INIT 후보 다섯 트랙 → `activeContext` 실행 순서표 + 슬라이스 체크리스트; `tasks.md` § PLAN — Remaining closure. 다음: BUILD 또는 CREATIVE(트랙 1개).
-- **INIT (remaining closure):** 완료 → PLAN 이행.
+- **BUILD+REFLECT (Ops O1 + 큐 검토, 2026-05-05):** [`reports/2026-05-05-runs-invariant-check.json`](../reports/2026-05-05-runs-invariant-check.json); [`reports/content-queue-agent-review-2026-05-05.md`](../reports/content-queue-agent-review-2026-05-05.md); `content-ops:queue-aggregate`; RUNBOOK 1줄.
 - **BUILD (#62 Phase 2 partial):** TOC `aria-current` + `elevate_dashboard_sidebar_nav_click`; [`tests/unit/dashboard-sidebar-nav-analytics.test.ts`](../tests/unit/dashboard-sidebar-nav-analytics.test.ts).
 - **REFLECT (#62 Phase 1):** DoD 부분 충족만 — [`reports/reflect-github-62-sidebar-phase1.md`](../reports/reflect-github-62-sidebar-phase1.md). Phase 2(축소·PostHog·a11y) 대기.
 - **BUILD (#62 안 A):** [`tests/unit/dashboard-toc-library-labels.test.ts`](../tests/unit/dashboard-toc-library-labels.test.ts) — 5 locale `Dashboard.toc.library` section≠item. CREATIVE 권한 문서 갱신. `pnpm verify`.

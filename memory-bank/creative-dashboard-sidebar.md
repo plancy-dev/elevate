@@ -6,6 +6,8 @@
 
 ## Decision (이미 합의된 증분 — BUILD 가능)
 
+0. **PLAN 고정 (2026-05-05):** **안 B**(허브형 Settings·4~5 항)는 [#60](https://github.com/plancy-dev/elevate/issues/60) **Productions 노출 정책** 합의 **전** — CREATIVE/BUILD **착수 보류**. 마이크로(라벨·`aria-current`·내비 PostHog 등)는 병행 가능.
+
 1. **Library group vs item label** — TOC 섹션 제목과 자식 링크가 동일 문자열이면 안 됨 (KO “라이브러리/라이브러리” 등). **접근:** `Dashboard.toc.library.section`(카탈로그형 섹션 제목)과 `Dashboard.toc.library.library`(내비 항목)를 **모든 locale**에서 분리.
 2. **Permission guards** — 사이드바는 [`src/app/(dashboard)/layout.tsx`](../src/app/(dashboard)/layout.tsx)의 `isOrgAdmin` / `isServiceAdmin`으로 Audit·Admin 노출 제어. **`/dashboard/organization/*`**는 [`organization/layout.tsx`](../src/app/(dashboard)/dashboard/organization/layout.tsx)에서 `canAccessOrganizationAdminConsole`로 **비관리자 → `/dashboard` redirect** — 직 URL도 fail-closed (BUILD 확인 완료).
 3. **#60에 맡기는 것(히어로·랜딩)** — 마케팅 히어로/CTA 카피·홈 IA는 #60 PR. **대시보드** TOC 붕괴(13→4)의 **최종 메타포**(Productions 노출 여부 등)는 #60 **코멘트·DoD**와 맞춘 뒤 큰 PR이 안전.

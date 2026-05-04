@@ -2,9 +2,25 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **PLAN** (남은 클로저 — INIT 이행, 2026-05-05)
+## Current Phase — **BUILD → REFLECT** (Ops O1 + 콘텐츠 큐 자동 검토, 2026-05-05)
 
-**INIT 종료:** 후보 트랙 **Ops | PostHog ADR-013 | #62 | #60 | #61** 를 집합으로 확정했고, 사용자 지시에 따라 **PLAN**으로 전환함. **BUILD 세션마다 트랙은 여전히 하나**만 고른다.
+**Ops BUILD 산출:** [`reports/2026-05-05-runs-invariant-check.json`](../reports/2026-05-05-runs-invariant-check.json) — `runsInvariant=PASS`, `maxConsecutiveUtcDaysWithScheduled=2`, `meetsSevenConsecutiveCalendarDays=false`. **재실행 정책:** 스트릭 진척·주간 점검 시 `pnpm exec tsx scripts/content-ops-runs-invariant-check.ts > reports/YYYY-MM-DD-runs-invariant-check.json`; 담당 on-call / operator.
+
+**콘텐츠 큐(에이전트 검토):** 집계 JSON [`reports/content-queue-aggregate-2026-05-05.json`](../reports/content-queue-aggregate-2026-05-05.json), 서술 [`reports/content-queue-agent-review-2026-05-05.md`](../reports/content-queue-agent-review-2026-05-05.md). CLI `pnpm run content-ops:queue-aggregate` — RUNBOOK § Runs invariant 아래 추가.
+
+### PLAN — 슬라이스 체크리스트 (갱신)
+
+- [x] **Ops:** 재실행 완료(위 JSON)·증거 경로 확정; automation-off는 미사용(스트릭 계속 추적).
+- [ ] **PostHog ADR-013:** **다음 BUILD 세션** — UI·실클릭·STAB 줄 (`tasks.md` marketing-cta 항목).
+- [x] **#62:** `creative-dashboard-sidebar.md` — 안 **B**(#60 Productions 정책 합의 전 착수 보류); 마이크로 a11y·내비 이벤트는 병행 가능.
+- [x] **#60 / #61:** 이번 BUILD 세션 **히어로·pricing 코드 PR 없음** (기존 SoT 유지).
+
+### 다음 모드
+
+- **BUILD:** PostHog ADR-013 증거, 또는 #62 마이크로, 또는 Ops O2(Vercel 토큰 스모크) — **한 세션 하나**.
+- **CREATIVE:** #62 안 B는 #60과 Productions 노출 합의 후.
+
+**INIT 종료:** 후보 트랙 **Ops | PostHog | #62 | #60 | #61** 집합·실행 순서는 아래 표 유지.
 
 ### PLAN — 이번 웨이브 실행 순서 (고정)
 
@@ -15,18 +31,6 @@
 | 3 | **#62** | CREATIVE SoT 있음; Productions 노출만 #60과 겹침 | CREATIVE 보강 → BUILD |
 | 4 | **#60** | 히어로 **구현 PR** 금지 유지 | 이슈·시나리오 합의·CREATIVE만; 합의 후 BUILD |
 | 5 | **#61** | #62와 라우트/컴포넌트 충돌 시 순서 조정 | 스코프 확정 후 BUILD |
-
-### PLAN — 슬라이스 체크리스트 (이번 PLAN 세션에서 채움)
-
-- [ ] **Ops:** `content-ops:runs-invariant-check` 재실행 시점·담당, 또는 automation-off 문구 초안 위치(`tasks.md` 어느 절)
-- [ ] **PostHog:** UI 검증 단계(프로젝트·브라우저 키·실클릭) 담당·산출물(`reports/` vs STAB 한 줄만)
-- [ ] **#62:** 안 B 착수 vs 마이크로 a11y만 — `creative-dashboard-sidebar.md`에 **한 줄 결정** 남기기
-- [ ] **#60 / #61:** 이번 주 **코드 PR 포함 여부** 명시적 아니오 확인(기본: #60 히어로 PR 없음)
-
-### 다음 모드 (PLAN 종료 후)
-
-- **BUILD:** Ops 증거만, 또는 PostHog REFLECT 한 커밋, 또는 #62 구현 PR — **한 세션에 하나**.
-- **CREATIVE:** #62 안 B 등 IA — `memory-bank/creative-dashboard-sidebar.md` 먼저.
 
 **직전 BUILD 참고:** #62 — [`TOC.tsx`](../src/components/desk/TOC.tsx), `elevate_dashboard_sidebar_nav_click`, [`dashboard-sidebar-nav-analytics.test.ts`](../tests/unit/dashboard-sidebar-nav-analytics.test.ts).
 

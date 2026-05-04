@@ -51,6 +51,7 @@ Preflight checks before enabling scheduled runs:
 ## Runs invariant and heartbeat
 
 - **CLI snapshot:** `pnpm run content-ops:runs-invariant-check` — last 7d `content_runs` totals, `trigger_type` / `metadata.automation_source` for scheduled rows, and PASS/WARN/FAIL style verdict.
+- **Queue aggregate (service role):** `pnpm run content-ops:queue-aggregate` — dumps JSON counts for `/admin/content-queue` (status / gate reasons / AI decisions); use for SLA and bottleneck triage.
 - **UI:** `/admin/morning-ops` includes an **Automation heartbeat** strip (green/yellow/red) from the same 7d window so operators can separate healthy idle from stale telemetry.
 
 ## Stabilization Gate Check (`#49/#50/#51`)

@@ -39,6 +39,7 @@
     "content-ops:gate-check": "pnpm tsx scripts/content-ops-gate-check.ts",
     "content-ops:gate51-trend-check": "pnpm tsx scripts/content-ops-gate51-trend-check.ts",
     "content-ops:runs-invariant-check": "pnpm tsx scripts/content-ops-runs-invariant-check.ts",
+    "content-ops:queue-aggregate": "pnpm tsx scripts/content-queue-aggregate-report.ts",
     "pr:automerge:safe": "pnpm tsx scripts/pr-automerge-safe.ts",
     "autoloop:poc": "pnpm tsx scripts/continuous-improvement-loop.ts",
     "autoloop:rehearsal": "pnpm autoloop:poc --mode=rehearsal --allow-dirty-tree --max-cycles=3 --max-hours=1 --interval-minutes=5",

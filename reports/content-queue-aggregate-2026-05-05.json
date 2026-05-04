@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-05-04T03:45:54.637Z",
+  "command": "pnpm run content-ops:queue-aggregate",
+  "rowCountScanned": 80,
+  "summaryCards": {
+    "pendingApproval": 59,
+    "staleOver24h": 17,
+    "mustReviewNow": 57,
+    "slaRiskReviewRequired": 17
+  },
+  "byStatus": {
+    "review_required": 57,
+    "draft": 2,
+    "approved": 6,
+    "scheduled": 6,
+    "published": 9
+  },
+  "byTypeStatus": {
+    "newsletter:review_required": 49,
+    "blog:review_required": 8,
+    "newsletter:draft": 1,
+    "blog:draft": 1,
+    "blog:approved": 3,
+    "newsletter:approved": 3,
+    "newsletter:scheduled": 6,
+    "newsletter:published": 8,
+    "blog:published": 1
+  },
+  "byGateReason": {
+    "citation_coverage_low": 45,
+    "possible_overcopy_detected": 6,
+    "comparison_missing": 6,
+    "counterargument_missing": 6,
+    "low_novelty": 11,
+    "body_too_short": 2,
+    "low_relevance": 2,
+    "low_specificity": 2,
+    "low_actionability": 2
+  },
+  "byAiDecision": {
+    "needs_rewrite": 5,
+    "hold_manual": 12,
+    "auto_approve_candidate": 6
+  }
+}
