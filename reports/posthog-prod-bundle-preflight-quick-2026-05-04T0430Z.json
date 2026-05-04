@@ -1,0 +1,10 @@
+{
+  "generatedAtUtc": "2026-05-04T04:30:02Z",
+  "host": "https://elevate.ai.kr",
+  "method": "fetch_home_html_then_sample_linked_chunk_scripts",
+  "chunksOnPage": 20,
+  "chunksScanned": 20,
+  "dplGuess": "dpl_3bADDiD1TDuPKUCK7NLBEjQzgfkE",
+  "verdict_bundleContainsProjectKeyLiteral": false,
+  "note": "ADR-013 §5a preflight: any chunk containing phc_ would set verdict true; same deployment id as prior full sample."
+}

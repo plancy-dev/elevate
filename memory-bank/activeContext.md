@@ -2,22 +2,29 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **BUILD → REFLECT** (PostHog ADR-013 MCP 재검증, 2026-05-06)
+## Current Phase — **BUILD → REFLECT** (PostHog STAB 한 세션 — ADR-013 §5)
 
-**PostHog BUILD 산출:** HogQL 프로젝트 **358775** — `elevate_marketing_cta_click` **7d=0**, **30d** `cta_id` 분해 **데이터 없음**; **365d** 동 프로젝트에 `event LIKE 'elevate%'` **0건**. 참고: `elevate_dashboard_sidebar_nav_click` **14d=0**. 요약 [`reports/reflect-adr013-posthog-2026-05-06.md`](../reports/reflect-adr013-posthog-2026-05-06.md), 기계 읽기 [`reports/posthog-adr013-build-snapshot-2026-05-06.json`](../reports/posthog-adr013-build-snapshot-2026-05-06.md). **ADR-013 §5 게이트:** 여전히 **미충족** — Vercel `NEXT_PUBLIC_POSTHOG_KEY`·프로젝트 정합·실트래픽 확인이 다음 액션.
+**이 세션 SoT:** [`memory-bank/tasks.md`](tasks.md) **§ Active session — PostHog STAB**. 순서: Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` → **Redeploy** → **번들 `phc_` 프리플라이트** → 프로드 CTA 스모크 → PostHog **358775** 확인 → **REFLECT** 리포트·STAB 줄. **의도적 제외(PENDING):** 동일 문서 **Explicit PENDING** 표.
+
+**다음 작업 / 모드:** PostHog **1–2**가 없으면 §5는 진행 불가(번들 **여전히 `phc_` 없음**). **권장:** **BUILD — Ops O2**([`tasks.md`](tasks.md) 표 **A**) — `pnpm content-ops:automation-run-smoke`로 prod 토큰 정합. **병행 증거:** Ops O1 [`reports/runs-invariant-recheck-latest.json`](../reports/runs-invariant-recheck-latest.json) · Gate51 [`reports/content-ops-gate51-trend-recheck-2026-05-04.json`](../reports/content-ops-gate51-trend-recheck-2026-05-04.json)(**PASS**).
+
+**직전 측정 (2026-05-04 UTC):** Prod 번들 **20** chunk — **`phc_` 없음** → 토큰 빌드 미포함. 빠른 재스캔: [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T0430Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T0430Z.json). MCP **358775:** `elevate_marketing_cta_click` **전체 0** · 7d 전체 이벤트 **0** · 30d **33**(`$pageview` 등) · `max(timestamp)` **2026-04-08**. REFLECT: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) · JSON [`reports/posthog-mcp-recheck-2026-05-04.json`](../reports/posthog-mcp-recheck-2026-05-04.json) · 번들 [`reports/posthog-prod-bundle-check-latest.json`](../reports/posthog-prod-bundle-check-latest.json).
+
+**Ops O2 (PENDING, 비세션):** [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) — **401** 재확인(`2026-05-04T04:30:54Z`, `pnpm content-ops:automation-run-smoke`).
 
 **직전 Ops BUILD (2026-05-05):** [`reports/2026-05-05-runs-invariant-check.json`](../reports/2026-05-05-runs-invariant-check.json) · [`reports/content-queue-agent-review-2026-05-05.md`](../reports/content-queue-agent-review-2026-05-05.md).
 
 ### PLAN — 슬라이스 체크리스트 (갱신)
 
-- [x] **Ops:** 재실행 완료(위 JSON)·증거 경로 확정; automation-off는 미사용(스트릭 계속 추적).
-- [x] **PostHog ADR-013:** MCP HogQL 재실행 완료 — §5 **미충족** (`elevate_*` 365d 없음·CTA 7d 0). 증거: [`reports/reflect-adr013-posthog-2026-05-06.md`](../reports/reflect-adr013-posthog-2026-05-06.md). **남음:** Vercel 키·라이브 클릭·STAB `[ ]` 해제는 프로덕트 확인 후.
+- [ ] **Ops O2:** prod `automation-run` **토큰 스모크 PASS** — Vercel `CONTENT_OPS_AUTOMATION_TOKEN`과 동일 값으로 `pnpm content-ops:automation-run-smoke` → [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) 갱신(현재 **401**).
+- [x] **PostHog ADR-013:** §5 미충족 — **2026-05-04** 번들+MCP 재측정 완료 (`phc_` 없음·CTA 이벤트 0). 증거: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **남음:** Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` + **재배포** 후 번들 PASS → 4–6번 체크리스트.
 - [x] **#62:** `creative-dashboard-sidebar.md` — 안 **B**(#60 Productions 정책 합의 전 착수 보류); 마이크로 a11y·내비 이벤트는 병행 가능.
 - [x] **#60 / #61:** 이번 BUILD 세션 **히어로·pricing 코드 PR 없음** (기존 SoT 유지).
 
-### 다음 모드
+### 다음 세션 예약
 
-- **BUILD:** **Ops O2** (Vercel `automation-run` 토큰 스모크) 또는 PostHog **배포 키 수정 후** 재쿼리 — **한 세션 하나**.
+- **진행 중(한 세션):** **PostHog STAB** — [`tasks.md`](tasks.md) **Active session** 체크리스트 전부. 완료 후 이 블록은 “다음 트랙”으로 갱신.
+- **Explicit PENDING:** [`tasks.md`](tasks.md) **Explicit PENDING** 표(Ops O2, 7d streak, #60·#61·#62, #73 등).
 - **CREATIVE:** #62 안 B는 #60과 Productions 노출 합의 후.
 
 **INIT 종료:** 후보 트랙 **Ops | PostHog | #62 | #60 | #61** 집합·실행 순서는 아래 표 유지.
@@ -79,8 +86,9 @@ flowchart LR
 - **#62:** Phase 1 REFLECT 완료 + Phase 2 partial(aria-current·sidebar PostHog) — DoD 나머지(13→4~5·전면 a11y)는 CREATIVE→BUILD.
 - **#73:** 이슈 체크박스에 합의/보류 기록(코드 불필요).
 
-### 다음 모드
+### 다음 모드 (슬라이스 일반)
 
+- **PostHog STAB 다음 세션:** 위 **`### 다음 세션 예약`** (`BUILD`→`REFLECT`).
 - Pkg-O1~O2·R1만 → **BUILD(증거)** 또는 **REFLECT** 짧게 → **ARCHIVE** 한 줄.  
 - Pkg-E62/E61 → **CREATIVE** 완료(위 링크) → **BUILD** → **REFLECT**.  
 - 스킬 선호 시: [`MEMORY_BANK_SKILL_GUIDE.md`](../docs/MEMORY_BANK_SKILL_GUIDE.md) · Skill-first 게이트는 [`tasks.md`](tasks.md) PLAN 에픽 체크박스.

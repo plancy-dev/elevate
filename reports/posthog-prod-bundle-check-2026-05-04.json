@@ -1,0 +1,109 @@
+{
+  "generatedAtUtc": "2026-05-04T04:26:41Z",
+  "host": "https://elevate.ai.kr",
+  "chunkUrlsSampled": 20,
+  "dplGuess": "dpl_3bADDiD1TDuPKUCK7NLBEjQzgfkE",
+  "results": [
+    {
+      "path": "/_next/static/chunks/02w~ck9axrww3.js",
+      "status": "no_phc",
+      "detail": 47701
+    },
+    {
+      "path": "/_next/static/chunks/03~yq9q893hmn.js",
+      "status": "no_phc",
+      "detail": 112541
+    },
+    {
+      "path": "/_next/static/chunks/04b2_8zo~bidb.js",
+      "status": "no_phc",
+      "detail": 30610
+    },
+    {
+      "path": "/_next/static/chunks/05xg54gt9l19v.js",
+      "status": "no_phc",
+      "detail": 24978
+    },
+    {
+      "path": "/_next/static/chunks/0623r~cwk6bvb.js",
+      "status": "no_phc",
+      "detail": 59314
+    },
+    {
+      "path": "/_next/static/chunks/08qub1egxmu6b.js",
+      "status": "no_phc",
+      "detail": 137576
+    },
+    {
+      "path": "/_next/static/chunks/0ahu1q7_zgq2o.js",
+      "status": "no_phc",
+      "detail": 232684
+    },
+    {
+      "path": "/_next/static/chunks/0b.a06ofqc-g5.js",
+      "status": "no_phc",
+      "detail": 176806
+    },
+    {
+      "path": "/_next/static/chunks/0d41zfrlrb8td.js",
+      "status": "no_phc",
+      "detail": 7068
+    },
+    {
+      "path": "/_next/static/chunks/0f6348vbbd3ls.js",
+      "status": "no_phc",
+      "detail": 38596
+    },
+    {
+      "path": "/_next/static/chunks/0g0ss7idhzqgu.js",
+      "status": "no_phc",
+      "detail": 224457
+    },
+    {
+      "path": "/_next/static/chunks/0hjfdiw~zql0j.js",
+      "status": "no_phc",
+      "detail": 839
+    },
+    {
+      "path": "/_next/static/chunks/0jqwlcvk.7elu.js",
+      "status": "no_phc",
+      "detail": 54769
+    },
+    {
+      "path": "/_next/static/chunks/0jtfsh78ptwmh.js",
+      "status": "no_phc",
+      "detail": 340
+    },
+    {
+      "path": "/_next/static/chunks/0tro6gl6v_ej3.js",
+      "status": "no_phc",
+      "detail": 485
+    },
+    {
+      "path": "/_next/static/chunks/0vvrqma64i9-8.js",
+      "status": "no_phc",
+      "detail": 31205
+    },
+    {
+      "path": "/_next/static/chunks/0wym7~d~2k_ap.js",
+      "status": "no_phc",
+      "detail": 44922
+    },
+    {
+      "path": "/_next/static/chunks/16kcmja0u9c09.js",
+      "status": "no_phc",
+      "detail": 41088
+    },
+    {
+      "path": "/_next/static/chunks/187jubqbbak9g.js",
+      "status": "no_phc",
+      "detail": 26522
+    },
+    {
+      "path": "/_next/static/chunks/turbopack-0118oc.s2mn9t.js",
+      "status": "no_phc",
+      "detail": 10981
+    }
+  ],
+  "verdict_bundleContainsProjectKeyLiteral": false
+}

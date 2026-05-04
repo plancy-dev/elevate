@@ -51,6 +51,8 @@ Preflight checks before enabling scheduled runs:
 ## Runs invariant and heartbeat
 
 - **CLI snapshot:** `pnpm run content-ops:runs-invariant-check` — last 7d `content_runs` totals, `trigger_type` / `metadata.automation_source` for scheduled rows, and PASS/WARN/FAIL style verdict.
+- **Prod automation-run smoke (operator token check):** `pnpm content-ops:automation-run-smoke` — loads `CONTENT_OPS_AUTOMATION_TOKEN` from `.env.local`, GETs production `/api/content-ops/automation-run` with `scenario=daily_generation` and `source=cursor`, writes `reports/ops-o2-automation-run-smoke-latest.json` unless `--out` is set. Exits **1** on HTTP **401** (local token does not match Vercel Production).
+- **Gate51 trend-only:** `pnpm run content-ops:gate51-trend-check` — 7d `content_items` novelty / blog review ratios; JSON on stdout. For a **clean** redirect file (no pnpm banner), use `pnpm exec tsx scripts/content-ops-gate51-trend-check.ts > reports/….json`.
 - **Queue aggregate (service role):** `pnpm run content-ops:queue-aggregate` — dumps JSON counts for `/admin/content-queue` (status / gate reasons / AI decisions); use for SLA and bottleneck triage.
 - **UI:** `/admin/morning-ops` includes an **Automation heartbeat** strip (green/yellow/red) from the same 7d window so operators can separate healthy idle from stale telemetry.
 

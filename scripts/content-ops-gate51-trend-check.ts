@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env.local", quiet: true });
 
 const MIN_DAY_BUCKETS = Number.parseInt(
   process.env.CONTENT_OPS_GATE51_MIN_DAY_BUCKETS ?? "2",

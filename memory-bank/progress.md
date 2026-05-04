@@ -1,9 +1,12 @@
 # Progress — Elevate (stabilization + PLAN handoff)
 
 **SoT for priority:** `memory-bank/tasks.md`  
-**Current focus:** `memory-bank/activeContext.md` (**BUILD→REFLECT** — PostHog ADR-013 MCP 2026-05-06; Ops·큐 증거 2026-05-05)
+**Current focus:** PostHog STAB는 **Vercel+재배포**까지 차단. **다음 권장:** **`BUILD` — Ops O2** (`automation-run` 스모크). Ops O1 스냅샷: [`reports/2026-05-04-runs-invariant-recheck-session.json`](reports/2026-05-04-runs-invariant-recheck-session.json).
 
 ## Status snapshot (aligned with `tasks.md`, 2026-05-05)
+
+- **BUILD+REFLECT PostHog (2026-05-04 UTC):** [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) — bundle preflight FAIL; MCP CTA all-time 0; §5 open. **Quick preflight recheck:** [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T0430Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T0430Z.json) — same `dpl`, no `phc_`.
+- **Ops O1 / Gate51 (2026-05-04 UTC recheck):** [`reports/runs-invariant-recheck-latest.json`](../reports/runs-invariant-recheck-latest.json) — `PASS`, streak **2**. [`reports/content-ops-gate51-trend-recheck-2026-05-04.json`](../reports/content-ops-gate51-trend-recheck-2026-05-04.json) — **PASS**. **다음 모드 권장:** `BUILD` **Ops O2** — `pnpm content-ops:automation-run-smoke` ([`memory-bank/tasks.md`](tasks.md) § 다음 작업 · 모드). prod [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) — **401** 재확인 (`04:30Z`); Vercel `CONTENT_OPS_AUTOMATION_TOKEN` 정합 후 재실행.
 
 - **PLAN (remaining closure, 2026-05-05):** INIT 후보 다섯 트랙 → `activeContext` 실행 순서표 + 슬라이스 체크리스트; `tasks.md` § PLAN — Remaining closure. 다음: BUILD 또는 CREATIVE(트랙 1개).
 - **BUILD PostHog (ADR-013, 2026-05-06):** MCP HogQL — CTA 7d 0, 365d `elevate%` 0; [`reports/reflect-adr013-posthog-2026-05-06.md`](../reports/reflect-adr013-posthog-2026-05-06.md), snapshot JSON. §5 still open.
@@ -14,7 +17,6 @@
 - **CREATIVE (#62):** [`memory-bank/creative-dashboard-sidebar.md`](creative-dashboard-sidebar.md) — 합리화 **안 A/B/C**, 라벨 표, BUILD 권장(안 A 먼저). `activeContext` → CREATIVE.
 - **INIT (다음 작업, post-ARCHIVE):** `activeContext`를 INIT 앵커 표로 갱신; `tasks.md`에 **Skill-first INIT** 게이트 체크박스 추가(팀 합의·Hooks merge 시 `[x]`).
 - **ARCHIVE (2026-05-04):** 웨이브 마감 문서 — [`memory-bank/archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md`](archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md); [`archive/index.md`](archive/index.md) 인덱스 갱신. `activeContext` → 다음 INIT 시 `tasks.md` 앵커.
-- **REFLECT (ADR-013 PostHog, 2026-05-04):** MCP HogQL — `elevate_marketing_cta_click` 8d **0건** (proj 358775). ADR §5 미충족. [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **남음:** 대시보드 재확인·프로드 키 정합·실트래픽 후 STAB 체크.
 - **BUILD (runs invariant, 2026-05-04):** `content-ops:runs-invariant-check` → [`reports/2026-05-04-runs-invariant-check.json`](../reports/2026-05-04-runs-invariant-check.json) — PASS, `maxConsecutiveUtcDaysWithScheduled=2`. `tasks.md` / `activeContext.md` 동기화. **REFLECT:** PostHog cta_id · Vercel `CONTENT_OPS_AUTOMATION_RUNTIME` · prod automation-run 토큰 정합.
 - **REFLECT (AI-native workflow docs, post–PR #74):** RFC·doc-gate가 `main`에 올라갔고 doc-gate §5 경로 확인 완료; RFC 기본안 유지(verify+기존 CI, MCP 조건부, Hooks는 팀 합의 후). 다음: [#73](https://github.com/plancy-dev/elevate/issues/73)에서 Hooks·MCP·CI 세 결정 합의 → 구현 PR.
 - **INIT wave:** closed for handoff — see `tasks.md` **INIT closeout** + morning report [`reports/content-ops-morning-handoff-2026-05-03.md`](../reports/content-ops-morning-handoff-2026-05-03.md); gate51 one-shot brief archived to `memory-bank/archive/work-history/init-p0-1-gate51-operational-closeout.md`.

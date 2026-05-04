@@ -1,0 +1,11 @@
+{
+  "queryWindowDays": 14,
+  "scheduledDaysUtc": [
+    "2026-05-02",
+    "2026-05-03"
+  ],
+  "scheduledRunCountInWindow": 9,
+  "maxConsecutiveUtcDaysWithScheduled": 2,
+  "meetsSevenConsecutiveCalendarDays": false,
+  "note": "Distinct UTC calendar days with \u22651 content_runs where trigger_type=scheduled; max streak counts consecutive days in sorted list."
+}

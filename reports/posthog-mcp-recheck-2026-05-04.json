@@ -1,0 +1,24 @@
+{
+  "kind": "posthog_mcp_recheck",
+  "generatedAtUtc": "2026-05-04T04:26:41Z",
+  "projectId": 358775,
+  "queries": {
+    "elevate_marketing_cta_click_7d": 0,
+    "all_events_7d": 0,
+    "all_events_30d": 33,
+    "elevate_marketing_cta_click_all_time": 0,
+    "max_event_timestamp": "2026-04-08T05:24:09.645000Z",
+    "events_30d_top": [
+      { "event": "$autocapture", "count": 15 },
+      { "event": "$pageview", "count": 13 },
+      { "event": "$web_vitals", "count": 3 },
+      { "event": "$pageleave", "count": 1 },
+      { "event": "$rageclick", "count": 1 }
+    ]
+  },
+  "verdict": {
+    "adr013_section5_gate": "NOT_SATISFIED",
+    "root_cause_hypothesis": "Client bundle on elevate.ai.kr still lacks inlined phc_ project token (build-time env empty at compile). Without PostHogProvider init, custom elevate_* events will not reach project 358775 from prod marketing surfaces.",
+    "corroborating": "posthog-prod-bundle-check-latest.json verdict_bundleContainsProjectKeyLiteral=false; same deployment id dpl_3bADDiD1TDuPKUCK7NLBEjQzgfkE"
+  }
+}

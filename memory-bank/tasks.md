@@ -17,6 +17,45 @@
 
 **From INIT:** 트랙 후보 Ops · PostHog ADR-013 · #62 · #60 · #61 → **PLAN 전환 완료**. 실행 순서·슬라이스 체크리스트: [`memory-bank/activeContext.md`](activeContext.md) **Current Phase — PLAN**. BUILD 세션은 트랙 하나만.
 
+## Active session — PostHog STAB / ADR-013 §5 (한 세션: BUILD → REFLECT)
+
+**목표:** 배포는 되었으나 **클라이언트 토큰이 빌드에 없던** 상태를 끝내고, §5·STAB `[ ]`를 증거로 정리한다. **이 표 밖 작업(Ops O2, 7일 스트릭, #62·#60·#61·#73 등)은 건드리지 않음** — 아래 **Explicit PENDING**만 참조.
+
+### BUILD → REFLECT 체크리스트 (순서 고정)
+
+1. [ ] Vercel **Production:** `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` = PostHog **phc_…** (358775와 정합). Preview는 팀 정책에 맞춤.
+2. [ ] **Redeploy** Production — env 추가/변경 **이후** 생성된 빌드일 것(필요 시 **Clear build cache**).
+3. [x] **번들 프리플라이트 (실행 완료, 결과 FAIL):** 2026-05-04 UTC — 홈에서 **20**개 chunk 샘플, **`phc_` 없음** → `PostHogRoot`에 토큰 미인라인 빌드로 판단. 증거: [`reports/posthog-prod-bundle-check-latest.json`](../reports/posthog-prod-bundle-check-latest.json) · [`reports/posthog-prod-bundle-check-2026-05-04.json`](../reports/posthog-prod-bundle-check-2026-05-04.json). **PASS 조건:** 1–2 후 재실행해 `verdict_bundleContainsProjectKeyLiteral: true`.
+4. [ ] **CTA 스모크:** **차단:** 3번 PASS 전에는 의미 없음(SDK 미초기화). PASS 후 `elevate.ai.kr` 등에서 클릭.
+5. [ ] PostHog **358775:** **차단:** 번들·토큰 미반영 상태에서 CTA 이벤트 기대 불가. MCP 재확인 [`reports/posthog-mcp-recheck-2026-05-04.json`](../reports/posthog-mcp-recheck-2026-05-04.json)(`elevate_marketing_cta_click` 7d=0, 전체 기간=0).
+6. [ ] **REFLECT:** §5 충족 후 [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) 업데이트·STAB·ADR 체크리스트 갱신.
+
+### Explicit PENDING (이번 PostHog 세션 제외 — 재개 조건만 기록)
+
+| 항목 | 모드 | 재개 조건 |
+|------|------|-----------|
+| Ops O2 `automation-run` | BUILD | Vercel `CONTENT_OPS_AUTOMATION_TOKEN` 정합 + GET 200 + smoke JSON |
+| Ops 7d `scheduled` streak · automation-off | BUILD / REFLECT | `content-ops:runs-invariant-check` 증거 또는 `tasks.md` off 블록 |
+| #62 안 B (Productions) | CREATIVE → BUILD | #60 노출 합의 후 |
+| #60 히어로/포지셔닝 구현 PR | BUILD | 시나리오 코멘트 후 (SoT 유지) |
+| #61 pricing | PLAN → BUILD | 스코프 확정, #62 충돌 시 순서 |
+| #73 P2 Hooks/MCP/CI **구현** | PLAN | 이슈 3항 합의 후 |
+| Skill-first INIT 게이트 | INIT | 팀 합의·Hooks 등 조건 후 `tasks.md` `[x]` |
+
+### 다음 작업 · 모드 (지금 막혔을 때)
+
+**상태:** PostHog **1–2** 미완 → **3번 FAIL 유지** (빠른 재스캔 `2026-05-04T04:30Z`, 동일 `dpl`, [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T0430Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T0430Z.json)). **4–6** 차단 유지.
+
+| 우선순위 | 모드 | 작업 | 누가 |
+|----------|------|------|------|
+| **A** | **BUILD** | **Ops O2** — `pnpm content-ops:automation-run-smoke` (또는 동일 GET) + Vercel와 바이트 동일 토큰 → **200**·[`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) 갱신 | 운영자 토큰 + 에이전트/쉘 |
+| **B** | **BUILD** | **PostHog** — Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` + **Redeploy** → 번들 `phc_` PASS | 운영자 먼저 |
+| **C** | **BUILD → REFLECT** | **Ops O1** — `pnpm run content-ops:runs-invariant-check` 스냅샷 | 에이전트 (병행) |
+
+**Ops O1 / Gate51 (병행):** [`reports/runs-invariant-recheck-latest.json`](../reports/runs-invariant-recheck-latest.json) — `PASS`, streak **2** (`2026-05-04T04:30Z`). Gate51 trend: [`reports/content-ops-gate51-trend-recheck-2026-05-04.json`](../reports/content-ops-gate51-trend-recheck-2026-05-04.json) — **PASS**. 이전 스냅샷: [`reports/2026-05-04-runs-invariant-recheck-session.json`](../reports/2026-05-04-runs-invariant-recheck-session.json), [`reports/2026-05-03-runs-invariant-recheck-session-v2.json`](../reports/2026-05-03-runs-invariant-recheck-session-v2.json).
+
+**이번 턴 권장:** **모드 `BUILD` — 트랙 A (Ops O2)** 한 세션으로 닫기. PostHog는 B 완료 후 같은 **BUILD → REFLECT** 흐름으로 이어감.
+
 ## BUILD track (active) — 2026-05-04
 
 - **Scope (merged):** ADR-013 PR2 — wire [`PostHogEvent.ELEVATE_MARKETING_CTA_CLICK`](../src/lib/analytics/posthog-events.ts) at 8 surfaces per [`docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md`](../docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md) Decisions #2–#3; required props `cta_id` + `locale`; optional `slug` (blog footer), `referrer_path` where useful.
@@ -109,8 +148,8 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 - [ ] [STAB][P1] marketing-cta-instrumentation-phase-1
   - Owner: rayleighko
   - Order: after #60 hero PR / parallel-safe with #61, #62
-  - Status: `build_2026-05-06_mcp_recheck_adr013_still_open`
-  - **BUILD / REFLECT (2026-05-06):** PostHog MCP (proj 358775) — `elevate_marketing_cta_click` 7d **0**; 30d `cta_id` breakdown **없음**; **365d** `elevate%` 커스텀 이벤트 **0건** (동 기간 `$pageview` 등 소량만 존재). **ADR-013 §5 미충족.** 증거: [`reports/reflect-adr013-posthog-2026-05-06.md`](../reports/reflect-adr013-posthog-2026-05-06.md), [`reports/posthog-adr013-build-snapshot-2026-05-06.json`](../reports/posthog-adr013-build-snapshot-2026-05-06.json). **이전:** [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **다음:** Vercel `NEXT_PUBLIC_POSTHOG_KEY` 비어 있지 않은지·프로젝트 358775 정합·프로드에서 CTA 클릭 스모크 후 재검.
+  - Status: `build_2026-05-04_bundle_fail_mcp_zero_adr013_open`
+  - **BUILD / REFLECT (2026-05-04):** Prod **번들 20 chunks — `phc_` 없음** → `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` 빌드 미포함. MCP **358775:** `elevate_marketing_cta_click` **7d=0**, **전체 기간=0**; 7d 전체 이벤트 **0**; 30d **33**건(자동캡처·페이지뷰 등만). **ADR-013 §5 미충족.** 증거: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md), [`reports/posthog-prod-bundle-check-latest.json`](../reports/posthog-prod-bundle-check-latest.json), [`reports/posthog-mcp-recheck-2026-05-04.json`](../reports/posthog-mcp-recheck-2026-05-04.json). **이전 스냅샷:** [`reports/reflect-adr013-posthog-2026-05-06.md`](../reports/reflect-adr013-posthog-2026-05-06.md). **다음:** Vercel **Production** `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` → **Redeploy** → 번들 `phc_` PASS → CTA 스모크 → MCP/UI.
   - Acceptance: 14 cta_id 모두 PostHog 7d 데이터에 non-zero, locale 분해 가능
   - Verify: pnpm verify + `tests/unit/marketing-cta-id-stable-values.test.ts` + `tests/unit/marketing-cta-instrumentation.test.ts` PASS + PostHog dashboard segment by cta_id
   - Refs: docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md, docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md
@@ -155,8 +194,9 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 
 ## Immediate Next Step
 
-- **PostHog / ADR-013:** **§5 미충족** — MCP 재검증 [`reports/reflect-adr013-posthog-2026-05-06.md`](reports/reflect-adr013-posthog-2026-05-06.md). **다음:** Vercel `NEXT_PUBLIC_POSTHOG_KEY`·358775 정합·프로드 CTA 클릭 후 STAB `[ ]` 해제.
-- **P0 stabilization (#49–#51):** `#51` gate51 **PASS** (see `reports/gate51-snapshots/2026-05-03-gate51-pass-multiday.json`). **Runs invariant (BUILD 2026-05-05):** [`reports/2026-05-05-runs-invariant-check.json`](reports/2026-05-05-runs-invariant-check.json) — `runsInvariant.status=PASS`, `maxConsecutiveUtcDaysWithScheduled=2`, `meetsSevenConsecutiveCalendarDays=false`, `scheduledDaysUtc`=`["2026-05-02","2026-05-03"]`. **콘텐츠 큐 에이전트 검토:** [`reports/content-queue-agent-review-2026-05-05.md`](reports/content-queue-agent-review-2026-05-05.md) · 집계 [`reports/content-queue-aggregate-2026-05-05.json`](reports/content-queue-aggregate-2026-05-05.json). **Prod 스모크:** `automation-run` + Vercel 토큰(로컬 `.env.local` 불일치 시 401 예상). **7 UTC일 스트릭:** 미달; operator 일별 `scheduled` 유지.
+- **진행 중:** PostHog STAB checklist — **차단** 시 [`tasks.md`](tasks.md) **§ 다음 작업 · 모드** — **권장 다음: `BUILD` Ops O2**.
+- **PostHog / ADR-013:** **번들 FAIL + MCP CTA 0** — [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) · §5a [`docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md`](../docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md).
+- **Ops O2 (automation-run):** **FAIL (401)** @ `2026-05-04T04:30:54.963Z` — `pnpm content-ops:automation-run-smoke` 재확인. 로컬 `CONTENT_OPS_AUTOMATION_TOKEN` ≠ Vercel Production. 증거: [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json). **다음:** Vercel Production 값을 `.env.local`에 맞춘 뒤 동일 스크립트 재실행 → **200**·`ok`/`skipped` 정상 응답 시 REFLECT 반영.
 - **Follow-on:** After **7** consecutive UTC days with ≥1 `scheduled` `content_runs`, write new `reports/*-runs-invariant-check.json` (same schema as `2026-05-03` file) and [x] the runtime line; **or** automation-off one-liner in `tasks.md`.
 - **GitHub #62 / #63 (Refs):** #62 — Phase 1 REFLECT + **Phase 2 partial:** `aria-current` + PostHog `elevate_dashboard_sidebar_nav_click` [`tests/unit/dashboard-sidebar-nav-analytics.test.ts`](../tests/unit/dashboard-sidebar-nav-analytics.test.ts). DoD 나머지(13→4~5, 전면 a11y). CREATIVE [`memory-bank/creative-dashboard-sidebar.md`](memory-bank/creative-dashboard-sidebar.md). #63 closed — CI `gstack:check`; [`reports/gstack-check-sample.log`](reports/gstack-check-sample.log).
 
