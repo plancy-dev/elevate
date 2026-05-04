@@ -1,0 +1,10 @@
+{
+  "generatedAtUtc": "2026-05-04T04:34:14Z",
+  "host": "https://elevate.ai.kr",
+  "method": "fetch_home_html_then_sample_linked_chunk_scripts",
+  "chunksOnPage": 20,
+  "chunksScanned": 20,
+  "dplGuess": "dpl_3FawzRHvV14GiwdFi27GUj9g4Wow",
+  "verdict_bundleContainsProjectKeyLiteral": false,
+  "note": "Third observed prod dpl in series; still no phc_ in 20-chunk sample. Prior: dpl_CaSEFDG92aEGMsPWjWLmR4jLrBNH (043310Z), dpl_3bADDiD1TDuPKUCK7NLBEjQzgfkE (earlier full report)."
+}
