@@ -53,6 +53,25 @@ When creating blog content, use **`docs/templates/blog-authoring-templates.md`**
 | REFLECT | `/review` (pre-merge diff), `/qa` or `/qa-only` (live site), `/investigate` (RCA), `/retro` (periodic) |
 | ARCHIVE | `/document-release` (post-ship doc sync) |
 
+### Vercel plugin (optional — deploy / env harness)
+
+Official **Vercel Plugin for AI coding agents** adds Vercel-specific slash commands and skills in supported tools (including Cursor). It is **optional** and **does not replace** `AGENTS.md`, Memory Bank, `pnpm verify`, or gstack.
+
+- **Docs:** [Vercel Plugin](https://vercel.com/docs/agent-resources/vercel-plugin)
+- **Install:** `npx plugins add vercel/vercel-plugin` (see upstream for Node / Bun prerequisites)
+
+**Team convention — when to use which slash (suggested)**
+
+| When | Slash command |
+|------|----------------|
+| Before promote / merge — deployment health, env overview | `/vercel-plugin:status` |
+| Sync or diff local vs Vercel env | `/vercel-plugin:env` |
+| Deploy preview or production | `/vercel-plugin:deploy` or `/vercel-plugin:deploy prod` |
+| New link / bootstrap / first env setup | `/vercel-plugin:bootstrap` |
+| Marketplace integrations | `/vercel-plugin:marketplace` |
+
+Skills such as `/vercel-plugin:nextjs` are **on-demand** when you need vendor-specific depth. **Telemetry:** set `VERCEL_PLUGIN_TELEMETRY=off` if the team disables plugin telemetry ([docs](https://vercel.com/docs/agent-resources/vercel-plugin#telemetry)).
+
 **Performance / maturity loop:** Use [`docs/AI_AGENT_MATURITY_REPORT.md`](docs/AI_AGENT_MATURITY_REPORT.md) (P1–P5, T1–T2) as the **scorecard**; attach gstack review or QA output to REFLECT as **evidence**, not as a substitute for CI or `pnpm verify`.
 
 ### Session handoff (closing a substantive turn)

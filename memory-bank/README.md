@@ -30,6 +30,7 @@
 - **Memory Bank** = 이 프로젝트의 **상태·우선순위·도메인** (SoT). gstack으로 옮기거나 대체하지 않는다.
 - **gstack** (`.agents/skills/gstack`) = **리뷰·전략·QA** 등 구조화된 역할 프롬프트. 설치는 `docs/GSTACK.md`.
 - **통합 허브**: `docs/AI_ORCHESTRATION.md` — 레이어·의사결정표·프롬프트 계약.
+- **Vercel 플러그인 (선택)**: 배포·`env` 에이전트 보조 — [`AGENTS.md`](../AGENTS.md) § **Vercel plugin** · [공식 문서](https://vercel.com/docs/agent-resources/vercel-plugin).
 - **전문가 세션·복붙**: `docs/AI_EXPERT_PROMPTS.md` — Memory Bank 필수 로드 + 블록 A~D.
 
 ## Cursor

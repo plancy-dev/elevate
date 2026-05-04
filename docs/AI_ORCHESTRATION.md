@@ -1,20 +1,22 @@
 # AI 오케스트레이션 — Elevate (단일 허브)
 
 이 문서는 **Cursor / Claude / gstack**을 섞어 쓸 때의 **역할 분담**과 **의사결정 기준**이다.  
-업계에서 널리 쓰는 패턴과 맞춘다: **도구별 프롬프트 템플릿(gstack)** + **프로젝트 맥락 단일 소스(memory-bank)** + **저장소 비가역 규칙(AGENTS·hooks)**.
+업계에서 널리 쓰는 패턴과 맞춘다: **도구별 프롬프트 템플릿(gstack)** + **프로젝트 맥락 단일 소스(memory-bank)** + **저장소 비가역 규칙(AGENTS·hooks)** + **선택적 Vercel 플러그인(배포 보조)**.
 
 ---
 
-## 1. 세 레이어 (충돌 시 위에서 아래로)
+## 1. 레이어 (충돌 시 위에서 아래로; D는 선택)
 
 | 레이어 | 위치 | 역할 |
 |--------|------|------|
 | **A. 제약** | `AGENTS.md`, `.cursor/rules/*`, Conventional Commits·pre-commit | 구현·커밋·Next.js 16 주의 — **항상 우선** |
 | **B. 프로젝트 상태** | `memory-bank/` (`tasks.md`, `activeContext.md`, `creative-elevate-ai-pivot.md` 등) | **무엇을 왜 만드는지**, 우선순위, 도메인 용어 — **gstack으로 대체하지 않음** |
 | **C. 에이전트 워크플로** | **gstack** (`.agents/skills/gstack`, `./setup` 후 슬래시 스킬) | **어떻게 생각·검토·출하할지** — CEO/엔지/디자인/QA 등 구조화된 역할 |
+| **D. Vercel 플러그인 (선택)** | [Vercel Plugin](https://vercel.com/docs/agent-resources/vercel-plugin) (`npx plugins add vercel/vercel-plugin`) | 배포·환경·Next 맥락 **보조** — **A–C를 대체하지 않음**; 슬래시 관행은 [`AGENTS.md`](../AGENTS.md) § Vercel plugin |
 
 - **memory-bank를 gstack으로 “이전”하지 않는다.** gstack은 범용 스킬 모음이고, Elevate의 로드맵·North Star는 저장소 내부 문서가 맞다.
 - **gstack을 memory-bank에 복제하지 않는다.** 스킬 목록·철학은 vendored `gstack` README / `CLAUDE.md` § gstack을 참조한다.
+- **Vercel 플러그인**은 배포·env 보조일 뿐이다. **AGENTS / verify / Memory Bank / gstack을 우회하지 않는다** ([`AGENTS.md`](../AGENTS.md) § Vercel plugin).
 
 ---
 
@@ -39,6 +41,12 @@
 - **예외:** 순수 문서(`docs/**`만)·메모리뱅크 서술만·이 PR 가이드처럼 런타임에 영향 없는 마크다운만 바뀐 경우 — 그래도 팀이 요구하면 verify 유지.
 
 gstack **`/ship`** 등은 이 저장소의 **`pnpm verify`·훅을 대체하지 않는다.** 상세 표는 [`AGENTS.md`](../AGENTS.md) § Operating model.
+
+---
+
+## 2c. Vercel 공식 플러그인 (선택)
+
+Next.js·Vercel 배포·환경 동기화를 **에이전트 슬래시**로 보강하고 싶을 때만 쓴다. 레이어 **A–C와 충돌 시 항상 A–C가 우선**이다. 팀에서 어떤 슬래시를 언제 쓸지는 **[`AGENTS.md`](../AGENTS.md) § Vercel plugin (optional — deploy / env harness)** 표를 따른다. 상세: [Vercel Plugin — agent resources](https://vercel.com/docs/agent-resources/vercel-plugin).
 
 ---
 

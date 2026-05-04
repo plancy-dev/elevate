@@ -18,6 +18,7 @@ disable-model-invocation: true
 - 페이즈·모드 매핑: **`.cursor/rules/workflow-modes.mdc`** (이미 always-on이면 중복 설명하지 말 것)
 - 레이어 A→B→C: **`docs/AI_ORCHESTRATION.md`**
 - 운영 모델·L1–L4 체인: **`AGENTS.md`** § AI orchestration → Operating model
+- (선택) Vercel 배포·env 슬래시: **`AGENTS.md`** § Vercel plugin
 
 이 스킬은 **절차와 출력 형식**만 고정한다. 표·체크리스트의 긴 본문은 위 파일을 읽는다.
 

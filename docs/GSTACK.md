@@ -31,4 +31,8 @@ cd .agents/skills/gstack
 - **AGENTS.md / Memory Bank / `.cursor/rules`** — 구현 프로세스·커밋·Next.js — **항상 우선**.
 - **gstack** — 전략·리뷰·QA 루프. **저장소 규칙을 대체하지 않는다.**
 
+## Vercel 플러그인 (선택)
+
+[Vercel Plugin for AI coding agents](https://vercel.com/docs/agent-resources/vercel-plugin)는 **gstack과 별도**다. 배포·환경·Next.js 맥락을 에이전트 슬래시로 보강할 때만 쓴다. 팀 슬래시 관행 표는 **[`AGENTS.md`](../AGENTS.md) § Vercel plugin (optional — deploy / env harness)**.
+
 스킬 전체 목록은 루트 **`CLAUDE.md`** § gstack 또는 **`.agents/skills/gstack/AGENTS.md`** 참고.

@@ -63,7 +63,7 @@ Elevate에서는 **같은 모델**을 써도 산출이 갈리는 이유를 **컨
 |------|------|
 | [`AI_ORCHESTRATION.md`](./AI_ORCHESTRATION.md) | 레이어·프롬프트 계약·금지 사항 |
 | [`AI_USAGE.md`](./AI_USAGE.md) | 30초 체크리스트 |
-| [`AGENTS.md`](../AGENTS.md) | Operating model · L1–L4 · gstack 1~2개 규칙 |
+| [`AGENTS.md`](../AGENTS.md) | Operating model · L1–L4 · gstack 규칙 · **§ Vercel plugin** (배포 슬래시 관행) |
 | [`.cursor/rules/workflow-modes.mdc`](../.cursor/rules/workflow-modes.mdc) | INIT 출력 형식·모드 전환 |
 | [`.cursor/skills/elevate-memory-bank-bootstrap/SKILL.md`](../.cursor/skills/elevate-memory-bank-bootstrap/SKILL.md) | 스킬 본문 (에이전트용) |
 
