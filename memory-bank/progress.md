@@ -5,7 +5,7 @@
 
 ## Status snapshot (aligned with `tasks.md`, 2026-05-05)
 
-- **BUILD+REFLECT PostHog (2026-05-04 UTC):** [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) — bundle FAIL. **Latest preflight:** `dpl_CHnn…`, no `phc_` — [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044434Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044434Z.json); prior [`044346Z`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044346Z.json) … [`0430Z`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T0430Z.json).
+- **BUILD+REFLECT PostHog (2026-05-04 UTC):** [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) — bundle FAIL. **Latest preflight:** `dpl_95QA…`, no `phc_` — [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044532Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044532Z.json); prior [`044434Z`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044434Z.json) … [`0430Z`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T0430Z.json).
 - **Ops O2 (2026-05-04 UTC):** [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) — **PASS** **HTTP 200**, `ok: true`, `daily_generation` (`04:41Z`).
 - **Ops O1 / Gate51 (2026-05-04 UTC recheck):** [`reports/runs-invariant-recheck-latest.json`](../reports/runs-invariant-recheck-latest.json) — `PASS`, scheduled UTC-day streak **3** (`2026-05-02`–`04`). [`reports/content-ops-gate51-trend-recheck-2026-05-04.json`](../reports/content-ops-gate51-trend-recheck-2026-05-04.json) — **PASS**. **다음 모드 권장:** **`BUILD` PostHog §5a** ([`memory-bank/tasks.md`](tasks.md)).
 

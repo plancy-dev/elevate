@@ -73,6 +73,13 @@
 - **Result:** **20** chunk sample, **`phc_` absent**.
 - **Machine:** [`posthog-prod-bundle-preflight-quick-2026-05-04T044434Z.json`](./posthog-prod-bundle-preflight-quick-2026-05-04T044434Z.json).
 
+### 1k) Recheck — new `dpl` (still no `phc_`)
+
+- **When:** `2026-05-04T04:45:32Z` (agent run, UTC).
+- **Deployment id:** `dpl_95QA99MMuC5Y4ozHA7VJZ6awDMpd`.
+- **Result:** **20** chunk sample, **`phc_` absent**.
+- **Machine:** [`posthog-prod-bundle-preflight-quick-2026-05-04T044532Z.json`](./posthog-prod-bundle-preflight-quick-2026-05-04T044532Z.json).
+
 **Ops (parallel, not §5):** prod `GET /api/content-ops/automation-run?scenario=daily_generation&source=cursor` — **HTTP 200**, `ok: true` — latest smoke @ `2026-05-04T04:41:20Z` ([`2026-05-04-ops-o2-automation-run-smoke.json`](./2026-05-04-ops-o2-automation-run-smoke.json)); previously `04:39:12Z`. **Caution:** each successful smoke **runs** `daily_generation`; use sparingly and check `/admin/runs` when debugging.
 
 **Ops O1 (parallel, not §5):** [`runs-invariant-recheck-latest.json`](./runs-invariant-recheck-latest.json) — **PASS** @ `2026-05-04T04:44:43Z`; `maxConsecutiveUtcDaysWithScheduled` **3** (UTC days `2026-05-02`–`04`); machine copy [`2026-05-04-runs-invariant-recheck-044434Z.json`](./2026-05-04-runs-invariant-recheck-044434Z.json).
@@ -81,7 +88,7 @@
 
 | Query | Result |
 |--------|--------|
-| `elevate_marketing_cta_click` last **7d** | **0** (recheck **~04:44 UTC** same) |
+| `elevate_marketing_cta_click` last **7d** | **0** (recheck **~04:45 UTC** same) |
 | All events last **7d** | **0** |
 | All events last **30d** | **33** (`$autocapture` 15, `$pageview` 13, …) |
 | `elevate_marketing_cta_click` **all time** | **0** |
