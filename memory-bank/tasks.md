@@ -44,7 +44,7 @@
 
 ### 다음 작업 · 모드 (지금 막혔을 때)
 
-**상태:** **Ops O2** — 마지막 스모크 **PASS (`200`)** `04:41Z` ([`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json)); 이번 턴 스모크 **미재실행**(`daily_generation` 부작용 방지). PostHog **1–2** 미완 → **3번 FAIL** (**`dpl_6eJQ…`**, **`phc_` 없음**·[`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044230Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044230Z.json)). REFLECT §1h: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **4–6** 차단 유지.
+**상태:** **Ops O2** — 마지막 스모크 **PASS (`200`)** `04:41Z` ([`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json)); 이번 턴 스모크 **미재실행**(`daily_generation` 부작용 방지). PostHog **1–2** 미완 → **3번 FAIL** (**`dpl_83tum…`**, **`phc_` 없음**·[`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044346Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044346Z.json)). REFLECT §1i: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **4–6** 차단 유지.
 
 | 우선순위 | 모드 | 작업 | 누가 |
 |----------|------|------|------|
