@@ -2,11 +2,27 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **ARCHIVE** (2026-05-04 웨이브 마감)
+## Current Phase — **INIT** (다음 작업 — ARCHIVE 직후)
 
-**아카이브 문서 (본 웨이브 단일 진입점):** [`archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md`](archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md) — PR #74·INIT·runs-invariant BUILD·ADR-013 PostHog REFLECT 요약·**다음 세션 앵커** 표.
+**직전 웨이브 아카이브:** [`archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md`](archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md) (읽기 전용).
 
-**다음 세션:** **INIT** — SoT는 [`tasks.md`](tasks.md) **Immediate Next Step** + STAB marketing-cta + (선택) [#73](https://github.com/plancy-dev/elevate/issues/73) P2. 아카이브는 참고만; 체크박스는 `tasks.md`에서 계속 연다.
+**SoT:** [`tasks.md`](tasks.md) — 특히 **Immediate Next Step** · `[STAB] marketing-cta…` · (선택) [#73](https://github.com/plancy-dev/elevate/issues/73) P2.
+
+### 다음 실행 앵커 (순서)
+
+| # | 트랙 | 할 일 | 검증 / 비고 |
+|---|------|--------|----------------|
+| 1 | **Ops P0** | 7 UTC일 `scheduled` `content_runs` **또는** `tasks.md`에 automation-off | `pnpm run content-ops:runs-invariant-check` → `reports/*-runs-invariant*.json` |
+| 2 | **Ops P0** | Vercel **`CONTENT_OPS_AUTOMATION_RUNTIME=cursor`** + prod `automation-run` 토큰 정합 | 대시보드; 비밀 미기록 |
+| 3 | **REFLECT** | PostHog UI — `elevate_marketing_cta_click` · `cta_id` 14값 (ADR-013 §5) | [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) 참고 |
+| 4 | **ENH (병렬 제약 있음)** | [#62](https://github.com/plancy-dev/elevate/issues/62) → [#60](https://github.com/plancy-dev/elevate/issues/60) 시나리오 전 히어로 PR 없음 | `tasks` § 병렬 제약 |
+
+**복잡도:** 증거·운영만 → **L1**. `src`/`tests`/CI 변경 시 **L2** + `pnpm verify` ([`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md) §2b).
+
+### 스킬로 INIT 열기 (선택 · 현재 기본은 하이브리드)
+
+- [`docs/MEMORY_BANK_SKILL_GUIDE.md`](../docs/MEMORY_BANK_SKILL_GUIDE.md) — **`elevate-memory-bank-bootstrap`** 지명 시 INIT 산출·L1–L4·다음 모드 한 블록.
+- **「스킬 기반만 쓴다」로 팀이 바꾼 뒤**에는 [`tasks.md`](tasks.md) PLAN 에픽의 **Skill-first INIT** 체크박스를 `[x]`로 — 그다음 세션부터는 **짧은 스킬+목표** 지시가 SoT (에이전트가 그때 형태 전환을 맞춤).
 
 **운영 앵커 (지속):** prod `automation-run` GET은 **Vercel 토큰**으로 operator 실행 · 7 UTC일 스트릭은 [`memory-bank/tasks.md`](tasks.md) Immediate Next Step.
 

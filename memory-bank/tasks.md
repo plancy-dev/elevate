@@ -21,7 +21,9 @@
 
 ## PLAN — AI-native workflow evolution (2026-05-03)
 
-- **Epic (process, not product):** [`docs/features/PLAN-ai-native-workflow-evolution-2026-05.md`](../docs/features/PLAN-ai-native-workflow-evolution-2026-05.md) — **P0/P1 + P2 RFC·문서 게이트 PR** 대기/머지 후 구현 세션. **검수 한 페이지:** [`docs/features/PLAN-ai-native-workflow-doc-gate.md`](../docs/features/PLAN-ai-native-workflow-doc-gate.md) · P2 RFC [`docs/features/PLAN-ai-native-workflow-p2-rfc.md`](../docs/features/PLAN-ai-native-workflow-p2-rfc.md). 원격 이슈·PR 번호: [`docs/DEV_PROCESS_GITHUB.md`](../docs/DEV_PROCESS_GITHUB.md). 머지 직후 REFLECT 한 줄은 doc-gate §4.
+- **Epic (process, not product):** [`docs/features/PLAN-ai-native-workflow-evolution-2026-05.md`](../docs/features/PLAN-ai-native-workflow-evolution-2026-05.md) — **P0/P1 + P2 RFC·문서 게이트 PR** 머지됨 → 구현 세션은 [#73](https://github.com/plancy-dev/elevate/issues/73) 합의 후. **검수 한 페이지:** [`docs/features/PLAN-ai-native-workflow-doc-gate.md`](../docs/features/PLAN-ai-native-workflow-doc-gate.md) · P2 RFC [`docs/features/PLAN-ai-native-workflow-p2-rfc.md`](../docs/features/PLAN-ai-native-workflow-p2-rfc.md). 원격 이슈·PR 번호: [`docs/DEV_PROCESS_GITHUB.md`](../docs/DEV_PROCESS_GITHUB.md). 머지 직후 REFLECT 한 줄은 doc-gate §4.
+- **Skill-first INIT (세션 지시 형태 전환 게이트):** 팀이 **「세션 시작은 `@elevate-memory-bank-bootstrap` 지명이 기본」**이라고 합의했거나, P2 **Hooks**가 merge되어 프롬프트 전 훅이 표준이 된 경우 → 아래를 `[x]`로 바꾼다. **그때부터** 사용자는 긴 "INIT 모드에서…" 대신 **스킬 한 줄 + 목표**만 주면 되고, 에이전트는 그 형태에 맞춘다. 가이드: [`docs/MEMORY_BANK_SKILL_GUIDE.md`](../docs/MEMORY_BANK_SKILL_GUIDE.md).  
+  - [ ] Skill-first INIT 활성 (위 조건 충족 시 체크; 체크 후 채팅에 **「스킬 기본 전환됨」** 한 줄 주면 이후 세션 정렬이 빠름)
 
 ## PLAN backlog — first slice (order TBD in PLAN session)
 

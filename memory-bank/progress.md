@@ -5,6 +5,7 @@
 
 ## Status snapshot (aligned with `tasks.md`, 2026-05-04)
 
+- **INIT (다음 작업, post-ARCHIVE):** `activeContext`를 INIT 앵커 표로 갱신; `tasks.md`에 **Skill-first INIT** 게이트 체크박스 추가(팀 합의·Hooks merge 시 `[x]`).
 - **ARCHIVE (2026-05-04):** 웨이브 마감 문서 — [`memory-bank/archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md`](archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md); [`archive/index.md`](archive/index.md) 인덱스 갱신. `activeContext` → 다음 INIT 시 `tasks.md` 앵커.
 - **REFLECT (ADR-013 PostHog, 2026-05-04):** MCP HogQL — `elevate_marketing_cta_click` 8d **0건** (proj 358775). ADR §5 미충족. [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **남음:** 대시보드 재확인·프로드 키 정합·실트래픽 후 STAB 체크.
 - **BUILD (runs invariant, 2026-05-04):** `content-ops:runs-invariant-check` → [`reports/2026-05-04-runs-invariant-check.json`](../reports/2026-05-04-runs-invariant-check.json) — PASS, `maxConsecutiveUtcDaysWithScheduled=2`. `tasks.md` / `activeContext.md` 동기화. **REFLECT:** PostHog cta_id · Vercel `CONTENT_OPS_AUTOMATION_RUNTIME` · prod automation-run 토큰 정합.
