@@ -1,29 +1,39 @@
-# REFLECT — ADR-013 PostHog production gate (2026-05-04)
+# REFLECT — ADR-013 PostHog §5 (2026-05-04 UTC, 번들 + MCP)
 
-**Context:** BUILD merged Phase 1b wiring; ADR-013 §5 **success definition** requires non-zero `ELEVATE_MARKETING_CTA_CLICK` (`elevate_marketing_cta_click`) by `cta_id` in 7d (14 values).
+**SoT:** [`docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md`](../docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md) Decision **#5** (7d non-zero by `cta_id`) · **#5a** (build-time `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`).
 
-**Check (PostHog MCP, project 358775 — Elevate):**
+## 1) Production client bundle (`elevate.ai.kr`)
 
-```sql
-SELECT count() AS total
-FROM events
-WHERE event = 'elevate_marketing_cta_click'
-  AND timestamp >= now() - INTERVAL 8 DAY;
-```
+- **Method:** Fetch homepage HTML → extract `/_next/static/chunks/*.js` → download **20** chunks with deployment query `dpl_3bADDiD1TDuPKUCK7NLBEjQzgfkE`.
+- **Result:** **no** file contained literal substring `phc_` → `verdict_bundleContainsProjectKeyLiteral: false`.
+- **Machine:** [`posthog-prod-bundle-check-latest.json`](./posthog-prod-bundle-check-latest.json) (also [`posthog-prod-bundle-check-2026-05-04.json`](./posthog-prod-bundle-check-2026-05-04.json) pointer row).
 
-**Result:** `total = 0` (MCP `query-run` HogQL, 2026-05-04).
+**Conclusion:** Current Production **JavaScript bundle was built without** an inlined PostHog project token → `PostHogRoot` resolves to children-only (no `posthog-js` init with key) → **marketing CTA captures from prod cannot reach** project 358775 until **env is set before a new build** + **Redeploy**.
 
-**Interpretation (non-exhaustive):**
+## 2) PostHog MCP (project **358775**)
 
-- Production may not yet send to this PostHog project, or keys/host mismatch, or **no user clicks** since deploy in this window.
-- Distinct-event search (`event ILIKE '%cta%' OR '%elevate%'`, 30d) returned no rows in the MCP response shape — treat as **no corroborating custom events** in the sampled window until re-run in UI.
+| Query | Result |
+|--------|--------|
+| `elevate_marketing_cta_click` last **7d** | **0** |
+| All events last **7d** | **0** |
+| All events last **30d** | **33** (`$autocapture` 15, `$pageview` 13, …) |
+| `elevate_marketing_cta_click` **all time** | **0** |
+| `max(timestamp)` | **2026-04-08T05:24:09.645Z** |
 
-**ADR-013 REFLECT exit gate:** **not satisfied** (cannot assert 14× `cta_id` non-zero).
+**Machine:** [`posthog-mcp-recheck-2026-05-04.json`](./posthog-mcp-recheck-2026-05-04.json).
 
-**Next actions:**
+**Conclusion:** No ADR-013 marketing CTA events are stored in this project (ever, per MCP). Recent 7d silence aligns with **no live SDK init from prod** (bundle evidence) and/or no traffic to a correctly instrumented build.
 
-1. In PostHog UI (same project), open Insights → run the HogQL above (or Trends on `elevate_marketing_cta_click` + breakdown `cta_id`).
-2. Confirm **prod** `NEXT_PUBLIC_POSTHOG_KEY` (or equivalent) targets **project 358775**.
-3. After traffic appears, re-run MCP or export screenshot; then update `memory-bank/tasks.md` STAB line + ADR-013 checklist.
+## 3) ADR-013 REFLECT exit gate
 
-**No code change required** for this REFLECT slice unless prod is pointed at the wrong project.
+**Status:** **NOT satisfied.**
+
+## 4) Next actions (operator → then agent REFLECT)
+
+1. Vercel **Production:** set **`NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`** = PostHog **Project API key** (`phc_…`) for project 358775.
+2. **Redeploy** Production (**after** the variable is saved). If bundle still lacks `phc_`, use **Redeploy with cleared build cache**.
+3. Re-run **§5a preflight** (grep/scan chunks for `phc_`) until `true`.
+4. **CTA smoke** on prod (multiple surfaces / locales).
+5. MCP or UI: confirm `elevate_marketing_cta_click` > 0 and breakdown by `cta_id`; then STAB `[ ]`, `tasks.md` Active session checklist, and ADR Implementation checklist.
+
+**Wrong env name:** Do not rely on `NEXT_PUBLIC_POSTHOG_KEY` alone — code SoT is **`NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`** ([`src/lib/env/posthog-public-constants.ts`](../src/lib/env/posthog-public-constants.ts)).

@@ -51,6 +51,8 @@ AGENTS.md complexity: Phase 1 = **L2** (PLAN required, no UI redesign). PR 1 (ty
 
 5. **Success definition (production):** PostHog dashboard segments ELEVATE_MARKETING_CTA_CLICK by cta_id and shows **non-zero hits in 7d for all 14 active cta_id values**, decomposable by locale. This is the **REFLECT exit gate** for ADR-013.
 
+6. **§5a — Client SDK env (Vercel, build-time):** `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` (`phc_…`) is **inlined into client chunks at build time** (`getPosthogPublicConfig` / `PostHogRoot`). Setting or changing it in the Vercel dashboard **after** a deployment does not affect the live bundle until a **new Production build** (use **Redeploy**; use clear build cache if the bundle still lacks the token). **Preflight:** fetch `https://elevate.ai.kr/`, collect `/_next/static/chunks/*.js` URLs from the HTML, download one or more chunk files, and confirm the literal substring `phc_` appears — if it does not, §5 cannot pass until env + rebuild.
+
 ## Non-goals / Out of scope
 
 **No** new PostHogEvent constants. Funnel chips that need LIBRARY_VIEW, BILLING_VIEW, PURCHASE_COMPLETED, etc. use the **existing** constants — Phase 1 does not touch them.
@@ -82,7 +84,7 @@ BAND_WAITLIST and BLOG_POST_FOOTER_* assume those surfaces exist or will exist i
 [x] PR 1 merged: tests/unit/marketing-cta-id-stable-values.test.ts added; CI green via pnpm verify.
 [x] PR 2 merged: 8 surfaces emit ELEVATE_MARKETING_CTA_CLICK with { cta_id, locale } per the contract; tests/unit/marketing-cta-instrumentation.test.ts covers each surface.
 [x] memory-bank/tasks.md updated with [STAB][P1] marketing-cta-instrumentation-phase-1 entry (Owner / Order / Acceptance / Verify).
-[ ] REFLECT after PR 2: confirm 7d PostHog data has non-zero hits for ≥ 12 of 14 cta_id values (allowance for low-traffic surfaces). **2026-05-04 check:** PostHog MCP HogQL — `elevate_marketing_cta_click` **0 hits / 8d** (project 358775); not yet meeting gate — [`reports/reflect-adr013-posthog-2026-05-04.md`](../../reports/reflect-adr013-posthog-2026-05-04.md).
+[ ] REFLECT after PR 2: confirm 7d PostHog data has non-zero hits for ≥ 12 of 14 cta_id values (allowance for low-traffic surfaces). **2026-05-04:** Prod bundle preflight — **20** JS chunks, **`phc_` absent** ([`reports/posthog-prod-bundle-check-latest.json`](../../reports/posthog-prod-bundle-check-latest.json)). MCP — `elevate_marketing_cta_click` **all-time 0**, 7d all events **0** ([`reports/posthog-mcp-recheck-2026-05-04.json`](../../reports/posthog-mcp-recheck-2026-05-04.json)); **gate not satisfied** — [`reports/reflect-adr013-posthog-2026-05-04.md`](../../reports/reflect-adr013-posthog-2026-05-04.md). **Earlier:** 2026-05-06 snapshot [`reflect-adr013-posthog-2026-05-06.md`](../../reports/reflect-adr013-posthog-2026-05-06.md).
 
 ## Cursor handoff
 
