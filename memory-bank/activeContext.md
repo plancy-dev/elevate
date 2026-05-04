@@ -6,17 +6,17 @@
 
 **이 세션 SoT:** [`memory-bank/tasks.md`](tasks.md) **§ Active session — PostHog STAB**. 순서: Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` → **Redeploy** → **번들 `phc_` 프리플라이트** → 프로드 CTA 스모크 → PostHog **358775** 확인 → **REFLECT** 리포트·STAB 줄. **의도적 제외(PENDING):** 동일 문서 **Explicit PENDING** 표.
 
-**다음 작업 / 모드:** **Ops O2 정합 완료** (스모크 **200**). **주요 게이트:** PostHog **§5a** — 번들에 **`phc_` 없음** (`dpl_8ZoKz…`). **권장:** **`BUILD` — Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` + Redeploy** ([`tasks.md`](tasks.md) 표 **A**). **병행:** Ops O1·Gate51 증거는 기존 리포트.
+**다음 작업 / 모드:** **Ops O2 정합 완료** (스모크 **200**). **주요 게이트:** PostHog **§5a** — 번들에 **`phc_` 없음** (**`dpl_CzqC…`**). **권장:** **`BUILD` — Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` + Redeploy** ([`tasks.md`](tasks.md) 표 **A**). **병행:** Ops O1·Gate51 증거는 기존 리포트.
 
-**직전 측정 (2026-05-04 UTC):** Prod **`dpl_8ZoKz…`** — **`phc_` 없음** · [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json). MCP CTA **7d=0**.
+**직전 측정 (2026-05-04 UTC):** Prod **`dpl_CzqC…`** — **`phc_` 없음** · [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044120Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044120Z.json). MCP CTA **7d=0**.
 
-**Ops O2:** [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) — **PASS** `2026-05-04T04:39:12Z` (`daily_generation`). 필요 시 `/admin/runs` 확인.
+**Ops O2:** [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) — **PASS** `2026-05-04T04:41:20Z` (`daily_generation`). 스모크는 시나리오 실행 — 과호출 주의.
 
 **직전 Ops BUILD (2026-05-05):** [`reports/2026-05-05-runs-invariant-check.json`](../reports/2026-05-05-runs-invariant-check.json) · [`reports/content-queue-agent-review-2026-05-05.md`](../reports/content-queue-agent-review-2026-05-05.md).
 
 ### PLAN — 슬라이스 체크리스트 (갱신)
 
-- [x] **Ops O2:** prod `automation-run` **토큰 스모크 PASS** — [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) (`200`, `2026-05-04T04:39Z`). 필요 시 `/admin/runs`.
+- [x] **Ops O2:** prod `automation-run` **토큰 스모크 PASS** — [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) (`200`, `2026-05-04T04:41Z`). **과호출 주의** (`daily_generation`).
 - [x] **PostHog ADR-013:** §5 미충족 — **2026-05-04** 번들+MCP 재측정 완료 (`phc_` 없음·CTA 이벤트 0). 증거: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **남음:** Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` + **재배포** 후 번들 PASS → 4–6번 체크리스트.
 - [x] **#62:** `creative-dashboard-sidebar.md` — 안 **B**(#60 Productions 정책 합의 전 착수 보류); 마이크로 a11y·내비 이벤트는 병행 가능.
 - [x] **#60 / #61:** 이번 BUILD 세션 **히어로·pricing 코드 PR 없음** (기존 SoT 유지).

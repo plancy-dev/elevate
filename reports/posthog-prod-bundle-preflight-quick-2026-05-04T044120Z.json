@@ -1,0 +1,10 @@
+{
+  "generatedAtUtc": "2026-05-04T04:41:20Z",
+  "host": "https://elevate.ai.kr",
+  "method": "fetch_home_html_then_sample_linked_chunk_scripts",
+  "chunksOnPage": 20,
+  "chunksScanned": 20,
+  "dplGuess": "dpl_CzqCLSPuQwe6oBK1YfCz4bE4uqFZ",
+  "verdict_bundleContainsProjectKeyLiteral": false,
+  "note": "Seventh observed prod dpl; still no phc_ in 20-chunk sample. Same session: Ops O2 smoke 200 at 04:41:20Z — triggers daily_generation."
+}

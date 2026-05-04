@@ -44,7 +44,7 @@
 
 ### 다음 작업 · 모드 (지금 막혔을 때)
 
-**상태:** **Ops O2 스모크 PASS (`200`)** @ `2026-05-04T04:39Z` — [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json). PostHog **1–2** 미완 → **3번 FAIL** (**`dpl_8ZoKz…`**, **`phc_` 없음**·[`reports/posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json)). REFLECT §1f: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **4–6** 차단 유지.
+**상태:** **Ops O2 스모크 PASS (`200`)** @ `2026-05-04T04:41Z` — [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json). PostHog **1–2** 미완 → **3번 FAIL** (**`dpl_CzqC…`**, **`phc_` 없음**·[`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044120Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044120Z.json)). REFLECT §1g: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **4–6** 차단 유지.
 
 | 우선순위 | 모드 | 작업 | 누가 |
 |----------|------|------|------|
@@ -195,8 +195,8 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 ## Immediate Next Step
 
 - **진행 중:** PostHog STAB checklist — **§5a 번들 `phc_`** 가 남은 게이트. Ops O2는 **PASS** ([`tasks.md`](tasks.md) § 다음 작업 · 모드).
-- **PostHog / ADR-013:** **번들 FAIL + MCP CTA 0** — 최신 **`dpl_8ZoKz…`** · [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json) · [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md).
-- **Ops O2 (automation-run):** **PASS (200)** @ `2026-05-04T04:39:12.334Z` — `pnpm content-ops:automation-run-smoke`, `scenario=daily_generation`, `ok: true`. 증거: [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json). **참고:** 실제 파이프라인이 돌았을 수 있음 → 필요 시 `/admin/runs` 확인.
+- **PostHog / ADR-013:** **번들 FAIL + MCP CTA 0** — 최신 **`dpl_CzqC…`** · [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044120Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044120Z.json) · [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md).
+- **Ops O2 (automation-run):** **PASS (200)** @ `2026-05-04T04:41:20.609Z` — `pnpm content-ops:automation-run-smoke`, `scenario=daily_generation`, `ok: true`. 증거: [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json). **참고:** 스모크마다 `daily_generation` 실행 — 과호출 주의, `/admin/runs` 확인.
 - **Follow-on:** After **7** consecutive UTC days with ≥1 `scheduled` `content_runs`, write new `reports/*-runs-invariant-check.json` (same schema as `2026-05-03` file) and [x] the runtime line; **or** automation-off one-liner in `tasks.md`.
 - **GitHub #62 / #63 (Refs):** #62 — Phase 1 REFLECT + **Phase 2 partial:** `aria-current` + PostHog `elevate_dashboard_sidebar_nav_click` [`tests/unit/dashboard-sidebar-nav-analytics.test.ts`](../tests/unit/dashboard-sidebar-nav-analytics.test.ts). DoD 나머지(13→4~5, 전면 a11y). CREATIVE [`memory-bank/creative-dashboard-sidebar.md`](memory-bank/creative-dashboard-sidebar.md). #63 closed — CI `gstack:check`; [`reports/gstack-check-sample.log`](reports/gstack-check-sample.log).
 

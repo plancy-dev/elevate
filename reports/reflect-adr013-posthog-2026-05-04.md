@@ -45,13 +45,20 @@
 - **Result:** **20** chunk sample, **`phc_` absent**.
 - **Machine:** [`posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json`](./posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json).
 
-**Ops (parallel, not §5):** prod `GET /api/content-ops/automation-run?scenario=daily_generation&source=cursor` — **HTTP 200**, `ok: true` @ `2026-05-04T04:39:12Z` — [`2026-05-04-ops-o2-automation-run-smoke.json`](./2026-05-04-ops-o2-automation-run-smoke.json). **Caution:** `daily_generation` can enqueue real pipeline steps; confirm `/admin/runs` if anything unexpected.
+### 1g) Recheck — new `dpl` (still no `phc_`)
+
+- **When:** `2026-05-04T04:41:20Z` (agent run, UTC).
+- **Deployment id:** `dpl_CzqCLSPuQwe6oBK1YfCz4bE4uqFZ`.
+- **Result:** **20** chunk sample, **`phc_` absent**.
+- **Machine:** [`posthog-prod-bundle-preflight-quick-2026-05-04T044120Z.json`](./posthog-prod-bundle-preflight-quick-2026-05-04T044120Z.json).
+
+**Ops (parallel, not §5):** prod `GET /api/content-ops/automation-run?scenario=daily_generation&source=cursor` — **HTTP 200**, `ok: true` — latest smoke @ `2026-05-04T04:41:20Z` ([`2026-05-04-ops-o2-automation-run-smoke.json`](./2026-05-04-ops-o2-automation-run-smoke.json)); previously `04:39:12Z`. **Caution:** each successful smoke **runs** `daily_generation`; use sparingly and check `/admin/runs` when debugging.
 
 ## 2) PostHog MCP (project **358775**)
 
 | Query | Result |
 |--------|--------|
-| `elevate_marketing_cta_click` last **7d** | **0** (recheck **~04:39 UTC** same) |
+| `elevate_marketing_cta_click` last **7d** | **0** (recheck **~04:41 UTC** same) |
 | All events last **7d** | **0** |
 | All events last **30d** | **33** (`$autocapture` 15, `$pageview` 13, …) |
 | `elevate_marketing_cta_click` **all time** | **0** |
