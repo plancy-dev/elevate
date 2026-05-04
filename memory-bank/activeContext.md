@@ -2,27 +2,58 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **INIT** (다음 작업 — ARCHIVE 직후)
+## Current Phase — **PLAN** (다음 스프린트 슬라이스 — Ops → REFLECT → ENH / P2)
 
-**직전 웨이브 아카이브:** [`archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md`](archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md) (읽기 전용).
+**직전 아카이브:** [`archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md`](archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md).
 
-**SoT:** [`tasks.md`](tasks.md) — 특히 **Immediate Next Step** · `[STAB] marketing-cta…` · (선택) [#73](https://github.com/plancy-dev/elevate/issues/73) P2.
+**SoT:** [`tasks.md`](tasks.md) · **PLAN 본문:** 아래 표(이 채팅과 동일) + `tasks` **Immediate Next Step** · **PLAN backlog** 첫 슬라이스.
 
-### 다음 실행 앵커 (순서)
+### PLAN — 목표·범위
 
-| # | 트랙 | 할 일 | 검증 / 비고 |
-|---|------|--------|----------------|
-| 1 | **Ops P0** | 7 UTC일 `scheduled` `content_runs` **또는** `tasks.md`에 automation-off | `pnpm run content-ops:runs-invariant-check` → `reports/*-runs-invariant*.json` |
-| 2 | **Ops P0** | Vercel **`CONTENT_OPS_AUTOMATION_RUNTIME=cursor`** + prod `automation-run` 토큰 정합 | 대시보드; 비밀 미기록 |
-| 3 | **REFLECT** | PostHog UI — `elevate_marketing_cta_click` · `cta_id` 14값 (ADR-013 §5) | [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) 참고 |
-| 4 | **ENH (병렬 제약 있음)** | [#62](https://github.com/plancy-dev/elevate/issues/62) → [#60](https://github.com/plancy-dev/elevate/issues/60) 시나리오 전 히어로 PR 없음 | `tasks` § 병렬 제약 |
+| 구분 | 내용 |
+|------|------|
+| **목표** | (A) content-ops **7 UTC일** 증거 또는 automation-off 명시 (B) **ADR-013 PostHog** §5 게이트 진행·문서화 (C) ENH **#62 선행** 후 #60/#61과 병렬 가능 범위만 (D) **#73** P2는 합의 후에만 구현 PR |
+| **범위 밖** | P2 Hooks/MCP/CI **구현**(#73 합의 전) · #60 **히어로 PR**(시나리오 코멘트 전) · 임계값·게이트 수치 임의 하향 |
 
-**복잡도:** 증거·운영만 → **L1**. `src`/`tests`/CI 변경 시 **L2** + `pnpm verify` ([`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md) §2b).
+### PLAN — 작업 패키지 (순서·의존성)
 
-### 스킬로 INIT 열기 (선택 · 현재 기본은 하이브리드)
+```mermaid
+flowchart LR
+  subgraph ops [Ops_L1]
+    O1[7d_scheduled_or_off]
+    O2[Vercel_runtime_token]
+  end
+  subgraph reflect [Reflect_L1]
+    R1[PostHog_UI_cta_id]
+  end
+  subgraph enh [ENH_L2]
+    E62[sidebar_62]
+    E61[pricing_61]
+  end
+  O1 --> O2
+  O2 --> R1
+  E62 --> E60gate["hero_60_blocked_until_scenario"]
+```
 
-- [`docs/MEMORY_BANK_SKILL_GUIDE.md`](../docs/MEMORY_BANK_SKILL_GUIDE.md) — **`elevate-memory-bank-bootstrap`** 지명 시 INIT 산출·L1–L4·다음 모드 한 블록.
-- **「스킬 기반만 쓴다」로 팀이 바꾼 뒤**에는 [`tasks.md`](tasks.md) PLAN 에픽의 **Skill-first INIT** 체크박스를 `[x]`로 — 그다음 세션부터는 **짧은 스킬+목표** 지시가 SoT (에이전트가 그때 형태 전환을 맞춤).
+1. **Pkg-O1 (Ops, L1):** 일별 `scheduled` 유지 또는 `tasks.md`에 automation-off 한 블록 → `runs-invariant-check` + `reports/*.json`.
+2. **Pkg-O2 (Ops, L1):** Vercel `CONTENT_OPS_AUTOMATION_RUNTIME=cursor` + prod `automation-run` **Vercel 토큰** 스모크(401 해소 확인). RUNBOOK·`.env.local.example`은 이미 문서 정합; **대시보드만** operator.
+3. **Pkg-R1 (REFLECT, L1):** PostHog UI에서 `elevate_marketing_cta_click` + `cta_id` breakdown; 프로젝트·키 정합 확인 후 `tasks` STAB 줄·ADR-013 체크리스트 갱신 여부 결정. MCP 0건은 [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) 참고.
+4. **Pkg-E62 (ENH, L2):** [#62](https://github.com/plancy-dev/elevate/issues/62) — `creative-dashboard-sidebar.md`와 5 locale; **BUILD 시 `pnpm verify`**.
+5. **Pkg-E61 (ENH, L2, 병렬 가능):** [#61](https://github.com/plancy-dev/elevate/issues/61) — #62와 파일 충돌 시 순서 조정.
+6. **Pkg-P2 (프로세스만):** [#73](https://github.com/plancy-dev/elevate/issues/73) 체크 3항 **합의** → 그다음에만 doc-gate §2 밖 구현 PR 분할.
+
+### PLAN — 성공 기준 (이 슬라이스)
+
+- **Ops:** `meetsSevenConsecutiveCalendarDays=true` **또는** `tasks.md` automation-off + invariant PASS 유지.
+- **ADR-013:** PostHog에서 14 `cta_id`에 대해 **관측 가능**한지(0이면 원인 문서화 유지) + STAB 상태 문자열 갱신.
+- **#62:** 머지 가능한 PR + verify green.
+- **#73:** 이슈 체크박스에 합의/보류 기록(코드 불필요).
+
+### 다음 모드
+
+- Pkg-O1~O2·R1만 → **BUILD(증거)** 또는 **REFLECT** 짧게 → **ARCHIVE** 한 줄.  
+- Pkg-E62/E61 → **CREATIVE**(이미 있으면 스킵) → **BUILD** → **REFLECT**.  
+- 스킬 선호 시: [`MEMORY_BANK_SKILL_GUIDE.md`](../docs/MEMORY_BANK_SKILL_GUIDE.md) · Skill-first 게이트는 [`tasks.md`](tasks.md) PLAN 에픽 체크박스.
 
 **운영 앵커 (지속):** prod `automation-run` GET은 **Vercel 토큰**으로 operator 실행 · 7 UTC일 스트릭은 [`memory-bank/tasks.md`](tasks.md) Immediate Next Step.
 
