@@ -6,6 +6,7 @@
 
 | Document | Description |
 |----------|-------------|
+| [`archive-ai-native-workflow-docs-ops-2026-05-04.md`](work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md) | ARCHIVE: doc-gate PR #74, INIT P0 table, runs-invariant 2026-05-04 BUILD, ADR-013 PostHog REFLECT (MCP 0건) — wave closeout (2026-05-04) |
 | [`build-adr013-phase1b-2026-05-04.md`](work-history/build-adr013-phase1b-2026-05-04.md) | BUILD: ADR-013 Phase 1b wiring + invariant handoff snapshot (2026-05-04) |
 | [`init-p0-1-gate51-operational-closeout.md`](work-history/init-p0-1-gate51-operational-closeout.md) | INIT one-shot: `#51` gate51 operational closeout brief (2026-05-03); superseded by streak + `tasks.md` SoT |
 | [`archive-pipeline-draft-dialog-2026-04.md`](work-history/archive-pipeline-draft-dialog-2026-04.md) | G3.1.2 파이프라인 「초안 저장됨」→ 다이얼로그 — 요약·수동 스모크 체크리스트; CREATIVE/REFLECT는 동일 폴더 `creative-*` / `reflect-*` (2026-04) |

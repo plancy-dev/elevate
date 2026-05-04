@@ -2,23 +2,11 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **REFLECT** (2026-05-04)
+## Current Phase — **ARCHIVE** (2026-05-04 웨이브 마감)
 
-**BUILD에서 끝낸 것(직전):** [`reports/2026-05-04-runs-invariant-check.json`](../reports/2026-05-04-runs-invariant-check.json) — invariant PASS, **7 UTC일 스트릭=2** 유지.
+**아카이브 문서 (본 웨이브 단일 진입점):** [`archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md`](archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md) — PR #74·INIT·runs-invariant BUILD·ADR-013 PostHog REFLECT 요약·**다음 세션 앵커** 표.
 
-**REFLECT에서 확인한 것 (PostHog MCP, project 358775):** HogQL `elevate_marketing_cta_click` 지난 **8일** `count() = 0` → ADR-013 §5 **프로덕션 14× cta_id non-zero** 게이트는 **아직 충족 불가**. 증거·다음 액션: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md).
-
-**운영 잔여 (대시보드·토큰):** Vercel **`CONTENT_OPS_AUTOMATION_RUNTIME=cursor`** · prod `automation-run` **401** 스모크는 **운영자** — 코드 변경 없음.
-
-### P0 잔여 (다음 턴)
-
-| 순서 | 작업 | 비고 |
-|------|------|------|
-| P0-a | 7 UTC일 `scheduled` **또는** `tasks.md` automation-off | 스트릭 **2** |
-| P0-b–c | Vercel runtime·automation 토큰 | |
-| P0-d | PostHog UI에서 동일 쿼리 재확인·프로젝트 정합 후 **트래픽 있으면** STAB·ADR 체크리스트 갱신 | MCP 0건은 **게이트 미통과**로 기록 |
-
-**다음 모드:** P0-d가 대시보드에서 녹으면 **REFLECT** 한 줄 더 → 필요 시 **ARCHIVE**; ENH [#60](https://github.com/plancy-dev/elevate/issues/60) 등은 별 트랙.
+**다음 세션:** **INIT** — SoT는 [`tasks.md`](tasks.md) **Immediate Next Step** + STAB marketing-cta + (선택) [#73](https://github.com/plancy-dev/elevate/issues/73) P2. 아카이브는 참고만; 체크박스는 `tasks.md`에서 계속 연다.
 
 **운영 앵커 (지속):** prod `automation-run` GET은 **Vercel 토큰**으로 operator 실행 · 7 UTC일 스트릭은 [`memory-bank/tasks.md`](tasks.md) Immediate Next Step.
 
