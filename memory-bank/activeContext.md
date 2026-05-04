@@ -2,11 +2,13 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **PLAN** (다음 스프린트 슬라이스 — Ops → REFLECT → ENH / P2)
+## Current Phase — **CREATIVE** (#62 대시보드 사이드바 — ENH)
+
+**CREATIVE SoT:** [`creative-dashboard-sidebar.md`](creative-dashboard-sidebar.md) — **안 A(얇은 슬라이스)** 권장 1차 · 안 B(허브 Settings) · 안 C(보류); 라벨·멘탈모델 표; ADR-012와 **마케팅/대시보드 층** 구분.
 
 **직전 아카이브:** [`archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md`](archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md).
 
-**SoT:** [`tasks.md`](tasks.md) · **PLAN 본문:** 아래 표(이 채팅과 동일) + `tasks` **Immediate Next Step** · **PLAN backlog** 첫 슬라이스.
+**SoT:** [`tasks.md`](tasks.md) · **PLAN 슬라이스(병행):** 아래 표·다이어그램 — Pkg-E62 진입 전 CREATIVE 확장 완료.
 
 ### PLAN — 목표·범위
 
@@ -52,7 +54,7 @@ flowchart LR
 ### 다음 모드
 
 - Pkg-O1~O2·R1만 → **BUILD(증거)** 또는 **REFLECT** 짧게 → **ARCHIVE** 한 줄.  
-- Pkg-E62/E61 → **CREATIVE**(이미 있으면 스킵) → **BUILD** → **REFLECT**.  
+- Pkg-E62/E61 → **CREATIVE** 완료(위 링크) → **BUILD** → **REFLECT**.  
 - 스킬 선호 시: [`MEMORY_BANK_SKILL_GUIDE.md`](../docs/MEMORY_BANK_SKILL_GUIDE.md) · Skill-first 게이트는 [`tasks.md`](tasks.md) PLAN 에픽 체크박스.
 
 **운영 앵커 (지속):** prod `automation-run` GET은 **Vercel 토큰**으로 operator 실행 · 7 UTC일 스트릭은 [`memory-bank/tasks.md`](tasks.md) Immediate Next Step.
