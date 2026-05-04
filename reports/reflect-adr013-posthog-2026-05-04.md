@@ -44,7 +44,7 @@
 
 ## 4) Next actions (operator → then agent REFLECT)
 
-1. Vercel **Production:** set **`NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`** = PostHog **Project API key** (`phc_…`) for project 358775.
+1. Vercel **Production:** set **`NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`** = PostHog **Project API key** (`phc_…`) for project 358775. **Exact env name** (case-sensitive): `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` — not `NEXT_PUBLIC_POSTHOG_KEY`; server `POSTHOG_KEY` alone does **not** inline into the browser bundle ([`src/lib/env/posthog-public.ts`](../src/lib/env/posthog-public.ts)).
 2. **Redeploy** Production (**after** the variable is saved). If bundle still lacks `phc_`, use **Redeploy with cleared build cache**.
 3. Re-run **§5a preflight** (grep/scan chunks for `phc_`) until `true`.
 4. **CTA smoke** on prod (multiple surfaces / locales).
