@@ -2,11 +2,24 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **REFLECT** (BUILD ADR-013 Phase 1b merged in working tree, 2026-05-04)
+## Current Phase — **INIT** (이슈 목록 정렬 → P0 우선, 새 세션)
 
-**방금 BUILD에서 끝낸 것:** ADR-013 Decisions #2–#3 **8 표면** wiring + `locale`/`referrer_path` 계약 (`marketing-cta-click-properties.ts`, `marketing-tracked-links.tsx`, home/header/pricing/blog). `pnpm verify` green. Runs invariant 스냅샷: [`reports/2026-05-03-runs-invariant-build-handoff.json`](../reports/2026-05-03-runs-invariant-build-handoff.json). RUNBOOK **vercel-cron 노이즈** 절 추가. 아카이브: [`memory-bank/archive/work-history/build-adr013-phase1b-2026-05-04.md`](archive/work-history/build-adr013-phase1b-2026-05-04.md).
+**복잡도(오늘 기본):** **L1** — 운영·증거·Memory Bank·PostHog 대시보드 확인이 중심. `src/`·`tests/`·CI를 바꾸면 **L2**로 올려 **`pnpm verify`** 필수([`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md) §2b).
 
-**REFLECT 남은 한 줄:** PostHog 7d에서 **14개 cta_id** non-zero(또는 ≥12) 확인 후 ADR-013 체크리스트 마지막 `[ ]` 해제 · `[STAB] marketing-cta…` 상태를 `shipped` 등으로 갱신.
+**직전 세션 맥락:** ADR-013 Phase 1b BUILD 머지·doc-gate·PR #74·#73 REFLECT 한 줄. 빌드 산출 요약: [`archive/work-history/build-adr013-phase1b-2026-05-04.md`](archive/work-history/build-adr013-phase1b-2026-05-04.md).
+
+### 오늘 P0 (`tasks.md` SoT — 오픈 GitHub 번호와 구분)
+
+| 순서 | 근거 | 작업 | 비고 |
+|------|------|------|------|
+| P0-a | `tasks.md` **Immediate Next Step** + L183–188 미체크 `[ ]` | SoT DB에서 **연속 7 UTC일** `scheduled` `content_runs` 증거 **또는** `tasks.md`에 **automation-off**(일시·담당·사유) | INIT 이슈 #38–#59는 **완료**; 이건 **런타임 증거** P0 |
+| P0-b | `tasks.md` INIT closeout (L19) | Vercel Production에 **`CONTENT_OPS_AUTOMATION_RUNTIME=cursor`** 명시 | **대시보드 작업**, 코드 PR 아님 |
+| P0-c | 동일 블록 **prod 스모크** | `automation-run` GET **401 해소** — 토큰은 **Vercel 값과 바이트 동일**하게만 검증(비밀 미기록) | |
+| P0-d | REFLECT 잔여 | PostHog 7d **cta_id** non-zero 확인 → ADR-013·`tasks` STAB marketing-cta 줄 갱신 | [#60](https://github.com/plancy-dev/elevate/issues/60) 등 ENH와 **별개** |
+
+**오픈 GitHub 이슈 (참고):** [#73](https://github.com/plancy-dev/elevate/issues/73) P2 구현 백로그(합의 후) · [#60](https://github.com/plancy-dev/elevate/issues/60) [#61](https://github.com/plancy-dev/elevate/issues/61) [#62](https://github.com/plancy-dev/elevate/issues/62) ENH — **오늘 P0 필수 목록에 넣지 않음**(`tasks.md` PLAN·Immediate가 우선).
+
+**다음 모드:** P0-a~c만 **증거/운영**이면 INIT 유지; 코드·테스트 변경 시 **짧은 PLAN → BUILD** → REFLECT.
 
 **운영 앵커 (지속):** prod `automation-run` GET은 **Vercel 토큰**으로 operator 실행 · 7 UTC일 스트릭은 [`memory-bank/tasks.md`](tasks.md) Immediate Next Step.
 
