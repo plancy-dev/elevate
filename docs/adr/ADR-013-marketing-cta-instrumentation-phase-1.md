@@ -82,7 +82,7 @@ BAND_WAITLIST and BLOG_POST_FOOTER_* assume those surfaces exist or will exist i
 [x] PR 1 merged: tests/unit/marketing-cta-id-stable-values.test.ts added; CI green via pnpm verify.
 [x] PR 2 merged: 8 surfaces emit ELEVATE_MARKETING_CTA_CLICK with { cta_id, locale } per the contract; tests/unit/marketing-cta-instrumentation.test.ts covers each surface.
 [x] memory-bank/tasks.md updated with [STAB][P1] marketing-cta-instrumentation-phase-1 entry (Owner / Order / Acceptance / Verify).
-[ ] REFLECT note in memory-bank/progress.md after PR 2: confirm 7d PostHog data has non-zero hits for ≥ 12 of 14 cta_id values (allowance for low-traffic surfaces).
+[ ] REFLECT after PR 2: confirm 7d PostHog data has non-zero hits for ≥ 12 of 14 cta_id values (allowance for low-traffic surfaces). **2026-05-04 check:** PostHog MCP HogQL — `elevate_marketing_cta_click` **0 hits / 8d** (project 358775); not yet meeting gate — [`reports/reflect-adr013-posthog-2026-05-04.md`](../../reports/reflect-adr013-posthog-2026-05-04.md).
 
 ## Cursor handoff
 
