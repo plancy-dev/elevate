@@ -5,6 +5,7 @@
 
 ## Status snapshot (aligned with `tasks.md`, 2026-05-04)
 
+- **REFLECT (#62 Phase 1):** DoD 부분 충족만 — [`reports/reflect-github-62-sidebar-phase1.md`](../reports/reflect-github-62-sidebar-phase1.md). Phase 2(축소·PostHog·a11y) 대기.
 - **BUILD (#62 안 A):** [`tests/unit/dashboard-toc-library-labels.test.ts`](../tests/unit/dashboard-toc-library-labels.test.ts) — 5 locale `Dashboard.toc.library` section≠item. CREATIVE 권한 문서 갱신. `pnpm verify`.
 - **CREATIVE (#62):** [`memory-bank/creative-dashboard-sidebar.md`](creative-dashboard-sidebar.md) — 합리화 **안 A/B/C**, 라벨 표, BUILD 권장(안 A 먼저). `activeContext` → CREATIVE.
 - **INIT (다음 작업, post-ARCHIVE):** `activeContext`를 INIT 앵커 표로 갱신; `tasks.md`에 **Skill-first INIT** 게이트 체크박스 추가(팀 합의·Hooks merge 시 `[x]`).

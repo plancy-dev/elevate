@@ -56,6 +56,7 @@
 
 - `pnpm verify` after i18n / nav touch.
 - Manual: ko/en에서 라이브러리 **그룹 vs 항목** 문자열이 다름; 비관리자에 Audit/Admin 미노출.
+- **REFLECT (Phase 1):** 자동 검증 — [`tests/unit/dashboard-toc-library-labels.test.ts`](../../tests/unit/dashboard-toc-library-labels.test.ts); 요약 — [`reports/reflect-github-62-sidebar-phase1.md`](../../reports/reflect-github-62-sidebar-phase1.md).
 
 ## Out of scope (이 CREATIVE 문서 밖)
 
