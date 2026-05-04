@@ -6,10 +6,17 @@ import type { ReactNode } from "react";
 type Props = {
   apiKey: string;
   apiHost: string;
+  /** Enables posthog-js verbose logging + SDK debug output. */
+  debug?: boolean;
   children: ReactNode;
 };
 
-export function PostHogProvider({ apiKey, apiHost, children }: Props) {
+export function PostHogProvider({
+  apiKey,
+  apiHost,
+  debug = false,
+  children,
+}: Props) {
   return (
     <PHProvider
       apiKey={apiKey}
@@ -18,6 +25,7 @@ export function PostHogProvider({ apiKey, apiHost, children }: Props) {
         person_profiles: "identified_only",
         capture_pageview: true,
         capture_pageleave: true,
+        debug,
       }}
     >
       {children}

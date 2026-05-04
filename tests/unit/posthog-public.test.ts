@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { POSTHOG_PUBLIC_ENV } from "@/lib/env/posthog-public-constants";
-import { getPosthogPublicConfig } from "@/lib/env/posthog-public";
+import {
+  getPosthogPublicConfig,
+  isPosthogBrowserDebugEnabled,
+} from "@/lib/env/posthog-public";
 
 describe("getPosthogPublicConfig", () => {
   afterEach(() => {
@@ -24,5 +27,23 @@ describe("getPosthogPublicConfig", () => {
     vi.stubEnv(POSTHOG_PUBLIC_ENV.PROJECT_TOKEN, "phc_x");
     vi.stubEnv(POSTHOG_PUBLIC_ENV.HOST, "https://eu.i.posthog.com");
     expect(getPosthogPublicConfig()?.apiHost).toBe("https://eu.i.posthog.com");
+  });
+});
+
+describe("isPosthogBrowserDebugEnabled", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("is false when unset", () => {
+    expect(isPosthogBrowserDebugEnabled()).toBe(false);
+  });
+
+  it("is true for 1 / true / yes (case-insensitive)", () => {
+    vi.stubEnv(POSTHOG_PUBLIC_ENV.BROWSER_DEBUG, "1");
+    expect(isPosthogBrowserDebugEnabled()).toBe(true);
+    vi.unstubAllEnvs();
+    vi.stubEnv(POSTHOG_PUBLIC_ENV.BROWSER_DEBUG, "TRUE");
+    expect(isPosthogBrowserDebugEnabled()).toBe(true);
   });
 });

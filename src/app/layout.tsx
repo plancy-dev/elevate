@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { PostHogRoot } from "@/components/analytics/posthog-root";
+import {
+  getPosthogPublicConfig,
+  isPosthogBrowserDebugEnabled,
+} from "@/lib/env/posthog-public";
 import { getSiteUrl } from "@/lib/seo/site-url";
 import {
   GOOGLE_SITE_VERIFICATION_CONTENT,
@@ -79,6 +83,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const posthogPublic = getPosthogPublicConfig();
+  const posthogDebug = isPosthogBrowserDebugEnabled();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -148,7 +155,10 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <AppThemeProvider>
-          <PostHogRoot>
+          <PostHogRoot
+            initialPublicConfig={posthogPublic}
+            debug={posthogDebug}
+          >
             <SupabaseUrlHashHandler />
             {children}
             <AppToaster />
