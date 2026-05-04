@@ -2,9 +2,11 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **CREATIVE** (#62 대시보드 사이드바 — ENH)
+## Current Phase — **BUILD** (#62 안 A — 라벨 회귀 방지)
 
-**CREATIVE SoT:** [`creative-dashboard-sidebar.md`](creative-dashboard-sidebar.md) — **안 A(얇은 슬라이스)** 권장 1차 · 안 B(허브 Settings) · 안 C(보류); 라벨·멘탈모델 표; ADR-012와 **마케팅/대시보드 층** 구분.
+**CREATIVE SoT:** [`creative-dashboard-sidebar.md`](creative-dashboard-sidebar.md) (권한 가드 fail-closed 문서 반영).
+
+**방금 BUILD:** [`tests/unit/dashboard-toc-library-labels.test.ts`](../tests/unit/dashboard-toc-library-labels.test.ts) — 5 locale에서 `Dashboard.toc.library.section` ≠ `library` 문자열 강제. i18n·TOC는 기존과 동일; **회귀만 잠금**. `pnpm verify` green.
 
 **직전 아카이브:** [`archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md`](archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md).
 

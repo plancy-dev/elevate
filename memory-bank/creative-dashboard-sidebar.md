@@ -7,7 +7,7 @@
 ## Decision (이미 합의된 증분 — BUILD 가능)
 
 1. **Library group vs item label** — TOC 섹션 제목과 자식 링크가 동일 문자열이면 안 됨 (KO “라이브러리/라이브러리” 등). **접근:** `Dashboard.toc.library.section`(카탈로그형 섹션 제목)과 `Dashboard.toc.library.library`(내비 항목)를 **모든 locale**에서 분리.
-2. **Permission guards** — 사이드바는 `layout.tsx`의 `isOrgAdmin` / `isServiceAdmin`으로 Audit·Admin 노출을 이미 제어. **후속:** 직 URL `/dashboard/organization/audit` 등이 비관리자에게 **fail-closed**(데이터·리다이렉트)인지 BUILD에서 확인.
+2. **Permission guards** — 사이드바는 [`src/app/(dashboard)/layout.tsx`](../src/app/(dashboard)/layout.tsx)의 `isOrgAdmin` / `isServiceAdmin`으로 Audit·Admin 노출 제어. **`/dashboard/organization/*`**는 [`organization/layout.tsx`](../src/app/(dashboard)/dashboard/organization/layout.tsx)에서 `canAccessOrganizationAdminConsole`로 **비관리자 → `/dashboard` redirect** — 직 URL도 fail-closed (BUILD 확인 완료).
 3. **#60에 맡기는 것(히어로·랜딩)** — 마케팅 히어로/CTA 카피·홈 IA는 #60 PR. **대시보드** TOC 붕괴(13→4)의 **최종 메타포**(Productions 노출 여부 등)는 #60 **코멘트·DoD**와 맞춘 뒤 큰 PR이 안전.
 
 ---
@@ -67,6 +67,6 @@
 
 ## Recommendation to BUILD
 
-1. **먼저 안 A** 머지 → 이슈 #62에 “Phase 1 = 라벨+가드”라고 본문에 남김.  
+1. **안 A (진행):** `tests/unit/dashboard-toc-library-labels.test.ts`로 라벨 계약 고정 · CREATIVE Decision 2에 org layout **fail-closed** 문서화. 이슈 #62 본문에 “Phase 1 = 라벨 회귀 테스트 + 권한 레이아웃 확인” 남기면 DoD 부분 충족에 유리.  
 2. **안 B**는 #60 DoD + Productions 노출 정책 한 줄 확정 후 **별 PR**.  
-3. **직 URL fail-closed**는 안 A와 같은 PR에 넣을지, 마이크로 PR로 쪼갤지 **엔지 리뷰**에서만 결정.
+3. 추가 마이크로 PR로 **직 URL**만 더 다지고 싶으면 엔지 리뷰에서 분할(현재는 layout으로 충분).
