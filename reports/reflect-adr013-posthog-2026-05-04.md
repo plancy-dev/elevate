@@ -10,11 +10,18 @@
 
 **Conclusion:** Current Production **JavaScript bundle was built without** an inlined PostHog project token → `PostHogRoot` resolves to children-only (no `posthog-js` init with key) → **marketing CTA captures from prod cannot reach** project 358775 until **env is set before a new build** + **Redeploy**.
 
+### 1b) Recheck — newer deployment (still no `phc_`)
+
+- **When:** `2026-05-04T04:33:10Z` (agent run, UTC).
+- **Deployment id:** `dpl_CaSEFDG92aEGMsPWjWLmR4jLrBNH` — **differs from §1**, so the homepage is serving a **new** build.
+- **Result:** **20** chunk sample, **`phc_` still absent** → build still lacks inlined project token (env not available at **build** time, wrong name, or empty value).
+- **Machine:** [`posthog-prod-bundle-preflight-quick-2026-05-04T043310Z.json`](./posthog-prod-bundle-preflight-quick-2026-05-04T043310Z.json).
+
 ## 2) PostHog MCP (project **358775**)
 
 | Query | Result |
 |--------|--------|
-| `elevate_marketing_cta_click` last **7d** | **0** |
+| `elevate_marketing_cta_click` last **7d** | **0** (recheck **~04:33 UTC** same) |
 | All events last **7d** | **0** |
 | All events last **30d** | **33** (`$autocapture` 15, `$pageview` 13, …) |
 | `elevate_marketing_cta_click` **all time** | **0** |

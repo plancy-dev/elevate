@@ -8,9 +8,9 @@
 
 **다음 작업 / 모드:** PostHog **1–2**가 없으면 §5는 진행 불가(번들 **여전히 `phc_` 없음**). **권장:** **BUILD — Ops O2**([`tasks.md`](tasks.md) 표 **A**) — `pnpm content-ops:automation-run-smoke`로 prod 토큰 정합. **병행 증거:** Ops O1 [`reports/runs-invariant-recheck-latest.json`](../reports/runs-invariant-recheck-latest.json) · Gate51 [`reports/content-ops-gate51-trend-recheck-2026-05-04.json`](../reports/content-ops-gate51-trend-recheck-2026-05-04.json)(**PASS**).
 
-**직전 측정 (2026-05-04 UTC):** Prod 번들 **20** chunk — **`phc_` 없음** → 토큰 빌드 미포함. 빠른 재스캔: [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T0430Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T0430Z.json). MCP **358775:** `elevate_marketing_cta_click` **전체 0** · 7d 전체 이벤트 **0** · 30d **33**(`$pageview` 등) · `max(timestamp)` **2026-04-08**. REFLECT: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) · JSON [`reports/posthog-mcp-recheck-2026-05-04.json`](../reports/posthog-mcp-recheck-2026-05-04.json) · 번들 [`reports/posthog-prod-bundle-check-latest.json`](../reports/posthog-prod-bundle-check-latest.json).
+**직전 측정 (2026-05-04 UTC):** Prod 번들 **20** chunk — **`phc_` 없음**; **새 `dpl`** `dpl_CaSEFDG92aEGMsPWjWLmR4jLrBNH` 재스캔 `04:33Z`에도 동일. 증거: [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T043310Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T043310Z.json) · REFLECT [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). MCP **358775:** `elevate_marketing_cta_click` **7d=0** (재확인) · 30d **33** 등 · [`reports/posthog-mcp-recheck-2026-05-04.json`](../reports/posthog-mcp-recheck-2026-05-04.json).
 
-**Ops O2 (PENDING, 비세션):** [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) — **401** 재확인(`2026-05-04T04:30:54Z`, `pnpm content-ops:automation-run-smoke`).
+**Ops O2 (PENDING, 비세션):** [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) — **401** 재확인(`2026-05-04T04:33:10Z`, `pnpm content-ops:automation-run-smoke`).
 
 **직전 Ops BUILD (2026-05-05):** [`reports/2026-05-05-runs-invariant-check.json`](../reports/2026-05-05-runs-invariant-check.json) · [`reports/content-queue-agent-review-2026-05-05.md`](../reports/content-queue-agent-review-2026-05-05.md).
 

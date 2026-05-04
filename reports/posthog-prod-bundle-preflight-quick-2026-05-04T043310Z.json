@@ -1,0 +1,10 @@
+{
+  "generatedAtUtc": "2026-05-04T04:33:10Z",
+  "host": "https://elevate.ai.kr",
+  "method": "fetch_home_html_then_sample_linked_chunk_scripts",
+  "chunksOnPage": 20,
+  "chunksScanned": 20,
+  "dplGuess": "dpl_CaSEFDG92aEGMsPWjWLmR4jLrBNH",
+  "verdict_bundleContainsProjectKeyLiteral": false,
+  "note": "New deployment id vs earlier 2026-05-04 preflight (dpl_3bADDiD1…); sample still has no phc_ literal → NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN not inlined at build or wrong/missing in Vercel at build time."
+}
