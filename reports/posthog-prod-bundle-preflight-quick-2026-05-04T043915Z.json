@@ -1,0 +1,10 @@
+{
+  "generatedAtUtc": "2026-05-04T04:39:15Z",
+  "host": "https://elevate.ai.kr",
+  "method": "fetch_home_html_then_sample_linked_chunk_scripts",
+  "chunksOnPage": 20,
+  "chunksScanned": 20,
+  "dplGuess": "dpl_8ZoKzWHZcqabVJJa8sp7VbAF5YgE",
+  "verdict_bundleContainsProjectKeyLiteral": false,
+  "note": "Sixth observed prod dpl; 20-chunk sample still no phc_. Same session: Ops O2 automation-run smoke PASS (200) — see 2026-05-04-ops-o2-automation-run-smoke.json."
+}

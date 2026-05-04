@@ -1,13 +1,14 @@
 {
   "kind": "ops_o2_automation_run_smoke",
-  "generatedAt": "2026-05-04T04:36:34.630Z",
+  "generatedAt": "2026-05-04T04:39:12.334Z",
   "host": "https://elevate.ai.kr",
   "scenario": "daily_generation",
   "source": "cursor",
   "hasLocalToken": true,
-  "httpStatus": 401,
+  "httpStatus": 200,
   "bodySummary": {
-    "ok": false,
-    "error": "unauthorized"
+    "ok": true,
+    "mode": "scenario",
+    "scenario": "daily_generation"
   }
 }

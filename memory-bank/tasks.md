@@ -34,7 +34,7 @@
 
 | 항목 | 모드 | 재개 조건 |
 |------|------|-----------|
-| Ops O2 `automation-run` | BUILD | Vercel `CONTENT_OPS_AUTOMATION_TOKEN` 정합 + GET 200 + smoke JSON |
+| Ops O2 `automation-run` | **REFLECT** | **PASS @ 2026-05-04** — [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) (`200`, `daily_generation`). 필요 시 `/admin/runs`로 부작용 확인 |
 | Ops 7d `scheduled` streak · automation-off | BUILD / REFLECT | `content-ops:runs-invariant-check` 증거 또는 `tasks.md` off 블록 |
 | #62 안 B (Productions) | CREATIVE → BUILD | #60 노출 합의 후 |
 | #60 히어로/포지셔닝 구현 PR | BUILD | 시나리오 코멘트 후 (SoT 유지) |
@@ -44,17 +44,17 @@
 
 ### 다음 작업 · 모드 (지금 막혔을 때)
 
-**상태:** PostHog **1–2** 미완 → **3번 FAIL 유지** (재스캔 **`2026-05-04T04:36Z`**, **`dpl_BYNK8…`** — **`phc_` 여전히 없음**·[`reports/posthog-prod-bundle-preflight-quick-2026-05-04T043634Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T043634Z.json); 이전 [`043552Z`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T043552Z.json) 등). REFLECT §1e: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **4–6** 차단 유지.
+**상태:** **Ops O2 스모크 PASS (`200`)** @ `2026-05-04T04:39Z` — [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json). PostHog **1–2** 미완 → **3번 FAIL** (**`dpl_8ZoKz…`**, **`phc_` 없음**·[`reports/posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json)). REFLECT §1f: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **4–6** 차단 유지.
 
 | 우선순위 | 모드 | 작업 | 누가 |
 |----------|------|------|------|
-| **A** | **BUILD** | **Ops O2** — `pnpm content-ops:automation-run-smoke` (또는 동일 GET) + Vercel와 바이트 동일 토큰 → **200**·[`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) 갱신 | 운영자 토큰 + 에이전트/쉘 |
-| **B** | **BUILD** | **PostHog** — Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` + **Redeploy** → 번들 `phc_` PASS | 운영자 먼저 |
+| **A** | **BUILD** | **PostHog §5a** — Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` + **Redeploy** → 번들 `phc_` → CTA 스모크 → MCP | 운영자 먼저 |
+| **B** | **REFLECT** | **Ops O2** — 이미 PASS; 필요 시 `/admin/runs` 확인 | 운영자 |
 | **C** | **BUILD → REFLECT** | **Ops O1** — `pnpm run content-ops:runs-invariant-check` 스냅샷 | 에이전트 (병행) |
 
-**Ops O1 / Gate51 (병행):** [`reports/runs-invariant-recheck-latest.json`](../reports/runs-invariant-recheck-latest.json) — `PASS`, streak **2** (`2026-05-04T04:30Z`). Gate51 trend: [`reports/content-ops-gate51-trend-recheck-2026-05-04.json`](../reports/content-ops-gate51-trend-recheck-2026-05-04.json) — **PASS**. 이전 스냅샷: [`reports/2026-05-04-runs-invariant-recheck-session.json`](../reports/2026-05-04-runs-invariant-recheck-session.json), [`reports/2026-05-03-runs-invariant-recheck-session-v2.json`](../reports/2026-05-03-runs-invariant-recheck-session-v2.json).
+**Ops O1 / Gate51 (병행):** [`reports/runs-invariant-recheck-latest.json`](../reports/runs-invariant-recheck-latest.json) — `PASS`, streak **2**. Gate51 trend: [`reports/content-ops-gate51-trend-recheck-2026-05-04.json`](../reports/content-ops-gate51-trend-recheck-2026-05-04.json) — **PASS**.
 
-**이번 턴 권장:** **모드 `BUILD` — 트랙 A (Ops O2)** 한 세션으로 닫기. PostHog는 B 완료 후 같은 **BUILD → REFLECT** 흐름으로 이어감.
+**이번 턴 권장:** **모드 `BUILD` — 트랙 A (PostHog)**. Ops 토큰은 정합 완료.
 
 ## BUILD track (active) — 2026-05-04
 
@@ -194,9 +194,9 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 
 ## Immediate Next Step
 
-- **진행 중:** PostHog STAB checklist — **차단** 시 [`tasks.md`](tasks.md) **§ 다음 작업 · 모드** — **권장 다음: `BUILD` Ops O2**.
-- **PostHog / ADR-013:** **번들 FAIL + MCP CTA 0** — [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) · §5a [`docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md`](../docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md).
-- **Ops O2 (automation-run):** **FAIL (401)** @ `2026-05-04T04:36:34.630Z` — `pnpm content-ops:automation-run-smoke` 재확인. 로컬 `CONTENT_OPS_AUTOMATION_TOKEN` ≠ Vercel Production. 증거: [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json). **다음:** Vercel Production 값을 `.env.local`에 맞춘 뒤 동일 스크립트 재실행 → **200**·`ok`/`skipped` 정상 응답 시 REFLECT 반영.
+- **진행 중:** PostHog STAB checklist — **§5a 번들 `phc_`** 가 남은 게이트. Ops O2는 **PASS** ([`tasks.md`](tasks.md) § 다음 작업 · 모드).
+- **PostHog / ADR-013:** **번들 FAIL + MCP CTA 0** — 최신 **`dpl_8ZoKz…`** · [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json) · [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md).
+- **Ops O2 (automation-run):** **PASS (200)** @ `2026-05-04T04:39:12.334Z` — `pnpm content-ops:automation-run-smoke`, `scenario=daily_generation`, `ok: true`. 증거: [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json). **참고:** 실제 파이프라인이 돌았을 수 있음 → 필요 시 `/admin/runs` 확인.
 - **Follow-on:** After **7** consecutive UTC days with ≥1 `scheduled` `content_runs`, write new `reports/*-runs-invariant-check.json` (same schema as `2026-05-03` file) and [x] the runtime line; **or** automation-off one-liner in `tasks.md`.
 - **GitHub #62 / #63 (Refs):** #62 — Phase 1 REFLECT + **Phase 2 partial:** `aria-current` + PostHog `elevate_dashboard_sidebar_nav_click` [`tests/unit/dashboard-sidebar-nav-analytics.test.ts`](../tests/unit/dashboard-sidebar-nav-analytics.test.ts). DoD 나머지(13→4~5, 전면 a11y). CREATIVE [`memory-bank/creative-dashboard-sidebar.md`](memory-bank/creative-dashboard-sidebar.md). #63 closed — CI `gstack:check`; [`reports/gstack-check-sample.log`](reports/gstack-check-sample.log).
 

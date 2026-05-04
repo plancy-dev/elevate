@@ -38,11 +38,20 @@
 - **Result:** **20** chunk sample, **`phc_` absent**.
 - **Machine:** [`posthog-prod-bundle-preflight-quick-2026-05-04T043634Z.json`](./posthog-prod-bundle-preflight-quick-2026-05-04T043634Z.json).
 
+### 1f) Recheck — new `dpl` (still no `phc_`)
+
+- **When:** `2026-05-04T04:39:15Z` (agent run, UTC).
+- **Deployment id:** `dpl_8ZoKzWHZcqabVJJa8sp7VbAF5YgE`.
+- **Result:** **20** chunk sample, **`phc_` absent**.
+- **Machine:** [`posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json`](./posthog-prod-bundle-preflight-quick-2026-05-04T043915Z.json).
+
+**Ops (parallel, not §5):** prod `GET /api/content-ops/automation-run?scenario=daily_generation&source=cursor` — **HTTP 200**, `ok: true` @ `2026-05-04T04:39:12Z` — [`2026-05-04-ops-o2-automation-run-smoke.json`](./2026-05-04-ops-o2-automation-run-smoke.json). **Caution:** `daily_generation` can enqueue real pipeline steps; confirm `/admin/runs` if anything unexpected.
+
 ## 2) PostHog MCP (project **358775**)
 
 | Query | Result |
 |--------|--------|
-| `elevate_marketing_cta_click` last **7d** | **0** (recheck **~04:37 UTC** same) |
+| `elevate_marketing_cta_click` last **7d** | **0** (recheck **~04:39 UTC** same) |
 | All events last **7d** | **0** |
 | All events last **30d** | **33** (`$autocapture` 15, `$pageview` 13, …) |
 | `elevate_marketing_cta_click` **all time** | **0** |
