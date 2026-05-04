@@ -2,22 +2,22 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **BUILD → REFLECT** (Ops O1 + 콘텐츠 큐 자동 검토, 2026-05-05)
+## Current Phase — **BUILD → REFLECT** (PostHog ADR-013 MCP 재검증, 2026-05-06)
 
-**Ops BUILD 산출:** [`reports/2026-05-05-runs-invariant-check.json`](../reports/2026-05-05-runs-invariant-check.json) — `runsInvariant=PASS`, `maxConsecutiveUtcDaysWithScheduled=2`, `meetsSevenConsecutiveCalendarDays=false`. **재실행 정책:** 스트릭 진척·주간 점검 시 `pnpm exec tsx scripts/content-ops-runs-invariant-check.ts > reports/YYYY-MM-DD-runs-invariant-check.json`; 담당 on-call / operator.
+**PostHog BUILD 산출:** HogQL 프로젝트 **358775** — `elevate_marketing_cta_click` **7d=0**, **30d** `cta_id` 분해 **데이터 없음**; **365d** 동 프로젝트에 `event LIKE 'elevate%'` **0건**. 참고: `elevate_dashboard_sidebar_nav_click` **14d=0**. 요약 [`reports/reflect-adr013-posthog-2026-05-06.md`](../reports/reflect-adr013-posthog-2026-05-06.md), 기계 읽기 [`reports/posthog-adr013-build-snapshot-2026-05-06.json`](../reports/posthog-adr013-build-snapshot-2026-05-06.md). **ADR-013 §5 게이트:** 여전히 **미충족** — Vercel `NEXT_PUBLIC_POSTHOG_KEY`·프로젝트 정합·실트래픽 확인이 다음 액션.
 
-**콘텐츠 큐(에이전트 검토):** 집계 JSON [`reports/content-queue-aggregate-2026-05-05.json`](../reports/content-queue-aggregate-2026-05-05.json), 서술 [`reports/content-queue-agent-review-2026-05-05.md`](../reports/content-queue-agent-review-2026-05-05.md). CLI `pnpm run content-ops:queue-aggregate` — RUNBOOK § Runs invariant 아래 추가.
+**직전 Ops BUILD (2026-05-05):** [`reports/2026-05-05-runs-invariant-check.json`](../reports/2026-05-05-runs-invariant-check.json) · [`reports/content-queue-agent-review-2026-05-05.md`](../reports/content-queue-agent-review-2026-05-05.md).
 
 ### PLAN — 슬라이스 체크리스트 (갱신)
 
 - [x] **Ops:** 재실행 완료(위 JSON)·증거 경로 확정; automation-off는 미사용(스트릭 계속 추적).
-- [ ] **PostHog ADR-013:** **다음 BUILD 세션** — UI·실클릭·STAB 줄 (`tasks.md` marketing-cta 항목).
+- [x] **PostHog ADR-013:** MCP HogQL 재실행 완료 — §5 **미충족** (`elevate_*` 365d 없음·CTA 7d 0). 증거: [`reports/reflect-adr013-posthog-2026-05-06.md`](../reports/reflect-adr013-posthog-2026-05-06.md). **남음:** Vercel 키·라이브 클릭·STAB `[ ]` 해제는 프로덕트 확인 후.
 - [x] **#62:** `creative-dashboard-sidebar.md` — 안 **B**(#60 Productions 정책 합의 전 착수 보류); 마이크로 a11y·내비 이벤트는 병행 가능.
 - [x] **#60 / #61:** 이번 BUILD 세션 **히어로·pricing 코드 PR 없음** (기존 SoT 유지).
 
 ### 다음 모드
 
-- **BUILD:** PostHog ADR-013 증거, 또는 #62 마이크로, 또는 Ops O2(Vercel 토큰 스모크) — **한 세션 하나**.
+- **BUILD:** **Ops O2** (Vercel `automation-run` 토큰 스모크) 또는 PostHog **배포 키 수정 후** 재쿼리 — **한 세션 하나**.
 - **CREATIVE:** #62 안 B는 #60과 Productions 노출 합의 후.
 
 **INIT 종료:** 후보 트랙 **Ops | PostHog | #62 | #60 | #61** 집합·실행 순서는 아래 표 유지.

@@ -109,8 +109,8 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 - [ ] [STAB][P1] marketing-cta-instrumentation-phase-1
   - Owner: rayleighko
   - Order: after #60 hero PR / parallel-safe with #61, #62
-  - Status: merged_to_main_2026-05-04_pending_posthog_reflect
-  - **REFLECT (2026-05-04):** PostHog MCP HogQL — `elevate_marketing_cta_click` **8d count=0** (project 358775). ADR-013 §5 게이트 **미충족**. 증거: [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). 다음: UI에서 동일 검증·프로드 키→프로젝트 정합·실클릭 후 `cta_id` breakdown.
+  - Status: `build_2026-05-06_mcp_recheck_adr013_still_open`
+  - **BUILD / REFLECT (2026-05-06):** PostHog MCP (proj 358775) — `elevate_marketing_cta_click` 7d **0**; 30d `cta_id` breakdown **없음**; **365d** `elevate%` 커스텀 이벤트 **0건** (동 기간 `$pageview` 등 소량만 존재). **ADR-013 §5 미충족.** 증거: [`reports/reflect-adr013-posthog-2026-05-06.md`](../reports/reflect-adr013-posthog-2026-05-06.md), [`reports/posthog-adr013-build-snapshot-2026-05-06.json`](../reports/posthog-adr013-build-snapshot-2026-05-06.json). **이전:** [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md). **다음:** Vercel `NEXT_PUBLIC_POSTHOG_KEY` 비어 있지 않은지·프로젝트 358775 정합·프로드에서 CTA 클릭 스모크 후 재검.
   - Acceptance: 14 cta_id 모두 PostHog 7d 데이터에 non-zero, locale 분해 가능
   - Verify: pnpm verify + `tests/unit/marketing-cta-id-stable-values.test.ts` + `tests/unit/marketing-cta-instrumentation.test.ts` PASS + PostHog dashboard segment by cta_id
   - Refs: docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md, docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md
@@ -155,6 +155,7 @@ Goal: execute stabilization backlog from remote issues after INIT foundation del
 
 ## Immediate Next Step
 
+- **PostHog / ADR-013:** **§5 미충족** — MCP 재검증 [`reports/reflect-adr013-posthog-2026-05-06.md`](reports/reflect-adr013-posthog-2026-05-06.md). **다음:** Vercel `NEXT_PUBLIC_POSTHOG_KEY`·358775 정합·프로드 CTA 클릭 후 STAB `[ ]` 해제.
 - **P0 stabilization (#49–#51):** `#51` gate51 **PASS** (see `reports/gate51-snapshots/2026-05-03-gate51-pass-multiday.json`). **Runs invariant (BUILD 2026-05-05):** [`reports/2026-05-05-runs-invariant-check.json`](reports/2026-05-05-runs-invariant-check.json) — `runsInvariant.status=PASS`, `maxConsecutiveUtcDaysWithScheduled=2`, `meetsSevenConsecutiveCalendarDays=false`, `scheduledDaysUtc`=`["2026-05-02","2026-05-03"]`. **콘텐츠 큐 에이전트 검토:** [`reports/content-queue-agent-review-2026-05-05.md`](reports/content-queue-agent-review-2026-05-05.md) · 집계 [`reports/content-queue-aggregate-2026-05-05.json`](reports/content-queue-aggregate-2026-05-05.json). **Prod 스모크:** `automation-run` + Vercel 토큰(로컬 `.env.local` 불일치 시 401 예상). **7 UTC일 스트릭:** 미달; operator 일별 `scheduled` 유지.
 - **Follow-on:** After **7** consecutive UTC days with ≥1 `scheduled` `content_runs`, write new `reports/*-runs-invariant-check.json` (same schema as `2026-05-03` file) and [x] the runtime line; **or** automation-off one-liner in `tasks.md`.
 - **GitHub #62 / #63 (Refs):** #62 — Phase 1 REFLECT + **Phase 2 partial:** `aria-current` + PostHog `elevate_dashboard_sidebar_nav_click` [`tests/unit/dashboard-sidebar-nav-analytics.test.ts`](../tests/unit/dashboard-sidebar-nav-analytics.test.ts). DoD 나머지(13→4~5, 전면 a11y). CREATIVE [`memory-bank/creative-dashboard-sidebar.md`](memory-bank/creative-dashboard-sidebar.md). #63 closed — CI `gstack:check`; [`reports/gstack-check-sample.log`](reports/gstack-check-sample.log).
