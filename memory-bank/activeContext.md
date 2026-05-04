@@ -6,9 +6,9 @@
 
 **이 세션 SoT:** [`memory-bank/tasks.md`](tasks.md) **§ Active session — PostHog STAB**. 순서: Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` → **Redeploy** → **번들 `phc_` 프리플라이트** → 프로드 CTA 스모크 → PostHog **358775** 확인 → **REFLECT** 리포트·STAB 줄. **의도적 제외(PENDING):** 동일 문서 **Explicit PENDING** 표.
 
-**다음 작업 / 모드:** **Ops O2 정합 완료** (스모크 **200**). **주요 게이트:** PostHog **§5a** — 번들에 **`phc_` 없음** (**`dpl_CzqC…`**). **권장:** **`BUILD` — Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` + Redeploy** ([`tasks.md`](tasks.md) 표 **A**). **병행:** Ops O1·Gate51 증거는 기존 리포트.
+**다음 작업 / 모드:** **Ops O2** 마지막 증거 **`200`** 유지(이번 턴 스모크 생략). **주요 게이트:** PostHog **§5a** — **`phc_` 없음** (`dpl_6eJQ…`) · [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044230Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044230Z.json). **권장:** **`BUILD` — Vercel `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` + Redeploy** ([`tasks.md`](tasks.md) 표 **A**). **병행:** Ops O1·Gate51 증거는 기존 리포트.
 
-**직전 측정 (2026-05-04 UTC):** Prod **`dpl_CzqC…`** — **`phc_` 없음** · [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044120Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044120Z.json). MCP CTA **7d=0**.
+**직전 측정 (2026-05-04 UTC):** Prod **`dpl_6eJQ…`** — **`phc_` 없음** · [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044230Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044230Z.json). MCP CTA **7d=0**. Ops 스모크는 **미재실행**.
 
 **Ops O2:** [`reports/2026-05-04-ops-o2-automation-run-smoke.json`](../reports/2026-05-04-ops-o2-automation-run-smoke.json) — **PASS** `2026-05-04T04:41:20Z` (`daily_generation`). 스모크는 시나리오 실행 — 과호출 주의.
 
