@@ -2,38 +2,31 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **INIT** (남은 작업 클로저 — 2026-05-05 부트스트랩)
+## Current Phase — **PLAN** (남은 클로저 — INIT 이행, 2026-05-05)
 
-**목적:** 스태빌·INIT 큐는 완료; **오픈 체크포인트**만 정리하면 다음 PLAN/BUILD 세션에 바로 진입 가능하게 한다.
+**INIT 종료:** 후보 트랙 **Ops | PostHog ADR-013 | #62 | #60 | #61** 를 집합으로 확정했고, 사용자 지시에 따라 **PLAN**으로 전환함. **BUILD 세션마다 트랙은 여전히 하나**만 고른다.
 
-### 남은 작업 인벤토리 (`tasks.md` SoT)
+### PLAN — 이번 웨이브 실행 순서 (고정)
 
-| 트랙 | 상태 | 복잡도·다음 모드 |
-|------|------|------------------|
-| **Ops — 7 UTC일 `scheduled` 스트릭** | `[ ]` 체크리스트 + invariant PASS, 연속일 7 미만 | **L1** — 증거·운영 → BUILD(스냅샷) 또는 automation-off 문서 → REFLECT |
-| **Ops — prod `automation-run` 401** | Vercel `CONTENT_OPS_AUTOMATION_TOKEN` 바이트 정합 | **L1** — BUILD 없음 선호, operator 스모크 |
-| **STAB — ADR-013 PostHog §5** | 코드 머지됨, HogQL 0건 REFLECT 기록 | **L1** — UI·키·프로젝트 정합 확인 → REFLECT → STAB 줄 갱신 |
-| **#62 사이드바** | Phase 1+2 partial 완료, DoD(4~5항·전면 a11y) 잔여 | **L2–L3** — CREATIVE(`creative-dashboard-sidebar.md`) 보강 후 PLAN → BUILD |
-| **#60 히어로/포지셔닝** | 시나리오 코멘트 게이트 | **L3** — PLAN → (#60 합의 후) CREATIVE/BUILD |
-| **#61 pricing** | 오픈 | **L2** — PLAN → BUILD (#62와 파일 충돌 시 순서) |
-| **#73 P2** | 구현 전 **합의** 필수 | **프로세스** — 이슈 체크만; 코드 INIT 아님 |
+| 순서 | 트랙 | 이유 | 다음 모드 |
+|------|------|------|-----------|
+| 1 | **Ops** (O1→O2) | 제품 분기와 무관, 증거·운영만 | BUILD(스냅샷/스모크) 또는 `tasks.md` automation-off 한 블록 |
+| 2 | **PostHog ADR-013** | `tasks.md` STAB `[ ]` 직결 | UI·키·프로젝트 정합 → REFLECT → STAB 줄 갱신 |
+| 3 | **#62** | CREATIVE SoT 있음; Productions 노출만 #60과 겹침 | CREATIVE 보강 → BUILD |
+| 4 | **#60** | 히어로 **구현 PR** 금지 유지 | 이슈·시나리오 합의·CREATIVE만; 합의 후 BUILD |
+| 5 | **#61** | #62와 라우트/컴포넌트 충돌 시 순서 조정 | 스코프 확정 후 BUILD |
 
-### INIT 체크리스트 (세션 시작 시)
+### PLAN — 슬라이스 체크리스트 (이번 PLAN 세션에서 채움)
 
-- [x] `memory-bank/tasks.md` · `activeContext.md` 확인
-- [ ] `docs/AI_EXPERT_PROMPTS.md` — 이번 트랙에 맞는 블록(A~D) 1개 선택
-- [ ] 증거 파일 재확인: [`reports/2026-05-04-runs-invariant-check.json`](../reports/2026-05-04-runs-invariant-check.json), [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md), [`reports/reflect-github-62-sidebar-phase1.md`](../reports/reflect-github-62-sidebar-phase1.md)
-- [ ] **트랙 1개만** 다음 모드로 승격 (병렬 시에도 SoT는 한 줄로)
+- [ ] **Ops:** `content-ops:runs-invariant-check` 재실행 시점·담당, 또는 automation-off 문구 초안 위치(`tasks.md` 어느 절)
+- [ ] **PostHog:** UI 검증 단계(프로젝트·브라우저 키·실클릭) 담당·산출물(`reports/` vs STAB 한 줄만)
+- [ ] **#62:** 안 B 착수 vs 마이크로 a11y만 — `creative-dashboard-sidebar.md`에 **한 줄 결정** 남기기
+- [ ] **#60 / #61:** 이번 주 **코드 PR 포함 여부** 명시적 아니오 확인(기본: #60 히어로 PR 없음)
 
-### INIT 완료 판정 → 다음 모드
+### 다음 모드 (PLAN 종료 후)
 
-```
-✅ INIT 준비 완료 (남은 작업)
-━━━━━━━━━━━━━━━━━━
-📁 SoT: tasks.md 체크박스 + 위 표
-📊 권장 분기: Ops/R1 → L1 → BUILD·REFLECT | #62 잔여 → PLAN→CREATIVE→BUILD
-➡️ 다음: 사용자가 고른 트랙에 대해 PLAN 또는 BUILD
-```
+- **BUILD:** Ops 증거만, 또는 PostHog REFLECT 한 커밋, 또는 #62 구현 PR — **한 세션에 하나**.
+- **CREATIVE:** #62 안 B 등 IA — `memory-bank/creative-dashboard-sidebar.md` 먼저.
 
 **직전 BUILD 참고:** #62 — [`TOC.tsx`](../src/components/desk/TOC.tsx), `elevate_dashboard_sidebar_nav_click`, [`dashboard-sidebar-nav-analytics.test.ts`](../tests/unit/dashboard-sidebar-nav-analytics.test.ts).
 
@@ -79,7 +72,7 @@ flowchart LR
 
 - **Ops:** `meetsSevenConsecutiveCalendarDays=true` **또는** `tasks.md` automation-off + invariant PASS 유지.
 - **ADR-013:** PostHog에서 14 `cta_id`에 대해 **관측 가능**한지(0이면 원인 문서화 유지) + STAB 상태 문자열 갱신.
-- **#62:** Phase 1(라벨 테스트·문서) **REFLECT 완료** — Phase 2(항목 축소·PostHog·a11y)는 별 PR.
+- **#62:** Phase 1 REFLECT 완료 + Phase 2 partial(aria-current·sidebar PostHog) — DoD 나머지(13→4~5·전면 a11y)는 CREATIVE→BUILD.
 - **#73:** 이슈 체크박스에 합의/보류 기록(코드 불필요).
 
 ### 다음 모드

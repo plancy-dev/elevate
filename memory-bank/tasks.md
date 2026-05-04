@@ -13,6 +13,10 @@
 
 **Non-negotiable:** `activeContext.md` § Non-Negotiable · #60 히어로 PR은 시나리오 코멘트 전 금지(`tasks.md` PLAN snapshot §7).
 
+## PLAN — Remaining closure (2026-05-05)
+
+**From INIT:** 트랙 후보 Ops · PostHog ADR-013 · #62 · #60 · #61 → **PLAN 전환 완료**. 실행 순서·슬라이스 체크리스트: [`memory-bank/activeContext.md`](activeContext.md) **Current Phase — PLAN**. BUILD 세션은 트랙 하나만.
+
 ## BUILD track (active) — 2026-05-04
 
 - **Scope (merged):** ADR-013 PR2 — wire [`PostHogEvent.ELEVATE_MARKETING_CTA_CLICK`](../src/lib/analytics/posthog-events.ts) at 8 surfaces per [`docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md`](../docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md) Decisions #2–#3; required props `cta_id` + `locale`; optional `slug` (blog footer), `referrer_path` where useful.
