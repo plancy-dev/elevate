@@ -5,6 +5,11 @@
 export const PostHogEvent = {
   ELEVATE_APP_READY: "elevate_app_ready",
   ELEVATE_DASHBOARD_IDENTIFIED: "elevate_dashboard_identified",
+  /**
+   * Desk sidebar primary nav (dashboard + admin shells).
+   * Properties: `href`, `mode` (dashboard | admin), `collapsed` (boolean), `locale`.
+   */
+  ELEVATE_DASHBOARD_SIDEBAR_NAV_CLICK: "elevate_dashboard_sidebar_nav_click",
   /** Funnel stages — see docs/CONTENT_FUNNEL.md */
   ELEVATE_FUNNEL_LIBRARY_VIEW: "elevate_funnel_library_view",
   ELEVATE_FUNNEL_BILLING_VIEW: "elevate_funnel_billing_view",

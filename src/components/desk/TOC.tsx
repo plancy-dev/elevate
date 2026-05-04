@@ -4,7 +4,9 @@ import * as Dialog from "@radix-ui/react-dialog";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
-import { useMessages } from "next-intl";
+import { useLocale, useMessages } from "next-intl";
+import { usePostHog } from "posthog-js/react";
+import { PostHogEvent } from "@/lib/analytics/posthog-events";
 import {
   BookOpen,
   ChevronLeft,
@@ -77,6 +79,8 @@ export function TOC({
   iconTonePreset = "focus",
 }: TOCProps) {
   const messages = useMessages();
+  const locale = useLocale();
+  const posthog = usePostHog();
   const tx = useCallback(
     (key: string, fallback: string) =>
       getNestedMessage(messages, `Dashboard.toc.${key}`) ?? fallback,
@@ -236,6 +240,18 @@ export function TOC({
       icon: iconByHref[item.href] ?? BookOpen,
     }));
   }, [sections]);
+  const captureSidebarNav = useCallback(
+    (href: string) => {
+      posthog?.capture(PostHogEvent.ELEVATE_DASHBOARD_SIDEBAR_NAV_CLICK, {
+        href,
+        mode,
+        collapsed,
+        locale,
+      });
+    },
+    [posthog, mode, collapsed, locale],
+  );
+
   const syncCollapsedToQuery = (nextCollapsed: boolean) => {
     const next = new URLSearchParams(searchParams.toString());
     if (nextCollapsed) next.set("toc", "collapsed");
@@ -303,8 +319,10 @@ export function TOC({
                           <li key={item.href}>
                             <Link
                               href={item.href}
+                              aria-current={active ? "page" : undefined}
                               aria-label={item.label}
                               title={item.label}
+                              onClick={() => captureSidebarNav(item.href)}
                               className={cn(
                                 "group relative flex h-9 w-9 items-center justify-center rounded-(--radius-1) transition-[opacity,color,background-color,border-color] duration-120 ease-(--ease-editorial) opacity-80 hover:opacity-100",
                                 iconTone.base,
@@ -342,6 +360,8 @@ export function TOC({
                         <li key={item.href}>
                           <Link
                             href={item.href}
+                            aria-current={active ? "page" : undefined}
+                            onClick={() => captureSidebarNav(item.href)}
                             className={cn(
                               "relative block rounded-(--radius-1) px-3 py-1.5 text-[13px] tracking-[0.01em] text-ink-500 transition-all duration-100 ease-(--ease-editorial) hover:bg-paper-0 hover:text-ink-900",
                               active &&
@@ -417,7 +437,11 @@ export function TOC({
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      onClick={() => setMobileOpenSection(null)}
+                      aria-current={item.href === activeHref ? "page" : undefined}
+                      onClick={() => {
+                        captureSidebarNav(item.href);
+                        setMobileOpenSection(null);
+                      }}
                       className={cn(
                         "block border border-ink-100 bg-paper-0 px-3 py-2 text-sm text-ink-700",
                         item.href === activeHref && "border-vermilion-600 text-ink-900",

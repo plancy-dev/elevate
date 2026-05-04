@@ -2,13 +2,13 @@
 
 **Agent workflow SoT (INIT→ARCHIVE, L1–L4, gstack 보조):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** — 에이전트·인간 모두 **복잡도에 맞는 페이즈**를 생략하지 않음(사용자 fast path만 예외).
 
-## Current Phase — **REFLECT** (#62 Phase 1 — sidebar 안 A)
+## Current Phase — **BUILD** (#62 Phase 2 partial — aria-current + sidebar nav PostHog)
 
-**BUILD에서 끝낸 것:** [`tests/unit/dashboard-toc-library-labels.test.ts`](../tests/unit/dashboard-toc-library-labels.test.ts) + CREATIVE 권한 문서; 커밋 `f55543e` 경로.
+**이번 BUILD:** [`src/components/desk/TOC.tsx`](../src/components/desk/TOC.tsx) — 활성 링크 `aria-current="page"`; 클릭 시 `PostHogEvent.ELEVATE_DASHBOARD_SIDEBAR_NAV_CLICK` (`href`, `mode`, `collapsed`, `locale`). 이벤트 상수 [`posthog-events.ts`](../src/lib/analytics/posthog-events.ts). 계약 테스트 [`tests/unit/dashboard-sidebar-nav-analytics.test.ts`](../tests/unit/dashboard-sidebar-nav-analytics.test.ts).
 
-**REFLECT 요약:** Issue #62 **DoD 일부만** 충족 — 라벨 중복·5 locale·verify는 **OK**; **13→4~5 축소·PostHog·키보드/aria**는 **미착수**. 증거: [`reports/reflect-github-62-sidebar-phase1.md`](../reports/reflect-github-62-sidebar-phase1.md).
+**직전 REFLECT:** #62 Phase 1 — [`reports/reflect-github-62-sidebar-phase1.md`](../reports/reflect-github-62-sidebar-phase1.md). **여전히 미착수:** 13→4~5(안 B), 전면 키보드 스윕.
 
-**다음:** **BUILD** — #62 Phase 2(안 B 등) **또는** `tasks` **Pkg-O1/O2/R1**(Ops·PostHog)으로 트랙 전환. #60 히어로 PR 제약 유지.
+**다음:** **REFLECT** 짧게 **또는** Pkg-O1/O2/R1. #60 히어로 PR 제약 유지.
 
 **직전 아카이브:** [`archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md`](archive/work-history/archive-ai-native-workflow-docs-ops-2026-05-04.md).
 
