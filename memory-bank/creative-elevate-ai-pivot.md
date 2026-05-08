@@ -1,3 +1,5 @@
+> Superseded by ADR-014 (2026-05-08). Prompt Studio thesis archived as "currently not active North Star" — revivable as future vertical candidate. North Star pivot history는 reference로 보존.
+
 # North Star — Elevate AI 플랫폼 피벗
 
 **Single source of truth** for product narrative (Gemini/VC 플라이휠·듀얼 GTM과 정합).  

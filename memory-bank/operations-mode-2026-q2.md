@@ -167,3 +167,50 @@ Then: confirm today’s topic → outline → draft → gates → publish → no
 ---
 
 *Updates: bump “Effective” or add a one-line changelog when policy shifts.*
+
+## Studio Brand Identity (added 2026-05-08)
+
+Elevate는 Studio brand — vertical product 빌드하는 솔로 founder의
+holding entity. 가게점수가 first vertical, future verticals 동일
+framework. 콘텐츠는 Studio operations documentation 역할.
+
+Reference: `docs/adr/ADR-014-elevate-studio-brand.md`.
+
+### Voice 정밀화
+
+- Old: "AI-augmented worker, pragmatic skepticism"
+- New: "Solo founder running AI-augmented Studio. Practitioner
+  documentation of multi-agent vertical building. Patterns discovered,
+  anti-patterns avoided."
+
+Implication: 블로그 voice가 "내가 일하는 방식 documenting" → "내가 운영하는
+Studio가 어떻게 vertical product를 ship하는지 documenting"으로 shift. 같은
+author, 더 specific lens.
+
+### Topic axes 재조정
+
+- (유지) AI workflow application — Studio 내부 운영 사례 강조
+- (유지) Solo operator productivity — 1인 vertical 빌드 lens
+- (유지) Prompt engineering — multi-agent orchestration 강조
+- (재조정) Vertical product building — B2B SaaS 일반론 → 1인 vertical
+  builder 관점
+- (유지) Founder / builder insights — Studio operating learnings
+- (유지) AI trend curation — Studio strategic perspective
+
+### 가게점수 mention rule
+
+자연 mention OK (Studio가 빌드 중인 product 중 하나로). 광고형 push X.
+
+판단 기준:
+
+- Natural mention: "이번 주 가게점수 V0.5 ship하면서 발견한 multi-agent
+  orchestration pattern은…" → OK. 콘텐츠 가치 self-contained, 가게점수는
+  example로 기능.
+- Ad-style push: "가게점수, 1인 카페 사장님 마케팅 진단 도구입니다. 지금
+  진단받기" → NOT OK. 콘텐츠가 promotion vehicle.
+
+### Operating implication
+
+Cursor의 daily 운영은 본 voice + topic axes를 reference. 기존 cadence
+(블로그 주 3회, 뉴스레터 주 1회) 유지. 다음 3개 post에서 voice 정밀화
+결과 평가 — unsubscribe rate · engagement 데이터 보고 W4 재조정.
