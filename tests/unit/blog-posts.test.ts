@@ -11,6 +11,7 @@ const EN_SLUGS = [
   "elevate-first-vertical-content-focus",
   "operator-grade-execution-moat-for-ai-enabled-teams-from-signal-to-operating-adva",
   "prompt-harness-beats-prompt-hacks",
+  "the-60-minute-boardroom",
 ].sort();
 const KO_SLUGS = [
   "cursor-session-discipline-that-ships",
