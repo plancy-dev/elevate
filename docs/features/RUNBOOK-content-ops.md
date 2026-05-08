@@ -52,8 +52,23 @@ Preflight checks before enabling scheduled runs:
 
 - **CLI snapshot:** `pnpm run content-ops:runs-invariant-check` — last 7d `content_runs` totals, `trigger_type` / `metadata.automation_source` for scheduled rows, and PASS/WARN/FAIL style verdict.
 - **Prod automation-run smoke (operator token check):** `pnpm content-ops:automation-run-smoke` — loads `CONTENT_OPS_AUTOMATION_TOKEN` from `.env.local`, GETs production `/api/content-ops/automation-run` with **default** `scenario=daily_generation` and `source=cursor`, writes `reports/ops-o2-automation-run-smoke-latest.json` unless `--out` is set. Exits **1** on HTTP **401**. **Caution:** `daily_generation` is a **real** scenario — each successful run can enqueue pipeline work; do not loop this in CI; check `/admin/runs` if unsure.
-- **Gate51 trend-only:** `pnpm run content-ops:gate51-trend-check` — 7d `content_items` novelty / blog review ratios; JSON on stdout. For a **clean** redirect file (no pnpm banner), use `pnpm exec tsx scripts/content-ops-gate51-trend-check.ts > reports/….json`.
+- **Gate51 trend-only:** `pnpm run content-ops:gate51-trend-check` — 7d `content_items` novelty / blog review ratios; **without `--out`:** JSON on stdout (after pnpm’s script header lines unless you use `pnpm run -s …`). **With `--out=`** (path must stay under `reports/`): writes **JSON only** to that file, **prints nothing to stdout** (one status line on **stderr**). Example: `pnpm run content-ops:gate51-trend-check -- --out=reports/your-snapshot.json`. Convenience: `pnpm run content-ops:gate51-trend-check:write-latest` → `reports/content-ops-gate51-trend-recheck-latest.json`. For stdout-only JSON (no pnpm header lines), use `pnpm run -s content-ops:gate51-trend-check` (no `--out`).
 - **Queue aggregate (service role):** `pnpm run content-ops:queue-aggregate` — dumps JSON counts for `/admin/content-queue` (status / gate reasons / AI decisions); use for SLA and bottleneck triage.
+- **Approved blog publish (service role, operator-only):** `pnpm run content-ops:publish-approved-blogs:dry-run` lists up to 200 `content_items` rows with `type=blog` and `status=approved` (override cap with `-- --limit=N`); without `--dry-run`, `pnpm run content-ops:publish-approved-blogs` calls `runPublishPipeline({ contentItemId })` once per listed row—**real** publish side effects—so dry-run first and add `Refs #<issue>` on the PR when this backs a tracked remediation.
+
+### Marketing blog: three layers (DB vs repo vs prod)
+
+The public routes under `/[locale]/blog/[slug]` **read MDX from `content/blog/<locale>/<slug>.mdx` at build time** (`getPostBySlug` in `src/lib/blog/posts.ts`). Supabase `content_items` (`type=blog`) holds **pipeline/editorial state**; successful publish paths **materialize** posts by writing those MDX files (`src/lib/content-ops/blog-publish-adapter.ts`). **URLs on `elevate.ai.kr` only update after the commit that contains the MDX ships** to the Vercel production deployment.
+
+- **Editorial / queue SoT:** `content_items` (+ publications) — what is approved, published_at, failures.
+- **Runtime SoT (per deploy):** MDX files **in the deployed Git revision** — this is what answers `curl` / HTML.
+- **Fast prod inventory:** Live `GET /sitemap.xml` blog `<loc>` entries — must match the deployed bundle; use this when operators distrust local tree alone.
+
+**Reconcile CLI (all three when service role present):**
+
+- `pnpm run blog:live-reconcile` — compares local MDX slugs vs production sitemap vs `content_items` (`type=blog`, `published_at` set). Options: `--site=https://elevate.ai.kr`, `--out=reports/blog-live-reconcile-<stamp>.json`, `--include-samples` (default excludes `sample-*` slugs like production).
+
+If DB says “published” but MDX is missing locally, the publish step did not write the file or a different machine/repo was used. If MDX exists locally but the prod sitemap omits the slug, **production is on an older deployment** — promote the correct commit; `curl` 404 on that slug is expected until then.
 - **UI:** `/admin/morning-ops` includes an **Automation heartbeat** strip (green/yellow/red) from the same 7d window so operators can separate healthy idle from stale telemetry.
 
 ## Stabilization Gate Check (`#49/#50/#51`)

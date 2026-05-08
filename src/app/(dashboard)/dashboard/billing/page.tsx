@@ -9,12 +9,8 @@ import {
   BillingLemonCheckout,
   type LemonBillingUnconfiguredReason,
 } from "@/components/dashboard/billing-lemon-checkout";
-import { BillingTossWidget } from "@/components/dashboard/billing-toss-widget";
 import type { OrgPlan } from "@/lib/organizations/plan";
 import { resolveLemonCheckoutForBillingPage } from "@/lib/payments/resolve-lemon-checkout-for-billing";
-import { getTossWidgetClientKey } from "@/lib/env/toss";
-import { getCatalogPaymentProvider } from "@/lib/payments/catalog-payment-provider";
-import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
 import { createClient } from "@/lib/supabase/server";
 import { resolveAppOrigin } from "@/lib/url/resolve-app-origin";
 
@@ -70,14 +66,13 @@ export default async function BillingPage({
     }
   }
 
-  const provider = getCatalogPaymentProvider();
   const origin = await resolveAppOrigin();
 
   let lemonCheckoutUrl: string | null = null;
   let lemonEmbedsCustomData = false;
   let lemonUnconfigured: LemonBillingUnconfiguredReason | null = null;
 
-  if (provider === "lemon" && contentProductSlug) {
+  if (contentProductSlug) {
     const r = await resolveLemonCheckoutForBillingPage({
       contentProductSlug,
       organizationId: prof?.organization_id ?? null,
@@ -99,7 +94,6 @@ export default async function BillingPage({
     }
   }
 
-  const widgetKey = getTossWidgetClientKey();
   const t = await getTranslations("Dashboard.pages");
   const tb = await getTranslations("Dashboard.billing");
 
@@ -121,7 +115,7 @@ export default async function BillingPage({
         {billingOrg ? (
           <BillingOrgSummary organizationName={billingOrg.name} plan={billingOrg.plan} />
         ) : null}
-        {provider === "lemon" && contentProductSlug ? (
+        {contentProductSlug ? (
           <BillingLemonCheckout
             contentProductSlug={contentProductSlug}
             checkoutUrl={lemonCheckoutUrl}
@@ -130,39 +124,6 @@ export default async function BillingPage({
             embedsCustomDataInCheckout={lemonEmbedsCustomData}
             unconfiguredReason={lemonUnconfigured}
           />
-        ) : null}
-        {provider === "toss" ? (
-          <>
-            {contentProductSlug ? (
-              <p className="text-sm text-ink-700 leading-relaxed">
-                {tb("checkoutWithSlug", {
-                  slug: contentProductSlug,
-                  amount: TOSS_POC_AMOUNT_KRW,
-                })}
-              </p>
-            ) : (
-              <p className="text-sm text-ink-700 leading-relaxed">
-                {tb("tossIntroNoSlug", { amount: TOSS_POC_AMOUNT_KRW })}
-              </p>
-            )}
-            {contentProductSlug ? (
-              <p className="text-sm text-ink-700 leading-relaxed">
-                {tb("tossIntro", { amount: TOSS_POC_AMOUNT_KRW })}
-              </p>
-            ) : null}
-            {user && widgetKey ? (
-              <BillingTossWidget
-                clientKey={widgetKey}
-                customerKey={user.id}
-                appOrigin={origin}
-                customerEmail={user.email ?? null}
-                customerName={prof?.display_name?.trim() || null}
-                contentProductSlug={contentProductSlug}
-              />
-            ) : (
-              <p className="text-sm text-ink-500">{tb("setClientKey")}</p>
-            )}
-          </>
         ) : null}
       </div>
     </div>

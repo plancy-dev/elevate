@@ -26,7 +26,7 @@
 |------|------|
 | 콘텐츠 카탈로그·엔타이틀먼트·`product_kind` | 스키마·Library UI 반영 (`009`/`010`) |
 | 전자책 퍼널 문서 | `docs/CONTENT_FUNNEL.md` |
-| Toss 결제 ↔ 카탈로그 자동 연동 | **백로그** (B4, ADR-001 확장) |
+| Lemon 웹훅 ↔ 카탈로그 entitlement | **진행·점검** (ADR-004/PLAN-lemon-squeezy-webhook) |
 | 자산 전달(Storage·서명 URL) | **백로그** |
 | PostHog 퍼널 이벤트 | **최소** (`posthog-events.ts` 이벤트 2종, 퍼널용 이벤트는 문서상 backlog) |
 
@@ -85,14 +85,14 @@ gstack **`/retro`**, **`/qa`** 산출물은 PR 항목 **증거**로 쓰고, **`p
 2. **에이전트 세션 부트스트랩 규칙** — “버그만 던져도” `tasks`/`activeContext`를 읽게 한 것은 **재현 가능한 개발 습관**으로 이어진다.  
 3. **CI가 핵심 게이트를 커버** — push/PR에 install 직후 **`gstack:check`**(벤더 gstack 미빌드 시 경고·exit 0), 이어 lint, typecheck, unit test, build (`.github/workflows/ci.yml`).  
 4. **제품 방향 문서화** — North Star, CONTENT_FUNNEL, REFLECT 감사 문서가 있어 **에이전트/인간 모두 같은 맥락**을 참조할 수 있다.  
-5. **Toss·PostHog 의존성이 코드에 존재** — “나중에 연결”이 아니라 **확장 지점이 명확**하다.
+5. **결제·분석 통합 지점이 문서화됨** — Lemon/Polar 웹훅·PostHog 등 **확장 경로가 경로 단위로 잡혀 있다**.
 
 ---
 
 ## 4. 현재 분석 — 부족한 점
 
 1. **관측(Analytics)이 North Star 대비 얇음** — `PostHogEvent`가 2개뿐이며, `CONTENT_FUNNEL.md`에 적힌 `purchase_completed`, `library_view` 등은 **정의·구현 backlog**.  
-2. **상업 루프 미완** — 결제 PoC(ADR-001)와 카탈로그 스키마는 있으나 **자동 entitlement·SKU 연결**은 미완 (`tasks` B4).  
+2. **상업 루프 일부** — Lemon 웹훅·entitlement 경로는 있으나 **관측·환불·E2E** 등은 여전히 백로그 (`tasks`, `CONTENT_FUNNEL`).  
 3. **E2E가 기본 CI에 없음** — `e2e.yml`은 `workflow_dispatch` — **회귀 비용이 사람에게 기대**는 구조.  
 4. **인앱 에이전트/워크스페이스** — 비전과 문서는 있으나 **제품 점수 항목에서는 아직 낮음**.  
 5. **자동 에이전트 eval 부재** — gstack `/review`·`/qa` 등은 증거로 쓰나, Anthropic식 **격리·회귀 eval 스위트**(수십 과제·주기 실행) 수준은 아직 없음.
@@ -105,7 +105,7 @@ gstack **`/retro`**, **`/qa`** 산출물은 PR 항목 **증거**로 쓰고, **`p
 
 | 우선순위 | 항목 |
 |----------|------|
-| P0 | Toss 성공 플로우 ↔ `content_products` / `organization_content_entitlements` 자동 반영 (B4) |
+| P0 | Lemon 주문 처리 ↔ `content_products` / `organization_content_entitlements` 안정화·관측 (B2/B4) |
 | P0 | Supabase Storage + signed URL + (선택) 감사 로그 |
 | P1 | PostHog 이벤트 스키마 고정: 퍼널 단계별 최소 세트 (`CONTENT_FUNNEL.md` 반영) |
 | P1 | Playwright 스모크를 주기 실행 또는 PR 라벨 트리거로 안정화 |
@@ -114,7 +114,7 @@ gstack **`/retro`**, **`/qa`** 산출물은 PR 항목 **증거**로 쓰고, **`p
 
 ### 5.2 수동으로 해야 할 일 (운영·거버넌스)
 
-- Toss 대시보드·콜백 URL·키 로테이션, 상용 계약 전 컴플라이언스 검토.  
+- Lemon·Polar 대시보드·웹훅 URL·시크릿 로테이션, 상용 계약 전 컴플라이언스 검토.  
 - PostHog 프로젝트·대시보드·퍼널 정의, 이벤트 네이밍 합의 (규칙 파일 참조).  
 - `memory-bank/activeContext.md` / `tasks.md` 스프린트 갱신.  
 - gstack 사용 시 Bun 설치·`./setup` — **선택**이지만 YC식 리뷰 루프를 쓰려면 필요.
@@ -125,7 +125,7 @@ gstack **`/retro`**, **`/qa`** 산출물은 PR 항목 **증거**로 쓰고, **`p
 |--------|------|
 | **Supabase** | Auth, DB, RLS, (예정) Storage |
 | **Vercel** | 배포 |
-| **Toss Payments** | 국내 카드 (PoC→상용) |
+| **Lemon Squeezy / Polar** | 카탈로그·구독 결제 (운영 경로) |
 | **PostHog** | 제품 분석 (확대 필요) |
 
 ---
@@ -178,8 +178,8 @@ gstack **`/retro`**, **`/qa`** 산출물은 PR 항목 **증거**로 쓰고, **`p
 
 ## 7. 결론
 
-Elevate는 **AI를 써서 소프트웨어를 만드는 쪽**에서는 이미 **체계적**이다. 반면 **AI를 팔고 측정하는 쪽**(결제·권한·전달·퍼널 분석)은 **문서와 스키마는 준비됐고 실행은 backlog**에 가깝다.  
-다음 분기의 점수를 올리는 가장 큰 레버는 **B4 + PostHog 퍼널 + Storage 전달**이며, 그다음이 **E2E 신뢰도**다.
+Elevate는 **AI를 써서 소프트웨어를 만드는 쪽**에서는 이미 **체계적**이다. 반면 **AI를 팔고 측정하는 쪽**(결제·권한·전달·퍼널 분석)은 **카탈로그 결제는 Lemon/Polar로 수렴**했으나 관측·환불·E2E 등 **일부는 여전히 backlog**에 가깝다.  
+다음 분기의 점수를 올리는 가장 큰 레버는 **B2/B4(웹훅·퍼널) + PostHog + Storage 전달**이며, 그다음이 **E2E 신뢰도**다.
 
 ---
 
@@ -190,4 +190,5 @@ Elevate는 **AI를 써서 소프트웨어를 만드는 쪽**에서는 이미 **�
 | [`AI_ORCHESTRATION.md`](./AI_ORCHESTRATION.md) | 개발 에이전트 레이어 |
 | [`CONTENT_FUNNEL.md`](./CONTENT_FUNNEL.md) | 전자책 퍼널 vs 코드 |
 | [`memory-bank/tasks.md`](../memory-bank/tasks.md) | 로드맵 SoT |
-| [`adr/ADR-001-toss-payments-poc.md`](./adr/ADR-001-toss-payments-poc.md) | 결제 PoC |
+| [`adr/ADR-004-lemon-squeezy-global-payments.md`](./adr/ADR-004-lemon-squeezy-global-payments.md) | 카탈로그 결제·웹훅 |
+| [`adr/ADR-001-toss-payments-poc.md`](./adr/ADR-001-toss-payments-poc.md) | 역사적 Toss PoC (앱 코드 제거됨) |

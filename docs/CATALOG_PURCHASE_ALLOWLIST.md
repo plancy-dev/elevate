@@ -2,9 +2,9 @@
 
 When **`CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true`** (server env), only profile emails present in **`catalog_purchase_allowlist`** can:
 
-1. Create a Toss payment intent (`createTossPaymentIntent`)
-2. Confirm payment on the success redirect (`confirmTossPaymentFromRedirect`) — for **pending** intents only; already-confirmed intents skip the gate
-3. Have the payment **webhook** confirm and grant entitlements — if the payer’s email is not allowed, the webhook **does not** update the intent or grant access (audit log metadata: `skipped: checkout_allowlist`)
+1. Start **Lemon Squeezy** hosted checkout for a catalog SKU (server checks before redirect).
+2. Complete hosted checkout and return to app success/fail routes (no separate in-app payment-confirm step).
+3. Have the **Lemon** order **`order_created`** webhook grant entitlements — if the payer’s email is not allowed, processing **skips** grant (audit / webhook path; see `src/lib/payments/lemon-squeezy-webhook.ts`).
 
 This is **not** the marketing waitlist (`waitlist_signups`). Match is on **`profiles.email`**, normalized with `lower(trim(...))`.
 

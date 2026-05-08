@@ -14,7 +14,6 @@ import {
   type ContentProductWithLemon,
 } from "@/components/admin/content-catalog-edit-dialog";
 import { LEMON_CUSTOM_PRICE_MIN_KRW } from "@/lib/payments/lemon-custom-price-minimum";
-import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
 import { cn } from "@/lib/utils";
 
 const KINDS = ["ebook", "guide", "template", "bundle"] as const;
@@ -280,7 +279,7 @@ export function ContentProductsAdminClient({
               type="number"
               min={0}
               step={1}
-              defaultValue={TOSS_POC_AMOUNT_KRW}
+              defaultValue={LEMON_CUSTOM_PRICE_MIN_KRW}
               className="w-full max-w-[200px] rounded-[var(--radius-1)] border border-ink-100 bg-paper-50 px-3 py-2 text-sm tabular-nums"
             />
             <p className="mt-1 text-[11px] text-ink-500 leading-relaxed">

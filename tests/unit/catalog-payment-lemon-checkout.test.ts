@@ -12,14 +12,9 @@ describe("getCatalogPaymentProvider", () => {
     expect(getCatalogPaymentProvider()).toBe("lemon");
   });
 
-  it("returns toss when set", () => {
+  it("returns lemon when legacy toss env is set (ignored)", () => {
     vi.stubEnv("NEXT_PUBLIC_CATALOG_PAYMENT_PROVIDER", "toss");
-    expect(getCatalogPaymentProvider()).toBe("toss");
-  });
-
-  it("is case-insensitive", () => {
-    vi.stubEnv("NEXT_PUBLIC_CATALOG_PAYMENT_PROVIDER", "TOSS");
-    expect(getCatalogPaymentProvider()).toBe("toss");
+    expect(getCatalogPaymentProvider()).toBe("lemon");
   });
 });
 

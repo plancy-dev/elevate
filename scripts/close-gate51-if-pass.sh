@@ -16,7 +16,7 @@ if ! command -v gh >/dev/null 2>&1; then
 fi
 
 echo "→ running #51 trend check"
-TREND_OUT="$(pnpm run content-ops:gate51-trend-check)"
+TREND_OUT="$(pnpm run -s content-ops:gate51-trend-check)"
 echo "$TREND_OUT" > /tmp/gate51-trend-check.out
 
 echo "→ running global gate check"

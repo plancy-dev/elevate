@@ -342,7 +342,7 @@ Website & waitlist: https://elevate.ai.kr/yt · Links: https://elevate.ai.kr/lin
 |------|------|
 | **PostHog** | `NEXT_PUBLIC_POSTHOG_*` · 퍼널은 [`POSTHOG_FUNNELS.md`](./POSTHOG_FUNNELS.md). |
 | **Resend / 이메일** | 대기명단 발송 도메인 DNS(SPF/DKIM) — Resend 대시보드 안내. |
-| **Toss 등 결제** | 운영 키·웹훅 URL — [`tasks.md`](../memory-bank/tasks.md) 백로그 P0 참고. |
+| **Lemon / Polar 결제** | 웹훅 URL·시크릿·체크아웃 링크 — [`PHASE2_ENV.md`](./PHASE2_ENV.md), [`MANUAL_OPERATOR_CHECKLIST.md`](./MANUAL_OPERATOR_CHECKLIST.md), [`tasks.md`](../memory-bank/tasks.md) Payments 줄. |
 
 ---
 

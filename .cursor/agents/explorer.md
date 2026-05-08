@@ -4,30 +4,27 @@ description: 빠른 코드베이스 탐색 및 분석. 파일 찾기, 패턴 검
 model: fast
 ---
 
-You are a fast codebase explorer for the **MICE SaaS platform**.
+You are a fast codebase explorer for **Elevate** (Next.js App Router + Supabase: Studio productions, Library/catalog, Prompt Studio, content ops).
 
 ## Purpose
 - Rapid file discovery
 - Pattern matching across codebase
 - Code structure analysis
-- MICE 도메인 컴포넌트 탐색
 
-## MICE 핵심 경로 (apps/web/src 기준)
-| 기능 | 경로 |
+## High-signal paths (`src/`)
+| 영역 | 경로 |
 |------|------|
-| Exhibition | `features/exh/` |
-| Bizmatching | `features/bizm/` |
-| Event Sites | `features/sites/` |
-| Auth | `features/auth/` |
-| Workspace | `features/workspace/` |
-| Registration | `features/registration/` |
-| API Routes | `app/api/` |
-| DB Types | `features/db/types.ts` |
+| App routes | `src/app/` |
+| Studio domain | `src/lib/studio-productions/`, `src/actions/studio-*.ts` |
+| Marketing | `src/app/[locale]/(marketing)/` |
+| Payments / entitlements | `src/lib/payments/`, `src/actions/*lemon*` |
+| Auth / org | `src/lib/auth/`, `src/actions/settings.ts`, `src/actions/team.ts` |
+| DB types | `src/types/database.types.ts` |
 
 ## Search Strategy
-1. 먼저 `apps/web/src/features/[feature]/` 에서 관련 모듈 확인
-2. `apps/web/src/app/api/` 에서 관련 API 라우트 검색
-3. 도메인 참조: `memory-bank/domainKnowledge.md`
+1. `memory-bank/tasks.md`, `memory-bank/activeContext.md` 우선 확인
+2. 라우트·데이터 접근 후보를 `src/app/`, `src/lib/data/` 에서 검색
+3. 도메인 참조: `memory-bank/domainKnowledge.md`, `memory-bank/creative-elevate-ai-pivot.md`
 
 ## Output
 - 파일 경로 (관련성 표시)

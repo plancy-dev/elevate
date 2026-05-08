@@ -1,0 +1,31 @@
+{
+  "kind": "posthog_mcp_recheck_operator_smoke",
+  "generatedAtUtc": "2026-05-05T01:51:39Z",
+  "projectId": 358775,
+  "origin": "https://elevate.ai.kr",
+  "browser": "cursor-ide-browser",
+  "smokeActions": [
+    { "cta_id": "hero_waitlist_inline_notify", "surface": "home hero inline", "evidence": "click Just notify me when paid plans open" },
+    { "cta_id": "hero_signup", "surface": "home hero", "evidence": "click Create free account → /signup" },
+    { "cta_id": "band_waitlist", "surface": "home band", "evidence": "click Join the waitlist (nth:1 band link)" },
+    { "cta_id": "pricing_card_annual", "surface": "/pricing", "evidence": "click Subscribe Annually" },
+    { "cta_id": "blog_post_footer_waitlist", "surface": "/blog/prompt-harness-beats-prompt-hacks footer", "evidence": "click Join waitlist (footer row)" },
+    { "cta_id": "blog_post_footer_pricing", "surface": "/blog/... footer", "evidence": "click Pricing after scroll to Back to blog (viewport footer row)" }
+  ],
+  "posthogQueries": {
+    "expected14_hits_7d": {
+      "hogql": "WITH ids AS (SELECT arrayJoin(['hero_ebooks','hero_waitlist_anchor','hero_waitlist_inline_notify','hero_prompt_studio','hero_signup','band_contact','hero_pricing','header_nav_pricing','header_nav_blog','band_waitlist','blog_post_footer_waitlist','blog_post_footer_pricing','pricing_card_monthly','pricing_card_annual']) AS expected) SELECT i.expected AS cta_id, countIf(e.properties.cta_id = i.expected AND e.timestamp > now() - INTERVAL 7 DAY) AS hits_7d FROM ids i LEFT JOIN events e ON e.event = 'elevate_marketing_cta_click' GROUP BY i.expected ORDER BY i.expected",
+      "minHits7d": 1,
+      "rowsAllNonZero": true
+    },
+    "elevate_marketing_cta_click_total": {
+      "hogql": "SELECT count() AS total FROM events WHERE event = 'elevate_marketing_cta_click'",
+      "total": 17
+    }
+  },
+  "verdict": {
+    "adr013_decision5_strict_14_of_14_nonzero_7d": "PASS",
+    "adr013_implementation_checklist_relaxed_12_of_14": "PASS",
+    "notes": "Prior HogQL GROUP BY toString(properties.cta_id) omitted band_waitlist/blog_post_footer_* in UI-style result set; raw properties.cta_id + allowlist join shows 14/14 hits_7d ≥ 1."
+  }
+}

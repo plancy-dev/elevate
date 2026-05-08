@@ -3,7 +3,7 @@
 import { AuditAction, AuditEntityType } from "@/lib/audit/constants";
 import { logAudit } from "@/lib/audit/log";
 import { revalidatePath } from "next/cache";
-import { getVenueManagerContext } from "@/lib/auth/require-org-editor";
+import { getOrgInviteManagerContext } from "@/lib/auth/require-org-editor";
 import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 import {
   normalizeSidebarIconTonePreference,
@@ -25,7 +25,7 @@ export async function updateOrganizationName(
   if (!v.ok) return { error: v.error };
 
   const supabase = await createClient();
-  const auth = await getVenueManagerContext(supabase);
+  const auth = await getOrgInviteManagerContext(supabase);
   if (!auth.ok) return { error: auth.error };
 
   const { error } = await supabase

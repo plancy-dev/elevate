@@ -9,7 +9,7 @@ import {
   buildCatalogStorageObjectPath,
   normalizeOriginalFileNameForDb,
 } from "@/lib/content/storage-filename";
-import { TOSS_POC_AMOUNT_KRW } from "@/lib/payments/toss-poc";
+import { LEMON_CUSTOM_PRICE_MIN_KRW } from "@/lib/payments/lemon-custom-price-minimum";
 import {
   clearContentProductLemonLink,
   upsertContentProductLemonLink,
@@ -111,7 +111,7 @@ export async function uploadContentProduct(
 
   let priceKrw = Number.parseInt(priceKrwRaw, 10);
   if (!Number.isFinite(priceKrw) || priceKrw < 0) {
-    priceKrw = TOSS_POC_AMOUNT_KRW;
+    priceKrw = LEMON_CUSTOM_PRICE_MIN_KRW;
   }
   const priceCents = priceKrw * 100;
 
@@ -196,7 +196,7 @@ export async function updateContentProduct(
 
   let priceKrw = Number.parseInt(priceKrwRaw, 10);
   if (!Number.isFinite(priceKrw) || priceKrw < 0) {
-    priceKrw = TOSS_POC_AMOUNT_KRW;
+    priceKrw = LEMON_CUSTOM_PRICE_MIN_KRW;
   }
   const priceCents = priceKrw * 100;
 

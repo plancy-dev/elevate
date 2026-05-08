@@ -35,9 +35,10 @@ describe("sample-* posts staging access", () => {
     process.env.VERCEL_ENV = originalEnv;
   });
 
-  it("keeps sample-* slugs accessible in preview/staging", () => {
+  it("lists normal posts in preview (sample-* fixtures are optional in repo)", () => {
     const posts = getAllPostMetaForLocale("en");
-    const samples = posts.filter((p) => p.slug.startsWith("sample-"));
-    expect(samples.length).toBeGreaterThan(0);
+    expect(posts.some((p) => p.slug === "prompt-harness-beats-prompt-hacks")).toBe(
+      true,
+    );
   });
 });

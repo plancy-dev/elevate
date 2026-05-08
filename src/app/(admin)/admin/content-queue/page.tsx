@@ -5,9 +5,17 @@ import { getTranslations } from "next-intl/server";
 import {
   listAdminContentQueue,
   runRetryFailedPublishOnly,
-  updateContentItemStatus,
 } from "@/actions/admin-content-ops";
+import { ContentQueueReviewEditDialogDynamic } from "@/components/admin/content-queue-review-edit-dialog-dynamic";
+import { ContentQueueRowActions } from "@/components/admin/content-queue-row-actions";
 import { FieldSelect } from "@/components/ui/field-select";
+import { Button } from "@/components/ui/button";
+import {
+  readLatestAiReview,
+  readLatestAiRewrite,
+  readLatestReviewGate,
+} from "@/lib/admin/content-queue-metadata";
+import { getContentOpsClaudeWhenGatePassedEnabled } from "@/lib/content-ops/claude-ui-policy";
 import type { Json } from "@/types/database.types";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -52,6 +60,7 @@ export default async function AdminContentQueuePage(props: {
   const rows = listRes.ok ? listRes.rows : [];
   const nowMs = new Date().getTime();
   const queueSummary = summarizeQueue(rows, nowMs);
+  const claudeWhenGatePassedEnabled = getContentOpsClaudeWhenGatePassedEnabled();
 
   return (
     <div className="min-h-screen bg-paper-50">
@@ -133,42 +142,62 @@ export default async function AdminContentQueuePage(props: {
         {rows.length === 0 ? (
           <p className="text-xs text-ink-500">{t("empty")}</p>
         ) : (
-          <div className="overflow-x-auto border border-ink-100">
-            <table className="w-full min-w-[1220px] text-left text-xs">
+          <div className="border border-ink-100">
+            <table className="w-full table-fixed text-center text-xs">
               <thead>
                 <tr className="border-b border-ink-100 bg-paper-50">
-                  <th className="p-2 font-medium text-ink-700">{t("columns.title")}</th>
-                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.type")}</th>
-                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.status")}</th>
-                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.quality")}</th>
-                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.gate")}</th>
-                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.aiAudit")}</th>
-                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.opsSignal")}</th>
-                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.updated")}</th>
-                  <th className="p-2 font-medium text-ink-700 whitespace-nowrap">{t("columns.actions")}</th>
+                  <th className="p-2 align-middle font-medium text-ink-700">{t("columns.title")}</th>
+                  <th className="hidden p-2 align-middle font-medium text-ink-700 whitespace-nowrap sm:table-cell">{t("columns.type")}</th>
+                  <th className="p-2 align-middle font-medium text-ink-700 whitespace-nowrap">{t("columns.status")}</th>
+                  <th className="hidden p-2 align-middle font-medium text-ink-700 whitespace-nowrap md:table-cell">{t("columns.quality")}</th>
+                  <th className="hidden p-2 align-middle font-medium text-ink-700 lg:table-cell">{t("columns.aiAudit")}</th>
+                  <th className="hidden p-2 align-middle font-medium text-ink-700 whitespace-nowrap lg:table-cell">{t("columns.opsSignal")}</th>
+                  <th className="p-2 align-middle font-medium text-ink-700 whitespace-nowrap">{t("columns.actions")}</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.id} className="border-b border-ink-100/80">
-                    <td className="p-2 text-ink-900">
-                      <div className="max-w-[360px] overflow-hidden text-ellipsis whitespace-nowrap font-medium" title={row.title}>
-                        {row.title}
+                    <td className="p-2 align-middle min-w-0 text-ink-900">
+                      <div className="mx-auto max-w-full text-center">
+                        <div className="overflow-hidden text-ellipsis whitespace-nowrap font-medium" title={row.title}>
+                          {row.title}
+                        </div>
+                        <p className="mt-0.5 text-center text-[10px] leading-tight text-ink-400 md:hidden">
+                          <span className="font-medium text-ink-500">{t("columns.quality")}:</span>{" "}
+                          {row.source_quality_score ?? "-"} / {row.fact_check_score ?? "-"}
+                        </p>
+                        <div className="mt-1 flex flex-wrap items-center justify-center gap-2 text-[11px]">
+                          <span className="text-ink-500">
+                            <span className="sm:hidden">{toTypeLabel(t, row.type)} · </span>
+                            {row.locale}
+                          </span>
+                          <ContentQueueReviewEditDialogDynamic
+                            itemId={row.id}
+                            claudeWhenGatePassedEnabled={claudeWhenGatePassedEnabled}
+                            trigger={
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-auto min-h-0 px-1.5 py-0.5 text-[11px] font-medium text-vermilion-600 hover:bg-vermilion-100/30 hover:text-vermilion-700"
+                              >
+                                {t("actions.openReview")}
+                              </Button>
+                            }
+                          />
+                        </div>
                       </div>
-                      <div className="mt-0.5 text-[11px] text-ink-500">{row.locale}</div>
                     </td>
-                    <td className="p-2 text-ink-700 whitespace-nowrap">{toTypeLabel(t, row.type)}</td>
-                    <td className="p-2 text-ink-700 whitespace-nowrap">{toItemStatusLabel(t, row.status)}</td>
-                    <td className="p-2 text-ink-700 whitespace-nowrap">
+                    <td className="hidden p-2 align-middle text-ink-700 whitespace-nowrap sm:table-cell">{toTypeLabel(t, row.type)}</td>
+                    <td className="p-2 align-middle text-ink-700 whitespace-nowrap">{toItemStatusLabel(t, row.status)}</td>
+                    <td className="hidden p-2 align-middle text-ink-700 whitespace-nowrap md:table-cell">
                       {row.source_quality_score ?? "-"} / {row.fact_check_score ?? "-"}
                     </td>
-                    <td className="p-2 text-ink-700 whitespace-nowrap">
-                      <ReviewGateCell t={t} metadata={row.metadata} />
-                    </td>
-                    <td className="p-2 text-ink-700 whitespace-nowrap">
+                    <td className="hidden p-2 align-middle min-w-0 text-ink-700 lg:table-cell">
                       <AiAuditCell t={t} metadata={row.metadata} />
                     </td>
-                    <td className="p-2 text-ink-700 whitespace-nowrap">
+                    <td className="hidden p-2 align-middle text-ink-700 whitespace-nowrap lg:table-cell">
                       <OpsSignalCell
                         t={t}
                         status={row.status}
@@ -178,62 +207,13 @@ export default async function AdminContentQueuePage(props: {
                         reviewNotes={row.review_notes}
                       />
                     </td>
-                    <td className="p-2 whitespace-nowrap text-ink-500">
-                      {new Date(row.updated_at).toISOString().replace("T", " ").slice(0, 19)} UTC
-                    </td>
-                    <td className="p-2">
-                      <div className="flex flex-wrap gap-1.5 whitespace-nowrap">
-                        <form action={updateContentItemStatus}>
-                          <input type="hidden" name="id" value={row.id} />
-                          <input type="hidden" name="status" value="approved" />
-                          <button
-                            type="submit"
-                            className="border border-ink-100 px-2 py-1 text-[11px] text-ink-700 hover:bg-highlight"
-                          >
-                            {t("actions.approve")}
-                          </button>
-                        </form>
-                        <form action={updateContentItemStatus}>
-                          <input type="hidden" name="id" value={row.id} />
-                          <input type="hidden" name="status" value="review_required" />
-                          <button
-                            type="submit"
-                            className="border border-ink-100 px-2 py-1 text-[11px] text-ink-700 hover:bg-highlight"
-                          >
-                            {t("actions.requestChanges")}
-                          </button>
-                        </form>
-                        <form action={updateContentItemStatus}>
-                          <input type="hidden" name="id" value={row.id} />
-                          <input type="hidden" name="status" value="scheduled" />
-                          <button
-                            type="submit"
-                            className="border border-ink-100 px-2 py-1 text-[11px] text-ink-700 hover:bg-highlight"
-                          >
-                            {t("actions.schedule")}
-                          </button>
-                        </form>
-                        <form action={updateContentItemStatus}>
-                          <input type="hidden" name="id" value={row.id} />
-                          <input type="hidden" name="status" value="publishing" />
-                          <button
-                            type="submit"
-                            className="border border-ink-100 px-2 py-1 text-[11px] text-ink-700 hover:bg-highlight"
-                          >
-                            {t("actions.publishNow")}
-                          </button>
-                        </form>
-                        <form action={updateContentItemStatus}>
-                          <input type="hidden" name="id" value={row.id} />
-                          <input type="hidden" name="status" value="send_failed" />
-                          <button
-                            type="submit"
-                            className="border border-ink-100 px-2 py-1 text-[11px] text-ink-700 hover:bg-highlight"
-                          >
-                            {t("actions.retryMark")}
-                          </button>
-                        </form>
-                      </div>
+                    <td className="p-2 align-middle">
+                      <ContentQueueRowActions
+                        row={row}
+                        typeLabel={toTypeLabel(t, row.type)}
+                        statusLabel={toItemStatusLabel(t, row.status)}
+                        claudeWhenGatePassedEnabled={claudeWhenGatePassedEnabled}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -269,44 +249,6 @@ function QueueSummaryCard({
   );
 }
 
-function ReviewGateCell({
-  t,
-  metadata,
-}: {
-  t: (key: string, values?: Record<string, string | number | Date>) => string;
-  metadata: Json | null;
-}) {
-  const latest = readLatestReviewGate(metadata);
-  if (!latest) {
-    return <span className="text-ink-500">-</span>;
-  }
-  if (latest.passed) {
-    return (
-      <span className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
-        {t("gate.pass")}
-      </span>
-    );
-  }
-  return (
-    <div className="flex flex-wrap gap-1">
-      {latest.reasons.length === 0 ? (
-        <span className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
-          {t("gate.fail")}
-        </span>
-      ) : (
-        latest.reasons.map((reason) => (
-          <span
-            key={reason}
-            className="inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium text-amber-700"
-          >
-            {reason}
-          </span>
-        ))
-      )}
-    </div>
-  );
-}
-
 function AiAuditCell({
   t,
   metadata,
@@ -321,9 +263,9 @@ function AiAuditCell({
   }
 
   return (
-    <div className="flex max-w-[280px] flex-col gap-1">
+    <div className="flex min-w-0 max-w-full flex-col items-center gap-1 text-center">
       {review ? (
-        <div className="flex flex-wrap items-center gap-1">
+        <div className="flex flex-wrap items-center justify-center gap-1">
           <span
             className={`inline-flex border px-2 py-0.5 text-[11px] font-medium ${
               review.decision === "auto_approve_candidate"
@@ -341,7 +283,7 @@ function AiAuditCell({
         </div>
       ) : null}
       {review?.policyReason ? (
-        <p className="truncate text-[11px] text-ink-500" title={review.policyReason}>
+        <p className="line-clamp-2 max-w-56 text-[11px] text-ink-500" title={review.policyReason}>
           {t("aiAudit.policyReason")}: {toAiPolicyReasonLabel(t, review.policyReason)}
         </p>
       ) : null}
@@ -352,76 +294,6 @@ function AiAuditCell({
       ) : null}
     </div>
   );
-}
-
-function readLatestReviewGate(metadata: Json | null): {
-  passed: boolean;
-  reasons: string[];
-  qualityScore: number;
-} | null {
-  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
-  const reviewGate = (metadata as Record<string, unknown>).review_gate;
-  if (!reviewGate || typeof reviewGate !== "object" || Array.isArray(reviewGate)) {
-    return null;
-  }
-  const latest = (reviewGate as Record<string, unknown>).latest;
-  if (!latest || typeof latest !== "object" || Array.isArray(latest)) return null;
-  const passed = (latest as Record<string, unknown>).passed;
-  const reasons = (latest as Record<string, unknown>).reasons;
-  const metrics = (latest as Record<string, unknown>).metrics;
-  const qualityScore =
-    metrics && typeof metrics === "object" && !Array.isArray(metrics)
-      ? Number((metrics as Record<string, unknown>).qualityScore ?? 0)
-      : 0;
-  return {
-    passed: passed === true,
-    reasons: Array.isArray(reasons)
-      ? reasons.filter((v): v is string => typeof v === "string")
-      : [],
-    qualityScore: Number.isFinite(qualityScore) ? qualityScore : 0,
-  };
-}
-
-function readLatestAiReview(metadata: Json | null): {
-  decision: "auto_approve_candidate" | "needs_rewrite" | "hold_manual";
-  confidence: number;
-  policyReason: string | null;
-} | null {
-  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
-  const aiReview = (metadata as Record<string, unknown>).ai_review;
-  if (!aiReview || typeof aiReview !== "object" || Array.isArray(aiReview)) return null;
-  const latest = (aiReview as Record<string, unknown>).latest;
-  if (!latest || typeof latest !== "object" || Array.isArray(latest)) return null;
-  const decision = (latest as Record<string, unknown>).decision;
-  if (
-    decision !== "auto_approve_candidate" &&
-    decision !== "needs_rewrite" &&
-    decision !== "hold_manual"
-  ) {
-    return null;
-  }
-  const confidenceRaw = Number((latest as Record<string, unknown>).confidence ?? 0);
-  const policyReasonRaw = (latest as Record<string, unknown>).policy_reason;
-  return {
-    decision,
-    confidence: Number.isFinite(confidenceRaw) ? confidenceRaw : 0,
-    policyReason: typeof policyReasonRaw === "string" ? policyReasonRaw : null,
-  };
-}
-
-function readLatestAiRewrite(metadata: Json | null): {
-  decisionAfter: "ready_for_approval" | "needs_manual_review";
-} | null {
-  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
-  const aiRewrite = (metadata as Record<string, unknown>).ai_rewrite;
-  if (!aiRewrite || typeof aiRewrite !== "object" || Array.isArray(aiRewrite)) return null;
-  const latest = (aiRewrite as Record<string, unknown>).latest;
-  if (!latest || typeof latest !== "object" || Array.isArray(latest)) return null;
-  const decisionAfter = (latest as Record<string, unknown>).decision_after;
-  if (decisionAfter !== "ready_for_approval" && decisionAfter !== "needs_manual_review") {
-    return null;
-  }
-  return { decisionAfter };
 }
 
 function summarizeQueue(
@@ -476,7 +348,11 @@ function OpsSignalCell({
   reviewNotes: string | null;
 }) {
   if (status !== "review_required") {
-    return <span className="text-ink-500">-</span>;
+    return (
+      <div className="flex justify-center">
+        <span className="text-ink-500">-</span>
+      </div>
+    );
   }
 
   const latest = readLatestReviewGate(metadata);
@@ -490,12 +366,14 @@ function OpsSignalCell({
       : t("opsSignal.reviewNeeded");
   const details = latest?.reasons.join(",") || reviewNotes || t("opsSignal.manualReviewRequired");
   return (
-    <span
-      className={`inline-flex border border-ink-100 bg-paper-50 px-2 py-0.5 text-[11px] font-medium ${isSlaRisk ? "text-danger" : "text-amber-700"}`}
-      title={details}
-    >
-      {label}
-    </span>
+    <div className="flex justify-center">
+      <span
+        className={`inline-flex max-w-44 justify-center border border-ink-100 bg-paper-50 px-2 py-0.5 text-center text-[11px] font-medium leading-snug ${isSlaRisk ? "text-danger" : "text-amber-700"}`}
+        title={details}
+      >
+        {label}
+      </span>
+    </div>
   );
 }
 

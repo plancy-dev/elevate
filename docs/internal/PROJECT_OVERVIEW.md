@@ -9,7 +9,7 @@
 
 ## 0. 한 줄 요약
 
-**Elevate**는 Next.js 16 + Supabase 기반 **B2B AI 콘텐츠·워크플로우 자동화 SaaS**. Legacy MICE(이벤트 운영) 모듈을 동결하고 **AI Studio**(영상 생성 + e-book 판매)로 전략적 피벗 중. 현재 단계: **Phase 1+3 출시 완료** (2026-04-23/24). 씬 키프레임 → Runway I2V → Buffer 멀티채널 발행 파이프라인 가동 중. 다음은 Phase 2 타임라인 에디터.
+**Elevate**는 Next.js 16 + Supabase 기반 **B2B AI 콘텐츠·워크플로우 자동화 SaaS**. 과거 MICE Postgres 도메인은 제거되었고, **AI Studio**(영상 생성 + e-book 판매)·**Prompt Studio** 피벗 축이 중심입니다.
 
 ---
 
@@ -34,7 +34,7 @@ login · signup · forgot-password · access-pending · auth/callback · update-
 
 ### 대시보드 (입주자용)
 - **Productions 워크벤치** — 에피소드 리스트, 신규 생성, `[episodeId]` 상세, channels(배포), integrations(자격증명), projects(템플릿/캐릭터 바이블)
-- **Library** — `[slug]` 상세 / read 뷰어 / checkout (Lemon·Toss)
+- **Library** — `[slug]` 상세 / read 뷰어 / checkout (**Lemon Squeezy** hosted)
 - **Billing** — purchases · success · fail
 - **운영** — settings · team · help · audit · organization/audit
 - **레거시 placeholder** — studio · admin (대시보드 내)
@@ -43,7 +43,7 @@ login · signup · forgot-password · access-pending · auth/callback · update-
 audit · content · lemon-webhook · purchase-allowlist · prompt-studio-allowlist · waitlist (총 7개)
 
 ### API 라우트
-auth/dashboard-entitlement · content/[productId]/download · integrations/youtube/oauth(start+callback) · studio/improve · waitlist · webhooks/lemonsqueezy · webhooks/toss
+auth/dashboard-entitlement · content/[productId]/download · integrations/youtube/oauth(start+callback) · studio/improve · waitlist · webhooks/lemonsqueezy · webhooks/polar
 
 ---
 
@@ -89,7 +89,9 @@ auth/dashboard-entitlement · content/[productId]/download · integrations/youtu
 
 ---
 
-## 4. 데이터 모델 (44 마이그레이션, 34개 테이블)
+## 4. 데이터 모델
+
+> 카운트(마이그레이션 수·테이블 수)는 시점별 스냅샷이며 최신 스키마는 Supabase 및 `pnpm db:types` 출력 기준입니다. MICE-era 테이블은 **`052_drop_mice_legacy_tables.sql`** 로 삭제되었습니다.
 
 ### Organization 중심 방사형 구조
 
@@ -98,11 +100,8 @@ organizations
   ├─ profiles (id=auth.users.id)
   ├─ organization_invitations
   ├─ organization_content_entitlements
-  ├─ events ─→ sessions ─→ session_attendees     [LEGACY MICE]
-  │       └─→ attendees
-  ├─ venues                                        [LEGACY MICE]
   ├─ audit_logs
-  ├─ toss_payment_intents ──→ content_products
+  ├─ toss_payment_intents ──→ content_products   [LEGACY DB — no app webhook; optional future drop]
   ├─ lemon_squeezy_processed_orders
   ├─ studio_projects
   ├─ studio_production_episodes  ★ Studio hub
@@ -147,8 +146,9 @@ organizations
 | **ElevenLabs** | TTS | org | 가동 |
 | **YouTube** | OAuth + 업로드 + analytics | env(OAuth) + org(token) | 가동 |
 | **Buffer** | 스케줄 발행 (3채널 캡션) | org | 가동 |
-| **Lemon Squeezy** | 글로벌 결제 (MoR) | env (ADR-005) | **Primary** |
-| **Toss Payments** | 한국 결제 | env | PoC |
+| **Lemon Squeezy** | 글로벌 결제 (MoR) | env (ADR-005) | **Primary** (catalog) |
+| **Polar** | 블로그 구독 등 | env | **Primary** (subscriptions) |
+| **Toss Payments** | (역사) 한국 PoC | — | **Removed from app** — [`ADR-001`](../adr/ADR-001-toss-payments-poc.md) |
 | **Resend** | waitlist 트랜잭션 메일 | env | 가동 |
 | **PostHog** | 분석 | env | 옵션 |
 
@@ -171,15 +171,9 @@ Library /[slug]/checkout
       └─ INSERT organization_content_entitlements (org+product UNIQUE)
 ```
 
-### Toss Payments (한국 PoC)
+### Legacy: Toss PoC (removed from app)
 
-```
-서버 액션 → toss_payment_intents (status=pending)
-  → Toss 결제 위젯
-  → POST /api/webhooks/toss (PAYMENT_STATUS_CHANGED)
-  → orderId 조회 → 조건부 UPDATE (.eq(status, "pending")로 멱등성)
-  → grantOrganizationContentEntitlement()
-```
+Toss widget, server actions, and `/api/webhooks/toss` are **not shipped** (2026-05). **`toss_payment_intents`** may still exist in Postgres as a **legacy** table from migration `008`; see [`ADR-005`](../adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md).
 
 ### e-book 다운로드
 
@@ -213,7 +207,7 @@ Library /[slug]/checkout
 create function user_organization_id() returns uuid security definer ...
   select organization_id from profiles where id = auth.uid();
 
-create policy on events using (organization_id = user_organization_id());
+create policy on studio_production_episodes using (organization_id = user_organization_id());
 ```
 
 004_profiles_rls_no_recursion.sql이 정착시킨 패턴. 이후 모든 Studio 테이블 동일.
@@ -271,7 +265,7 @@ create policy on events using (organization_id = user_organization_id());
 ### 🟢 낮음
 
 7. **Artifact metadata 스키마 비일관** — `jsonb` 자유 형식.
-8. **Legacy MICE 역할 enum** RLS에 일부만 적용.
+8. **Legacy MICE Postgres domain** 제거 후 RLS 패턴 재검증(새 FK 없음 확인).
 9. **YouTube 업로드 후 공개/예약 상태 변경 추적 없음**.
 10. **Buffer 발행 결과 재확인 없음** (webhook 미사용).
 

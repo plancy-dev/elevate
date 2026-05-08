@@ -1,0 +1,17 @@
+{
+  "generatedAtUtc": "2026-05-04T07:17:14Z",
+  "note": "Full project API key must not be committed. This file records methodology + verdicts only.",
+  "host": "https://elevate.ai.kr",
+  "path": "/en",
+  "verdict_htmlContainsProjectKeyLiteral": true,
+  "htmlProjectKeyPrefix": "phc_",
+  "legacy_staticChunkSample": {
+    "chunksFetched": 20,
+    "verdict_anyChunkContainsPhcLiteral": false,
+    "interpretation": "NEXT_PUBLIC token may be supplied only via RSC payload (see RootLayout initialPublicConfig → PostHogRoot), not inlined into every hashed chunk — bundle-only preflight can false-negative."
+  },
+  "posthogProjectId": 358775,
+  "hogqlAllTimeElevateMarketingCtaClick": 0,
+  "hogql30dPageviewTotal": 25,
+  "interpretation": "Browser SDK initializes enough to emit $pageview from prod + dev URLs; ADR-013 CTA event has never been recorded — needs live click smoke + UI path verification, not only env."
+}

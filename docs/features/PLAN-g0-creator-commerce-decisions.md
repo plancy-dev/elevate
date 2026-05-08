@@ -32,7 +32,7 @@
 ## 3. Payment rails (summary)
 
 - **Lemon Squeezy:** Primary path for **international card** + MoR; variant ↔ catalog via `content_product_lemon_links` + webhook `custom_data`.  
-- **Toss (KR):** **Deferred** for new work—no new Toss-first catalog flows until explicitly prioritized; existing PoC code may remain for legacy scenarios.  
+- **Toss (KR):** **Deferred** for new work—no Toss-first catalog flows; app PoC **removed** (2026-05). Legacy DB only: [`ADR-005`](../adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md).  
 - **SKU mapping:** Lemon `variant_id` → `content_products` row; webhook uses `organization_id` / `content_product_slug` in custom data per existing PLAN/ADR.
 
 ---

@@ -6,11 +6,11 @@ alwaysApply: true
 
 # Memory Bank Workflow
 
-> 단일 소스: 워크플로우 + Cursor 모드 통합
+> **워크플로 원칙과 하네스(필수 읽기·INIT 형식·Ops vs BUILD·verify):** [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) **§2** (canonical). 이 파일은 Cursor 모드·서브에이전트 참조만 남긴다.
 
 ---
 
-## 워크플로우 & Cursor 모드 매핑
+## 워크플로 & Cursor 모드 매핑
 
 ```
 INIT(VAN) → PLAN → CREATIVE → BUILD → REFLECT → ARCHIVE
@@ -18,11 +18,11 @@ INIT(VAN) → PLAN → CREATIVE → BUILD → REFLECT → ARCHIVE
    Ask      Plan     Plan      Agent   Ask/Debug  Agent
 ```
 
-**gstack (선택):** 페이즈별 권장 슬래시 스킬은 **[`AGENTS.md`](../../AGENTS.md) § AI orchestration → Operating model** 와 [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) §5. Memory Bank를 먼저 로드한 뒤 **1~2개**만 골라 쓴다.
+**gstack (선택):** [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) **§6** · [`AGENTS.md`](../../AGENTS.md) § Operating model. Memory Bank Tier 0 로드 후 **1~2개**만.
 
 | 모드 | Cursor | 목적 | 다음 단계 |
 |------|--------|------|-----------|
-| **INIT** | Ask→Agent | 분석, 복잡도 판단 | L1→BUILD / L2+→PLAN |
+| **INIT** | Ask→Agent | 분석, 복잡도 판단 | §2.2 출력 후 L1→BUILD / L2+→PLAN |
 | **PLAN** | **Plan** | 계획 수립 | CREATIVE 필요시→CREATIVE / 아니면→BUILD |
 | **CREATIVE** | Plan | 설계 결정, UI→ui-ux-pro-max | BUILD |
 | **BUILD** | **Agent** | 구현 (에러→Debug) | REFLECT |
@@ -33,45 +33,9 @@ INIT(VAN) → PLAN → CREATIVE → BUILD → REFLECT → ARCHIVE
 
 ---
 
-## 복잡도별 워크플로우
+## 복잡도·INIT
 
-| Level | 설명 | 워크플로우 |
-|-------|------|-----------|
-| L1 | 버그 수정, 단일 파일 | INIT→BUILD→REFLECT |
-| L2 | 기능 개선, 2-5 파일 | INIT→PLAN→BUILD→REFLECT |
-| L3 | 새 기능, 5+ 파일, 설계 필요 | INIT→PLAN→CREATIVE→BUILD→REFLECT |
-| L4 | 아키텍처 변경, 시스템 전반 | 전체 + ARCHIVE |
-
-### 복잡도 판단 기준
-
-| 기준 | L1 | L2 | L3 | L4 |
-|------|----|----|----|----|
-| 파일 수 | 1 | 2-5 | 5+ | 10+ |
-| 설계 결정 | 불필요 | 불필요 | 필요 | 다수 |
-| DB 변경 | 없음 | 경미 | 스키마 | 마이그레이션 |
-
----
-
-## INIT 체크리스트
-
-```
-□ memory-bank/ 확인 (tasks.md, activeContext.md)
-□ docs/AI_EXPERT_PROMPTS.md (제안·실행 세션 — 블록 A~D 활용)
-□ memory-bank/domainKnowledge.md 참조 (MICE 용어)
-□ 관련 파일 탐색 (/explorer)
-□ 복잡도 판단 → 워크플로우 결정
-```
-
-### 출력 형식
-
-```
-✅ INIT 완료
-━━━━━━━━━━━━━━━━━━
-📁 파일: [n개]
-📊 복잡도: L[1-4]
-   - 파일 수: n / 설계: 필요·불필요 / DB: 있음·없음
-➡️ 다음: [PLAN/BUILD]
-```
+복잡도 L1–L4 표·페이즈 체인·INIT 출력 블록: **[`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) §2.2–§2.3**.
 
 ---
 
@@ -103,6 +67,8 @@ INIT(VAN) → PLAN → CREATIVE → BUILD → REFLECT → ARCHIVE
 2. 에러 발생 → Debug 전환
 3. progress.md 단계별 업데이트
 ```
+
+**제품 BUILD 완료·verify:** [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) **§2.6**.
 
 **서브에이전트**:
 - `/frontend-engineer` - UI
@@ -141,8 +107,7 @@ INIT(VAN) → PLAN → CREATIVE → BUILD → REFLECT → ARCHIVE
 | `creative-*.md` | 설계 결정 | CREATIVE |
 | `memory-bank/archive/` | 통합 아카이브 (완료 문서) | ARCHIVE, 정리 시 |
 
-→ 상세: `memory-bank/README.md` | 아카이브·정리: `.cursor/rules/archive-and-cleanup.mdc`  
-→ **AI 오케스트레이션** (gstack·Memory Bank·규칙): `docs/AI_ORCHESTRATION.md` · 요약: `docs/AI_USAGE.md`
+→ 상세: `memory-bank/README.md` | 아카이브·정리: `.cursor/rules/archive-and-cleanup.mdc`
 
 ---
 

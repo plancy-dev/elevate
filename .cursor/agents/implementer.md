@@ -4,22 +4,18 @@ description: 코드 구현 전문가. 기능 구현, API 개발, 비즈니스 �
 model: inherit
 ---
 
-You are a senior full-stack developer implementing features for a **MICE SaaS platform**.
+> 상세: `memory-bank/domainKnowledge.md`, `memory-bank/creative-elevate-ai-pivot.md`
 
-## MICE 도메인 컨텍스트
-> 상세: `memory-bank/domainKnowledge.md`, `databaseSchema.md`
-
-- **Exhibition**: 전시회 참가 등록, 부스 배정, 세션
-- **Bizmatching**: 1:1 미팅 요청/수락 워크플로우
-- **Addon**: 조직에 추가되는 기능 모듈
-- **Tenant**: 멀티테넌트 격리 (organization_id 기반)
+- **Studio**: 영상 에피소드·artifact·배포 파이프라인 (`src/lib/studio-productions/`).
+- **Library / catalog**: `content_products`, Lemon Squeezy 엔타이틀먼트.
+- **Prompt Studio**: 향후/베타 중심의 프롬프트 분석 표면 (`memory-bank/tasks.md`).
+- **Tenant**: 조직 단위 격리 (`organization_id`, Supabase RLS).
 
 ## Tech Stack
-- Next.js 15+ (App Router)
+- Next.js 16 (App Router, RSC)
 - TypeScript (strict mode)
-- Supabase (PostgreSQL + Auth + RLS)
-- Tailwind CSS + shadcn/ui
-- TanStack Query v5
+- Supabase (PostgreSQL + Auth + RLS + Realtime)
+- Tailwind CSS v4 + Radix UI (`src/components/ui/`)
 
 ## Implementation Principles
 1. **Type Safety** - No `any`, proper TypeScript types
@@ -30,20 +26,15 @@ You are a senior full-stack developer implementing features for a **MICE SaaS pl
 
 ## Code Structure
 ```
-src/
-├── app/api/          # API routes
-├── features/         # Feature modules
-│   └── [feature]/
-│       ├── api/      # API calls
-│       ├── hooks/    # Custom hooks
-│       └── types/    # Type definitions
-├── components/       # Shared components
-└── lib/              # Utilities
+src/app/          # 라우팅 (marketing, dashboard, api)
+src/components/   # UI
+src/actions/      # 서버 액션
+src/lib/          # 도메인·유틸
 ```
 
 ## Supabase Patterns
-- Always use RLS policies
-- Use generated types from `src/features/db/types.ts`
+- 항상 RLS 정책 준수
+- 생성 타입: `src/types/database.types.ts` (`pnpm db:types`)
 - Handle auth state properly
 - Use transactions for multi-table operations
 

@@ -21,7 +21,7 @@ This document aligns with the [Vercel production checklist](https://vercel.com/d
 | `X-Content-Type-Options: nosniff` | Reduces MIME sniffing attacks. |
 | `X-Frame-Options: SAMEORIGIN` | Reduces clickjacking; our app is not intended to be embedded cross-origin. |
 | `Referrer-Policy: strict-origin-when-cross-origin` | Limits referrer leakage on cross-origin navigations. |
-| `Permissions-Policy` | Disables sensitive features we do not use (`camera`, `microphone`, `geolocation`). **Payment widgets** are not denied here so Toss / payment iframes keep working. |
+| `Permissions-Policy` | Disables sensitive features we do not use (`camera`, `microphone`, `geolocation`). **Hosted checkout** (Lemon/Polar) runs on the PSP origin; this header is not tuned to block payment flows. |
 
 ### Content-Security-Policy (CSP)
 

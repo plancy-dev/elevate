@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isValidCatalogSlug } from "@/lib/content/catalog-slug";
-import { getCatalogPaymentProvider } from "@/lib/payments/catalog-payment-provider";
 import { resolveLemonCheckoutForBillingPage } from "@/lib/payments/resolve-lemon-checkout-for-billing";
 import { resolveAppOrigin } from "@/lib/url/resolve-app-origin";
 
@@ -10,8 +9,7 @@ export const dynamic = "force-dynamic";
 type Props = { params: Promise<{ slug: string }> };
 
 /**
- * One-click Lemon (or Toss) checkout: redirects straight to the payment provider.
- * Avoids the intermediate Billing “Open checkout” step for catalog purchases.
+ * One-click Lemon checkout: redirects straight to the payment provider.
  */
 export default async function LibraryCatalogCheckoutRedirectPage({ params }: Props) {
   const { slug } = await params;
@@ -32,11 +30,6 @@ export default async function LibraryCatalogCheckoutRedirectPage({ params }: Pro
     .select("organization_id")
     .eq("id", user.id)
     .maybeSingle();
-
-  const provider = getCatalogPaymentProvider();
-  if (provider === "toss") {
-    redirect(`/dashboard/billing?product=${encodeURIComponent(slug)}`);
-  }
 
   const origin = await resolveAppOrigin();
   const successPath = `/dashboard/library/${encodeURIComponent(slug)}?checkout=success`;

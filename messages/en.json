@@ -222,7 +222,7 @@
   "About": {
     "metaTitle": "About",
     "title": "About Elevate",
-    "description": "We build infrastructure for MICE teams who need measurable outcomes, not another spreadsheet. Founded in 2026 (placeholder)."
+    "description": "We build AI workflow infrastructure for teams that need measurable outcomes, not another spreadsheet. Founded in 2026 (placeholder)."
   },
   "Blog": {
     "metaTitle": "Blog",
@@ -325,7 +325,7 @@
       "section2Title": "Library visibility",
       "section2Body": "Library reflects entitlements for the signed-in user's organization. If something is missing, it is usually a subscription or purchase state—not a personal account issue.\n\nStarter plans may see fewer titles; upgrading the org unlocks more catalog content when available.",
       "section3Title": "Billing and ownership",
-      "section3Body": "Toss Payments PoC and future gateways attach to the organization so finance has a single invoice trail. Personal accounts exist for sign-in, but purchase and download rights are org-scoped."
+      "section3Body": "Lemon Squeezy and Polar checkouts attach to the organization so finance has a single invoice trail. Personal accounts exist for sign-in, but purchase and download rights are org-scoped."
     },
     "security": {
       "metaTitle": "Security & compliance | Elevate",
@@ -343,74 +343,74 @@
   "Solutions": {
     "metaTitle": "Solutions",
     "title": "Solutions",
-    "description": "Event and travel programs generate thousands of comms—speaker briefs, sponsor copy, attendee emails, and exhibitor kits. Elevate helps MICE teams standardize and improve that language with model-aware prompts, org-scoped drafts, and Library-backed assets.",
+    "description": "Elevate improves model-aware prompts, org-scoped drafts, and Library-backed playbooks so every team ships consistent AI output—not scattershot spreadsheets.",
     "items": {
       "conferences": {
-        "title": "Conferences",
-        "desc": "Multi-track programs and speaker/sponsor comms at scale."
+        "title": "Marketing & launches",
+        "desc": "Campaign briefs, nurture sequences, and landing copy with repeatable prompt patterns your org can approve once."
       },
       "exhibitions": {
-        "title": "Exhibitions",
-        "desc": "Exhibitor kits, floor campaigns, and lead-gen copy consistency."
+        "title": "Partners & revenue teams",
+        "desc": "Decks, FAQs, and follow-ups that stay on-message when AE and partner teams lean on AI drafts."
       },
       "incentive-travel": {
-        "title": "Incentive travel",
-        "desc": "Program narratives and compliance-sensitive itineraries."
+        "title": "Customer success",
+        "desc": "Onboarding narratives, lifecycle emails, and success playbooks tuned to your model stack and tone guardrails."
       },
       "corporate-meetings": {
-        "title": "Corporate meetings",
-        "desc": "Exec summaries, hybrid runbooks, internal AI policy alignment."
+        "title": "Leadership & internal ops",
+        "desc": "Exec updates, policies, and runbooks that stay aligned as models and regulators change underneath you."
       }
     }
   },
   "SolutionsSlug": {
     "conferences": {
-      "metaTitle": "Conferences | Elevate",
-      "metaDescription": "Improve prompt libraries for speaker briefs, sponsor tiers, and attendee journeys—scoped to your organization.",
-      "title": "Conferences",
-      "lead": "Large programs mean repeated comms: session descriptions, speaker briefs, sponsor deliverables, and attendee journeys. Elevate helps you build reusable prompt patterns and improve them against the models your team actually uses.",
+      "metaTitle": "Marketing solutions | Elevate",
+      "metaDescription": "Model-aware prompts, org-scoped drafts, and repeatable launch playbooks.",
+      "title": "Marketing & launches",
+      "lead": "Growth teams rewrite the same narratives for every cohort and channel. Elevate gives you Prompt Studio discipline plus Library-backed assets so drafts stay aligned with finance-approved claims.",
       "section1Title": "Where Elevate fits",
-      "section1Body": "Use Prompt Studio to tighten instructions for on-brand tone, clarity, and model alignment. When marketing attaches catalog assets, Library makes downloads entitlement-aware—so field teams and agencies pull from the same source of truth.\n\nThis is not a replacement for your registration or abstract system; it is the quality layer on top of language and AI-assisted drafts.",
+      "section1Body": "Use Prompt Studio to tighten instructions before they hit Gemini, GPT, Claude, or your internal router. Tie downloads to catalog entitlements so agencies and freelancers pull from sanctioned sources—not random docs.",
       "section2Title": "Operational outcomes",
-      "section2Body": "Fewer one-off rewrites, fewer off-brand variants, faster review cycles when teams share org-scoped drafts.\n\nRoles and billing stay tied to the organization so procurement can audit who had access to what.",
+      "section2Body": "Fewer one-off tone resets, clearer review loops, fewer “which doc is authoritative?” debates when campaign season stacks up.",
       "section3Title": "Getting started",
-      "section3Body": "Join the waitlist for Prompt Studio beta, or open Billing when checkout is enabled to unlock catalog content. Contact sales if you need enterprise rollout and security review."
+      "section3Body": "Join the Prompt Studio beta waitlist, browse the catalog, or talk to sales for enterprise rollout and SSO."
     },
     "exhibitions": {
-      "metaTitle": "Exhibitions | Elevate",
-      "metaDescription": "Consistent exhibitor comms, booth kits, and campaign copy—improved with model-aware prompts and org-scoped drafts.",
-      "title": "Exhibitions",
-      "lead": "Exhibitions depend on tight coordination between exhibitors, agencies, and floor teams. Elevate helps you standardize prompt templates for kits, campaigns, and lead follow-ups so tone and claims stay consistent across hundreds of touchpoints.",
-      "section1Title": "Language consistency",
-      "section1Body": "Prompt Studio surfaces structured improvements so teams do not ship contradictory instructions to models or contractors.\n\nPair with Library when downloadable guides and templates are part of your commercial program.",
+      "metaTitle": "Revenue teams | Elevate",
+      "metaDescription": "Sharper partner narratives, repeatable decks, and org-scoped AI drafts.",
+      "title": "Partners & revenue teams",
+      "lead": "Elevate replaces one-off GPT threads with reproducible prompts, structured improvements, and entitlements aligned to SKU-level access.",
+      "section1Title": "Consistency under pressure",
+      "section1Body": "AEs iterate faster without inventing forbidden claims. Structured templates keep PLG narratives and outbound sequences stable quarter to quarter.",
       "section2Title": "Governance",
-      "section2Body": "Everything stays inside the organization tenant. That matters when sponsors and exhibitors expect confidentiality around unreleased messaging.\n\nAudit and admin tooling continues to mature—see the product changelog for what is live.",
+      "section2Body": "Organizations, roles, and audit trails intentionally mirror procurement expectations as we harden enterprise mode.",
       "section3Title": "Next steps",
-      "section3Body": "Browse the catalog for packaged guides, or talk to sales about multi-org programs and pilots."
+      "section3Body": "Pair Prompt Studio previews with catalog unlocks whenever downloadable guides are part of your motion."
     },
     "incentive-travel": {
-      "metaTitle": "Incentive travel | Elevate",
-      "metaDescription": "Narratives and comms for incentive programs—with structured prompt improvement and org-scoped drafts.",
-      "title": "Incentive travel",
-      "lead": "Incentive programs require polished narratives, itinerary language, and sensitive attendee comms. Elevate helps teams iterate on prompts with clear model targets and reviewable structure before messages reach VIPs.",
-      "section1Title": "Quality and safety",
-      "section1Body": "Model-aware prompts reduce the risk of off-tone or off-policy copy when programs span multiple regions.\n\nDrafts remain scoped to your organization so partner agencies and internal teams can collaborate without exposing content publicly.",
-      "section2Title": "Catalog and rewards",
-      "section2Body": "When guides are part of the reward package, Library entitlements align downloads with what the org purchased.\n\nCatalog and billing are designed to sit alongside Prompt Studio, not compete with it.",
-      "section3Title": "Talk to us",
-      "section3Body": "For bespoke programs or compliance-heavy rollouts, contact sales and we will align on review and deployment expectations."
+      "metaTitle": "Customer success | Elevate",
+      "metaDescription": "Lifecycle narratives and nurture copy improved with Prompt Studio governance.",
+      "title": "Customer success",
+      "lead": "Elevate captures the tone, disclaimers, and proof points CS teams recycle every renewal cycle—then pushes those guardrails straight into Prompt Studio drafts.",
+      "section1Title": "Quality and empathy",
+      "section1Body": "Model-aware tweaks ensure escalations feel human instead of hallucinated apologies. Drafts remain inside the tenant so agencies never leak unreleased wording.",
+      "section2Title": "Catalog synergy",
+      "section2Body": "When ebooks or premium guides augment your CS motion, Lemon Squeezy + Library entitlements keep downloads auditable.",
+      "section3Title": "Talk with us",
+      "section3Body": "Need compliance-heavy onboarding or multilingual CS? Ping sales and we will map rollout expectations."
     },
     "corporate-meetings": {
-      "metaTitle": "Corporate meetings | Elevate",
-      "metaDescription": "Exec summaries, hybrid runbooks, and internal AI policy alignment—improved with Prompt Studio and org-scoped governance.",
-      "title": "Corporate meetings",
-      "lead": "Corporate meetings teams juggle internal comms, executive summaries, and hybrid logistics. Elevate gives you a repeatable prompt layer so leadership updates, FAQs, and policy explanations stay consistent as models and regulations change.",
+      "metaTitle": "Leadership & operations | Elevate",
+      "metaDescription": "Policy memos, executive briefings, and internal AI guardrails—all reviewable.",
+      "title": "Leadership & internal ops",
+      "lead": "Elevate helps COOs and chiefs-of-staff keep internal AI workflows consistent: approved prompt banks, escalation paths, and org-only drafts.",
       "section1Title": "Internal alignment",
-      "section1Body": "Prompt Studio helps teams converge on approved phrasing and structure before content is broadcast to Slack, email, or intranet.\n\nOrg workspace ensures the right roles can edit drafts and approve changes.",
+      "section1Body": "Prompt Studio enforces naming, structure, and risk language before All-hands, Slack broadcasts, or email pushes go wide.",
       "section2Title": "Security posture",
-      "section2Body": "Supabase Auth and RLS underpin tenant isolation. For enterprise buyers, deeper security and compliance materials are available under NDA.\n\nSee Security and Compliance pages for statements of direction.",
-      "section3Title": "Rollout",
-      "section3Body": "Start with the waitlist for Prompt Studio beta; add catalog entitlements when you need downloadable playbooks. We will meet you where your procurement process is."
+      "section2Body": "Everything remains Supabase-backed with tenant isolation today; deeper enterprise packets ship on request.",
+      "section3Title": "Roll out deliberately",
+      "section3Body": "Start with Prompt Studio previews, unlock catalog bundles when downloadable policies help, escalate to SSO when procurement demands it."
     }
   },
   "Pricing": {
@@ -484,7 +484,7 @@
       },
       {
         "kind": "check",
-        "label": "Org billing & Toss checkout",
+        "label": "Org billing & catalog checkout",
         "starter": true,
         "professional": true,
         "enterprise": true
@@ -562,7 +562,6 @@
       "authInsufficientPermissions": "You don't have permission to do this.",
       "authInviteManagersOnly": "Only admins and organizers can manage invitations.",
       "authAdminOnly": "Only organization admins can change member roles.",
-      "authVenuePermissionDenied": "You don't have permission for venue management.",
       "settingsOrgNameRequired": "Organization name is required.",
       "settingsTextTooLong": "Use at most {max} characters.",
       "inviteInvalidEmail": "Enter a valid email address.",
@@ -758,10 +757,6 @@
       "orgPaidNote": "Your organization is on a paid service plan. Broader Library access may already be included; individual catalog titles can still be purchased separately when needed.",
       "orgStarterNote": "Your organization is on the Starter plan. Upgrade unlocks more Library content for the whole team; you can still buy individual catalog items from the Library when checkout is linked.",
       "orgSummaryLibraryCta": "Open Library to browse titles and checkout",
-      "checkoutWithSlug": "You’re paying for “{slug}.” After it succeeds, your organization will see it in the Library (test amount: {amount} KRW).",
-      "tossIntroNoSlug": "When test payments are enabled, use the form below ({amount} KRW).",
-      "tossIntro": "Complete the payment below. You’ll return here when it’s done.",
-      "setClientKey": "Payments aren’t available in this workspace yet.",
       "lemonCheckoutWithSlug": "You’re buying “{slug}.” Continue in the new tab to pay securely.",
       "lemonMissingUrlTitle": "Checkout isn’t ready",
       "lemonMissingUrlBody": "We couldn’t open checkout for this title. Please ask your organization administrator for help.",
@@ -782,34 +777,14 @@
       "lemonUnknownProductTitle": "Title not found",
       "lemonUnknownProductBody": "That title isn’t available. Return to the Library and choose another item.",
       "errors": {
-        "pocAmountOnly": "This test checkout only supports {amount} KRW.",
-        "missingWidgetKey": "Payments are not enabled: the checkout client key is missing.",
-        "catalogUnknown": "That product is not available or is inactive.",
-        "catalogPriceMismatch": "This product’s price does not match the test amount ({amount} KRW).",
-        "paymentServerConfig": "Payment could not be started because the server is not fully configured.",
-        "intentCreateFailed": "We could not start the payment. Please try again in a moment.",
         "checkoutAllowlistDenied": "Catalog checkout is limited to invited email addresses. Ask an administrator to add your email to the checkout allowlist.",
         "checkoutAllowlistNoEmail": "Your profile has no email address. Update your account or contact support.",
-        "generic": "Something went wrong. Please try again.",
-        "tossClientUnknown": "Something went wrong with the payment window. Try again, or allow pop-ups for this site."
+        "generic": "Something went wrong. Please try again."
       },
-      "widgetErrorLoad": "Failed to load Toss widget",
-      "widgetNotReady": "Payment UI is not ready yet.",
-      "widgetErrorRequest": "Payment request failed",
-      "widgetOpening": "Opening…",
-      "widgetPay": "Pay test amount ({amount} KRW)",
-      "widgetLoading": "Loading payment methods…",
-      "orderNameDefault": "Elevate PoC (test)",
-      "orderNameWithSlug": "Elevate — {slug}",
-      "customerFallback": "Member",
       "successMeta": "Payment success",
       "externalCheckoutReturnTitle": "Back from checkout",
       "externalCheckoutReturnBody": "You’re back from the payment page. If your purchase doesn’t show in the Library within a minute, refresh the Library or open the title again.",
       "externalCheckoutReturnLibrary": "Open Library",
-      "successTitle": "Payment confirmed",
-      "successAlready": "This payment was already confirmed.",
-      "successBody": "Your payment was received.",
-      "failConfirmTitle": "Could not confirm",
       "failMeta": "Payment failed",
       "failTitle": "Payment cancelled or failed",
       "failBody": "The test payment did not complete. You can try again from Billing.",
@@ -825,16 +800,9 @@
         "openLibrary": "Browse the Library",
         "noOrganization": "You need to be in an organization to see purchase history.",
         "sectionUnlocks": "Catalog unlocks",
-        "sectionToss": "Toss test payments",
-        "sectionTossHint": "Shown when your workspace uses test card payments.",
         "unlockedAt": "Unlocked {date}",
         "removedProduct": "Catalog item removed or unavailable",
-        "tossAmount": "{amount} KRW",
         "orgScopeFootnote": "Records are scoped to your organization. Other members of the same org see the same history."
-      },
-      "confirmErrors": {
-        "checkoutAllowlistDenied": "We could not confirm this payment because your email is not on the checkout allowlist.",
-        "checkoutAllowlistNoEmail": "We could not confirm this payment because your profile has no email address."
       }
     },
     "connectedAccounts": {
@@ -1357,11 +1325,70 @@
         "actions": "Actions"
       },
       "actions": {
+        "openReview": "Review / edit",
         "approve": "Approve",
         "requestChanges": "Request changes",
         "schedule": "Schedule",
         "publishNow": "Publish now",
         "retryMark": "Retry mark"
+      },
+      "editor": {
+        "metaTitle": "Review item",
+        "backToQueue": "Back to queue",
+        "intro": "Edit markdown, record editor notes, and recompute the local review gate. Saving does not change status or call external AI APIs.",
+        "titleLabel": "Title",
+        "summaryLabel": "Summary",
+        "bodyLabel": "Body (Markdown)",
+        "notesLabel": "Editor notes",
+        "notesHint": "Free-form notes for you and your team (also appears in queue tooltips where applicable).",
+        "notesPlaceholder": "e.g. Fixed citations in §2, trimmed duplicate links…",
+        "save": "Save changes",
+        "recomputeGate": "Recompute review gate (local)",
+        "gateHint": "Uses the same rules as automated review_gate: citation density, structure, overcopy heuristics. No LLM usage.",
+        "qualityScore": "Quality score",
+        "workflowActions": "Status",
+        "reject": "Reject",
+        "localeLabel": "Locale",
+        "idLabel": "ID",
+        "statusLabel": "Status",
+        "dialogTitle": "Review & edit",
+        "dialogClose": "Close",
+        "openFullPage": "Open full page",
+        "loadErrorForbidden": "You do not have access to this item.",
+        "loadErrorInvalidId": "Invalid item id.",
+        "loadErrorNotFound": "Item was not found.",
+        "loadErrorGeneric": "Could not load item: {detail}"
+      },
+      "claude": {
+        "sectionTitle": "Claude (two-step)",
+        "requestReview": "Request Claude review",
+        "applyRevision": "Apply Claude revision",
+        "primaryHint": "While the review gate has not passed, run review and body revision in one click, or use the steps below for manual control.",
+        "primaryChainCta": "Run Claude review & apply revision",
+        "primaryStepsDetails": "Step-by-step (review, then apply)",
+        "advancedDisclosureLabel": "Claude two-step (manual)",
+        "advancedHintWhenGatePassed": "Review gate passed — use the two steps below only when you want to adjust the brief or body.",
+        "advancedDisabledByPolicy": "Claude tools are disabled after the review gate passes (CONTENT_OPS_CLAUDE_WHEN_GATE_PASSED).",
+        "twoStepHint": "Step 1 writes an editorial brief to metadata. Step 2 rewrites the body from that brief. Set CONTENT_OPS_ANTHROPIC_API_KEY on the server.",
+        "successReview": "Review brief saved to item metadata.",
+        "successRevision": "Body updated from the latest brief.",
+        "successChain": "Review brief saved and body updated from the new brief.",
+        "truncationWarning": "(Draft was truncated for API size.)",
+        "errors": {
+          "forbidden": "Not allowed.",
+          "invalid_id": "Invalid item id.",
+          "missing_api_key": "Set CONTENT_OPS_ANTHROPIC_API_KEY (server-only).",
+          "not_found": "Item not found.",
+          "anthropic_http": "Claude API error",
+          "empty_response": "Claude returned an empty reply.",
+          "no_brief": "Run “Request Claude review” first.",
+          "revision_failed_after_review": "Review was saved, but applying the revision to the body failed.",
+          "db_error": "Database update failed.",
+          "exception": "Unexpected error.",
+          "unknown": "Error: {code}"
+        },
+        "briefHeading": "Latest Claude review brief",
+        "briefEmpty": "No brief yet — use Request Claude review."
       },
       "gate": {
         "pass": "Pass",
@@ -1394,6 +1421,19 @@
           "qualityScoreBelowThreshold": "Quality score below threshold",
           "hardBlockReasonDetected": "Hard-block reason detected"
         }
+      },
+      "detailDialog": {
+        "trigger": "Details",
+        "triggerTooltip": "Open details — review gate, timestamps, notes, more actions, and Claude steps",
+        "title": "Item details",
+        "description": "Additional gate status, timestamps, notes, and advanced actions for this queue row.",
+        "sectionGate": "Review gate",
+        "timingHeading": "Timestamps",
+        "created": "Created",
+        "updated": "Updated",
+        "sectionNotes": "Editor notes",
+        "sectionMoreActions": "More actions",
+        "close": "Close"
       },
       "empty": "No queue items found."
     },
@@ -1608,7 +1648,7 @@
     "adminPurchaseAllowlist": {
       "metaTitle": "Checkout allowlist",
       "title": "Checkout allowlist",
-      "intro": "When CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true, only emails listed here can create a Toss payment intent for the catalog PoC. This is independent of the marketing waitlist. Profile email must match (normalized, case-insensitive).",
+      "intro": "When CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true, only emails listed here can start catalog checkout (Lemon / Polar). This is independent of the marketing waitlist. Profile email must match (normalized, case-insensitive).",
       "emailLabel": "Email",
       "noteLabel": "Note (optional)",
       "add": "Add email",

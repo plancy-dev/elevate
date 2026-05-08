@@ -1,12 +1,12 @@
 ---
-description: 자동 워크플로우 트리거 - 모든 작업 요청 시 AGENTS.md 프로세스 자동 실행
+description: 자동 워크플로우 트리거 - 구현류 요청 시 INIT·AGENTS 프로세스
 globs: []
 alwaysApply: true
 ---
 
 # 자동 워크플로우 규칙
 
-> **모든 작업 요청은 AGENTS.md 프로세스를 따릅니다.**
+> **구현·수정·버그 등 “작업” 요청은** [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) **§2** 하네스 + [`AGENTS.md`](../../AGENTS.md) 페이즈를 따른다. **읽기 전용 질문**은 예외(아래 § 예외 처리).
 
 ---
 
@@ -16,16 +16,16 @@ alwaysApply: true
 
 | 키워드 | 동작 |
 |--------|------|
-| `INIT`, `VAN` | INIT 분석 시작 |
+| `INIT`, `VAN` | INIT 분석 시작 — 출력은 [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) **§2.2** 단일 형식 |
 | `PLAN` | 계획 수립 (Cursor Plan) |
 | `CREATIVE` | 설계 결정 |
 | `BUILD` | 구현 (Cursor Agent) |
 | `REFLECT` | 검토 |
 | `ARCHIVE` | 문서화 |
 
-### 암시적 패턴 (자동 INIT 시작)
+### 암시적 패턴 (구현류 → INIT 포함)
 
-다음 패턴 감지 시 **자동으로 INIT 실행**:
+아래 패턴이면 **`ai-session-bootstrap.mdc`** 와 함께 INIT·복잡도 판단을 적용한다.
 
 ```
 구현/수정/추가/삭제/변경/개선/리팩토링 + 해줘/해주세요
@@ -35,31 +35,11 @@ alwaysApply: true
 
 ---
 
-## 필수 실행 프로세스
+## INIT (자동 실행 시)
 
-### 1. INIT (자동 실행)
+단계 및 **출력 문자열** 전부: [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) **§2.1–§2.3** (“INIT 체크리스트” 포함). **예전의 `INIT 분석` 별칭 헤더는 쓰지 않고**, §2.2 **`INIT 완료` 블록만** 출력한다.
 
-```
-1. 요청 분석
-2. memory-bank/tasks.md, activeContext.md 참조 (로드맵·앵커; ai-session-bootstrap과 동일)
-3. memory-bank/domainKnowledge.md 참조
-4. 관련 파일 탐색
-5. 복잡도 판단 (L1-L4)
-6. 결과 출력 (AGENTS.md 형식)
-```
-
-**출력 형식**:
-```
-✅ INIT 분석
-━━━━━━━━━━━━━━━━━
-📋 요청: {요약}
-📊 복잡도: L{n}
-📁 관련: {파일}
-━━━━━━━━━━━━━━━━━
-➡️ 다음: {PLAN/BUILD}
-```
-
-### 2. 복잡도별 자동 진행
+## 복잡도별 자동 진행
 
 | L | 워크플로우 | 자동 진행 |
 |---|-----------|-----------|
@@ -68,9 +48,9 @@ alwaysApply: true
 | 3 | +CREATIVE | 설계 결정 후 |
 | 4 | 전체 (+ARCHIVE) | 단계별 확인 |
 
-**SoT (페이즈·gstack):** [`AGENTS.md`](../../AGENTS.md) § AI orchestration → Operating model.
+**SoT (페이즈·gstack):** [`AGENTS.md`](../../AGENTS.md) § Operating model · [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) §2·§6.
 
-### 3. 각 단계 완료 시
+### 각 단계 완료 시
 
 - 다음 단계 자동 안내
 - `activeContext.md` 자동 갱신 (모드 전환 시)
@@ -110,9 +90,9 @@ alwaysApply: true
 
 ## 참조
 
-- **AGENTS.md**: 전체 가이드
-- **docs/AI_ORCHESTRATION.md**: AI 도구 레이어·의사결정 (요약: `docs/AI_USAGE.md`)
-- **ai-session-bootstrap.mdc**: 구현·버그·기능 시 tasks/activeContext 자동 로드
-- **docs/AI_USER_TEMPLATES.md**: 버그·기능 요청 권장 형식
-- **workflow-modes.mdc**: 상세 워크플로우
-- **memory-bank/**: 컨텍스트
+- **AGENTS.md**: 전체 가이드 · Session handoff·Ops vs BUILD 요약도 [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) §2
+- **`docs/AI_ORCHESTRATION.md`** §2: Tier 0/1 · INIT 형식 · 턴 종료 · Ops vs 제품 BUILD · verify (**§2.6**)
+- **ai-session-bootstrap.mdc**: 구현·버그·기능 시 Tier 0 자동 로드
+- **`docs/AI_USER_TEMPLATES.md`**: 버그·기능 요청 권장 형식
+- **`workflow-modes.mdc`**: 모드별 Cursor 가이드
+- **`memory-bank/`**: 컨텍스트

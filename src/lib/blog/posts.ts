@@ -36,6 +36,8 @@ const blogFrontmatterSchema = z
     locale: z.string().optional(),
     heroPhotoCredit: z.string().optional(),
     heroNote: z.string().optional(),
+    /** Set by content-ops blog publish adapter; ignored for rendering. */
+    template_version: z.string().optional(),
   })
   .strict();
 
@@ -146,7 +148,7 @@ function listMdxFiles(dir: string): string[] {
 }
 
 /**
- * Blog posts live under `content/blog/<locale>/<slug>.mdx` (e.g. `content/blog/en/the-prompt-is-your-product-surface.mdx`).
+ * Blog posts live under `content/blog/<locale>/<slug>.mdx` (e.g. `content/blog/en/prompt-harness-beats-prompt-hacks.mdx`).
  * Each locale has its own files—no fallback to English at runtime.
  * Sample posts (slug starting with "sample-") are excluded in production builds.
  */

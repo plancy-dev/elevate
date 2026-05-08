@@ -7,7 +7,7 @@
 | 파일 | 요약 |
 |------|------|
 | `000_pre_init_cleanup.sql` | 사전 정리 |
-| `001_initial_schema.sql` | **MICE**: `organizations`, `profiles`, `venues`, `events`, `sessions`, `attendees`, `session_attendees` + RLS |
+| `001_initial_schema.sql` | **Historical:** created MICE tables (later **dropped** by `052_drop_mice_legacy_tables.sql`); still creates `organizations`, `profiles`, core enums |
 | `002_profiles_select_own.sql` | profiles RLS |
 | `003_session_attendees_policies.sql` | 세션 참석 RLS |
 | `004_profiles_rls_no_recursion.sql` | profiles RLS |
@@ -17,7 +17,7 @@
 | `008_toss_payment_intents.sql` | 결제 인텐트 |
 
 **재사용**: Auth, `organizations`, `profiles`, 초대·감사·결제 인프라.  
-**피벗 후 방침**: MICE 테이블은 당분간 **보관**(삭제 마이그레이션 보류). 신규 도메인은 별도 테이블로 추가.
+**피벗 후 방침**: MICE 테이블은 **`052_drop_mice_legacy_tables.sql`** 로 제거(백업 후 적용). 신규 도메인은 Studio·콘텐츠·결제 축으로만 확장.
 
 ## 2. 앱 라우트 (요약)
 

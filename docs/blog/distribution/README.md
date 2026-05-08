@@ -43,7 +43,7 @@ North Star alignment: [`memory-bank/creative-elevate-ai-pivot.md`](../../../memo
 
 | File | Post |
 |------|------|
-| [`the-prompt-is-your-product-surface.md`](the-prompt-is-your-product-surface.md) | Flagship en/ko blog — prompt as product surface |
+| [`prompt-harness-beats-prompt-hacks.md`](prompt-harness-beats-prompt-hacks.md) | P1 longform — en + ko (`prompt-harness-beats-prompt-hacks`) |
 
 ## Related
 

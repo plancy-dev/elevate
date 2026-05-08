@@ -11,7 +11,7 @@ This document aligns **Elevate AI**’s first MVP (**prompt improvement / Prompt
 | Awareness | SEO, social, referrals, ads | Localized home (`/[locale]`): **Prompt Studio** + waitlist; blog/resources for inbound |
 | Interest | Learn product; join whitelist without account | `/product/prompt-studio`, `/pricing`, `/demo`, `/contact`; **`#waitlist`** → `waitlist_signups` |
 | Conversion (lead) | Waitlist (Prompt Studio beta) | `POST /api/waitlist`; PostHog `elevate_waitlist_submitted` (no email in analytics) |
-| Conversion (pay) | Pay | **Lemon Squeezy** (global MoR) — variant ↔ `content_products` + webhook; Toss PoC는 레거시·KR 실험용 ([`ADR-001`](./adr/ADR-001-toss-payments-poc.md)). G0 기본 경로: [`PLAN-g0-creator-commerce-decisions.md`](./features/PLAN-g0-creator-commerce-decisions.md) |
+| Conversion (pay) | Pay | **Lemon Squeezy** (global MoR) — variant ↔ `content_products` + `POST /api/webhooks/lemonsqueezy`; blog subscriptions **Polar**. 역사적 Toss PoC는 앱에서 제거됨 ([`ADR-001`](./adr/ADR-001-toss-payments-poc.md), [`ADR-005`](./adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md)). G0: [`PLAN-g0-creator-commerce-decisions.md`](./features/PLAN-g0-creator-commerce-decisions.md) |
 | Access | Prompt improvement + files | **Prompt Studio** (MVP roadmap); **Library** — read access = paid org plan **or** per-SKU entitlement (`013`); PDF download vs **web-only** in-app reader |
 | Expand | Team, more SKUs, B2B | Invites (`006`), org billing, future upsell |
 
@@ -64,12 +64,12 @@ Sample posts (slugs starting with `sample-`) are **QA/staging fixtures** for tes
 1. **Solo buyer** — today’s model is org-scoped; for strict B2C ebook, consider `user_id` on entitlements or a personal org.
 2. **Ops** — create Storage bucket/policies; set `storage_object_path` on catalog rows; optional access logs.
 3. **Analytics** — dashboards and alerts in PostHog are manual; optional server-side capture for waitlist (duplicate of client success) if you need backend-only verification.
-4. **Invite-only commerce** — optional `allowlisted_email` / org flag before Toss confirm (backlog if product requires strict whitelist).
+4. **Invite-only commerce** — optional `catalog_purchase_allowlist` before Lemon checkout / webhook grant ([`CATALOG_PURCHASE_ALLOWLIST.md`](./CATALOG_PURCHASE_ALLOWLIST.md)).
 5. **Prompt Studio beta** — `prompt_studio_beta_allowlist` (migration `016`) + `/admin/prompt-studio-allowlist`; when `STUDIO_BETA_REQUIRE_ALLOWLIST=true`, `/dashboard/studio` requires profile email on the list (independent of waitlist and `catalog_purchase_allowlist`).
 
 ## Related
 
 - **Who may read ebooks (subscription vs per-purchase):** [`docs/EBOOK_READ_ALLOWLIST.md`](./EBOOK_READ_ALLOWLIST.md)
-- **Optional invite-only checkout (catalog Toss):** [`docs/CATALOG_PURCHASE_ALLOWLIST.md`](./CATALOG_PURCHASE_ALLOWLIST.md)
+- **Optional invite-only checkout (catalog):** [`docs/CATALOG_PURCHASE_ALLOWLIST.md`](./CATALOG_PURCHASE_ALLOWLIST.md)
 - Reflection / audit (archived): [`memory-bank/archive/work-history/reflect-ebook-content-funnel.md`](../memory-bank/archive/work-history/reflect-ebook-content-funnel.md), [`memory-bank/archive/work-history/reflect-mvp-waitlist-landing-audit.md`](../memory-bank/archive/work-history/reflect-mvp-waitlist-landing-audit.md)
 - gstack (YC-style review loops): [`docs/GSTACK.md`](GSTACK.md)

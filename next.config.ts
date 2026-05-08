@@ -95,36 +95,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/dashboard/events",
-        destination: "/dashboard",
-        permanent: false,
-      },
-      {
-        source: "/dashboard/events/:path*",
-        destination: "/dashboard",
-        permanent: false,
-      },
-      {
-        source: "/dashboard/venues",
-        destination: "/dashboard",
-        permanent: false,
-      },
-      {
-        source: "/dashboard/venues/:path*",
-        destination: "/dashboard",
-        permanent: false,
-      },
-      {
-        source: "/dashboard/attendees",
-        destination: "/dashboard",
-        permanent: false,
-      },
-      {
-        source: "/dashboard/attendees/:path*",
-        destination: "/dashboard",
-        permanent: false,
-      },
-      {
         source: "/dashboard/analytics",
         destination: "/dashboard",
         permanent: false,

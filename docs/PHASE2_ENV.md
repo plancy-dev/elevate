@@ -27,16 +27,8 @@ NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 키는 **절대** 저장소에 커밋하지 말고 대시보드·`.env.local`에만 둡니다.  
 설정이 없으면 앱은 PostHog를 로드하지 않고 동작합니다.
 
-## Toss Payments (PoC)
+## Payments — Lemon Squeezy + Polar (operational)
 
-실제 결제 연동 전 단계입니다.
+카탈로그·빌링은 **Lemon Squeezy** 호스트 체크아웃 + `POST /api/webhooks/lemonsqueezy`; 블로그 구독 등은 **Polar** + `POST /api/webhooks/polar`. 변수 표·운영 순서: [`docs/adr/ADR-004-lemon-squeezy-global-payments.md`](./adr/ADR-004-lemon-squeezy-global-payments.md), [`docs/features/PLAN-lemon-squeezy-webhook.md`](./features/PLAN-lemon-squeezy-webhook.md), 루트 **`.env.local.example`**.
 
-1. [Toss Payments 개발자](https://developers.tosspayments.com/)에서 테스트 키 발급.
-2. `docs/adr/ADR-001-toss-payments-poc.md`의 변수 표 참고 후 서버 전용 시크릿은 **서버 env**에만 저장 (`TOSS_SECRET_KEY` 등).
-3. 앱의 `/dashboard/billing`에서 **결제위젯 PoC**(고정 **100원** 테스트)를 쓰려면:
-   - `NEXT_PUBLIC_TOSS_WIDGET_CLIENT_KEY` (브라우저)
-   - 승인 API: `TOSS_WIDGET_SECRET_KEY` (위젯 시크릿) 우선, 없으면 `TOSS_SECRET_KEY` (API 개별 시크릿)
-   - `NEXT_PUBLIC_APP_URL`과 동일한 호스트로 Toss 대시보드에 **성공/실패 URL** 등록:  
-     `{APP_URL}/dashboard/billing/success`, `{APP_URL}/dashboard/billing/fail`
-   - DB: **`008_toss_payment_intents.sql`** 적용 후 `pnpm db:types` 권장
-   - 웹훅(선택): 공개 URL이 필요 — `https://<host>/api/webhooks/toss` (로컬은 ngrok 등)
+**Legacy DB:** 마이그레이션 **`008_toss_payment_intents.sql`** 가 이미 적용된 프로젝트에는 테이블이 남을 수 있으나 **앱은 사용하지 않음** (2026-05 제거) — [`docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md`](./adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md). 역사적 Toss env 표는 [`docs/adr/ADR-001-toss-payments-poc.md`](./adr/ADR-001-toss-payments-poc.md).

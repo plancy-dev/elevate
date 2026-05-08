@@ -9,7 +9,6 @@ import type { ContentProductKind } from "@/lib/data/library";
 import { createClient } from "@/lib/supabase/server";
 import { getAppLocale } from "@/lib/i18n/app-locale";
 import { formatCurrencyMinor } from "@/lib/format-currency";
-import { cn } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dashboard.pages");
@@ -59,15 +58,13 @@ export default async function PurchaseHistoryPage() {
   const tPages = await getTranslations("Dashboard.pages");
 
   let entitlements: Awaited<ReturnType<typeof loadOrgPurchaseHistory>>["entitlements"] = [];
-  let tossPayments: Awaited<ReturnType<typeof loadOrgPurchaseHistory>>["tossPayments"] = [];
 
   if (orgId) {
     const data = await loadOrgPurchaseHistory(supabase, orgId);
     entitlements = data.entitlements;
-    tossPayments = data.tossPayments;
   }
 
-  const hasAny = entitlements.length > 0 || tossPayments.length > 0;
+  const hasAny = entitlements.length > 0;
 
   return (
     <div className="min-h-screen bg-paper-50">
@@ -135,61 +132,6 @@ export default async function PurchaseHistoryPage() {
                           <p className="text-xs text-ink-500 shrink-0 sm:text-right">
                             {t("unlockedAt", { date: formatTs(row.granted_at, locale) })}
                           </p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </section>
-            ) : null}
-
-            {tossPayments.length > 0 ? (
-              <section aria-labelledby="ph-toss">
-                <h3
-                  id="ph-toss"
-                  className="text-xs font-semibold uppercase tracking-wider text-ink-500 mb-3"
-                >
-                  {t("sectionToss")}
-                </h3>
-                <p className="text-xs text-ink-500 mb-3 leading-relaxed">{t("sectionTossHint")}</p>
-                <div className="overflow-hidden rounded-[var(--radius-1)] border border-ink-100 bg-paper-0">
-                  <ul className="divide-y divide-ink-100">
-                    {tossPayments.map((row) => (
-                      <li key={row.id} className="px-5 py-3">
-                        <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-start">
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-ink-900 tabular-nums">
-                              {t("tossAmount", { amount: row.amount_krw.toLocaleString(locale) })}
-                            </p>
-                            {row.product ? (
-                              <Link
-                                href={`/dashboard/library/${encodeURIComponent(row.product.slug)}`}
-                                className="text-xs text-primary hover:underline mt-0.5 inline-block"
-                              >
-                                {row.product.title}
-                              </Link>
-                            ) : null}
-                            <p className="text-[11px] font-mono text-ink-500 mt-1 break-all">
-                              {row.order_id}
-                            </p>
-                          </div>
-                          <div className="text-xs text-ink-500 shrink-0 sm:text-right">
-                            <span
-                              className={cn(
-                                "inline-block rounded px-1.5 py-0.5 text-[10px] font-medium uppercase",
-                                row.status === "confirmed"
-                                  ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                                  : "bg-paper-50 text-ink-500",
-                              )}
-                            >
-                              {row.status}
-                            </span>
-                            <p className="mt-1">
-                              {row.confirmed_at
-                                ? formatTs(row.confirmed_at, locale)
-                                : formatTs(row.created_at, locale)}
-                            </p>
-                          </div>
                         </div>
                       </li>
                     ))}

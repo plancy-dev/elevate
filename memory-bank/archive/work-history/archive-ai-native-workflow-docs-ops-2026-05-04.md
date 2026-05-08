@@ -9,7 +9,7 @@
 | 문서 게이트 (P0–P2 구현 전 검수) | `docs/features/PLAN-ai-native-workflow-doc-gate.md` |
 | P2 RFC (문서/구현 PR 경계·수용 기준) | `docs/features/PLAN-ai-native-workflow-p2-rfc.md` |
 | PLAN 상위 링크 | `docs/features/PLAN-ai-native-workflow-evolution-2026-05.md` |
-| 허브 | `docs/AI_ORCHESTRATION.md` §7, `docs/AI_USAGE.md` |
+| 허브 | `docs/AI_ORCHESTRATION.md` §2 하네스·§8 관련 목록, `docs/AI_USAGE.md` |
 | ADR 프로세스 | `docs/adr/README.md` |
 | GitHub Issues vs PR | `docs/DEV_PROCESS_GITHUB.md` |
 | 추적 이슈 | GitHub **#73** (P2 implementation backlog) |

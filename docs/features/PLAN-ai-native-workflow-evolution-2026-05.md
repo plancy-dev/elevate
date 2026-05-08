@@ -15,7 +15,7 @@
 - [Harness design for long-running application development](https://www.anthropic.com/engineering/harness-design-long-running-apps): planner / generator / **evaluator**(MCP로 실제 클릭·검증), **스프린트 계약**(무엇이 done인지 합의) 등 고신뢰 하네스.
 - [Scaling Managed Agents](https://www.anthropic.com/engineering/managed-agents): **brain / hands / session** 분리, 세션 로그를 컨텍스트 밖 저장소로 — “메타 하네스” 관점.
 
-**Elevate 매핑:** `elevate-memory-bank-bootstrap` + `tasks`/`activeContext`/`progress` = initializer·handoff에 가깝다. **Evaluator** 축은 gstack `/qa`·`/browse`·`pnpm verify`·CI로 부분 충족.
+**Elevate 매핑:** `elevate-work-harness`(INIT 별칭 `elevate-memory-bank-bootstrap`) + `tasks`/`activeContext`/`progress` = initializer·handoff에 가깝다. **Evaluator** 축은 gstack `/qa`·`/browse`·`pnpm verify`·CI로 부분 충족.
 
 ### 1.2 OpenAI Codex — 커스터마이징·스킬·OSS 사례
 
@@ -23,7 +23,7 @@
 - [Agent Skills](https://developers.openai.com/codex/skills): 메타데이터 우선 로드, **progressive disclosure**, 설명에 트리거·경계, repo는 **`.agents/skills`** 스캔 등.
 - [Using skills to accelerate OSS maintenance](https://developers.openai.com/blog/skills-agents-sdk): **if/then 필수 스킬**(`$implementation-strategy`, `$code-change-verification`, …), **Docs MCP**로 할루시네이션 감소, **Codex GitHub Action**으로 CI에 동일 하네스 이식.
 
-**Elevate 매핑:** 루트 `AGENTS.md` + `.cursor/rules` + gstack `.agents/skills` + 이미 추가한 **`.cursor/skills/elevate-memory-bank-bootstrap`**. **필수 스킬 라우팅 if/then**은 아직 Codex 수준으로 엄밀하진 않음 → **§4 P1**.
+**Elevate 매핑:** 루트 `AGENTS.md` + `.cursor/rules` + gstack `.agents/skills` + **`.cursor/skills/elevate-work-harness`**(통합 하네스). **필수 스킬 라우팅 if/then**은 아직 Codex 수준으로 엄밀하진 않음 → **§4 P1**.
 
 ### 1.3 Cursor — 규칙·스킬·에이전트 모범 사례
 
@@ -51,6 +51,8 @@
 - [토스페이먼츠 MCP 서버 구현기](https://toss.tech/article/37777): 문서만 주면 **시크릿 키 클라이언트 노출·플로우 오류**; **MCP + Cursor**에서 **정확도·안전** 개선.
 - [앱인토스 AI 개발 가이드](https://developers-apps-in-toss.toss.im/development/llms.html): `llms.txt` / **MCP** / **@docs** 명시.
 
+**Elevate 결제 레일 SoT (앱):** 카탈로그·빌링은 **Lemon Squeezy + Polar** — [`ADR-004`](../adr/ADR-004-lemon-squeezy-global-payments.md), [`ADR-005`](../adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md). 위 두 외부 링크는 **MCP·문서 연동 패턴** 참고용이며, 레포의 결제 구현 경로와 혼동하지 말 것.
+
 **Elevate 매핑:** 결제·외부 API 작업 시 **공식 MCP·문서 도구** 우선 호출을 규칙에 한 줄 더 박기(§4 P1). (이미 PostHog 등 MCP 사용 중인 패턴 확장.)
 
 ---
@@ -63,7 +65,7 @@
 | 페이즈·복잡도 | `workflow-modes.mdc`, L1–L4, INIT→ARCHIVE |
 | 상태 SoT | `memory-bank/tasks.md`, `activeContext.md`, `progress.md` |
 | 세이프가드 | Husky, `commit-verification`, `pnpm verify`, CI, PostHog 규칙 |
-| 스킬 | gstack vendored + `elevate-memory-bank-bootstrap` + UI 스킬 |
+| 스킬 | gstack vendored + `elevate-work-harness` + UI 스킬 |
 | 세션 부트스트랩 | `ai-session-bootstrap.mdc` (자동) + [MEMORY_BANK_SKILL_GUIDE.md](../MEMORY_BANK_SKILL_GUIDE.md) (명시) |
 
 ---
@@ -91,7 +93,7 @@
 1. **`docs/MEMORY_BANK_SKILL_GUIDE.md`** 또는 **`docs/AI_EXPERT_PROMPTS.md`**에 **짧은 절** 추가:  
    - 긴 디버그(예: **~20 메시지** 초과) 시 **새 채팅 + `tasks`/`activeContext` 인용 한 블록 요약** 후 계속.  
    - 출처: 커뮤니티 큐레이션([cursor-ai-tips](https://github.com/murataslan1/cursor-ai-tips)) + Anthropic “깨끗한 handoff” 정신.
-2. **`docs/AI_ORCHESTRATION.md`** §3 옆에 **한 문단**: 외부 API·결제·PII 구역은 **MCP/공식 문서 도구 우선**(토스 사례).
+2. **`docs/AI_ORCHESTRATION.md`** §4 옆에 **한 문단**: 외부 API·결제·PII 구역은 **MCP/공식 문서 도구 우선**(토스 사례).
 
 **수용 기준:** 위 두 곳 중 최소 한 곳에 반영, 링크로 이 PLAN 참조.
 
@@ -99,11 +101,11 @@
 
 - [x] [`docs/MEMORY_BANK_SKILL_GUIDE.md`](../MEMORY_BANK_SKILL_GUIDE.md) — § 긴 디버그·세션 리셋
 - [x] [`docs/AI_EXPERT_PROMPTS.md`](../AI_EXPERT_PROMPTS.md) — §1b + MEMORY_BANK_SKILL_GUIDE 링크
-- [x] [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) — §3 외부 API·결제·MCP 우선 문단
+- [x] [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) — §4 외부 API·결제·MCP 우선 문단
 
 ### P1 — 정책·구조 (1~3 PR)
 
-**진행:** 베이스라인 감사 표 [`docs/CURSOR_RULES_AUDIT.md`](../CURSOR_RULES_AUDIT.md) · verify if/then은 [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) **§2b** + [`AGENTS.md`](../../AGENTS.md) BUILD 행.
+**진행:** 베이스라인 감사 표 [`docs/CURSOR_RULES_AUDIT.md`](../CURSOR_RULES_AUDIT.md) · verify if/then은 [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) **§2.6** + [`AGENTS.md`](../../AGENTS.md) BUILD 행.
 
 **P1 잔여 처리(저장소):**
 

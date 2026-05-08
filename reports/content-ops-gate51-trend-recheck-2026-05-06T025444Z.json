@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-05-06T02:54:45.624Z",
+  "lookbackDays": 7,
+  "minDayBuckets": 2,
+  "status": "PENDING",
+  "decisionReason": "latest daily trend does not show simultaneous improvement",
+  "trend": [
+    {
+      "day": "2026-05-01",
+      "total": 38,
+      "lowNovelty": 9,
+      "lowNoveltyRatio": 0.2368,
+      "blogTotal": 12,
+      "blogReviewRequired": 2,
+      "blogReviewRequiredRatio": 0.1667
+    },
+    {
+      "day": "2026-05-03",
+      "total": 42,
+      "lowNovelty": 0,
+      "lowNoveltyRatio": 0,
+      "blogTotal": 1,
+      "blogReviewRequired": 0,
+      "blogReviewRequiredRatio": 0
+    },
+    {
+      "day": "2026-05-04",
+      "total": 6,
+      "lowNovelty": 0,
+      "lowNoveltyRatio": 0,
+      "blogTotal": 3,
+      "blogReviewRequired": 1,
+      "blogReviewRequiredRatio": 0.3333
+    }
+  ]
+}

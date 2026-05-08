@@ -14,68 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      attendees: {
-        Row: {
-          checked_in: boolean
-          checked_in_at: string | null
-          company: string
-          created_at: string
-          currency: string
-          custom_fields: Json
-          email: string
-          event_id: string
-          first_name: string
-          id: string
-          job_title: string
-          last_name: string
-          nps_score: number | null
-          registration_type: Database["public"]["Enums"]["registration_type"]
-          ticket_price_cents: number
-        }
-        Insert: {
-          checked_in?: boolean
-          checked_in_at?: string | null
-          company?: string
-          created_at?: string
-          currency?: string
-          custom_fields?: Json
-          email: string
-          event_id: string
-          first_name?: string
-          id?: string
-          job_title?: string
-          last_name?: string
-          nps_score?: number | null
-          registration_type?: Database["public"]["Enums"]["registration_type"]
-          ticket_price_cents?: number
-        }
-        Update: {
-          checked_in?: boolean
-          checked_in_at?: string | null
-          company?: string
-          created_at?: string
-          currency?: string
-          custom_fields?: Json
-          email?: string
-          event_id?: string
-          first_name?: string
-          id?: string
-          job_title?: string
-          last_name?: string
-          nps_score?: number | null
-          registration_type?: Database["public"]["Enums"]["registration_type"]
-          ticket_price_cents?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "attendees_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       audit_logs: {
         Row: {
           action: string
@@ -572,100 +510,6 @@ export type Database = {
         }
         Relationships: []
       }
-      events: {
-        Row: {
-          actual_attendees: number
-          budget_cents: number
-          cover_image_url: string | null
-          created_at: string
-          created_by: string | null
-          currency: string
-          description: string
-          end_date: string
-          event_type: Database["public"]["Enums"]["event_type"]
-          expected_attendees: number
-          id: string
-          is_public: boolean
-          organization_id: string
-          revenue_cents: number
-          slug: string
-          start_date: string
-          status: Database["public"]["Enums"]["event_status"]
-          timezone: string
-          title: string
-          updated_at: string
-          venue_id: string | null
-        }
-        Insert: {
-          actual_attendees?: number
-          budget_cents?: number
-          cover_image_url?: string | null
-          created_at?: string
-          created_by?: string | null
-          currency?: string
-          description?: string
-          end_date: string
-          event_type?: Database["public"]["Enums"]["event_type"]
-          expected_attendees?: number
-          id?: string
-          is_public?: boolean
-          organization_id: string
-          revenue_cents?: number
-          slug: string
-          start_date: string
-          status?: Database["public"]["Enums"]["event_status"]
-          timezone?: string
-          title: string
-          updated_at?: string
-          venue_id?: string | null
-        }
-        Update: {
-          actual_attendees?: number
-          budget_cents?: number
-          cover_image_url?: string | null
-          created_at?: string
-          created_by?: string | null
-          currency?: string
-          description?: string
-          end_date?: string
-          event_type?: Database["public"]["Enums"]["event_type"]
-          expected_attendees?: number
-          id?: string
-          is_public?: boolean
-          organization_id?: string
-          revenue_cents?: number
-          slug?: string
-          start_date?: string
-          status?: Database["public"]["Enums"]["event_status"]
-          timezone?: string
-          title?: string
-          updated_at?: string
-          venue_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "events_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "events_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "events_venue_id_fkey"
-            columns: ["venue_id"]
-            isOneToOne: false
-            referencedRelation: "venues"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       lemon_squeezy_processed_orders: {
         Row: {
           content_product_id: string
@@ -973,95 +817,6 @@ export type Database = {
           note?: string | null
         }
         Relationships: []
-      }
-      session_attendees: {
-        Row: {
-          attendee_id: string
-          checked_in: boolean
-          checked_in_at: string | null
-          session_id: string
-        }
-        Insert: {
-          attendee_id: string
-          checked_in?: boolean
-          checked_in_at?: string | null
-          session_id: string
-        }
-        Update: {
-          attendee_id?: string
-          checked_in?: boolean
-          checked_in_at?: string | null
-          session_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "session_attendees_attendee_id_fkey"
-            columns: ["attendee_id"]
-            isOneToOne: false
-            referencedRelation: "attendees"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "session_attendees_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "sessions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      sessions: {
-        Row: {
-          capacity: number
-          created_at: string
-          description: string
-          end_time: string
-          event_id: string
-          id: string
-          registered_count: number
-          room: string
-          speaker_name: string
-          speaker_title: string
-          start_time: string
-          title: string
-        }
-        Insert: {
-          capacity?: number
-          created_at?: string
-          description?: string
-          end_time: string
-          event_id: string
-          id?: string
-          registered_count?: number
-          room?: string
-          speaker_name?: string
-          speaker_title?: string
-          start_time: string
-          title: string
-        }
-        Update: {
-          capacity?: number
-          created_at?: string
-          description?: string
-          end_time?: string
-          event_id?: string
-          id?: string
-          registered_count?: number
-          room?: string
-          speaker_name?: string
-          speaker_title?: string
-          start_time?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "sessions_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       studio_distribution_channels: {
         Row: {
@@ -2114,53 +1869,6 @@ export type Database = {
           },
         ]
       }
-      venues: {
-        Row: {
-          address: string
-          capacity: number
-          city: string
-          country: string
-          created_at: string
-          id: string
-          latitude: number | null
-          longitude: number | null
-          name: string
-          organization_id: string
-        }
-        Insert: {
-          address?: string
-          capacity?: number
-          city?: string
-          country?: string
-          created_at?: string
-          id?: string
-          latitude?: number | null
-          longitude?: number | null
-          name: string
-          organization_id: string
-        }
-        Update: {
-          address?: string
-          capacity?: number
-          city?: string
-          country?: string
-          created_at?: string
-          id?: string
-          latitude?: number | null
-          longitude?: number | null
-          name?: string
-          organization_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "venues_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       waitlist_signups: {
         Row: {
           created_at: string
@@ -2232,24 +1940,7 @@ export type Database = {
     Enums: {
       blog_subscription_status: "active" | "cancelled" | "expired" | "past_due"
       blog_subscription_tier: "free" | "monthly" | "annual"
-      event_status:
-        | "draft"
-        | "planning"
-        | "registration_open"
-        | "live"
-        | "completed"
-        | "cancelled"
-      event_type:
-        | "conference"
-        | "exhibition"
-        | "meeting"
-        | "incentive"
-        | "seminar"
-        | "workshop"
-        | "gala"
-        | "other"
       org_plan: "starter" | "professional" | "enterprise"
-      registration_type: "general" | "vip" | "speaker" | "sponsor" | "media"
       user_role: "admin" | "organizer" | "coordinator" | "viewer"
     }
     CompositeTypes: {
@@ -2380,26 +2071,7 @@ export const Constants = {
     Enums: {
       blog_subscription_status: ["active", "cancelled", "expired", "past_due"],
       blog_subscription_tier: ["free", "monthly", "annual"],
-      event_status: [
-        "draft",
-        "planning",
-        "registration_open",
-        "live",
-        "completed",
-        "cancelled",
-      ],
-      event_type: [
-        "conference",
-        "exhibition",
-        "meeting",
-        "incentive",
-        "seminar",
-        "workshop",
-        "gala",
-        "other",
-      ],
       org_plan: ["starter", "professional", "enterprise"],
-      registration_type: ["general", "vip", "speaker", "sponsor", "media"],
       user_role: ["admin", "organizer", "coordinator", "viewer"],
     },
   },

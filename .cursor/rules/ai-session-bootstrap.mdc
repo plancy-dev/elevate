@@ -8,36 +8,46 @@ alwaysApply: true
 
 에이전트는 **코드 변경·버그 수정·기능 구현**이 수반되는 요청을 처리할 때, 아래를 **먼저** 적용한다. (사용자가 “한 파일만”, “설명만”, “이전 턴에서 이미 맥락 있음”이라고 한 경우는 예외.)
 
-## 1. 읽기 (도구로 로드)
+## 1. 읽기 — Tier 0 (도구로 로드)
 
-1. **`memory-bank/tasks.md`** — 우선순위·로드맵 SoT  
-2. **`memory-bank/activeContext.md`** — 현재 페이즈·앵커 파일  
+**정의·조건 전부 [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) §2.1.**
 
-위 두 파일이 없으면(다른 저장소 포크 직후 등) 생략하고 사용자에게 경로 확인을 요청한다.
+실무 순서:
+
+1. **`memory-bank/tasks.md`**  
+2. **`memory-bank/activeContext.md`**  
+3. **`docs/AI_ORCHESTRATION.md`** (특히 **§2**)
+
+위 두 MB 파일이 없으면 생략하고 사용자에게 경로 확인을 요청한다.
+
+Tier 1(조건부 읽기)도 §2.1 표를 따른다.
 
 ## 2. 오케스트레이션 (한 번 확인)
 
-**`docs/AI_ORCHESTRATION.md`** — 레이어(A 규칙 → B memory-bank → C gstack), `pnpm verify` vs gstack `/ship` 우선순위.
+레이어 A→B→C, **Ops vs 제품 BUILD**, **`pnpm verify`**: [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md).
 
-이미 동일 스레드에서 읽었으면 반복 읽기는 생략한다.
+이미 동일 스레드에서 읽었으면 반복 읽기 생략.
+
+**선택(명시 호출):** 사용자가 **`@elevate-work-harness`** 지정 시 트리아지·INIT·전문가·gstack 브릿지 — [`.cursor/skills/elevate-work-harness/SKILL.md`](../../.cursor/skills/elevate-work-harness/SKILL.md). 레이어 **A(저장소 규칙·훅)** 는 스킬이 덮어쓰지 않는다(`AGENTS.md`).
 
 ## 2b. GitHub Issues · 원격 작업 큐 (기능·스튜디오 범위일 때)
 
-**`docs/DEV_PROCESS_GITHUB.md`** — 이슈·PR·`gh issue list`와의 정렬. 사용자가 “다음 할 일”, “이슈 N 구현”, “Studio 작업 목록”을 말하면 **원격 이슈를 조회·참조**할 수 있다 (`pnpm issues:studio` 또는 `gh issue list`). 구현 PR에는 `Closes #` / `Refs #`를 권장한다.
+**`docs/DEV_PROCESS_GITHUB.md`** — 이슈·PR·`gh issue list`. 사용자가 “다음 할 일”, “이슈 N 구현” 등이면 참조 가능(`pnpm issues:studio` 또는 `gh issue list`). 구현 PR에는 `Closes #` / `Refs #` 권장.
 
 ## 3. 검증·출하
 
-- 이 저장소의 **단일 검증 스크립트**는 **`pnpm verify`** (`package.json` 참고).  
-- gstack **`/ship`** 등과 충돌 시 **저장소 스크립트·커밋 훅이 우선** (`commit-verification` 규칙).
+제품 **`pnpm verify`** 와 게이트: [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) **§2.5–§2.6**.
+
+- gstack **`/ship`** 등과 충돌 시 **저장소 스크립트·커밋 훅 우선** (`commit-verification` 규칙).
 
 ## 4. 사용자 메시지 형식
 
-버그·기능 요청은 **`docs/AI_USER_TEMPLATES.md`** 템플릿을 쓰면 동일 동작이 보장되기 쉽다. 필수는 아님.
+버그·기능: [`docs/AI_USER_TEMPLATES.md`](../../docs/AI_USER_TEMPLATES.md) 권장(필수 아님).
 
-**우선순위·실행 세션·최선안 하나**를 고정하려면 **`docs/AI_EXPERT_PROMPTS.md`** 블록 A~D를 사용한다. 에이전트는 제안·다음 작업 응답 시 **§1 의사결정 바**를 적용하고, 가능하면 사용자가 붙여 넣을 **후속 프롬프트(블록 B/C)**를 함께 제공한다. **페이즈(INIT→ARCHIVE) 준수**는 **`AGENTS.md`** § Operating model과 동일 레포에서 최우선이다.
+우선순위·실행 세션: [`docs/AI_EXPERT_PROMPTS.md`](../../docs/AI_EXPERT_PROMPTS.md) 블록 A~D 및 §1 바. **페이즈는 [`AGENTS.md`](../../AGENTS.md) § Operating model.**
 
-**턴 종료 시(핵심):** 코드 변경·게이트/ops 실행·`memory-bank/*` 또는 GitHub 증거 갱신까지 했다면, 응답 **말미**에 문서 **링크만** 남기지 말고 **`docs/AI_EXPERT_PROMPTS.md`**에서 **블록 A 전문**과 상황에 맞는 **B / C / D**를 **그대로 출력**한다(사용자가 다음 세션에 복붙 가능해야 함). 단순 정의·한 줄 답·저장소 무관 질문은 생략해도 된다. 범위·예외는 **`AGENTS.md`** — *AI orchestration* (Session handoff 단락)과 동일하다.
+**턴 종료:** [`docs/AI_ORCHESTRATION.md`](../../docs/AI_ORCHESTRATION.md) **§2.4** (원문 블록은 항상 `AI_EXPERT_PROMPTS.md`). 단순 한 줄 Q&A 등 §2.4 예외는 생략 가능.
 
 ## 5. 다른 프로젝트로 복제 시
 
-**`docs/AI_WORKFLOW_PORTABILITY.md`** — 바꿀 파일만 최소화하는 체크리스트.
+**[`docs/AI_WORKFLOW_PORTABILITY.md`](../../docs/AI_WORKFLOW_PORTABILITY.md)**

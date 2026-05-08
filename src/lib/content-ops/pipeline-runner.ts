@@ -301,6 +301,43 @@ function extractLatestAiReviewDecision(metadata: unknown): QueueTriageDecision |
   return null;
 }
 
+/**
+ * Structural rewrite adds comparison/counterargument/citation blocks (see applyRewritePatch).
+ * Skip when overcopy or missing sources — those need editorial ingest or human edit.
+ */
+const REVIEW_GATE_REWRITE_BLOCKERS: ReadonlySet<string> = new Set([
+  "possible_overcopy_detected",
+  "source_links_missing",
+]);
+
+export function shouldAttemptContentQueueRewrite(metadata: unknown): {
+  attempt: boolean;
+  reviewGate: ReviewGateLite | null;
+} {
+  const triageDecision = extractLatestAiReviewDecision(metadata);
+  const reviewGate = extractLatestReviewGate(metadata);
+
+  if (triageDecision === "auto_approve_candidate") {
+    return { attempt: false, reviewGate };
+  }
+  if (triageDecision === "needs_rewrite") {
+    return { attempt: true, reviewGate };
+  }
+  if (!reviewGate || reviewGate.passed || reviewGate.reasons.length === 0) {
+    return { attempt: false, reviewGate };
+  }
+  if (reviewGate.reasons.some((r) => REVIEW_GATE_REWRITE_BLOCKERS.has(r))) {
+    return { attempt: false, reviewGate };
+  }
+  if (triageDecision === "hold_manual") {
+    return { attempt: true, reviewGate };
+  }
+  if (triageDecision === null) {
+    return { attempt: true, reviewGate };
+  }
+  return { attempt: false, reviewGate };
+}
+
 type RewriteDirective = {
   focusNotes: string[];
   citationAnchors: string[];
@@ -1146,7 +1183,7 @@ export async function runQueueRewritePipeline(runId: string): Promise<{
     .select("id, type, status, title, body_markdown, metadata, updated_at")
     .in("status", ["draft", "review_required"])
     .order("updated_at", { ascending: true })
-    .limit(120);
+    .limit(200);
 
   let scannedCount = 0;
   let rewrittenCount = 0;
@@ -1155,11 +1192,11 @@ export async function runQueueRewritePipeline(runId: string): Promise<{
   const failureMessages: string[] = [];
 
   for (const item of (candidates ?? []) as ContentItemRow[]) {
-    const triageDecision = extractLatestAiReviewDecision(item.metadata);
-    if (triageDecision !== "needs_rewrite") continue;
+    const { attempt, reviewGate } = shouldAttemptContentQueueRewrite(item.metadata);
+    if (!attempt) continue;
     scannedCount += 1;
 
-    const reviewBefore = extractLatestReviewGate(item.metadata);
+    const reviewBefore = reviewGate;
     const reviewReasons = reviewBefore?.reasons ?? [];
     const { data: sourceRows } = await admin
       .from("content_item_source_map")

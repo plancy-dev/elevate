@@ -17,7 +17,7 @@
 
 ### Tech Stack
 - **Next.js 16** (App Router, RSC) · **TypeScript strict** · **Tailwind CSS v4** with semantic tokens
-- **Supabase** (Postgres + Auth + RLS + Storage) · **Vercel** · **Toss Payments** · **PostHog**
+- **Supabase** (Postgres + Auth + RLS + Storage) · **Vercel** · **Lemon Squeezy / Polar** (payments) · **PostHog**
 - **next-intl** (ko/en)
 
 ### Sources Provided

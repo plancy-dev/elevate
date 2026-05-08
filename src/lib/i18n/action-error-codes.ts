@@ -9,7 +9,6 @@ export const ActionErrorCode = {
   authInsufficientPermissions: "authInsufficientPermissions",
   authInviteManagersOnly: "authInviteManagersOnly",
   authAdminOnly: "authAdminOnly",
-  authVenuePermissionDenied: "authVenuePermissionDenied",
 
   settingsOrgNameRequired: "settingsOrgNameRequired",
   settingsTextTooLong: "settingsTextTooLong",

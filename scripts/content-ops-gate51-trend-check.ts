@@ -1,7 +1,34 @@
+import fs from "node:fs";
+import path from "node:path";
 import dotenv from "dotenv";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 dotenv.config({ path: ".env.local", quiet: true });
+
+function parseOutPath(argv: string[]): string | null {
+  for (const arg of argv) {
+    if (arg.startsWith("--out=")) {
+      const v = arg.slice("--out=".length).trim();
+      return v.length > 0 ? v : null;
+    }
+  }
+  const idx = argv.indexOf("--out");
+  if (idx !== -1) {
+    const next = argv[idx + 1];
+    if (next && !next.startsWith("-")) return next;
+  }
+  return null;
+}
+
+/** Resolved absolute path; rejects paths outside `<cwd>/reports/`. */
+function resolvedReportsOutOrThrow(cwd: string, raw: string): string {
+  const resolved = path.resolve(cwd, raw);
+  const reportsRoot = path.resolve(cwd, "reports");
+  if (resolved !== reportsRoot && !resolved.startsWith(`${reportsRoot}${path.sep}`)) {
+    throw new Error(`--out must be under reports/: ${raw}`);
+  }
+  return resolved;
+}
 
 const MIN_DAY_BUCKETS = Number.parseInt(
   process.env.CONTENT_OPS_GATE51_MIN_DAY_BUCKETS ?? "2",
@@ -93,20 +120,29 @@ async function main() {
       : "latest daily trend does not show simultaneous improvement";
   }
 
-  console.log(
-    JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        lookbackDays: LOOKBACK_DAYS,
-        minDayBuckets: MIN_DAY_BUCKETS,
-        status,
-        decisionReason,
-        trend,
-      },
-      null,
-      2,
-    ),
-  );
+  const payload = {
+    generatedAt: new Date().toISOString(),
+    lookbackDays: LOOKBACK_DAYS,
+    minDayBuckets: MIN_DAY_BUCKETS,
+    status,
+    decisionReason,
+    trend,
+  };
+  const json = JSON.stringify(payload, null, 2);
+
+  const cwd = process.cwd();
+  const outRaw = parseOutPath(process.argv.slice(2));
+  if (outRaw) {
+    const outPath = resolvedReportsOutOrThrow(cwd, outRaw);
+    fs.mkdirSync(path.dirname(outPath), { recursive: true });
+    fs.writeFileSync(outPath, `${json}\n`, "utf8");
+    console.error(
+      `[content-ops-gate51-trend-check] wrote ${path.relative(cwd, outPath)} (status=${payload.status})`,
+    );
+    return;
+  }
+
+  console.log(json);
 }
 
 main().catch((error) => {

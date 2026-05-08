@@ -10,7 +10,7 @@ Root **`DESIGN.md`** is the discovery entry (Stitch / [awesome-design-md](https:
 
 ## Product vision (AI pivot)
 
-Before large feature work, align with **`memory-bank/creative-elevate-ai-pivot.md`** (North Star) and **`memory-bank/tasks.md`** (roadmap SoT). Legacy MICE modules remain in the repo but are not the default story for new work.
+Before large feature work, align with **`memory-bank/creative-elevate-ai-pivot.md`** (North Star) and **`memory-bank/tasks.md`** (roadmap SoT). The historical MICE schema was removed (`052_drop_mice_legacy_tables.sql`); new work targets AI platform surfaces.
 
 ## Blog authoring (public/member/premium)
 
@@ -18,7 +18,9 @@ When creating blog content, use **`docs/templates/blog-authoring-templates.md`**
 
 ## AI orchestration (how tools fit together)
 
-**Single hub:** [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) — layers (repo rules → memory-bank → gstack), decision table, and prompt contract. Bug/feature prompts work without manual paste: `.cursor/rules/ai-session-bootstrap.mdc`. Optional user formats: [`docs/AI_USER_TEMPLATES.md`](docs/AI_USER_TEMPLATES.md). **Expert default + copy-paste blocks (Memory Bank–first):** [`docs/AI_EXPERT_PROMPTS.md`](docs/AI_EXPERT_PROMPTS.md). Forking the workflow: [`docs/AI_WORKFLOW_PORTABILITY.md`](docs/AI_WORKFLOW_PORTABILITY.md).
+**Single hub:** [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) — **§2 세션 하네스**(Tier·INIT·턴 종료·Ops vs BUILD·verify) + 레이어·도구 선택. 버그·기능 요청도 `.cursor/rules/ai-session-bootstrap.mdc`로 Tier 0가 자동 적용된다. 전문가 복붙: [`docs/AI_EXPERT_PROMPTS.md`](docs/AI_EXPERT_PROMPTS.md). Fork [`docs/AI_WORKFLOW_PORTABILITY.md`](docs/AI_WORKFLOW_PORTABILITY.md).
+
+- **Skill-first SoT 되돌리기** (`memory-bank/tasks.md` Skill-first 체크 vs 실제 팀 합의 불일치): 절차 SoT는 [`docs/MEMORY_BANK_SKILL_GUIDE.md`](docs/MEMORY_BANK_SKILL_GUIDE.md) § Skill-first `[x]` 가 실제 합의와 다를 때 — 오케스트레이션 §9 자동화 링크만 [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) §9.
 
 ### Operating model: INIT → PLAN → CREATIVE → BUILD → REFLECT → ARCHIVE
 
@@ -35,10 +37,10 @@ When creating blog content, use **`docs/templates/blog-authoring-templates.md`**
 
 | Phase | Cursor (typical) | Minimum artifact |
 |-------|------------------|-------------------|
-| **INIT** | Ask / short Agent | Declared **L1–L4**, touched paths, SoT refs [`memory-bank/tasks.md`](memory-bank/tasks.md), [`memory-bank/activeContext.md`](memory-bank/activeContext.md) |
+| **INIT** | Ask / short Agent | 형식 **[`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) §2.2**; **L1–L4**; SoT refs [`memory-bank/tasks.md`](memory-bank/tasks.md), [`memory-bank/activeContext.md`](memory-bank/activeContext.md) |
 | **PLAN** | **Plan** | Plan + risks + verification idea (in chat or linked notes); align with [`memory-bank/tasks.md`](memory-bank/tasks.md) |
 | **CREATIVE** | **Plan** | Decision logged [`memory-bank/creative-*.md`](memory-bank/), ADR, or `docs/features/…` as appropriate |
-| **BUILD** | **Agent** | Code + **`pnpm verify`** when material changes apply — gate: [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) **§2b** |
+| **BUILD** | **Agent** | Code + **`pnpm verify`** when material changes apply — gate: [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) **§2.6** |
 | **REFLECT** | Ask / **Debug** | What shipped, gaps, follow-ups → [`memory-bank/progress.md`](memory-bank/progress.md) / `tasks.md` |
 | **ARCHIVE** | Agent | Durable summaries → [`memory-bank/archive/`](memory-bank/archive/) per `.cursor/rules/archive-and-cleanup.mdc` |
 
@@ -76,7 +78,11 @@ Skills such as `/vercel-plugin:nextjs` are **on-demand** when you need vendor-sp
 
 ### Session handoff (closing a substantive turn)
 
+규약(언제 블록 B/C/D인지 포함): **[`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) §2.4**. 원문 블록: [`docs/AI_EXPERT_PROMPTS.md`](docs/AI_EXPERT_PROMPTS.md).
+
 When you **implemented or changed code**, **ran ops/gates**, or **updated Memory Bank / GitHub evidence**, end the reply with a **copy-paste bundle** from [`docs/AI_EXPERT_PROMPTS.md`](docs/AI_EXPERT_PROMPTS.md): paste **Block A** in full, plus **Block B** (next concrete task), **Block C** (if the user asked “what next”), or **Block D** (ops-only follow-up). Do not substitute with “see the doc” alone. **Skip** for trivial one-off Q&A (definitions, single-line nits, no repo impact). Full block text stays in the doc so this file does not go stale.
+
+**Ops vs 제품 BUILD:** 레이블을 섞지 말 것 — **[`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) §2.5**.
 
 ## GitHub Issues · remote task queue
 

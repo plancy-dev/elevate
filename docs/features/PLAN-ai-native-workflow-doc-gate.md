@@ -15,14 +15,14 @@
 |---|--------|------|
 | P0-1 | 긴 디버그·세션 리셋 | [`docs/MEMORY_BANK_SKILL_GUIDE.md`](../MEMORY_BANK_SKILL_GUIDE.md) |
 | P0-2 | 전문가 프롬프트 ↔ 가이드 | [`docs/AI_EXPERT_PROMPTS.md`](../AI_EXPERT_PROMPTS.md) |
-| P0-3 | 외부 API·결제·MCP 우선 | [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) §3 |
-| P0-4 | (선택) Memory Bank 스킬 | [`.cursor/skills/elevate-memory-bank-bootstrap/SKILL.md`](../../.cursor/skills/elevate-memory-bank-bootstrap/SKILL.md) |
+| P0-3 | 외부 API·결제·MCP 우선 | [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) §4 |
+| P0-4 | (선택) Memory Bank 스킬 | [`.cursor/skills/elevate-work-harness/SKILL.md`](../../.cursor/skills/elevate-work-harness/SKILL.md) · INIT 별칭 [`elevate-memory-bank-bootstrap`](../../.cursor/skills/elevate-memory-bank-bootstrap/SKILL.md) |
 
 ### P1 — 정책·감사·GitHub
 
 | # | 산출물 | 경로 |
 |---|--------|------|
-| P1-1 | verify if/then 게이트 | [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) §2b · [`AGENTS.md`](../../AGENTS.md) Operating model |
+| P1-1 | verify if/then 게이트 | [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) **§2.6** · [`AGENTS.md`](../../AGENTS.md) Operating model |
 | P1-2 | `.cursor/rules` 감사 표 | [`docs/CURSOR_RULES_AUDIT.md`](../CURSOR_RULES_AUDIT.md) |
 | P1-3 | Issues vs PR 번호 | [`docs/DEV_PROCESS_GITHUB.md`](../DEV_PROCESS_GITHUB.md) |
 | P1-4 | ADR 프로세스 기준 | [`docs/adr/README.md`](../adr/README.md) |
@@ -39,7 +39,7 @@
 | # | 용도 | 경로 |
 |---|------|------|
 | H-1 | 짧은 체크리스트 | [`docs/AI_USAGE.md`](../AI_USAGE.md) |
-| H-2 | 단일 오케스트레이션 허브 | [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) §7 |
+| H-2 | 단일 오케스트레이션 허브 | [`docs/AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) **§2** 하네스 + §8 관련 목록 |
 | H-3 | 작업 SoT | [`memory-bank/tasks.md`](../../memory-bank/tasks.md) |
 
 ---
@@ -51,7 +51,7 @@
 - `.cursor/hooks/` 실제 스크립트·설정
 - `mcp.json` / `mcp.json.example`의 **새 MCP 항목 추가**(문서만 예시 문구는 RFC·DEVELOPMENT 쪽 합의 후)
 - Codex 등 **추가 GitHub Actions** 워크플로 파일
-- 애플리케이션 런타임 코드 변경(문서 PR 예외 정책은 [`AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) §2b)
+- 애플리케이션 런타임 코드 변경(문서 PR 예외 정책은 [`AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) **§2.6**)
 
 자세한 문구는 P2 RFC **「문서 PR 범위 vs 다음 구현 PR」**을 따른다.
 

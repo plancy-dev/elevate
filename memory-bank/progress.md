@@ -3,6 +3,10 @@
 **SoT for priority:** `memory-bank/tasks.md`  
 **Current focus:** PostHog **§5a** — Production 번들에 **`phc_` 인라인**까지. **Ops O2 스모크는 PASS** ([`reports/2026-05-04-ops-o2-automation-run-smoke.json`](reports/2026-05-04-ops-o2-automation-run-smoke.json)). Ops O1 스냅샷: [`reports/2026-05-04-runs-invariant-recheck-session.json`](reports/2026-05-04-runs-invariant-recheck-session.json).
 
+## DB · `052_drop_mice_legacy_tables` (2026-05-06)
+
+- RUNBOOK added: [`docs/operations/RUNBOOK-drop-mice-schema-052.md`](../docs/operations/RUNBOOK-drop-mice-schema-052.md). **Staging/prod apply + backup + `pnpm db:types`** — operator-owned; agent did not run SQL or `db:types` (avoids reintroducing dropped-table types before migration).
+
 ## Status snapshot (aligned with `tasks.md`, 2026-05-05)
 
 - **BUILD+REFLECT PostHog (2026-05-04 UTC):** [`reports/reflect-adr013-posthog-2026-05-04.md`](../reports/reflect-adr013-posthog-2026-05-04.md) — bundle FAIL. **Latest preflight:** `dpl_95QA…`, no `phc_` — [`reports/posthog-prod-bundle-preflight-quick-2026-05-04T044532Z.json`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044532Z.json); prior [`044434Z`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T044434Z.json) … [`0430Z`](../reports/posthog-prod-bundle-preflight-quick-2026-05-04T0430Z.json).

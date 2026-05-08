@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ActionErrorCode } from "@/lib/i18n/action-error-codes";
 
-/** Roles that may create/update/delete org-scoped operational data (events, sessions, etc.). */
+/** Roles that may create/update/delete org-scoped operational data (team, invitations, etc.). */
 export const ORG_EDITOR_ROLES = ["admin", "organizer", "coordinator"] as const;
 
 export type OrgEditorContext = {
@@ -54,7 +54,7 @@ export async function getOrgMemberContext(
 
 /**
  * Resolves the current user as an org-bound editor (admin | organizer | coordinator).
- * Use in server actions that mirror RLS expectations for `events`, `sessions`, etc.
+ * Use in server actions that mirror org-scoped edit RLS expectations.
  */
 export async function getOrgEditorContext(
   supabase: SupabaseClient,
@@ -92,7 +92,7 @@ export async function getOrgEditorContext(
   };
 }
 
-/** Invitations: same as venue policy (admin | organizer). */
+/** Invitations — admin | organizer. */
 const INVITE_MANAGER_ROLES = ["admin", "organizer"] as const;
 
 export async function getOrgInviteManagerContext(
@@ -125,21 +125,3 @@ export async function getOrgAdminContext(
   return base;
 }
 
-/** Venues RLS allows only admin | organizer (not coordinator). */
-const VENUE_MANAGER_ROLES = ["admin", "organizer"] as const;
-
-export async function getVenueManagerContext(
-  supabase: SupabaseClient,
-): Promise<
-  { ok: true; ctx: OrgEditorContext } | { ok: false; error: string }
-> {
-  const base = await getOrgEditorContext(supabase);
-  if (!base.ok) return base;
-  if (!(VENUE_MANAGER_ROLES as readonly string[]).includes(base.ctx.role)) {
-    return {
-      ok: false,
-      error: ActionErrorCode.authVenuePermissionDenied,
-    };
-  }
-  return base;
-}

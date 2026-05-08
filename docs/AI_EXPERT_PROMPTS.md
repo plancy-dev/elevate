@@ -2,7 +2,7 @@
 
 **대상:** Cursor / Claude / 기타 에이전트에 붙여 넣는 **표준 프롬프트**와, 에이전트가 스스로 적용할 **의사결정 바(15년차 스태프·프린시플 엔지니어링 수준)**.
 
-**연결:** Memory Bank = 상태 SoT · [`docs/AI_ORCHESTRATION.md`](./AI_ORCHESTRATION.md) = 레이어·도구 선택.
+**연결:** Memory Bank = 상태 SoT · [`docs/AI_ORCHESTRATION.md`](./AI_ORCHESTRATION.md) = 레이어 + **세션 하네스(Tier·INIT·턴 종료·Ops vs BUILD·verify) 단일 허브 §2.** 아래 블록 A의 “필수 3파일” = 해당 문서 **§2.1 Tier 0.**
 
 ---
 
@@ -14,14 +14,14 @@
 2. **SoT 정합** — [`memory-bank/tasks.md`](../memory-bank/tasks.md) · [`memory-bank/activeContext.md`](../memory-bank/activeContext.md)와 충돌하면, 코드보다 먼저 **메모리뱅크 수정이 맞는지** 짚는다.
 3. **가역성·증거** — 운영/게이트 이슈는 **측정 가능한 증거**(스크립트 출력, 스냅샷, 이슈 코멘트) 없이 “완료”라고 말하지 않는다.
 4. **범위 고정** — 요청 밖 **드라이브 바이 리팩터** 금지. 확장이 필요하면 **명시적 PLAN** 후에만.
-5. **검증 일원화** — 이 저장소는 변경 후 **`pnpm verify`**(또는 작업에 맞는 최소 하위 집합)로 맞춘다. ([`AGENTS.md`](../AGENTS.md) · 커밋 규칙 우선.)
+5. **검증 일원화** — 제품 BUILD 변경은 **`pnpm verify`**(또는 합의된 최소 하위 집합). 예외와 Ops 게이트는 [`docs/AI_ORCHESTRATION.md`](./AI_ORCHESTRATION.md) **§2.5–§2.6**.
 6. **비밀 금지** — 키·토큰·`.env.local` 내용을 프롬프트나 PR 본문에 넣지 않는다.
 
 ### 1b. 긴 디버그·세션 리셋
 
 같은 스레드에서 디버그가 **길어지면**(가이드: 사용자 메시지 **약 20턴** 초과) 컨텍스트 오염 위험이 커진다. **새 채팅**을 열고, `memory-bank/tasks.md`·`activeContext.md`에서 **목표·범위만** 인용한 뒤 **블록 A**를 맨 위에 다시 붙여 세션을 재고정한다. 단계별 설명·근거 링크는 [`MEMORY_BANK_SKILL_GUIDE.md`](./MEMORY_BANK_SKILL_GUIDE.md) **§ 긴 디버그·세션 리셋**에 둔다(여기서는 중복하지 않음).
 
-제안만 하고 끝내지 말고, 사용자가 **다음 세션에 그대로 재사용**할 수 있도록 아래 **블록 A~C** 중 하나를 함께 넘긴다. (저장소 에이전트 규약: **`AGENTS.md`** § Session handoff · **`CLAUDE.md`** § AI orchestration · `.cursor/rules/ai-session-bootstrap.mdc` §4.)
+제안만 하고 끝내지 말고, 사용자가 **다음 세션에 그대로 재사용**할 수 있도록 아래 **블록 A~C** 중 하나를 함께 넘긴다. (턴 종료 규약·Ops vs BUILD: **`docs/AI_ORCHESTRATION.md` §2.4–§2.5** · **`AGENTS.md`** § Session handoff · **`CLAUDE.md`** · `.cursor/rules/ai-session-bootstrap.mdc` §4.)
 
 ---
 
@@ -38,8 +38,24 @@
 3. docs/AI_ORCHESTRATION.md
 
 그 다음 사용자 요청을 수행한다. 메모리뱅크와 모순되면 구현 전에 어떤 파일을 어떻게 고칠지 제안해라.
-검증: 이 저장소는 변경 후 pnpm verify(또는 합의된 최소 검증)를 돌려라.
+검증: 제품 BUILD 변경이면 변경 후 pnpm verify(또는 합의된 최소 검증)를 돌려라. 순수 문서·.mdc·스킬만이면 [`docs/AI_ORCHESTRATION.md`](./AI_ORCHESTRATION.md) §2.6 예외 규칙에 따른다.
 ```
+
+### 2a. 축약 — 스킬로 블록 A 생략
+
+채팅에 위 블록 전문을 넣지 않으려면 **프로젝트 스킬** [`elevate-work-harness`](../.cursor/skills/elevate-work-harness/SKILL.md)를 **`@elevate-work-harness`** 로 지정한다(트리아지·INIT·gstack 브릿지 포함). **블록 A만** 빠르게 걸고 싶으면 별칭 **`@elevate-expert-session-block`** ([`elevate-expert-session-block/SKILL.md`](../.cursor/skills/elevate-expert-session-block/SKILL.md))도 동일하다. 사용자는 아래만 붙이면 된다:
+
+```text
+@elevate-work-harness
+
+[요청]
+…
+
+[완료 조건]
+…
+```
+
+(선호 시 한 줄 헤더: `[역할·로드] @elevate-work-harness` — 또는 기존과 동일하게 `@elevate-expert-session-block`)
 
 ---
 
@@ -53,7 +69,7 @@
 
 [완료 조건]
 - [ ] memory-bank/tasks.md 또는 activeContext.md에 반영할 항목이 있으면 diff까지 포함
-- [ ] pnpm verify 통과(또는 실패 시 원인·다음 액션 명시)
+- [ ] 순수 마크다운·`.mdc`·프로젝트 스킬만이면 `AI_ORCHESTRATION` §2.6에 따라 verify 생략을 PR/요약에 한 줄 명시했거나, 실행 코드 변경 시 `pnpm verify` 통과(또는 실패 원인·다음 액션)
 - [ ] 관련 GitHub 이슈가 있으면 Closes/Refs 번호 명시
 
 추측으로 게이트를 PASS라고 말하지 말고, 스크립트/쿼리 결과를 인용해라.
@@ -110,5 +126,5 @@ reports/prioritized-backlog-expert-2026-05-03.md(또는 memory-bank/tasks.md) �
 | 문서 | 용도 |
 |------|------|
 | [`AI_USER_TEMPLATES.md`](AI_USER_TEMPLATES.md) | 버그·기능 짧은 템플릿 |
-| [`AI_ORCHESTRATION.md`](AI_ORCHESTRATION.md) | 레이어 A/B/C, gstack 매핑 |
+| [`AI_ORCHESTRATION.md`](./AI_ORCHESTRATION.md) | 레이어 A/B/C · **§2 하네스** · gstack 매핑 |
 | [`memory-bank/README.md`](../memory-bank/README.md) | Memory Bank 파일 역할 |

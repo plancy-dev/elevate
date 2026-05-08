@@ -214,7 +214,7 @@
   "About": {
     "metaTitle": "会社情報",
     "title": "Elevate について",
-    "description": "測定可能な成果が必要な MICE チーム向けの基盤を提供します。スプレッドシートの置き換えではありません。2026年設立（プレースホルダー）。"
+    "description": "測定できる成果が必要なチームへ、AIワークフロー基盤を提供します（スプレッドシートの置き換えではありません）。2026年設立（プレースホルダー）。"
   },
   "Blog": {
     "metaTitle": "ブログ",
@@ -317,7 +317,7 @@
       "section2Title": "Library visibility",
       "section2Body": "Library reflects entitlements for the signed-in user's organization. If something is missing, it is usually a subscription or purchase state—not a personal account issue.\n\nStarter plans may see fewer titles; upgrading the org unlocks more catalog content when available.",
       "section3Title": "Billing and ownership",
-      "section3Body": "Toss Payments PoC and future gateways attach to the organization so finance has a single invoice trail. Personal accounts exist for sign-in, but purchase and download rights are org-scoped."
+      "section3Body": "Lemon Squeezy と Polar の決済が組織に紐づき、請求の追跡が一か所にまとまります。サインインは個人アカウントでも、購入とダウンロード権限は組織スコープです。"
     },
     "security": {
       "metaTitle": "Security & compliance | Elevate",
@@ -335,74 +335,74 @@
   "Solutions": {
     "metaTitle": "Solutions",
     "title": "Solutions",
-    "description": "Event and travel programs generate thousands of comms—speaker briefs, sponsor copy, attendee emails, and exhibitor kits. Elevate helps MICE teams standardize and improve that language with model-aware prompts, org-scoped drafts, and Library-backed assets.",
+    "description": "Elevateはモデルに合わせたプロンプト整備・組織スコープのドラフト・Library連携プレイブックを束ね、バラバラなAI出力を減らします。",
     "items": {
       "conferences": {
-        "title": "Conferences",
-        "desc": "Multi-track programs and speaker/sponsor comms at scale."
+        "title": "マーケティングとローンチ",
+        "desc": "承認済みプロンプト型でキャンペーンブリーフ／ランディング／ナーチャーを回します。"
       },
       "exhibitions": {
-        "title": "Exhibitions",
-        "desc": "Exhibitor kits, floor campaigns, and lead-gen copy consistency."
+        "title": "パートナーと売上チーム",
+        "desc": "AIドラフトでもデックとFAQが外れず、チャネルの誰が叩いても同じ主張になります。"
       },
       "incentive-travel": {
-        "title": "Incentive travel",
-        "desc": "Program narratives and compliance-sensitive itineraries."
+        "title": "カスタマーサクセス",
+        "desc": "オンボーディング文言やライフサイクルメールをモデルスタックとトーンルールへ合わせて磨きます。"
       },
       "corporate-meetings": {
-        "title": "Corporate meetings",
-        "desc": "Exec summaries, hybrid runbooks, internal AI policy alignment."
+        "title": "リーダーシップと社内運用",
+        "desc": "幹部向け連絡、ポリシー、オペレーションプレイブックをモデル規制のアップデートに耐える形へ揃えます。"
       }
     }
   },
   "SolutionsSlug": {
     "conferences": {
-      "metaTitle": "Conferences | Elevate",
-      "metaDescription": "Improve prompt libraries for speaker briefs, sponsor tiers, and attendee journeys—scoped to your organization.",
-      "title": "Conferences",
-      "lead": "Large programs mean repeated comms: session descriptions, speaker briefs, sponsor deliverables, and attendee journeys. Elevate helps you build reusable prompt patterns and improve them against the models your team actually uses.",
-      "section1Title": "Where Elevate fits",
-      "section1Body": "Use Prompt Studio to tighten instructions for on-brand tone, clarity, and model alignment. When marketing attaches catalog assets, Library makes downloads entitlement-aware—so field teams and agencies pull from the same source of truth.\n\nThis is not a replacement for your registration or abstract system; it is the quality layer on top of language and AI-assisted drafts.",
-      "section2Title": "Operational outcomes",
-      "section2Body": "Fewer one-off rewrites, fewer off-brand variants, faster review cycles when teams share org-scoped drafts.\n\nRoles and billing stay tied to the organization so procurement can audit who had access to what.",
-      "section3Title": "Getting started",
-      "section3Body": "Join the waitlist for Prompt Studio beta, or open Billing when checkout is enabled to unlock catalog content. Contact sales if you need enterprise rollout and security review."
+      "metaTitle": "マーケティング活用 | Elevate",
+      "metaDescription": "モデル対応プロンプト、組織範囲のドラフト、再利用可能なローンチ手順。",
+      "title": "マーケティングとローンチ",
+      "lead": "成長チームはコホートごとに同じ説明を何度も書き直します。Prompt Studio と Library で主張や免責まで整えた状態でドラフトを回せます。",
+      "section1Title": "Elevateの位置づけ",
+      "section1Body": "Gemini / GPT / Claude などへ渡す直前にPrompt Studioで指示を締める。認可ソースだけをエージェンシーや協業にも配ります。",
+      "section2Title": "運用上の結果",
+      "section2Body": "トーン調整や「どれが権威ソースか」の争いが減り、campaignウィンドウでもレビューを速読できます。",
+      "section3Title": "はじめる",
+      "section3Body": "Prompt Studioベータウェイトリスト、カタログ閲覧、エンタープライズ SSOはセールスへ。"
     },
     "exhibitions": {
-      "metaTitle": "Exhibitions | Elevate",
-      "metaDescription": "Consistent exhibitor comms, booth kits, and campaign copy—improved with model-aware prompts and org-scoped drafts.",
-      "title": "Exhibitions",
-      "lead": "Exhibitions depend on tight coordination between exhibitors, agencies, and floor teams. Elevate helps you standardize prompt templates for kits, campaigns, and lead follow-ups so tone and claims stay consistent across hundreds of touchpoints.",
-      "section1Title": "Language consistency",
-      "section1Body": "Prompt Studio surfaces structured improvements so teams do not ship contradictory instructions to models or contractors.\n\nPair with Library when downloadable guides and templates are part of your commercial program.",
-      "section2Title": "Governance",
-      "section2Body": "Everything stays inside the organization tenant. That matters when sponsors and exhibitors expect confidentiality around unreleased messaging.\n\nAudit and admin tooling continues to mature—see the product changelog for what is live.",
-      "section3Title": "Next steps",
-      "section3Body": "Browse the catalog for packaged guides, or talk to sales about multi-org programs and pilots."
+      "metaTitle": "収益組織 | Elevate",
+      "metaDescription": "パートナー訴求、再利用デッキ、組織のAIドラフトを明瞭に。",
+      "title": "パートナーと売上チーム",
+      "lead": "ワンオフのGPTチャットより、標準プロンプトと構造化改善・SKU準拠権限へのリンクをセットにします。",
+      "section1Title": "プレッシャー下の統一",
+      "section1Body": "禁止論点なしでAEが素早く回し、ストーリーも安定します。",
+      "section2Title": "ガバナンス",
+      "section2Body": "ロール／監査は調達との整合を視野に拡張中です。",
+      "section3Title": "次にできること",
+      "section3Body": "ダウンロード資料があるならカタログロックとセットで運用しましょう。"
     },
     "incentive-travel": {
-      "metaTitle": "Incentive travel | Elevate",
-      "metaDescription": "Narratives and comms for incentive programs—with structured prompt improvement and org-scoped drafts.",
-      "title": "Incentive travel",
-      "lead": "Incentive programs require polished narratives, itinerary language, and sensitive attendee comms. Elevate helps teams iterate on prompts with clear model targets and reviewable structure before messages reach VIPs.",
-      "section1Title": "Quality and safety",
-      "section1Body": "Model-aware prompts reduce the risk of off-tone or off-policy copy when programs span multiple regions.\n\nDrafts remain scoped to your organization so partner agencies and internal teams can collaborate without exposing content publicly.",
-      "section2Title": "Catalog and rewards",
-      "section2Body": "When guides are part of the reward package, Library entitlements align downloads with what the org purchased.\n\nCatalog and billing are designed to sit alongside Prompt Studio, not compete with it.",
-      "section3Title": "Talk to us",
-      "section3Body": "For bespoke programs or compliance-heavy rollouts, contact sales and we will align on review and deployment expectations."
+      "metaTitle": "カスタマーサクセス | Elevate",
+      "metaDescription": "ライフサイクル訴求とガバナンス付きドラフト調整。",
+      "title": "カスタマーサクセス",
+      "lead": "請求サイクルのたび再利用する論点／免責をPrompt Studio側で固定します。",
+      "section1Title": "品質と共感",
+      "section1Body": "エスカレーションが空回りしないようモデル適合での微調整。ドラフトは常にテナント内。",
+      "section2Title": "カタログとの相乗効果",
+      "section2Body": "電子書籍や優良ガイドを付けるなら Lemon Squeezy と Library が監査ログを繋げます。",
+      "section3Title": "相談",
+      "section3Body": "多言語／コンプラ重視の運用ならセールスと調整しましょう。"
     },
     "corporate-meetings": {
-      "metaTitle": "Corporate meetings | Elevate",
-      "metaDescription": "Exec summaries, hybrid runbooks, and internal AI policy alignment—improved with Prompt Studio and org-scoped governance.",
-      "title": "Corporate meetings",
-      "lead": "Corporate meetings teams juggle internal comms, executive summaries, and hybrid logistics. Elevate gives you a repeatable prompt layer so leadership updates, FAQs, and policy explanations stay consistent as models and regulations change.",
-      "section1Title": "Internal alignment",
-      "section1Body": "Prompt Studio helps teams converge on approved phrasing and structure before content is broadcast to Slack, email, or intranet.\n\nOrg workspace ensures the right roles can edit drafts and approve changes.",
-      "section2Title": "Security posture",
-      "section2Body": "Supabase Auth and RLS underpin tenant isolation. For enterprise buyers, deeper security and compliance materials are available under NDA.\n\nSee Security and Compliance pages for statements of direction.",
-      "section3Title": "Rollout",
-      "section3Body": "Start with the waitlist for Prompt Studio beta; add catalog entitlements when you need downloadable playbooks. We will meet you where your procurement process is."
+      "metaTitle": "リーダーシップと運用 | Elevate",
+      "metaDescription": "ポリシーメモ、幹部向け資料、レビュー可能なガードレール。",
+      "title": "リーダーシップと社内運用",
+      "lead": "COO/オフィスのAIフローを、承認済みプロンプトバンクとエスカレパスへ落とします。",
+      "section1Title": "内向きの統一",
+      "section1Body": "オールハンズ／Slack配信までに名前・構成・リスク文言を Prompt Studio が整えます。",
+      "section2Title": "セキュリティ態勢",
+      "section2Body": "Supabase テナント分離が土台です。詳細なエンプラ資料は請求に応じ提供します。",
+      "section3Title": "段階的ロールアウト",
+      "section3Body": "まずプレビュー、必要ならカタログ権限、調達要件でSSOへ。"
     }
   },
   "Pricing": {
@@ -476,7 +476,7 @@
       },
       {
         "kind": "check",
-        "label": "Org billing & Toss checkout",
+        "label": "組織の請求とカタログ決済",
         "starter": true,
         "professional": true,
         "enterprise": true
@@ -554,7 +554,6 @@
       "authInsufficientPermissions": "この操作を行う権限がありません。",
       "authInviteManagersOnly": "招待の管理は管理者とオーガナイザーのみです。",
       "authAdminOnly": "メンバーのロール変更は組織管理者のみが行えます。",
-      "authVenuePermissionDenied": "会場管理の権限がありません。",
       "settingsOrgNameRequired": "組織名を入力してください。",
       "settingsTextTooLong": "最大 {max} 文字までです。",
       "inviteInvalidEmail": "有効なメールアドレスを入力してください。",
@@ -750,10 +749,6 @@
       "orgPaidNote": "有料のサービスプランです。ライブラリの範囲が広い場合があり、必要に応じてカタログの個別購入も可能です。",
       "orgStarterNote": "Starter プランです。アップグレードでチーム向けのライブラリ範囲が広がることがあります。チェックアウトが接続されていれば、ライブラリから個別購入もできます。",
       "orgSummaryLibraryCta": "ライブラリを開いてタイトルを見る・決済する",
-      "checkoutWithSlug": "「{slug}」のお支払いです。完了すると組織のライブラリに反映されます（テスト金額 {amount} KRW）。",
-      "tossIntroNoSlug": "テスト決済が有効な場合は、下で {amount} KRW のお支払いを続けられます。",
-      "tossIntro": "下で決済を完了すると、この画面に戻ります。",
-      "setClientKey": "このワークスペースではまだ決済をご利用いただけません。",
       "lemonCheckoutWithSlug": "「{slug}」を購入します。新しいタブで決済を続けてください。",
       "lemonMissingUrlTitle": "決済を開けません",
       "lemonMissingUrlBody": "このタイトルの決済を開けません。組織の管理者にお問い合わせください。",
@@ -774,34 +769,14 @@
       "lemonUnknownProductTitle": "項目が見つかりません",
       "lemonUnknownProductBody": "このタイトルが見つかりません。ライブラリに戻り、再度お選びください。",
       "errors": {
-        "pocAmountOnly": "このテスト決済は {amount} KRW のみ対応しています。",
-        "missingWidgetKey": "決済が無効です。クライアントキーがありません。",
-        "catalogUnknown": "その商品は利用できないか、非アクティブです。",
-        "catalogPriceMismatch": "この商品の価格がテスト金額（{amount} KRW）と一致しません。",
-        "paymentServerConfig": "サーバー設定が完了していないため、決済を開始できません。",
-        "intentCreateFailed": "決済を開始できませんでした。しばらくしてから再度お試しください。",
         "checkoutAllowlistDenied": "カタログの決済は招待されたメールアドレスのみ開始できます。管理者にプロフィールのメールを許可リストに追加してもらってください。",
         "checkoutAllowlistNoEmail": "プロフィールにメールアドレスがありません。アカウントを更新するかサポートに連絡してください。",
-        "generic": "問題が発生しました。もう一度お試しください。",
-        "tossClientUnknown": "決済ウィンドウで問題が発生しました。もう一度お試しいただくか、このサイトのポップアップを許可してください。"
+        "generic": "問題が発生しました。もう一度お試しください。"
       },
-      "widgetErrorLoad": "Tossウィジェットの読み込みに失敗しました",
-      "widgetNotReady": "決済UIの準備ができていません。",
-      "widgetErrorRequest": "決済リクエストに失敗しました",
-      "widgetOpening": "開いています…",
-      "widgetPay": "テスト金額を支払う ({amount} KRW)",
-      "widgetLoading": "決済方法を読み込み中…",
-      "orderNameDefault": "Elevate PoC (test)",
-      "orderNameWithSlug": "Elevate — {slug}",
-      "customerFallback": "メンバー",
       "successMeta": "決済成功",
       "externalCheckoutReturnTitle": "チェックアウトから戻りました",
       "externalCheckoutReturnBody": "決済画面から戻りました。購入したタイトルが 1 分以内にライブラリに表示されない場合は、更新するかタイトルを開き直してください。",
       "externalCheckoutReturnLibrary": "ライブラリを開く",
-      "successTitle": "決済が確認されました",
-      "successAlready": "この決済は既に確認済みです。",
-      "successBody": "お支払いを受け付けました。",
-      "failConfirmTitle": "確認できませんでした",
       "failMeta": "決済失敗",
       "failTitle": "決済がキャンセルまたは失敗しました",
       "failBody": "テスト決済が完了しませんでした。請求ページから再試行できます。",
@@ -817,16 +792,9 @@
         "openLibrary": "ライブラリを見る",
         "noOrganization": "購入履歴を表示するには組織に所属している必要があります。",
         "sectionUnlocks": "カタログの解除",
-        "sectionToss": "Toss テスト決済",
-        "sectionTossHint": "テスト用カード決済を使うワークスペースで表示されます。",
         "unlockedAt": "解除 {date}",
         "removedProduct": "カタログ項目が削除されているか利用できません",
-        "tossAmount": "{amount} KRW",
         "orgScopeFootnote": "記録は現在の組織にスコープされます。同じ組織のメンバーは同じ履歴を見られます。"
-      },
-      "confirmErrors": {
-        "checkoutAllowlistDenied": "プロフィールのメールがチェックアウト許可リストにないため、この決済を確認できませんでした。",
-        "checkoutAllowlistNoEmail": "プロフィールにメールがないため、この決済を確認できませんでした。"
       }
     },
     "connectedAccounts": {
@@ -1349,11 +1317,70 @@
         "actions": "操作"
       },
       "actions": {
+        "openReview": "レビュー / 編集",
         "approve": "承認",
         "requestChanges": "修正依頼",
         "schedule": "予約",
         "publishNow": "今すぐ公開",
         "retryMark": "再試行マーク"
+      },
+      "editor": {
+        "metaTitle": "アイテムをレビュー",
+        "backToQueue": "キューに戻る",
+        "intro": "Markdown を直接編集し、編集メモを残したうえでローカルのみレビューゲートを再計算できます。保存してもステータスは変わらず、外部の AI API は呼びません。",
+        "titleLabel": "タイトル",
+        "summaryLabel": "要約",
+        "bodyLabel": "本文（Markdown）",
+        "notesLabel": "編集メモ",
+        "notesHint": "チーム向けの自由記述です。キューのツールチップなどに反映されることがあります。",
+        "notesPlaceholder": "例: §2 の引用を修正、重複リンクを削除…",
+        "save": "変更を保存",
+        "recomputeGate": "レビューゲートを再計算（ローカル）",
+        "gateHint": "自動 review_gate と同じルール（引用密度、構造、overcopy ヒューリスティック）のみを適用します。LLM は使いません。",
+        "qualityScore": "品質スコア",
+        "workflowActions": "ステータス",
+        "reject": "却下",
+        "localeLabel": "ロケール",
+        "idLabel": "ID",
+        "statusLabel": "ステータス",
+        "dialogTitle": "レビュー・編集",
+        "dialogClose": "閉じる",
+        "openFullPage": "全画面で開く",
+        "loadErrorForbidden": "この項目にアクセスする権限がありません。",
+        "loadErrorInvalidId": "項目IDが不正です。",
+        "loadErrorNotFound": "項目が見つかりません。",
+        "loadErrorGeneric": "項目を読み込めませんでした: {detail}"
+      },
+      "claude": {
+        "sectionTitle": "Claude（2段階）",
+        "requestReview": "Claude にレビュー依頼",
+        "applyRevision": "Claude で本文を反映",
+        "primaryHint": "レビュー ゲートが未通過の間は、ワンクリックでレビューと本文反映をまとめて実行するか、下の手順で個別に操作できます。",
+        "primaryChainCta": "レビュー保存後に本文を反映（まとめて実行）",
+        "primaryStepsDetails": "手順どおり（レビュー → 反映）",
+        "advancedDisclosureLabel": "Claude 2段階（手動）",
+        "advancedHintWhenGatePassed": "レビュー ゲート通過済み — ブリーフや本文を調整するときだけ下の 2 段階を使ってください。",
+        "advancedDisabledByPolicy": "レビュー ゲート通過後の Claude は運用設定で無効です（CONTENT_OPS_CLAUDE_WHEN_GATE_PASSED）。",
+        "twoStepHint": "1) 編集ブリーフを metadata に保存 → 2) そのブリーフで本文を書き直します。サーバーに CONTENT_OPS_ANTHROPIC_API_KEY を設定してください。",
+        "successReview": "レビュー用ブリーフを metadata に保存しました。",
+        "successRevision": "最新のブリーフに基づき本文を更新しました。",
+        "successChain": "レビュー ブリーフを保存し、新しいブリーフで本文を更新しました。",
+        "truncationWarning": "（API サイズのためドラフトの一部のみ送信しました。）",
+        "errors": {
+          "forbidden": "権限がありません。",
+          "invalid_id": "項目 ID が無効です。",
+          "missing_api_key": "CONTENT_OPS_ANTHROPIC_API_KEY をサーバー環境変数に設定してください。",
+          "not_found": "項目が見つかりません。",
+          "anthropic_http": "Claude API エラー",
+          "empty_response": "Claude の応答が空です。",
+          "no_brief": "先に「Claude にレビュー依頼」を実行してください。",
+          "revision_failed_after_review": "レビューは保存されましたが、本文への反映に失敗しました。",
+          "db_error": "DB の更新に失敗しました。",
+          "exception": "予期しないエラーです。",
+          "unknown": "エラー: {code}"
+        },
+        "briefHeading": "最新の Claude レビュー ブリーフ",
+        "briefEmpty": "ブリーフはまだありません — 「レビュー依頼」を実行してください。"
       },
       "gate": {
         "pass": "合格",
@@ -1386,6 +1413,19 @@
           "qualityScoreBelowThreshold": "品質スコアしきい値未満",
           "hardBlockReasonDetected": "ハードブロック理由を検出"
         }
+      },
+      "detailDialog": {
+        "trigger": "詳細",
+        "triggerTooltip": "詳細を開く — レビューゲート、時刻、メモ、その他の操作、Claudeの手順",
+        "title": "項目の詳細",
+        "description": "この行のレビューゲート、時刻、メモ、拡張操作、Claudeの手順を表示します。",
+        "sectionGate": "レビューゲート",
+        "timingHeading": "時刻",
+        "created": "作成",
+        "updated": "更新",
+        "sectionNotes": "編集メモ",
+        "sectionMoreActions": "その他の操作",
+        "close": "閉じる"
       },
       "empty": "キュー項目がありません。"
     },
@@ -1600,7 +1640,7 @@
     "adminPurchaseAllowlist": {
       "metaTitle": "チェックアウト許可リスト",
       "title": "チェックアウト許可リスト",
-      "intro": "CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true のとき、ここに登録されたメールのみカタログの Toss 決済インテントを作成できます。マーケティングのウェイトリストとは別で、プロフィールのメールと一致する必要があります（正規化・大文字小文字は区別しません）。",
+      "intro": "CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true のとき、ここに登録されたメールのみカタログ決済（Lemon / Polar）を開始できます。マーケティングのウェイトリストとは別で、プロフィールのメールと一致する必要があります（正規化・大文字小文字は区別しません）。",
       "emailLabel": "メール",
       "noteLabel": "メモ（任意）",
       "add": "メールを追加",

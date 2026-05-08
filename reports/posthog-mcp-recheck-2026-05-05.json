@@ -1,0 +1,78 @@
+{
+  "kind": "posthog_mcp_recheck",
+  "generatedAtUtc": "2026-05-05T01:44:25Z",
+  "projectId": 358775,
+  "tool": "query-run (HogQL)",
+  "queries": {
+    "elevate_marketing_cta_click_and_pageview_30d": {
+      "hogql": "SELECT event, count() AS c FROM events WHERE event IN ('elevate_marketing_cta_click', '$pageview') AND timestamp > now() - INTERVAL 30 DAY GROUP BY event ORDER BY c DESC",
+      "rows": [
+        { "event": "$pageview", "c": 32 },
+        { "event": "elevate_marketing_cta_click", "c": 13 }
+      ]
+    },
+    "elevate_marketing_cta_click_all_time": {
+      "hogql": "SELECT count() AS total_all_time FROM events WHERE event = 'elevate_marketing_cta_click'",
+      "total_all_time": 13
+    },
+    "elevate_marketing_cta_click_cta_id_7d": {
+      "hogql": "SELECT ifNull(nullIf(toString(properties.cta_id), ''), '(missing)') AS cta_id, count() AS c FROM events WHERE event = 'elevate_marketing_cta_click' AND timestamp > now() - INTERVAL 7 DAY GROUP BY cta_id ORDER BY c DESC",
+      "rows": [
+        { "cta_id": "header_nav_blog", "c": 3 },
+        { "cta_id": "header_nav_pricing", "c": 3 },
+        { "cta_id": "hero_ebooks", "c": 2 },
+        { "cta_id": "band_contact", "c": 1 },
+        { "cta_id": "hero_waitlist_anchor", "c": 1 },
+        { "cta_id": "pricing_card_monthly", "c": 1 },
+        { "cta_id": "hero_pricing", "c": 1 },
+        { "cta_id": "hero_prompt_studio", "c": 1 }
+      ],
+      "distinctCtaIds7d": 8
+    },
+    "elevate_marketing_cta_click_cta_id_all_time": {
+      "hogql": "SELECT ifNull(nullIf(toString(properties.cta_id), ''), '(missing)') AS cta_id, count() AS c FROM events WHERE event = 'elevate_marketing_cta_click' GROUP BY cta_id ORDER BY cta_id",
+      "rows": [
+        { "cta_id": "band_contact", "c": 1 },
+        { "cta_id": "header_nav_blog", "c": 3 },
+        { "cta_id": "header_nav_pricing", "c": 3 },
+        { "cta_id": "hero_ebooks", "c": 2 },
+        { "cta_id": "hero_pricing", "c": 1 },
+        { "cta_id": "hero_prompt_studio", "c": 1 },
+        { "cta_id": "hero_waitlist_anchor", "c": 1 },
+        { "cta_id": "pricing_card_monthly", "c": 1 }
+      ],
+      "distinctCtaIdsAllTime": 8
+    }
+  },
+  "expectedWireCtaIds14": [
+    "hero_ebooks",
+    "hero_waitlist_anchor",
+    "hero_waitlist_inline_notify",
+    "hero_prompt_studio",
+    "hero_signup",
+    "band_contact",
+    "hero_pricing",
+    "header_nav_pricing",
+    "header_nav_blog",
+    "band_waitlist",
+    "blog_post_footer_waitlist",
+    "blog_post_footer_pricing",
+    "pricing_card_monthly",
+    "pricing_card_annual"
+  ],
+  "ctaIdsWithZeroObservedAllTime": [
+    "hero_waitlist_inline_notify",
+    "hero_signup",
+    "band_waitlist",
+    "blog_post_footer_waitlist",
+    "blog_post_footer_pricing",
+    "pricing_card_annual"
+  ],
+  "verdict": {
+    "adr013_section5a_client_token": "PASS_BY_PRIOR_HTML_RSC_EVIDENCE",
+    "adr013_section5_cta_telemetry_path": "PASS",
+    "adr013_section5_decision5_strict_14_of_14_nonzero_7d": "NOT_SATISFIED",
+    "adr013_implementation_checklist_relaxed_12_of_14": "NOT_SATISFIED",
+    "notes": "2026-05-04 MCP snapshot (posthog-mcp-recheck-2026-05-04.json) showed 0 CTA events; 2026-05-05 HogQL contradicts stale zero. Six cta_id values have no prod observations yet; wiring exists in src/app/[locale]/(marketing)/page.tsx, blog/[slug]/page.tsx, pricing/page.tsx per grep."
+  }
+}

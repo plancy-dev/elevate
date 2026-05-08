@@ -13,7 +13,7 @@
 | **문서 PR (이번 파도)** | 이 RFC 본문 보강, doc-gate, PLAN·AI_* 상호 링크, `memory-bank/tasks.md` 한 줄, ADR README, 규칙 **프론트매터만**(예: `globs: []`) | Hooks 실행 파일, `mcp.json` 실제 추가, 새 CI 워크플로, 앱 런타임 코드 |
 | **다음 구현 PR** | `.cursor/hooks/` + README, 팀이 승인한 MCP만 `mcp.json.example` 문서화·선택 항목, (합의 시) 릴리즈/nightly용 추가 Action | 이 RFC를 머지하지 않은 채로만 무리하게 도입 |
 
-순수 문서만 바뀐 PR은 [`AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) §2b의 verify **예외**에 해당할 수 있다. 다만 팀이 요구하면 그래도 `pnpm verify`를 돌린다.
+순수 문서만 바뀐 PR은 [`AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) **§2.6** verify **예외**에 해당할 수 있다. 다만 팀이 요구하면 그래도 `pnpm verify`를 돌린다.
 
 ---
 
@@ -33,7 +33,7 @@
 |------|------|----------------------|
 | CI | gstack `/ship` 또는 Codex Action을 **기본 브랜치마다** 추가할까? | **`pnpm verify` + 기존 Actions**를 단일 SoT로 유지. 중복은 플레이크·비용만 증가할 수 있음. 추가 실험은 **릴리즈 브랜치 또는 nightly**만. |
 | Hooks | Agent 전에 경고/게이트를 둘까? | **팀 합의 후**만 최소 도입. “`pnpm verify` 없이 큰 diff 커밋”류는 **거짓 양성**이 나기 쉬워 문구·조건을 먼저 RFC에 고정한다. |
-| Docs MCP | 기본 개발자가 MCP를 켜야 하나? | **아니오.** 새 결제·인증·외부 HTTP SDK를 **처음** 넣을 때만 선택적으로 켠다([`AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) §3). |
+| Docs MCP | 기본 개발자가 MCP를 켜야 하나? | **아니오.** 새 결제·인증·외부 HTTP SDK를 **처음** 넣을 때만 선택적으로 켠다([`AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) §4).
 
 ---
 
@@ -57,7 +57,7 @@
 
 ## 5. P2-7 Docs MCP — 제안
 
-- **트리거:** 새 결제·인증·외부 HTTP SDK를 **처음** 넣을 때만 MCP 켜기(레포 [`AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) §3).
+- **트리거:** 새 결제·인증·외부 HTTP SDK를 **처음** 넣을 때만 MCP 켜기(레포 [`AI_ORCHESTRATION.md`](../AI_ORCHESTRATION.md) §4).
 - **구현 시:** `mcp.json.example`에 선택 항목으로 문서화; 기본 개발자는 끈 상태로도 `pnpm verify` 통과.
 
 ---

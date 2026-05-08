@@ -8,6 +8,16 @@ import {
   CONTENT_OPS_RUN_SEQUENCE,
   type ContentOpsRunType,
 } from "@/lib/content-ops/automation-config";
+import {
+  buildEditorUserPayload,
+  buildReviewerUserPayload,
+  CONTENT_QUEUE_EDITOR_SYSTEM,
+  CONTENT_QUEUE_REVIEWER_SYSTEM,
+  fetchAnthropicText,
+  resolveContentOpsAnthropicConfig,
+  stripOuterMarkdownFence,
+} from "@/lib/content-ops/claude-content-queue";
+import { evaluateReviewGate } from "@/lib/content-ops/review-gate";
 import { runPublishPipeline } from "@/lib/content-ops/pipeline-runner";
 import {
   executeContentOpsRun,
@@ -26,6 +36,9 @@ import {
 
 const CONTENT_OPS_HEARTBEAT_LOOKBACK_HOURS = 168;
 
+const ADMIN_CONTENT_ITEM_ID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 const EMAIL_RE =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
@@ -42,6 +55,11 @@ export type AdminContentItemRow = {
   review_notes: string | null;
   created_at: string;
   updated_at: string;
+};
+
+export type AdminContentItemDetail = AdminContentItemRow & {
+  body_markdown: string;
+  summary: string | null;
 };
 
 export type AdminContentSourceRow = {
@@ -92,6 +110,425 @@ async function assertPlatformAdmin(): Promise<
     return { ok: false, error: "forbidden" };
   }
   return { ok: true };
+}
+
+export async function getAdminContentItem(
+  id: string,
+): Promise<
+  { ok: true; row: AdminContentItemDetail } | { ok: false; error: string }
+> {
+  if (!ADMIN_CONTENT_ITEM_ID_RE.test(id)) return { ok: false, error: "invalid_id" };
+  const gate = await assertPlatformAdmin();
+  if (!gate.ok) return { ok: false, error: gate.error };
+
+  try {
+    const admin = createAdminClient();
+    const { data, error } = await admin
+      .from("content_items")
+      .select(
+        "id, type, title, locale, status, source_quality_score, fact_check_score, scheduled_at, metadata, review_notes, created_at, updated_at, body_markdown, summary",
+      )
+      .eq("id", id)
+      .maybeSingle();
+    if (error) return { ok: false, error: error.message };
+    if (!data) return { ok: false, error: "not_found" };
+    return { ok: true, row: data as unknown as AdminContentItemDetail };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "unknown" };
+  }
+}
+
+export async function saveAdminContentItemDraft(formData: FormData): Promise<void> {
+  const gate = await assertPlatformAdmin();
+  if (!gate.ok) return;
+
+  const id = String(formData.get("id") ?? "").trim();
+  if (!ADMIN_CONTENT_ITEM_ID_RE.test(id)) return;
+
+  const title = String(formData.get("title") ?? "").trim();
+  const bodyMarkdown = String(formData.get("body_markdown") ?? "");
+  const summaryRaw = String(formData.get("summary") ?? "").trim();
+  const reviewNotesRaw = String(formData.get("review_notes") ?? "");
+
+  if (!title) return;
+
+  try {
+    const admin = createAdminClient();
+    const { data: existing, error: loadErr } = await admin
+      .from("content_items")
+      .select("metadata")
+      .eq("id", id)
+      .maybeSingle();
+    if (loadErr || !existing) return;
+
+    const nowIso = new Date().toISOString();
+    const root = ((existing.metadata ?? {}) as Record<string, unknown>) ?? {};
+    const nextMetadata = {
+      ...root,
+      editor_manual: {
+        last_saved_at: nowIso,
+      },
+    };
+
+    const { error } = await admin
+      .from("content_items")
+      .update({
+        title,
+        body_markdown: bodyMarkdown,
+        summary: summaryRaw.length > 0 ? summaryRaw : null,
+        review_notes: reviewNotesRaw.trim().length > 0 ? reviewNotesRaw.trim() : null,
+        metadata: nextMetadata as Json,
+        updated_at: nowIso,
+      })
+      .eq("id", id);
+    if (error) return;
+
+    revalidatePath("/admin/content-queue");
+    revalidatePath(`/admin/content-queue/${id}`);
+  } catch (e) {
+    console.error("[saveAdminContentItemDraft] failed", e);
+  }
+}
+
+/**
+ * Re-runs the same local {@link evaluateReviewGate} rules as batch review_gate (no LLM / no paid API).
+ * Does not clear editor {@link review_notes}; gate results live in metadata.review_gate.
+ */
+export async function recomputeAdminContentItemReviewGate(formData: FormData): Promise<void> {
+  const gate = await assertPlatformAdmin();
+  if (!gate.ok) return;
+
+  const id = String(formData.get("id") ?? "").trim();
+  if (!ADMIN_CONTENT_ITEM_ID_RE.test(id)) return;
+
+  try {
+    const admin = createAdminClient();
+    const { data: item, error: loadErr } = await admin
+      .from("content_items")
+      .select("id, body_markdown, metadata, status")
+      .eq("id", id)
+      .maybeSingle();
+    if (loadErr || !item) return;
+
+    const { count: sourceLinkCount } = await admin
+      .from("content_item_source_map")
+      .select("id", { count: "exact", head: true })
+      .eq("content_item_id", id);
+
+    const gateResult = evaluateReviewGate({
+      bodyMarkdown: item.body_markdown ?? "",
+      sourceLinkCount: sourceLinkCount ?? 0,
+    });
+
+    const nowIso = new Date().toISOString();
+    const nextMetadata = {
+      ...((item.metadata ?? {}) as Record<string, unknown>),
+      reviewGate: {
+        latest: {
+          run_id: "manual_admin",
+          checked_at: nowIso,
+          passed: gateResult.passed,
+          reasons: gateResult.reasons,
+          metrics: gateResult.metrics,
+        },
+      },
+      review_gate: {
+        latest: {
+          run_id: "manual_admin",
+          checked_at: nowIso,
+          passed: gateResult.passed,
+          reasons: gateResult.reasons,
+          metrics: gateResult.metrics,
+        },
+      },
+    };
+
+    const patch: Record<string, unknown> = {
+      metadata: nextMetadata as Json,
+      updated_at: nowIso,
+    };
+    if (
+      !gateResult.passed &&
+      (item.status === "draft" || item.status === "review_required")
+    ) {
+      patch.status = "review_required";
+    }
+
+    const { error } = await admin.from("content_items").update(patch).eq("id", id);
+    if (error) return;
+
+    revalidatePath("/admin/content-queue");
+    revalidatePath(`/admin/content-queue/${id}`);
+  } catch (e) {
+    console.error("[recomputeAdminContentItemReviewGate] failed", e);
+  }
+}
+
+export type ClaudeQueueActionState =
+  | { status: "idle" }
+  | {
+      status: "success";
+      code: "review_saved" | "revision_applied" | "chain_complete";
+      truncation?: boolean;
+    }
+  | { status: "error"; code: string; detail?: string };
+
+function asMetaObject(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  return value as Record<string, unknown>;
+}
+
+function readReviewGateSnapshot(metadata: Json | null): {
+  passed: boolean | null;
+  reasons: string[];
+  qualityScore: number | null;
+} {
+  const root = asMetaObject(metadata);
+  const rg = asMetaObject(root?.review_gate);
+  const latest = asMetaObject(rg?.latest);
+  if (!latest) return { passed: null, reasons: [], qualityScore: null };
+  const passed =
+    latest.passed === true ? true : latest.passed === false ? false : null;
+  const reasonsRaw = latest.reasons;
+  const reasons = Array.isArray(reasonsRaw)
+    ? reasonsRaw.filter((v): v is string => typeof v === "string")
+    : [];
+  const metrics = asMetaObject(latest.metrics);
+  const q = Number(metrics?.qualityScore);
+  return {
+    passed,
+    reasons,
+    qualityScore: Number.isFinite(q) ? q : null,
+  };
+}
+
+async function claudeReviewForItemId(id: string): Promise<ClaudeQueueActionState> {
+  const cfg = resolveContentOpsAnthropicConfig();
+  if (!cfg) return { status: "error", code: "missing_api_key" };
+
+  try {
+    const admin = createAdminClient();
+    const { data: row, error } = await admin
+      .from("content_items")
+      .select("id, type, locale, title, summary, body_markdown, metadata, review_notes")
+      .eq("id", id)
+      .maybeSingle();
+    if (error || !row) return { status: "error", code: "not_found" };
+
+    const snap = readReviewGateSnapshot(row.metadata as Json);
+    const { user, truncated } = buildReviewerUserPayload({
+      itemType: String(row.type),
+      locale: String(row.locale),
+      title: String(row.title ?? ""),
+      summary: row.summary ?? null,
+      bodyMarkdown: String(row.body_markdown ?? ""),
+      gateReasons: snap.reasons,
+      gatePassed: snap.passed,
+      qualityScore: snap.qualityScore,
+      reviewNotes: row.review_notes ?? null,
+    });
+
+    const llm = await fetchAnthropicText({
+      apiKey: cfg.apiKey,
+      model: cfg.model,
+      system: CONTENT_QUEUE_REVIEWER_SYSTEM,
+      user,
+      maxTokens: 8192,
+    });
+    if (!llm.ok) {
+      return {
+        status: "error",
+        code: "anthropic_http",
+        detail: `${llm.status}: ${llm.body}`,
+      };
+    }
+    const brief = (llm.text ?? "").trim();
+    if (!brief) return { status: "error", code: "empty_response" };
+
+    const nowIso = new Date().toISOString();
+    const root = asMetaObject(row.metadata as Json) ?? {};
+    const prevBrief = asMetaObject(root.claude_review_brief);
+    const prevLatest = asMetaObject(prevBrief?.latest);
+    const nextMetadata = {
+      ...root,
+      claude_review_brief: {
+        ...(prevBrief ?? {}),
+        latest: {
+          created_at: nowIso,
+          model: cfg.model,
+          brief_markdown: brief,
+          gate_reasons: snap.reasons,
+          input_truncated: truncated,
+        },
+        previous: prevLatest ?? null,
+      },
+    } as Json;
+
+    const { error: upErr } = await admin
+      .from("content_items")
+      .update({
+        metadata: nextMetadata,
+        updated_at: nowIso,
+      })
+      .eq("id", id);
+    if (upErr) return { status: "error", code: "db_error", detail: upErr.message };
+
+    revalidatePath("/admin/content-queue");
+    revalidatePath(`/admin/content-queue/${id}`);
+    return {
+      status: "success",
+      code: "review_saved",
+      truncation: truncated || undefined,
+    };
+  } catch (e) {
+    console.error("[claudeReviewForItemId] failed", e);
+    return { status: "error", code: "exception", detail: String(e) };
+  }
+}
+
+async function claudeRevisionForItemId(id: string): Promise<ClaudeQueueActionState> {
+  const cfg = resolveContentOpsAnthropicConfig();
+  if (!cfg) return { status: "error", code: "missing_api_key" };
+
+  try {
+    const admin = createAdminClient();
+    const { data: row, error } = await admin
+      .from("content_items")
+      .select("id, body_markdown, metadata, status")
+      .eq("id", id)
+      .maybeSingle();
+    if (error || !row) return { status: "error", code: "not_found" };
+
+    const metaRoot = asMetaObject(row.metadata as Json) ?? {};
+    const briefRoot = asMetaObject(metaRoot.claude_review_brief);
+    const briefLatest = asMetaObject(briefRoot?.latest);
+    const briefMarkdown =
+      typeof briefLatest?.brief_markdown === "string" ? briefLatest.brief_markdown : "";
+    if (!briefMarkdown.trim()) return { status: "error", code: "no_brief" };
+
+    const bodyBefore = String(row.body_markdown ?? "");
+    const { user, truncated } = buildEditorUserPayload({
+      briefMarkdown,
+      bodyMarkdown: bodyBefore,
+    });
+
+    const llm = await fetchAnthropicText({
+      apiKey: cfg.apiKey,
+      model: cfg.model,
+      system: CONTENT_QUEUE_EDITOR_SYSTEM,
+      user,
+      maxTokens: 16384,
+    });
+    if (!llm.ok) {
+      return {
+        status: "error",
+        code: "anthropic_http",
+        detail: `${llm.status}: ${llm.body}`,
+      };
+    }
+    const revised = stripOuterMarkdownFence(llm.text ?? "").trim();
+    if (!revised) return { status: "error", code: "empty_response" };
+
+    const nowIso = new Date().toISOString();
+    const prevRev = asMetaObject(metaRoot.claude_editor_revision);
+    const prevRevLatest = asMetaObject(prevRev?.latest);
+    const nextMetadata = {
+      ...metaRoot,
+      claude_editor_revision: {
+        ...(prevRev ?? {}),
+        latest: {
+          applied_at: nowIso,
+          model: cfg.model,
+          prior_body_chars: bodyBefore.length,
+          new_body_chars: revised.length,
+          input_truncated: truncated,
+        },
+        previous: prevRevLatest ?? null,
+      },
+    } as Json;
+
+    const patch: Record<string, unknown> = {
+      body_markdown: revised,
+      metadata: nextMetadata,
+      updated_at: nowIso,
+    };
+    if (row.status === "draft" || row.status === "review_required") {
+      patch.status = "review_required";
+    }
+
+    const { error: upErr } = await admin.from("content_items").update(patch).eq("id", id);
+    if (upErr) return { status: "error", code: "db_error", detail: upErr.message };
+
+    revalidatePath("/admin/content-queue");
+    revalidatePath(`/admin/content-queue/${id}`);
+    return {
+      status: "success",
+      code: "revision_applied",
+      truncation: truncated || undefined,
+    };
+  } catch (e) {
+    console.error("[claudeRevisionForItemId] failed", e);
+    return { status: "error", code: "exception", detail: String(e) };
+  }
+}
+
+export async function requestClaudeContentReview(
+  _prev: ClaudeQueueActionState,
+  formData: FormData,
+): Promise<ClaudeQueueActionState> {
+  const gate = await assertPlatformAdmin();
+  if (!gate.ok) return { status: "error", code: "forbidden" };
+
+  const id = String(formData.get("id") ?? "").trim();
+  if (!ADMIN_CONTENT_ITEM_ID_RE.test(id)) return { status: "error", code: "invalid_id" };
+
+  return claudeReviewForItemId(id);
+}
+
+export async function applyClaudeContentRevision(
+  _prev: ClaudeQueueActionState,
+  formData: FormData,
+): Promise<ClaudeQueueActionState> {
+  const gate = await assertPlatformAdmin();
+  if (!gate.ok) return { status: "error", code: "forbidden" };
+
+  const id = String(formData.get("id") ?? "").trim();
+  if (!ADMIN_CONTENT_ITEM_ID_RE.test(id)) return { status: "error", code: "invalid_id" };
+
+  return claudeRevisionForItemId(id);
+}
+
+/** One request: save Claude review brief, then apply body revision from that brief (two LLM calls). */
+export async function runClaudeReviewThenRevision(
+  _prev: ClaudeQueueActionState,
+  formData: FormData,
+): Promise<ClaudeQueueActionState> {
+  const gate = await assertPlatformAdmin();
+  if (!gate.ok) return { status: "error", code: "forbidden" };
+
+  const id = String(formData.get("id") ?? "").trim();
+  if (!ADMIN_CONTENT_ITEM_ID_RE.test(id)) return { status: "error", code: "invalid_id" };
+
+  const r1 = await claudeReviewForItemId(id);
+  if (r1.status !== "success") return r1;
+
+  const r2 = await claudeRevisionForItemId(id);
+  if (r2.status === "success") {
+    return {
+      status: "success",
+      code: "chain_complete",
+      truncation: r1.truncation || r2.truncation || undefined,
+    };
+  }
+  if (r2.status === "error") {
+    const detail = [r2.code, r2.detail].filter(Boolean).join(": ");
+    return {
+      status: "error",
+      code: "revision_failed_after_review",
+      detail: detail || undefined,
+    };
+  }
+  return { status: "error", code: "exception", detail: "unexpected_revision_state" };
 }
 
 export async function listAdminContentQueue(filters?: {
@@ -161,6 +598,7 @@ export async function updateContentItemStatus(formData: FormData): Promise<void>
     }
 
     revalidatePath("/admin/content-queue");
+    revalidatePath(`/admin/content-queue/${id}`);
     revalidatePath("/admin/runs");
     revalidatePath("/admin/subscribers");
   } catch (e) {

@@ -4,7 +4,8 @@
 
 | 영역 | 할 일 |
 | ---- | ------ |
-| **Toss Payments** | 대시보드 성공/실패·웹훅 URL(`https://<도메인>/api/webhooks/toss`) 등록, 키 발급/로테이션, 상용 전 PG·세금·약관 점검 |
+| **Lemon Squeezy** | 웹훅 URL `https://<도메인>/api/webhooks/lemonsqueezy`, `LEMON_SQUEEZY_WEBHOOK_SECRET`, API 키·스토어 ID — [`docs/features/PLAN-lemon-squeezy-webhook.md`](./features/PLAN-lemon-squeezy-webhook.md), [`ADR-004`](./adr/ADR-004-lemon-squeezy-global-payments.md) |
+| **Polar** | 블로그 구독 체크아웃 링크·웹훅 `https://<도메인>/api/webhooks/polar` — `.env.local.example` |
 | **Supabase (필수)** | 스튜디오 운영 기준 마이그레이션 `034`(assembly jobs + claim RPC)·`035`(Realtime broadcast) 적용 여부 확인, `CONTENT_STORAGE_BUCKET`(기본 `elevate-content`) 존재/정책 점검 |
 | **Video Worker (필수)** | Fly 배포 상태 확인(`fly machine list -a elevate-video-assembly`), `/health` 정상, 로그에 `[assembly-worker] poll loop started` 존재, worker/app이 동일 Supabase 프로젝트 사용 |
 | **Publish/Buffer** | 조직 Buffer 키 저장 여부, 실패 row 재시도 버튼 동작(에피소드 단위/개별), `studio_scheduled_posts.last_error` 확인 절차 숙지 |
@@ -21,4 +22,4 @@
 4. Publish scheduler에서 retry/cancel 동작 확인
 5. 라이브 스모크 실행 전 테스트 episode 격리 여부 재확인
 
-관련: [ADR-001](./adr/ADR-001-toss-payments-poc.md), [AI_AGENT_MATURITY_REPORT.md](./AI_AGENT_MATURITY_REPORT.md).
+관련: [ADR-004](./adr/ADR-004-lemon-squeezy-global-payments.md), [ADR-005](./adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md), [AI_AGENT_MATURITY_REPORT.md](./AI_AGENT_MATURITY_REPORT.md). (역사) Toss PoC: [ADR-001](./adr/ADR-001-toss-payments-poc.md).

@@ -3,6 +3,8 @@
 **Single source of truth** for product narrative (Gemini/VC 플라이휠·듀얼 GTM과 정합).  
 구현 세부는 `memory-bank/tasks.md`와 ADR로 갱신한다.
 
+> **실행 상태 (2026-05-06):** 제품 빌드 우선순위(Prompt Studio·히어로 등 이슈 트랙)는 [`operations-mode-2026-q2.md`](operations-mode-2026-q2.md)에 따라 **일시 중단(paused)**. 본 문서는 서사·전략 SoT로 **삭제하지 않음** — 재개 시점은 운영 모드 문서와 `tasks.md`를 본다.
+
 ## GTM vs 제품 계층 (2026-Q2, ADR-012)
 
 **방문자에게 보이는 이야기(GTM)** 는 GitHub **#60**에서 채택한 **시나리오 A — 미디어 우선**이 우선한다([`docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md`](../docs/adr/ADR-012-positioning-2026-q2-scenario-a-media-first.md)). 블로그·뉴스레터·구독 약속이 히어로/카피의 **1순위 축**이 될 수 있다.
@@ -48,7 +50,7 @@
 - 단기 서비스명 **Elevate** 유지.
 - “Plancy가 만든 Elevate” 서사는 도메인·푸터·About에서 정리 가능.
 
-## 레거시 MICE
+## Historical MICE schema (removed)
 
-- 기존 이벤트·venue·참석자 기능은 **레거시**로 보존하되, 내비·카피는 신규 비전 우선.
-- 스키마 삭제는 데이터 마이그레이션·고객 영향 검토 후 별도 결정.
+- The original **events → sessions → attendees** and **venues** domain was **removed from the database** in [`supabase/migrations/052_drop_mice_legacy_tables.sql`](../../supabase/migrations/052_drop_mice_legacy_tables.sql) (2026-05). Operators must **backup** before applying in production and run **`pnpm db:types`** afterward.
+- Dashboard routes for legacy event tools were already retired; marketing copy has been reframed around AI workflows.

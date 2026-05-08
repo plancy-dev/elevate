@@ -14,7 +14,7 @@
 | **activeContext.md** | 지금 페이즈, 다음 작업 앵커 |
 | **creative-architecture.md** | 아키텍처·스키마·라우트 구조 결정 |
 | **techStack.md** | 기술 스택 한 페이지 요약 |
-| **domainKnowledge.md** | MICE 용어·도메인 메모 |
+| **domainKnowledge.md** | 피벗 도메인·역사 참고 메모 |
 | **archive/** | REFLECT·대체된 CREATIVE 등 — [`archive/index.md`](archive/index.md) |
 
 ## 갱신 규칙
@@ -29,17 +29,17 @@
 
 - **Memory Bank** = 이 프로젝트의 **상태·우선순위·도메인** (SoT). gstack으로 옮기거나 대체하지 않는다.
 - **gstack** (`.agents/skills/gstack`) = **리뷰·전략·QA** 등 구조화된 역할 프롬프트. 설치는 `docs/GSTACK.md`.
-- **통합 허브**: `docs/AI_ORCHESTRATION.md` — 레이어·의사결정표·프롬프트 계약.
+- **통합 허브**: [`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md) — **§2 세션 하네스**(Tier·INIT·턴 종료·Ops vs BUILD·verify) + 레이어.
 - **Vercel 플러그인 (선택)**: 배포·`env` 에이전트 보조 — [`AGENTS.md`](../AGENTS.md) § **Vercel plugin** · [공식 문서](https://vercel.com/docs/agent-resources/vercel-plugin).
 - **전문가 세션·복붙**: `docs/AI_EXPERT_PROMPTS.md` — Memory Bank 필수 로드 + 블록 A~D.
 
 ## Cursor
 
-- **에이전트 페이즈 모델 (INIT→ARCHIVE):** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model** (레포 최우선; `workflow-modes.mdc`·`AI_ORCHESTRATION.md`와 정합)
-- 규칙: `.cursor/rules/memory-bank-guide.mdc`
-- 워크플로우: `.cursor/rules/workflow-modes.mdc`
-- AI 진입점: `docs/AI_USAGE.md` → 상세 `docs/AI_ORCHESTRATION.md`
-- 전문가 복붙 프롬프트(Memory Bank 강제 로드): `docs/AI_EXPERT_PROMPTS.md`
+- **에이전트 하네스(canonical):** [`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md) **§2**
+- **제품 페이즈 헌장:** [`AGENTS.md`](../AGENTS.md) § **AI orchestration → Operating model**
+- 규칙: `.cursor/rules/memory-bank-guide.mdc` · 워크플로(모드·서브에이전트만): `.cursor/rules/workflow-modes.mdc`
+- AI 진입점: [`docs/AI_USAGE.md`](../docs/AI_USAGE.md)
+- 전문가 복붙: [`docs/AI_EXPERT_PROMPTS.md`](../docs/AI_EXPERT_PROMPTS.md)
 
 ## 시크릿
 

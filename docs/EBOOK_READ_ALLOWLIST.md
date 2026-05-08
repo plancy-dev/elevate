@@ -12,7 +12,7 @@
 | 경로 | 데이터 | 설명 |
 |------|--------|------|
 | **구독** | `organizations.plan`이 `professional` 또는 `enterprise` | 유료 조직 구독으로 카탈로그 전반 이용 (코드: `hasPaidServiceSubscription`) |
-| **개별 구매** | `organization_content_entitlements`에 `(organization_id, content_product_id)` 행 존재 | 결제 확정 후 부여 (Toss PoC: `grantOrganizationContentEntitlement`, `src/lib/payments/content-entitlement.ts`) |
+| **개별 구매** | `organization_content_entitlements`에 `(organization_id, content_product_id)` 행 존재 | 결제 확정 후 부여 (Lemon 웹훅 등: `grantOrganizationContentEntitlement`, `src/lib/payments/content-entitlement.ts`) |
 
 `Starter` 플랜이고 entitlement도 없으면 **읽기 불가**입니다.
 

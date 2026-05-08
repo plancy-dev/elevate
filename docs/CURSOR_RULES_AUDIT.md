@@ -50,7 +50,7 @@ Elevate — P1 잔여 (PLAN §4 P1)
 
 main에 P0 머지 완료. 다음을 수행:
 1) docs/CURSOR_RULES_AUDIT.md의 분할·축소 후보를 검토하고, 승인된 항목만 PR로 반영한다.
-2) AI_ORCHESTRATION §2b verify 게이트가 팀 플로우와 맞는지 확인하고, 필요 시 AGENTS 표현만 다듬는다.
+2) AI_ORCHESTRATION §2.6 verify 게이트가 팀 플로우와 맞는지 확인하고, 필요 시 AGENTS 표현만 다듬는다.
 3) nested AGENTS.md는 합의 후에만 추가한다.
 
 SoT: docs/features/PLAN-ai-native-workflow-evolution-2026-05.md §4 P1

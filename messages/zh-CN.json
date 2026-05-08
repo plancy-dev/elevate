@@ -214,7 +214,7 @@
   "About": {
     "metaTitle": "关于",
     "title": "关于 Elevate",
-    "description": "我们为需要可衡量成果的 MICE 团队打造基础设施，而不是又一张表格。成立于 2026 年（占位）。"
+    "description": "我们为需要可衡量成果的团队搭建 AI 工作流基础设施——不是又一张表格。成立于 2026 年（占位）。"
   },
   "Blog": {
     "metaTitle": "博客",
@@ -317,7 +317,7 @@
       "section2Title": "Library visibility",
       "section2Body": "Library reflects entitlements for the signed-in user's organization. If something is missing, it is usually a subscription or purchase state—not a personal account issue.\n\nStarter plans may see fewer titles; upgrading the org unlocks more catalog content when available.",
       "section3Title": "Billing and ownership",
-      "section3Body": "Toss Payments PoC and future gateways attach to the organization so finance has a single invoice trail. Personal accounts exist for sign-in, but purchase and download rights are org-scoped."
+      "section3Body": "Lemon Squeezy 与 Polar 结账与组织绑定，财务可在同一处追踪。登录为个人账户，购买与下载权限以组织为范围。"
     },
     "security": {
       "metaTitle": "Security & compliance | Elevate",
@@ -335,74 +335,74 @@
   "Solutions": {
     "metaTitle": "Solutions",
     "title": "Solutions",
-    "description": "Event and travel programs generate thousands of comms—speaker briefs, sponsor copy, attendee emails, and exhibitor kits. Elevate helps MICE teams standardize and improve that language with model-aware prompts, org-scoped drafts, and Library-backed assets.",
+    "description": "Elevate 统一管理模型自适应提示词、组织范围内草稿以及 Library 附带的 playbook，减少各团队割裂的 AI 输出。",
     "items": {
       "conferences": {
-        "title": "Conferences",
-        "desc": "Multi-track programs and speaker/sponsor comms at scale."
+        "title": "市场与上新",
+        "desc": "战役简报、培育和落地页共用可重复的提示词模版，并经组织审批。"
       },
       "exhibitions": {
-        "title": "Exhibitions",
-        "desc": "Exhibitor kits, floor campaigns, and lead-gen copy consistency."
+        "title": "渠道与创收团队",
+        "desc": "当销售与合作伙伴使用 AI 草稿时，简报和 FAQ 仍可保持话术一致。"
       },
       "incentive-travel": {
-        "title": "Incentive travel",
-        "desc": "Program narratives and compliance-sensitive itineraries."
+        "title": "客户成功",
+        "desc": "按模型栈与语气护栏打磨入职叙事、生命周期邮件和成功 playbook。"
       },
       "corporate-meetings": {
-        "title": "Corporate meetings",
-        "desc": "Exec summaries, hybrid runbooks, internal AI policy alignment."
+        "title": "高管与内部运营",
+        "desc": "在模型与监管快速变化时依旧对齐高管播报、制度和运行手册。"
       }
     }
   },
   "SolutionsSlug": {
     "conferences": {
-      "metaTitle": "Conferences | Elevate",
-      "metaDescription": "Improve prompt libraries for speaker briefs, sponsor tiers, and attendee journeys—scoped to your organization.",
-      "title": "Conferences",
-      "lead": "Large programs mean repeated comms: session descriptions, speaker briefs, sponsor deliverables, and attendee journeys. Elevate helps you build reusable prompt patterns and improve them against the models your team actually uses.",
-      "section1Title": "Where Elevate fits",
-      "section1Body": "Use Prompt Studio to tighten instructions for on-brand tone, clarity, and model alignment. When marketing attaches catalog assets, Library makes downloads entitlement-aware—so field teams and agencies pull from the same source of truth.\n\nThis is not a replacement for your registration or abstract system; it is the quality layer on top of language and AI-assisted drafts.",
-      "section2Title": "Operational outcomes",
-      "section2Body": "Fewer one-off rewrites, fewer off-brand variants, faster review cycles when teams share org-scoped drafts.\n\nRoles and billing stay tied to the organization so procurement can audit who had access to what.",
-      "section3Title": "Getting started",
-      "section3Body": "Join the waitlist for Prompt Studio beta, or open Billing when checkout is enabled to unlock catalog content. Contact sales if you need enterprise rollout and security review."
+      "metaTitle": "市场方案 | Elevate",
+      "metaDescription": "模型自适应提示词、组织级草稿以及可重复使用的新品上线手册。",
+      "title": "市场与上新",
+      "lead": "增长团队在渠道与群体中反复重写同一故事。Elevate 通过 Prompt Studio 与 Library，让草稿与法务认可的主张保持一致。",
+      "section1Title": "Elevate 的定位",
+      "section1Body": "在接入 Gemini/GPT/Claude 前先于 Prompt Studio 收紧指令；通过目录权限让供应商只拿得到授权的资料。",
+      "section2Title": "运营结果",
+      "section2Body": "减少临时改口的次数，厘清评审路径，也少陷入“谁是权威出处”的讨论。",
+      "section3Title": "如何开始",
+      "section3Body": "加入 Prompt Studio 候选名单或浏览目录；企业级 SSO 请咨询销售。"
     },
     "exhibitions": {
-      "metaTitle": "Exhibitions | Elevate",
-      "metaDescription": "Consistent exhibitor comms, booth kits, and campaign copy—improved with model-aware prompts and org-scoped drafts.",
-      "title": "Exhibitions",
-      "lead": "Exhibitions depend on tight coordination between exhibitors, agencies, and floor teams. Elevate helps you standardize prompt templates for kits, campaigns, and lead follow-ups so tone and claims stay consistent across hundreds of touchpoints.",
-      "section1Title": "Language consistency",
-      "section1Body": "Prompt Studio surfaces structured improvements so teams do not ship contradictory instructions to models or contractors.\n\nPair with Library when downloadable guides and templates are part of your commercial program.",
-      "section2Title": "Governance",
-      "section2Body": "Everything stays inside the organization tenant. That matters when sponsors and exhibitors expect confidentiality around unreleased messaging.\n\nAudit and admin tooling continues to mature—see the product changelog for what is live.",
-      "section3Title": "Next steps",
-      "section3Body": "Browse the catalog for packaged guides, or talk to sales about multi-org programs and pilots."
+      "metaTitle": "创收团队 | Elevate",
+      "metaDescription": "更锋利的伙伴话术、可复用的材料包和组织级草稿。",
+      "title": "渠道与创收团队",
+      "lead": "Elevate 用可重复的提示结构与改进流程取代一次性 GPT 对话，并让权限与 SKU 对齐。",
+      "section1Title": "高压下的一致性",
+      "section1Body": "销售迭代更快却不会杜撰违禁表述，模板让 PLG 叙事稳定。",
+      "section2Title": "治理",
+      "section2Body": "角色与审计轨迹正以企业采购的预期为目标演进。",
+      "section3Title": "下一步",
+      "section3Body": "若需要可下载指南，可把 Prompt Studio 预览与目录解锁搭配使用。"
     },
     "incentive-travel": {
-      "metaTitle": "Incentive travel | Elevate",
-      "metaDescription": "Narratives and comms for incentive programs—with structured prompt improvement and org-scoped drafts.",
-      "title": "Incentive travel",
-      "lead": "Incentive programs require polished narratives, itinerary language, and sensitive attendee comms. Elevate helps teams iterate on prompts with clear model targets and reviewable structure before messages reach VIPs.",
-      "section1Title": "Quality and safety",
-      "section1Body": "Model-aware prompts reduce the risk of off-tone or off-policy copy when programs span multiple regions.\n\nDrafts remain scoped to your organization so partner agencies and internal teams can collaborate without exposing content publicly.",
-      "section2Title": "Catalog and rewards",
-      "section2Body": "When guides are part of the reward package, Library entitlements align downloads with what the org purchased.\n\nCatalog and billing are designed to sit alongside Prompt Studio, not compete with it.",
-      "section3Title": "Talk to us",
-      "section3Body": "For bespoke programs or compliance-heavy rollouts, contact sales and we will align on review and deployment expectations."
+      "metaTitle": "客户成功 | Elevate",
+      "metaDescription": "以 Prompt Studio 治理优化生命周期话术与 nurturing 文案。",
+      "title": "客户成功",
+      "lead": "Elevate 抓住 CS 团队在每次续约都会复用的语气、免责声明和证据要点，并将其注入 Prompt Studio 草稿。",
+      "section1Title": "质量与共情",
+      "section1Body": "模型对齐让升级沟通更诚恳；草稿始终在租户边界内。",
+      "section2Title": "与目录协同",
+      "section2Body": "若电子书纳入 CS 漏斗，可由 Lemon Squeezy + Library 形成可追踪下载。",
+      "section3Title": "联系我们",
+      "section3Body": "若需重型合规或多语言 CS，请咨询销售厘清上线预期。"
     },
     "corporate-meetings": {
-      "metaTitle": "Corporate meetings | Elevate",
-      "metaDescription": "Exec summaries, hybrid runbooks, and internal AI policy alignment—improved with Prompt Studio and org-scoped governance.",
-      "title": "Corporate meetings",
-      "lead": "Corporate meetings teams juggle internal comms, executive summaries, and hybrid logistics. Elevate gives you a repeatable prompt layer so leadership updates, FAQs, and policy explanations stay consistent as models and regulations change.",
-      "section1Title": "Internal alignment",
-      "section1Body": "Prompt Studio helps teams converge on approved phrasing and structure before content is broadcast to Slack, email, or intranet.\n\nOrg workspace ensures the right roles can edit drafts and approve changes.",
-      "section2Title": "Security posture",
-      "section2Body": "Supabase Auth and RLS underpin tenant isolation. For enterprise buyers, deeper security and compliance materials are available under NDA.\n\nSee Security and Compliance pages for statements of direction.",
-      "section3Title": "Rollout",
-      "section3Body": "Start with the waitlist for Prompt Studio beta; add catalog entitlements when you need downloadable playbooks. We will meet you where your procurement process is."
+      "metaTitle": "领导与内部运营 | Elevate",
+      "metaDescription": "政策备忘录、高管简报以及可审查的内部 AI 护栏。",
+      "title": "高管与内部运营",
+      "lead": "Elevate 帮助 COO/办公室把控内部 AI：已批准提示池、上报路径和组织可见草稿。",
+      "section1Title": "内部对齐",
+      "section1Body": "在向全员大会或 Slack 广播前，Prompt Studio 统一命名结构与风险话术。",
+      "section2Title": "安全态势",
+      "section2Body": "当前基于 Supabase 租户隔离；更完整的资料可按需提供。",
+      "section3Title": "分阶段上线",
+      "section3Body": "先试运行 Prompt Studio；需要时再开目录捆绑；采购若要 SSO，再升级。"
     }
   },
   "Pricing": {
@@ -476,7 +476,7 @@
       },
       {
         "kind": "check",
-        "label": "Org billing & Toss checkout",
+        "label": "组织账单与目录结账",
         "starter": true,
         "professional": true,
         "enterprise": true
@@ -554,7 +554,6 @@
       "authInsufficientPermissions": "您没有执行此操作的权限。",
       "authInviteManagersOnly": "仅管理员和组织者可以管理邀请。",
       "authAdminOnly": "仅组织管理员可以更改成员角色。",
-      "authVenuePermissionDenied": "您没有场地管理权限。",
       "settingsOrgNameRequired": "请填写组织名称。",
       "settingsTextTooLong": "最多 {max} 个字符。",
       "inviteInvalidEmail": "请输入有效的邮箱地址。",
@@ -750,10 +749,6 @@
       "orgPaidNote": "当前为付费服务方案。资料库可能已包含更多内容；如需也可单独购买目录商品。",
       "orgStarterNote": "当前为 Starter 方案。升级可为团队解锁更多资料库内容；结账已接入时也可在资料库单独购买目录商品。",
       "orgSummaryLibraryCta": "打开资料库浏览标题并结账",
-      "checkoutWithSlug": "正在为「{slug}」结账。完成后将计入组织的资料库（测试金额 {amount} KRW）。",
-      "tossIntroNoSlug": "若已启用测试支付，可在下方继续支付 {amount} KRW。",
-      "tossIntro": "在下方完成支付后，将返回此页面。",
-      "setClientKey": "当前工作区暂不可用支付。",
       "lemonCheckoutWithSlug": "您正在购买「{slug}」。请在新标签页继续支付。",
       "lemonMissingUrlTitle": "无法打开支付",
       "lemonMissingUrlBody": "无法打开该内容的支付。请联系组织管理员。",
@@ -774,34 +769,14 @@
       "lemonUnknownProductTitle": "未找到该内容",
       "lemonUnknownProductBody": "找不到该内容。请返回资料库重新选择。",
       "errors": {
-        "pocAmountOnly": "此测试结账仅支持 {amount} KRW。",
-        "missingWidgetKey": "支付未启用：缺少客户端密钥。",
-        "catalogUnknown": "该商品不可用或已停用。",
-        "catalogPriceMismatch": "该商品价格与测试金额（{amount} KRW）不一致。",
-        "paymentServerConfig": "服务器未完成配置，无法开始支付。",
-        "intentCreateFailed": "无法开始支付，请稍后重试。",
         "checkoutAllowlistDenied": "仅受邀邮箱可发起目录结账。请让管理员将您的资料邮箱加入结账许可名单。",
         "checkoutAllowlistNoEmail": "资料中缺少邮箱。请更新账号或联系支持。",
-        "generic": "出现问题，请重试。",
-        "tossClientUnknown": "支付窗口出现问题。请重试，或允许本网站的弹窗。"
+        "generic": "出现问题，请重试。"
       },
-      "widgetErrorLoad": "无法加载 Toss 组件",
-      "widgetNotReady": "支付界面尚未就绪。",
-      "widgetErrorRequest": "支付请求失败",
-      "widgetOpening": "正在打开…",
-      "widgetPay": "支付测试金额（{amount} KRW）",
-      "widgetLoading": "正在加载支付方式…",
-      "orderNameDefault": "Elevate PoC (test)",
-      "orderNameWithSlug": "Elevate — {slug}",
-      "customerFallback": "成员",
       "successMeta": "支付成功",
       "externalCheckoutReturnTitle": "已从结账返回",
       "externalCheckoutReturnBody": "您已从支付页返回。若 1 分钟内资料库仍未显示已购内容，请刷新或重新打开该内容。",
       "externalCheckoutReturnLibrary": "打开资料库",
-      "successTitle": "支付已确认",
-      "successAlready": "该支付已确认。",
-      "successBody": "支付已受理。",
-      "failConfirmTitle": "无法确认",
       "failMeta": "支付失败",
       "failTitle": "支付已取消或失败",
       "failBody": "测试支付未完成。您可以从账单页重试。",
@@ -817,16 +792,9 @@
         "openLibrary": "浏览资料库",
         "noOrganization": "需要加入组织后才能查看购买记录。",
         "sectionUnlocks": "目录解锁",
-        "sectionToss": "Toss 测试支付",
-        "sectionTossHint": "在使用测试卡支付的工作区中会显示。",
         "unlockedAt": "解锁 {date}",
         "removedProduct": "目录项已删除或不可用",
-        "tossAmount": "{amount} KRW",
         "orgScopeFootnote": "记录按当前组织范围显示；同一组织的成员看到相同历史。"
-      },
-      "confirmErrors": {
-        "checkoutAllowlistDenied": "您的资料邮箱不在结账许可名单中，无法确认此笔支付。",
-        "checkoutAllowlistNoEmail": "资料中无邮箱，无法确认此笔支付。"
       }
     },
     "connectedAccounts": {
@@ -1349,11 +1317,70 @@
         "actions": "操作"
       },
       "actions": {
+        "openReview": "审阅 / 编辑",
         "approve": "批准",
         "requestChanges": "请求修改",
         "schedule": "定时",
         "publishNow": "立即发布",
         "retryMark": "标记重试"
+      },
+      "editor": {
+        "metaTitle": "审阅条目",
+        "backToQueue": "返回队列",
+        "intro": "直接编辑 Markdown、记录编辑备注，并仅本地重新计算审核门槛。保存不会改变状态，也不会调用外部 AI API。",
+        "titleLabel": "标题",
+        "summaryLabel": "摘要",
+        "bodyLabel": "正文（Markdown）",
+        "notesLabel": "编辑备注",
+        "notesHint": "团队可见的自由备注；也可能显示在队列提示中。",
+        "notesPlaceholder": "例：修正 §2 引用、删除重复链接…",
+        "save": "保存更改",
+        "recomputeGate": "重新计算审核门槛（本地）",
+        "gateHint": "仅应用与自动 review_gate 相同的规则（引用密度、结构、overcopy 启发式），不使用 LLM。",
+        "qualityScore": "质量分",
+        "workflowActions": "状态",
+        "reject": "驳回",
+        "localeLabel": "语言区域",
+        "idLabel": "ID",
+        "statusLabel": "状态",
+        "dialogTitle": "审核与编辑",
+        "dialogClose": "关闭",
+        "openFullPage": "打开完整页面",
+        "loadErrorForbidden": "您没有权限访问此条目。",
+        "loadErrorInvalidId": "条目 ID 无效。",
+        "loadErrorNotFound": "未找到条目。",
+        "loadErrorGeneric": "无法加载条目: {detail}"
+      },
+      "claude": {
+        "sectionTitle": "Claude（两步）",
+        "requestReview": "请求 Claude 审核",
+        "applyRevision": "用 Claude 应用修订",
+        "primaryHint": "在审核闸门尚未通过时，可一键完成审核与正文修订，或在下方分步操作。",
+        "primaryChainCta": "一键：请求审核并应用修订",
+        "primaryStepsDetails": "分步操作（审核 → 应用）",
+        "advancedDisclosureLabel": "Claude 两步（手动）",
+        "advancedHintWhenGatePassed": "审核闸门已通过 — 仅在需要调整简报或正文时使用下方两步。",
+        "advancedDisabledByPolicy": "审核通过后，Claude 已按运维策略关闭（CONTENT_OPS_CLAUDE_WHEN_GATE_PASSED）。",
+        "twoStepHint": "第 1 步将编辑简报写入 metadata；第 2 步根据该简报重写正文。请在服务器设置 CONTENT_OPS_ANTHROPIC_API_KEY。",
+        "successReview": "审核简报已保存到条目 metadata。",
+        "successRevision": "已根据最新简报更新正文。",
+        "successChain": "已保存审核简报，并根据新简报更新了正文。",
+        "truncationWarning": "（因 API 体积限制，仅发送了部分草稿。）",
+        "errors": {
+          "forbidden": "无权限。",
+          "invalid_id": "条目 ID 无效。",
+          "missing_api_key": "请在服务器环境变量中设置 CONTENT_OPS_ANTHROPIC_API_KEY。",
+          "not_found": "未找到条目。",
+          "anthropic_http": "Claude API 错误",
+          "empty_response": "Claude 返回为空。",
+          "no_brief": "请先执行「请求 Claude 审核」。",
+          "revision_failed_after_review": "审核已保存，但未能将修订应用到正文。",
+          "db_error": "数据库更新失败。",
+          "exception": "意外错误。",
+          "unknown": "错误：{code}"
+        },
+        "briefHeading": "最新 Claude 审核简报",
+        "briefEmpty": "尚无简报 — 请先请求审核。"
       },
       "gate": {
         "pass": "通过",
@@ -1386,6 +1413,19 @@
           "qualityScoreBelowThreshold": "质量分低于阈值",
           "hardBlockReasonDetected": "检测到硬阻断原因"
         }
+      },
+      "detailDialog": {
+        "trigger": "详情",
+        "triggerTooltip": "打开详情 — 审核门禁、时间、备注、更多操作与 Claude 步骤",
+        "title": "条目详情",
+        "description": "查看本行的审核门禁、时间戳、备注、更多操作与 Claude 步骤。",
+        "sectionGate": "审核门禁",
+        "timingHeading": "时间",
+        "created": "创建",
+        "updated": "更新",
+        "sectionNotes": "编辑备注",
+        "sectionMoreActions": "更多操作",
+        "close": "关闭"
       },
       "empty": "未找到队列项。"
     },
@@ -1600,7 +1640,7 @@
     "adminPurchaseAllowlist": {
       "metaTitle": "结账许可名单",
       "title": "结账许可名单",
-      "intro": "当 CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true 时，仅此处列出的邮箱可创建目录 Toss 支付意向。与营销候补名单无关；须与资料邮箱一致（规范化、不区分大小写）。",
+      "intro": "当 CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true 时，仅此处列出的邮箱可发起目录结账（Lemon / Polar）。与营销候补名单无关；须与资料邮箱一致（规范化、不区分大小写）。",
       "emailLabel": "邮箱",
       "noteLabel": "备注（可选）",
       "add": "添加邮箱",

@@ -8,7 +8,7 @@
 ## 로케일 (블로그 + 향후 전자책 SKU)
 
 출시 순서: **`en`** (기본 URL) → **`ko`** → **`ja`** → **`zh-CN`** → **`zh-TW`** (리소스가 부족하면 ko/en을 먼저 병행해도 됨).  
-필라 글은 결국 **모든 목표 로케일**에 두는 것이 SEO 패리티에 유리합니다. **M3** 플래그십 `the-prompt-is-your-product-surface`는 **en·ko·ja·zh-CN·zh-TW** MDX **✅ 2026-04** ([`tasks.md`](tasks.md) Phase M).
+필라 글은 결국 **모든 목표 로케일**에 두는 것이 SEO 패리티에 유리합니다. 과거 플래그십 `the-prompt-is-your-product-surface`(**en·ko·ja·zh-CN·zh-TW**)는 **2026-05-06 레포에서 제거**(운영 우선순위 조정). 현재 P1 롱폼 허브는 **`prompt-harness-beats-prompt-hacks`** (en·ko).
 
 ---
 
@@ -19,7 +19,7 @@
 | **P1** | **프롬프트 작성·모델** | 프롬프트를 다듬는 실무자; “어떤 모델”, 구조, 평가 | `#waitlist`, `/product/prompt-studio` | 향후 Prompt Studio 가이드 SKU; 블로그는 **맛보기·글 하나에 패턴 하나** |
 | **P2** | **가이드·디지털 러닝** | 형식을 비교하는 구매 담당; 구매 전 신뢰 | `/product/ebooks-and-guides`, Library 스토리 | **`content_products`** 전자책/가이드 행과 매핑; 블로그는 **발췌, 한 강, 목차 슬라이스** |
 | **P3** | **일하는 방식의 AI (워크플로)** | 팀 리드; 엔터프라이즈 세일즈 없이 생산성 프레이밍 | Contact, `#waitlist` | 가벼운 B2B 내러티브; 나중에 **번들** SKU |
-| **P4** | **신뢰·데이터·조직 맥락** | 보안을 중시하는 중소기업; 듀얼 GTM 씨앗 | Signup, Compliance/Security 페이지 | **조직 결제** 스토리 보강; MICE는 건드리지 않음 |
+| **P4** | **신뢰·데이터·조직 맥락** | 보안을 중시하는 중소기업; 듀얼 GTM 씨앗 | Signup, Compliance/Security 페이지 | **조직 결제** 스토리 보강 |
 | **P5** | **빌드 인 퍼블릭·SEO** | 개발자·얼리어답터; 투명성 | 블로그 인덱스, `#waitlist` | 메타 콘텐츠; **P1–P2로 클러스터 링크** |
 
 **규칙:**
@@ -66,7 +66,7 @@
 
 | 주 시작일 | 로케일 우선순위 | 필라 | 작업 제목·각도 | 주요 CTA | 상태 |
 |-----------|----------------|------|----------------|----------|------|
-| 2026-04-07 | en → ko | P1 | 블로그 첫 글: 프롬프트=제품 표면·GTM 관점 (Prompt Studio·대기명단) | `#waitlist` | **shipped** (`the-prompt-is-your-product-surface`) |
+| 2026-04-07 | en → ko | P1 | 블로그 첫 글: 프롬프트=제품 표면·GTM 관점 (Prompt Studio·대기명단) | `#waitlist` | **retired** (MDX 제거 2026-05-06; URL 404 예상) |
 | 2026-04-13 | en | P2 | 긴 채팅 스레드보다 가이드가 나은 이유 (Library / 전자책 스토리) | `/product/ebooks-and-guides` | idea |
 | 2026-04-20 | ko | P1 | 모델 고르기 전에: 작업 유형별 체크리스트 (짧은 실무 팁) | `#waitlist` | idea |
 | 2026-04-27 | en | P5 | 우리가 배포한 것: 블로그 분석 + 대기명단 루프 (빌드 인 퍼블릭) | 블로그 인덱스 + `#waitlist` | idea |

@@ -7,7 +7,7 @@ alwaysApply: false
 # Memory Bank Guide — Elevate
 
 > **상세 가이드**: `memory-bank/README.md`  
-> **AI 진입점**: `docs/AI_ORCHESTRATION.md` (요약: `docs/AI_USAGE.md`)
+> **AI 진입점**: `docs/AI_ORCHESTRATION.md` **§2** 하네스 + 요약 `docs/AI_USAGE.md`
 
 ---
 
@@ -18,7 +18,7 @@ alwaysApply: false
 ```
 1. memory-bank/activeContext.md → 현재 페이즈
 2. memory-bank/tasks.md → 우선순위·체크리스트 (SoT)
-3. INIT 모드로 시작 (workflow-modes.mdc)
+3. INIT: 출력 형식 `docs/AI_ORCHESTRATION.md` §2.2 (워크플로 모드 참고는 `workflow-modes.mdc`)
 ```
 
 ### 파일 우선순위
@@ -28,7 +28,7 @@ alwaysApply: false
 | 1 | tasks.md | 로드맵·페이즈 (SoT) |
 | 2 | activeContext.md | 현재 초점·다음 파일 |
 | 3 | progress.md | 완료/남은 일 |
-| 4 | domainKnowledge.md | MICE 용어 |
+| 4 | domainKnowledge.md | AI 피벗 조직·카탈로그 메모 |
 | 5 | creative-architecture.md | 스키마·라우트·결정 |
 | 6 | techStack.md | 스택·환경 변수 |
 | 7 | `docs/AI_EXPERT_PROMPTS.md` | 전문가 의사결정·Memory Bank 강제 로드 복붙 블록 |

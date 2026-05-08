@@ -45,4 +45,4 @@ Commercial loop: **e-books & guides** in Library remain the wedge; Studio drives
 
 - North Star: `memory-bank/creative-elevate-ai-pivot.md`
 - Funnel: `docs/CONTENT_FUNNEL.md`
-- Payments PoC: `docs/adr/ADR-001-toss-payments-poc.md`
+- Payments (catalog): `docs/adr/ADR-004-lemon-squeezy-global-payments.md` · rails: `docs/adr/ADR-005-payment-rails-lemon-primary-toss-deferred.md` · historical Toss PoC: `docs/adr/ADR-001-toss-payments-poc.md`

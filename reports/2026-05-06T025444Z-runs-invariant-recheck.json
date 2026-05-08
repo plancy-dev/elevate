@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-05-06T02:54:45.147Z",
+  "command": "pnpm run content-ops:runs-invariant-check",
+  "lookbackHours": 168,
+  "heartbeat": {
+    "level": "green",
+    "lookbackHours": 168,
+    "rowCount": 98,
+    "lastAnyRunAt": "2026-05-04T06:22:32.209285+00:00",
+    "hoursSinceAny": 44,
+    "lastScheduledRunAt": "2026-05-04T04:40:40.890642+00:00",
+    "hoursSinceScheduled": 46,
+    "countsByTrigger": {
+      "manual": 80,
+      "scheduled": 18
+    },
+    "scheduledByAutomationSource": {
+      "cursor": 17,
+      "vercel-cron": 1
+    },
+    "manualOnlyPath": false,
+    "scheduledWithoutAutomationSource": 0
+  },
+  "runsInvariant": {
+    "status": "PASS",
+    "reason": "runs_and_heartbeat_within_expected_bounds"
+  },
+  "consecutiveScheduledDaysUtc": {
+    "queryWindowDays": 14,
+    "scheduledDaysUtc": [
+      "2026-05-02",
+      "2026-05-03",
+      "2026-05-04"
+    ],
+    "scheduledRunCountInWindow": 18,
+    "maxConsecutiveUtcDaysWithScheduled": 3,
+    "meetsSevenConsecutiveCalendarDays": false,
+    "note": "Distinct UTC calendar days with ≥1 content_runs where trigger_type=scheduled; max streak counts consecutive days in sorted list."
+  }
+}

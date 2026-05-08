@@ -22,6 +22,7 @@
    - `migrations/037_profiles_dashboard_access.sql` — **`profiles.dashboard_access`** boolean; required for `/dashboard` gate in the app
    - `migrations/042_content_ebook_delivery_and_first_open.sql` — ebook delivery mode + first-open audit table
    - `migrations/043_catalog_purchase_allowlist.sql` — optional catalog checkout email gate
+   - `migrations/052_drop_mice_legacy_tables.sql` — **destructive** (run only after backup): drops legacy MICE tables (`events`, `venues`, `sessions`, `attendees`, `session_attendees`) and related enums. Apply in Supabase SQL Editor or CLI, then run **`pnpm db:types`**. **Operator checklist:** [`docs/operations/RUNBOOK-drop-mice-schema-052.md`](../docs/operations/RUNBOOK-drop-mice-schema-052.md).
 
 Who may open **`/dashboard`** is decided by **`profiles.dashboard_access`** (see `src/lib/auth/dashboard-access.ts` and [`docs/DEVELOPMENT.md`](../docs/DEVELOPMENT.md) § Dashboard access). The **`waitlist_signups`** and **`prompt_studio_beta_allowlist`** tables are used for other product gates (e.g. marketing / Prompt Studio beta), not for the dashboard shell.
 

@@ -9,6 +9,7 @@ This file is a **Cal.com-inspired design reference** for agents and humans build
 | **App shell** (`(dashboard)`, `(admin)`) | Neutral surfaces, spacing rhythm, shadow depth (ring + diffuse) | Keep **product primary blue** (`--primary`, IBM-style); do not replace the whole shell with Cal’s charcoal CTA-only system. |
 | **Marketing** (`[locale]/(marketing)`) | Monochrome confidence, generous section spacing | Often combined with **warm cream** marketing chrome where components already use `variant="marketing"` and `--marketing-*` tokens. |
 | **Primitives** | Card elevation, radius scale, focus as keyboard-only affordance | `Button` / `FieldSelect` use **`focus-visible`**; `Card` uses `shadow-card` from tokens tuned toward Cal-like multi-layer elevation. |
+| **Agent workflow** | “무엇을 읽고·언제 검증하는가”는 UI 레퍼런스 밖 규약 | 허브 단일 진술 **[`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) §2** · 디자인·엔지 리뷰 순서 **[`docs/design/QUALITY_PIPELINE.md`](docs/design/QUALITY_PIPELINE.md)** |
 
 A **CLI snapshot** from `npx getdesign@latest add cal` is vendored at [`docs/design/third-party/cal-getdesign/DESIGN.md`](docs/design/third-party/cal-getdesign/DESIGN.md) for upstream diffing; customize the **root** `DESIGN.md` here as the project evolves.
 

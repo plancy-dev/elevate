@@ -6,7 +6,7 @@ type AdminClient = SupabaseClient<Database>;
 
 /**
  * Inserts org entitlement for a content product (idempotent).
- * Call after payment confirmation when `toss_payment_intents.content_product_id` is set.
+ * Call after hosted checkout (e.g. Lemon) confirms purchase for a catalog product.
  */
 export async function grantOrganizationContentEntitlement(
   admin: AdminClient,

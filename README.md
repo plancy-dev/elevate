@@ -2,7 +2,7 @@
 
 **AI adoption and workflow platform (pivot in progress).**
 
-Elevate helps teams turn **measurable AI outcomes** into repeatable workflows: premium guides and templates today; **organization-scoped** access, billing, and (roadmap) agent workspaces. The codebase still contains **legacy MICE** (meetings/events) modules for backward compatibility; new work follows [`memory-bank/creative-elevate-ai-pivot.md`](memory-bank/creative-elevate-ai-pivot.md).
+Elevate helps teams turn **measurable AI outcomes** into repeatable workflows: premium guides and templates today; **organization-scoped** access, billing, and (roadmap) agent workspaces. Product direction follows [`memory-bank/creative-elevate-ai-pivot.md`](memory-bank/creative-elevate-ai-pivot.md). Historical MICE-era tables were **removed from the schema** via migration [`052_drop_mice_legacy_tables.sql`](supabase/migrations/052_drop_mice_legacy_tables.sql) after operator backup — run `pnpm db:types` when the migration is applied.
 
 ## Tech Stack
 
@@ -29,6 +29,7 @@ Elevate helps teams turn **measurable AI outcomes** into repeatable workflows: p
 | [`.github/DESIGN.md`](.github/DESIGN.md) | Studio scene render — GitHub epic/labels pointer [#1](https://github.com/plancy-dev/elevate/issues/1) |
 | [`docs/DEV_PROCESS_GITHUB.md`](docs/DEV_PROCESS_GITHUB.md) | Issues/PR/gh CLI + gstack — 원격 작업 큐·`pnpm issues:studio` |
 | [`docs/AI_ORCHESTRATION.md`](docs/AI_ORCHESTRATION.md) | AI 도구 레이어 (gstack·Memory Bank·규칙) |
+| [`docs/MEMORY_BANK_SKILL_GUIDE.md`](docs/MEMORY_BANK_SKILL_GUIDE.md) | **Cursor:** `@elevate-work-harness` + 목표 한 줄로 세션 시작 (통합 하네스; 온보딩 한 줄 초안 § 포함) |
 | [`docs/AI_AGENT_MATURITY_REPORT.md`](docs/AI_AGENT_MATURITY_REPORT.md) | AI 에이전트 활용 성숙도·벤치마크·점수 (리포트) |
 | [`docs/AUTOMATIONS_NO_SLACK_OPS.md`](docs/AUTOMATIONS_NO_SLACK_OPS.md) | Slack/Linear 없이 운영하는 Cloud Agent 자동화 3종 |
 | [`docs/MANUAL_OPERATOR_CHECKLIST.md`](docs/MANUAL_OPERATOR_CHECKLIST.md) | Toss / Supabase / PostHog / env 수동 작업 체크리스트 |
@@ -91,8 +92,8 @@ supabase/migrations/            # Database migration SQL
 - **Multi-tenant**: Organization-scoped data with Supabase RLS
 - **Roles**: admin, organizer, coordinator, viewer
 - **Data model (current)**:
-  - **New**: content catalog & org entitlements (see migration `009`)
-  - **Legacy MICE**: Organizations → Events → Sessions → Attendees (deprecated for new features)
+  - **Core**: profiles, organizations, content catalog / entitlements, Studio productions, Newsletter / content ops
+  - **MICE-era domain** (`events`, `venues`, `sessions`, `attendees`, related enums): **dropped** — see migration `052_drop_mice_legacy_tables.sql`; regenerate types after apply
 
 ## Design System
 

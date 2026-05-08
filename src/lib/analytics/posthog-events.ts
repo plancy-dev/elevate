@@ -43,6 +43,13 @@ export const PostHogEvent = {
   ELEVATE_STUDIO_EPISODE_RUNWAY_RENDER: "elevate_studio_episode_runway_render",
   ELEVATE_STUDIO_EPISODE_YOUTUBE_UPLOAD_STUB_CLICKED:
     "elevate_studio_episode_youtube_upload_stub_clicked",
+  /**
+   * Admin content queue — Claude review→revision chain (server action).
+   * Props: `content_item_id`, `gate_passed` (boolean | null), `chain_seq` (number); optional `truncation`, `fail_code`.
+   */
+  CONTENT_QUEUE_CLAUDE_CHAIN_STARTED: "content_queue_claude_chain_started",
+  CONTENT_QUEUE_CLAUDE_CHAIN_COMPLETED: "content_queue_claude_chain_completed",
+  CONTENT_QUEUE_CLAUDE_CHAIN_FAILED: "content_queue_claude_chain_failed",
 } as const;
 
 /** `elevate_marketing_cta_click` — stable `cta_id` values */

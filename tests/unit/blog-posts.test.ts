@@ -5,53 +5,48 @@ vi.mock("server-only", () => ({}));
 import { routing } from "@/i18n/routing";
 import { getAllPostMetaForLocale, getPostBySlug } from "@/lib/blog/posts";
 
-/** en+ko: release note + flagship + automation post + access-tier sample posts. ja/zh: flagship translation + legacy samples (no release MDX yet). */
-const EN_KO_SLUGS = [
+/** en: pipeline-published longform (+ en-only slug). ko: harness + direction posts. ja/zh: welcome + SEO slice (no en-only slugs). */
+const EN_SLUGS = [
+  "cursor-session-discipline-that-ships",
+  "elevate-first-vertical-content-focus",
+  "operator-grade-execution-moat-for-ai-enabled-teams-from-signal-to-operating-adva",
   "prompt-harness-beats-prompt-hacks",
-  "release-0-2-0",
-  "sample-member-account-required",
-  "sample-premium-subscriber-only",
-  "sample-public-open-notes",
-  "the-prompt-is-your-product-surface",
 ].sort();
-const JA_ZH_SLUGS = ["seo-and-waitlist", "the-prompt-is-your-product-surface", "welcome"].sort();
+const KO_SLUGS = [
+  "cursor-session-discipline-that-ships",
+  "elevate-first-vertical-content-focus",
+  "prompt-harness-beats-prompt-hacks",
+].sort();
+const JA_ZH_SLUGS = ["seo-and-waitlist", "welcome"].sort();
 
 describe("blog posts (locale MDX)", () => {
-  it("lists expected slugs per locale (en+ko flagship vs ja/zh flagship + samples)", () => {
+  it("lists expected slugs per locale (en+ko vs ja/zh)", () => {
     for (const locale of routing.locales) {
       const slugs = getAllPostMetaForLocale(locale)
         .map((p) => p.slug)
         .sort();
-      const expected = locale === "en" || locale === "ko" ? EN_KO_SLUGS : JA_ZH_SLUGS;
+      const expected =
+        locale === "en"
+          ? EN_SLUGS
+          : locale === "ko"
+            ? KO_SLUGS
+            : JA_ZH_SLUGS;
       expect(slugs).toEqual(expected);
     }
   });
 
-  it("loads body and meta for flagship post in English", () => {
-    const post = getPostBySlug("the-prompt-is-your-product-surface", "en");
+  it("loads body and meta for English longform (prompt harness)", () => {
+    const post = getPostBySlug("prompt-harness-beats-prompt-hacks", "en");
     expect(post).not.toBeNull();
     expect(post!.meta.title.length).toBeGreaterThan(0);
-    expect(post!.meta.ogImage).toBe(
-      "/blog/the-prompt-is-your-product-surface/hero.jpg",
-    );
-    expect(post!.body).toContain("Prompt Studio");
-    expect(post!.body).toContain("/blog/the-prompt-is-your-product-surface/hero.jpg");
+    expect(post!.meta.ogImage).toBeUndefined();
+    expect(post!.body).toContain("Prompt hacks");
   });
 
-  it("loads Korean flagship post", () => {
-    const post = getPostBySlug("the-prompt-is-your-product-surface", "ko");
+  it("loads Korean prompt harness post", () => {
+    const post = getPostBySlug("prompt-harness-beats-prompt-hacks", "ko");
     expect(post).not.toBeNull();
-    expect(post!.body).toContain("Prompt Studio");
-  });
-
-  it("loads v0.2.0 release posts (en + ko)", () => {
-    const en = getPostBySlug("release-0-2-0", "en");
-    const ko = getPostBySlug("release-0-2-0", "ko");
-    expect(en).not.toBeNull();
-    expect(ko).not.toBeNull();
-    expect(en!.meta.ogImage).toBe("/blog/release-0-2-0/hero.jpg");
-    expect(en!.body).toContain("0.2.0");
-    expect(ko!.body).toContain("0.2.0");
+    expect(post!.body).toContain("하네스");
   });
 
   it("returns null for unknown slug", () => {

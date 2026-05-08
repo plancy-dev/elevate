@@ -27,7 +27,7 @@ Production hostname (e.g. **`https://elevate.ai.kr`**) must be consistent across
 | **Supabase → Authentication → URL configuration** | **Site URL** = that same origin (e.g. `https://elevate.ai.kr`). |
 | **Redirect URLs** | Include at least: `https://elevate.ai.kr/**`, `https://elevate.ai.kr/auth/callback`, and local dev (`http://localhost:3000/**`, `http://localhost:3000/auth/callback`) if you test auth locally. Add preview deployment URLs if you use Supabase auth on Vercel previews. |
 | **Recovery / email templates** | If Supabase emails link to the Site URL root, ensure PKCE/code handling matches `src/proxy.ts` → `/auth/callback` flow (see `supabase/README.md`). |
-| **Payments (Toss)** | Success/fail URLs registered in the Toss dashboard must use the **same host** as `NEXT_PUBLIC_APP_URL`. See [`PHASE2_ENV.md`](./PHASE2_ENV.md). |
+| **Payments (Lemon / Polar)** | Hosted checkout return URLs and webhooks must use the **same public host** policy as `NEXT_PUBLIC_APP_URL` where applicable. See [`PHASE2_ENV.md`](./PHASE2_ENV.md), [`.env.local.example`](../.env.local.example). |
 
 After changing Site URL or redirects, smoke-test: sign-in, sign-up, password recovery, and (if enabled) checkout return URLs.
 
@@ -48,7 +48,7 @@ To add a new surface (e.g. blog CTA), add the string to `WAITLIST_SOURCE_VALUES`
 
 ## Blog (MDX)
 
-Posts live under **`content/blog/<locale>/<slug>.mdx`** (e.g. `content/blog/en/the-prompt-is-your-product-surface.mdx`). Each supported locale (`en`, `ko`, `ja`, `zh-CN`, `zh-TW`) has its own files—there is **no** automatic fallback to English at runtime. Use YAML front matter: `title`, `description`, `date` (`YYYY-MM-DD`); optional **`ogImage`** (public path, e.g. `/blog/<slug>/hero.jpg`) for post-specific **Open Graph / Twitter** images; optional **`heroPhotoCredit`** / **`heroNote`** for editorial metadata only (do **not** duplicate as a prose paragraph after the hero image—see `tests/unit/blog-body-builder-memo-guard.test.ts`). Slugs must match `^[a-z0-9]+(?:-[a-z0-9]+)*$`. Loading: `src/lib/blog/posts.ts`. Hero assets live under **`public/blog/<slug>/`** — avoid remote-only hero URLs (they can break). See [`docs/BLOG_POST_PIPELINE.md`](BLOG_POST_PIPELINE.md).
+Posts live under **`content/blog/<locale>/<slug>.mdx`** (e.g. `content/blog/en/prompt-harness-beats-prompt-hacks.mdx`). Each supported locale (`en`, `ko`, `ja`, `zh-CN`, `zh-TW`) has its own files—there is **no** automatic fallback to English at runtime. Use YAML front matter: `title`, `description`, `date` (`YYYY-MM-DD`); optional **`ogImage`** (public path, e.g. `/blog/<slug>/hero.jpg`) for post-specific **Open Graph / Twitter** images; optional **`heroPhotoCredit`** / **`heroNote`** for editorial metadata only (do **not** duplicate as a prose paragraph after the hero image—see `tests/unit/blog-body-builder-memo-guard.test.ts`). Slugs must match `^[a-z0-9]+(?:-[a-z0-9]+)*$`. Loading: `src/lib/blog/posts.ts`. Hero assets live under **`public/blog/<slug>/`** — avoid remote-only hero URLs (they can break). See [`docs/BLOG_POST_PIPELINE.md`](BLOG_POST_PIPELINE.md).
 
 Programmatic weekly generation (Cursor SDK): [`docs/BLOG_AUTOPUBLISH_SDK.md`](BLOG_AUTOPUBLISH_SDK.md).
 

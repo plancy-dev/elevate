@@ -1,5 +1,7 @@
 # REFLECT — ADR-013 PostHog §5 (2026-05-04 UTC, 번들 + MCP)
 
+**Update 2026-05-05:** PostHog MCP HogQL now shows **non-zero** `elevate_marketing_cta_click` (13 all-time, 8 distinct `cta_id` in 7d). See **[`reflect-adr013-posthog-2026-05-05.md`](./reflect-adr013-posthog-2026-05-05.md)** + [`posthog-mcp-recheck-2026-05-05.json`](./posthog-mcp-recheck-2026-05-05.json). The §2 table below is a **historical** MCP snapshot.
+
 **SoT:** [`docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md`](../docs/adr/ADR-013-marketing-cta-instrumentation-phase-1.md) Decision **#5** (7d non-zero by `cta_id`) · **#5a** (build-time `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`).
 
 ## 1) Production client bundle (`elevate.ai.kr`)

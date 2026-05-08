@@ -1,18 +1,13 @@
 /**
- * Machine codes returned by `createTossPaymentIntent` for client i18n
- * (`Dashboard.billing.errors.*` and `Dashboard.actionErrors.*`).
+ * Machine codes for catalog checkout allowlist gates (`Dashboard.billing.errors.*`).
  */
 export const PaymentIntentErrorCode = {
-  pocAmountOnly: "pocAmountOnly",
-  missingWidgetKey: "missingWidgetKey",
-  catalogUnknown: "catalogUnknown",
-  catalogPriceMismatch: "catalogPriceMismatch",
-  paymentServerConfig: "paymentServerConfig",
-  intentCreateFailed: "intentCreateFailed",
   /** `CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true` and email not on `catalog_purchase_allowlist` */
   checkoutAllowlistDenied: "checkoutAllowlistDenied",
   /** Profile has no email — cannot match allowlist */
   checkoutAllowlistNoEmail: "checkoutAllowlistNoEmail",
+  /** Fallback when a checkout URL carries an unknown `error` code */
+  generic: "generic",
 } as const;
 
 export type PaymentIntentErrorCode =

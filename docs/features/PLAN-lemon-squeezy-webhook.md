@@ -2,7 +2,7 @@
 
 ## Goal
 
-When a **paid** Lemon Squeezy order is created, grant **`organization_content_entitlements`** for the correct `content_products` row, idempotently, with audit logs comparable to the Toss webhook path.
+When a **paid** Lemon Squeezy order is created, grant **`organization_content_entitlements`** for the correct `content_products` row, idempotently, with audit logs on the grant path.
 
 ## Endpoint
 
@@ -39,7 +39,7 @@ When a **paid** Lemon Squeezy order is created, grant **`organization_content_en
    - Profile matching org + buyer email when possible; else org `admin` profile; else any org member.
 
 4. **Catalog allowlist** (`CATALOG_CHECKOUT_REQUIRE_ALLOWLIST=true`)  
-   - If `profiles.id` known: same check as Toss webhook.  
+   - If `profiles.id` known: same allowlist check as the Lemon webhook server path (`assertCatalogCheckoutAllowlist` semantics).  
    - Else: allowlist check on normalized buyer email.
 
 ## Idempotency
@@ -66,4 +66,4 @@ When a **paid** Lemon Squeezy order is created, grant **`organization_content_en
 - `src/lib/payments/lemon-squeezy-signature.ts`  
 - `src/lib/payments/lemon-squeezy-webhook.ts`  
 - `src/lib/payments/content-entitlement.ts`  
-- Toss reference: `src/app/api/webhooks/toss/route.ts`
+- **Legacy (removed):** Toss PoC webhook was `src/app/api/webhooks/toss/route.ts` — not in tree; see [`docs/adr/ADR-001-toss-payments-poc.md`](../adr/ADR-001-toss-payments-poc.md).

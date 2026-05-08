@@ -57,7 +57,7 @@ Operators (including founders dogfooding) need a **durable place inside Elevate*
 
 | Need | Existing code / pattern |
 |------|-------------------------|
-| Org-scoped RLS | `public.user_organization_id()`, patterns in `007_audit_logs.sql`, `008_toss_payment_intents.sql` |
+| Org-scoped RLS | `public.user_organization_id()`, patterns in `007_audit_logs.sql`; `008_toss_payment_intents.sql` is **legacy DB only** (no app route) |
 | Dashboard shell, sidebar | `src/components/dashboard/sidebar.tsx`, `(dashboard)/dashboard/*` |
 | i18n | `messages/*.json` Dashboard namespace |
 | Auth | Supabase session in server components |

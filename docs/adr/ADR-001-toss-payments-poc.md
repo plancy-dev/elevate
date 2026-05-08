@@ -2,7 +2,9 @@
 
 ## Status
 
-PoC implemented (Elevate app): 결제위젯 + **승인 API** + `toss_payment_intents` + `payment.confirmed` 감사 로그; 웹훅은 `PAYMENT_STATUS_CHANGED` 처리(선택). 실제 상용 과금·계약 전 단계.
+**Superseded in app (2026-05):** Toss widget, server actions, and `POST /api/webhooks/toss` were **removed** from the codebase. **`public.toss_payment_intents`** (`008_toss_payment_intents.sql`) may remain in deployed databases as a **legacy table** only; current checkout is **Lemon Squeezy + Polar** — [`ADR-005`](./ADR-005-payment-rails-lemon-primary-toss-deferred.md).
+
+**Original PoC (archived):** 결제위젯 + **승인 API** + `toss_payment_intents` + `payment.confirmed` 감사 로그; 웹훅은 `PAYMENT_STATUS_CHANGED` 처리(선택). 실제 상용 과금·계약 전 단계.
 
 ## Context
 
