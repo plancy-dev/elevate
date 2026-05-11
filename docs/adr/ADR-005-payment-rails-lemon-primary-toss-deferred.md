@@ -36,3 +36,4 @@
 
 - [`docs/features/PLAN-g0-creator-commerce-decisions.md`](../features/PLAN-g0-creator-commerce-decisions.md)  
 - [`docs/CONTENT_FUNNEL.md`](../CONTENT_FUNNEL.md)  
+- ADR-017 (Vertical Payment Localization) — supersedes Studio-level USD lock for vertical products. Studio-level lock unchanged.
