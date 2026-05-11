@@ -52,8 +52,10 @@ next-env.d.ts
 # Optional gstack vendored skills (clone via docs/GSTACK.md; not required for CI)
 .agents/
 
-# Local Claude/Cursor workspace metadata
-.claude/
+# Local Claude/Cursor workspace metadata (per-user). Track shared subdirs only.
+.claude/worktrees/
+.claude/settings.local.json
+.claude/cache/
 
 # Supabase CLI local cache
 supabase/.temp/
