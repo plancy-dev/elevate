@@ -48,6 +48,12 @@ Decision trigger: <observation that would lock or kill this hypothesis>
 - Concrete example: ADR-017 codified KRW vertical-level payment localization because the audience trust scar (Korean self-employed reading USD price as "foreign / not for me") was a (d)-class friction.
 - Pattern: when (a)/(b)/(c) don't explain drop-off in an audience with a known trust scar category, check (d) before adding more UX polish.
 
+## PostHog access pattern (Phase 1)
+
+현재 (Phase 1): PostHog data access는 *manual paste pattern*. Founder 또는 컨트롤타워가 PostHog dashboard에서 read → chat에 paste → skill이 text-level analysis.
+
+Phase 2+: MCP server (PostHog 공식) 또는 Bash tool (curl) 추가 시 *autonomous access* 가능. allowed-tools update 필요.
+
 ## References
 
 - ADR-013 (marketing CTA + PostHog instrumentation — 4-event spec, funnel reporting)
