@@ -1,6 +1,6 @@
 # Elevate — Operations & content mode (2026 Q2)
 
-**Effective:** 2026-05-06 · **Horizon:** ~3 months (revisit with sajangnote progress + Elevate audience data).
+**Effective:** 2026-05-06 · **Horizon:** ~3 months (revisit with 가게점수 progress + Elevate audience data).
 
 This file is the **SoT for “what we do / don’t do on Elevate”** during the content-channel phase. Changes here supersede ad-hoc chat; substantive updates should be dated at the top or in a short changelog section.
 
@@ -10,17 +10,17 @@ This file is the **SoT for “what we do / don’t do on Elevate”** during the
 
 Elevate pauses vertical AI **product build** and enters **content-channel mode**: blog 3×/week (Mon/Wed/Fri), newsletter 1×/week (Thu), SEO + email list, INIT/STAB ops only.
 
-The **first vertical** is **`sajangnote`** (1인 카페·디저트·베이커리 사장님 대상 **marketing diagnosis** AI) — but as a **separate product**: new domain, new repo, new brand, **no code import from Elevate**, **no sajangnote work in this repo** (separate Cursor agent / progress).
+The **first vertical** is **`가게점수`** (1인 카페·디저트·베이커리 사장님 대상 **marketing diagnosis** AI) — but as a **separate product**: new domain, new repo, new brand, **no code import from Elevate**, **no 가게점수 work in this repo** (separate Cursor agent / progress).
 
-Elevate does **not** run sajangnote; it shares **direction and builder insights** with the Elevate audience.
+Elevate does **not** run 가게점수; it shares **direction and builder insights** with the Elevate audience.
 
 ---
 
-## Elevate vs sajangnote (boundary)
+## Elevate vs 가게점수 (boundary)
 
-| | Elevate (this repo) | sajangnote |
+| | Elevate (this repo) | 가게점수 |
 |---|---------------------|------------|
-| Domain / brand | elevate.ai.kr (existing) | sajangnote (separate) |
+| Domain / brand | elevate.ai.kr (existing) | 가게점수 (separate) |
 | Repo | This monorepo | **Separate** — fresh start |
 | Cursor / agent | Elevate sessions only | Own sessions; **do not touch from Elevate** |
 | Audience | Generic professionals, builders, AI workflow ICP | 1인 카페·디저트·베이커리 사장님 |
@@ -28,15 +28,15 @@ Elevate does **not** run sajangnote; it shares **direction and builder insights*
 
 **Rules**
 
-- No **advertorial** for sajangnote on Elevate. Natural **mentions** when topic fits = OK.
+- No **advertorial** for 가게점수 on Elevate. Natural **mentions** when topic fits = OK.
 - **Cross-promotion** to another list only with **explicit consent** (signup option or separate form).
 - **One** post-launch **glass announcement** on Elevate = OK; after that, light mentions only.
-- Product detail, pricing, demo = **sajangnote’s** channels.
+- Product detail, pricing, demo = **가게점수’s** channels.
 
-**sajangnote (concept only — not built here)**
+**가게점수 (concept only — not built here)**
 
 - Paste shop info → scored diagnosis (e.g. “47/100”) + action plan.
-- Commercial shape (informing market positioning only): $7 = one diagnosis + 30-day access + one free re-diagnosis (exact packaging lives in sajangnote repo).
+- Commercial shape (informing market positioning only): $7 = one diagnosis + 30-day access + one free re-diagnosis (exact packaging lives in 가게점수 repo).
 
 ---
 
@@ -44,7 +44,7 @@ Elevate does **not** run sajangnote; it shares **direction and builder insights*
 
 Korean “desire axis” verticals with strong incumbents (comparison, wealth, appearance, kids’ education, etc.) show **saturation**: domain leaders already ship AI deeply (examples named in strategy docs: e.g. 자소설닷컴, 콴다, 메링, 잼페이스, 운세박사-class players — not an exhaustive competitive report in this file).
 
-The **gap** we want to explore first is **self-employed / small-business unified AI assistant**, narrowed to **solo café · dessert · bakery** owners (audience-first + parallel cash-flow **16-week** path; detailed market notes will live under **sajangnote** `docs/decisions/`, not here).
+The **gap** we want to explore first is **self-employed / small-business unified AI assistant**, narrowed to **solo café · dessert · bakery** owners (audience-first + parallel cash-flow **16-week** path; detailed market notes will live under **가게점수** `docs/decisions/`, not here).
 
 ---
 
@@ -73,7 +73,7 @@ Aligns with **ADR-012 (media-first)** and **commits harder** to it: **audience-f
 - **Newsletter** — **1×/week** (Thursday).
 - **SEO** + **email list** growth.
 - **INIT/STAB** ops: incidents, dependency updates, PostHog monitoring, whitelist signups.
-- **No sajangnote implementation** in this codebase.
+- **No 가게점수 implementation** in this codebase.
 
 ---
 
@@ -86,7 +86,7 @@ Aligns with **ADR-012 (media-first)** and **commits harder** to it: **audience-f
 5. Founder/builder insight — decisions, frameworks, failures.
 6. AI trend curation — weekly finds + Korea applicability.
 
-**Do not overweight** 소상공인-only topics here; that ICP is **sajangnote’s** channel. Elevate stays **generic professional** audience.
+**Do not overweight** 소상공인-only topics here; that ICP is **가게점수’s** channel. Elevate stays **generic professional** audience.
 
 ---
 
@@ -109,7 +109,7 @@ Aligns with **ADR-012 (media-first)** and **commits harder** to it: **audience-f
 - Headline: curiosity + clarity.
 - **SEO:** 1–3 keywords woven naturally.
 - **PostHog:** if the post has a primary CTA, tracking must follow [`docs/CONTENT_FUNNEL.md`](../docs/CONTENT_FUNNEL.md) / ADR-013 patterns (waitlist links already instrumented on marketing surfaces where applicable).
-- **0%** advertorial for sajangnote.
+- **0%** advertorial for 가게점수.
 
 ---
 
@@ -119,7 +119,7 @@ Aligns with **ADR-012 (media-first)** and **commits harder** to it: **audience-f
 - **Main essay** — one deep piece (best post of the week **or** newsletter-only).
 - **Curation** — 3–5 external links + one-line notes.
 - **Founder note** — 1–2 short paragraphs (shipping, doubt, learnings).
-- **CTA** — blog / social / sajangnote launch alert — **one light line** at the end.
+- **CTA** — blog / social / 가게점수 launch alert — **one light line** at the end.
 
 Target **1,500–2,500 characters** (Korean newsletter norm); align outline on **Sunday** plan.
 

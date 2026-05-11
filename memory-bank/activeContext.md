@@ -8,7 +8,7 @@
 
 **Docs harness (2026-05-07):** `tasks.md` **Docs harness** 행 갱신 완료; **스크립트 미실행** = **Ops 게이트 완료 아님**(문서 유지보수) — [`docs/AI_ORCHESTRATION.md`](../docs/AI_ORCHESTRATION.md) §2.5.
 
-**Product BUILD pause:** #60·#61·#62·#73, Prompt Studio MVP — deferred per operations doc. **sajangnote** 별도 레포 — Elevate 세션에서 구현 **금지**.
+**Product BUILD pause:** #60·#61·#62·#73, Prompt Studio MVP — deferred per operations doc. **가게점수** 별도 레포 — Elevate 세션에서 구현 **금지**.
 
 **North Star:** [`creative-elevate-ai-pivot.md`](../memory-bank/creative-elevate-ai-pivot.md) — 기록 유지, **실행 일시 중단** (문서 상단 배너).
 

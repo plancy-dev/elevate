@@ -4,7 +4,7 @@
 
 **Authority:** [`memory-bank/operations-mode-2026-q2.md`](../memory-bank/operations-mode-2026-q2.md) · **Weekly plan:** [`memory-bank/content-plan-weekly.md`](../memory-bank/content-plan-weekly.md).
 
-**Commitment:** Elevate = **content channel** (blog 3×/wk, newsletter 1×/wk, SEO + list, INIT/STAB ops). **No new product features / new pages / design refactors / new ADRs** (~3 months) except maintenance & incidents. **sajangnote** = separate repo — **no implementation work in this repo.** North Star doc [`creative-elevate-ai-pivot.md`](../memory-bank/creative-elevate-ai-pivot.md) **paused execution**, record retained.
+**Commitment:** Elevate = **content channel** (blog 3×/wk, newsletter 1×/wk, SEO + list, INIT/STAB ops). **No new product features / new pages / design refactors / new ADRs** (~3 months) except maintenance & incidents. **가게점수** = separate repo — **no implementation work in this repo.** North Star doc [`creative-elevate-ai-pivot.md`](../memory-bank/creative-elevate-ai-pivot.md) **paused execution**, record retained.
 
 **Evidence — direction post (2026-05-06):** [`content/blog/ko/elevate-first-vertical-content-focus.mdx`](../content/blog/ko/elevate-first-vertical-content-focus.mdx) · [`content/blog/en/elevate-first-vertical-content-focus.mdx`](../content/blog/en/elevate-first-vertical-content-focus.mdx).
 

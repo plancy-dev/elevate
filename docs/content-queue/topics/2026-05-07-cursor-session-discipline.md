@@ -2,7 +2,7 @@
 
 **Status:** EN + KO MDX in repo · **Type:** `blog` · **Primary axis:** 1 — AI workflow
 
-**Why this topic (one line):** Monday’s post set direction; Wednesday should ship something **immediately useful** to builders—how we **finish** a Cursor session instead of opening 30 tabs and stalling. It matches **operations mode** (shipping writing/features in tight loops) without selling sajangnote.
+**Why this topic (one line):** Monday’s post set direction; Wednesday should ship something **immediately useful** to builders—how we **finish** a Cursor session instead of opening 30 tabs and stalling. It matches **operations mode** (shipping writing/features in tight loops) without selling 가게점수.
 
 **Weekly plan pointer:** [`memory-bank/content-plan-weekly.md`](../../../memory-bank/content-plan-weekly.md)
 
