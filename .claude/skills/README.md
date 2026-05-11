@@ -43,6 +43,15 @@ When multiple skills could match, the canonical routing:
 | "Vertical pricing ADR" | `gagejumsu-vertical` → `strategic-architect` | `strategic-architect` alone | Chain: vertical context first, then ADR formalism |
 | "Sprint synthesis" | `control-tower` | (no alternative) | Cross-session synthesis is control-tower's primary scope |
 
+## Cross-session reference via Drive
+
+Session isolation 문제 80% solve mechanism.
+See `docs/operations/drive-integration.md`.
+
+Drive MCP server (`drivemcp.googleapis.com`)가 Anthropic account level에서 모든 session에 available. Critical files (ADRs / Operations / Essays / Dispatches)를 Drive에 mirror해두면 cross-session reference가 Drive URL share만으로 작동.
+
+Setup status: `docs/operations/drive-integration.md` table 참조.
+
 ## Phase 2+ deferred
 
 Phase 1 codifies skill bodies only. Future phases:
