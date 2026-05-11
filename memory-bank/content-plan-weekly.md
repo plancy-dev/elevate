@@ -30,7 +30,7 @@
 
 ## Thu 2026-05-08 — Newsletter draft (Week 1 mail)
 
-**SoT:** Mon 중심 + (prod `200`일 때만) Wed HTTPS 링크 + **sajagnote 비활성 홍보** + 대기명단 CTA. Elevate Q2 = 콘텐츠 채널 ([`memory-bank/tasks.md`](tasks.md) operations mode); **sajagnote는 별도 레포** — 본 메일에서 제품 세일즈·런치 일정 언급 금지.
+**SoT:** Mon 중심 + (prod `200`일 때만) Wed HTTPS 링크 + **가게점수 비활성 홍보** + 대기명단 CTA. Elevate Q2 = 콘텐츠 채널 ([`memory-bank/tasks.md`](tasks.md) operations mode); **가게점수는 별도 레포** — 본 메일에서 제품 세일즈·런치 일정 언급 금지.
 
 1. **Subject seed:** Elevate가 Q2에 왜 글과 리스트 우선으로 가는지 (한 줄 훅; 기능 릴리즈 날짜 없음).
 2. **Lead (3–4문장):** Mon 방향글 요지 — 미디어 퍼스트, 큰 기능 홍보 잠깐 접기, 쓸 가치 있는 글이 먼저.
