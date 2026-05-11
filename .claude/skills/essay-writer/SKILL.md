@@ -76,4 +76,3 @@ allowed-tools: Read, Glob, Grep, Edit, Write
 - Weekly Dispatch writing (use `dispatch-writer`)
 - Strategic decision-making behind the Essay (use `control-tower`)
 - Publish path / commit (use `code-reviewer`)
-- 9 카피 원칙 application without founder paste of principle list (don't invent)
