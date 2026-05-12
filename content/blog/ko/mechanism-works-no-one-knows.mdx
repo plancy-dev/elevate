@@ -1,0 +1,85 @@
+---
+title: "메커니즘은 작동하는데 결제가 0이었다"
+description: "결제 시스템도, 사이트도, 발행된 글 5개도 모두 작동했다. 단, 외부 customer는 0이었다. 5분의 audit이 알려준 L4의 진짜 의미."
+date: "2026-05-12"
+access_tier: "public"
+locale: "ko"
+tags:
+  - 솔로-파운더
+  - 빌드-다큐멘테이션
+  - 캐시-플로우
+  - 퍼널-감사
+---
+
+# 메커니즘은 작동하는데 결제가 0이었다
+
+*오늘 vertical을 publish하면서 발견한, cash flow의 진짜 깨진 layer.*
+
+---
+
+오늘 아침 Polar MCP를 처음 연결했다. 결제 시스템 dashboard에 들어간 건 반년 만이었다. 원해서 들어간 게 아니라 — 컨트롤타워가 들어가보라고 했다.
+
+5월 7일에 결제 한 건이 있었다. ₩9,900, 카페 진단 product. 친구가 테스트로 결제한 거였다. 환불됨. 외부 customer는 0건이었다.
+
+다시 정리하면 이렇다.
+
+- Product 4개 active (Monthly $5.99, Annual $47.99, Vertical 진단 ₩9,900, 베타 stage 2)
+- Polar checkout integration 작동 (5/7 결제가 그 증거)
+- 결제 페이지 → checkout → invoice → 환불 cycle 모두 정상
+- 외부 결제 0
+
+처음엔 "결제 시스템 어디가 망가졌나" 의심했다. 그래서 layer 별로 audit했다.
+
+## 5분 layer audit
+
+**L0 — 사이트 존재한다?** `gagejumsu.com`, `elevate.ai.kr` 둘 다 deploy되어 있었다.
+
+**L1 — Product description?** Elevate Polar description은 `null`이었다. 비어 있었다. 컨트롤타워가 솔로 사업자 대상으로 작성했는데, 사이트에 들어가보니 enterprise framing이었다. Audience 잘못 잡았다. 다시 작성했다.
+
+**L2 — Polar integration?** 완전히 작동. Pricing page에 Polar checkout direct link가 있다. 클릭 한 번이면 결제 flow.
+
+**L3 — Blog content?** 5개 essay 발행 (4/30 ~ 5/8). English only.
+
+**L4 — Traffic?** 0.
+
+여기서 멈췄다.
+
+> Cash flow 메커니즘이 broken 게 아니었다. 메커니즘이 작동하는 방을 만들었는데, 그 방에 사람을 부르지 않았다.
+
+## 방과 메커니즘
+
+L4 — 가장 외곽 layer. 가장 신경 안 쓴 layer. 그러나 나머지 모든 layer가 작동해도 L4가 0이면 cash flow는 0이다.
+
+오늘 한 일은 그래서 L4에 첫 publish 진행이었다. Vertical (카페 가게점수 진단 도구)를 Threads 한국 자영업 community에 카드뉴스 + 5-post thread 형태로 publish. Reply 1개 추가 — 알고리즘 신호. 24시간 후 response 측정.
+
+## Reach에 대해 놓친 것
+
+여기서 또 발견한 것은 — Elevate는 5개 국어 글로벌 서비스인데 (영어, 일본어, 한국어, 중국어 간체, 중국어 번체), content는 English only다. 나머지 4 언어는 발행된 글이 0건이다. 각 language별 audience entry mechanism이 별도다. Naver, Baidu, Yahoo JP는 Google과 다르다. Threads, X, note.com, Weibo, Zhihu는 같은 platform이 아니다. Tone, format, 문화적 fit 모두 radically 다르다.
+
+5월 7일 결제 1건은 내가 친구에게 직접 share했기 때문에 발생했다. Cold audience reach는 0. 오늘 Threads publish가 cold audience에 진짜 처음 진입 시도였다.
+
+결과는 24시간 후에 안다.
+
+## 당신의 dashboard에서
+
+오늘 발견한 lesson은 이거다.
+
+- Subscription tier가 기술적 active라고 결제가 시작되지 않는다.
+- Polar 결제 link가 작동한다고 traffic이 시작되지 않는다.
+- Blog 5개 발행되어 있다고 audience가 그 글에 찾아오지 않는다.
+
+**메커니즘이 작동하는 방과, 그 방에 사람이 들어오는 mechanism은 완전히 다른 layer다.**
+
+이걸 5분이면 verify할 수 있다. Polar dashboard 한 번 들어가서 지난 30일 결제 0건인지 확인한다. Site analytics 한 번 보고 traffic 0인지 확인한다. 그 5분이 몇 주의 잘못된 build를 멈추게 한다.
+
+이걸 오늘 처음 했다. 지난 2주 동안 기술적 mechanism build에 시간을 다 썼다. L4 audit은 오늘이 처음이었다.
+
+같은 lesson이 당신의 사업에도 적용된다. 결제 시스템이 기술적으로 작동하는가는 5분이면 verify된다. Audience entry mechanism이 작동하는가는 같은 dashboard, 같은 view에서 보인다 — 지난 30일 결제 0이면 L4가 깨진 거다. 나머지 5 layer가 다 작동해도 그게 cash flow의 진짜 bottleneck이다.
+
+오늘은 L4에 첫 publish를 진행했다. 24시간 후에 진짜 audience response를 본다. 외부 customer 0에서 1로 가는 transition이 cash flow에서 제일 어렵다.
+
+그 시작은 바로 여기다 — 이미 가지고 있는 dashboard 안에서, 5분.
+
+---
+
+*This essay is also available in [English](/blog/mechanism-works-no-one-knows).*
