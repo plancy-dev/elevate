@@ -29,13 +29,16 @@ Scope:
 - Vertical-specific data analysis
 - Vertical-specific launch evidence
 
-## Verification rule (pre-commit routine)
+## Verification rule v2 (pre-commit routine)
 
-모든 commit 전 *target repo verify*:
+모든 commit 전 *target repo verify* + (v2) *product-marketing alignment*:
 
 1. 현재 `pwd` 확인
 2. Content type → repo layer match check
-3. Mismatch detected → 다른 repo로 redirect
+3. (v2, NEW) Marketing copy (Hero, carousel, landing) 작성 시 → product actual scope alignment check (sample diagnosis output 또는 product spec과 promise verify)
+4. Mismatch detected → 다른 repo로 redirect 또는 Hero/carousel revise 또는 product scope expansion 결정
+
+> **v2 rationale**: Phase 2.7에서 Hero F (cost layer pivot)이 actual product scope (visibility-only)와 false positioning으로 surface. Marc Point 5 (audience layer) 해결책 자체가 *3rd layer mismatch (product scope vs marketing copy)*를 재도입. Anti-pattern catalog 9th entry 참조 (`145fa12`).
 
 ## Rationale
 
