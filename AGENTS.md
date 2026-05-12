@@ -98,6 +98,13 @@ This repo can include **[gstack](https://github.com/garrytan/gstack)** under `.a
 
 If gstack is not installed locally, follow `CLAUDE.md` install commands; do not assume skills exist.
 
+## Subagents reference
+
+`.claude/agents/` (Phase 2, W2 D2 Day 1):
+
+- **marc-dissent** — indie hacker pragmatist counter-perspective (Pieter Levels archetype). PROACTIVELY applied at every strategic decision before founder explicit lock. 5-point analysis: over-engineering / 80%-spec / unverified assumptions / hidden risk / no compromise. Scope: strategic decisions only (audience copy, pricing, positioning, ADR, vertical features) — NOT code review.
+- **dissent-verifier** — Generator/Evaluator separation (OpenAI Codex pattern). PROACTIVELY invoked AFTER founder responds to dissent. Verifies whether response is substantive engagement or surface rationalization. Surfaces most-likely-correct rejected dissent point.
+
 ## Cursor Cloud specific instructions
 
 ### Environment
@@ -124,3 +131,16 @@ If gstack is not installed locally, follow `CLAUDE.md` install commands; do not 
 - **Supabase**: No local Supabase needed — the app connects to a remote Supabase project via env vars. Integration tests (`pnpm test:integration`) require `SUPABASE_INTEGRATION_TEST=1`.
 - **sharp rebuild**: After `pnpm install`, sharp may warn about ignored build scripts. Run `pnpm rebuild sharp` if image optimization breaks. The `pnpm.onlyBuiltDependencies` in `package.json` lists `sqlite3`; sharp is handled by its prebuilt binaries.
 - **Next.js 16**: Read docs in `node_modules/next/dist/docs/` for API differences from training data.
+
+## Mobile orchestration (Phase 4 emerging)
+
+Karpathy harness Phase 4 trial (W2 D2+):
+
+- Claude Code Remote Control enabled for elevate repo
+- Cowork + Dispatch (Anthropic mobile app) for non-code file/task ops
+- Mac awake + Claude app open requirement (current Remote Control limitation)
+- Trial phase — production dependency 회피 until W4 stability sign-off
+
+## Cross-tool consistency
+
+Cursor / Claude Code / Codex / Windsurf 모두 본 `AGENTS.md`를 root reference로 읽는다. Tool-specific files (`.cursor/`, `.claude/`, `.windsurf/`, etc.)는 본 standard 위에 layer — 상충 시 `AGENTS.md` + Memory Bank + commit hooks가 우선 (see `CLAUDE.md` § Skill routing rule 1).
