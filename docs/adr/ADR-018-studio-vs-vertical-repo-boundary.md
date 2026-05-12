@@ -48,7 +48,7 @@ Scope:
 
 - W2 D1 13 commits + W2 D2 commits retroactive audit 필요 (별도 sprint)
 - 향후 commit pre-hook 또는 pwd-verify routine 자동화 검토
-- Anti-pattern catalog v2에 layer mismatch 6th entry 추가 (별도 commit)
+- Anti-pattern catalog v2에 *6th + 7th entries* 추가 (layer mismatch + directory invisible assumption, 0e9e765 commit)
 
 ## Reference
 
