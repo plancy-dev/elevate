@@ -128,5 +128,7 @@ W2 D2 surface (2026-05-12):
 - Auto mode classifier의 의도된 friction (default-branch guard 등)을 *bypass routine*으로 만들면 classifier 자체 무의미 → fix: `!` prefix는 one-time bypass only, `settings.json` permission rule 추가는 case-by-case 신중 결정
 - Subagent invocation fallback (general-purpose + persona inject) 성공 시 *operational gap*을 *masked* 가능 — workaround 자체가 permanent solution으로 변질 risk → fix: Phase 2 Day 2에 subagent dispatcher 정식 해결 priority
 - Primary user verify (실제 user contact)와 secondary market research (data 분석)는 *상호 보완 not 대체* → fix: secondary research 진행 시에도 primary verify track 별도 유지 (특히 결제 게이트 inversion 같은 *behavioral* hypothesis는 *audience direct voice가 ground truth*)
+- Studio level (Elevate) vs vertical level (가게점수) repo boundary 미명확화 → vertical content (Hero copy, carousel)가 Studio repo에 commit되는 case 발생 (fe99d4c → revert + 6825d56/f0ee33a로 redirect). Marc Point 5 (wrong layer)의 meta-level 재현 — 컨트롤타워가 *audience layer*만이 아니라 *repo layer*에서도 동일 anti-pattern 재현 → fix: ADR-018 Studio vs vertical repo boundary + 모든 commit 전 *target repo verify (pwd + content type match)*가 routine
+- 컨트롤타워가 repo directory structure를 *implicit assumption으로 진행* (예: `content/` folder를 marketing-only로 가정, 실제로는 `blog/`, `dispatches/`, `ebooks/` pre-existing) → Code session이 *empirical fact로 corrections* (controller↔supervisee feedback loop). 진짜 가치 있는 control mechanism → fix: 컨트롤타워 prediction에 *directory state empirical verify*가 default (`ls`/`find` 또는 Code session ping)
 
 (이후 매 sprint sync에서 add)
