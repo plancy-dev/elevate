@@ -121,4 +121,12 @@ W2 D1 surface (2026-05-11):
 - Sub-headline duplicate carrying (Hero headline) → fix: Marc 5-point analysis
 - Single-layer dissent trust → fix: dissent-verifier (Generator/Evaluator pattern)
 
+W2 D2 surface (2026-05-12):
+
+- Operationally-true content를 spec 작성 시 *replacement default* 가정 → fix: merge-not-replace explicit + dangling reference check 명시 (Commit 1 abort + redirect에서 catch)
+- `.claude/agents/` subagent file 작성 ≠ Claude Code dispatcher 자동 register → fix: Phase 3 hooks 등록 시 `settings.json` wiring + fresh session restart verify (Phase 2.1 first invocation에서 surface)
+- Auto mode classifier의 의도된 friction (default-branch guard 등)을 *bypass routine*으로 만들면 classifier 자체 무의미 → fix: `!` prefix는 one-time bypass only, `settings.json` permission rule 추가는 case-by-case 신중 결정
+- Subagent invocation fallback (general-purpose + persona inject) 성공 시 *operational gap*을 *masked* 가능 — workaround 자체가 permanent solution으로 변질 risk → fix: Phase 2 Day 2에 subagent dispatcher 정식 해결 priority
+- Primary user verify (실제 user contact)와 secondary market research (data 분석)는 *상호 보완 not 대체* → fix: secondary research 진행 시에도 primary verify track 별도 유지 (특히 결제 게이트 inversion 같은 *behavioral* hypothesis는 *audience direct voice가 ground truth*)
+
 (이후 매 sprint sync에서 add)
