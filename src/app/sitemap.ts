@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getPathname } from "@/i18n/navigation";
-import { getAllPostMetaForLocale } from "@/lib/blog/posts";
+import {
+  getAllTagsForLocale,
+  getIndexablePostMetaForLocale,
+} from "@/lib/blog/posts";
 import {
   buildBlogPostAlternatesLanguages,
   buildPathAlternatesLanguages,
@@ -51,18 +54,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
       });
     }
 
-    for (const post of getAllPostMetaForLocale(locale)) {
+    // noindex posts (frontmatter `noindex: true`) excluded from sitemap.
+    // Used for stub posts in JA/zh-CN/zh-TW until substantive translation.
+    for (const post of getIndexablePostMetaForLocale(locale)) {
       const pathname = getPathname({
         locale,
         href: `/blog/${post.slug}` as never,
       });
       const languages = buildBlogPostAlternatesLanguages(post.slug);
+      // Use post.modified if set (frontmatter explicit), else fall back to date.
+      const lastModified = new Date(
+        `${post.modified ?? post.date}T12:00:00Z`,
+      );
       entries.push({
         url: `${base}${pathname}`,
-        lastModified: new Date(`${post.date}T12:00:00Z`),
+        lastModified,
         changeFrequency: "monthly",
         priority: 0.65,
         ...(languages ? { alternates: { languages } } : {}),
+      });
+    }
+
+    // Tag pages (long-tail SEO + internal linking surfaces)
+    for (const tag of getAllTagsForLocale(locale)) {
+      const pathname = getPathname({
+        locale,
+        href: `/blog/tag/${encodeURIComponent(tag)}` as never,
+      });
+      entries.push({
+        url: `${base}${pathname}`,
+        changeFrequency: "weekly",
+        priority: 0.5,
       });
     }
   }

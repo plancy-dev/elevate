@@ -9,7 +9,11 @@ import {
 } from "@/components/analytics/marketing-tracked-links";
 import { MarketingCtaId } from "@/lib/analytics/posthog-events";
 import { blogMdxComponents } from "@/components/blog/mdx-components";
-import { getAllPostMetaForLocale, getPostBySlug } from "@/lib/blog/posts";
+import {
+  getAllPostMetaForLocale,
+  getPostBySlug,
+  getRelatedPostsForLocale,
+} from "@/lib/blog/posts";
 import { routing } from "@/i18n/routing";
 import { buildBlogPostAlternatesLanguages } from "@/lib/seo/locale-alternates";
 import {
@@ -55,6 +59,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonicalUrl = `${getSiteUrl()}${pathname}`;
   const languageAlternates = buildBlogPostAlternatesLanguages(slug);
   const published = `${post.meta.date}T12:00:00.000Z`;
+  // Use modified frontmatter if set; otherwise fall back to date.
+  // Decoupling improves Google's freshness signal for edited posts.
+  const modified = post.meta.modified
+    ? `${post.meta.modified}T12:00:00.000Z`
+    : published;
   const ogImagePath = post.meta.ogImage ?? "/og-default.webp";
   const ogImages = [
     {
@@ -78,9 +87,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: "Elevate",
       type: "article",
       publishedTime: published,
-      modifiedTime: published,
+      modifiedTime: modified,
       locale,
       images: ogImages,
+      ...(post.meta.tags ? { tags: post.meta.tags } : {}),
     },
     twitter: {
       card: "summary_large_image",
@@ -88,6 +98,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: post.meta.description || undefined,
       images: ogImages.map((i) => i.url),
     },
+    // noindex frontmatter → robots meta noindex (stub posts, thin content)
+    ...(post.meta.noindex
+      ? {
+          robots: {
+            index: false,
+            follow: false,
+            googleBot: { index: false, follow: false },
+          },
+        }
+      : {}),
   };
 }
 
@@ -126,13 +146,20 @@ export default async function BlogPostPage({ params }: Props) {
   const canonicalUrl = `${base}${pathname}`;
   const imagePath = post.meta.ogImage ?? "/og-default.webp";
   const imageUrl = `${base}${imagePath.startsWith("/") ? imagePath : `/${imagePath}`}`;
+  const inLanguage =
+    locale === "zh-CN" ? "zh-CN" : locale === "zh-TW" ? "zh-TW" : locale;
+  const datePublished = `${post.meta.date}T12:00:00.000Z`;
+  const dateModified = post.meta.modified
+    ? `${post.meta.modified}T12:00:00.000Z`
+    : datePublished;
+
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.meta.title,
-    inLanguage: locale === "zh-CN" ? "zh-CN" : locale === "zh-TW" ? "zh-TW" : locale,
-    datePublished: `${post.meta.date}T12:00:00.000Z`,
-    dateModified: `${post.meta.date}T12:00:00.000Z`,
+    inLanguage,
+    datePublished,
+    dateModified,
     image: imageUrl,
     mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
     isPartOf: { "@id": websiteJsonLdId(base), "@type": "WebSite" },
@@ -142,10 +169,55 @@ export default async function BlogPostPage({ params }: Props) {
       name: "Elevate",
       url: base,
     },
+    // E-E-A-T author signal (ADR-024 founder framing)
+    author: {
+      "@type": "Person",
+      name: "조윤환",
+      url: base,
+    },
+    wordCount: post.meta.wordCount,
+    timeRequired: `PT${post.meta.readingMinutes}M`,
   };
   if (post.meta.description) {
     jsonLd.description = post.meta.description;
   }
+  if (post.meta.tags && post.meta.tags.length > 0) {
+    jsonLd.keywords = post.meta.tags.join(", ");
+    jsonLd.articleSection = post.meta.tags[0]; // Primary tag = section
+  }
+
+  // BreadcrumbList JSON-LD (internal navigation + Google rich snippet)
+  const blogIndexUrl = `${base}${getPathname({
+    locale,
+    href: "/blog" as never,
+  })}`;
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: `${base}${getPathname({ locale, href: "/" as never })}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: blogIndexUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.meta.title,
+        item: canonicalUrl,
+      },
+    ],
+  };
+
+  // Related posts (same locale, tag intersection)
+  const relatedPosts = getRelatedPostsForLocale(slug, locale, 3);
 
   return (
     <div className="border-t border-ink-100">
@@ -158,11 +230,17 @@ export default async function BlogPostPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <article className="mx-auto max-w-[min(45rem,100%)] px-4 py-10 sm:px-6 lg:px-8">
-        <p className="text-xs text-ink-500">
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-500">
           <time dateTime={post.meta.date}>
             {t("published", { date: post.meta.date })}
           </time>
+          <span aria-hidden="true">·</span>
+          <span>{post.meta.readingMinutes} min read</span>
         </p>
         <h1 className="mt-2 text-(length:--elevate-prose-hero-title-size) font-semibold leading-[1.15] tracking-tight text-ink-900">
           {post.meta.title}
@@ -207,6 +285,63 @@ export default async function BlogPostPage({ params }: Props) {
             />
           </>
         )}
+
+        {/* Tags (frontmatter-driven, surfaces tag pages) */}
+        {post.meta.tags && post.meta.tags.length > 0 ? (
+          <div className="mt-10 flex flex-wrap gap-2">
+            {post.meta.tags.map((tag) => (
+              <Link
+                key={tag}
+                href={`/blog/tag/${encodeURIComponent(tag)}` as never}
+                className="rounded-full bg-ink-50 px-2.5 py-0.5 text-xs text-ink-600 hover:bg-ink-100"
+              >
+                {tag}
+              </Link>
+            ))}
+          </div>
+        ) : null}
+
+        {/* Related posts (tag intersection, same-locale, exclude noindex) */}
+        {relatedPosts.length > 0 ? (
+          <section className="mt-14 border-t border-ink-100 pt-8">
+            <h2 className="text-base font-semibold text-ink-900">
+              {locale === "ko"
+                ? "이어서 보면 좋은 글"
+                : locale === "ja"
+                  ? "次に読むと良い記事"
+                  : locale.startsWith("zh")
+                    ? "继续阅读推荐"
+                    : "Continue reading"}
+            </h2>
+            <ul className="mt-5 space-y-5">
+              {relatedPosts.map((rp) => (
+                <li
+                  key={rp.slug}
+                  className="border-b border-ink-100 pb-4 last:border-b-0"
+                >
+                  <div className="text-xs text-ink-500">
+                    <time dateTime={rp.date}>{rp.date}</time>
+                    <span aria-hidden="true"> · </span>
+                    <span>{rp.readingMinutes} min</span>
+                  </div>
+                  <h3 className="mt-1 text-base font-semibold text-ink-900">
+                    <Link
+                      href={`/blog/${rp.slug}` as never}
+                      className="hover:text-vermilion-600"
+                    >
+                      {rp.title}
+                    </Link>
+                  </h3>
+                  {rp.description ? (
+                    <p className="mt-1 text-sm text-ink-600">
+                      {rp.description}
+                    </p>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <div className="mt-14 border-t border-ink-100 pt-8">
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-2">

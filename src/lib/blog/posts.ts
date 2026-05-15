@@ -13,6 +13,8 @@ export type BlogPostMeta = {
   title: string;
   description: string;
   date: string;
+  /** Optional last-modified date (frontmatter `modified`). Falls back to `date` for dateModified JSON-LD. */
+  modified?: string;
   accessTier: "public" | "member" | "premium";
   isPremium: boolean;
   /** Absolute path from site root for OG/Twitter preview, e.g. `/blog/my-slug/hero.jpg`. Must live under `public/`. */
@@ -21,6 +23,14 @@ export type BlogPostMeta = {
   heroPhotoCredit?: string;
   /** Optional internal editorial note for the hero (not rendered as article prose). */
   heroNote?: string;
+  /** Tags from frontmatter — surfaced in JSON-LD `keywords` + Related posts intersection. */
+  tags?: string[];
+  /** Estimated reading time in minutes (computed from body). */
+  readingMinutes: number;
+  /** Word count of body (computed). Used in BlogPosting JSON-LD `wordCount`. */
+  wordCount: number;
+  /** If true, frontmatter explicitly excluded this post from sitemap + adds noindex meta. Used for stub/thin posts. */
+  noindex: boolean;
 };
 
 const blogFrontmatterSchema = z
@@ -28,6 +38,8 @@ const blogFrontmatterSchema = z
     title: z.string(),
     description: z.string(),
     date: z.string(),
+    /** Optional last-modified date. If absent, falls back to `date`. ISO 8601 format. */
+    modified: z.string().optional(),
     ogImage: z.string().optional(),
     access_tier: z.enum(["public", "member", "premium"]).optional(),
     is_premium: z.boolean().optional(),
@@ -36,6 +48,8 @@ const blogFrontmatterSchema = z
     locale: z.string().optional(),
     heroPhotoCredit: z.string().optional(),
     heroNote: z.string().optional(),
+    /** If true: exclude from sitemap + add `<meta name="robots" content="noindex">`. Used for stubs / thin posts. */
+    noindex: z.boolean().optional(),
     /** Set by content-ops blog publish adapter; ignored for rendering. */
     template_version: z.string().optional(),
   })
@@ -105,9 +119,42 @@ export function findBlogBodyBuilderMemoLeak(body: string): string | null {
   return null;
 }
 
+/**
+ * Estimate reading time and word count from MDX body.
+ * - English: ~200 words/min reader speed
+ * - Korean (CJK): ~300 chars/min reader speed (different cognitive load per char)
+ * Use word count for `wordCount` JSON-LD field regardless.
+ */
+function estimateReadingFromBody(
+  body: string,
+  locale: string,
+): { readingMinutes: number; wordCount: number } {
+  // Strip code blocks, MDX markdown syntax, image refs, then count
+  const stripped = body
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/!\[[^\]]*]\([^)]+\)/g, "") // image markdown
+    .replace(/\[([^\]]+)]\([^)]+\)/g, "$1") // link markdown keep visible text
+    .replace(/[#*_`>!\-\[\]()]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  // Word count (whitespace-split for both CJK + Latin scripts)
+  const wordCount = stripped.split(/\s+/).filter(Boolean).length;
+
+  // Reading time: CJK locales use char-based, others use word-based
+  const isCjk = locale === "ko" || locale === "ja" || locale.startsWith("zh");
+  const readingMinutes = isCjk
+    ? Math.max(1, Math.ceil(stripped.replace(/\s+/g, "").length / 300))
+    : Math.max(1, Math.ceil(wordCount / 200));
+
+  return { readingMinutes, wordCount };
+}
+
 function parseFrontmatter(
   data: Record<string, unknown>,
   slug: string,
+  body: string,
+  locale: string,
 ): Omit<BlogPostMeta, "slug"> {
   const parsed = blogFrontmatterSchema.safeParse(data);
   if (!parsed.success) {
@@ -128,12 +175,22 @@ function parseFrontmatter(
     typeof d.heroNote === "string" && d.heroNote.trim()
       ? d.heroNote.trim()
       : undefined;
+  const { readingMinutes, wordCount } = estimateReadingFromBody(body, locale);
+  const tags =
+    Array.isArray(d.tags) && d.tags.length > 0
+      ? d.tags.map((t) => String(t).trim()).filter(Boolean)
+      : undefined;
   return {
     title: d.title,
     description: d.description,
     date: d.date,
     accessTier,
     isPremium,
+    readingMinutes,
+    wordCount,
+    noindex: d.noindex === true,
+    ...(d.modified ? { modified: d.modified } : {}),
+    ...(tags && tags.length > 0 ? { tags } : {}),
     ...(ogImage ? { ogImage } : {}),
     ...(heroPhotoCredit ? { heroPhotoCredit } : {}),
     ...(heroNote ? { heroNote } : {}),
@@ -160,12 +217,22 @@ export function getAllPostMetaForLocale(locale: string): BlogPostMeta[] {
     const slug = file.replace(/\.mdx$/i, "");
     if (shouldExcludeSlug(slug)) continue;
     const raw = fs.readFileSync(path.join(dir, file), "utf8");
-    const { data } = matter(raw);
-    const meta = parseFrontmatter(data as Record<string, unknown>, slug);
+    const { data, content } = matter(raw);
+    const meta = parseFrontmatter(
+      data as Record<string, unknown>,
+      slug,
+      content,
+      locale,
+    );
     posts.push({ slug, ...meta });
   }
   posts.sort((a, b) => (a.date < b.date ? 1 : -1));
   return posts;
+}
+
+/** Same as getAllPostMetaForLocale but EXCLUDES noindex posts (sitemap + feed filter). */
+export function getIndexablePostMetaForLocale(locale: string): BlogPostMeta[] {
+  return getAllPostMetaForLocale(locale).filter((p) => !p.noindex);
 }
 
 export function getPostBySlug(
@@ -178,9 +245,70 @@ export function getPostBySlug(
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(raw);
-  const meta = parseFrontmatter(data as Record<string, unknown>, slug);
+  const meta = parseFrontmatter(
+    data as Record<string, unknown>,
+    slug,
+    content,
+    locale,
+  );
   return {
     meta: { slug, ...meta },
     body: content.trim(),
   };
+}
+
+/**
+ * Related posts — same-locale + tag intersection score, exclude current + noindex.
+ * Internal linking + bounce rate reduction.
+ */
+export function getRelatedPostsForLocale(
+  currentSlug: string,
+  locale: string,
+  limit = 3,
+): BlogPostMeta[] {
+  const all = getIndexablePostMetaForLocale(locale);
+  const current = all.find((p) => p.slug === currentSlug);
+  if (!current) return [];
+
+  const currentTags = new Set(current.tags ?? []);
+  const candidates = all.filter((p) => p.slug !== currentSlug);
+
+  if (currentTags.size === 0) {
+    // No tags → newest N
+    return candidates.slice(0, limit);
+  }
+
+  const scored = candidates
+    .map((p) => {
+      const tags = new Set(p.tags ?? []);
+      const intersect = [...currentTags].filter((t) => tags.has(t)).length;
+      return { post: p, score: intersect };
+    })
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return b.post.date < a.post.date ? -1 : 1;
+    });
+
+  return scored.slice(0, limit).map((s) => s.post);
+}
+
+/** Get all unique tags across indexable posts for a locale (for tag pages). */
+export function getAllTagsForLocale(locale: string): string[] {
+  const all = getIndexablePostMetaForLocale(locale);
+  const tags = new Set<string>();
+  for (const p of all) {
+    for (const tag of p.tags ?? []) {
+      tags.add(tag);
+    }
+  }
+  return Array.from(tags).sort();
+}
+
+export function getPostsByTagForLocale(
+  tag: string,
+  locale: string,
+): BlogPostMeta[] {
+  return getIndexablePostMetaForLocale(locale).filter((p) =>
+    (p.tags ?? []).includes(tag),
+  );
 }
