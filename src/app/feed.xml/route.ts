@@ -1,5 +1,8 @@
 import { getPathname } from "@/i18n/navigation";
-import { getIndexablePostMetaForLocale } from "@/lib/blog/posts";
+import {
+  getIndexablePostMetaForLocale,
+  getPostBySlug,
+} from "@/lib/blog/posts";
 import { getSiteUrl } from "@/lib/seo/site-url";
 import { routing } from "@/i18n/routing";
 
@@ -12,7 +15,22 @@ function escapeXml(text: string): string {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g,"&quot;");
+    .replace(/"/g, "&quot;");
+}
+
+/**
+ * Strip MDX/markdown to plain text for Atom `<content type="text">`.
+ * Full content (vs summary only) improves SEO + RSS reader UX.
+ */
+function mdxToPlainText(body: string): string {
+  return body
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/!\[[^\]]*]\([^)]+\)/g, " ")
+    .replace(/\[([^\]]+)]\([^)]+\)/g, "$1")
+    .replace(/[#*_`>!]/g, " ")
+    .replace(/\n+/g, "\n")
+    .replace(/[ \t]+/g, " ")
+    .trim();
 }
 
 /** Atom 1.0 — default-locale blog only (`en`). Per-locale feeds at `/ko/feed.xml` etc. */
@@ -28,7 +46,7 @@ export function GET(): Response {
 
   let latest = "";
   for (const p of posts) {
-    const iso = `${p.date}T12:00:00.000Z`;
+    const iso = `${p.modified ?? p.date}T12:00:00.000Z`;
     if (iso > latest) latest = iso;
   }
   if (!latest) {
@@ -42,14 +60,19 @@ export function GET(): Response {
         href: `/blog/${post.slug}` as never,
       });
       const url = `${base}${pathname}`;
-      const updated = `${post.date}T12:00:00.000Z`;
+      const published = `${post.date}T12:00:00.000Z`;
+      const updated = `${post.modified ?? post.date}T12:00:00.000Z`;
+      // Full-content Atom — load body, strip to plain text
+      const full = getPostBySlug(post.slug, locale);
+      const contentPlain = full ? mdxToPlainText(full.body) : post.description;
       return `  <entry>
     <title>${escapeXml(post.title)}</title>
     <link href="${escapeXml(url)}" rel="alternate" type="text/html"/>
     <id>${escapeXml(url)}</id>
     <updated>${updated}</updated>
-    <published>${updated}</published>
+    <published>${published}</published>
     <summary type="text">${escapeXml(post.description)}</summary>
+    <content type="text">${escapeXml(contentPlain)}</content>
   </entry>`;
     })
     .join("\n");
