@@ -31,18 +31,29 @@ W2 D4 가게점수 Threads post (founder reflection) → 96 views / 0 engagement
 
 **Threads는 가게점수 product의 channel-mode와 mismatch.** Threads는 Mode 1.5 (visual promote + community currency)이고 가게점수 product는 Mode 2+3 (helpful + discover)이다. ADR-027 channel strategy 명시한 mode-fit principle 적용.
 
-**Channel mix (effort distribution):**
+**Channel mix (effort distribution) — v2 (2026-05-15 W2 D5 evening, own blog setup 후 update):**
 
 | Priority | Channel | Mode | Effort % | 사장님 weekly cost |
 |---|---|---|---|---|
-| **Primary** | Naver Blog SEO | Mode 2 (Helpful) + Mode 3 (Discover) | 30% | 30min/week |
+| **Primary** | **자체 블로그 (gagejumsu.com/blog)** ⭐ | Mode 2 (Helpful) + Mode 3 (Discover) | 30% | 5min/week (review only — content는 컨트롤타워 draft) |
 | **Primary** | 자영업 네이버 카페 답글 (AI-assisted) | Mode 2 (Helpful) | 30% | 25min/week |
+| **Secondary** | Naver Blog cross-post (W4+, API automation) | Mode 2+3 | 10% | 0 (자동, W4 setup 후) |
 | **Secondary** | Threads visual post weekly | Mode 1 (Promote) minimal | 10% | 5min/week |
 | **Tertiary** | Twitter/X Elevate Studio brand | Mode 1+2 mix (Builder audience) | 10% | 5min/week W4+ |
 | **Future** | LinkedIn / Indie Hackers / Hacker News | Mode 2 (Builder) | 10% | W5+ |
-| **Buffer** | Persona simulation, PostHog review, product decisions | — | 10% | — |
 
-**Total 사장님 manual cost:** ~1h/week (모든 channel 합산).
+**Total 사장님 manual cost:** ~45min/week (own blog 자체 운영) + W4부터 Naver Blog API automation 추가 시 동일.
+
+**v1 vs v2 차이:**
+- v1: Naver Blog primary (Naver platform 의존)
+- **v2: 자체 블로그 primary** (100% 통제 + brand consistency + PostHog direct integration)
+- Naver Blog는 W4+ API cross-post automation으로 secondary (한국 자영업자 search reach 보강)
+
+**v2 채택 이유 (2026-05-15 W2 D5 evening 추가 결정):**
+- 사장님 명시: "자체 블로그를 만들어서 올리고 SEO를 높이는 건 어때? 그건 100% 우리가 관리할 수 있잖아"
+- 100% brand control + 인디해커 framework + own asset 빌드
+- Hybrid Strategy: own blog primary + Naver Blog cross-post secondary
+- Implementation: 2026-05-15 W2 D5 evening commit 692dad9 (own blog infrastructure)
 
 ## Rejected alternatives
 
