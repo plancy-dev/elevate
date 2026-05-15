@@ -1,0 +1,59 @@
+---
+title: "Build the funnel before the feature"
+description: "I almost committed a new feature ADR yesterday. A two-minute analytics query stopped me. Here is what the data actually said and the rule I now apply before any next build."
+date: "2026-05-15"
+slug: "build-funnel-before-feature"
+tags: ["solo-founder", "build-documentation", "anti-pattern", "funnel-audit", "decision-discipline"]
+access_tier: "public"
+locale: "en"
+---
+
+# Build the funnel before the feature
+
+*What a two-minute query did to a commit I was thirty seconds away from typing — and the rule that came out of it.*
+
+---
+
+Yesterday morning I had a commit ready. The diff was clean, the ADR draft was written, and the working title was "Stage 1.5: Marketing Image Generator." It was going to be the next feature on top of 가게점수 — the Korean small-business marketing diagnosis vertical the Studio shipped two weeks ago. The reasoning felt sound. A diagnosis tool tells a self-employed owner what is wrong with their online visibility. The obvious next step is to give them something to fix it with. So: a tool that generates marketing images. Stage 1.5 in the product layer cake. The ADR even had a manual concierge fallback worked out — Level 1 humans doing what the model could not yet do — so the surface area was small enough to ship inside a week.
+
+The prompt was pasted into the Code session. I was thirty seconds from typing the commit message.
+
+Then I ran a query I had not run before. Two minutes, four lines of HogQL against the vertical's PostHog project. The result froze the commit.
+
+The funnel for the diagnosis tool — the one I was about to extend — looked like this over the previous fourteen days. Page views: 55. Landing CTA clicks: 1. Checkout page loaded: 1. Diagnosis submitted: 0. Result viewed: 0. The funnel I was about to attach a new feature to had nobody walking through it. Not "few." Zero, at the step where the actual product begins.
+
+I want to write about this carefully because it is not a story about funnel optimization. It is a story about a category mistake that solo builders make almost weekly — I make it weekly — and that no amount of taste or experience seems to prevent on its own. The mistake is to specify the next feature for an audience that has not yet arrived.
+
+The mistake is structurally appealing because the next-feature reasoning always carries a kind of internal authority. The product roadmap implies the next step. The user research, even imagined user research, implies the next step. Senior product instincts imply the next step. Every craft signal points forward. But forward, in the absence of a verified funnel, is sideways. You are not building the next thing for the people using the current thing. You are building the next thing for the people you wish were using the current thing. The two operations look identical in your IDE. They look identical in the ADR. They look identical in commit messages and changelogs and even in the satisfaction of having shipped. They are not identical in the outcome.
+
+Building features for a funnel with no traffic is a particular kind of expensive. It is not "wasted time" in the loose sense — every solo founder knows time is the constraint. It is structurally expensive because of what it crowds out. The hour I would have spent on the Marketing Image Generator was an hour I did not spend running the analytics query. The week I would have spent shipping it was a week I did not spend on the real bottleneck, which is getting users into the diagnosis funnel I had already built. This is the same shape as an essay I published earlier in the week about the cash-flow mechanism. The building of the room and the inviting of guests are different acts. Yesterday's commit would have been the construction of a second room before anyone had walked through the door of the first.
+
+The control system the Studio runs — a multi-instance Claude harness orchestrated across Cursor, Code session, and a control-tower chat — caught the mistake at the last possible second. Not because it is clever. Because I had built one specific reflex into it, and that reflex fired.
+
+The reflex is a single question, asked before any feature ADR commit: what is the quantitative state of the funnel this feature attaches to?
+
+There are three possible answers, and each routes to a different action. The first answer is that the funnel has working step-to-step conversion — five percent or higher at each transition, on a sample large enough to be meaningful. In that case the feature ADR is appropriate. You are extending a system that has signal, for users who are already arriving. The next step is to build. The second answer is that the funnel has measured drop-off — less than five percent conversion at some step, on a meaningful sample. In that case the funnel fix is the priority, not the new feature. The drop-off step is where actual users are getting stuck, and the next feature is irrelevant until they unstick. The third answer is that the funnel has zero traffic at the step the feature attaches to. In that case neither the new feature nor the funnel fix is the priority. The audience-entry layer is the priority, and no amount of product work substitutes for it.
+
+I am writing this rule down because I will need it again. The shape of it is intentionally generic. It is not about my diagnosis tool. It is about every feature commit, in every product, that a builder is contemplating.
+
+The numbers for yesterday were unambiguous. Fourteen-day window, vertical PostHog project. Page views to landing CTA click: 55 to 1, a 1.82 percent conversion. Result viewed at the bottom of the funnel: 0. Step three to step four — checkout page load to diagnosis submission — was 1 to 0. A 100 percent drop, on a sample of one. A sample of one is not a measurement. That is the actual finding. The funnel I was about to extend was not producing data because no one was inside it.
+
+The Marketing Image Generator ADR was, in retrospect, a coping mechanism. It is more pleasant to specify a new feature than to confront a working funnel with zero users. Specifying produces a sense of progress. Confronting does not. Specifying generates a commit. Confronting generates a different category of work — content, distribution, audience — that is much harder to measure in the short term and much harder to enjoy in the moment of doing it.
+
+What I did yesterday, after the query, was abort the Marketing Image Generator commit and write a different artifact in its place. The replacement document captured the beta-access mechanism for the generator — designed, but not built — and embedded the funnel threshold directly into its preconditions. The threshold says, in writing, that the build phase begins when step one to step N conversion exceeds five percent on a meaningful sample. Until then, the build phase is suspended.
+
+I then added a new entry to the anti-pattern catalog the Studio maintains. Number twenty-five, the twenty-fifth surfaced failure mode I have caught the harness in since starting this discipline a couple of weeks ago. The text reads, roughly: new product feature ADR commits require funnel baseline quantitative measurement as a prerequisite section.
+
+The catalog is the most important artifact the Studio produces. Not the diagnosis tool, not the essays, not the dispatches. The catalog. It is the thing that turns a single learning into a permanent change in how the next decision will be made. Every entry is an engineered fix to a specific failure I can point to, with a specific date and a specific commit and, in this case, a specific PostHog query that froze a specific feature.
+
+The rule travels well outside any one product. If you are building something — a SaaS, a marketplace, a content business, a tool — and you find yourself drafting the spec for the next feature, ask the procedural question first. What is the conversion rate of the existing funnel this feature attaches to? Not "is anyone using the product." That is the wrong granularity. The right granularity is the fraction of users moving from the step before this feature to the step where the feature would live. If you cannot answer that question in two minutes — if the query is not already wired, if the analytics is not instrumented, if the answer is "I would have to check" — then the answer is that you do not know, which is operationally indistinguishable from zero.
+
+The two-minute version of this audit is enough. Open the dashboard. Run the funnel. Read the number. If the number is below five percent at any step, the next feature is not the work. The funnel is the work.
+
+The commit message I almost typed yesterday was for a feature that would have served exactly zero users in the fourteen days following its ship date. I know this because zero users were positioned to receive it. The query that froze the commit took two minutes to write. The artifact that replaced the original ADR took twenty. The catalog entry that codified the rule took five. The total cost of not making the mistake was under thirty minutes of work.
+
+The cost of making the mistake would have been a week of build, a feature that does not move the metric that matters, and a roadmap that drifts one full step further from the real bottleneck. Multiplied by the number of weeks a solo founder has in a year, that drift is most of the difference between a product that finds its audience and one that doesn't.
+
+I am running the query before every next feature ADR. The rule is in writing. The funnel comes before the feature.
+
+If you are weighing the same kind of commit this week, the procedure is portable. Open your analytics. Run the funnel for the surface your next feature would attach to. If the number is small enough that you cannot tell whether the feature would matter, you already have your answer. The funnel comes before the feature. Build the funnel first.
